@@ -12,7 +12,7 @@ We believe both "Consumer First" and "Provider" approaches have their place in a
 
 So we decided on **Contract First** approach. This reduces bias towards Provider or Consumer in API Design.
 
-### Does Qontract work only with all programming languages?
+### Does Qontract work with all programming languages?
 
 Yes, Qontract can work with any language / tech stack in [command line](/documentation/command_line.html) mode.
 At the moment [programmatic support](/documentation/getting_started_programmatically.html) is only available to JVM languages.
