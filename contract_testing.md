@@ -19,7 +19,7 @@ There have been several tools and techniques that have been tried over time to s
   * It also assumes that the Provider has to exist before Consumer development can start
 * API Mocks - These tools (Example: Wiremock) let you author the mock server yourself instead of recording the interaction. However there is no way to say whether the mock is truly representing the provider.
 
-Since these techniques cannot guarantee that provider stub may is inline with the provider, Integration Tests are necessary.
+These techniques cannot guarantee that provider stub is inline with the provider. So Integration Tests are necessary to make sure Provider and Consumer are compatible.
 
 ---
 
@@ -72,4 +72,4 @@ Before picking a Contract Testing tool, it is important to understand which type
 It is not easy to pick on approach. Some use cases require an API First approach while others may not.
 Also quite often we need to develop the Provider and Consumer in parallel.
 
-Qontract being an [Contract First](/#what-is-contract-first) suits both development styles seamlessly.
+Qontract being a [Contract First](/#what-is-contract-first) contract testing tool, suits both development styles seamlessly.
