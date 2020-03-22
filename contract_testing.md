@@ -57,4 +57,4 @@ Before picking a Contract Testing tool, it is important to consider your Develop
 
 It is not easy to pick on approach. Some use cases require an API First approach and others not. So usually we will have a mix of these techniques.
 
-Qontract being an [Contract First](http://localhost:4000/#what-is-contract-first) suits both development styles seamlessly.
+Qontract being an [Contract First](/#what-is-contract-first) suits both development styles seamlessly.
