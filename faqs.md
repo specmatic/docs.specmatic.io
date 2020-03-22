@@ -10,7 +10,8 @@ Contract Testing involves two sides, Consumer and Provider. Contract Testing Too
 
 We believe both "Consumer First" and "Provider" approaches have their place in application architecture and did not want to impose either technique on developers.
 
-So we decided on **Contract First** approach. This reduces bias towards Provider or Consumer in API Design.
+So we decided on **Contract First** approach. When you start with the Contract, you can either go the Provider First route or Consumer First route.
+This also reduces bias towards Provider or Consumer in API Design.
 
 ### Does Qontract work with all programming languages?
 
@@ -21,5 +22,5 @@ We are working on adding support for more languages and VMs.
 ### How much code do I have to write to get Qontract running?
 
 Zero, if you are adopting the [command_line](/documentation/command_line.html) approach.
-If you would like richer IDE support you have to write a few lines of code to get it going.
+If you need IDE support, you have to write a few lines of code to get it going.
 

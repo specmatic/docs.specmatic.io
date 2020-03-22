@@ -51,7 +51,7 @@ This command will give a xunit like feedback about each scenario and what parts 
     	Request: {path=/pets/180, method=GET, headers={Content-Type=text/plain}, body=}
     	Response: {"status":400,"status-text":"Bad Request","headers":{"Content-Length":"231","Content-Type":"application/json"}}
     
-    Tests run: 1, Failures: 0
+    Tests run: 1, Failures: 1
 
 As you can see it has rightly pointed out that we have not implemented the "/pets" endpoint. Once you build it the errors will disappear.
 This is quite similar to how we start with a feature file in BDD and then let it drive development.
