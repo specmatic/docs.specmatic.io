@@ -6,7 +6,7 @@ nav_order: 1
 # Qontract
 {: .fs-9}
 
-Qontract is a ["Contract First"](#what-is-contract-first) Contract Testing Tool.
+Qontract is a ["Contract First"](/faqs.html#what-is-contract-first) Contract Testing Tool.
 {: .fs-6 .fw-300}
 
 [Get started now](/documentation/getting_started.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](//github.com/qontract/qontract){: .btn .fs-5 .mb-4 .mb-md-0 }
@@ -26,17 +26,6 @@ Systems interact with each other through several means. Qontract hopes to addres
 * File system
 * Libraries, SDK 
 * OS Level Pipes
-
----
-
-### What is "Contract First"?
-Contract Testing involves two sides, Consumer and Provider. Contract Testing Tools usually have to pick a side that will define the contracts.
-* **Consumer Driven Contracts** - The contract is generated based on the Provider Stub / Mock server that is defined by Consumers.
-* **Provider Driven Contracts** - The contract is more or less a Provider API test. This test / contract generates the Provider Stub / Mock server that is used by Consumers.
-
-We believe both "Consumer First" and "Provider" approaches have their place in application architecture and did not want to impose either technique on developers.
-
-So we decided on **Contract First** approach. This reduces bias towards Provider or Consumer in API Design.
 
 ---
 ### Key Features
