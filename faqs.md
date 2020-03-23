@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Frequently Asked Questions
-nav_order: 5
+nav_order: 6
 ---
 ### What is "Contract First"?
 Contract Testing involves two sides, Consumer and Provider. Contract Testing Tools usually have to pick a side that will define the contracts.
