@@ -59,17 +59,19 @@ Let us look at the updated Test Food Pyramid.
 
 Contract Tests are Fast and Quick like Unit Tests and still offer a majority of the value provided by Integration Tests.
 
-Before picking a Contract Testing tool, it is important to understand which type of Contract Testing you need. This will depend on the order in which Consumer and Provider are built / defined.
-* FrontEnd before BackEnd / Consumer First - [Consumer Driven Contract](https://martinfowler.com/articles/consumerDrivenContracts.html)
-  * In this style consumers (UI, Applications) write Test Doubles for Providers because the Provider API does not exist.
-  * A contract is generated based on these Test Doubles and shared with the Provider API Team
-  * Now it is the responsibility of the Provider API team to make sure they honor this contract
-* API First - Provider Driven Contract
-  * The Provider API Team write tests against their application
-  * These tests generate a test Double or Fake which is shared with Consumer Teams.
-  * Consumers use these Test Doubles / Fakes during development and testing to avoid expensive calls to the real Provider
+# Qontract - Contract First
 
-It is not easy to pick on approach. Some use cases require an API First approach while others may not.
-Also quite often we need to develop the Provider and Consumer in parallel.
+Most of the "Contract Testing" tools are "[Consumer Driven Contract](https://martinfowler.com/articles/consumerDrivenContracts.html)" testing tool. Here the contract is generated based on the Provider Stub / Mock server that is defined by Consumers.
+This setup suits the Consumer First Development Style better. Here Provider API design is based on what the Consumers need.
+* In this style consumers (UI, Applications) write Test Doubles for Providers because the Provider API does not exist.
+* A contract is generated based on these Test Doubles and shared with the Provider API Team
+* Now it is the responsibility of the Provider API team to make sure they honor this contract
 
-Qontract being a [Contract First](/#what-is-contract-first) contract testing tool, suits both development styles seamlessly.
+However there are scenarios where this may not work well.
+* Public APIs - Here the Provider has to publish the Contract before Consumer Development can begin
+* API First - Some teams prefer to start with API Design for various reasons. Consumer Development starts only after that.
+
+We believe both "Consumer First" and "Provider First" styles have their place in application architecture and wanted to build a tool that caters to both styles.
+
+So we decided on **Contract First** approach. When you start with the Contract, you can either go the Provider First route or Consumer First route.
+This also reduces bias towards Provider or Consumer in API Design.
