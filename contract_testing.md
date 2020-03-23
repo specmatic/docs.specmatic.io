@@ -10,7 +10,7 @@ nav_order: 3
 
 ### Context
 
-With an several applications moving to MicroServices / Distributed Architecture, it is becoming increasingly hard to run all dependencies on a single machine as a Developer.
+With several applications moving to MicroServices / Distributed Architecture, it is becoming increasingly hard to run all dependencies on a single machine as a Developer.
 
 There have been several tools and techniques that have been tried over time to solve this. Examples:
 * Record and Replay - When there were no tools to help stub other service dependencies the go to approach was to use tools like Fiddler to record and replay requests. It worked, just that it was not convenient to store these recordings in version control. Just a trick up a developer’s sleeve to move fast while developing client applications.
