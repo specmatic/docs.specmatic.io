@@ -17,5 +17,5 @@ We are then able to add support for Web APIs, Messaging Platforms, Testing Frame
 * **Provider Side**
   * Contract Test Command Line - Runs the executable scenarios as tests against a provider instance
   * Contract Test JUnit Support - Same as command line, however it runs the executable scenarios through JUnit Dynamic Tests which your IDE will be able to display like regular JUnit Test Results
-* **Contract vs Contract** is a unique capability where we can compare two contract signatures for compatibility without having implement either contract. This component takes another version of the contract as an input to compare with the initial contract.
+* **Contract vs Contract** is a unique capability where we can compare two contract signatures for compatibility without having to implement either contract. This component takes another version of the contract as an input to compare with the initial contract.
 
