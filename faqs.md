@@ -4,17 +4,10 @@ title: Frequently Asked Questions
 nav_order: 6
 ---
 ### What is "Contract First"?
-Most of the "Contract Testing" tools are "Consumer Driven Contract" testing tool.
-This setup suits the Consumer First Development Style better. Here Provider API design is based on what the Consumers need. Which is good thing.
 
-However there scenarios where this may not work well.
-* Public APIs - Here the Provider has to publish the Contract before Consumer Development can begin
-* API First - Some teams prefer to start with API Design for various reasons. Consumer Development starts only after that.
+Qontract, requires you to author the contract first which is then leveraged to run Provider Stubs and Contract Tests.
 
-We believe both "Consumer First" and "Provider First" approaches have their place in application architecture and wanted to build a tool that caters to both styles.
-
-So we decided on **Contract First** approach. When you start with the Contract, you can either go the Provider First route or Consumer First route.
-This also reduces bias towards Provider or Consumer in API Design.
+More on this [here](http://qontract.run/contract_testing.html#qontract---contract-first).
 
 ### Does Qontract work with all programming languages?
 

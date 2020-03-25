@@ -59,6 +59,8 @@ Let us look at the updated Test Food Pyramid.
 
 Contract Tests are Fast and Quick like Unit Tests and still offer a majority of the value provided by Integration Tests.
 
+---
+
 # Qontract - Contract First
 
 Most of the "Contract Testing" tools are "[Consumer Driven Contract](https://martinfowler.com/articles/consumerDrivenContracts.html)" testing tool. Here the contract is generated based on the Provider Stub / Mock server that is defined by Consumers.
@@ -75,3 +77,4 @@ We believe both "Consumer First" and "Provider First" styles have their place in
 
 So we decided on **Contract First** approach. When you start with the Contract, you can either go the Provider First route or Consumer First route.
 This also reduces bias towards Provider or Consumer in API Design.
+

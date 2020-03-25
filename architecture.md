@@ -8,7 +8,7 @@ nav_order: 4
 ![](/images/logical_architecture.jpg)
 
 Qontract leverages evolutionary architecture principles and is extensible by design. The blue boxes within the dotted line make up the core.
-We are then able to add support for Web APIs, Messaging Platforms, Testing Frameworks, etc. as drop add on capabilities.
+This enables us to add support for Web APIs, Messaging Platforms, Testing Frameworks, etc. in a modular manner.
 
 * **Gherkin Lexer** is central to the working of Qontract. It translates Gherkin to executable Scenarios which can either behave as stub / mock responses or tests for consumers and providers respectively.
 * **Consumer Side**
