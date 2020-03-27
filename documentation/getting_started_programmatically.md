@@ -26,6 +26,7 @@ Add jar dependency.
     <groupId>run.qontract</groupId>
     <artifactId>qontract-core</artifactId>
     <version>{{ site.latest_release }}</version>
+    <scope>test</scope>
 </dependency>
 ```
 
@@ -97,6 +98,17 @@ public class Pet {
 
 ### Provider - Runinng Contract as a test
 
+Add JUnit Jar dependency. This lets you run the contract as a JUnit 5 test.
+
+```
+<dependency>
+    <groupId>run.qontract</groupId>
+    <artifactId>junit5-support</artifactId>
+    <version>{{ site.latest_release }}</version>
+    <scope>test</scope>
+</dependency>
+```
+
 Qontract leverages testing Frameworks to let you run contract as a test.
 At the moment JUnit is supported. Each Scenario in translated to a junit test so that you get IDE support to run your contract.
 
@@ -106,7 +118,7 @@ Add a test class that extends "run.qontract.test.ContractAsATest". In the setUp 
 public class PetStoreContractTest extends QontractJUnitSupport {
     @BeforeAll
     public static void setUp() {
-        File contract = new File("contract/service.contract");
+        File contract = new File("contract/service.qontract");
         System.setProperty("path", contract.getAbsolutePath());
         System.setProperty("host", "localhost");
         System.setProperty("port", "port");
@@ -125,7 +137,7 @@ public class PetStoreContractTest extends QontractJUnitSupport {
 
     @BeforeAll
     public static void setUp() {
-        File contract = new File("contract/service.contract");
+        File contract = new File("contract/service.qontract");
         System.setProperty("path", contract.getAbsolutePath());
         System.setProperty("host", "localhost");
         System.setProperty("port", "8080");
