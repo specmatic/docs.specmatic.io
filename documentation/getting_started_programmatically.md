@@ -25,7 +25,7 @@ Add jar dependency.
 <dependency>
     <groupId>run.qontract</groupId>
     <artifactId>qontract-core</artifactId>
-    <version>0.0.1</version>
+    <version>{{ site.latest_release }}</version>
 </dependency>
 ```
 
