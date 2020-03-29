@@ -122,7 +122,7 @@ When we run the command this time we see success.
     Scenario: Should be able to get a pet by petId GET /pets/(petid:number) SUCCESSFUL
     Tests run: 1, Failures: 0
 
-You may have noticed that we started with a contract and then leveraged it as a test drive the API development. This is quite similar to BDD.
+You may have noticed that we started with a contract and then leveraged it as a test to drive the API development. This is quite similar to BDD.
 
 ---
 
