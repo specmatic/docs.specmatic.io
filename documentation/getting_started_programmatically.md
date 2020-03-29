@@ -87,11 +87,11 @@ public class PetStoreConsumerTest {
 
 Let us take a closer look at the above test.
 * The objective of this test is to help us build a PetStoreConsumer (API Client) class.
-* The setUP and teardDown methods are responsible for starting a Qontract Mock server (based on the service.qontract) and stopping it respectively
-* As any good test, it has arrange, act and assert sections.
-* In the arrange section we are setting up the Qontract Mock to expect a request /pets/123 and return { petid: 123 }
+* The setUP and tearDown methods are responsible for starting a Qontract Mock server (based on the service.qontract) and stopping it respectively
+* Just like any good unit test has arrange, act and assert sections.
+* In the arrange section is setting up the Qontract Mock to expect a request /pets/123 and return { petid: 123 }
 * The act section instantiates a PetStoreConsumer with API url (mock server URL) and then we call getPet which is then expected invoke /pets/123.
-* The assert section verify that PetStoreConsumer is able to translate the response to Pet object
+* The assert section verifies that PetStoreConsumer is able to translate the response to Pet object
 
 At this point you will see compilation errors because we do not have PetStoreConsumer and Pet classes. Let us define those.
 
@@ -125,7 +125,8 @@ public class Pet {
 
 Now we can run the PetStoreConsumerTest. This test is fast and also does not require the real backend api to be running.
 
-Since the test exercises the contract as a mock we can be sure that this test will fail if there are changes in the contract.
+Since this test exercises contract as a mock we can be sure that when there are changes in the contract, this test will fail because of mismatch errors in mock setup section.
+This is important because it helps us keep the Consumer in line with the Provider.
 
 ---
 
