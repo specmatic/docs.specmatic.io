@@ -9,28 +9,47 @@ Programmatic Approach
 
 If you are building your application in a JVM language, you are in luck, because you can spawn the stub / mock server or run the contract as test programmatically.
 
-### Author a contract
+---
 
-Refer to [authoring a contract](/documentation/authoring_contract_introduction.html) page.
+### Setup
 
-### Consumer - Leveraging Mock Server
-
-TODO: Stub vs Mock explanation
-
-Let us try building a Pet Store Consumer through Test First appraoch.
-
-Add jar dependency.
+Add jar dependency. Notice this is test only scope. There is no need to ship Qontract jar with your production code.
 
 ```
 <dependency>
     <groupId>run.qontract</groupId>
     <artifactId>qontract-core</artifactId>
-    <version>{{ site.latest_release }}</version>
+    <version>0.1.0</version>
     <scope>test</scope>
 </dependency>
 ```
 
+---
+
+### Author a contract
+
+{% include authoring_contract_introduction.md %}
+
+---
+
+### Consumer - Leveraging Mock Server
+
+Let us try building a Pet Store Consumer through Test First approach.
+Add below test to your codebase.
+
 ```java
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import run.qontract.core.HttpRequest;
+import run.qontract.core.HttpResponse;
+import run.qontract.core.utilities.Utilities;
+import run.qontract.mock.ContractMock;
+import run.qontract.mock.MockScenario;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 public class PetStoreConsumerTest {
     private static ContractMock petStoreMock;
 
@@ -38,18 +57,18 @@ public class PetStoreConsumerTest {
     public static void setup() throws Throwable {
         //Start a mock server based on the contract
         String gherkin = Utilities.readFile("<baseDir>/petstore/qontract/service.qontract");
-        petStoreMock = ContractMock.fromGherkin(gherkin, 9003);
+        petStoreMock = new ContractMock(gherkin, 9003);
         petStoreMock.start();
     }
 
     @Test
     public void shouldGetPetByPetId() throws IOException {
         //Arrange - Setup the mock to respond to the request we expect PetStoreConsumer to make
-        HttpRequest httpRequest = new HttpRequest().setMethod("GET").updatePath("/pets/123");
+        HttpRequest httpRequest = new HttpRequest().updateMethod("GET").updatePath("/pets/123");
         HttpResponse httpResponse = HttpResponse.Companion.jsonResponse("{petid:123}");
         Map<String, Object> serverState = new HashMap<>();
         // This line makes sure the request and response we are setting up are in line with the contract
-        petStoreMock.tryToMockExpectation(new MockScenario(httpRequest, httpResponse, serverState));
+        petStoreMock.createMockScenario(new MockScenario(httpRequest, httpResponse, serverState));
 
         //Act
         PetStoreConsumer petStoreConsumer = new PetStoreConsumer("http://localhost:9003");
@@ -66,7 +85,15 @@ public class PetStoreConsumerTest {
 }
 ```
 
-The test injects mock pet store service url to the PetStoreConsumer. Let us now look at how the PetStoreConsumer and Pet code looks.
+Let us take a closer look at the above test.
+* The objective of this test is to help us build a PetStoreConsumer (API Client) class.
+* The setUP and teardDown methods are responsible for starting a Qontract Mock server (based on the service.qontract) and stopping it respectively
+* As any good test, it has arrange, act and assert sections.
+* In the arrange section we are setting up the Qontract Mock to expect a request /pets/123 and return { petid: 123 }
+* The act section instantiates a PetStoreConsumer with API url (mock server URL) and then we call getPet which is then expected invoke /pets/123.
+* The assert section verify that PetStoreConsumer is able to translate the response to Pet object
+
+At this point you will see compilation errors because we do not have PetStoreConsumer and Pet classes. Let us define those.
 
 ```java
 public class PetStoreConsumer {
@@ -96,7 +123,11 @@ public class Pet {
 }
 ```
 
-### Provider - Runinng Contract as a test
+The above test should succeed.
+
+---
+
+### Provider - Running Contract as a test
 
 Add JUnit Jar dependency. This lets you run the contract as a JUnit 5 test.
 
@@ -104,50 +135,46 @@ Add JUnit Jar dependency. This lets you run the contract as a JUnit 5 test.
 <dependency>
     <groupId>run.qontract</groupId>
     <artifactId>junit5-support</artifactId>
-    <version>{{ site.latest_release }}</version>
+    <version>0.1.0</version>
     <scope>test</scope>
 </dependency>
 ```
 
 Qontract leverages testing Frameworks to let you run contract as a test.
-At the moment JUnit is supported. Each Scenario in translated to a junit test so that you get IDE support to run your contract.
+At the moment JUnit 5 is supported. Each Scenario in translated to a junit test so that you get IDE support to run your contract.
 
-Add a test class that extends "run.qontract.test.ContractAsATest". In the setUp method point to the location of the contract file and host and port of the provider.
-
-```java
-public class PetStoreContractTest extends QontractJUnitSupport {
-    @BeforeAll
-    public static void setUp() {
-        File contract = new File("contract/service.qontract");
-        System.setProperty("path", contract.getAbsolutePath());
-        System.setProperty("host", "localhost");
-        System.setProperty("port", "port");
-    }
-}
-```
-
-Now all you have to do is make sure your provider app is running and then run your PetStoreContractTest just like any other JUnit test suite.
-And results are displayed like JUnit tests.
-
-You can also start and stop your application in the setUp and tearDown. Example: Here we are starting a Spring Provider Application.
+Add below test to your Provider.
 
 ```java
+import run.qontract.test.QontractJUnitSupport;
+
+import java.io.File;
+
 public class PetStoreContractTest extends QontractJUnitSupport {
     private static ConfigurableApplicationContext context;
 
     @BeforeAll
     public static void setUp() {
-        File contract = new File("contract/service.qontract");
+        File contract = new File("contract/service.contract");
         System.setProperty("path", contract.getAbsolutePath());
         System.setProperty("host", "localhost");
         System.setProperty("port", "8080");
 
+        //Optional
         context = SpringApplication.run(Application.class);
     }
 
     @AfterAll
     public static void tearDown() {
+        //Optional
         context.stop();
     }
 }
 ```
+
+A closer look at above test.
+* PetStoreContractTest extends QontractJUnitSupport. QontractJUnitSupport leverages JUnit5 Dynamic Tests to translate scenarios in the contract to tests.
+* The setUp method passes the location of contract file, host port etc. to QontractJUnitSupport through System Properties
+* Optional - You can start and stop the application in setUp and tearDown. In this example we are starting a Springboot application.
+
+All you to do is right click (or use JUnit shortcuts) and run it just like a unit test.
