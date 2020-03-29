@@ -123,7 +123,9 @@ public class Pet {
 }
 ```
 
-The above test should succeed.
+Now we can run the PetStoreConsumerTest. This test is fast and also does not require the real backend api to be running.
+
+Since the test exercises the contract as a mock we can be sure that this test will fail if there are changes in the contract.
 
 ---
 
@@ -176,5 +178,6 @@ A closer look at above test.
 * PetStoreContractTest extends QontractJUnitSupport. QontractJUnitSupport leverages JUnit5 Dynamic Tests to translate scenarios in the contract to tests.
 * The setUp method passes the location of contract file, host port etc. to QontractJUnitSupport through System Properties
 * Optional - You can start and stop the application in setUp and tearDown. In this example we are starting a Springboot application.
+* Note - Please do not add any other unit test to the above class. The above test is only supposed to have setUp and optionally tearDown methods.
 
-All you to do is right click (or use JUnit shortcuts) and run it just like a unit test.
+To run this test, right click (or use JUnit shortcuts) and run it just like a unit test.
