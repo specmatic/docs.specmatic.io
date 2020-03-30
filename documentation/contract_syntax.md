@@ -16,13 +16,28 @@ That said, if you are not familiar with Gherkin, no need to worry. Gherkin knowl
 
 ### What is a Contract?
 
-A contract in short is an API specification. It describes the provider endpoints, the requests they accept, the responses they return and the data types they support etc.
+A contract is an API specification. It describes the provider endpoints, the requests it accepts, the responses it returns and the data types it support etc.
 
-It is a simple text file which you can create with any text editor. You do not need any IDE or environment.
+Contracts are text files which you can create with any text editor. IDE setup is optional.
 
 Just make sure that the extension is ".qontract".
 
-We are working on syntax highlighting and formatting support for the same. In the mean time if you already have a Gherkin or Cucumber plugin in your IDE / Text editor please do leverage it.
+#### IDE Setup
+
+This is an optional step. Jump to [syntax reference] if you want to skip this step.
+
+Since majority of qontract's syntax is just Gherkin, you can leverage Cucumber plugins for syntax highlighting.
+Below steps helps you work with the .qontract files in Intellij Idea with syntax highlighting, auto-suggest (only Gherkin keywords) and formatting.
+
+* Install [Cucumber Plugin](https://plugins.jetbrains.com/plugin/7212-cucumber-for-java)
+* Go to Preference > Editor > File Types and under recognized file types select "Cucumber Scenario"
+* Under "Registered Patterns" add "*.qontract" as shown below
+
+![](/images/ide_setup.jpg)
+
+This should highlight the Gherkin keywords in your qontract file.
+
+Similarly you should be able to setup your favourite IDE or text editor.
 
 ---
 
