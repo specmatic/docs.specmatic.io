@@ -22,9 +22,11 @@ Contracts are text files which you can create with any text editor. IDE setup is
 
 Just make sure that the extension is ".qontract".
 
-#### IDE Setup
+---
 
-This is an optional step. Jump to [syntax reference] if you want to skip this step.
+### IDE Setup
+
+This is an optional step. Jump to [syntax reference](/documentation/contract_syntax.html#basics) if you want to skip this step.
 
 Since majority of qontract's syntax is just Gherkin, you can leverage Cucumber plugins for syntax highlighting.
 Below steps helps you work with the .qontract files in Intellij Idea with syntax highlighting, auto-suggest (only Gherkin keywords) and formatting.
