@@ -136,7 +136,7 @@ We can describe arrays where the type of each element is known, but the length o
 
 Here, ["(number*)"] would match [1], [1, 2], and even the empty array [].
 
-Note that for now, the array operator works only on type names. ["(number)"]* is not valid syntax. See [Defining Patterns](#defining-patterns) for more.
+Note that for now, the array operator works only on type names. ["(number)"]* is not valid syntax. See [Defining Types](#defining-types) for more.
 
 ### Objects
 
@@ -154,7 +154,7 @@ In ```{"val1": "(number)", "val2": "(number)", "operation": "(string)"}``` you c
 
 This would match ```{"val1": 10, "val2": 20, "operation": "+"}```.
 
-### Defining Patterns
+### Defining Types
 
 Sometimes the data structure is too complex to view in place. It helps to be able to pull it out, so that the semantics of the request are not obscured.
 
@@ -171,8 +171,8 @@ This request body is way too complex. Instead:
     Feature: Arithmetic API
 
     Scenario: Perform 2 nested operations
-      Given pattern Operation {"val1": "(number)", "val2": "(number)", "operation": "(string)"}
-      And pattern ContainerOperation {"op1": "(Operation)", "op2": "(Operation)", "operation": "(string)"}
+      Given type Operation {"val1": "(number)", "val2": "(number)", "operation": "(string)"}
+      And type ContainerOperation {"op1": "(Operation)", "op2": "(Operation)", "operation": "(string)"}
 
       When POST /operate
       And request-body (ContainerOperation)
@@ -228,7 +228,7 @@ We can describe a list of items of a particular type.
     Feature: Arithmetic API
 
     Scenario: Add all numbers
-      Given pattern Numbers (number*)
+      Given type Numbers (number*)
 
       When POST /sum
       And request-body (Numbers)
@@ -244,7 +244,7 @@ If there are multiple APIs using common types, it helps to put them in the Backg
     Feature: Arithmetic API
 
     Background:
-      Given pattern Numbers (number*)
+      Given type Numbers (number*)
     
     Scenario: Add numbers
       When POST /sum
@@ -260,12 +260,12 @@ If there are multiple APIs using common types, it helps to put them in the Backg
 
 ### Overriding Types
 
-A scenario can override a pattern defined in the background. Useful when one scenarios needs a slightly different data structure from the rest.
+A scenario can override a type defined in the background. Useful when one scenarios needs a slightly different data structure from the rest.
 
     Feature: Pet Store API
 
     Background:
-      Given pattern Pet
+      Given type Pet
         | id   | (number) |
         | name | (string) |
         | type | (string) |
@@ -276,7 +276,7 @@ A scenario can override a pattern defined in the background. Useful when one sce
       And response-body (Pet)
 
     Scenario: Create pet
-      Given pattern Pet
+      Given type Pet
         | name | (string) |
         | type | (string) |
       When POST /pet
@@ -293,7 +293,7 @@ We can describe an object in which a key is optional.
     Feature: Pet Store API
 
     Scenario: Get pet details
-      Given pattern Pet
+      Given type Pet
         | id           | (number) |
         | name         | (string) |
         | description? | (string) |
@@ -310,7 +310,7 @@ However if Pet is in the request, such as:
     Feature: Pet Store API
 
     Scenario: Create pet
-      Given pattern Pet
+      Given type Pet
         | name         | (string) |
         | description? | (string) |
       When POST /pets
@@ -326,7 +326,7 @@ So when running in test mode, qontract will run 2 tests for this, one with the d
 We can represent values that may be null.
 
     Scenario: Create pet
-      Given pattern Pet
+      Given type Pet
         | name         | (string)  |
         | description  | (string?) |
       When POST /pets
@@ -339,12 +339,12 @@ Note that while the value of description can be null, the key itself is compulso
 
 Cyclomatic complexity is 2, so when running in test mode, Qontract will generate two requests, one with description set to a random string, and one with it set to null.
 
-### Slice Operator
+### Rest Operator
 
     Feature: Arithmetic API
 
     Scenario: Arithmetic operation
-      Given pattern Operation ["(string)", "(number...)"]
+      Given type Operation ["(string)", "(number...)"]
       When POST /operate
       And request-body (Operation)
       Then status 200
