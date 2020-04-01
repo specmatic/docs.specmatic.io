@@ -11,9 +11,7 @@ Qontract extends the Gherkin syntax by adding some more keywords.
 
 If you are familiar with Gherkin you should feel right at home. But if not, don't worry, Gherkin is easy to pick up. You'll learn as you go.
 
----
-
-### What is a Contract?
+## What is a Contract?
 
 A contract is an API specification. It describes the provider endpoints, the requests it accepts, the responses it returns and the data types it support etc.
 
@@ -21,11 +19,9 @@ Contracts are text files which you can create with any text editor. IDE setup is
 
 Just make sure that the extension is ".qontract".
 
----
-
 ### Syntax Highlighting
 
-This is an optional step. Jump to [syntax reference](/documentation/contract_syntax.html#basics) if you want to skip this step.
+This is an optional step. Jump to [syntax reference](#syntax-reference) if you want to skip this step.
 
 Since majority of qontract's syntax is just Gherkin, you can leverage Cucumber plugins for syntax highlighting.
 Below steps helps you work with the .qontract files in Intellij Idea with syntax highlighting, auto-suggest (only Gherkin keywords) and formatting.
@@ -40,7 +36,7 @@ This should highlight the Gherkin keywords in your qontract file.
 
 Similarly you should be able to setup your favourite IDE or text editor.
 
----
+## Syntax Reference
 
 ### Feature
 
@@ -49,8 +45,6 @@ A Contract File starts with the Feature at the top.
     Feature: Contract for the petstore service
 
 This line describes what the API is about.
-
----
 
 ### Scenario
 
@@ -67,13 +61,9 @@ Scenario: Should be able to get a pet by petId
     And response-body {petid: "(number)"}
 ```
 
----
-
 ### Given
 
 As mentioned, Given section is optional and is only necessary if you need to setup data.
-
----
 
 ### When
 
@@ -103,8 +93,6 @@ In above example, there are two more keywords.
 * request-body - As you may have guessed you can only have one request-body for a request
 * request-header - You can add as many request headers as you like
 
----
-
 ### Then
 
 This section describes response.
@@ -115,8 +103,6 @@ This section describes response.
       And response-header CONTENT-TYPE application/json
       
 The response-body and response-header keywords are similar to request-body and request-header respectively.
-
----
 
 ### Primitive Data Types
 
@@ -137,8 +123,6 @@ So for example:
 
 number, string, boolean and null are all used the same way.
 
----
-
 ### Arrays
 
 We can describe an array containing multiple values.
@@ -154,8 +138,6 @@ We can describe an array containing multiple values.
 Since we are leveraging native JSON syntax, the type must be placed within a string.
 
 ["(number)", "(number)"] would match [1, 2], but not [1], nor [1, 2, 3], and not [1, "2"]
-
----
 
 ### Variable Length Arrays
 
@@ -173,8 +155,6 @@ Here, ["(number*)"] would match [1], [1, 2], and even the empty array [].
 
 Note that for now, the array operator works only on type names. ["(number)"]* is not valid syntax. See [Defining Patterns](#defining-patterns) for more.
 
----
-
 ### Objects
 
 We can describe JSON objects, and provide type specifiers for their values.
@@ -190,8 +170,6 @@ We can describe JSON objects, and provide type specifiers for their values.
 In ```{"val1": "(number)", "val2": "(number)", "operation": "(string)"}``` you can see that the keys are fixed.
 
 This would match ```{"val1": 10, "val2": 20, "operation": "+"}```.
-
----
 
 ### Defining Patterns
 
@@ -220,8 +198,6 @@ This request body is way too complex. Instead:
 
 This expresses the intent of the structures much more easily.
 
----
-
 ### Defining Objects As Tables
 
 We can take readability one step further by using tables.
@@ -247,8 +223,6 @@ We can take readability one step further by using tables.
 And this way each part of the structure is easy to see.
 
 The pipes should be aligned for better readability. Fortunately, modern editors or IDEs like Visual Studio Code and IntelliJ Idea take care of this for you.
-
----
 
 ### Putting Value In Objects
 
