@@ -11,7 +11,7 @@ Qontract extends the Gherkin syntax by adding some more keywords.
 
 If you are familiar with Gherkin you should feel right at home. But if not, don't worry, Gherkin is easy to pick up. You'll learn as you go.
 
-## What is a Contract?
+## The Contract File
 
 A contract is an API specification. It describes the provider endpoints, the requests it accepts, the responses it returns and the data types it support etc.
 
