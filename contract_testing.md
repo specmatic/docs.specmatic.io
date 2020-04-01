@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Contract Testing
+title: What Is Contract Testing
 nav_order: 3
 ---
-# Contract Testing
+# What Is Contract Testing
 {: .fs-9}
 
 ---
@@ -70,11 +70,11 @@ This setup suits the Consumer First Development Style better. Here Provider API 
 * Now it is the responsibility of the Provider API team to make sure they honor this contract
 
 However there are scenarios where this may not work well.
-* Public APIs - Here the Provider has to publish the Contract before Consumer Development can begin
+* Public APIs - Here the Provider has to publish the Contract before Consumer Development can begin.
 * API First - Some teams prefer to start with API Design for various reasons. Consumer Development starts only after that.
 
-We believe both "Consumer First" and "Provider First" styles have their place in application architecture and wanted to build a tool that caters to both styles.
+We believe both "Consumer First" and "Contract First" styles have their place in application architecture and wanted to build a tool that caters to both styles.
 
-So we decided on **Contract First** approach. When you start with the Contract, you can either go the Provider First route or Consumer First route.
+We built Qontract for the **Contract First** approach. When you start with the Contract, you can either go the Provider First route or Consumer First route.
 This also reduces bias towards Provider or Consumer in API Design.
 

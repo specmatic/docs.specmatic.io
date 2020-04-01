@@ -1,9 +1,9 @@
 ---
 layout: default
-title: How does it work?
+title: How Does Qontract Work?
 nav_order: 4
 ---
-### Logical Architecture
+### Qontract Architecture
 
 ![](/images/logical_architecture.jpg)
 

@@ -8,9 +8,8 @@ Contract Syntax
 ===============
 
 Qontract extends the Gherkin syntax by adding some more keywords.
-However for the most part if you are familiar with Gherkin you should feel right at home.
 
-That said, if you are not familiar with Gherkin, no need to worry. Gherkin knowledge is not a pre-requisite.
+If you are familiar with Gherkin you should feel right at home. But if not, don't worry, Gherkin is easy to pick up. You'll learn as you go.
 
 ---
 
@@ -24,7 +23,7 @@ Just make sure that the extension is ".qontract".
 
 ---
 
-### IDE Setup
+### Syntax Highlighting
 
 This is an optional step. Jump to [syntax reference](/documentation/contract_syntax.html#basics) if you want to skip this step.
 
@@ -43,7 +42,7 @@ Similarly you should be able to setup your favourite IDE or text editor.
 
 ---
 
-### Basics
+### Feature
 
 A Contract File starts with the Feature at the top.
 
@@ -53,7 +52,7 @@ This line describes what the API is about.
 
 ---
 
-### Scenarios
+### Scenario
 
 Each Feature can have several scenarios. Each scenario describes a single interaction with the Provider.
 It is written in the Given, When and Then Format
@@ -124,4 +123,125 @@ The response-body and response-header keywords are similar to request-body and r
 * number
 * string
 * boolean
-* exact
+* null
+
+So for example:
+    
+    Feature: String API
+
+    Scenario: Upper case of a string
+      When POST /uppercase
+      And request-body (string)
+      Then status 200
+      And response-body (string)
+
+number, string, boolean and null are all used the same way.
+
+---
+
+### Arrays
+
+We can describe an array containing multiple values.
+
+    Feature: Arithmetic API
+    
+    Scenario: Add 2 numbers
+      When POST /add
+      And request-body ["(number)", "(number)"]
+      Then status 200
+      And response-body (number)
+
+Since we are leveraging native JSON syntax, the type must be placed within a string.
+
+["(number)", "(number)"] would match [1, 2], but not [1], nor [1, 2, 3], and not [1, "2"]
+
+---
+
+### Variable Length Arrays
+
+We can describe arrays where the type of each element is known, but the length of the array is not fixed.
+
+    Feature: Arithmetic API
+    
+    Scenario: Add all the numbers
+      When POST /add
+      And request-body ["(number*)"]
+      Then status 200
+      And response-body (number)
+
+Here, ["(number*)"] would match [1], [1, 2], and even the empty array [].
+
+Note that for now, the array operator works only on type names. ["(number)"]* is not valid syntax. See [Defining Patterns](#defining-patterns) for more.
+
+---
+
+### Objects
+
+We can describe JSON objects, and provide type specifiers for their values.
+
+    Feature: Arithmetic API
+
+    Scenario: Perform an arithmetic operation
+      When POST /operate
+      And request-body {"val1": "(number)", "val2": "(number)", "operation": "(string)"}
+      Then status 200
+      And response-body (number)
+
+In ```{"val1": "(number)", "val2": "(number)", "operation": "(string)"}``` you can see that the keys are fixed.
+
+This would match ```{"val1": 10, "val2": 20, "operation": "+"}```.
+
+---
+
+### Defining Patterns
+
+Sometimes the data structure is too complex to view in place. It helps to be able to pull it out, so that the semantics of the request are not obscured.
+
+    Feature: Arithmetic API
+
+    Scenario: Perform 2 nested operations
+      When POST /operate
+      And request-body {"op1": {"val1": "(number)", "val2": "(number)", "operation": "(string)"}, "op2": {"val1": "(number)", "val2": "(number)", "operation": "(string)"}, "operation": "(string)"}
+      Then status 200
+      And response-body (number)
+
+This request body is way too complex. Instead:
+
+    Feature: Arithmetic API
+
+    Scenario: Perform 2 nested operations
+      Given pattern Operation {"val1": "(number)", "val2": "(number)", "operation": "(string)"}
+      And pattern ContainerOperation {"op1": "(Operation)", "op2": "(Operation)", "operation": "(string)"}
+
+      When POST /operate
+      And request-body (ContainerOperation)
+      Then status 200
+      And response-body (number)
+
+This expresses the intent of the structures much more easily.
+
+### Defining Objects As Tables
+
+We can take readability one step further by using tables.
+
+    Feature: Arithmetic API
+
+    Scenario: Perform 2 nested operations
+      Given json Operation
+      | val2      | "(number)" |
+      | val1      | "(number)" |
+      | operation | "(string)" |
+      
+      And json ContainerOperation
+      | op1      | "(Operation)" |
+      | op2      | "(Operation)" |
+      | operation | "(string)"   |
+
+      When POST /operate
+      And request-body (ContainerOperation)
+      Then status 200
+      And response-body (number)
+
+And this way each part of the structure is easy to see.
+
+The pipes should be aligned for better readability. Fortunately, modern editors or IDEs like Visual Studio Code and IntelliJ Idea take care of this for you.
