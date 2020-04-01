@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Contract Syntax
+title: Language
 parent: Documentation
 nav_order: 3
 ---
-Contract Syntax
-===============
+Language
+========
 
 Qontract extends the Gherkin syntax by adding some more keywords.
 
