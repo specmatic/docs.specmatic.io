@@ -21,8 +21,6 @@ Visual Studio Code and IntelliJ Idea support [syntax highlighting](syntax_highli
 
 ## Syntax Reference
 
-But you can easily get started with a text editor.
-
 ### Feature
 
 A Contract File starts with the Feature at the top.
