@@ -19,7 +19,7 @@ It can describe the HTTP requests and responses, and within them:
 * Types of all values (e.g. a header value should be a number, a json value at a specific key should be boolean)
 * Tabular notation to make payload description easier to read for complex payloads (currently supports json)
 
-The Examples keyword in Gherkin can be used to provide values that align the server with the client.
+The Examples keyword in Gherkin can be used to provide specific values to use. If an example is present for a particular parameter, it is not auto generated.
 
 ## Test Mode
 
