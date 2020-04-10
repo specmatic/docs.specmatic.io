@@ -1,6 +1,6 @@
 Download the standalone Jar.
 
-<https://github.com/qontract/qontract/releases/download/0.1/qontract-{{ site.latest_release }}-all.jar>
+<https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract-{{ site.latest_release }}-all.jar>
 
 #### Mac / Linux
 
