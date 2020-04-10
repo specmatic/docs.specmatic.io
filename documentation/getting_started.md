@@ -44,7 +44,7 @@ Let us start with the Consumer in this example. We will be running a Stub / Mock
 
 To spin up a stub server with the service.qontract we authored earlier, run below command.
 
-    qontract stub --path="<base-dir>/petstore/qontract/service.qontract" --host="localhost" --port="8000" start
+    qontract stub "<base-dir>/petstore/qontract/service.qontract" --host="localhost" --port="8000"
 
 The command has defaults and necessary help to guide you through.
 
@@ -71,7 +71,7 @@ Qontract runs Contract Tests on API to make sure it adheres to the contract.
 
 Below command runs service.qontract as a contract test against the provider.
 
-    qontract test --path="<base-dir>/petstore/contract/service.qontract" --host="localhost" --port="8000" run
+    qontract test "<base-dir>/petstore/contract/service.qontract" --host="localhost" --port="8000"
     
 You should see below error message.
 
