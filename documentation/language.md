@@ -87,12 +87,14 @@ This section describes response.
       
 The response-body and response-header keywords are similar to request-body and request-header respectively.
 
-### Primitive Data Types
+### Built-in Data Types
 
 * number
 * string
 * boolean
 * null
+* url
+* datetime
 
 So for example:
     
@@ -105,6 +107,18 @@ So for example:
       And response-body (string)
 
 number, string, boolean and null are all used the same way.
+
+#### datetime type
+
+`(datetime)` matches and generates ISO standard dates within strings. No other primitive data type will be accepted.
+
+#### url type
+
+`(url)` matches and generates valid urls within strings. No other primitive data type will be accepted.
+
+For example, `(url)` will match "http://somedomain.xyz?key=value"
+
+If you want to specify an https url, you can use `(url https)`.
 
 ### Arrays
 
