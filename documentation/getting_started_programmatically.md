@@ -19,7 +19,7 @@ Add jar dependency. Notice this is test only scope. There is no need to ship Qon
 <dependency>
     <groupId>run.qontract</groupId>
     <artifactId>qontract-core</artifactId>
-    <version>0.1.0</version>
+    <version>{{ site.latest_release }}</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -138,7 +138,7 @@ Add JUnit Jar dependency. This lets you run the contract as a JUnit 5 test.
 <dependency>
     <groupId>run.qontract</groupId>
     <artifactId>junit5-support</artifactId>
-    <version>0.1.0</version>
+    <version>{{ site.latest_release }}</version>
     <scope>test</scope>
 </dependency>
 ```
