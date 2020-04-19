@@ -383,6 +383,7 @@ For example:
 
 * ```(numbers?*)``` is an array of nullable numbers, so it matches [1, 2, null, 4, null]
 For example:
+
     Given type Data
       | numbers | (numbers?*) |
 
@@ -391,7 +392,22 @@ For example:
 * ```["(string)", "(number?...)"]``` matches ["+", 1, 2, null, 3, 4]. The first is a string. The rest are all nullable numbres.
 
 For example:
+
     Given type Operation
       | numbers | (numbers?*) |
 
 ...would match both {"numbers": [1, 2, 3]} and {"numbers": [1, null, 3, 4, null, null]}
+
+### Dictionary
+
+We can represent json objects whose keys and values are not known in advance, but their patterns are known.
+
+For example, if we know that that the keys are strings but the values are numbers, we can say:
+
+    Given type Ids (string: number)
+
+### Pattern in string
+
+We can explicitly describe types in strings. If for example we know that the value is a number, but it will be inside a string:
+
+    Given type Id (number in string)
