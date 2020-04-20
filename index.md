@@ -37,5 +37,5 @@ Systems interact with each other through several means. Qontract hopes to addres
 * **Contract as Stub / Mock** - Run stubs / mocks that are based on your downstream contracts to isolate your development
 * **Contract as Test** - Test drive your APIs using a contract
 * **Programmatic** (Kotlin, Java and JVM languages) **and Command line support**
-* [**And many more**](/features.html)
+* [**And many more**](/Features.html)
 
