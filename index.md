@@ -25,7 +25,7 @@ With this ability, we can now deploy, at will, any system’s component at any t
 Qontract is a contract driven development tool that allows us to turn our contracts into executable specification.
 
 According to us there are 2 key advantages, which were never possible before:
-* **Death of Integration Testing** - As long as the service provider and consumer adhere to the contract, you can be 100% confident that each of them can develop and deploy their parts independently. **No need for integraion testing**. 
+* **Death of Integration Testing** - As long as the service provider and consumer adhere to the contract, you can be 100% confident that each of them can develop and deploy their parts independently. **No need for integration testing**. 
     - On the provider side, run **Qontract in test mode** 
     - On the consumer side run **Qontract in stub mode** - Qontract ensures that the expecations you are setting on your stubs are in-fact valid as per the contract.
 * **Backward Compatibility Verification** - Typically for the provider to ensure they've not broken backward compatability, they need to test their new version of the service with an existing version of the consumer. You might have multiple consumers. This is a complex and time consuming process. With Qontract, you just need to run the contract with new version of the contract with the pervious version of the contract to check for backward compatability.
