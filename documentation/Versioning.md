@@ -149,3 +149,17 @@ Recommendations:
 This will achieve the following:
 - By using a git repo, all who need the contract will get it from the same place, ensuring that all have the same contract.
 - If we keep the contracts in `<user home directory>/contracts`, which is a path that can be created in any dev environment, we will be able to lookup contracts from tests easily without having to make customisations for each individual developer.
+
+## CI / CD
+
+### Test Mode - The API Build Pipeline
+
+Use the command `java -jar qontract.jar test --check <contract file path with minor version> to run your tests.
+
+Qontract exists with a non-zero value if the tests fail, which can be used to break a build.
+
+### Stub Mode - The API Consumer Build Pipeline
+
+In the consumer pipeline when using qontract in stub mode, simply start qontract in stub mode before running your tests.
+
+[Read more about stub mode here](/documentation/command_line.html#stub-mode).

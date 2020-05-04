@@ -65,6 +65,22 @@ Run the command `curl -v -X POST -H "Content-Type: text/plain" -d 10 http://loca
 
 Then try `curl -v -X POST -H "Content-Type: text/plain" -d 20 http://localhost:9000/square`. Note that the input number has been changed to 20. You should get back a random number every time you run this command. This is because there was no expectation set for the input 10, but it matches the contract request format, so a random response is generated from the contract and returned.
 
+### Multiple Contracts
+
+To run a stub for multiple contracts, and hit the same end point:
+
+    java -jar qontract.jar stub math1.qontract math2.qontract math3.qontract
+
+Qontract accepts any number of .qontract files.
+
+### Stub Data From Single Directory
+
+If needed, you can put all the stub information in a single directory.
+
+    java -jar qontract.jar stub --data=./stubdata math1.qontract math2.qontract math3.qontract
+
+The format and file extension of the files in `./stubdata` must be the same as the files described above.
+
 ### Stubbing A Type Instead Of A Value
 
 The stub can be configured to always return 100, as long as the request is in the right format.
