@@ -9,15 +9,19 @@ Versioning
 
 ## Why Version Your Contracts
 
-One of the key goals of this framework is to signal to developers when they are breaking backward compatibility of their APIs.
+One of the key goals of this framework is to alert developers when their changes are breaking backward compatibility.
 
-As an API developer, you should ensure that all changes to your API are backward compatibility. But if this is not possible, then you must inform downstream consumers to udpate their applications. You must also support the older API for a while until all consumers have migrated to the new API.
+New versions of an API must ideally be backward compatible. If a breaking change must be made, the API developer should inform downstream consumers to update their applications. Support for the older API should remain until all consumers have migrated to the new API.
 
-As a developer of a component that consumes some API, API formats should remain the same, despite updates to the API.
+Developers of a component that consumes that API will expect the API formats not to change without warning.
 
-Qontract uses versioning to inform developers about back compatibility, or lack thereof as the case may be. Qontract expects a contract's major version to be incremented when backward compatibility with the last supported contract will be broken. But if backward compatibility is intact, the minor version must be incremented, while the major version remains the same.
+Qontract uses versioning to alert developers, both API and API consumer developers, to back compatibility breakage.
+
+Qontract expects a contract's major version to be incremented when backward compatibility with the last supported contract must be broken. If backward compatibility is maintained despite a change to the API, the minor version must be incremented, while the major version remains the same.
 
 This is similar to [semantic versioning](https://semver.org).
+
+The mechanism by which Qontract verifies backward compatibility is described below.
 
 ## The Versioning Model
 
