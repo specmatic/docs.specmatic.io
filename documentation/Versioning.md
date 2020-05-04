@@ -7,6 +7,16 @@ nav_order: 7
 Versioning
 ==========
 
+## Why Version Your Contracts
+
+We use versioning to make it easier to maintain backward compatibility.
+
+As an API developer, you should not break backward compatibility of an major version of the contract. Minor version changes signal additions to the contract, with older APIs remaining intact.
+
+As a dev of a component that consumes an API support v1, no future update should break the API format, unless the API deprecates v1 of the contract in favour of v2.
+
+This is similar to [semantic versioning](https://semver.org).
+
 ## The Versioning Model
 
 Contracts can be versioned. Contracts have a major and minor version. If the contract is changed, and it is backward compatible with the older one, the minor version is incremented. If not, the major version is incremented.
