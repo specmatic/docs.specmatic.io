@@ -9,17 +9,19 @@ Versioning
 
 ## Why Version Your Contracts
 
-We use versioning to make it easier to maintain backward compatibility.
+One of the key goals of this framework is to signal to developers when they are breaking backward compatibility of their APIs.
 
-As an API developer, you should not break backward compatibility of an major version of the contract. Minor version changes signal additions to the contract, with older APIs remaining intact.
+As an API developer, you should ensure that all changes to your API are backward compatibility. But if this is not possible, then you must inform downstream consumers to udpate their applications. You must also support the older API for a while until all consumers have migrated to the new API.
 
-As a dev of a component that consumes an API support v1, no future update should break the API format, unless the API deprecates v1 of the contract in favour of v2.
+As a developer of a component that consumes some API, API formats should remain the same, despite updates to the API.
+
+Qontract uses versioning to inform developers about back compatibility, or lack thereof as the case may be. Qontract expects a contract's major version to be incremented when backward compatibility with the last supported contract will be broken. But if backward compatibility is intact, the minor version must be incremented, while the major version remains the same.
 
 This is similar to [semantic versioning](https://semver.org).
 
 ## The Versioning Model
 
-Contracts can be versioned. Contracts have a major and minor version. If the contract is changed, and it is backward compatible with the older one, the minor version is incremented. If not, the major version is incremented.
+Contracts have a major and minor version. If the contract is changed, and it is backward compatible with the older one, the minor version is incremented. If not, the major version is incremented.
 
 Take for example the math contract for squaring a number.
 
