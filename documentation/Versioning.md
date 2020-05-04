@@ -144,7 +144,7 @@ One way of sharing the contracts is to use git. Everyone who needs the contracts
 
 Recommendations:
 - Create a directory name /contracts in your user home directory. User home is a location on all laptops, and hence will be a convenient place from which to lookup contracts for running tests.
-- Checkout the git repo in `/<your home directory>/contracts`, e.g. `/<your home directory>/math`.
+- Checkout the git repo in `/<your home directory>/contracts`, e.g. `/<your home directory>/contracts/math`.
 
 This will achieve the following:
 - By using a git repo, all who need the contract will get it from the same place, ensuring that all have the same contract.
