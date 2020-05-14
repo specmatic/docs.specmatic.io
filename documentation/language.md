@@ -15,7 +15,7 @@ If you are familiar with Gherkin you should feel right at home. But if not, don'
 
 A contract is an API specification. It describes the provider endpoints, the requests it accepts, the responses it returns and the data types it support etc.
 
-Contracts are text files which you can create with any text editor. Just make sure that the extension is ".contract".
+Contracts are text files which you can create with any text editor. Just make sure that the extension is ".qontract".
 
 Visual Studio Code and IntelliJ Idea support [syntax highlighting](syntax_highlighting.html). We recommend setting up an editor if you want to write these contracts on a regular basis.
 
