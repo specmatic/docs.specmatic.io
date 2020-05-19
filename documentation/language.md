@@ -411,3 +411,37 @@ For example, if we know that that the keys are strings but the values are number
 We can explicitly describe types in strings. If for example we know that the value is a number, but it will be inside a string:
 
     Given type Id (number in string)
+
+### Explicit reference to examples in type declarations
+
+We can explicitly refer to the example column from within a type declaration.
+
+    When POST /
+      And request-body (number from orderid)
+      Then status 200
+
+    Examples:
+    | orderid |
+    | 10      |
+
+In this example, the request-body looks up the orderid from the examples. When the test request is generated, it contain the value `10` in the request body.
+
+### Kafka messages
+
+We can describe Kafka messages.
+The syntax:
+
+    * kafka-message <topic> <key type> <value type>
+
+OR
+
+    * kafka-message <topic> <value type>
+
+For example:
+
+    Given json Customer
+      | name  | (string) |
+      | phone | (string) |
+    Then kafka-message customerdata (String) (Customer*)
+
+Here the message is expected to be on the customerdata topic, the key should be a string, and the value should be a json string.
