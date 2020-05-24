@@ -9,3 +9,5 @@ aux_links:
 
 plugins:
   - jekyll-remote-theme
+
+logo: "/images/Qontract.png"
