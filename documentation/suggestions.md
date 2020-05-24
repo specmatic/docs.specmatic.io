@@ -49,12 +49,14 @@ Note: It is mandatory to name the scenario and also scenario names must be uniqu
 
 ### Command Line
 
-    qontract test --path=".. ../petstore/qontract/service.qontract" \
-                    --suggestions=".. ../petstore/qontract/suggestions-staging.qontract" \
-                                --host="staging-server" \
-                                --port="8000" \
-                   run
-                   
+    qontract test --suggestions="../petstore/qontract/suggestions-staging.qontract" --host="staging-server" --port="8000" "../petstore/qontract/service.qontract"
+
+Alternatively:
+
+    qontract test --suggestions='{"Contract for the petstore service": [{"petid": 345}]}' service.qontract
+
+Consider the json object in above command. Note that the scenario name is used as the key, and each element of the array consist of a json object, with column names and values as keys and values respectively.
+
 ### Programmatic
 
 TODO 
