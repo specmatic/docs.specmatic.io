@@ -11,11 +11,11 @@ Qontract Standalone Jar severs two purposes.
 * **Zero IDE setup and no code** You can run Contract Tests without a writing a single line of code. Just need to author the Contract to describe your API.
 * **Work with several languages and tech stack** Your provider can be a Python Application and the Consumer a JavaScript application. Qontract can work with that setup in the command line mode.
 
-### Introduction
+## Introduction
 
 Refer to [getting started](/documentation/getting_started.md)
 
-### In-command help
+## In-command help
 
 The qontract command is full of helpful documentation.
 
@@ -23,9 +23,11 @@ You can start with `java -jar qontract.jar` to see help on the sub commands.
 
 Then execute any sub command without parameters to see it. For example, try `java -jar qontract.jar stub`.
 
-### Stub mode
+## Stub mode
 
-Qontract can be used as a stub.
+Qontract can be used as a stub, for service virtualisation.
+
+### HTTP stubs
 
 For example, create the following contract in a file name math.qontract:
 
@@ -65,7 +67,15 @@ Run the command `curl -v -X POST -H "Content-Type: text/plain" -d 10 http://loca
 
 Then try `curl -v -X POST -H "Content-Type: text/plain" -d 20 http://localhost:9000/square`. Note that the input number has been changed to 20. You should get back a random number every time you run this command. This is because there was no expectation set for the input 10, but it matches the contract request format, so a random response is generated from the contract and returned.
 
-### Multiple Contracts
+### Kafka stubs
+
+Kafka stubs are only generated for stub data provided to Qontract in stub files.
+
+Run the command `qontract stub --kafkaHost=<kafka host> --kafkaPort<kafka port> --data=<data dir> contract_file.qontract`. This will load the kafka message from the file, validate it against the specified contract file, and publish a message to the specified topic, on the kafka instance specified by the params named `kafkaHost` and `kafkaPort`.
+
+Read more about the --data param [below](#stub-data-from-single-directory).
+
+## Multiple Contracts
 
 To run a stub for multiple contracts, and hit the same end point:
 
@@ -73,7 +83,7 @@ To run a stub for multiple contracts, and hit the same end point:
 
 Qontract accepts any number of .qontract files.
 
-### Stub Data From Single Directory
+## Stub Data From Single Directory
 
 If needed, you can put all the stub information in a single directory.
 
@@ -81,7 +91,7 @@ If needed, you can put all the stub information in a single directory.
 
 The format and file extension of the files in `./stubdata` must be the same as the files described above.
 
-### Stubbing A Type Instead Of A Value
+## Stubbing A Type Instead Of A Value
 
 The stub can be configured to always return 100, as long as the request is in the right format.
 
@@ -104,8 +114,9 @@ Your json document should looks like this:
 
 This time, `curl -v -X POST -H "Content-Type: text/plain" -d 10 http://localhost:9000/square` and `curl -v -X POST -H "Content-Type: text/plain" -d 20 http://localhost:9000/square` will both get 100 back in the response.
 
-### Test Mode
+## Test Mode
 
+### HTTP test mode
 The command to run test mode is:
 `java -jar qontract.jar test --host=<hostname> --port=<port> <qontract filename>.qontract`
 
@@ -116,6 +127,14 @@ Take the math contract above. Use `java -jar qontract.jar samples math.qontract`
 Qontract will generate a similar request and send it to host:port, where the server application is expected to be running. The response that comes back from the server will be validated against the contract.
 
 And if the server did not understand the request, it means that the contract request format and the server implementation are out of sync.
+
+### Kafka test mode
+
+You can test whether the available values on a Kafka topic meet the contract.
+
+Use `qontract test --kafkaHost=<kafka host> --kafkaPort=<kafka port> contract_file.qontract`. Qontract will join a Kafka consumer group named `qontract`, subscribe to the topics mentioned in the contract file, pull the messages from those topics from the Kafka instance running on the specified kafkaHost and kafkaPort, and validate them according to the contract.
+
+The command will exit with a non-zero value if any errors are found.
 
 ### Build Server Integration
 

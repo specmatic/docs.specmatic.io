@@ -118,7 +118,10 @@ number, string, boolean and null are all used the same way.
 
 For example, `(url)` will match "http://somedomain.xyz?key=value"
 
-If you want to specify an https url, you can use `(url https)`.
+You can also specifically define the following url types:
+* `(url-http)` declares an http url
+* `(url-https)` declares an https url
+* `(url-path)` declares a url path without the scheme prefix
 
 ### Arrays
 
