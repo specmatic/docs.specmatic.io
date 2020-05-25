@@ -75,6 +75,10 @@ Run the command `qontract stub --kafkaHost=<kafka host> --kafkaPort<kafka port> 
 
 Read more about the --data param [below](#stub-data-from-single-directory).
 
+If you need a local Kafka instance to use in your testing, you can use `qontract stub --kafkaHost=<kafka host> --kafkaPort<kafka port> --data=<data dir> --startKafka contract_file.qontract`.
+
+Note the `--startKafka` flag. Qontract will start a Kafka instance, load the stub data and validate it, create the needed topic and dump the message onto it.
+
 ## Multiple Contracts
 
 To run a stub for multiple contracts, and hit the same end point:
@@ -143,6 +147,8 @@ You can test whether the available values on a Kafka topic meet the contract.
 Use `qontract test --kafkaHost=<kafka host> --kafkaPort=<kafka port> contract_file.qontract`. Qontract will join a Kafka consumer group named `qontract`, subscribe to the topics mentioned in the contract file, pull the messages from those topics from the Kafka instance running on the specified kafkaHost and kafkaPort, and validate them according to the contract.
 
 The command will exit with a non-zero value if any errors are found.
+
+If you wish to ack the message you have read, use `qontract test --kafkaHost=<kafka host> --kafkaPort=<kafka port> --commit contract_file.qontract`. Note the `--commit` flag. Qontract will now read and test the message, but will ack them. The next time you run qontract test, there will be no messages available for reading on that topic.
 
 ### Build Server Integration
 
