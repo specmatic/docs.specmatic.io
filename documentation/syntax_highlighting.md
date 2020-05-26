@@ -5,7 +5,7 @@ parent: Documentation
 nav_order: 6
 ---
 Syntax Highlighting
--------------------
+===================
 
 Since majority of qontract's syntax is just Gherkin, you can leverage Cucumber plugins for syntax highlighting.
 Below steps helps you work with the .qontract files in Intellij Idea with syntax highlighting, auto-suggest (only Gherkin keywords) and formatting.
