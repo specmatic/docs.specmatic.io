@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Generating Qontract Files
+title: Convert Stubs and Postman Collections
 parent: Documentation
 nav_order: 8
 ---
-Generating Qontract Files
-=========================
+Convert Stubs and Postman Collections
+=====================================
 
 Qontract can convert stub data and [Postman](https://www.postman.com) collections into Qontract files.
 
