@@ -46,13 +46,13 @@ In math_data, create a new file named square.json, containing this json document
 
 ```json
 {
-    "mock-http-request": {
+    "http-request": {
         "method": "POST",
         "path": "/square",
         "body": 10
     },
 
-    "mock-http-response": {
+    "http-response": {
         "status": 200,
         "body": 100
     }
@@ -66,6 +66,26 @@ The following commands use curl. This is readily available on Linux, and should 
 Run the command `curl -v -X POST -H "Content-Type: text/plain" -d 10 http://localhost:9000/square`. You should get back 100 as the response.
 
 Then try `curl -v -X POST -H "Content-Type: text/plain" -d 20 http://localhost:9000/square`. Note that the input number has been changed to 20. You should get back a random number every time you run this command. This is because there was no expectation set for the input 10, but it matches the contract request format, so a random response is generated from the contract and returned.
+
+### HTTP stub file format
+
+http-request may contain the following keys:
+- method: string - requred, HTTP method of the request
+- path: string - requred, path of the request
+- headers: json object - optional, keys are header names, values are the corresponding header values
+- body: string - optional, body of the request
+- form-fields: json object - optional, keys are form field names, values are the corresponding form field values
+- multipart-formdata: json object - optional, contains the follwing keys
+  - name: string - required, the name of the field
+  - content: string - optional, used if the content is sent directly
+  - filename: string - starts with an @ (e.g. @employee.csv), used if the content is expected to be from a file
+  - contentType: string - the Content-Type header to expect
+  - contentEncoding: string - the COntent-Encoding header to expect
+
+http-response may contain the following keys:
+- status: number - required, the http status in the response
+- headers: json object - optional, keys are header names, values are the corresponding header values
+- body: string - optional, body of the response
 
 ### Kafka stubs
 
