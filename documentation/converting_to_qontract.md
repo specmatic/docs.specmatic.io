@@ -24,4 +24,3 @@ You can read more about the format in the [command line documentation](/document
 This command will read the postman collection, and write the new qontract file into "qontract file.json" as specified in the command.
 
 To see the qontract on standard output instead, just omit `-o filename.json`.
-s
