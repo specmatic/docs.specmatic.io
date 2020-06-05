@@ -401,14 +401,6 @@ For example:
 
 ...would match both {"numbers": [1, 2, 3]} and {"numbers": [1, null, 3, 4, null, null]}
 
-### Dictionary
-
-We can represent json objects whose keys and values are not known in advance, but their patterns are known.
-
-For example, if we know that that the keys are strings but the values are numbers, we can say:
-
-    Given type Ids (string: number)
-
 ### Pattern in string
 
 We can explicitly describe types in strings. If for example we know that the value is a number, but it will be inside a string:
