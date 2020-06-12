@@ -13,7 +13,7 @@ Qontract Standalone Jar severs two purposes.
 
 ## Introduction
 
-Refer to [getting started](/documentation/getting_started.md)
+Refer to [getting started](/documentation/getting_started.html)
 
 ## In-command help
 
@@ -75,10 +75,10 @@ http-request may contain the following keys:
 - headers: json object - optional, keys are header names, values are the corresponding header values
 - body: string - optional, body of the request
 - form-fields: json object - optional, keys are form field names, values are the corresponding form field values
-- multipart-formdata: json object - optional, contains the follwing keys
+- multipart-formdata: array of json objects - optional, each contains the following keys
   - name: string - required, the name of the field
   - content: string - optional, used if the content is sent directly
-  - filename: string - starts with an @ (e.g. @employee.csv), used if the content is expected to be from a file
+  - filename: string - starts with an @ (e.g. @employee.csv), used if the content is expected to be from a file (provide either content or filename, not both)
   - contentType: string - the Content-Type header to expect
   - contentEncoding: string - the COntent-Encoding header to expect
 
