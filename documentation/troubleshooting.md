@@ -14,7 +14,7 @@ Usually the error should be fairly descriptive, but sometimes we need to dig dee
 ### Qontract test or stub are showing a lot of errors. I am not sure where to start debugging.
 
 #### CAUSES
-Under some circumstances when none of the scenarios are matching, Qontract simply returns all the errors at you.
+Under some circumstances when none of the scenarios are matching, Qontract simply returns all the errors to you.
 
 Qontract checks the path first. So if that doesn't match, it's likely that the scenario is irrelevant.
 
