@@ -13,7 +13,7 @@ Usually the error should be fairly descriptive, but sometimes we need to dig dee
 
 Here are some debugging tips.
 
-## Qontract test or stub are showing a lot of errors. I am not sure where to start debugging.
+### Qontract test or stub are showing a lot of errors. I am not sure where to start debugging.
 
 Under some circumstances when none of the scenarios are matching, Qontract simply returns all the errors at you.
 
@@ -23,7 +23,7 @@ Hence, start by ignoring all the path related errors and look at the non path re
 
 If there are only path errors, it means that your url itself doesn't match any of the scenarios. You then need to identify the scenario representing the API you want to use, and make sure that your request url's path matches the scenario path.
 
-## My API is responding with errors when invoked with with Qontract test
+### My API is responding with errors when invoked with with Qontract test
 
 CAUSES
 
@@ -45,7 +45,7 @@ If you are writing this contract for the first time, you might have written the 
 - Read the logs, to understand what Qontract is sending to your application.
 - Based on that, you can determine whether your contract is in sync with your application or not.
 
-## Postman request works, Qontract test does not
+### Postman request works, Qontract test does not
 
 CAUSES
 
@@ -57,7 +57,7 @@ SOLUTION
 - Read the logs, to understand what Qontract is sending to your application.
 - Compare that with the Postman request. It's likely that they are not in sync.
 
-## Qontract test was working before but it now show errors
+### Qontract test was working before but it now show errors
 
 CAUSES
 
@@ -72,7 +72,7 @@ SOLUTION
 - Check the request being sent by Qontract. Very often, this is where the problem will be found.
 - Check the response, Qontract will tell you what it sees amiss.
 
-## Stub says Cookie header is missing, but it is not missing in Postman
+### Stub says Cookie header is missing, but it is not missing in Postman
 
 CAUSES
 
@@ -82,7 +82,7 @@ SOLUTION
 
 Make sure that you have the latest version of Chrome and of the Postman extension.
 
-## Stub mode returns an error to Postman
+### Stub mode returns an error to Postman
 
 CAUSES
 
