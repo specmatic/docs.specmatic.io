@@ -7,11 +7,9 @@ nav_order: 9
 Troubleshooting
 ===============
 
-Usually, Qontract errors are great to get. Not because we want errors. But if we're going to get them, we'd rather get Qontract errors on the laptop, than integraton errors in staging, testing or worst of all, production.
+It may seem counter intuitive at first, but Qontract errors are good news. Not because we want errors. But if we're breaking integration, we'd rather get Qontract errors in our dev environment, than integraton errors in staging, testing or worst of all, production.
 
-Usually the error should be fairly descriptive, but sometimes we need to dig deeper.
-
-Here are some debugging tips.
+Usually the error should be fairly descriptive, but sometimes we need to dig deeper. So here are some troubleshooting tips.
 
 ### Qontract test or stub are showing a lot of errors. I am not sure where to start debugging.
 
