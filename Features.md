@@ -32,7 +32,7 @@ In test mode, Qontracts accepts a contract file, and the hostname and port of th
 
 This is meant to be used by API providers.
 
-## Service virtualisation
+## Service Virtualisation
 
 In stub mode, Qontract provides random responses to requests that match the contract. It's a way of exploring what the contract looks like.
 
