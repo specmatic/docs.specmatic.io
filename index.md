@@ -43,6 +43,7 @@ Systems interact with each other through several means. Qontract hopes to addres
 * **Service Virtualisation** - Run your contract in stub mode and isolate yourself from downstream dependencies (also be sure that your stubs are 100% compatible with the actual provider)
 * **Contract as Test** - Test drive your components (APIs) using a contract
 * **Programmatic** (Kotlin, Java and JVM languages) **and Command line support**
+* Versioning
 * Support for **callbacks**
 * Converting from **Postman to Qontract**
 * Support for **Kafka**

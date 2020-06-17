@@ -44,6 +44,10 @@ This mode can also stub out real requests and responses, which will be validated
 
 Given an older and a newer contract, Qontract will spin up a stub of the new one, and run the old in test mode against it. If all the tests pass, the new contract is considered backward compatible with the old.
 
+## Versioning
+
+Qontract provides various tools that enable you to version your contracts.
+
 ## Support for Callbacks
 
 Qontract enables contract testing for async callbacks with the help of Qontract's stub mode.
