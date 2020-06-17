@@ -16,13 +16,38 @@ Usually the error should be fairly descriptive, but sometimes we need to dig dee
 #### CAUSES
 Under some circumstances when none of the scenarios are matching, Qontract simply returns all the errors to you.
 
-Qontract checks the path first. So if that doesn't match, it's likely that the scenario is irrelevant.
-
 #### SOLUTION
 
-Start by ignoring all the path related errors and look at the non path related errors. Most often, this will help you zero down on the core issue.
+First, start by ignoring all the path related errors. Look only at the non path related errors. Most often, this will help you zero down on the core error.
 
-If there are only path errors, it means that your url itself doesn't match any of the scenarios. You then need to identify the scenario representing the API you want to use, and make sure that your request url's path matches the scenario path.
+But if all the errors are path related, it means that your request url doesn't match the path in any of the scenarios.
+
+If the scenario relevant to the API you are calling had a path variable, e.g. /order/(id:number), then you may find helpful path matching errors.
+
+For example, consider this contract:
+
+```gherkin
+#File name order.qontract
+Feature: Order contract
+
+Scenario: Order API
+When POST /basic
+And request-body (number)
+Then status 200
+```
+
+Run it using `java -jar path/to/qontract.jar stub order.qontract`.
+
+Then run `curl http://localhost:9000/order/abc`, and you'll get an error looking like this.
+
+```
+In scenario "Order info"
+>> REQUEST.URL.id.PATH (/order/abc)
+
+Expected number, actual was string: "abc"%
+```
+
+But sometimes there are only path matching errors to be found, and no path variables involved. In that case, simply identify the scenario representing the API you want to use. Then see how that scenario's path differs from your request.
 
 ### My API is responding with errors when invoked with with Qontract test
 
@@ -77,7 +102,7 @@ Either the old response format is not being accepted by your application, or the
 
 #### CAUSES
 
-It's possible that you do not have the latest verison of either Chrome or the Postman extension.
+It's possible that you do not have the latest version of either Chrome or the Postman extension.
 
 #### SOLUTION
 
