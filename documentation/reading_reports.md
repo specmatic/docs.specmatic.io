@@ -1,15 +1,15 @@
 ---
 layout: default
-title: Understanding The Reports
+title: Reading The Reports
 parent: Documentation
-nav_order: 10
+nav_order: 6
 ---
-Understanding The Reports
-=========================
+Reading The Reports
+===================
 
-Qontract strives to pinpoint the error so that you know exactly what went wrong, and why.
+Qontract strives to pinpoint the mismatch so that you know exactly what went wrong and where.
 
-Qontract reports contain 3 components:
+A report contain 3 components:
 1. the scenario
 2. the path to the error
 3. details about the error
