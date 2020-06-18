@@ -2,7 +2,7 @@
 layout: default
 title: Suggestions
 parent: Documentation
-nav_order: 5
+nav_order: 6
 ---
 Suggestions
 ===========

@@ -2,12 +2,19 @@
 layout: default
 title: Reading The Reports
 parent: Documentation
-nav_order: 6
+nav_order: 7
 ---
 Reading The Reports
 ===================
 
-Qontract strives to pinpoint the mismatch so that you know exactly what went wrong and where.
+- [Reading The Reports](#reading-the-reports)
+  - [Report Format](#report-format)
+  - [Error In The Request](#error-in-the-request)
+  - [Error in JSON request](#error-in-json-request)
+
+## Report Format
+
+Qontract strives to pinpoint the location of the error, and tell you exactly what went amiss there.
 
 A report contain 3 components:
 1. the scenario

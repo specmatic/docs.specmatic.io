@@ -2,7 +2,7 @@
 layout: default
 title: Command Line
 parent: Documentation
-nav_order: 4
+nav_order: 5
 ---
 Command Line
 ============
@@ -69,23 +69,7 @@ Then try `curl -v -X POST -H "Content-Type: text/plain" -d 20 http://localhost:9
 
 ### HTTP stub file format
 
-http-request may contain the following keys:
-- method: string - requred, HTTP method of the request
-- path: string - requred, path of the request
-- headers: json object - optional, keys are header names, values are the corresponding header values
-- body: string - optional, body of the request
-- form-fields: json object - optional, keys are form field names, values are the corresponding form field values
-- multipart-formdata: array of json objects - optional, each contains the following keys
-  - name: string - required, the name of the field
-  - content: string - optional, used if the content is sent directly
-  - filename: string - starts with an @ (e.g. @employee.csv), used if the content is expected to be from a file (provide either content or filename, not both)
-  - contentType: string - the Content-Type header to expect
-  - contentEncoding: string - the COntent-Encoding header to expect
-
-http-response may contain the following keys:
-- status: number - required, the http status in the response
-- headers: json object - optional, keys are header names, values are the corresponding header values
-- body: string - optional, body of the response
+[Review the file format here](/documentation/service_virtualisation.html#stub-file-format).
 
 ### Kafka stubs
 
