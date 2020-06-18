@@ -95,11 +95,55 @@ end
 
 After I start the above server, I run the command again.
 
+    >> Request Start At Thu Jun 18 11:42:47 IST 2020
+    -> GET /pets/320
+    -> Accept-Charset: UTF-8
+    -> Accept: */*
+    ->
+    ->
+    <- 404 Not Found
+    <- Content-Type: text/html;charset=utf-8
+    <- X-Cascade: pass
+    <- Content-Length: 471
+    <- X-Xss-Protection: 1; mode=block
+    <- X-Content-Type-Options: nosniff
+    <- X-Frame-Options: SAMEORIGIN
+    <- Server: WEBrick/1.6.0 (Ruby/2.7.1/2020-03-31)
+    <- Date: Thu, 18 Jun 2020 06:12:47 GMT
+    <- Connection: Keep-Alive
+    <-
+    <- <!DOCTYPE html>
+    <- <html>
+    <- <head>
+    <-   <style type="text/css">
+    <-   body { text-align:center;font-family:helvetica,arial;font-size:22px;
+    <-     color:#888;margin:20px}
+    <-   #c {margin:0 auto;width:500px;text-align:left}
+    <-   </style>
+    <- </head>
+    <- <body>
+    <-   <h2>Sinatra doesn’t know this ditty.</h2>
+    <-   <img src='http://localhost:8000/__sinatra__/404.png'>
+    <-   <div id="c">
+    <-     Try this:
+    <-     <pre>get &#x27;&#x2F;pets&#x2F;320&#x27; do
+    <-   &quot;Hello World&quot;
+    <- end
+    <- </pre>
+    <-   </div>
+    <- </body>
+    <- </html>
+    << Response At Thu Jun 18 11:42:47 IST 2020 ==
+
+
     Scenario: Should be able to get a pet by petId GET /pets/(petid:number) FAILED
-    Reason: Response did not match
-    	    Expected: 200 Actual: 404
-    	Request: HttpRequest(method=GET, path=/pets/491, headers={Content-Type=text/plain}, body=, queryParams={}, formFields={})
-    	Response: {"status":404,"status-text":"Not Found","headers":{"Content-Type":"text/html;charset=utf-8","X-Cascade":"pass","Content-Length":"471","X-Xss-Protection":"1; mode=block","X-Content-Type-Options":"nosniff","X-Frame-Options":"SAMEORIGIN","Server":"WEBrick/1.4.2 (Ruby/2.6.3/2019-04-16)","Date":"Sun, 29 Mar 2020 15:04:59 GMT","Connection":"Keep-Alive"}}
+    Reason: Testing scenario "Should be able to get a pet by petId"
+        >> RESPONSE.STATUS
+
+        Expected status: 200, actual: 404
+
+
+    Tests run: 1, Failures: 1
 
 This time it is a different error and it rightly points out that the petstore API does not support /pets/:id endpoint. 
 It also prints request and response to help us debug.
@@ -119,7 +163,28 @@ end
 
 When we run the command this time we see success.
 
+    >> Request Start At Thu Jun 18 11:55:20 IST 2020
+    -> GET /pets/899
+    -> Accept-Charset: UTF-8
+    -> Accept: */*
+    ->
+    ->
+    <- 200 OK
+    <- Content-Type: application/json
+    <- Content-Length: 14
+    <- X-Content-Type-Options: nosniff
+    <- Server: WEBrick/1.6.0 (Ruby/2.7.1/2020-03-31)
+    <- Date: Thu, 18 Jun 2020 06:25:20 GMT
+    <- Connection: Keep-Alive
+    <-
+    <- {
+    <-     "petid": 899
+    <- }
+    << Response At Thu Jun 18 11:55:20 IST 2020 ==
+
+
     Scenario: Should be able to get a pet by petId GET /pets/(petid:number) SUCCESSFUL
+
     Tests run: 1, Failures: 0
 
 You may have noticed that we started with a contract and then leveraged it as a test to drive the API development. This is quite similar to BDD.
