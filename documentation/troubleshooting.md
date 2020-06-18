@@ -52,6 +52,31 @@ Expected number, actual was string: "abc"%
 
 But sometimes there are only path matching errors to be found, and no path variables involved. In that case, simply identify the scenario representing the API you want to use. Then see how that scenario's path differs from your request.
 
+### The stub is serving random values instead of my stubbed data
+
+#### SOLUTIONS
+
+There are two possible reasons.
+
+1. The stubbed data may not have been in compliance with the contract, and so Qontract rejected it at startup.
+
+To check if this happened, take a look at the stub log on the console at startup. You may find something like this:
+
+    /path/to/math_data/sample.json didn't match math.qontract
+    In scenario "Square of a number"
+    >> REQUEST.BODY.data
+
+    Expected number, actual was string: "hello"
+    Stub server is running on http://localhost:9000. Ctrl + C to stop.
+
+In this case, it means that the contract expectd data to be a number, but it was a string, and so the stub was not loaded.
+
+2. The request did not match the stub request. If the request from your application, Postman, etc does not match the stubbed request exactly, Qontract will not send the corresponding stubbed response back. But if it does match the contract, Qontract will send a random response back in the same shape as what was declared in the contract file.
+
+To check if this is the case, start the stub in strict mode: `java -jar /path/to/qontract.jar stub --strict /path/to/contract.qontract`, and try the requests again.
+
+In strict mode, if Qontract cannot find a match amongst the available stubs for the request from your application or Postman, it will show the reasons why the stubs did not match your request.
+
 ### My API is responding with errors when invoked with with Qontract test
 
 #### CAUSES
