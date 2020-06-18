@@ -7,7 +7,7 @@ nav_order: 2
 Programmatic Approach
 =====================
 
-If you are building your application in a JVM language, you are in luck, because you can spawn the stub / mock server or run the contract as test programmatically.
+If you are building your application in a JVM language, you are in luck, because you can run programmatically the contract as a stub server or as tests.
 
 ---
 
