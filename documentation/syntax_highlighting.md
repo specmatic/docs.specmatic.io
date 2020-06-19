@@ -2,7 +2,7 @@
 layout: default
 title: Syntax Highlighting
 parent: Documentation
-nav_order: 8
+nav_order: 9
 ---
 Syntax Highlighting
 ===================
