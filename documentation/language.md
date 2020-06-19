@@ -33,6 +33,9 @@ Language
     - [Combining *, ? and ...](#combining---and-)
     - [Pattern in string](#pattern-in-string)
     - [Explicit reference to examples in type declarations](#explicit-reference-to-examples-in-type-declarations)
+    - [Dictionary](#dictionary)
+    - [Form fields](#form-fields)
+    - [Multipart](#multipart)
     - [Kafka messages](#kafka-messages)
 
 Qontract extends the Gherkin syntax by adding some more keywords.
@@ -135,6 +138,8 @@ So for example:
       And response-body (string)
 
 number, string, boolean and null are all used the same way.
+
+Note: The number type matches decimals numbers too.
 
 #### datetime type
 
@@ -449,9 +454,49 @@ We can explicitly refer to the example column from within a type declaration.
 
 In this example, the request-body looks up the orderid from the examples. When the test request is generated, it contain the value `10` in the request body.
 
+###  Dictionary
+
+Sometimes we don't know the exact keys and values, but we know what their types will be.
+
+For example, a json object of order details, where the keys are product ids and the values are json objects containing quantity and discount.
+
+We can express it like this:
+
+```
+Given type ProductInfo
+| product_id | (number) |
+| quantity   | (number) |
+And type Order (dictionary number ProductInfo)
+```
+
+The first type in the dictionary refers to the key. The key is always a string, and the type refers to what should be in the string, which in this example is a number.
+
+The value will be another json object, containing the product info described above.
+
+### Form fields
+
+We can describe form fields in the request like this:
+
+```
+When POST /orders
+And form-field name (string)
+And form-field address (string)
+```
+
+### Multipart
+
+We can describe multipart form data in the request like this:
+
+```
+When POST /orders
+And multipart-formdata name (string)
+And multipart-formdata address (string)
+```
+
 ### Kafka messages
 
 We can describe Kafka messages.
+
 The syntax:
 
     * kafka-message <topic> <key type> <value type>
