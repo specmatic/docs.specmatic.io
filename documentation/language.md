@@ -7,6 +7,34 @@ nav_order: 5
 Language
 ========
 
+- [Language](#language)
+  - [The Contract File](#the-contract-file)
+  - [Syntax Reference](#syntax-reference)
+    - [Feature](#feature)
+    - [Scenario](#scenario)
+    - [Given](#given)
+    - [When](#when)
+    - [Then](#then)
+    - [Built-in Data Types](#built-in-data-types)
+      - [datetime type](#datetime-type)
+      - [url type](#url-type)
+    - [Arrays](#arrays)
+    - [Variable Length Arrays](#variable-length-arrays)
+    - [Objects](#objects)
+    - [Defining Types](#defining-types)
+    - [Defining Objects As Tables](#defining-objects-as-tables)
+    - [Putting Value In Objects](#putting-value-in-objects)
+    - [List Operator](#list-operator)
+    - [Types In Background](#types-in-background)
+    - [Overriding Types](#overriding-types)
+    - [Optional Operator](#optional-operator)
+    - [Nullable Operator](#nullable-operator)
+    - [Rest Operator](#rest-operator)
+    - [Combining *, ? and ...](#combining---and-)
+    - [Pattern in string](#pattern-in-string)
+    - [Explicit reference to examples in type declarations](#explicit-reference-to-examples-in-type-declarations)
+    - [Kafka messages](#kafka-messages)
+
 Qontract extends the Gherkin syntax by adding some more keywords.
 
 If you are familiar with Gherkin you should feel right at home. But if not, don't worry, Gherkin is easy to pick up. You'll learn as you go.
