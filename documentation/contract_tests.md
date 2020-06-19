@@ -35,7 +35,9 @@ How then are contract tests different from API tests?
 
 The answer is that the developer alone controls the tests completely. The developer can change the tests for legitimate reasons, without realising that there may be changes to the API format, parameters, etc. If there is any such accidental breakage, the contract tests will fail.
 
-The contract spec is typically stored in a central repository, which is managed and updated by multiple teams. So at the very least, developers are conscious of this, and will not change the contract without talking to all concerned. To eliminate concerns around integration breakage, make sure that all changes to the contract are back backward compatible, using the tools that Qontract has provided.
+So what prevents the developer from updating the contract to match the API tests, thus breaking downstream consumers?
+
+Well, the contract spec is typically stored in a central repository, which is managed and updated by multiple teams. So at the very least, developers are conscious of this, and will not change the contract without talking to all concerned. To eliminate concerns around integration breakage, make sure that all changes to the contract are back backward compatible, using the tools that Qontract has provided.
 
 ### Why Use Qontract
 
