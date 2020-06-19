@@ -27,11 +27,11 @@ Service Virtualisation
 
 It is not easy to develop an application that depends on 3rd party APIs. These APIs never run on the dev laptop or environment. They must be invoked over the network, during the process of coding, debugging or running component tests. But access to the APIs is usually flaky. The network may be down. The dev laptop may be offline. Sometimes an account has to be setup, data within the account has to be created, orders placed, etc.
 
-Instead, we prefer to setup a stub API that appears to act like the real API, and runs on the developer's laptop. Since it is on the developer's laptop, it is never down, and is always available. The application doesn't know that it is talking to a stub, and in fact cannot tell the difference.
+Instead, we prefer to setup a stub API that appears to act like the real API, and runs on the developer's laptop. Since it is on the developer's laptop, it is never flaky, and always available. The consuming application that is being developed on that laptop doesn't know that it is talking to a local stub, and in fact cannot tell the difference.
 
 ### Why Use Qontract
 
-There are many tools you can use for service virtualisation. Qontract however validates the stub setup (called expectatations) with the contract spec to ensure that the stub request and response formats are the same as those of the real API.
+There are many tools you can use for service virtualisation. Qontract however compares the stub setup (called expectatations) with the given contract to ensure that they are in sync. The same contract is used by the provider when running [contract tests](/documentation/contract_tests.html).
 
 ### Stub without expectations
 
