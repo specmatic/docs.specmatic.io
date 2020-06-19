@@ -31,7 +31,9 @@ Instead, we prefer to setup a stub API that appears to act like the real API, an
 
 ### Why Use Qontract
 
-There are many tools you can use for service virtualisation. Qontract however compares the stub setup (called expectatations) with the given contract to ensure that they are in sync. The same contract is used by the provider when running [contract tests](/documentation/contract_tests.html).
+There are many tools you can use for service virtualisation. Qontract however compares the stub setup (called expectatations) with the given contract to ensure that they are in sync. The same contract is used by the provider when running [contract tests](/documentation/contract_tests.html). Since the consumer sets expectations on it's stubs that match the contract, and the provider API is built to adhere to the same contract, the integration between the consumer and provider stays intact.
+
+Additionally, the contract spec is human-readable. So contracts can be circulated around by email, chat, etc when the API design is under discussion.
 
 ### Stub without expectations
 
@@ -434,7 +436,8 @@ Here is a sample json stub file, containing all the keys you can use, with inlin
         "method": "POST",
         "path": "/url/path", // You cannot put a full url here
         "headers": {
-            "X-Header-Name": "(string)"
+            "X-Header-Name1": "(string)",
+            "X-Header-Name2": "(string)"
         },
         "query": {
             "id": "(number)",
@@ -442,7 +445,7 @@ Here is a sample json stub file, containing all the keys you can use, with inlin
         },
 
 
-        // WARNING You can have either body, form-fields or multipart-formdata, but not all 3
+        // IMPORTANT You can have either body, form-fields or multipart-formdata, but not all 3
         "form-fields": {
             "Data": "(PredefinedJsonType)",
             "MoreData": "some hardcoded value"
@@ -466,6 +469,10 @@ Here is a sample json stub file, containing all the keys you can use, with inlin
 
     "http-response": {
         "status": 200, // http status expected in the response
+        "headers": { // same as request headers
+            "X-Header-Name": "(string)",
+            "X-Header-Name2": "(string)"
+        }
         "body": "some value" // can be any json value, but must match the contract
     }
 }
