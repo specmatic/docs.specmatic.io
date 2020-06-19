@@ -445,7 +445,7 @@ We can explicitly describe types in strings. If for example we know that the val
 We can explicitly refer to the example column from within a type declaration.
 
     When POST /
-      And request-body (number from orderid)
+      And request-body (orderid:number)
       Then status 200
 
     Examples:
