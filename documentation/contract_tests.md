@@ -85,7 +85,7 @@ And run it: `{{ site.qontract_cmd }} stub sample_application.qontract`.
 
 In another tab, run the test command again against the "sample" application :-)
 
-```shell
+```
 > qontract test numbers.qontract
 >> Request Start At Fri Jun 19 12:35:50 IST 2020
 -> POST /square
