@@ -5,6 +5,14 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.11.1
+
+Date: 16th June 2020
+
+What's new:
+- Added nicer error messages for multipart mismatch errors
+- Added strict flag for stub mode, with which the stub will respond with the concerned mismatch errors in case the stub doesn't match any input, instead of returning random values
+
 ### Release 0.11.0
 
 Date: 12th June 2020
