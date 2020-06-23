@@ -35,7 +35,7 @@ Language
     - [Explicit reference to examples in type declarations](#explicit-reference-to-examples-in-type-declarations)
     - [Dictionary](#dictionary)
     - [Form fields](#form-fields)
-    - [Multipart](#multipart)
+    - [Multipart form data](#multipart-form-data)
     - [Kafka messages](#kafka-messages)
 
 Qontract extends the Gherkin syntax by adding some more keywords.
@@ -483,15 +483,19 @@ And form-field name (string)
 And form-field address (string)
 ```
 
-### Multipart
+This corresponds Postman's x-www-form-urlencoded in the request body.
+
+### Multipart form data
 
 We can describe multipart form data in the request like this:
 
 ```
 When POST /orders
-And multipart-formdata name (string)
-And multipart-formdata address (string)
+And request-part name (string)
+And request-part address (string)
 ```
+
+This corresponds Postman's form-data in the request body.
 
 ### Kafka messages
 
