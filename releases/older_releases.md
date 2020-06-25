@@ -5,6 +5,14 @@ parent: Releases
 nav_order: 2
 ---
 
+Date: 23rd June 2020
+
+What's new:
+- Improved error message in several areas
+- Added basic instrumentation for when Qontract runs as a server for service virtualisation in a test environment
+
+Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.12.0/qontract.jar)
+
 ### Release 0.11.1
 
 Date: 16th June 2020
@@ -12,6 +20,8 @@ Date: 16th June 2020
 What's new:
 - Added nicer error messages for multipart mismatch errors
 - Added strict flag for stub mode, with which the stub will respond with the concerned mismatch errors in case the stub doesn't match any input, instead of returning random values
+
+Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.11.1/qontract.jar)
 
 ### Release 0.11.0
 
