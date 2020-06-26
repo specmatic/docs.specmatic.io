@@ -32,100 +32,119 @@ Add jar dependency. Notice this is test only scope. There is no need to ship Qon
 
 ---
 
-### Consumer - Leveraging Mock Server
+### Consumer - Leveraging Stub Server
 
 Let us try building a Pet Store Consumer through Test First approach.
-Add below test to your codebase.
+
+First add the following json to a stub file named expectation.json, in a directory named petstore_data:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/pets/10"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "name": "Archie",
+      "type": "dog",
+      "status": "available",
+      "id": 10
+    }
+  }
+}
+```
+
+Then add the test below to your codebase.
 
 ```java
+package com.petstore.test;
+
+import com.petstore.demo.PetStoreConsumer;
+import com.petstore.demo.model.Pet;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import run.qontract.core.HttpRequest;
-import run.qontract.core.HttpResponse;
-import run.qontract.core.utilities.Utilities;
-import run.qontract.mock.ContractMock;
-import run.qontract.mock.MockScenario;
+import run.qontract.stub.ContractStub;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static run.qontract.stub.API.*;
 
 public class PetStoreConsumerTest {
-    private static ContractMock petStoreMock;
+    private static ContractStub petStoreStub;
 
     @BeforeAll
-    public static void setup() throws Throwable {
-        //Start a mock server based on the contract
-        String gherkin = Utilities.readFile("<baseDir>/petstore/qontract/service.qontract");
-        petStoreMock = new ContractMock(gherkin, 9003);
-        petStoreMock.start();
+    public static void setUP() {
+        // Path to the contract
+        List<String> contracts = new ArrayList<String>();
+        contracts.add("/path/to/service.qontract");
+
+        // Path to stub data directory
+        List<String> stubDataDir = new ArrayList<String>();
+        stubDataDir.add("/path/to/stub/data/petstore_data");
+
+        //Start the stub server
+        petStoreStub = createStubFromContracts(contracts, stubDataDir, "localhost", 9000);
     }
 
     @Test
-    public void shouldGetPetByPetId() throws IOException {
-        //Arrange - Setup the mock to respond to the request we expect PetStoreConsumer to make
-        HttpRequest httpRequest = new HttpRequest().updateMethod("GET").updatePath("/pets/123");
-        HttpResponse httpResponse = HttpResponse.Companion.jsonResponse("{petid:123}");
-        Map<String, Object> serverState = new HashMap<>();
-        // This line makes sure the request and response we are setting up are in line with the contract
-        petStoreMock.createMockScenario(new MockScenario(httpRequest, httpResponse, serverState));
+    public void shouldGetPetByPetId() {
+        PetStoreConsumer petStoreConsumer = new PetStoreConsumer("http://localhost:9000");
+        Pet archie = petStoreConsumer.getPet(10);
 
-        //Act
-        PetStoreConsumer petStoreConsumer = new PetStoreConsumer("http://localhost:9003");
-        Pet pet = petStoreConsumer.getPet(123);
-
-        //Assert
-        Assert.assertEquals(123, pet.getPetid());
+        assertEquals(10, archie.getId());
+        assertEquals("Archie", archie.getName());
     }
 
     @AfterAll
-    public static void tearDown() {
-        petStoreMock.close();
+    public static void tearDown() throws IOException {
+        petStoreStub.close();
     }
 }
 ```
 
 Let us take a closer look at the above test.
 * The objective of this test is to help us build a PetStoreConsumer (API Client) class.
-* The setUP and tearDown methods are responsible for starting a Qontract Mock server (based on the service.qontract) and stopping it respectively
-* Just like any good unit test has arrange, act and assert sections.
-* In the arrange section is setting up the Qontract Mock to expect a request /pets/123 and return { petid: 123 }
-* The act section instantiates a PetStoreConsumer with API url (mock server URL) and then we call getPet which is then expected invoke /pets/123.
+* The setUP and tearDown methods are responsible for starting a Qontract Stub server (based on the service.qontract) and stopping it respectively.
+* In the setUP section, we pass the expectation json file to the stub. This tells it to expect a call to /pets/10, to which it must return the given pet info.
 * The assert section verifies that PetStoreConsumer is able to translate the response to Pet object
 
 At this point you will see compilation errors because we do not have PetStoreConsumer and Pet classes. Let us define those.
 
 ```java
+package com.petstore.demo;
+
+import com.petstore.demo.model.Pet;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+
 public class PetStoreConsumer {
-    private String petStoreUrl;
+    private final String petStoreUrl;
 
     public PetStoreConsumer(String petStoreUrl) {
         this.petStoreUrl = petStoreUrl;
     }
 
-    public Pet getPet(int petId) {
+    public Pet getPet(int id) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Pet> response = restTemplate.exchange(URI.create(petStoreUrl + "/pets/" + petId), HttpMethod.GET, null, Pet.class);
+        URI uri = URI.create(petStoreUrl + "/pets/" + id);
+        ResponseEntity<Pet> response = restTemplate.getForEntity(uri, Pet.class);
         return response.getBody();
-    }
-}
-
-public class Pet {
-    private int petid;
-
-    public void setPetid(int id) {
-        this.petid = id;
-    }
-
-    public int getPetid() {
-        return this.petid;
     }
 }
 ```
 
 Now we can run the PetStoreConsumerTest. This test is fast and also does not require the real backend api to be running.
 
-Since this test exercises contract as a mock we can be sure that when there are changes in the contract, this test will fail because of mismatch errors in mock setup section.
+Since this test runs the contract as a stub we can be sure that when there are changes in the contract, this test will fail because of mismatch errors in stub setup section.
+
 This is important because it helps us keep the Consumer in line with the Provider.
 
 ---
@@ -182,3 +201,5 @@ A closer look at above test.
 * Note - Please do not add any other unit test to the above class. The above test is only supposed to have setUp and optionally tearDown methods.
 
 To run this test, right click (or use JUnit shortcuts) and run it just like a unit test.
+
+Following the test-first style approach, we haven't written a pet store API yet, so the contract test will fail. We now need to add a pet store API that passes the contract tests. We leave this as an exercise for the reader.
