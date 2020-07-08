@@ -5,6 +5,15 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.12.2
+
+Date: 30th June 2020
+
+What's new:
+- Improved support for CI
+
+Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.12.2/qontract.jar)
+
 ### Release 0.12.1
 
 Date: 25th June 2020
