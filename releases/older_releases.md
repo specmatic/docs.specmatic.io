@@ -5,6 +5,17 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.13.0
+
+Date: 8th July 2020
+
+What's new:
+- Experimental support for recording contracts and stubs in proxy mode
+- Rewritten support for XML
+- Improved support for CI
+
+Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.13.0/qontract.jar)
+
 ### Release 0.12.2
 
 Date: 30th June 2020

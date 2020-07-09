@@ -8,12 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 8th July 2020
+Date: 9th July 2020
 
 What's new:
-- Experimental support for recording contracts and stubs in proxy mode
-- Rewritten support for XML
-- Improved support for CI
+- Fixes for optional value matching in json objects
 
 Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 
