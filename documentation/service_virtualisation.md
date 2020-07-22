@@ -19,6 +19,7 @@ Service Virtualisation
     - [Stub without hardcoding values in the request](#stub-without-hardcoding-values-in-the-request)
     - [Stub without hardcoding values in the response](#stub-without-hardcoding-values-in-the-response)
     - [Debugging your stub using strict mode](#debugging-your-stub-using-strict-mode)
+    - [Dynamic stubbing over HTTP](#dynamic-stubbing-over-http)
     - [Stub file format](#stub-file-format)
 
 [Read here about contract testing and where Qontract fits in](/contract_testing.html).
@@ -425,6 +426,14 @@ Expected string: "22 Baker Street", actual was string: "New York"
 ```
 
 Without strict mode on, the stub would have returned the string "success", as you can see in examples above.
+
+### Dynamic stubbing over HTTP
+
+You can setup a stub over HTTP, after Qontract has been started.
+
+Post the stub content using the POST verb to Qontract at the path /_qontract/expectations
+
+The content of the POST request will be the stub data, just like you would put into a stub json file.
 
 ### Stub file format
 
