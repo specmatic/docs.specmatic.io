@@ -3,6 +3,10 @@ layout: default
 title: Frequently Asked Questions
 nav_order: 6
 ---
+
+Frequently Asked Questions
+--------------------------
+
 ### What is "Contract First"?
 
 Qontract, requires you to author the contract first which is then leveraged to run Provider Stubs and Contract Tests.
