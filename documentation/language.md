@@ -497,6 +497,15 @@ And request-part address (string)
 
 This corresponds Postman's form-data in the request body.
 
+If the request part contains a file, use the @ symbol to denote the file name, like so:
+
+```
+When POST /orders
+And request-part customers @customers.csv
+```
+
+When running the test, @customers.csv must actually exist in the working directory.
+
 ### Kafka messages
 
 We can describe Kafka messages.
