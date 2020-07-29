@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Reading The Reports
+title: Understanding Error Reports
 parent: Documentation
 nav_order: 8
 ---
-Reading The Reports
-===================
+Understanding Error Reports
+===========================
 
 - [Reading The Reports](#reading-the-reports)
   - [Report Format](#report-format)
