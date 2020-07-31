@@ -5,6 +5,13 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.13.1
+
+Date: 9th July 2020
+
+What's new:
+- Fixes for optional value matching in json objects
+
 ### Release 0.13.0
 
 Date: 8th July 2020

@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 9th July 2020
+Date: 31st July 2020
 
 What's new:
-- Fixes for optional value matching in json objects
+- Improved CI support (new push command for pushing contract changes, new subscribe command to have the ci pipeline run when changes occur)
+- Bug fixes
 
 Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 
