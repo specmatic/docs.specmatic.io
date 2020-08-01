@@ -24,13 +24,13 @@ According to us there are 2 key advantages, which were never possible before:
 * **Death of Integration Testing** - As long as the service provider and consumer adhere to the contract, you can be 100% confident that each of them can develop and deploy their parts independently. **No need for integration testing**. 
     - On the provider side, run **Qontract in test mode** 
     - On the consumer side run **Qontract in stub mode** - Qontract ensures that the expectations you are setting on your stubs are in-fact valid as per the contract.
-* **Backward Compatibility Verification** - Typically for the provider to ensure they've not broken backward compatibility, they need to test their new version of the service with an existing version of the consumer. You might have multiple consumers. This is a complex and time consuming process. With Qontract, you just need to run the contract with new version of the contract with the previous version of the contract to check for backward compatibility.
+* **Backward Compatibility Verification** - Typically for the provider to ensure they've not broken backward compatibility, they need to test their new version of the service with the current versions of all the consumers. This is a complex and time consuming process. With Qontract, you just need to run the new version of the contract with the previous version to check for backward compatibility (no consumer tests required.)
 
 ### Our Goal is to support various types of Interactions
 Systems interact with each other through several means. Qontract hopes to address all these mechanisms and not just web interactions.
-* API calls (JSon Rest, SOAP XML, gRPC, Thrift, other binary protocols) - Current focus
-* Events via Messaging (Kafka, )
-* DB
+* API calls (JSon REST, SOAP XML, gRPC, Thrift, other binary protocols)
+* Events via Messaging (Kafka, Redis, ActiveMQ, RabbitMQ, Kinesis, etc.)
+* DB, Other Data Stores
 * File system
 * Libraries, SDK 
 * OS Level Pipes
