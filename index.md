@@ -11,11 +11,9 @@ nav_order: 1
 ---
 ### Context
 
-In a complex, interdependent eco-system, where each system’s components are evolving rapidly,
-we want to make the dependencies between these components explicit in the form of contracts.
-By doing so, [Contract Testing](/contract_testing.html) helps us get instantaneous feedback when we make changes to avoid accidental breakage.
+In a complex, interdependent eco-system, where each service is evolving rapidly, we want to make the dependencies between them explicit in the form of executable contracts. By doing so, [Contract Testing](/contract_testing.html) allows teams to get instantaneous feedback while making changes to avoid accidental breakage.
 
-With this ability, we can now deploy, at will, any system’s component at any time without having to completely depend on expensive integration tests.
+With this ability, we can now deploy, at will, any service at any time without having to depend on expensive and fragile integration tests.
 
 ### What is Qontract
 Qontract is a [contract driven development tool](/faqs.html#what-is-contract-first) that allows us to turn our contracts into executable specification.
@@ -28,8 +26,8 @@ According to us there are 2 key advantages, which were never possible before:
 
 ### Our Goal is to support various types of Interactions
 Systems interact with each other through several means. Qontract hopes to address all these mechanisms and not just web interactions.
-* API calls (JSon REST, SOAP XML, gRPC, Thrift, other binary protocols)
-* Events via Messaging (Kafka, Redis, ActiveMQ, RabbitMQ, Kinesis, etc.)
+* API calls (**JSon REST**, **SOAP XML**, gRPC, Thrift, other binary protocols)
+* Events via Messaging (**Kafka**, Redis, ActiveMQ, RabbitMQ, Kinesis, etc.)
 * DB, Other Data Stores
 * File system
 * Libraries, SDK 
@@ -38,14 +36,17 @@ Systems interact with each other through several means. Qontract hopes to addres
 ---
 ### Key Features
 
-* **Human readable contracts** - Qontract leverages **Gherkin**'s strength as a specification mechanism to define your components (APIs.)
+* [**Contract First**](/faqs.html#what-is-contract-first) - With an API-first approach, you can use Consumer or Provider driven contracts, whatever suits your needs the best.
+** Once a Contract is written, both Consumers and Providers can start development in parallel
+* **Human readable contracts** - Qontract leverages **Gherkin**'s strength as a specification mechanism to define your services (APIs.) No additional language specific tooling required.
+** Anyone 1.Developer (Consumer or Provider), 2.Architect, 3.Tech Leads, 4.Developer, 5.Tester can author the contracts
 * **Backward Compatibility Verification** - Contract vs Contract testing (cross version compatibility checks) etc.
 * **Service Virtualisation** - Run your contract in stub mode and isolate yourself from downstream dependencies (also be sure that your stubs are 100% compatible with the actual provider)
-* **Contract as Test** - Test drive your components (APIs) using a contract
+* **Contract as Test** - Test drive your services (APIs) using a contract
 * **Programmatic** (Kotlin, Java and JVM languages) **and Command line support**
+* **Tight integration with CI** - Triger Provider and Consumer CI builds when any of the contracts change.
 * Versioning
-* Support for **callbacks**
-* Converting from **Postman to Qontract**
-* Support for **Kafka**
+* Support for **SOAP/XML**, **Kafka**, **callbacks** and more
+* Already have a lot of APIs? Don't worry, we can take your **Postman Collection** and easily generate contracts from it
 
 [**Read more about them here**](/Features.html)
