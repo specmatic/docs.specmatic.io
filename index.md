@@ -37,9 +37,9 @@ Systems interact with each other through several means. Qontract hopes to addres
 ### Key Features
 
 * [**Contract First**](/faqs.html#what-is-contract-first) - With an API-first approach, you can use Consumer or Provider driven contracts, whatever suits your needs the best.
-** Once a Contract is written, both Consumers and Providers can start development in parallel
+  - Once a Contract is written, both Consumers and Providers can start development in parallel
 * **Human readable contracts** - Qontract leverages **Gherkin**'s strength as a specification mechanism to define your services (APIs.) No additional language specific tooling required.
-** Anyone 1.Developer (Consumer or Provider), 2.Architect, 3.Tech Leads, 4.Developer, 5.Tester can author the contracts
+  - Anyone 1.Developer (Consumer or Provider), 2.Architect, 3.Tech Leads, 4.Developer, 5.Tester can author the contracts
 * **Backward Compatibility Verification** - Contract vs Contract testing (cross version compatibility checks) etc.
 * **Service Virtualisation** - Run your contract in stub mode and isolate yourself from downstream dependencies (also be sure that your stubs are 100% compatible with the actual provider)
 * **Contract as Test** - Test drive your services (APIs) using a contract
