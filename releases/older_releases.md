@@ -7,6 +7,14 @@ nav_order: 2
 
 ### Release 0.13.1
 
+Date: 31st July 2020
+
+What's new:
+- Improved CI support (new push command for pushing contract changes, new subscribe command to have the ci pipeline run when changes occur)
+- Bug fixes
+
+### Release 0.13.1
+
 Date: 9th July 2020
 
 What's new:
