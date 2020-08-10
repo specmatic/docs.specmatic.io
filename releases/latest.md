@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 2nd August 2020
+Date: 8th August 2020
 
 What's new:
-- Minor enhancements for XML support
+- Renamed backwardCompatible to compatible, and improved it for use in CI
 
 Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 

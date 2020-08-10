@@ -5,7 +5,16 @@ parent: Releases
 nav_order: 2
 ---
 
-### Release 0.13.1
+### Release 0.14.1
+
+Date: 2nd August 2020
+
+What's new:
+- Minor enhancements for XML support
+
+Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
+
+### Release 0.14.0
 
 Date: 31st July 2020
 
