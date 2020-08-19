@@ -409,15 +409,14 @@
     font-size: 36px;
     line-height: 42px;
     font-weight: 700;
-    letter-spacing: -1px;
-    text-align: left;
+    letter-spacing: -0.5px;
+    text-align: center;
 }
 
 @media (min-width: 576px) {
     .main-title {
         font-size: 36px;
         line-height: 56px;
-        text-align: center;
     }
 }
 
@@ -444,7 +443,7 @@
 
 .tag-line {
     font-weight: normal;
-    text-align: left;
+    text-align: center;
     font-size: 22px;
     line-height: 32px;
     margin-top: 1rem;
@@ -455,7 +454,6 @@
         font-size: 24px;
         line-height: 38px;
         margin-top: 0.5rem;
-        text-align: center;
     }
 }
 
@@ -947,6 +945,8 @@ ul.compatible-list li:hover {
     padding-bottom: 25px;
     font-weight: 700;
     line-height: 44px;
+    font-size: 1.8rem;
+    text-align: center;
 }
 
 @media (min-width: 576px) {
@@ -954,6 +954,7 @@ ul.compatible-list li:hover {
     .content-left-content h2 {
         font-size: 38px;
         line-height: 54px;
+        text-align: left;
     }
 }
 
@@ -1595,7 +1596,7 @@ ul.compatible-list li:hover {
 }
 
 .footer-social-list {
-    margin-top: 50px;
+    margin-top: 0;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
