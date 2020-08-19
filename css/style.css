@@ -406,38 +406,84 @@
 
 .main-title {
     color: #300d73;
-    font-size: 30px;
-    line-height: 60px;
+    font-size: 36px;
+    line-height: 42px;
     font-weight: 700;
-    letter-spacing: -3px;
-    text-align: center;
+    letter-spacing: -1px;
+    text-align: left;
 }
 
 @media (min-width: 576px) {
     .main-title {
-        font-size: 48px;
-        line-height: 76px;
+        font-size: 36px;
+        line-height: 56px;
+        text-align: center;
     }
 }
 
 @media (min-width: 768px) {
     .main-title {
-        font-size: 58px;
-        line-height: 86px;
+        font-size: 50px;
+        line-height: 72px;
+        letter-spacing: -2px;
     }
 }
 
 @media (min-width: 992px) {
     .main-title {
         font-size: 65px;
-        padding-right: 21px;
-        text-align: left;
+        letter-spacing: -3px;
     }
 }
 
 @media (min-width: 1200px) {
     .main-title {
         font-size: 4.2rem;
+    }
+}
+
+.tag-line {
+    font-weight: normal;
+    text-align: left;
+    font-size: 22px;
+    line-height: 32px;
+    margin-top: 1rem;
+}
+
+@media (min-width: 576px) {
+    .tag-line {
+        font-size: 24px;
+        line-height: 38px;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+}
+
+@media (min-width: 768px) {
+    .tag-line {
+        font-size: 32px;
+        line-height: 48px;
+        letter-spacing: -1px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .tag-line {
+        font-size: 2.0rem;
+    }
+}
+
+.image-header {
+    font-weight: 400;
+    text-align: center;
+    line-height: 1.5;
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+@media (min-width: 576px) {
+    .image-header {
+        font-size: 1.4rem;
     }
 }
 
