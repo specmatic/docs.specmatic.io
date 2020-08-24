@@ -406,7 +406,7 @@
 
 .main-title {
     color: #300d73;
-    font-size: 36px;
+    font-size: 34px;
     line-height: 42px;
     font-weight: 700;
     letter-spacing: -0.5px;
@@ -424,14 +424,13 @@
     .main-title {
         font-size: 50px;
         line-height: 72px;
-        letter-spacing: -2px;
+        letter-spacing: -1.5px;
     }
 }
 
 @media (min-width: 992px) {
     .main-title {
         font-size: 65px;
-        letter-spacing: -3px;
     }
 }
 
@@ -442,11 +441,12 @@
 }
 
 .tag-line {
-    font-weight: normal;
+    font-weight: 200;
     text-align: center;
     font-size: 22px;
     line-height: 32px;
     margin-top: 1rem;
+    letter-spacing: 0.75px;
 }
 
 @media (min-width: 576px) {
@@ -459,9 +459,8 @@
 
 @media (min-width: 768px) {
     .tag-line {
-        font-size: 32px;
+        font-size: 30px;
         line-height: 48px;
-        letter-spacing: -1px;
     }
 }
 
@@ -472,11 +471,12 @@
 }
 
 .image-header {
-    font-weight: 400;
+    font-weight: 200;
     text-align: center;
-    line-height: 1.5;
     font-size: 1.2rem;
-    font-style: italic;
+    line-height: 1.5;
+    letter-spacing: 0.75px;
+    color: #3d1886;
 }
 
 @media (min-width: 576px) {
@@ -857,19 +857,26 @@ ul.compatible-list li:hover {
 }
 
 .content-small-card .card-content h5 {
-    font-weight: 600;
-    letter-spacing: -0.0125rem;
+    font-weight: 500;
+    letter-spacing: 0.025rem;
     line-height: 32px;
+    font-size: 1.1rem;
+}
+
+@media (min-width: 576px) {
+    .content-small-card .card-content h5 {
+    font-size: 1.2rem;
+    }
 }
 
 .content-small-card .card-content p {
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 300;
     line-height: 28px;
     color: #5c4980;
     margin-bottom: 0;
     padding-top: 7px;
-    letter-spacing: 0.0125rem;
+    letter-spacing: 0.025rem;
 }
 
 .content-img {
@@ -896,7 +903,7 @@ ul.compatible-list li:hover {
 
 @media (min-width: 992px) {
     .content-left-content {
-        padding-right: 60px;
+        padding-left: 10px;
     }
 }
 
@@ -906,16 +913,16 @@ ul.compatible-list li:hover {
 
 @media (min-width: 992px) {
     .content-right-content p {
-        padding-right: 20px;
+        padding-right: 10px;
     }
 }
 
 @media (min-width: 1200px) {
     .content-right-content {
-        padding-right: 60px;
+        padding-right: 10px;
     }
     .content-right-content p {
-        padding-right: 40px;
+        padding-right: 10px;
     }
 }
 
@@ -985,8 +992,8 @@ ul.compatible-list li:hover {
 
 .content-right-content p,
 .content-left-content p {
-    font-weight: 400;
-    letter-spacing: -0.0125rem;
+    font-weight: 200;
+    letter-spacing: 0.045rem;
     font-size: 18px;
     line-height: 30px;
     color: #300d73;
@@ -1171,7 +1178,6 @@ ul.compatible-list li:hover {
 @media (min-width: 1200px) {
     .section-title h2 {
         font-size: 48px;
-        letter-spacing: -0.0125rem;
     }
 }
 
@@ -1250,7 +1256,7 @@ ul.compatible-list li:hover {
 .feature-widget .content h5 {
     font-size: 21px;
     font-weight: 600;
-    letter-spacing: -0.0125rem;
+    letter-spacing: 0.025rem;
     line-height: 32px;
     margin-bottom: 15px;
     color: #ffffffdd;
@@ -1260,7 +1266,8 @@ ul.compatible-list li:hover {
     color: rgba(255, 255, 255, 0.8);
     font-size: 16px;
     line-height: 28px;
-    letter-spacing: 0.0125rem;
+    letter-spacing: 0.045rem;
+    font-weight: 200;
 }
 
 .feature-widget:hover .widget-icon {
@@ -1623,7 +1630,6 @@ ul.compatible-list li:hover {
 .copyright p {
     font-size: 14px;
     font-weight: 400;
-    letter-spacing: -0.6px;
     line-height: 28px;
     color: #666666;
 }
