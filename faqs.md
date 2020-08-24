@@ -9,7 +9,7 @@ Frequently Asked Questions
 
 ### What is "Contract First"?
 
-Qontract, requires you to author the contract first which is then leveraged to run Provider Stubs and Contract Tests.
+Qontract requires you to author the contract first which is then leveraged to run Provider Stubs and Contract Tests.
 
 More on this [here](/contract_testing.html#qontract---contract-first).
 
