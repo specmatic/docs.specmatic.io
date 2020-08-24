@@ -12,7 +12,7 @@ HTTP Proxy
       - [Start The Proxy](#start-the-proxy)
       - [Proxy Setup](#proxy-setup)
       - [Generate Contracts](#generate-contracts)
-    - [Reverse Proxy Mode](#reverse-proxy-mode)
+    - [Reverse Proxy Mode (Supports HTTPS Application Endpoint)](#reverse-proxy-mode-supports-https-application-endpoint)
       - [Start The Proxy](#start-the-proxy-1)
       - [Generate Contracts](#generate-contracts-1)
 
@@ -60,7 +60,7 @@ new_feature.qontract stub0.json
 
 In this case, a single api call was executed. As a result, Qontract generated two files. stub0.json contains the request sent from Postman and the response from the server. new_feature.qontract contains the contract generated from stub0.json.
 
-### Reverse Proxy Mode
+### Reverse Proxy Mode (Supports HTTPS Application Endpoint)
 
 If your remote service runs over HTTPS, use Inbound Proxy Mode. In this mode, Qontract Proxy acts as a reverse proxy to the target application. You configure your application to talk to Qontract Proxy. In this mode, you must not configure proxy settings on the OS or the application. The application is not aware that Qontract is a proxy. Instead, just configure your application to make API calls to Qontract Proxy. Qontract will forward all requests to the target end point, and return it's responses.
 
