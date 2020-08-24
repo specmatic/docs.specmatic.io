@@ -21,7 +21,7 @@ HTTP Proxy
       - [Step 2: Configure the OS proxy](#step-2-configure-the-os-proxy)
       - [Step 3: Trigger requests and responses](#step-3-trigger-requests-and-responses)
       - [Step 4: Generating the contracts](#step-4-generating-the-contracts)
-    - [Local Service Talks To Remove Service Over HTTPS](#local-service-talks-to-remove-service-over-https)
+    - [Local Service Talks To Remote Service Over HTTPS](#local-service-talks-to-remote-service-over-https)
       - [Step 1: Run the proxy](#step-1-run-the-proxy-1)
       - [Step 2: Configure the application's base url](#step-2-configure-the-applications-base-url)
       - [Step 3: Trigger requests and responses](#step-3-trigger-requests-and-responses-1)
@@ -146,7 +146,7 @@ Stop the proxy using Ctrl+C.
 
 Take a look a the directory `./generated_contracts` which we provided in the proxy command earlier. You'll find in it all the contracts and stubs of the requests and responses that your application triggered.
 
-### Local Service Talks To Remove Service Over HTTPS
+### Local Service Talks To Remote Service Over HTTPS
 
 You have a local service talking to a remote service, which runs on HTTPS, and no Postman collection which Qontract can convert.
 
