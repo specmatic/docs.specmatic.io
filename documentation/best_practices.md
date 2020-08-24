@@ -15,8 +15,10 @@ Best Practices
     - [Smells and Remedies](#smells)
 - [Continuous Integration and Pull Request Builders](#ci-and-pull-request-builders)
 
-Organising contract files
+Organizing contract files
 --------
+
+We have already covered how to author good [scenarios](/documentation/languag.html). Let us walk through the aspects we should consider when stringing scenarios together in contract files.
 
 ### Authoring Contract Files - The Dilemma
 
@@ -34,7 +36,7 @@ Organising contract files
 * Disadvantages / Smells
     * Common structures / datatypes across endpoints have to be duplicated (because we cannot import one .qontract file inside another)
 
-As mentioned above, both of these extremes are necessarily the best.
+As mentioned above, both of these extremes are not necessarily the best.
 
 ### Single Responsibility Principle
 
