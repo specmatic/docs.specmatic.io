@@ -31,12 +31,21 @@ Language
     - [Nullable Operator](#nullable-operator)
     - [Rest Operator](#rest-operator)
     - [Combining *, ? and ...](#combining---and-)
-    - [Pattern in string](#pattern-in-string)
-    - [Explicit reference to examples in type declarations](#explicit-reference-to-examples-in-type-declarations)
+    - [Pattern In String](#pattern-in-string)
+    - [Explicit Reference To Examples In Type Declarations](#explicit-reference-to-examples-in-type-declarations)
     - [Dictionary](#dictionary)
-    - [Form fields](#form-fields)
-    - [Multipart form data](#multipart-form-data)
-    - [Kafka messages](#kafka-messages)
+    - [Form Fields](#form-fields)
+    - [Multipart Form Data](#multipart-form-data)
+    - [Kafka Messages](#kafka-messages)
+    - [XML Tags](#xml-tags)
+    - [Multiline XML Definitions](#multiline-xml-definitions)
+    - [XML Data Types](#xml-data-types)
+    - [XML Attributes](#xml-attributes)
+    - [Optional Values In XML Tags](#optional-values-in-xml-tags)
+    - [Optional Values In XML Attributes](#optional-values-in-xml-attributes)
+    - [Optional XML Attributes](#optional-xml-attributes)
+    - [Declaring XML Types](#declaring-xml-types)
+    - [XML Types Within Types](#xml-types-within-types)
 
 Qontract extends the Gherkin syntax by adding some more keywords.
 
@@ -56,7 +65,9 @@ Visual Studio Code and IntelliJ Idea support [syntax highlighting](syntax_highli
 
 A Contract File starts with the Feature at the top.
 
-    Feature: Contract for the petstore service
+```gherkin
+Feature: Contract for the petstore service
+```
 
 This line describes what the API is about.
 
@@ -68,7 +79,7 @@ It is written in the Given, When and Then Format
 * When - This represents the request
 * Then - Assertions
 
-```
+```gherkin
 Scenario: Should be able to get a pet by petId
     When GET /pets/(petid:number)
     Then status 200
@@ -83,8 +94,10 @@ As mentioned, Given section is optional and is only necessary if you need to set
 
 In the above example, let us focus on below line.
 
-    When GET /pets/(petid:number)
-    
+```gherkin
+When GET /pets/(petid:number)
+```
+
 When keyword is followed by the Http Method and the URL.
 
 * List of supported Http Methods - GET, POST, PUT, DELETE
@@ -98,10 +111,12 @@ URL Parameters Definition
 
 You can also append more information to the the request with the "And clause"
 
-    When POST /pets/
-      And request-body {petid: "(number)"}
-      And request-header auth-token (string)
-      And request-header traceid (number)
+```gherkin
+When POST /pets/
+  And request-body {petid: "(number)"}
+  And request-header auth-token (string)
+  And request-header traceid (number)
+```
 
 In above example, there are two more keywords.
 * request-body - As you may have guessed you can only have one request-body for a request
@@ -111,11 +126,13 @@ In above example, there are two more keywords.
 
 This section describes response.
 
-    Then status 200
-      And response-body {petid: "(number)"}
-      And response-header token (string)
-      And response-header CONTENT-TYPE application/json
-      
+```gherkin
+Then status 200
+  And response-body {petid: "(number)"}
+  And response-header token (string)
+  And response-header CONTENT-TYPE application/json
+```
+
 The response-body and response-header keywords are similar to request-body and request-header respectively.
 
 ### Built-in Data Types
@@ -128,14 +145,16 @@ The response-body and response-header keywords are similar to request-body and r
 * datetime
 
 So for example:
-    
-    Feature: String API
 
-    Scenario: Upper case of a string
-      When POST /uppercase
-      And request-body (string)
-      Then status 200
-      And response-body (string)
+```gherkin    
+Feature: String API
+
+Scenario: Upper case of a string
+  When POST /uppercase
+  And request-body (string)
+  Then status 200
+  And response-body (string)
+```
 
 number, string, boolean and null are all used the same way.
 
@@ -160,13 +179,15 @@ You can also specifically define the following url types:
 
 We can describe an array containing multiple values.
 
-    Feature: Arithmetic API
-    
-    Scenario: Add 2 numbers
-      When POST /add
-      And request-body ["(number)", "(number)"]
-      Then status 200
-      And response-body (number)
+```gherkin
+Feature: Arithmetic API
+
+Scenario: Add 2 numbers
+  When POST /add
+  And request-body ["(number)", "(number)"]
+  Then status 200
+  And response-body (number)
+```
 
 Since we are leveraging native JSON syntax, the type must be placed within a string.
 
@@ -176,13 +197,15 @@ Since we are leveraging native JSON syntax, the type must be placed within a str
 
 We can describe arrays where the type of each element is known, but the length of the array is not fixed.
 
-    Feature: Arithmetic API
-    
-    Scenario: Add all the numbers
-      When POST /add
-      And request-body ["(number*)"]
-      Then status 200
-      And response-body (number)
+```gherkin
+Feature: Arithmetic API
+
+Scenario: Add all the numbers
+  When POST /add
+  And request-body ["(number*)"]
+  Then status 200
+  And response-body (number)
+```
 
 Here, ["(number*)"] would match [1], [1, 2], and even the empty array [].
 
@@ -192,13 +215,15 @@ Note that for now, the array operator works only on type names. ["(number)"]* is
 
 We can describe JSON objects, and provide type specifiers for their values.
 
-    Feature: Arithmetic API
+```gherkin
+Feature: Arithmetic API
 
-    Scenario: Perform an arithmetic operation
-      When POST /operate
-      And request-body {"val1": "(number)", "val2": "(number)", "operation": "(string)"}
-      Then status 200
-      And response-body (number)
+Scenario: Perform an arithmetic operation
+  When POST /operate
+  And request-body {"val1": "(number)", "val2": "(number)", "operation": "(string)"}
+  Then status 200
+  And response-body (number)
+```
 
 In ```{"val1": "(number)", "val2": "(number)", "operation": "(string)"}``` you can see that the keys are fixed.
 
@@ -208,26 +233,30 @@ This would match ```{"val1": 10, "val2": 20, "operation": "+"}```.
 
 Sometimes the data structure is too complex to view in place. It helps to be able to pull it out, so that the semantics of the request are not obscured.
 
-    Feature: Arithmetic API
+```gherkin
+Feature: Arithmetic API
 
-    Scenario: Perform 2 nested operations
-      When POST /operate
-      And request-body {"op1": {"val1": "(number)", "val2": "(number)", "operation": "(string)"}, "op2": {"val1": "(number)", "val2": "(number)", "operation": "(string)"}, "operation": "(string)"}
-      Then status 200
-      And response-body (number)
+Scenario: Perform 2 nested operations
+  When POST /operate
+  And request-body {"op1": {"val1": "(number)", "val2": "(number)", "operation": "(string)"}, "op2": {"val1": "(number)", "val2": "(number)", "operation": "(string)"}, "operation": "(string)"}
+  Then status 200
+  And response-body (number)
+```
 
 This request body is way too complex. Instead:
 
-    Feature: Arithmetic API
+```gherkin
+Feature: Arithmetic API
 
-    Scenario: Perform 2 nested operations
-      Given type Operation {"val1": "(number)", "val2": "(number)", "operation": "(string)"}
-      And type ContainerOperation {"op1": "(Operation)", "op2": "(Operation)", "operation": "(string)"}
+Scenario: Perform 2 nested operations
+  Given type Operation {"val1": "(number)", "val2": "(number)", "operation": "(string)"}
+  And type ContainerOperation {"op1": "(Operation)", "op2": "(Operation)", "operation": "(string)"}
 
-      When POST /operate
-      And request-body (ContainerOperation)
-      Then status 200
-      And response-body (number)
+  When POST /operate
+  And request-body (ContainerOperation)
+  Then status 200
+  And response-body (number)
+```
 
 This expresses the intent of the structures much more easily.
 
@@ -235,23 +264,25 @@ This expresses the intent of the structures much more easily.
 
 We can take readability one step further by using tables.
 
-    Feature: Arithmetic API
+```gherkin
+Feature: Arithmetic API
 
-    Scenario: Perform 2 nested operations
-      Given json Operation
-      | val2      | (number) |
-      | val1      | (number) |
-      | operation | (string) |
-      
-      And json ContainerOperation
-      | op1       | (Operation) |
-      | op2       | (Operation) |
-      | operation | (string)    |
+Scenario: Perform 2 nested operations
+  Given json Operation
+  | val2      | (number) |
+  | val1      | (number) |
+  | operation | (string) |
+  
+  And json ContainerOperation
+  | op1       | (Operation) |
+  | op2       | (Operation) |
+  | operation | (string)    |
 
-      When POST /operate
-      And request-body (ContainerOperation)
-      Then status 200
-      And response-body (number)
+  When POST /operate
+  And request-body (ContainerOperation)
+  Then status 200
+  And response-body (number)
+```
 
 And this way each part of the structure is easy to see.
 
@@ -261,13 +292,15 @@ The pipes should be aligned for better readability. Fortunately, modern editors 
 
 You can specify values in objects instead of types.
 
-    Feature: Arithmetic API
+```gherkin
+Feature: Arithmetic API
 
-    Scenario: Perform 2 nested operations
-      Given json Operation
-      | val1   | (number) |
-      | val2   | (number) |
-      | option | "first"  |
+Scenario: Perform 2 nested operations
+  Given json Operation
+  | val1   | (number) |
+  | val2   | (number) |
+  | option | "first"  |
+```
 
 This matches ```{"val1": 10, "val2": 20, "option": "first" }``` but not ```{"val1": 10, "val2": 20, "option": "something else" }```
 
@@ -275,15 +308,17 @@ This matches ```{"val1": 10, "val2": 20, "option": "first" }``` but not ```{"val
 
 We can describe a list of items of a particular type.
 
-    Feature: Arithmetic API
+```gherkin
+Feature: Arithmetic API
 
-    Scenario: Add all numbers
-      Given type Numbers (number*)
+Scenario: Add all numbers
+  Given type Numbers (number*)
 
-      When POST /sum
-      And request-body (Numbers)
-      Then status 200
-      And response-body (number)
+  When POST /sum
+  And request-body (Numbers)
+  Then status 200
+  And response-body (number)
+```
 
 (Numbers) is defined as (number*), and this matches [4, 7, 3, 85, 0]
 
@@ -291,65 +326,70 @@ We can describe a list of items of a particular type.
 
 If there are multiple APIs using common types, it helps to put them in the Background. All scenarios inherit definitions in the background.
 
-    Feature: Arithmetic API
+```gherkin
+Feature: Arithmetic API
 
-    Background:
-      Given type Numbers (number*)
-    
-    Scenario: Add numbers
-      When POST /sum
-      And request-body (Numbers)
-      Then status 200
-      And response-body (number)
+Background:
+  Given type Numbers (number*)
 
-    Scenario: multiply numbers
-      When POST /product
-      And request-body (Numbers)
-      Then status 200
-      And response-body (number)
+Scenario: Add numbers
+  When POST /sum
+  And request-body (Numbers)
+  Then status 200
+  And response-body (number)
+
+Scenario: multiply numbers
+  When POST /product
+  And request-body (Numbers)
+  Then status 200
+  And response-body (number)
+```
 
 ### Overriding Types
 
 A scenario can override a type defined in the background. Useful when one scenarios needs a slightly different data structure from the rest.
 
-    Feature: Pet Store API
+```gherkin
+Feature: Pet Store API
 
-    Background:
-      Given type Pet
-        | id   | (number) |
-        | name | (string) |
-        | type | (string) |
+Background:
+  Given type Pet
+    | id   | (number) |
+    | name | (string) |
+    | type | (string) |
 
-    Scenario: Get details of a pet
-      When GET /pet/(id:number)
-      Then status 200
-      And response-body (Pet)
+Scenario: Get details of a pet
+  When GET /pet/(id:number)
+  Then status 200
+  And response-body (Pet)
 
-    Scenario: Create pet
-      Given type Pet
-        | name | (string) |
-        | type | (string) |
-      When POST /pet
-      And request-body (Pet)
-      Then status 200
-      And response-body (number)
-
+Scenario: Create pet
+  Given type Pet
+    | name | (string) |
+    | type | (string) |
+  When POST /pet
+  And request-body (Pet)
+  Then status 200
+  And response-body (number)
+```
 Compare the Pet definition in the background, and in the second scenario. The second one lacks an id, since the id is assigned by the application, and the caller will not have the id when invoking the API
 
 ### Optional Operator
 
 We can describe an object in which a key is optional.
 
-    Feature: Pet Store API
+```gherkin
+Feature: Pet Store API
 
-    Scenario: Get pet details
-      Given type Pet
-        | id           | (number) |
-        | name         | (string) |
-        | description? | (string) |
-      When GET /pet/(id:number)
-      Then status 200
-      And response-body (Pet)
+Scenario: Get pet details
+  Given type Pet
+    | id           | (number) |
+    | name         | (string) |
+    | description? | (string) |
+  When GET /pet/(id:number)
+  Then status 200
+  And response-body (Pet)
+```
 
 Note the suffix ```?``` attached to the description key, which declares the keyoptional.
 
@@ -357,15 +397,17 @@ The response can now be ```{"id": 10, "name": "Socks", "description": "Brown and
 
 However if Pet is in the request, such as:
 
-    Feature: Pet Store API
+```gherkin
+Feature: Pet Store API
 
-    Scenario: Create pet
-      Given type Pet
-        | name         | (string) |
-        | description? | (string) |
-      When POST /pets
-      Then status 200
-      And response-body (number)
+Scenario: Create pet
+  Given type Pet
+    | name         | (string) |
+    | description? | (string) |
+  When POST /pets
+  Then status 200
+  And response-body (number)
+```
 
 Cyclomatic complexity here is 2. There are 2 types of structures that could be sent in the request, one with description and one without.
 
@@ -375,13 +417,15 @@ So when running in test mode, qontract will run 2 tests for this, one with the d
 
 We can represent values that may be null.
 
-    Scenario: Create pet
-      Given type Pet
-        | name         | (string)  |
-        | description  | (string?) |
-      When POST /pets
-      Then status 200
-      And response-body (number)
+```gherkin
+Scenario: Create pet
+  Given type Pet
+    | name         | (string)  |
+    | description  | (string?) |
+  When POST /pets
+  Then status 200
+  And response-body (number)
+```
 
 The Pet type will permit both ```{"name": "Daisy", "description": "Beautiful dog!"}``` and ```{"name": "Daisy", "description": null}``` to be passed as a request to /pets.
 
@@ -391,14 +435,16 @@ Cyclomatic complexity is 2, so when running in test mode, Qontract will generate
 
 ### Rest Operator
 
-    Feature: Arithmetic API
+```gherkin
+Feature: Arithmetic API
 
-    Scenario: Arithmetic operation
-      Given type Operation ["(string)", "(number...)"]
-      When POST /operate
-      And request-body (Operation)
-      Then status 200
-      And response-body (number)
+Scenario: Arithmetic operation
+  Given type Operation ["(string)", "(number...)"]
+  When POST /operate
+  And request-body (Operation)
+  Then status 200
+  And response-body (number)
+```
 
 Operation would match ["+", 1, 2, 3], ["-", 2, 5, 3, 6], etc.
 
@@ -410,47 +456,51 @@ These operators can be combined. The operators must be interpreted in reverse or
 
 So:
 * ```(number*)``` means an array of numbers, such as [1, 2, 3]
-* ```(numbers*?)``` reading *? backwards, it means a nullable array of numbers, so it matches either [1, 2, 3] or null
-For example:
-    Given type Data
-      | numbers | (numbers*?) |
+* ```(numbers*?)``` reading *? backwards, it means a nullable array of numbers, so it matches either [1, 2, 3] or null. For example:
+```gherkin
+Given type Data
+  | numbers | (numbers*?) |
+```
 
 ...would match both {"numbers": [1, 2, 3]} and {"numbers": null}
 
-* ```(numbers?*)``` is an array of nullable numbers, so it matches [1, 2, null, 4, null]
-For example:
-
-    Given type Data
-      | numbers | (numbers?*) |
-
-...would match both {"numbers": [1, 2, 3]} and {"numbers": [1, null, 3, 4, null, null]}
-
-* ```["(string)", "(number?...)"]``` matches ["+", 1, 2, null, 3, 4]. The first is a string. The rest are all nullable numbres.
-
-For example:
-
-    Given type Operation
-      | numbers | (numbers?*) |
+* ```(numbers?*)``` is an array of nullable numbers, so it matches [1, 2, null, 4, null]. For example:
+```gherkin
+Given type Data
+  | numbers | (numbers?*) |
+```
 
 ...would match both {"numbers": [1, 2, 3]} and {"numbers": [1, null, 3, 4, null, null]}
 
-### Pattern in string
+* ```["(string)", "(number?...)"]``` matches ["+", 1, 2, null, 3, 4]. The first is a string. The rest are all nullable numbres. For example:
+```gherkin
+Given type Operation
+  | numbers | (numbers?*) |
+```
+
+...would match both {"numbers": [1, 2, 3]} and {"numbers": [1, null, 3, 4, null, null]}
+
+### Pattern In String
 
 We can explicitly describe types in strings. If for example we know that the value is a number, but it will be inside a string:
 
-    Given type Id (number in string)
+```gherkin
+Given type Id (number in string)
+```
 
-### Explicit reference to examples in type declarations
+### Explicit Reference To Examples In Type Declarations
 
 We can explicitly refer to the example column from within a type declaration.
 
-    When POST /
-      And request-body (orderid:number)
-      Then status 200
+```gherkin
+When POST /
+  And request-body (orderid:number)
+  Then status 200
 
-    Examples:
-    | orderid |
-    | 10      |
+Examples:
+| orderid |
+| 10      |
+```
 
 In this example, the request-body looks up the orderid from the examples. When the test request is generated, it contain the value `10` in the request body.
 
@@ -462,7 +512,7 @@ For example, a json object of order details, where the keys are product ids and 
 
 We can express it like this:
 
-```
+```gherkin
 Given type ProductInfo
 | product_id | (number) |
 | quantity   | (number) |
@@ -473,11 +523,11 @@ The first type in the dictionary refers to the key. The key is always a string, 
 
 The value will be another json object, containing the product info described above.
 
-### Form fields
+### Form Fields
 
 We can describe form fields in the request like this:
 
-```
+```gherkin
 When POST /orders
 And form-field name (string)
 And form-field address (string)
@@ -485,11 +535,11 @@ And form-field address (string)
 
 This corresponds Postman's x-www-form-urlencoded in the request body.
 
-### Multipart form data
+### Multipart Form Data
 
 We can describe multipart form data in the request like this:
 
-```
+```gherkin
 When POST /orders
 And request-part name (string)
 And request-part address (string)
@@ -499,30 +549,226 @@ This corresponds Postman's form-data in the request body.
 
 If the request part contains a file, use the @ symbol to denote the file name, like so:
 
-```
+```gherkin
 When POST /orders
 And request-part customers @customers.csv
 ```
 
 When running the test, @customers.csv must actually exist in the working directory.
 
-### Kafka messages
+### Kafka Messages
 
 We can describe Kafka messages.
 
 The syntax:
 
-    * kafka-message <topic> <key type> <value type>
+```gherkin
+* kafka-message <topic> <key type> <value type>
+```
 
 OR
 
-    * kafka-message <topic> <value type>
+```gherkin
+* kafka-message <topic> <value type>
+```
 
 For example:
 
-    Given json Customer
-      | name  | (string) |
-      | phone | (string) |
-    Then kafka-message customerdata (String) (Customer*)
+```gherkin
+Given json Customer
+  | name  | (string) |
+  | phone | (string) |
+Then kafka-message customerdata (String) (Customer*)
+```
 
 Here the message is expected to be on the customerdata topic, the key should be a string, and the value should be a json string.
+
+### XML Tags
+
+We can describe XML tags like this:
+
+```gherkin
+When POST /customer
+And request-body <customer><name>(string)</name></customer>
+Then status 200
+```
+
+And this matches the following xml document:
+
+```xml
+<customer><name>John Doe</name></customer>
+```
+
+### Multiline XML Definitions
+
+```gherkin
+When POST /customer
+And request-body <customer><name>(string)</name><id>(number)</id></customer>
+Then status 200
+```
+
+The above contract can also be declared like this:
+
+```gherkin
+When POST /customer
+And request-body
+"""
+<customer>
+  <name>(string)</name>
+  <id>(number)</id>
+</customer>
+"""
+Then status 200
+```
+
+### XML Data Types
+
+You can use all the scalar data types described [earlier in this document](built-in-data-types) except for null.
+
+### XML Attributes
+
+Similarly, we can describe XML tags:
+
+```gherkin
+When POST /customer
+And request-body
+"""
+<customer enabled="(boolean)">
+  <name>(string)</name>
+</customer>
+"""
+Then status 200
+```
+
+This matches the following XML document:
+
+```xml
+<customer enabled="true"><name>John Doe</name></customer>
+```
+
+### Optional Values In XML Tags
+
+```gherkin
+When POST /customer
+And request-body
+"""
+<customer>
+  <name>(string?)</name>
+</customer>
+"""
+Then status 200
+```
+
+And this matches an xml documents containing a name:
+
+```xml
+<customer><name>John Doe</name></customer>
+```
+
+and one with an empty name tag:
+
+```xml
+<customer><name></name></customer>
+```
+
+or just:
+
+```xml
+<customer><name/></customer>
+```
+
+### Optional Values In XML Attributes
+
+```gherkin
+When POST /customer
+And request-body
+"""
+<customer enabled="(boolean?)">
+  <name>(string)</name>
+</customer>
+"""
+Then status 200
+```
+
+This matches a document with a value in enabled tag:
+
+```xml
+<customer enabled="true"><name>John Doe</name></customer>
+```
+
+and one with an empty enabled tag:
+
+```xml
+<customer enabled="true"><name>John Doe</name></customer>
+```
+
+Note here that only the value is optional. The tag is not. So the contract does NOT match a document without an enabled tag.
+
+Specifically, the above contract will NOT match the following:
+
+```xml
+<customer><name>John Doe</name></customer>
+```
+
+### Optional XML Attributes
+
+An optional attribute require special synax because ? is not valid syntax in an XML tag name.
+
+```gherkin
+When POST /customer
+And request-body
+"""
+<customer enabled:optional="(boolean)">
+  <name>(string)</name>
+</customer>
+"""
+Then status 200
+```
+
+This will match a tag with the "enabled" attribute:
+
+```xml
+<customer enabled="true"><name>John Doe</name></customer>
+```
+
+and also one without:
+
+```xml
+<customer><name>John Doe</name></customer>
+```
+
+### Declaring XML Types
+
+```gherkin
+Given type Customer
+"""
+<customer>
+  <name>(string)</name>
+</customer>
+"""
+When POST /customer
+And request-body (Customer)
+Then status 200
+```
+
+This matches the following XML contract:
+
+```xml
+<customer><name>John Doe</name></customer>
+```
+
+### XML Types Within Types
+
+```gherkin
+Given type Name <name>(string)</name>
+And type Customer <customer>(Name)</customer>
+When POST /customer
+And request-body (Customer)
+Then status 200
+```
+
+This matches the following XML contract:
+
+```xml
+<customer><name>John Doe</name></customer>
+```

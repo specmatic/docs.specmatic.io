@@ -12,7 +12,7 @@ HTTP Proxy
       - [Start The Proxy](#start-the-proxy)
       - [Proxy Setup](#proxy-setup)
       - [Generate Contracts](#generate-contracts)
-    - [Reverse Proxy Mode (Supports HTTPS Application Endpoint)](#reverse-proxy-mode-supports-https-application-endpoint)
+    - [Reverse Proxy Mode](#reverse-proxy-mode)
       - [Start The Proxy](#start-the-proxy-1)
       - [Generate Contracts](#generate-contracts-1)
 
@@ -63,7 +63,7 @@ new_feature.qontract stub0.json
 
 In this case, a single api call was executed. As a result, Qontract generated two files. stub0.json contains the request sent from Postman and the response from the server. new_feature.qontract contains the contract generated from stub0.json.
 
-### Reverse Proxy Mode (Supports HTTPS Application Endpoint)
+### Reverse Proxy Mode
 
 \
 ![](/images/qontract-reverse-proxy.svg)
