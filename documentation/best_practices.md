@@ -9,26 +9,27 @@ Best Practices
 Organising contract files
 --------
 
-There are a handful of approaches to author and maintain .qontract files. Below are two examples:
-* All scenarios and APIs in one .qontract file
-    * Advantages
-        * Suitable for smaller services and applications
-        * Reuse structures and datatypes that are declared in the background section across many scenarios
-        * One single place to look at
-    * Disadvantages / Smells
-        * The .qontract file can become large and becomes a scroll hell
-        * Merge conflicts etc. because everyone updates the same file etc.
-* One .qontract file per API endpoint which contains all positive and negative scenarios pertaining to that API endpoint.
-    * Advantages
-        * Short .qontract files
-    * Disadvantages / Smells
-        * Common structures / datatypes across endpoints have to be duplicated (because we cannot import one .qontract file inside another)
+### Authoring Contract Files - The Dilemma
 
-So both these extremes are not necessarily suitable.
+**All scenarios and APIs in one .qontract file**
+* Advantages
+    * One single place to look at
+    * Common structures and datatypes that are declared in the background section can be re-used across many scenarios
+* Disadvantages / Smells
+    * The .qontract file can become large and becomes a scroll hell
+    * Churn and merge conflicts etc. because everyone updates the same file
+    
+**One .qontract file per API endpoint**
+* Advantages
+    * Short .qontract files
+* Disadvantages / Smells
+    * Common structures / datatypes across endpoints have to be duplicated (because we cannot import one .qontract file inside another)
+
+As mentioned above, both of these extremes are necessarily the best.
 
 ### Single Responsibility Principle
 
-We recommend adhering to SRP as a guideline.
+We recommend adhering to SRP in order to achieve well authored contracts.
 
 * Each .qontract should have scenarios (regardless of whether they belong one endpoint or several endpoints) that are related to a single axis of change.
 * In other words, a contract file must change for one and only reason (entity, purpose or action).
@@ -56,12 +57,7 @@ Static stub files should be co-located with their respective contracts. Example:
 
 ### Repository Design
 
-**Mono Repo**
-* The contract files can be kept as a peer to other subprojects within the parent project as per above recommendations
-
-**Multi Repo**
-* Internal / Private Contracts - Contract files that are used by a Provider / Consumers within its own boundaries or by just its own developers can reside within its respective repo
-* External / Public Contracts - Contract files which are exposed to other Providers / Consumers across boundaries / teams / organisations should reside in a common central repository
+WIP...
 
 Contract Design Principles
 ------
@@ -71,12 +67,12 @@ Contract Design Principles
 * Provide multiple example rows when there are nullable values.
     * Qontract runs two tests when there is a single nullable value, one for null and one for non-null values. When there are several of these Qontract will attempt running tests for all permutations.
     * The example rows can help Qontract in determining which are the plausible combinations in the context of your application.
-* Extract common structures and datatypes to background
+* Reduce Duplication. Extract common structures and datatypes to background.
     * Helps reduce verbosity in scenarios
     * Reduces human error that can happen when there is duplication of structure or datatype definition across scenarios
 
 ### Smells
-* Too many optional parameters in a single API - possible smell that indicates that this API needs to split.
+* Too many optional parameters in a single API - Indicates that this API needs to split.
 
 CI and Pull Request Builders
 ------
