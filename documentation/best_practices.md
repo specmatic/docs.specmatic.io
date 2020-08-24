@@ -6,6 +6,15 @@ nav_exclude: true
 Best Practices
 ========
 
+- [Organizing Contract Files](#organising-contract-files)
+    - [Authoring Contract Files - The Dilemma](#authoring-contract-files---the-dilemma)
+    - [Single Responsibility Principle](#single-responsibility-principle)
+    - [Namespaces](#namespacing)
+    - [Static Stub Json](#static-stubs)
+- [Contract Design Principles](#contract-design-principles)
+    - [Smells and Remedies](#smells)
+- [Continuous Integration and Pull Request Builders](#ci-and-pull-request-builders)
+
 Organising contract files
 --------
 
