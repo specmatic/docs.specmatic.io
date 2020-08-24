@@ -18,7 +18,7 @@ Best Practices
 Organizing contract files
 --------
 
-We have already covered how to author good [scenarios](/documentation/languag.html). Let us walk through the aspects we should consider when stringing scenarios together in contract files.
+We have already covered how to author good [scenarios](/documentation/language.html). Let us walk through the aspects we should consider when stringing scenarios together in contract files.
 
 ### Authoring Contract Files - The Dilemma
 
