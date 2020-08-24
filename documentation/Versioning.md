@@ -7,6 +7,13 @@ nav_order: 10
 Versioning
 ==========
 
+- [Versioning](#versioning)
+  - [Backward Compatibility](#backward-compatibility)
+  - [Contract Namespaces And File System Structure](#contract-namespaces-and-file-system-structure)
+  - [Ensuring Backward Compatibility](#ensuring-backward-compatibility)
+    - [Compare Working Directory With HEAD](#compare-working-directory-with-head)
+    - [Compare A Contract In Two Different Commits](#compare-a-contract-in-two-different-commits)
+
 ## Backward Compatibility
 
 Take for example the math contract for squaring a number.
