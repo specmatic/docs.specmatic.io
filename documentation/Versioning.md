@@ -65,13 +65,15 @@ We share contracts by committing them to a git repository.
 
 Here's a sample git repository that contains the math contract:
 
+```
 <BASE_DIR>
-/run
-    /qontract
-        /examples
-            /math
-                /1.qontract
-                /2.qontract
+    /run
+        /qontract
+            /examples
+                /math
+                    /1.qontract
+                    /2.qontract
+```
 
 - The path ./run/qontract/examples/math acts as a namespace, much like a dot separated package name.
 - Contract file names should be the same as their version numbers.
