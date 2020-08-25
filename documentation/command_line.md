@@ -124,9 +124,9 @@ This time, `curl -v -X POST -H "Content-Type: text/plain" -d 10 http://localhost
 
 ### Dynamically stubbing HTTP requests
 
-While the Qontract instance is running, you can ask it to stub out a request by POSTING the stub to _stub_setup.
+While the Qontract instance is running, you can ask it to stub out a request by POSTING the stub to /_qontract/expectations.
 
-`curl -X POST -H 'Content-Type: application/json' -d '{"mock-http-request": {"method": "POST", "path": "/square", "body": 10}, "mock-http-response": {"status": 200, "body": 100}}' http://localhost:9000/_stub_setup`
+`curl -X POST -H 'Content-Type: application/json' -d '{"mock-http-request": {"method": "POST", "path": "/square", "body": 10}, "mock-http-response": {"status": 200, "body": 100}}' http://localhost:9000//_qontract/expectations`
 
 The payload is follows the same structure as the json posted in the previous section.
 
