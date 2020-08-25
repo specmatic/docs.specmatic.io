@@ -99,36 +99,7 @@ If needed, you can put all the stub information in a single directory.
 
 The format and file extension of the files in `./stubdata` must be the same as the files described above.
 
-## Stubbing A Type Instead Of A Value
-
-The stub can be configured to always return 100, as long as the request is in the right format.
-
-Your json document should looks like this:
-
-```json
-{
-    "mock-http-request": {
-        "method": "POST",
-        "path": "/square",
-        "body": "(number)"
-    },
-
-    "mock-http-response": {
-        "status": 200,
-        "body": 100
-    }
-}
-```
-
-This time, `curl -v -X POST -H "Content-Type: text/plain" -d 10 http://localhost:9000/square` and `curl -v -X POST -H "Content-Type: text/plain" -d 20 http://localhost:9000/square` will both get 100 back in the response.
-
-### Dynamically stubbing HTTP requests
-
-While the Qontract instance is running, you can ask it to stub out a request by POSTING the stub to /_qontract/expectations.
-
-`curl -X POST -H 'Content-Type: application/json' -d '{"mock-http-request": {"method": "POST", "path": "/square", "body": 10}, "mock-http-response": {"status": 200, "body": 100}}' http://localhost:9000//_qontract/expectations`
-
-The payload is follows the same structure as the json posted in the previous section.
+For more information, check out the documentation on [service virtualisation](/service_virtualisation.html).
 
 ## Test Mode
 
@@ -158,3 +129,5 @@ If you wish to ack the message you have read, use `qontract test --kafkaHost=<ka
 
 Qontract "test" command exits with status 0 or 1 to represent success or failure respectively.
 You can configure your Provider builds to fail when it does not satisfy the contract.
+
+For more information, check out the documentation on [running contract tests](/contract_tests.html).
