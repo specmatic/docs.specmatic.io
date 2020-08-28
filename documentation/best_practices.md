@@ -1,7 +1,8 @@
 ---
 layout: default
 title: Best Practices
-nav_exclude: true
+parent: Documentation
+nav_order: 14
 ---
 Best Practices
 ========
@@ -59,25 +60,22 @@ While this is not mandated, it is highly recommended as a way to improve maintai
 Static stub files should be co-located with their respective contracts. Example:
 
 ```
-    /com
-        /shop
-            /orders
-                returns.qontract
+/com
+    /shop
+        /orders
+            returns.qontract
+            /returns_data
                 returns.json
 ```
-
-### Repository Design
-
-WIP...
 
 Contract Design Principles
 ------
 * Be specific with datatypes.
     * This improves ability spot issues when running the contract as a test and in generating meaningful dummy values in stub mode.
     * Example: Prefer date/url over string where possible
-* Provide multiple example rows when there are nullable values.
-    * Qontract runs two tests when there is a single nullable value, one for null and one for non-null values. When there are several of these Qontract will attempt running tests for all permutations.
-    * The example rows can help Qontract in determining which are the plausible combinations in the context of your application.
+* When your Scenario has several nullable values, prefer levering Scenario Outline. In Scenario Outline provide multiple example rows when there are nullable values.
+    * Qontract runs [two tests per nullable value](/documentation/language.html#nullable-operator), one for null and one for non-null value. When there are several nullable values Qontract will attempt running tests for all permutations.
+    * The example rows in [Scenario Outline](/documentation/language.html#scenario-outline) can help Qontract in determining which are the plausible combinations in the context of your application.
 * Reduce Duplication. Extract common structures and datatypes to background.
     * Helps reduce verbosity in scenarios
     * Reduces human error that can happen when there is duplication of structure or datatype definition across scenarios
