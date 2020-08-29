@@ -28,11 +28,11 @@ Service Virtualisation
 
 It is not easy to develop an application that depends on 3rd party APIs. These APIs never run on the dev laptop or environment. They must be invoked over the network, during the process of coding, debugging or running component tests. But access to the APIs is usually flaky. The network may be down. The dev laptop may be offline. Sometimes an account has to be setup, data within the account has to be created, orders placed, etc.
 
-Instead, we prefer to setup a stub API that appears to act like the real API, and runs on the developer's laptop. Since it is on the developer's laptop, it is never flaky, and always available. The consuming application that is being developed on that laptop doesn't know that it is talking to a local stub, and in fact cannot tell the difference.
+Instead, we prefer to set up a stub API that appears to act like the real API, and runs on the developer's laptop. Since it is on the developer's laptop, it is never flaky, and always available. The consuming application that is being developed on that laptop doesn't know that it is talking to a local stub, and in fact cannot tell the difference.
 
 ### Why Use Qontract
 
-There are many tools you can use for service virtualisation. Qontract however compares the stub setup (called expectatations) with the given contract to ensure that they are in sync. The same contract is used by the provider when running [contract tests](/documentation/contract_tests.html). Since the consumer sets expectations on it's stubs that match the contract, and the provider API is built to adhere to the same contract, the integration between the consumer and provider stays intact.
+There are many tools you can use for service virtualisation. Qontract however compares the stub setup (called expectations) with the given contract to ensure that they are in sync. The same contract is used by the provider when running [contract tests](/documentation/contract_tests.html). Since the consumer sets expectations on it's stubs that match the contract, and the provider API is built to adhere to the same contract, the integration between the consumer and provider stays intact.
 
 Additionally, the contract spec is human-readable. So contracts can be circulated around by email, chat, etc when the API design is under discussion.
 
@@ -443,7 +443,7 @@ Here is a sample json stub file, containing all the keys you can use, with inlin
 {
     "http-request": {
         "method": "POST",
-        "path": "/url/path", // You cannot put a full url here
+        "path": "/url/path/(number)/some/more/path", // Path parameters can appear inline, query parameters need to mentioned separately in the query section below.
         "headers": {
             "X-Header-Name1": "(string)",
             "X-Header-Name2": "(string)"

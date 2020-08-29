@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Language
+title: Contract Syntax
 parent: Documentation
 nav_order: 6
 ---
@@ -177,7 +177,7 @@ Scenario Outline: Should be able to get a pet by petId
 ```
 
 NOTE: Scenario Outline is effective only in the context of request params when running contract as a test.
-To return specific values when running the contract leverage [Stub Mode](/documentation/command_line.html#stub-mode)
+To return specific values when running the contract leverage [Stub Mode](/documentation/command_line.html#stub-mode).
 
 ### Built-in Data Types
 
