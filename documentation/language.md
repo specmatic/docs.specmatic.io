@@ -12,7 +12,6 @@ Language
   - [Syntax Reference](#syntax-reference)
     - [Feature](#feature)
     - [Scenario](#scenario)
-    - [Scenario Outline](#scenario)
     - [Given](#given)
     - [When](#when)
     - [Then](#then)
