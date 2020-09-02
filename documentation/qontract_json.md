@@ -9,30 +9,37 @@ Format of qontract.json
 
 ```json
 {
+  "sources": [
+    {
+      "provider": "git",
+      "repository": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts2",
+      "test": [
+        "com/petstore/2.qontract"
+      ],
+      "stub": [
+        "com/petstore/payment.qontract"
+      ]
+    }
+  ],
+
   "auth": {
-    // needed for CI
     "bearer-file": "bearer.txt"
   },
+
   "pipeline": {
     "provider": "azure",
-    
-    // Azure organization name
     "organization": "XNSio",
-    
-    // Azure project name
     "project": "XNSIO",
-    
-    // Azure build pipeline definition id
     "definitionId": 4
-  },
+  }
+}
+```
 
-  // List of contract sources
-  //
-  // A source consists of
-  // - a git repository containing contracts
-  // - and the relative paths of the needed contracts in the repository
-  //
-  // ultiple sources can be declared
+h3. Declare contracts
+
+Contains a list of git repositories containing contract files.
+
+```json
   "sources": [
     {
       "provider": "git",
@@ -52,6 +59,36 @@ Format of qontract.json
           "com/petstore/payment.qontract"
       ]
     }
-  ]
+  ],
+```
+
+h3. Declare pipeline details
+
+Contains details of the project pipeline.
+
+```json
+  // needed for CI, leave as is
+  "auth": {
+    "bearer-file": "bearer.txt"
+  },
+
+  // pipeline details of this project
+  //
+  // This is used by qontract install, to register
+  //    a project's build pipeline to run when a contract changes
+  // The details below must be replaced with the details relevant
+  //   to your project
+  "pipeline": {
+    "provider": "azure", // pipeline type, leave as is
+    
+    // Azure organization name
+    "organization": "XNSio",
+    
+    // Azure project name
+    "project": "XNSIO",
+    
+    // Azure build pipeline definition id
+    "definitionId": 4
+  }
 }
 ```
