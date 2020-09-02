@@ -5,6 +5,13 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.15.0
+
+Date: 12th August 2020
+
+What's new:
+- Improvements to the proxy command
+
 ### Release 0.14.2
 
 Date: 8th August 2020

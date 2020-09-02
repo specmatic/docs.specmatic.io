@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 12th August 2020
+Date: 2nd September 2020
 
 What's new:
-- Improvements to the proxy command
+- updated qontract.json format
+- better error messages
 
 Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 
