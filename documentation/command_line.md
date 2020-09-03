@@ -87,7 +87,7 @@ Note the `--startKafka` flag. Qontract will start a Kafka instance, load the stu
 
 To run a stub for multiple contracts, and hit the same end point:
 
-    java -jar qontract.jar stub math1.qontract math2.qontract math3.qontract
+    java -jar qontract.jar stub payment_api.qontract journey_api.qontract ticket_api.qontract
 
 Qontract accepts any number of .qontract files.
 
@@ -95,7 +95,7 @@ Qontract accepts any number of .qontract files.
 
 If needed, you can put all the stub information in a single directory.
 
-    java -jar qontract.jar stub --data=./stubdata math1.qontract math2.qontract math3.qontract
+    java -jar qontract.jar stub --data=./stubdata payment_api.qontract journey_api.qontract ticket_api.qontract
 
 The format and file extension of the files in `./stubdata` must be the same as the files described above.
 

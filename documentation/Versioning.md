@@ -77,13 +77,15 @@ Here's a sample git repository that contains the math contract:
     /run
         /qontract
             /examples
-                /math
-                    /1.qontract
-                    /2.qontract
+                math_1.qontract
+                math_2.qontract
 ```
 
-- The path ./run/qontract/examples/math acts as a namespace, much like a dot separated package name.
-- Contract file names should be the same as their version numbers.
+- The path ./run/qontract/examples acts as a namespace, much like a dot separated package name.
+- Contract file names can begin with any text (no spaces)
+    - If there is a version number, then they must include version number at the end of the name before ".qontract" extension.
+    - The underscore separates the name of the contract and version number
+    - In above example the name of contract is math and there are two versions of this API.
 
 All updates to a contract file must be backward compatible.
 
@@ -95,12 +97,12 @@ Since the file is in git, comparing it with it's previous version is easy.
 
 Let's say you have the git repo in your home directory with the directory structure mentioned above.
 
-Make a change to 1.qontract.
+Make a change to math_1.qontract.
 
-To check if the change is considered backward compatible, open a terminal or command prompt and run the command `java -jar qontract.jar compatible git file ./run/qontract/examples/math/1.qontract`. You should see something like this if the change is backward compatible:
+To check if the change is backward compatible, open a terminal or command prompt and run the command `java -jar qontract.jar compatible git file ./run/qontract/examples/math_1.qontract`. You should see something like this if the change is backward compatible:
 
 ```shell
-> java -jar qontract.jar compatible git file ./run/qontract/examples/math/1.qontract
+> java -jar qontract.jar compatible git file ./run/qontract/examples/math_1.qontract
 Tests run: 1, Passed: 1, Failed: 0
 
 The newer contract is backward compatible
@@ -114,7 +116,7 @@ The exit status on failure is non zero, so you can use this if you wish to write
 
 This is useful in CI.
 
-If you with to comapare the changes in a contract between two commits, such as HEAD and HEAD^1, try this:
+If you wish to compare the changes in a contract between two commits, such as HEAD and HEAD^1, try this:
 
 ```shell
 > java -jar qontract.jar compatible git commits ./remote/random.qontract HEAD HEAD^1
