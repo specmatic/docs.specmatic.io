@@ -13,6 +13,7 @@ Versioning
   - [Ensuring Backward Compatibility](#ensuring-backward-compatibility)
     - [Compare Working Directory With HEAD](#compare-working-directory-with-head)
     - [Compare A Contract In Two Different Commits](#compare-a-contract-in-two-different-commits)
+  - [Handling Contracts in progress](#handling-contracts-in-progress)
 
 ## Backward Compatibility
 
@@ -128,3 +129,16 @@ The newer contract is backward compatible
 This requires of course that there are two versions at least in the git repository.
 
 You can even use commit hashes here if you wish to compare any other pair of commits.
+
+## Handling Contracts in progress
+
+For contracts which are not finalized yet and are in progress, you can annotate them as @WIP. This annotation tag will skip backward compatibility check for the contract. 
+
+```gherkin
+@WIP
+Scenario: Should be able to get a pet by petId
+  When GET /pets/(petid:number)
+  Then status 200
+  And response-body {petid: "(number)"}
+```
+Once the contract is complete you can remove the @WIP tag.
