@@ -35,7 +35,7 @@ Format of qontract.json
 }
 ```
 
-h3. Declare contracts
+### Declare contracts
 
 Contains a list of git repositories containing contract files.
 
@@ -62,7 +62,7 @@ Contains a list of git repositories containing contract files.
   ],
 ```
 
-h3. Declare pipeline details
+### Declare pipeline details
 
 Contains details of the project pipeline.
 
