@@ -9,7 +9,7 @@ Authentication
 
 ### Using Cookies
 
-Since Cookie is an HTTP request header, it can be accordingly represented in the contract as below:
+Since Cookie is an HTTP request header, it can be represented like in the following contract:
 
 ```gherkin
 Scenario: Perform an arithmetic operation
@@ -20,7 +20,7 @@ Scenario: Perform an arithmetic operation
   And response-body (number)
 ```
 
-The cookie can be respectively stubbed as below:
+A stub that includes the cookie then looks like this:
 
 ```json
 {
