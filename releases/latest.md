@@ -8,11 +8,12 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 2nd September 2020
+Date: 9th September 2020
 
 What's new:
-- updated qontract.json format
-- better error messages
+- qontract.json is now supported in test mode
+- new qontract bundle command for use in CI
+- support for recursive type definitions
 
 Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 

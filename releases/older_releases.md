@@ -5,6 +5,14 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.16.0
+
+Date: 2nd September 2020
+
+What's new:
+- updated qontract.json format
+- better error messages
+
 ### Release 0.15.0
 
 Date: 12th August 2020
