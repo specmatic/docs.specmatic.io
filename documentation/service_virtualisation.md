@@ -434,8 +434,8 @@ Without strict mode on, the stub would have returned the string "success", as yo
 
 Consider below contract file.
 
+File: petstore.contract
 ```gherkin
-# petstore.contract
 Feature: Contract for the petstore service
 
     Scenario: Fetch pet details
@@ -446,8 +446,8 @@ Feature: Contract for the petstore service
 
 The path parameter id and query parameter name can be setup in the corresponding data json file with below syntax.
 
+File: petstore_data/petstore.json
 ```json
-// petstore_data/petstore.json
 {
      "http-request": {
          "method": "GET",
@@ -466,7 +466,8 @@ The path parameter id and query parameter name can be setup in the corresponding
 The path parameter, id is set up to match the number 2. Query parameters cannot be mentioned as is, they have to separately setup under the "query" section.
 
 So even below curl request will return "Golden Retriever" as long as path and query parameters matches.
-```shell script
+
+```
 curl -vs http://0.0.0.0:9000/pets/2\?name\=Archie 2>&1 | less
 
 Golden Retriever
@@ -494,10 +495,9 @@ Expected string: "Archie", actual was string: "Shiro"* Closing connection 0
 
 ### Datatype matching in Stubs
 
-Let us assume in the above example you are not interested in matching the pet id. As long as the name is "Archie" you want to return "Goldern Retriever".
+Let us assume in the above example you are not interested in matching the pet id. As long as the name is "Archie" you want to return "Golden Retriever".
 
 ```json
-// petstore_data/petstore.json
 {
      "http-request": {
          "method": "GET",
@@ -512,6 +512,26 @@ Let us assume in the above example you are not interested in matching the pet id
     }
 }
 ```
+
+Another example where we can match any string in the query parameter "name" and only the number 2 for id.
+
+```json
+{
+     "http-request": {
+         "method": "GET",
+         "path": "/pets/2",
+         "query": {
+             "name": "(string)"
+         }
+     },
+     "http-response": {
+        "status": 200,
+        "body": "Golden Retriever"
+    }
+}
+```
+
+The Datatype matching works in "--strict" mode also.
 
 ### Dynamic stubbing over HTTP
 
