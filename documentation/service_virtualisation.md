@@ -465,12 +465,53 @@ The path parameter id and query parameter name can be setup in the corresponding
 
 The path parameter, id is set up to match the number 2. Query parameters cannot be mentioned as is, they have to separately setup under the "query" section.
 
-So even below curl request will return "Golden Retriever" as long as path parameter matches.
+So even below curl request will return "Golden Retriever" as long as path and query parameters matches.
 ```shell script
-curl http://localhost:9000/pets/2
+curl -vs http://0.0.0.0:9000/pets/2\?name\=Archie 2>&1 | less
+
+Golden Retriever
 ``` 
 
+If the path and query parameters do not match the stub, then a generated response will be returned.
+```
+curl -vs http://0.0.0.0:9000/pets/2\?name\=Shiro 2>&1 | less
+MJUKU
+```
+
 In strict mode (running the stub command with --strict option), the entire URL is matched.
+```
+java -jar ~/Downloads/qontract.jar stub ~/test.qontract --strict
+
+curl -vs http://0.0.0.0:9000/pets/2\?name\=Archie 2>&1 | less
+Golden Retriever
+
+curl -vs http://0.0.0.0:9000/pets/2\?name\=Shiro 2>&1 | less
+STRICT MODE ON
+>> REQUEST.URL.QUERY-PARAMS.name
+Expected string: "Archie", actual was string: "Shiro"* Closing connection 0
+
+```
+
+### Datatype matching in Stubs
+
+Let us assume in the above example you are not interested in matching the pet id. As long as the name is "Archie" you want to return "Goldern Retriever".
+
+```json
+// petstore_data/petstore.json
+{
+     "http-request": {
+         "method": "GET",
+         "path": "/pets/(id:number)",
+         "query": {
+             "name": "Archie"
+         }
+     },
+     "http-response": {
+        "status": 200,
+        "body": "Golden Retriever"
+    }
+}
+```
 
 ### Dynamic stubbing over HTTP
 
