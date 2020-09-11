@@ -10,33 +10,35 @@ Service Virtualisation
 - [Service Virtualisation](#service-virtualisation)
     - [Why Service Virtualisation](#why-service-virtualisation)
     - [Why Use Qontract](#why-use-qontract)
-    - [Stub without expectations](#stub-without-expectations)
-    - [Stub with expectations](#stub-with-expectations)
-    - [Stub with json](#stub-with-json)
-    - [Stub contains incorrect data](#stub-contains-incorrect-data)
-    - [Stub with multiple contracts](#stub-with-multiple-contracts)
-    - [Keeping all the expectations in a single directory](#keeping-all-the-expectations-in-a-single-directory)
-    - [Stub without hardcoding values in the request](#stub-without-hardcoding-values-in-the-request)
+    - [Basic stub using just the contract](#basic-stub-using-just-the-contract)
+    - [Stubbing out specific responses to specific requests](#stubbing-out-specific-responses-to-specific-requests)
+    - [Stubbing requests and responses with complex data](#stubbing-requests-and-responses-with-complex-data)
+    - [Errors when stubbing requests or reponses that do not match the contract](#errors-when-stubbing-requests-or-reponses-that-do-not-match-the-contract)
+    - [Stubbing out multiple contracts in one Qontract instance](#stubbing-out-multiple-contracts-in-one-qontract-instance)
+    - [Organising the json expectation files into a single directory](#organising-the-json-expectation-files-into-a-single-directory)
+    - [Lenient stubbing - when unexpected requests match the contract](#lenient-stubbing---when-unexpected-requests-match-the-contract)
+    - [Strict mode - helpful for debugging your stubs and requests](#strict-mode---helpful-for-debugging-your-stubs-and-requests)
+    - [Matching Path and Query Parameters in stub data json](#matching-path-and-query-parameters-in-stub-data-json)
+    - [Datatype matching in Stubs](#datatype-matching-in-stubs)
     - [Stub without hardcoding values in the response](#stub-without-hardcoding-values-in-the-response)
-    - [Debugging your stub using strict mode](#debugging-your-stub-using-strict-mode)
-    - [Dynamic stubbing over HTTP](#dynamic-stubbing-over-http)
+    - [Creating dynamic stubs](#creating-dynamic-stubs)
     - [Stub file format](#stub-file-format)
 
 [Read here about contract testing and where Qontract fits in](/contract_testing.html).
 
 ### Why Service Virtualisation
 
-It is not easy to develop an application that depends on 3rd party APIs. These APIs never run on the dev laptop or environment. They must be invoked over the network, during the process of coding, debugging or running component tests. But access to the APIs is usually flaky. The network may be down. The dev laptop may be offline. Sometimes an account has to be setup, data within the account has to be created, orders placed, etc.
+It is not easy to develop an application that depends on 3rd party APIs. These APIs never run on the dev laptop or environment. They must be invoked over the network, during the process of coding, debugging or running component tests. But access to the APIs is usually flaky. The network may be down. The dev laptop may be offline. Sometimes an account has to be setup, data within the account has to be created, orders placed, etc and different developers on the same project overwrite eachother's test data. This results in slow, flaky tests whose feedback cannot be trusted, and a poor overal development experience.
 
-Instead, we prefer to set up a stub API that appears to act like the real API, and runs on the developer's laptop. Since it is on the developer's laptop, it is never flaky, and always available. The consuming application that is being developed on that laptop doesn't know that it is talking to a local stub, and in fact cannot tell the difference.
+The way to solve this is to set up a stub API that appears to act like the real API, and runs on the developer's laptop. The developer must tell it what http requests it will get, and what responses must be given in return. But since it is on the developer's laptop, it is never flaky, and always available. The consuming application that is being developed on that laptop doesn't know that it is talking to a local stub, and in fact cannot tell the difference.
 
 ### Why Use Qontract
 
-There are many tools you can use for service virtualisation. Qontract however compares the stub setup (called expectations) with the given contract to ensure that they are in sync. The same contract is used by the provider when running [contract tests](/documentation/contract_tests.html). Since the consumer sets expectations on it's stubs that match the contract, and the provider API is built to adhere to the same contract, the integration between the consumer and provider stays intact.
+There are many tools you can use for service virtualisation. Qontract however compares the stub setup (called expectations) with the given contract to ensure that they are in sync. The same contract is used by the provider when running [contract tests](/documentation/contract_tests.html). Since the consumer sets expectations on it's stubs that match the contract, and the provider API is built against the same contract, the integration between the consumer and provider stays intact.
 
-Additionally, the contract spec is human-readable. So contracts can be circulated around by email, chat, etc when the API design is under discussion.
+Additionally, the contract spec is human-readable, which makes getting on the same page much easier.
 
-### Stub without expectations
+### Basic stub using just the contract
 
 In it's most basic form, you only need the contract.
 
@@ -67,7 +69,7 @@ The response will be randomly generated, based on the contract. The contract def
 
 Try this out with a more complex json response and see how it works.
 
-### Stub with expectations
+### Stubbing out specific responses to specific requests
 
 Often, you'll need the stub to return a specific response for a given request.
 
@@ -141,7 +143,7 @@ Let's post 10 to the stub and see:
 
 We did not have a stub with 10 in the request, but it matched the ontract. Qontract did not have a stubbed response, so it generated one and returned it.
 
-### Stub with json
+### Stubbing requests and responses with complex data
 
 The contract:
 
@@ -193,7 +195,7 @@ Invoke it in another tab:
 success
 ```
 
-### Stub contains incorrect data
+### Errors when stubbing requests or reponses that do not match the contract
 
 The contract:
 
@@ -258,7 +260,7 @@ Try invoking the stub now:
 YHTHY
 ```
 
-### Stub with multiple contracts
+### Stubbing out multiple contracts in one Qontract instance
 
 If you want to stub out multiple contracts together:
 
@@ -268,7 +270,7 @@ If you want to stub out multiple contracts together:
 
 If the customer_data and order_data directories exist, stub data will be loaded from them automatically.
 
-### Keeping all the expectations in a single directory
+### Organising the json expectation files into a single directory
 
 If you want to organise all your stubs into a single directory, so that you can manage them more easily, you'll need to pass that directory to the stub, like this:
 
@@ -278,126 +280,20 @@ If you want to organise all your stubs into a single directory, so that you can 
 
 Stubs matching either of the two contracts will be loaded, the rest will be rejected and the mismatch reports will be written to the console.
 
-### Stub without hardcoding values in the request
+### Lenient stubbing - when unexpected requests match the contract
 
-What if you want to match any value of the right type.
+By default, if your request matches the contract, but none of the stubs, contract generates a response using the format defined in the contract. The values in the response are randomised.
 
-```gherkin
-# filename: customer.qontract
-
-Feature: Customer API
-  Scenario: Add customer
-    Given type Customer
-      | name    | (string) |
-      | address | (string) |
-    When POST /customers
-    And request-body (Customer)
-    Then status 200
-```
-
-Suppose you want to create a stub in which any address is accepted, but the name must be Sherlock Holmes.
-
-Create a directory named customer_data, and a file named stub.json within it that contains this:
-
-```json
-// filepath: customer_data/stub.json
-{
-    "http-request": {
-        "method": "POST",
-        "path": "/customers",
-        "body": {
-            "name": "Sherlock Holmes",
-            "address": "(string)"
-        }
-    },
-    "http-response": {
-        "status": 200
-    }
-}
-```
-
-Note that the address key in the stub is (string), which matches the contract exactly.
-
-Note how this works. We can pass anything in the address and it's accepted by the stub.
-
-```shell
-> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "22 Baker Street"}' http://localhost:9000/customers
-success
-> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "1000 Baker Street"}' http://localhost:9000/customers
-success
-> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "1000000 Baker Street"}' http://localhost:9000/customers
-success
-```
-
-### Stub without hardcoding values in the response
-
-Sometimes you don't care what values come back in the response, you just need, say, a string.
+Consider this contract:
 
 ```gherkin
 # filename: customer.qontract
 
 Feature: Customer API
   Scenario: Add customer
-    Given type Customer
-      | name    | (string) |
-      | address | (string) |
-    When POST /customers
-    And request-body (Customer)
+    When GET /customers?name=(string)
     Then status 200
     And response-body (string)
-```
-
-Create a directory named customer_data, and a file named stub.json within it that contains this:
-
-```json
-// filepath: customer_data/stub.json
-{
-    "http-request": {
-        "method": "POST",
-        "path": "/customers",
-        "body": {
-            "name": "Sherlock Holmes",
-            "address": "22 Baker Street"
-        }
-    },
-    "http-response": {
-        "status": 200,
-        "body": "(string)"
-    }
-}
-```
-
-And the result:
-
-```shell
-> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "22 Baker Street"}' http://localhost:9000/customers
-TPVNQ
-```
-
-The response is a random one, generated by Qontract.
-
-### Debugging your stub using strict mode
-
-If your request doesn't match any of the stubs, but does match one of the contracts, the stub returns a random response that corresponds to the scenario that matched the incoming request.
-
-But if instead, you want to know why the match failed, use strict mode.
-```
-java -jar path/to/qontract.jar stub customer.qontract --strict
-```
-
-Try the same contract as above:
-
-```gherkin
-# filename: customer.qontract
-
-Feature: Customer API
-  Scenario: Add customer
-    Given type Customer
-      | name    | (string) |
-      | address | (string) |
-    When POST /customers
-    And request-body (Customer)
-    Then status 200
 ```
 
 Create a directory named customer_data, and inside it a file named stub.json, with the following contents:
@@ -406,33 +302,102 @@ Create a directory named customer_data, and inside it a file named stub.json, wi
 // filename: customer_data/stub.json
 {
     "http-request": {
-        "method": "POST",
+        "method": "GET",
         "path": "/customers",
-        "body": {
-            "name": "Sherlock Holmes",
-            "address": "22 Baker Street"
+        "query": {
+            "name": "Sherlock"
         }
     },
     "http-response": {
-        "status": 200
+        "status": 200,
+        "body": "22 Baker Street"
     }
 }
 ```
 
-And see the results:
+Now start the stub, and in a new tab or window, invoke the API passing Sherlock:
 
 ```shell
-> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "New York"}' http://localhost:9000/customers
->> REQUEST.BODY.address
-
-Expected string: "22 Baker Street", actual was string: "New York"
+> curl http://localhost:9000/customers\?name\=Sherlock
+22 Baker Street%
 ```
 
-Without strict mode on, the stub would have returned the string "success", as you can see in examples above.
+Which is what we expect.
+
+But let's try the wrong name now:
+
+```
+curl http://localhost:9000/customers\?name\=Jane
+ILXWG
+```
+
+Note that the stub was expecting Sherlock but not Jane. However, the `name` query parameter can take a string according to the contract and Jane is a string.
+
+So while Qontract doesn't know what to reply in response to the request for a customer named Jane, the request does meet the contract.
+
+In this case, Qontract generated a randomised response based on the format in the contract and returned it.
+
+### Strict mode - helpful for debugging your stubs and requests
+
+Sometimes when we send a request we thought we had stubbed, we get a randomised response because of lenient stubbing. But we do want the specific response we had stubbed out, and would like Qontract to tell us why it is not returning it.
+
+To do this, we must turn strict mode **on**.
+
+```
+java -jar path/to/qontract.jar stub customer.qontract --strict
+```
+
+Invariably this happens when the request matches the contract, but does not match any of the stubs. Perhaps it's a small difference, which is why we missed it.
+
+Let's try this with the same contract as above:
+
+```gherkin
+# filename: customer.qontract
+
+Feature: Customer API
+  Scenario: Add customer
+    When GET /customers?name=(string)
+    Then status 200
+    And response-body (string)
+```
+
+Create a directory named customer_data, and inside it a file named stub.json, with the following contents:
+
+```json
+// filename: customer_data/stub.json
+{
+    "http-request": {
+        "method": "GET",
+        "path": "/customers",
+        "query": {
+            "name": "Sherlock"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": "22 Baker Street"
+    }
+}
+```
+
+Now start the stub, and in a new tab, invoke the API with the name Jane instead of Sherlock and see the result:
+
+```shell
+> curl http://localhost:9000/customers\?name\=Jane
+STRICT MODE ON
+
+>> REQUEST.URL.QUERY-PARAMS.name
+
+Expected string: "Sherlock", actual was string: "Jane"
+```
+
+This is exactly the same command we ran at the end of the previous section but at that time we were not running in strict mode, so Qontract returned a valid but randomized response.
+
+In strict mode, Qontract told us what went wrong with the request.
 
 ### Matching Path and Query Parameters in stub data json
 
-Consider below contract file.
+Consider this contract file.
 
 File: petstore.contract
 ```gherkin
@@ -441,7 +406,7 @@ Feature: Contract for the petstore service
     Scenario: Fetch pet details
         When GET /pets/(id:number)?name=(string)
         Then status 200
-        And response-body (name:string)
+        And response-body (string)
 ```
 
 The path parameter id and query parameter name can be setup in the corresponding data json file with below syntax.
@@ -495,7 +460,56 @@ Expected string: "Archie", actual was string: "Shiro"* Closing connection 0
 
 ### Datatype matching in Stubs
 
-Let us assume in the above example you are not interested in matching the pet id. As long as the name is "Archie" you want to return "Golden Retriever".
+What if you want to match any value of the right datatype in the request.
+
+```gherkin
+# filename: customer.qontract
+
+Feature: Customer API
+  Scenario: Add customer
+    Given type Customer
+      | name    | (string) |
+      | address | (string) |
+    When POST /customers
+    And request-body (Customer)
+    Then status 200
+```
+
+Suppose you want to create a stub in which any address is accepted, but the name must be Sherlock Holmes.
+
+Create a directory named customer_data, and a file named stub.json within it that contains this:
+
+```json
+// filepath: customer_data/stub.json
+{
+    "http-request": {
+        "method": "POST",
+        "path": "/customers",
+        "body": {
+            "name": "Sherlock Holmes",
+            "address": "(string)"
+         }
+    },
+    "http-response": {
+        "status": 200
+    }
+}
+```
+
+Note that the address key in the stub is (string), which matches the contract exactly.
+
+Note how this works. We can pass anything in the address and it's accepted by the stub.
+
+```shell
+> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "22 Baker Street"}' http://localhost:9000/customers
+success
+> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "1000 Baker Street"}' http://localhost:9000/customers
+success
+> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "1000000 Baker Street"}' http://localhost:9000/customers
+success
+```
+
+The same goes for responses. Let us assume in the above example you are not interested in matching the pet id. As long as the name is "Archie" you want to return "Golden Retriever".
 
 ```json
 {
@@ -533,7 +547,54 @@ Another example where we can match any string in the query parameter "name" and 
 
 The Datatype matching works in "--strict" mode also.
 
-### Dynamic stubbing over HTTP
+### Stub without hardcoding values in the response
+
+Sometimes you don't care what values come back in the response, you just need, say, a string.
+
+```gherkin
+# filename: customer.qontract
+
+Feature: Customer API
+  Scenario: Add customer
+    Given type Customer
+      | name    | (string) |
+      | address | (string) |
+    When POST /customers
+    And request-body (Customer)
+    Then status 200
+    And response-body (string)
+```
+
+Create a directory named customer_data, and a file named stub.json within it that contains this:
+
+```json
+// filepath: customer_data/stub.json
+{
+    "http-request": {
+        "method": "POST",
+        "path": "/customers",
+        "body": {
+            "name": "Sherlock Holmes",
+            "address": "22 Baker Street"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": "(string)"
+    }
+}
+```
+
+And the result:
+
+```shell
+> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "22 Baker Street"}' http://localhost:9000/customers
+TPVNQ
+```
+
+The response is a random one, generated by Qontract.
+
+### Creating dynamic stubs
 
 You can setup a stub over HTTP, after Qontract has been started.
 
