@@ -393,7 +393,7 @@ Expected string: "Sherlock", actual was string: "Jane"
 
 This is exactly the same command we ran at the end of the previous section but we were not running in strict mode then.
 
-Now in strict mode, Qontract tells us what went wrong with the request.
+Now in strict mode, Qontract returns an error indicating what was wrong with our request.
 
 ### Matching Path and Query Parameters in stub data json
 
