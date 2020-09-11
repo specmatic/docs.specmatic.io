@@ -15,7 +15,6 @@ Service Virtualisation
     - [Stubbing requests and responses with complex data](#stubbing-requests-and-responses-with-complex-data)
     - [Errors when stubbing requests or reponses that do not match the contract](#errors-when-stubbing-requests-or-reponses-that-do-not-match-the-contract)
     - [Stubbing out multiple contracts in one Qontract instance](#stubbing-out-multiple-contracts-in-one-qontract-instance)
-    - [Organising the json expectation files into a single directory](#organising-the-json-expectation-files-into-a-single-directory)
     - [Lenient stubbing](#lenient-stubbing)
     - [Strict mode](#strict-mode)
     - [Matching Path and Query Parameters in stub data json](#matching-path-and-query-parameters-in-stub-data-json)
@@ -293,16 +292,6 @@ If you want to stub out multiple contracts together:
 ```
 
 If the customer_data and order_data directories exist, stub data will be loaded from them automatically.
-
-### Organising the json expectation files into a single directory
-
-If you want to organise all your stubs into a single directory, so that you can manage them more easily, you'll need to pass that directory to the stub, like this:
-
-```shell
-> {{ site.qontract_cmd }} stub --data /path/to/stub/directory customer.qontract order.qontract
-```
-
-Stubs matching either of the two contracts will be loaded, the rest will be rejected and the mismatch reports will be written to the console.
 
 ### Lenient stubbing
 
