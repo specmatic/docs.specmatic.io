@@ -23,6 +23,7 @@ Authoring Contracts
     - [Generate contracts](#generate-contracts-1)
   - [Importing a Postman collection](#importing-a-postman-collection)
     - [Export the collection](#export-the-collection)
+    - [Generate the contract](#generate-the-contract)
   - [Scenarios](#scenarios)
     - [Web Application On Local Environment Invokes API](#web-application-on-local-environment-invokes-api)
       - [Step 1: Run the proxy](#step-1-run-the-proxy)
@@ -425,7 +426,8 @@ File: postman_employee.json
                 }
         ],
         "protocolProfileBehavior": {}
-}```
+}
+```
 
 ### Generate the contract
 
