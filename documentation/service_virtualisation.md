@@ -391,9 +391,9 @@ STRICT MODE ON
 Expected string: "Sherlock", actual was string: "Jane"
 ```
 
-This is exactly the same command we ran at the end of the previous section but at that time we were not running in strict mode, so Qontract returned a valid but randomized response.
+This is exactly the same command we ran at the end of the previous section but we were not running in strict mode then.
 
-In strict mode, Qontract told us what went wrong with the request.
+Now in strict mode, Qontract tells us what went wrong with the request.
 
 ### Matching Path and Query Parameters in stub data json
 
