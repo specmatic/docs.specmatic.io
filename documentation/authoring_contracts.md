@@ -23,7 +23,6 @@ Authoring Contracts
     - [Generate contracts](#generate-contracts-1)
   - [Importing a Postman collection](#importing-a-postman-collection)
     - [Export the collection](#export-the-collection)
-    - [Generate the contract](#generate-the-contract)
   - [Scenarios](#scenarios)
     - [Web Application On Local Environment Invokes API](#web-application-on-local-environment-invokes-api)
       - [Step 1: Run the proxy](#step-1-run-the-proxy)
@@ -139,6 +138,8 @@ Jane Doe
 
 You can read more about [service virtualization here](/documentation/service_virtualisation.html).
 
+Note the examples, which are used only when running [contract tests](documentation/../contract_tests.html). Examples have no part to play in service virtualisation (stubbing).
+
 ## Generating a contract using outbound proxy mode
 
 \
@@ -233,13 +234,108 @@ This is useful when you have a Postman collection which you use to test your ser
 
 First you must [export the collection to a file](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#exporting-postman-data). Use v2.1 when doing so.
 
+Here's a sample Postman collection that you can use:
+
+File: postman_employee.json
+```json
+{
+        "info": {
+                "_postman_id": "042689b4-61dc-4697-85e6-72d47adc0678",
+                "name": "Free API",
+                "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+        },
+        "item": [
+                {
+                        "name": "Employee data",
+                        "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                        "raw": "http://dummy.restapiexample.com/api/v1/employees",
+                                        "protocol": "http",
+                                        "host": [
+                                                "dummy",
+                                                "restapiexample",
+                                                "com"
+                                        ],
+                                        "path": [
+                                                "api",
+                                                "v1",
+                                                "employees"
+                                        ]
+                                }
+                        },
+                        "response": []
+                }
+        ],
+        "protocolProfileBehavior": {}
+}```
+
 ### Generate the contract
 
-`qontract import postman -o <qontract file>.json <postman collection file>.json`
+```bash
+> qontract import postman -o . <postman collection file>.json
+```
 
 This command will read the Postman collection, and write the new qontract file into "qontract file.json" as specified in the command.
 
-To see the qontract on standard output instead, just omit `-o filename.json`.
+It will also output logs of the requests it made and responses it received.
+
+The `-o .` option tells Qontract to write the contract into the current directory.
+
+Take a look at the resulting contract:
+
+```gherkin
+> cat postman_employee-dummy.restapiexample.com.qontract
+Feature: Free API
+  Scenario: Employee data
+    Given type Data
+      | id | (string) |
+      | employee_name | (string) |
+      | employee_salary | (string) |
+      | employee_age | (string) |
+      | profile_image | (string) |
+    And type ResponseBody
+      | status | (string) |
+      | data | (Data*) |
+    When GET /api/v1/employees
+    Then status 200
+    And response-header Cache-Control (string)
+    And response-header Date (string)
+    And response-header Display (string)
+    And response-header Referrer-Policy (string)
+    And response-header Response (number)
+    And response-header Server (string)
+    And response-header X-Ezoic-Cdn (string)
+    And response-header X-Middleton-Display (string)
+    And response-header X-Middleton-Response (number)
+    And response-header X-Sol (string)
+    And response-header Transfer-Encoding (string)
+    And response-body (ResponseBody)
+```
+
+We can immediately see a numer of headers in the contract that have nothing to do with the AIP. Qontract dumps them all into the contract and leaves it to you to keep what's important.
+
+You should simply remove the unnecessary headers, like so:
+
+```gherkin
+Feature: Free API
+  Scenario: Employee data
+    Given type Data
+      | id | (string) |
+      | employee_name | (string) |
+      | employee_salary | (string) |
+      | employee_age | (string) |
+      | profile_image | (string) |
+    And type ResponseBody
+      | status | (string) |
+      | data | (Data*) |
+    When GET /api/v1/employees
+    Then status 200
+    And response-body (ResponseBody)
+  ```
+
+Now with this contract, even if the actual response had those headers, Qontract will in future not concern itself with the unknown headers.
 
 ## Scenarios
 
