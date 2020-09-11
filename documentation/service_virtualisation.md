@@ -16,10 +16,10 @@ Service Virtualisation
     - [Errors when stubbing requests or reponses that do not match the contract](#errors-when-stubbing-requests-or-reponses-that-do-not-match-the-contract)
     - [Stubbing out multiple contracts in one Qontract instance](#stubbing-out-multiple-contracts-in-one-qontract-instance)
     - [Organising the json expectation files into a single directory](#organising-the-json-expectation-files-into-a-single-directory)
-    - [Lenient stubbing - when unexpected requests match the contract](#lenient-stubbing---when-unexpected-requests-match-the-contract)
-    - [Strict mode - helpful for debugging your stubs and requests](#strict-mode---helpful-for-debugging-your-stubs-and-requests)
+    - [Lenient stubbing](#lenient-stubbing)
+    - [Strict mode](#strict-mode)
     - [Matching Path and Query Parameters in stub data json](#matching-path-and-query-parameters-in-stub-data-json)
-    - [Datatype matching in Stubs](#datatype-matching-in-stubs)
+    - [Datatype matching in stubs](#datatype-matching-in-stubs)
     - [Stub without hardcoding values in the response](#stub-without-hardcoding-values-in-the-response)
     - [Creating dynamic stubs](#creating-dynamic-stubs)
     - [Stub file format](#stub-file-format)
@@ -67,8 +67,6 @@ Any request that matches the contract request will be accepted.
 
 The response will be randomly generated, based on the contract. The contract defines the response as a number, so the response was a randomly generated number. In every run, you will get a different, randomly generated response that matches the contract.
 
-Try this out with a more complex json response and see how it works.
-
 ### Stubbing out specific responses to specific requests
 
 Often, you'll need the stub to return a specific response for a given request.
@@ -106,6 +104,23 @@ Follow these steps:
 }
 ```
 
+- Create a json file named square_of_6.json
+- Put in that file the following text:
+
+```json
+{
+    "http-request": {
+        "method": "POST",
+        "path": "/square",
+        "body": 6
+    },
+    "http-response": {
+        "status": 200,
+        "body": 36
+    }
+}
+```
+
 The directory structure now looks like this:
 
 ```
@@ -114,6 +129,7 @@ The directory structure now looks like this:
  \_ square_data     [directory]
     |
      \_ square_of_5.json [file]
+     \_ square_of_6.json [file]
 ```
 
 Try running the stub now:
@@ -122,6 +138,7 @@ Try running the stub now:
 > {{ site.qontract_cmd }} stub square.qontract
 Reading the stub files below:
 ./square_data/square_of_5.json
+./square_data/square_of_6.json
 Stub server is running on http://localhost:9000. Ctrl + C to stop.
 ```
 
@@ -132,6 +149,13 @@ In another tab, let's post 5 to the stub and see what happens:
 ```shell
 > curl -X POST -H 'Content-Type: text/plain' -d 5 http://localhost:9000/square
 25
+```
+
+Try posting 6 to the stub:
+
+```shell
+> curl -X POST -H 'Content-Type: text/plain' -d 6 http://localhost:9000/square
+36
 ```
 
 Let's post 10 to the stub and see:
@@ -280,9 +304,9 @@ If you want to organise all your stubs into a single directory, so that you can 
 
 Stubs matching either of the two contracts will be loaded, the rest will be rejected and the mismatch reports will be written to the console.
 
-### Lenient stubbing - when unexpected requests match the contract
+### Lenient stubbing
 
-By default, if your request matches the contract, but none of the stubs, contract generates a response using the format defined in the contract. The values in the response are randomised.
+So far we have been using examples of lenient stubbing. To reiterate, by default in lenient stubbing, if your request matches the contract, but none of the stubs, contract generates a response using the format defined in the contract. The values in the response are randomised.
 
 Consider this contract:
 
@@ -337,7 +361,7 @@ So while Qontract doesn't know what to reply in response to the request for a cu
 
 In this case, Qontract generated a randomised response based on the format in the contract and returned it.
 
-### Strict mode - helpful for debugging your stubs and requests
+### Strict mode
 
 Sometimes when we send a request we thought we had stubbed, we get a randomised response because of lenient stubbing. But we do want the specific response we had stubbed out, and would like Qontract to tell us why it is not returning it.
 
@@ -399,7 +423,7 @@ Now in strict mode, Qontract returns an error indicating what was wrong with our
 
 Consider this contract file.
 
-File: petstore.contract
+File: petstore.qontract
 ```gherkin
 Feature: Contract for the petstore service
 
@@ -460,61 +484,11 @@ curl -vs http://0.0.0.0:9000/pets/2\?name\=Shiro 2>&1 | less
 STRICT MODE ON
 >> REQUEST.URL.QUERY-PARAMS.name
 Expected string: "Archie", actual was string: "Shiro"* Closing connection 0
-
 ```
 
-### Datatype matching in Stubs
+### Datatype matching in stubs
 
-What if you want to match any value of the right datatype in the request.
-
-```gherkin
-# filename: customer.qontract
-
-Feature: Customer API
-  Scenario: Add customer
-    Given type Customer
-      | name    | (string) |
-      | address | (string) |
-    When POST /customers
-    And request-body (Customer)
-    Then status 200
-```
-
-Suppose you want to create a stub in which any address is accepted, but the name must be Sherlock Holmes.
-
-Create a directory named customer_data, and a file named stub.json within it that contains this:
-
-```json
-// filepath: customer_data/stub.json
-{
-    "http-request": {
-        "method": "POST",
-        "path": "/customers",
-        "body": {
-            "name": "Sherlock Holmes",
-            "address": "(string)"
-         }
-    },
-    "http-response": {
-        "status": 200
-    }
-}
-```
-
-Note that the address key in the stub is (string), which matches the contract exactly.
-
-Note how this works. We can pass anything in the address and it's accepted by the stub.
-
-```shell
-> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "22 Baker Street"}' http://localhost:9000/customers
-success
-> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "1000 Baker Street"}' http://localhost:9000/customers
-success
-> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "1000000 Baker Street"}' http://localhost:9000/customers
-success
-```
-
-The same goes for responses. Let us assume in the above example you are not interested in matching the pet id. As long as the name is "Archie" you want to return "Golden Retriever".
+Let us assume in the above example you are not interested in matching the pet id. As long as the name is "Archie" you want to return "Golden Retriever".
 
 ```json
 {
@@ -550,7 +524,7 @@ Another example where we can match any string in the query parameter "name" and 
 }
 ```
 
-The Datatype matching works in "--strict" mode also.
+The Datatype matching works in ("--strict")[#strict-mode] mode also.
 
 ### Stub without hardcoding values in the response
 
