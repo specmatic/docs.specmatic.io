@@ -149,24 +149,28 @@ This tool will help you generate contract specs when the API is ready and can be
 
 ### Start the proxy
 
-Syntax: qontract proxy ./generated_contracts
+As an example, let's generate a contract for the /employee API from this helpfully provided set of dummy APIs: http://dummy.restapiexample.com
 
-Let's try running it:
+First let's start the proxy:
 
 ```bash
-> qontract proxy ./generated_contracts
+> qontract proxy ./contracts
 Proxy server is running on http://localhost:9000. Ctrl + C to stop.
 ```
 
+Make sure the contracts directory does not exist before you start the proxy.
+
 ### Proxy setup
 
-We'll use Postman as an example.
+We'll take Postman as an example. Setup proxy in Postman's settings with the proxy host as localhost and the proxy port as 9000.
 
 Here's the documentation on [proxy settings in Postman](https://learning.postman.com/docs/sending-requests/capturing-request-data/proxy/). Use Qontract Proxy as an HTTP proxy, with localhost as the host and 9000 as the port.
 
+Note: All operating systems have a system wide configuration settings for configuring an HTTP proxy. Many applications (such as Postman) provide their own proxy configuration settings.
+
 ### Generate contracts
 
-Now use Postman to send a request to your HTTP service of choice (for HTTPS, see [Inbound Proxy Mode](#reverse-proxy-mode)). You could start the service in your dev environment, or perhaps use a service in the staging environment. Either way, with the proxy setup as described above, Postman will route the request through the qontract proxy. Make sure to trigger all the requests that you wish to capture as contracts.
+Create a new Postman request to send a GET request to http://dummy.restapiexample.com/api/v1/employees.
 
 Finally, kill the proxy using Ctrl+C on the command prompt, and it will generate contracts from all the reqeusts and responses it has seen.
 
@@ -179,13 +183,165 @@ Writing stub data to ./data/stub0.json
 When it does, the proxy generates contracts and stubs out of all the request-response exchanges it has seen, and we will see something like this:
 
 ```bash
-> ls ./generated_contracts
+> ls ./contracts
 new_feature.qontract stub0.json
 ```
 
-In this case, a single api call was executed. As a result, Qontract generated two files. stub0.json contains the request sent from Postman and the response from the server. new_feature.qontract contains the contract generated from stub0.json.
+Let's see what's in them.
 
-All operating systems have a system wide configuration settings for configuring an HTTP proxy. Many applications (such as Postman) provide their own proxy configuration settings.
+```bash
+> cat contracts/new_feature.qontract
+Feature: New feature
+  Scenario: GET http://dummy.restapiexample.com/api/v1/employees
+    Given type Data
+      | id | (string) |
+      | employee_name | (string) |
+      | employee_salary | (string) |
+      | employee_age | (string) |
+      | profile_image | (string) |
+    And type ResponseBody
+      | status | (string) |
+      | data | (Data*) |
+    When GET http://dummy.restapiexample.com/api/v1/employees
+    And request-header User-Agent (string)
+    And request-header Accept (string)
+    And request-header Postman-Token (string)
+    And request-header Host (string)
+    And request-header Accept-Encoding (string)
+    And request-header Connection (string)
+    Then status 200
+    And response-header Cache-Control (string)
+    And response-header Date (string)
+    And response-header Display (string)
+    And response-header Referrer-Policy (string)
+    And response-header Response (number)
+    And response-header Server (string)
+    And response-header X-Ezoic-Cdn (string)
+    And response-header X-Middleton-Display (string)
+    And response-header X-Middleton-Response (number)
+    And response-header X-Sol (string)
+    And response-body (ResponseBody)
+
+    Examples:
+    | User-Agent | Accept | Postman-Token | Host | Accept-Encoding | Connection |
+    | PostmanRuntime/7.26.3 | */* | 162f2e8b-e3c2-48d8-9db7-0541daa8325a | dummy.restapiexample.com | gzip, deflate, br | keep-alive |
+```
+
+Note that examples are use for [contract testing](/documentation/contract_tests.html). They have no bearing on service virtualization (stubbing).
+
+Similarly, take a look at the stub. Here is a shortened version of it:
+
+```bash
+{
+    "http-request": {
+        "path": "/api/v1/employees",
+        "method": "GET",
+        "headers": {
+            "User-Agent": "PostmanRuntime/7.26.3",
+            "Accept": "*/*",
+            "Postman-Token": "4e20854c-86dc-454e-a1a1-09f79321072a",
+            "Host": "localhost:9000",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive"
+        },
+        "body": ""
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "status": "success",
+            "data": [
+                {
+                    "id": "1",
+                    "employee_name": "Tiger Nixon",
+                    "employee_salary": "320800",
+                    "employee_age": "61",
+                    "profile_image": ""
+                },
+                {
+                    "id": "2",
+                    "employee_name": "Garrett Winters",
+                    "employee_salary": "170750",
+                    "employee_age": "63",
+                    "profile_image": ""
+                }
+            ]
+        },
+        "status-text": "OK",
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Expose-Headers": "Content-Type, X-Requested-With, X-authentication, X-client",
+            "Cache-Control": "max-age=31536000",
+            "Content-Encoding": "gzip",
+            "Content-Type": "application/json;charset=utf-8",
+            "Date": "Fri, 11 Sep 2020 15:37:11 GMT",
+            "Display": "staticcontent_sol",
+            "Referrer-Policy": "",
+            "Response": "200",
+            "Server": "nginx/1.16.0",
+            "Vary": "Accept-Encoding",
+            "X-Ezoic-Cdn": "Hit ds;mm;64e5dcd8fd074fe044e20470a9643699;2-133674-2;11eea874-25cc-4a8a-4a7a-e7fd9bafe9d8",
+            "X-Middleton-Display": "staticcontent_sol",
+            "X-Middleton-Response": "200",
+            "X-Sol": "pub_site",
+            "Content-Length": "595"
+        }
+    }
+}
+```
+
+There are many unnecessary headers being declared in the contract and stubbed out as well. Qontract just puts outputs it finds, leaving it you to decide what's important and what isn't.
+
+So here's an improved version of the above contract without the unnecessary headers:
+
+```gherkin
+Feature: New feature
+  Scenario: GET /api/v1/employees
+    Given type Data
+      | id | (string) |
+      | employee_name | (string) |
+      | employee_salary | (string) |
+      | employee_age | (string) |
+      | profile_image | (string) |
+    And type ResponseBody
+      | status | (string) |
+      | data | (Data*) |
+    When GET /api/v1/employees
+    Then status 200
+    And response-body (ResponseBody)
+```
+
+And similarly, and improved stub file:
+```json
+{
+    "http-request": {
+        "path": "/api/v1/employees",
+        "method": "GET"
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "status": "success",
+            "data": [
+                {
+                    "id": "1",
+                    "employee_name": "Tiger Nixon",
+                    "employee_salary": "320800",
+                    "employee_age": "61",
+                    "profile_image": ""
+                },
+                {
+                    "id": "2",
+                    "employee_name": "Garrett Winters",
+                    "employee_salary": "170750",
+                    "employee_age": "63",
+                    "profile_image": ""
+                }
+            ]
+        }
+    }
+}
+```
 
 ## Generating a contract using reverse proxy mode
 
@@ -194,22 +350,20 @@ All operating systems have a system wide configuration settings for configuring 
 
 If your remote service runs over HTTPS, use Inbound Proxy Mode. In this mode, Qontract Proxy acts as a reverse proxy to the target application. You configure your application to talk to Qontract Proxy. In this mode, you must not configure proxy settings on the OS or the application. The application is not aware that Qontract is a proxy. Instead, just configure your application to make API calls to Qontract Proxy. Qontract will forward all requests to the target end point, and return it's responses.
 
+Let's use the same freely provided (again many thanks to it's maintainer) test employee API that we used above.
+
 ### Start the proxy
 
-Syntax: qontract proxy --target https://host.internal.company.com/service ./generated_contracts
-
-Here https://host.internal.company.com/service is the real application.
-
-Let's try running it:
-
 ```bash
-> qontract proxy --target https://host.internal.company.com/service ./generated_contracts
-Proxy server is running on http://localhost:9000. Ctrl + C to stop.
+> qontract proxy --target http://dummy.restapiexample.com ./contracts
+Proxy server is running on http://localhost:9000. Ctrl + C to stop.```
 ```
+
+Make sure the contracts directory does not exist.
 
 ### Generate contracts
 
-Now use Postman to send a request to Qontract. Alternatively, configure your application's service base url to point to Qontract Proxy for all API calls. Qontract will transparently act as a benign man-in-the-middle between your application and the remote application. Make sure to trigger all the requests that you wish to capture as contracts.
+Now use Postman to send a request to Qontract. Create a new Postman request to make a GET request to http://localhost:9000/api/v1/employees
 
 Finally, kill the proxy using Ctrl+C on the command prompt, and it will generate contracts from all the reqeusts and responses it has seen.
 
@@ -222,9 +376,11 @@ Writing stub data to ./data/stub0.json
 When it does, the proxy generates contracts and stubs out of all the request-response exchanges it has seen, and we will see something like this:
 
 ```bash
-> ls ./generated_contracts
+> ls ./contracts
 new_feature.qontract stub0.json
 ```
+
+These files will look just like what is generated by the outbound proxy mode. So take a look at the previous section to see what is in them, and what to do once you have these files.
 
 ## Importing a Postman collection
 
@@ -241,7 +397,7 @@ File: postman_employee.json
 {
         "info": {
                 "_postman_id": "042689b4-61dc-4697-85e6-72d47adc0678",
-                "name": "Free API",
+                "name": "Free Test API",
                 "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
         },
         "item": [
@@ -287,7 +443,7 @@ Take a look at the resulting contract:
 
 ```gherkin
 > cat postman_employee-dummy.restapiexample.com.qontract
-Feature: Free API
+Feature: Free Test API
   Scenario: Employee data
     Given type Data
       | id | (string) |
@@ -319,7 +475,7 @@ We can immediately see a numer of headers in the contract that have nothing to d
 You should simply remove the unnecessary headers, like so:
 
 ```gherkin
-Feature: Free API
+Feature: Free Test API
   Scenario: Employee data
     Given type Data
       | id | (string) |
