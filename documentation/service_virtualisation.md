@@ -432,23 +432,28 @@ The path parameter, id is set up to match the number 2. Query parameters cannot 
 
 So even below curl request will return "Golden Retriever" as long as path and query parameters matches.
 
-```
-curl -vs http://0.0.0.0:9000/pets/2\?name\=Archie 2>&1 | less
+```bash
+> curl -vs http://0.0.0.0:9000/pets/2\?name\=Archie 2>&1 | less
 
 Golden Retriever
 ``` 
 
 If the path and query parameters do not match the stub, then a generated response will be returned.
-```
-curl -vs http://0.0.0.0:9000/pets/2\?name\=Shiro 2>&1 | less
+```bash
+> curl -vs http://0.0.0.0:9000/pets/2\?name\=Shiro 2>&1 | less
 MJUKU
 ```
 
 In strict mode (running the stub command with --strict option), the entire URL is matched.
-```
-java -jar ~/Downloads/qontract.jar stub ~/test.qontract --strict
 
-curl -vs http://0.0.0.0:9000/pets/2\?name\=Archie 2>&1 | less
+```bash
+> java -jar ~/Downloads/qontract.jar stub ~/test.qontract --strict
+```
+
+And in a new tab:
+
+```bash
+> curl -vs http://0.0.0.0:9000/pets/2\?name\=Archie 2>&1 | less
 Golden Retriever
 
 curl -vs http://0.0.0.0:9000/pets/2\?name\=Shiro 2>&1 | less
