@@ -5,6 +5,15 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.17.0
+
+Date: 9th September 2020
+
+What's new:
+- qontract.json is now supported in test mode
+- new qontract bundle command for use in CI
+- support for recursive type definitions
+
 ### Release 0.16.0
 
 Date: 2nd September 2020
