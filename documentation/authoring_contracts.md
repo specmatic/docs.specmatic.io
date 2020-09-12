@@ -11,30 +11,19 @@ Authoring Contracts
   - [By hand](#by-hand)
     - [The contract file](#the-contract-file)
     - [Stub files that accompany the contract file](#stub-files-that-accompany-the-contract-file)
-  - [Generate a contract a sample request and response](#generate-a-contract-a-sample-request-and-response)
+  - [From a sample request and response](#from-a-sample-request-and-response)
     - [Create the sample file](#create-the-sample-file)
     - [Convert the sample into a contract](#convert-the-sample-into-a-contract)
-  - [Generating a contract using outbound proxy mode](#generating-a-contract-using-outbound-proxy-mode)
+  - [From an existing application using outbound proxy mode](#from-an-existing-application-using-outbound-proxy-mode)
     - [Start the proxy](#start-the-proxy)
     - [Proxy setup](#proxy-setup)
     - [Generate contracts](#generate-contracts)
-  - [Generating a contract using reverse proxy mode](#generating-a-contract-using-reverse-proxy-mode)
+  - [From an existing application using reverse proxy mode](#from-an-existing-application-using-reverse-proxy-mode)
     - [Start the proxy](#start-the-proxy-1)
     - [Generate contracts](#generate-contracts-1)
   - [Importing a Postman collection](#importing-a-postman-collection)
     - [Export the collection](#export-the-collection)
     - [Generate the contract](#generate-the-contract)
-  - [Scenarios](#scenarios)
-    - [Web Application On Local Environment Invokes API](#web-application-on-local-environment-invokes-api)
-      - [Step 1: Run the proxy](#step-1-run-the-proxy)
-      - [Step 2: Configure the OS proxy](#step-2-configure-the-os-proxy)
-      - [Step 3: Trigger requests and responses](#step-3-trigger-requests-and-responses)
-      - [Step 4: Generating the contracts](#step-4-generating-the-contracts)
-    - [Local Service Talks To Remote Service Over HTTPS](#local-service-talks-to-remote-service-over-https)
-      - [Step 1: Run the proxy](#step-1-run-the-proxy-1)
-      - [Step 2: Configure the application's base url](#step-2-configure-the-applications-base-url)
-      - [Step 3: Trigger requests and responses](#step-3-trigger-requests-and-responses-1)
-      - [Step 4: Generating the contracts](#step-4-generating-the-contracts-1)
 
 ## By hand
 
@@ -67,7 +56,7 @@ The resulting directory structure might look something like this:
      \_ listing_all_orders.json [file]
 ```
 
-## Generate a contract a sample request and response
+## From a sample request and response
 
 If you know what the request and response should look like, you can start by creating a file with the sample request and response.
 
@@ -141,12 +130,12 @@ You can read more about [service virtualization here](/documentation/service_vir
 
 Note the examples, which are used only when running [contract tests](documentation/../contract_tests.html). Examples have no part to play in service virtualisation (stubbing).
 
-## Generating a contract using outbound proxy mode
+## From an existing application using outbound proxy mode
 
 \
 ![](/images/qontract-proxy.svg)
 
-This tool will help you generate contract specs when the API is ready and can be invoked by an application such as Postman, or perhaps the web application that you are building.
+This tool will help you generate contract specs when the API exists in some environment and can be invoked.
 
 ### Start the proxy
 
@@ -344,12 +333,12 @@ And similarly, and improved stub file:
 }
 ```
 
-## Generating a contract using reverse proxy mode
+## From an existing application using reverse proxy mode
 
 \
 ![](/images/qontract-reverse-proxy.svg)
 
-If your remote service runs over HTTPS, use Inbound Proxy Mode. In this mode, Qontract Proxy acts as a reverse proxy to the target application. You configure your application to talk to Qontract Proxy. In this mode, you must not configure proxy settings on the OS or the application. The application is not aware that Qontract is a proxy. Instead, just configure your application to make API calls to Qontract Proxy. Qontract will forward all requests to the target end point, and return it's responses.
+If your remote service runs over HTTPS, use Inbound Proxy Mode. Qontract acts as a transparent proxy between the client (Postman, your application, etc) and the API.
 
 Let's use the same freely provided (again many thanks to it's maintainer) test employee API that we used above.
 
@@ -494,72 +483,3 @@ Feature: Free Test API
   ```
 
 Now with this contract, even if the actual response had those headers, Qontract will in future not concern itself with the unknown headers.
-
-## Scenarios
-
-### Web Application On Local Environment Invokes API
-
-You may have a web application running on your local developer environment, which invokes an HTTP API for which you wish to generate a contract.
-
-#### Step 1: Run the proxy
-
-Run this command:
-```bash
-> qontract proxy ./generated_contracts
-Proxy server is running on http://localhost:9000. Ctrl + C to stop.
-```
-
-#### Step 2: Configure the OS proxy
-
-* If you're running the web application on MacOS, configure your [system proxy settings](https://support.apple.com/en-in/guide/mac-help/mchlp2591/mac).
-* If you're on Windows using Microsoft Edge, configure your [Microsoft Edge proxy settings](https://docs.microsoft.com/en-us/deployedge/edge-learnmore-cmdline-options-proxy-settings)).
-
-Chrome will also have it's settings on Windows and MacOS (left as an exercise for the reader).
-
-#### Step 3: Trigger requests and responses
-
-Once the proxy has been setup in the OS / browser, simply start up your web application in your browser, and run it, click buttons, load pages, etc.
-
-#### Step 4: Generating the contracts
-
-By now you should see logs at the command prompt showing the requests that the proxy has served.
-
-Stop the proxy using Ctrl+C.
-
-Take a look a the directory `./generated_contracts` which we provided in the proxy command earlier. You'll find in it all the contracts and stubs of the requests and responses that your application triggered.
-
-### Local Service Talks To Remote Service Over HTTPS
-
-You have a local service talking to a remote service, which runs on HTTPS, and no Postman collection which Qontract can convert.
-
-Since the remote application runs on HTTPS, we need to use the reverse proxy mode.
-
-#### Step 1: Run the proxy
-
-Let's assume that the remote service runs on https://service.internal.company.com/customer
-
-Run this command:
-```bash
-> qontract proxy --target https://service.internal.company.com/customer ./generated_contracts
-Proxy server is running on http://localhost:9000. Ctrl + C to stop.
-```
-
-#### Step 2: Configure the application's base url
-
-In reverse proxy mode, your application is not aware that there is a proxy.
-
-The application must talk to the proxy as if it is the actual service.
-
-Configure the service base url of your application to point to http://localhost:9000
-
-#### Step 3: Trigger requests and responses
-
-Start up your web application in your browser, and run it, click buttons, load pages, etc.
-
-#### Step 4: Generating the contracts
-
-By now you should see logs at the command prompt showing the requests that the proxy has served.
-
-Stop the proxy using Ctrl+C.
-
-Take a look a the directory `./generated_contracts` which we provided in the proxy command earlier. You'll find in it all the contracts and stubs of the requests and responses that your application triggered.
