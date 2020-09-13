@@ -15,6 +15,7 @@ Troubleshooting
     - [Qontract test was working before but it now show errors](#qontract-test-was-working-before-but-it-now-show-errors)
     - [Stub says Cookie header is missing, but it is not missing in Postman](#stub-says-cookie-header-is-missing-but-it-is-not-missing-in-postman)
     - [Stub mode returns an error to Postman](#stub-mode-returns-an-error-to-postman)
+    - [java.lang.ClassNotFoundException: kotlin.KotlinNothingValueException](#javalangclassnotfoundexception-kotlinkotlinnothingvalueexception)
 
 It may seem counter intuitive at first, but Qontract error reports are good news. Not because we want errors. But if we're breaking integration, we'd rather get Qontract errors in our dev environment, than integraton errors in staging, testing or worst of all, production.
 
@@ -131,3 +132,33 @@ The Postman request does not match the Contract.
 To resolve this:
 - Make sure you have the latest version of Qontract.
 - Read the error message, to understand where Qontract believes the issue is.
+
+### java.lang.ClassNotFoundException: kotlin.KotlinNothingValueException
+
+This is probably because one of your project's dependencies are pulling in an older version of Kotlin.
+
+Qontract uses Kotlin 1.4, which defines a new class kotlin.KotlinNothingValueException. This was not present in earlier versions of Kotlin. It's like that oneof your dependencies is pulling in Kotlin 1.3.x or earlier, due to which this class is missing.
+
+One way to resolve this is to declare add the stdlib declaration to your pom.
+
+If you are using JDK8, add this snippet:
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8 -->
+<dependency>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <artifactId>kotlin-stdlib-jdk8</artifactId>
+    <version>1.4.10</version>
+</dependency>
+```
+
+If you're using a later version of the JDK:
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
+<dependency>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <artifactId>kotlin-stdlib</artifactId>
+    <version>1.4.10</version>
+</dependency>
+```
