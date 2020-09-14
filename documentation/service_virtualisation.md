@@ -14,6 +14,7 @@ Service Virtualisation
     - [Stubbing out specific responses to specific requests](#stubbing-out-specific-responses-to-specific-requests)
     - [Stubbing requests and responses with complex data](#stubbing-requests-and-responses-with-complex-data)
     - [Errors when stubbing requests or reponses that do not match the contract](#errors-when-stubbing-requests-or-reponses-that-do-not-match-the-contract)
+    - [Match not found: wrong URL or method in the request](#match-not-found-wrong-url-or-method-in-the-request)
     - [Stubbing out multiple contracts in one Qontract instance](#stubbing-out-multiple-contracts-in-one-qontract-instance)
     - [Lenient stubbing](#lenient-stubbing)
     - [Strict mode](#strict-mode)
@@ -282,6 +283,81 @@ Try invoking the stub now:
 > curl -X POST -H 'Content-Type: application/json' -d '{"name": "Sherlock Holmes", "address": "22 Baker Street"}' http://localhost:9000/customers
 YHTHY
 ```
+
+### Match not found: wrong URL or method in the request
+
+When the stub gives you this error, it means that the url and method in your request does not match the contract or any of the stubs that you have setup.
+
+Let's try this with an example.
+
+File: square.qontract
+```gherkin
+Feature: Square API
+  Scenario: Square number
+    When POST /square
+    And request-body (number)
+    Then status 200
+    And response-body (number)
+```
+
+Create a stub for it:
+
+File: square_data/stub.json
+```json
+{
+    "http-request": {
+        "method": "POST",
+        "path": "/square",
+        "body": 10
+    },
+    "http-response": {
+        "status": 200,
+        "body": 100
+    }
+}
+```
+
+Run the stub:
+
+```bash
+> qontract stub square.qontract
+Loading square.qontract
+  Loading stub expectations from /Users/joelrosario/tmp/square_data
+  Reading the following stub files:
+    /Users/joelrosario/tmp/square_data/stub.json
+Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
+```
+
+And in a new tab, let's make an API call with the number we stubbed out:
+```bash
+> curl -X POST -H 'Content-Type: text/plain' -d 10 http://localhost:9000/square
+100
+```
+
+Let's pass a number we did not stub out, say 20:
+```bash
+> curl -X POST -H 'Content-Type: text/plain' -d 20 http://localhost:9000/square
+263
+```
+
+Let's even try with the the wrong method. The API expects POST, let's try with GET:
+
+```bash
+curl -X GET -H 'Content-Type: text/plain' -d 20 http://localhost:9000/square
+In scenario "Square number"
+>> REQUEST.METHOD
+
+Expected POST, actual was GET
+```
+
+But now, let's try with a URL that does not feature in the contract at all:
+
+```bash
+curl -X POST -H 'Content-Type: text/plain' -d 20 http://localhost:9000/number
+Match not found
+```
+
+Without the URL, Qontract has no clue how to correlate the request with either the contract or it's stubs, and simply responds saying "Match not found".
 
 ### Stubbing out multiple contracts in one Qontract instance
 
