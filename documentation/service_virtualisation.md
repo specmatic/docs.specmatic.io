@@ -286,7 +286,7 @@ YHTHY
 
 ### Match not found: wrong URL or method in the request
 
-When the stub gives you this error, it means that the url and method in your request does not match the contract or any of the stubs that you have setup.
+When the stub gives you this error, it means that the url in your request does not match the contract or any of the stubs that you have setup.
 
 Let's try this with an example.
 
