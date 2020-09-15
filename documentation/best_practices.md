@@ -142,9 +142,6 @@ Note how [background](documentation/../language.html#background) contains everyt
 ## Namespacing
 
 It is a good idea to maintain contract files under folder structures that represent namespaces just like you would maintain code.
-Example: com/shop/orders/returns.qontract
-
-While this is not mandated, it is highly recommended as a way to improve maintainablity.
 
 For example:
 
@@ -154,6 +151,8 @@ For example:
         /orders
             returns.qontract
 ```
+
+While this is not mandated, it is highly recommended as a way to improve maintainablity.
 
 ## Static stubs
 
