@@ -47,6 +47,7 @@ Language
     - [Optional XML Attributes](#optional-xml-attributes)
     - [Declaring XML Types](#declaring-xml-types)
     - [XML Types Within Types](#xml-types-within-types)
+    - [Background](#background)
 
 Qontract extends the Gherkin syntax by adding some more keywords.
 
@@ -76,7 +77,7 @@ This line describes what the API is about.
 
 Each Feature can have several scenarios. Each scenario describes a single interaction with the Provider.
 It is written in the Given, When and Then Format
-* Given - Pre-conditions, Data setup etc. You can leave this out if you do not have to setup any data etc.
+* Given - Pre-conditions, data structure definitions, etc.
 * When - This represents the request
 * Then - Assertions
 
@@ -89,7 +90,7 @@ Scenario: Should be able to get a pet by petId
 
 ### Given
 
-As mentioned, Given section is optional and is only necessary if you need to setup data.
+We usually setup data structures needed by the contract using this keyword. We'll skip this for now, but you'll see examples of how Given is used further below, after we have covered a few basics.
 
 ### When
 
@@ -814,4 +815,49 @@ This matches the following XML contract:
 
 ```xml
 <customer><name>John Doe</name></customer>
+```
+
+### Background
+
+All Scenarios and Scenario Outlines inherit the Background. So put the parts common to all scenarios into the Background.
+
+For example:
+
+```gherkin
+Feature: Customer API
+  Scenario: Get customer details
+    Given type Customer
+    | name    | (string) |
+    | address | (string) |
+    When GET /customer/(id:number)
+    Then status 200
+    And response-body (Customer)
+
+  Scenario: Get customer list
+    Given type Customer
+    | name    | (string) |
+    | address | (string) |
+    When GET /customers
+    Then status 200
+    And response-body (Customer*)
+```
+
+Let's remove the duplication, by putting the Customer type into the Background.
+
+```gherkin
+Feature: Customer API
+  Background:
+    Given type Customer
+    | name    | (string) |
+    | address | (string) |
+
+  Scenario: Get customer details
+    When GET /customer/(id:number)
+    Then status 200
+    And response-body (Customer)
+
+  Scenario: Get customer list
+    When GET /customers
+    Then status 200
+    And response-body (Customer*)
 ```

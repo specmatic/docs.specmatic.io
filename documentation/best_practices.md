@@ -7,55 +7,146 @@ nav_order: 15
 Best Practices
 ========
 
-- [Organizing Contract Files](#organising-contract-files)
-    - [Authoring Contract Files - The Dilemma](#authoring-contract-files---the-dilemma)
-    - [Single Responsibility Principle](#single-responsibility-principle)
-    - [Namespaces](#namespacing)
-    - [Static Stub Json](#static-stubs)
-- [Contract Design Principles](#contract-design-principles)
-    - [Smells and Remedies](#smells)
-- [Continuous Integration and Pull Request Builders](#ci-and-pull-request-builders)
-
-Organizing contract files
---------
+- [Best Practices](#best-practices)
+  - [Design Patterns](#design-patterns)
+    - [All API endpoints in one .qontract file](#all-api-endpoints-in-one-qontract-file)
+    - [One API endpoint per .qontract file](#one-api-endpoint-per-qontract-file)
+    - [Multiple scenarios per endpoint](#multiple-scenarios-per-endpoint)
+  - [Principles Of Design](#principles-of-design)
+  - [Namespacing](#namespacing)
+  - [Static stubs](#static-stubs)
+  - [CI and Pull Request Builders](#ci-and-pull-request-builders)
 
 We have already covered how to author good [scenarios](/documentation/language.html). Let us walk through the aspects we should consider when stringing scenarios together in contract files.
 
-### Authoring Contract Files - The Dilemma
+## Design Patterns
 
-**All scenarios and APIs in one .qontract file**
+### All API endpoints in one .qontract file
+
+When all the endpoints are simple, data structures are not too deep, or the list of APIs is small, all the scenarios related to these end points can go into a single file.
+
 * Advantages
-    * One single place to look at
-    * Common structures and datatypes that are declared in the background section can be re-used across many scenarios
+    * One single place to look at for all the APIs.
+    * Common structures and datatypes that are declared in the Background section can be re-used across many scenarios.
 * Disadvantages / Smells
-    * The .qontract file can become large and becomes a scroll hell
-    * Churn and merge conflicts etc. because everyone updates the same file
-    
-**One .qontract file per API endpoint**
+    * The .qontract file can become large and becomes a scroll hell.
+    * All the developers update the same file, resulting in a larger number of merge conflics.
+
+### One API endpoint per .qontract file
+
+High complexity of API endpoints may result in too much information stuffed into a single contract file. This often happens when the data structures in the request or response payloads are very deep. Put the entire definition of this API endpoint in a file by itself.
+
 * Advantages
-    * Short .qontract files
+    * Easier to comprehend .qontract files
 * Disadvantages / Smells
     * Common structures / datatypes across endpoints have to be duplicated (because we cannot import one .qontract file inside another)
 
-As mentioned above, both of these extremes are not necessarily the best.
+### Multiple scenarios per endpoint
 
-### Single Responsibility Principle
+A large number of optional keys is often a design smell.
 
-We recommend adhering to SRP in order to achieve well authored contracts.
+Here's a contract to get the dimensions of any shape, be it rectangle, triangle or circle. A general contract would look like this:
 
-* Each .qontract should have scenarios (regardless of whether they belong one endpoint or several endpoints) that are related to a single axis of change.
-* In other words, a contract file must change for one and only reason (entity, purpose or action).
-* This promotes healthy re-usability of structures and datatypes and helps in reducing merge conflicts
-* It may take time to triangulate on the right set of scenarios per file. In the long term this approach is best suited or applications of any size.
+```gherkin
+Feature: Shape API
+  Scenario: Dimensions
+    When GET /dimensions/(id:number)
+    Then status 200
+    And response-body
+    | type           | (string) |
+    | length?        | (number) |
+    | breadth?       | (number) |
+    | side1?         | (number) |
+    | side2?         | (number) |
+    | side3?         | (number) |
+    | circumference? | (number) |
+```
 
-### Namespacing
+This is a poor API spec. length and breadth will both be there when the shape is a rectangle, and neither for a circle (which will have circumference).
+
+This can be split into 3 different scenarios.
+
+```gherkin
+Feature: Shape API
+  Scenario: Dimensions of a rectangle
+    When GET /dimensions/(id:number)
+    Then status 200
+    And response-body
+    | type    | (string) |
+    | length  | (number) |
+    | breadth | (number) |
+
+  Scenario: Dimensions of a triangle
+    When GET /dimensions/(id:number)
+    Then status 200
+    And response-body
+    | type  | (string) |
+    | side1 | (number) |
+    | side2 | (number) |
+    | side3 | (number) |
+
+  Scenario: Dimensions of a circle
+    When GET /dimensions/(id:number)
+    Then status 200
+    And response-body
+    | type          | (string) |
+    | circumference | (number) |
+```
+
+But now there's so much duplication in these scenarios. This too can be fixed:
+
+```gherkin
+Feature: Shape API
+  Background:
+    When GET /dimensions/(id:number)
+    Then status 200
+
+  Scenario: Dimensions of a rectangle
+    * response-body
+    | type    | (string) |
+    | length  | (number) |
+    | breadth | (number) |
+
+  Scenario: Dimensions of a triangle
+    * response-body
+    | type  | (string) |
+    | side1 | (number) |
+    | side2 | (number) |
+    | side3 | (number) |
+
+  Scenario: Dimensions of a circle
+    * response-body
+    | type          | (string) |
+    | circumference | (number) |
+```
+
+Note how [background](documentation/../language.html#background) contains everything that's common to the scenarios.
+
+## Principles Of Design
+* Be specific with datatypes.
+    * This improves ability spot issues when running the contract as a test and in generating meaningful dummy values in stub mode.
+    * Example: Prefer date/url over string where possible
+* When your Scenario has several nullable values, use Scenario Outline. In Scenario Outline provide multiple example rows when there are nullable values.
+    * Qontract runs [two tests per nullable value](/documentation/language.html#nullable-operator), one for null and one for non-null value. When there are several nullable values Qontract will attempt running tests for all permutations.
+    * The example rows in [Scenario Outline](/documentation/language.html#scenario-outline) can help Qontract in determining which are the plausible combinations in the context of your application.
+* Reduce Duplication. Extract common structures and datatypes to background.
+    * Helps reduce verbosity in scenarios
+    * Reduces human error that can happen when there is duplication of structure or datatype definition across scenarios
+* Single Responsibility Principle
+    * We recommend adhering to SRP in order to achieve well authored contracts.
+    * Each .qontract should have scenarios (regardless of whether they belong one endpoint or several endpoints) that are related to a single axis of change.
+    * In other words, a contract file must change for one and only reason (entity, purpose or action).
+    * This promotes healthy re-usability of structures and datatypes and helps in reducing merge conflicts
+    * It may take time to triangulate on the right set of scenarios per file. In the long term this approach is best suited or applications of any size.
+
+## Namespacing
 
 It is a good idea to maintain contract files under folder structures that represent namespaces just like you would maintain code.
 Example: com/shop/orders/returns.qontract
 
 While this is not mandated, it is highly recommended as a way to improve maintainablity.
 
-### Static stubs
+## Static stubs
 
 Static stub files should be co-located with their respective contracts. Example:
 
@@ -68,22 +159,6 @@ Static stub files should be co-located with their respective contracts. Example:
                 returns.json
 ```
 
-Contract Design Principles
-------
-* Be specific with datatypes.
-    * This improves ability spot issues when running the contract as a test and in generating meaningful dummy values in stub mode.
-    * Example: Prefer date/url over string where possible
-* When your Scenario has several nullable values, prefer levering Scenario Outline. In Scenario Outline provide multiple example rows when there are nullable values.
-    * Qontract runs [two tests per nullable value](/documentation/language.html#nullable-operator), one for null and one for non-null value. When there are several nullable values Qontract will attempt running tests for all permutations.
-    * The example rows in [Scenario Outline](/documentation/language.html#scenario-outline) can help Qontract in determining which are the plausible combinations in the context of your application.
-* Reduce Duplication. Extract common structures and datatypes to background.
-    * Helps reduce verbosity in scenarios
-    * Reduces human error that can happen when there is duplication of structure or datatype definition across scenarios
-
-### Smells
-* Too many optional parameters in a single API - Indicates that this API needs to split.
-
-CI and Pull Request Builders
-------
+## CI and Pull Request Builders
 * In repositories that store contracts, we recommend running the backward-compatibility check as a bare minimum
 * It is also helpful to have a Pull Request builder that can run the backward-compatibility check and annotate PRs where a contract change is involved
