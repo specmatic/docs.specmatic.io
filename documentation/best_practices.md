@@ -146,6 +146,15 @@ Example: com/shop/orders/returns.qontract
 
 While this is not mandated, it is highly recommended as a way to improve maintainablity.
 
+For example:
+
+```
+/com
+    /shop
+        /orders
+            returns.qontract
+```
+
 ## Static stubs
 
 Static stub files should be co-located with their respective contracts. Example:
