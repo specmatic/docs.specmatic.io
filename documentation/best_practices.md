@@ -45,9 +45,9 @@ High complexity of API endpoints may result in too much information stuffed into
 
 A large number of optional keys is often a design smell.
 
-This is because, most often it's a group of keys that are together either present or missing. And representing them all as equally optional, to mix and match any which way, is incorrect, and will not give you feedback when you stub out the wrong combination of keys.
+This is because there are usually multiple groups of keys that are either present or missing together. It would be wrong to simply mark them all as optional, to be mixed and matched any which way, because this will not give you feedback when you stub out the wrong combination of keys.
 
-Let's look at an example of this.
+Let's look at concrete example.
 
 Here's a contract to get the dimensions of any shape, be it rectangle, triangle or circle. A general contract would look like this:
 
@@ -68,7 +68,9 @@ Feature: Shape API
 
 This is a poor API spec. length and breadth will both be there when the shape is a rectangle, and neither for a circle (which will have circumference).
 
-This can be split into 3 different scenarios.
+So the API will never return, for example, a body with length and side1. And we should not be able to stub it out. But the current contract allows us to do this. As a result, when we actually integrate our consumer with the real shape API, the consumer is expecting length and side1, but it would get length and breadth, and the consumer would break as a result.
+
+To avoid this problem, the API should be represented in the form of 3 different scenarios.
 
 ```gherkin
 Feature: Shape API
