@@ -43,13 +43,11 @@ High complexity of API endpoints may result in too much information stuffed into
 
 ### Multiple scenarios per endpoint
 
-A large number of optional keys is often a design smell.
+A large number of optional keys is usually a design smell. The concerned API payload usually contains multiple groups of keys, where all the keys in a group are either present or missing together. If they are all simply marked optional, the contract will let you stub out incorrect combinations of optional keys any which way, without giving you feedback.
 
-This is because there are usually multiple groups of keys that are either present or missing together. It would be wrong to simply mark them all as optional, to be mixed and matched any which way, because this will not give you feedback when you stub out the wrong combination of keys.
+Let's look at a concrete example.
 
-Let's look at concrete example.
-
-Here's a contract to get the dimensions of any shape, be it rectangle, triangle or circle. A general contract would look like this:
+Here's a contract to get the dimensions of any shape, be it rectangle, triangle or circle. A single-scenario contract would look like this:
 
 ```gherkin
 Feature: Shape API
