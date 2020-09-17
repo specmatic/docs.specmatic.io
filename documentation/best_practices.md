@@ -45,14 +45,16 @@ High complexity of API endpoints may result in too much information stuffed into
 
 A large number of optional keys is usually a design smell. The concerned API payload usually contains multiple groups of keys, where all the keys in a group are either present or missing together. If they are all simply marked optional, the contract will let you stub out incorrect combinations of optional keys any which way, without giving you feedback.
 
-Let's look at a concrete example.
+Here's a concrete example.
 
-Here's a contract to get the dimensions of any shape, be it rectangle, triangle or circle. A single-scenario contract would look like this:
+Let's describe an API that returns the dimensions of a shape. If the requested shape is a rectangle, the response JSON contains two keys, `length` and `breadth`, if a circle, `circumference`, and if a triangle, `side1`, `side2` and `side3`.
+
+Here's what a single-scenario contract might look like:
 
 ```gherkin
 Feature: Shape API
   Scenario: Dimensions
-    When GET /dimensions/(id:number)
+    When GET /dimensions/(shape_id:number)
     Then status 200
     And response-body
     | type           | (string) |
@@ -64,13 +66,11 @@ Feature: Shape API
     | circumference? | (number) |
 ```
 
-* if the shape in the url is a rectangle, the response will have length and breadth, but none of the other keys,
-* a circle will have circumference, and none of the others,
-* and a triangle shape will have side1, side2, side3, and again, none of the other keys.
+Now the contract shows almost all the keys as optional. This lets us stub out a response containing only length and side1, which is unrealistic. The real API would never return such a response, so we should not be able to stub out such a response either.
 
-So the real API would never return, for example, a body with length and side1. And we should not be able to stub out such a response. But the current contract allows us to setup this incorrect stub, and we can stub out length and side1 and write our consumer against it. Then, when we actually integrate our consumer with the real shape API instance, the consumer will expect length and side1, but it will get length and breadth, and it will break.
+But the contract in this form allows it. So if we in error stub out a response with length and side1, and write our consumer against this stub, we'd get no negative feedback. Then, when we actually integrate our consumer with the real shape API instance, the consumer will expect length and side1, but it will get length and breadth, and it will break.
 
-If the contract were designed better, this could have been caught during development.
+If the contract were designed better, the incorrect stub of length and side1 itself would have been rejected, saving us the integration error.
 
 Take a look at the contract below:
 
@@ -103,7 +103,7 @@ Feature: Shape API
 
 This contract will not let us stub out a response with length and side1. None of the scenarios support that combination.
 
-But now there's duplication in these scenarios. This too can be fixed:
+But now there's duplication in all the scenarios. This too can be fixed:
 
 ```gherkin
 Feature: Shape API
@@ -130,7 +130,7 @@ Feature: Shape API
     | circumference | (number) |
 ```
 
-Note how [background](documentation/../language.html#background) contains everything that's common to the scenarios.
+Note how the [background](documentation/../language.html#background) contains everything that's common to the scenarios.
 
 ## Principles Of Design
 * Be specific with datatypes.
