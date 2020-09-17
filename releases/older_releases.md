@@ -5,6 +5,15 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.17.1
+
+Date: 12th September 2020
+
+What's new:
+- Bug fix to Proxy mode
+
+Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
+
 ### Release 0.17.0
 
 Date: 9th September 2020
@@ -36,16 +45,12 @@ Date: 8th August 2020
 What's new:
 - Renamed backwardCompatible to compatible, and improved it for use in CI
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
-
 ### Release 0.14.1
 
 Date: 2nd August 2020
 
 What's new:
 - Minor enhancements for XML support
-
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 
 ### Release 0.14.0
 
