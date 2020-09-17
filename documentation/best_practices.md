@@ -64,11 +64,15 @@ Feature: Shape API
     | circumference? | (number) |
 ```
 
-This is a poor API spec. length and breadth will both be there when the shape is a rectangle, and neither for a circle (which will have circumference).
+* if the shape in the url is a rectangle, the response will have length and breadth, but none of the other keys,
+* a circle will have circumference, and none of the others,
+* and a triangle shape will have side1, side2, side3, and again, none of the other keys.
 
-So the API will never return, for example, a body with length and side1. And we should not be able to stub it out. But the current contract allows us to do this. As a result, when we actually integrate our consumer with the real shape API, the consumer is expecting length and side1, but it would get length and breadth, and the consumer would break as a result.
+So the real API would never return, for example, a body with length and side1. And we should not be able to stub out such a response. But the current contract allows us to setup this incorrect stub, and we can stub out length and side1 and write our consumer against it. Then, when we actually integrate our consumer with the real shape API instance, the consumer will expect length and side1, but it will get length and breadth, and it will break.
 
-To avoid this problem, the API should be represented in the form of 3 different scenarios.
+If the contract were designed better, this could have been caught during development.
+
+Take a look at the contract below:
 
 ```gherkin
 Feature: Shape API
@@ -97,7 +101,9 @@ Feature: Shape API
     | circumference | (number) |
 ```
 
-But now there's so much duplication in these scenarios. This too can be fixed:
+This contract will not let us stub out a response with length and side1. None of the scenarios support that combination.
+
+But now there's duplication in these scenarios. This too can be fixed:
 
 ```gherkin
 Feature: Shape API
