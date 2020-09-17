@@ -34,7 +34,7 @@ When all the endpoints are simple, data structures are not too deep, or the list
 
 ### One API endpoint per .qontract file
 
-High complexity of API endpoints may result in too much information stuffed into a single contract file. This often happens when the data structures in the request or response payloads are very deep. Put the entire definition of this API endpoint in a file by itself.
+High complexity of API endpoints may result in too much information stuffed into a single contract file. This often happens when the data structures in the request or response payloads are very deep. When faced with such an API end point, put the definition of the API into a file by itself.
 
 * Advantages
     * Easier to comprehend .qontract files
@@ -44,6 +44,10 @@ High complexity of API endpoints may result in too much information stuffed into
 ### Multiple scenarios per endpoint
 
 A large number of optional keys is often a design smell.
+
+This is because, most often it's a group of keys that are together either present or missing. And representing them all as equally optional, to mix and match any which way, is incorrect, and will not give you feedback when you stub out the wrong combination of keys.
+
+Let's look at an example of this.
 
 Here's a contract to get the dimensions of any shape, be it rectangle, triangle or circle. A general contract would look like this:
 
