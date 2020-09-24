@@ -14,11 +14,17 @@ The easiest way to get started with Qontract for JavaScript developers is to use
 ## Quick Start
 ```npm install qontract```  will install the qontract locally to the node project.
 
-Sample npm scripts to run qontract, with `*.qontract` as the path of qontract files and `src/mocks` as the path for the stub data directory (Check [Documentation](https://qontract.run/documentation.html) for more information on cli commands and arguments.)
+### Sample npm scripts to run qontract:
+
+You can just add these npm scripts in your package.json and you should be good to run them using `npm run script-name` in a node environment.
 
 `"qontract-stub": "qontract stub *.qontract --data src/mocks --host=localhost --port=8000"`
 
 `"qontract-test": "qontract test *.qontract --host=localhost --port=8000"`
+
+Here, `*.qontract` is the path of qontract files and `src/mocks` is the path for the stub data directory.
+
+(Check [Documentation](https://qontract.run/documentation.html) for more information on cli commands and arguments.)
 
 ## Test helper library
 
