@@ -13,6 +13,8 @@ The quickest approach to getting started is through the command line.
 
 {% include setup_command_line.md %}
 
+For nodejs projects, follow [this document](/documentation/qontract_for_javascript.html).
+
 ---
 
 ### Example Application - PetStore
