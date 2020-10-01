@@ -5,6 +5,16 @@ parent: Releases
 nav_order: 2
 ---
 
+### Release 0.18.0
+
+Date: 17th September 2020
+
+What's new:
+- Improvements to the test command
+- Improvements to stub command
+- Improvements to some error message
+- Improvements to contract generation
+
 ### Release 0.17.1
 
 Date: 12th September 2020
