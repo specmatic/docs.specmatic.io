@@ -178,7 +178,7 @@ public class PetStoreContractTest extends QontractJUnitSupport {
     @BeforeAll
     public static void setUp() {
         File contract = new File("contract/service.qontract");
-        System.setProperty("path", contract.getAbsolutePath());
+        System.setProperty("contractPaths", contract.getAbsolutePath());
         System.setProperty("host", "localhost");
         System.setProperty("port", "8080");
 
