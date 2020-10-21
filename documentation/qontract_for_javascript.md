@@ -2,7 +2,7 @@
 layout: default
 title: JavaScript
 parent: Documentation
-nav_order: 16
+nav_order: 18
 ---
 Qontract for JavaScript
 ==============

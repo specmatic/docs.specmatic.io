@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Contract Syntax
+title: Language
 parent: Documentation
 nav_order: 6
 ---

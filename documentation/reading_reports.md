@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Understanding Error Reports
+title: Understanding Errors
 parent: Documentation
 nav_order: 8
 ---
-Understanding Error Reports
-===========================
+Understanding Errors
+====================
 
-- [Reading The Reports](#reading-the-reports)
+- [Understanding Errors](#understanding-errors)
   - [Report Format](#report-format)
   - [Error In The Request](#error-in-the-request)
   - [Error in JSON request](#error-in-json-request)
