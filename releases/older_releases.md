@@ -5,6 +5,13 @@ parent: Releases
 nav_order: 2
 ---
 
+### Rrelease 0.18.1
+
+Date: 1st October 2020
+
+What's new:
+- Minor improvements and fixes
+
 ### Release 0.18.0
 
 Date: 17th September 2020

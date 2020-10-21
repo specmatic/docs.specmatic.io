@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 1st October 2020
+Date: 21st October 2020
 
 What's new:
-- Minor improvements and fixes
+- Improvements to xml type matching
 
 Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 
