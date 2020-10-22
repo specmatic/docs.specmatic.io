@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Releases
-nav_order: 7
+title: Download
+nav_order: 3
 has_children: true
 ---
-Releases
+Download
 ========
 
 The latest release of Qontract is [{{ site.latest_release }}](/releases/latest.html).
