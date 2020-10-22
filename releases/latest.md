@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Latest
-parent: Releases
+parent: Download
 nav_order: 1
 ---
 
