@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Adoption Patterns
-nav_order: 7
+nav_order: 8
 ---
 # Adoption Patterns
 

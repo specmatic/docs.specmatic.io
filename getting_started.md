@@ -1,8 +1,7 @@
 ---
 layout: default
 title: Getting started (in 5 min)
-parent: Documentation
-nav_order: 1
+nav_order: 4
 ---
 Getting started
 ===============

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: What Is Contract Testing
-nav_order: 5
+nav_order: 6
 ---
 # What Is Contract Testing
 {: .fs-9}
