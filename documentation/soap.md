@@ -8,15 +8,20 @@ SOAP
 ====
 
 - [SOAP](#soap)
+    - [Obtaining Payload Samples](#obtaining-payload-samples)
     - [Defining SOAP Contracts](#defining-soap-contracts)
     - [Order of the nodes](#order-of-the-nodes)
     - [Factoring out sub types](#factoring-out-sub-types)
     - [Using the background](#using-the-background)
     - [Array of nodes](#array-of-nodes)
     - [Namespace prefixes](#namespace-prefixes)
-    - [Obtaining Payload Samples](#obtaining-payload-samples)
+    - [Sample projects](#sample-projects)
 
 The syntax for XML payloads can be found on the [Language](/documentation/language.html) page. Here, we will see how you can use it to define SOAP contracts.
+
+### Obtaining Payload Samples
+
+Use your application's logging features to obtain requests and responses for your SOAP API, which you can then rewrite using Qontract syntax.
 
 ### Defining SOAP Contracts
 
@@ -246,6 +251,10 @@ But since the namespace remains the same, the SOAP server considers both request
 
 Qontract ignores the namespaces, and matches against the node name, at this point in time. So if for example a payload in the contract has the prefix `ns2`, but the request has the prefix `ns3`, Qontact will ignore both `ns2` and `ns3`, and verify that the incoming node name matches the contract's node name.
 
-### Obtaining Payload Samples
+### Sample projects
 
-Use your application's logging features to obtain requests and responses for your SOAP API, which you can then rewrite using Qontract syntax.
+Here is a [SOAP API sample](https://github.com/qontract/petstore-soap-api/). Here is the [SOAP contract, api_1.qontract](https://github.com/qontract/petstore-contracts/tree/master/run/qontract/examples/petstore-soap) for which it declares support. You will find the stub examples in api_1_data.
+
+The petstore-soap-api project runs api_1.qontract as contract tests.
+
+Here is a [SOAP consumer sample](https://github.com/qontract/petstore-soap-website/). This project contains a simple static page, and JSON API which consumes the SOAP service. It declares the same SOAP API contract as a dependency, and the tests use this contract to stub out the SOAP API that it consumes.
