@@ -72,7 +72,7 @@ Order must be preserved. If the contract defines SOAP-ENV:Header before SOAP-ENV
 If you want to pull out some of the datatype definitions to make the payload definition easier to read:
 
 ```gherkin
-Feature: Petstore SOAP API (edited)
+Feature: Petstore SOAP API
   Scenario Outline: Get Pet Info
     Given type GetPetRequest
     """
@@ -162,7 +162,7 @@ Feature: Petstore SOAP API (edited)
 Suppose there is an array of invoice ids for various expenses for a pet.
 
 ```gherkin
-Feature: Petstore SOAP API (edited)
+Feature: Petstore SOAP API
   Background:
     Given type Request
     """
