@@ -10,11 +10,11 @@ SOAP
 - [SOAP](#soap)
     - [Obtaining Payload Samples](#obtaining-payload-samples)
     - [Defining SOAP Contracts](#defining-soap-contracts)
-    - [Order of the nodes](#order-of-the-nodes)
+    - [Declaring an array of nodes](#declaring-an-array-of-nodes)
+    - [Reusing declarations across scenarios](#reusing-declarations-across-scenarios)
     - [Factoring out sub types](#factoring-out-sub-types)
-    - [Using the background](#using-the-background)
-    - [Array of nodes](#array-of-nodes)
     - [Namespace prefixes](#namespace-prefixes)
+    - [Order of the nodes](#order-of-the-nodes)
     - [Sample projects](#sample-projects)
 
 The syntax for XML payloads can be found on the [Language](/documentation/language.html) page. Here, we will see how you can use it to define SOAP contracts.
@@ -27,49 +27,273 @@ Use your application's logging features to obtain requests and responses for you
 
 SOAP contracts are defined just like regular contracts you will find on the [Language](/documentation/language.html) page, but with SOAP XML payloads instead.
 
-Here's a basic example:
+Here's a basic example of the SOAP API of a pet store, which gets information about a pet in the store's inventory:
 
 ```gherkin
-Feature: Petstore SOAP API (edited)
-  Scenario Outline: Get Pet Info
-    Given type Request
-    """
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>
+Feature: Petstore SOAP API
+    Scenario Outline: Get Pet Info
+        Given type Request
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                    <SOAP-ENV:Header/>
+                    <SOAP-ENV:Body>
+                            <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+                                <ns2:id>(number)</ns2:id>
+                            </ns2:GetPetRequest>
+                    </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+        And type Response
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                    <SOAP-ENV:Header/>
+                    <SOAP-ENV:Body>
+                        <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
+                                <ns2:id>(number)</ns2:id>
+                                <ns2:name>(string)</ns2:name>
+                                <ns2:type>(string)</ns2:type>
+                                <ns2:status>(string)</ns2:status>
+                        </ns2:GetPetResponse>
+                    </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+        When POST /ws
+        And request-body (Request)
+        Then status 200
+        And response-body (Response)
+```
+
+### Declaring an array of nodes
+
+Consider the following SOAP API to get all invoice ids related to a pet.
+
+Here's the request for all invoice ids for pet id 100:
+
+```xml
+    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+            <SOAP-ENV:Header/>
+            <SOAP-ENV:Body>
+                    <ns2:GetPetInvoiceIdsRequest xmlns:ns2="http://qontract.run/petstore/api">
+                        <ns2:id>100</ns2:id>
+                    </ns2:GetPetInvoiceIdsRequest>
+            </SOAP-ENV:Body>
+    </SOAP-ENV:Envelope>
+```
+
+...and the response, containing 3 invoice ids:
+
+```xml
+    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+            <SOAP-ENV:Header/>
+            <SOAP-ENV:Body>
+                <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://qontract.run/petstore/api">
+                        <ns2:id>10</ns2:id>
+                        <ns2:id>11</ns2:id>
+                        <ns2:id>12</ns2:id>
+                </ns2:GetPetInvoiceIdsResponse>
+            </SOAP-ENV:Body>
+    </SOAP-ENV:Envelope>
+```
+
+The number of invoice id nodes is, naturally, not fixed. There could be more, depending on how much the store has spent on the pet.
+
+Our contract must define a response which can contain multiple id nodes.
+
+Here's the way to do this:
+
+```gherkin
+Feature: Pet store API
+    Scenario: Get pet invoice ids
+        Given type Request
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                    <SOAP-ENV:Header/>
+                    <SOAP-ENV:Body>
+                            <ns2:GetPetInvoiceIds xmlns:ns2="http://qontract.run/petstore/api">
+                                <ns2:id>(number)</ns2:id>
+                            </ns2:GetPetInvoiceIds>
+                    </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+        And type Id
+        """
+        <ns2:id>100</ns2:id>
+        """
+        And type Response
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                    <SOAP-ENV:Header/>
+                    <SOAP-ENV:Body>
+                            <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://qontract.run/petstore/api">
+                            (Id*)
+                            </ns2:GetPetInvoiceIdsResponse>
+                    </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+
+        When POST /ws
+        And request-body (Request)
+        Then status 200
+        And response-body (Response)
+```
+
+Let's review what's been done:
+1. We pulled the definition of Id outside, into it's own xml data type,
+2. And then we put (Id*) inside the response, indicating that there could be multiple nodes of type Id.
+
+### Reusing declarations across scenarios
+
+There may be multiple APIs with the same overall payload structures, with the differences found only in part of the request and response payloads.
+
+We can declare these common pieces in the background section. These declarations get inherited by all scenarios in the contract file.
+
+In this example, we have two APIs. The first API returns the data on a pet in the pet store's inventory for a given pet id. The second API returns a list of invoice ids representing expenses incurred by the pet store for a given pet id.
+
+We can start with the following contract:
+
+```gherkin
+Feature: Pet store API
+    Scenario Outline: Get Pet Info
+        Given type Request
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                    <SOAP-ENV:Header/>
+                    <SOAP-ENV:Body>
                         <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
                             <ns2:id>(number)</ns2:id>
                         </ns2:GetPetRequest>
-                </SOAP-ENV:Body>
-        </SOAP-ENV:Envelope>
-    """
-    And type Response
-    """
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>
-                    <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
+                    </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+        And type Response
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                    <SOAP-ENV:Header/>
+                    <SOAP-ENV:Body>
+                        <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
                             <ns2:id>(number)</ns2:id>
                             <ns2:name>(string)</ns2:name>
                             <ns2:type>(string)</ns2:type>
                             <ns2:status>(string)</ns2:status>
-                    </ns2:GetPetResponse>
-                </SOAP-ENV:Body>
-        </SOAP-ENV:Envelope>
-    """
-    When POST /ws
-    And request-body (Request)
-    Then status 200
-    And response-body (Response)
+                        </ns2:GetPetResponse>
+                    </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+        When POST /ws
+        And request-body (Request)
+        Then status 200
+        And response-body (Response)
+
+    Scenario: Get pet invoice ids
+        Given type Request
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                    <SOAP-ENV:Header/>
+                    <SOAP-ENV:Body>
+                        <ns2:GetPetInvoiceIds xmlns:ns2="http://qontract.run/petstore/api">
+                            <ns2:id>(number)</ns2:id>
+                        </ns2:GetPetInvoiceIds>
+                    </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+        And type Id
+        """
+        <ns2:id>100</ns2:id>
+        """
+        And type Response
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                    <SOAP-ENV:Header/>
+                    <SOAP-ENV:Body>
+                        <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://qontract.run/petstore/api">
+                        (Id*)
+                        </ns2:GetPetInvoiceIdsResponse>
+                    </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+
+        When POST /ws
+        And request-body (Request)
+        Then status 200
+        And response-body (Response)
 ```
 
-### Order of the nodes
+These two API definitions have much in common. The request and response headers, The request method, request path, response status, request headers and payload envelopes are exactly the same between both scenarios.
 
-Order must be preserved. If the contract defines SOAP-ENV:Header before SOAP-ENV:Body, the actual xml document must contain the SOAP-ENV:Header before the SOAP-ENV:Body.
+All these details can be pulled into the background, with the invdividual scenarios encapsulating just the differences.
+
+```gherkin
+Feature: Pet store API
+    Background:
+        Given type Request
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                <SOAP-ENV:Header/>
+                <SOAP-ENV:Body>
+                    (RequestBody)
+                </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+        And type Response
+        """
+            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                <SOAP-ENV:Header/>
+                <SOAP-ENV:Body>
+                (ResponseBody)
+                </SOAP-ENV:Body>
+            </SOAP-ENV:Envelope>
+        """
+
+        When POST /ws
+        And request-body (Request)
+        Then status 200
+        And response-body (Response)
+
+    Scenario Outline: Get Pet Info
+        Given type RequestBody
+        """
+            <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+                <ns2:id>(number)</ns2:id>
+            </ns2:GetPetRequest>
+        """
+        And type ResponseBody
+        """
+            <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
+                <ns2:id>(number)</ns2:id>
+                <ns2:name>(string)</ns2:name>
+                <ns2:type>(string)</ns2:type>
+                <ns2:status>(string)</ns2:status>
+            </ns2:GetPetResponse>
+        """
+
+    Scenario: Get pet invoice ids
+        Given type RequestBody
+        """
+            <ns2:GetPetInvoiceIds xmlns:ns2="http://qontract.run/petstore/api">
+                <ns2:id>(number)</ns2:id>
+            </ns2:GetPetInvoiceIds>
+        """
+        And type Id <ns2:id>100</ns2:id>
+        And type ResponseBody
+        """
+            <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://qontract.run/petstore/api">
+            (Id*)
+            </ns2:GetPetInvoiceIdsResponse>
+        """
+```
+
+Let's review what's been done:
+1. We pulled the declaration of the request method, request path, status, and the common structures in request and response into the background.
+2. RequestBody and ResponseBody are referred to in the background, in the request and response structures. But they are defined in each scenario as needed.
+3. Note that the Id type in the response is now defined in a single line.
 
 ### Factoring out sub types
 
-If you want to pull out some of the datatype definitions to make the payload definition easier to read:
+Sometimes, a data type definition can be cleaned up by pulling a part of the definition outside.
+
+We have seen this done in the above sections. In [Reusing types across scenarios](#reusing-declarations-across-scenarios) we pulled out the Request and Response type into the background. In [Factoring out an array of nodes](#declaring-an-array-of-nodes), we pulled out the definition of the Id node.
+
+Let's review this again, in the form of another contract.
 
 ```gherkin
 Feature: Petstore SOAP API
@@ -83,137 +307,33 @@ Feature: Petstore SOAP API
     Given type Request
     """
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>(GetPetRequest)</SOAP-ENV:Body>
+            <SOAP-ENV:Header/>
+            <SOAP-ENV:Body>(GetPetRequest)</SOAP-ENV:Body>
         </SOAP-ENV:Envelope>
     """
     Given type GetPetResponse
     """
         <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
-                <ns2:id>(number)</ns2:id>
-                <ns2:name>(string)</ns2:name>
-                <ns2:type>(string)</ns2:type>
-                <ns2:status>(string)</ns2:status>
-        </ns2:GetPetResponse>
-    """
-    Given type Response
-    """
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>(GetPetResponse)</SOAP-ENV:Body>
-        </SOAP-ENV:Envelope>
-    """
-    When POST /ws
-    And request-body (Request)
-    Then status 200
-    And response-body (Response)
-```
-
-See how we pulled out the request and response structures.
-
-### Using the background
-
-In fact, there may be more such APIs with the same overall structure, with the differences being in the request and response.
-
-We can pull some common details into the background.
-
-```gherkin
-Feature: Petstore SOAP API (edited)
-  Background:
-    Given type Request
-    """
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>(RequestPayload)</SOAP-ENV:Body>
-        </SOAP-ENV:Envelope>
-    """
-    Given type Response
-    """
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>(ResponsePayload)</SOAP-ENV:Body>
-        </SOAP-ENV:Envelope>
-    """
-    When POST /ws
-    And request-body (Request)
-    Then status 200
-    And response-body (Response)
-
-  Scenario Outline: Get Pet Info
-    * type RequestPayload
-    """
-        <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
             <ns2:id>(number)</ns2:id>
-        </ns2:GetPetRequest>
-    """
-    * type ResponsePayload
-    """
-        <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
-                <ns2:id>(number)</ns2:id>
-                <ns2:name>(string)</ns2:name>
-                <ns2:type>(string)</ns2:type>
-                <ns2:status>(string)</ns2:status>
+            <ns2:name>(string)</ns2:name>
+            <ns2:type>(string)</ns2:type>
+            <ns2:status>(string)</ns2:status>
         </ns2:GetPetResponse>
-    """
-```
-
-### Array of nodes
-
-Suppose there is an array of invoice ids for various expenses for a pet.
-
-```gherkin
-Feature: Petstore SOAP API
-  Background:
-    Given type Request
-    """
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>(RequestPayload)</SOAP-ENV:Body>
-        </SOAP-ENV:Envelope>
     """
     Given type Response
     """
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>(ResponsePayload)</SOAP-ENV:Body>
+            <SOAP-ENV:Header/>
+            <SOAP-ENV:Body>(GetPetResponse)</SOAP-ENV:Body>
         </SOAP-ENV:Envelope>
     """
     When POST /ws
     And request-body (Request)
     Then status 200
     And response-body (Response)
-
-  Scenario Outline: Get Pet Info
-    * type RequestPayload
-    """
-        <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
-            <ns2:id>(number)</ns2:id>
-        </ns2:GetPetRequest>
-    """
-    * type InvoiceId <invoiceid>(number)</invoiceid>
-    * type ResponsePayload
-    """
-        <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
-                <ns2:id>(number)</ns2:id>
-                <ns2:name>(string)</ns2:name>
-                <ns2:type>(string)</ns2:type>
-                <ns2:status>(string)</ns2:status>
-                <ns2:invoices>(InvoiceId*)</ns2:invoices>
-        </ns2:GetPetResponse>
-    """
 ```
 
-This would match a response payload looking like this:
-
-```xml
-        <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
-                <ns2:id>(number)</ns2:id>
-                <ns2:name>(string)</ns2:name>
-                <ns2:type>(string)</ns2:type>
-                <ns2:status>(string)</ns2:status>
-                <ns2:invoices><invoiceid>10</invoiceid><invoiceid>20</invoiceid></ns2:invoices>
-        </ns2:GetPetResponse>
-```
+If the XML request or response payloads get complex and long, we may need to factor out sub parts of them for the sake of readability.
 
 ### Namespace prefixes
 
@@ -249,7 +369,17 @@ Note that the namespace prefix changed from `ns2` in the first request to `ns3` 
 
 But since the namespace remains the same, the SOAP server considers both requests to be identical.
 
-Qontract ignores the namespaces, and matches against the node name, at this point in time. So if for example a payload in the contract has the prefix `ns2`, but the request has the prefix `ns3`, Qontact will ignore both `ns2` and `ns3`, and verify that the incoming node name matches the contract's node name.
+The [Namespace in XML 1.1](https://www.w3.org/TR/xml-names11/#ns-qualnames) document explains it like this:
+
+> Note that the prefix functions only as a placeholder for a namespace name. Applications should use the namespace name, not the prefix, in constructing names whose scope extends beyond the containing document.
+
+The exact prefix name is not important. The prefix is merely a reference to the namespace, which is what really matters.
+
+So as a shortcut, Qontract ignores the namespaces, and matches against the node name, at this point in time. If for example a payload in the contract has the prefix `ns2`, but the request has the prefix `ns3`, Qontact will ignore both `ns2` and `ns3`, and verify that the incoming node name matches the contract's node name.
+
+### Order of the nodes
+
+Order must be preserved. If the contract defines SOAP-ENV:Header before SOAP-ENV:Body, the actual xml document must contain the SOAP-ENV:Header before the SOAP-ENV:Body.
 
 ### Sample projects
 
