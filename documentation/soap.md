@@ -340,12 +340,12 @@ For example, when getting pet info for pet id 10, the SOAP client library might 
 
 ```xml
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>
-                    <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
-                        <ns2:id>10</ns2:id>
-                    </ns2:GetPetRequest>
-                </SOAP-ENV:Body>
+            <SOAP-ENV:Header/>
+            <SOAP-ENV:Body>
+                <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+                    <ns2:id>10</ns2:id>
+                </ns2:GetPetRequest>
+            </SOAP-ENV:Body>
         </SOAP-ENV:Envelope>
 ```
 
@@ -353,18 +353,18 @@ For example, when getting pet info for pet id 10, the SOAP client library might 
 
 ```xml
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>
-                    <ns3:GetPetRequest xmlns:ns3="http://qontract.run/petstore/api">
-                        <ns3:id>10</ns3:id>
-                    </ns3:GetPetRequest>
-                </SOAP-ENV:Body>
+            <SOAP-ENV:Header/>
+            <SOAP-ENV:Body>
+                <ns3:GetPetRequest xmlns:ns3="http://qontract.run/petstore/api">
+                    <ns3:id>10</ns3:id>
+                </ns3:GetPetRequest>
+            </SOAP-ENV:Body>
         </SOAP-ENV:Envelope>
 ```
 
 Note that the namespace prefix changed from `ns2` in the first request to `ns3` in the second.
 
-The namespace prefix is merely a reference to the the namespace. In both requests, while the namespace prefix has changed, the namespace remains the same.
+The namespace prefix is merely a reference to the the namespace. In both requests, while the namespace prefix has changed, the namespace remained the same.
 
 The [Namespace in XML 1.1](https://www.w3.org/TR/xml-names11/#ns-qualnames) document explains it like this:
 
@@ -372,7 +372,40 @@ The [Namespace in XML 1.1](https://www.w3.org/TR/xml-names11/#ns-qualnames) docu
 
 The exact prefix name is not important. It's the namespace, not the prefix referring to it that matters. Now since the namespace has remained the same in both request payloads, the SOAP server considers both requests to be identical.
 
-So as a shortcut, Qontract ignores the namespaces, and matches against the node name, at this point in time. If for example a payload in the contract has the prefix `ns2`, but the request has the prefix `ns3`, Qontact will ignore both `ns2` and `ns3`, and verify that the incoming node name matches the contract's node name.
+So as a shortcut at this point in time, Qontract completely ignores the namespace, as well as the namespace prefixes, and matches the node name in the actual request payload against the node name in the contract request payload.
+
+Take the following contract snippet:
+
+```gherkin
+Scenario: Get Pet Details
+    Given type GetPetRequest
+    """
+        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+            <SOAP-ENV:Header/>
+            <SOAP-ENV:Body>
+                <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+                    <ns2:id>(number)</ns2:id>
+                </ns2:GetPetRequest>
+            </SOAP-ENV:Body>
+        </SOAP-ENV:Envelope>
+    """
+    # snip
+```
+
+This scenario would match the following xml request payload:
+
+```xml
+    <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+        <SOAP-ENV:Header/>
+        <SOAP-ENV:Body>
+            <ns3:GetPetRequest xmlns:ns3="http://qontract.run/petstore/api">
+                <ns3:id>10</ns3:id>
+            </ns3:GetPetRequest>
+        </SOAP-ENV:Body>
+    </SOAP-ENV:Envelope>
+```
+
+The contract defines a payload with namespace prefix `ns2`, and the actual request uses the namespace prefix `ns3`. But since Qontract completely ignores namespaces, and the node names excluding the namespaces are the same, the request will successfully match the contract.
 
 ### Order of the nodes
 
