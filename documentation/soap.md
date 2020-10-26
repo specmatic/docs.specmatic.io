@@ -115,10 +115,7 @@ Feature: Pet store API
                     </SOAP-ENV:Body>
             </SOAP-ENV:Envelope>
         """
-        And type Id
-        """
-        <ns2:id>100</ns2:id>
-        """
+        And type Id <ns2:id>100</ns2:id>
         And type Response
         """
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
@@ -140,6 +137,7 @@ Feature: Pet store API
 Let's review what's been done:
 1. We pulled the definition of Id outside, into it's own xml data type,
 2. And then we put (Id*) inside the response, indicating that there could be multiple nodes of type Id.
+3. Note that the Id type in the response is now defined in a single line.
 
 ### Reusing declarations across scenarios
 
@@ -285,7 +283,6 @@ Feature: Pet store API
 Let's review what's been done:
 1. We pulled the declaration of the request method, request path, status, and the common structures in request and response into the background.
 2. RequestBody and ResponseBody are referred to in the background, in the request and response structures. But they are defined in each scenario as needed.
-3. Note that the Id type in the response is now defined in a single line.
 
 ### Factoring out sub types
 
