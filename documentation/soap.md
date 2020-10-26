@@ -65,7 +65,7 @@ Feature: Petstore SOAP API
 
 ### Declaring an array of nodes
 
-Consider the following SOAP API to get all invoice ids related to a pet.
+Consider the following SOAP API to get all invoice ids related to a pet in a pet store's inventory.
 
 Here's the request for all invoice ids for pet id 100:
 
