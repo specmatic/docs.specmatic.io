@@ -136,7 +136,7 @@ Feature: Pet store API
 
 Let's review what's been done:
 1. We pulled the definition of Id outside, into it's own xml data type,
-2. And then we put (Id*) inside the response, indicating that there could be multiple nodes of type Id.
+2. And then we put (Id*) inside the response, indicating that there could be multiple xml nodes with the structure defined in the Id type.
 3. Note that the Id type in the response is now defined in a single line.
 
 ### Reusing declarations across scenarios
@@ -145,7 +145,7 @@ There may be multiple APIs with the same overall payload structures, with the di
 
 We can declare these common pieces in the background section. These declarations get inherited by all scenarios in the contract file.
 
-In this example, we have two APIs. The first API returns the data on a pet in the pet store's inventory for a given pet id. The second API returns a list of invoice ids representing expenses incurred by the pet store for a given pet id.
+In the following example, we have two APIs. The first API returns the data on a pet in the pet store's inventory for a given pet id. The second API returns a list of invoice ids representing expenses incurred by the pet store for a given pet id.
 
 We can start with the following contract:
 
@@ -288,7 +288,7 @@ Let's review what's been done:
 
 Sometimes, a data type definition can be cleaned up by pulling a part of the definition outside.
 
-We have seen this done in the above sections. In [Reusing types across scenarios](#reusing-declarations-across-scenarios) we pulled out the Request and Response type into the background. In [Factoring out an array of nodes](#declaring-an-array-of-nodes), we pulled out the definition of the Id node.
+We have seen this done in the above sections. In [Declaring an array of nodes](#declaring-an-array-of-nodes), we pulled out the definition of the Id node. In [Reusing declarations across scenarios](#reusing-declarations-across-scenarios) we pulled out the Request and Response type into the background.
 
 Let's review this again, in the form of another contract.
 
@@ -364,13 +364,13 @@ For example, when getting pet info for pet id 10, the SOAP client library might 
 
 Note that the namespace prefix changed from `ns2` in the first request to `ns3` in the second.
 
-But since the namespace remains the same, the SOAP server considers both requests to be identical.
+The namespace prefix is merely a reference to the the namespace. In both requests, while the namespace prefix has changed, the namespace remains the same.
 
 The [Namespace in XML 1.1](https://www.w3.org/TR/xml-names11/#ns-qualnames) document explains it like this:
 
 > Note that the prefix functions only as a placeholder for a namespace name. Applications should use the namespace name, not the prefix, in constructing names whose scope extends beyond the containing document.
 
-The exact prefix name is not important. The prefix is merely a reference to the namespace, which is what really matters.
+The exact prefix name is not important. It's the namespace, not the prefix referring to it that matters. Now since the namespace has remained the same in both request payloads, the SOAP server considers both requests to be identical.
 
 So as a shortcut, Qontract ignores the namespaces, and matches against the node name, at this point in time. If for example a payload in the contract has the prefix `ns2`, but the request has the prefix `ns3`, Qontact will ignore both `ns2` and `ns3`, and verify that the incoming node name matches the contract's node name.
 
