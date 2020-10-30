@@ -11,7 +11,7 @@ Release {{ site.latest_release }}
 Date: 21st October 2020
 
 What's new:
-- Improvements to xml type matching
+- Added the ability to stub out a delayed response to a request
 
 Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 

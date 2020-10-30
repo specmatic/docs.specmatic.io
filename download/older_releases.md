@@ -5,7 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
-### Rrelease 0.18.1
+### Release 0.19.1
+
+Date: 21st October 2020
+
+What's new:
+- Improvements to xml type matching
+
+### Release 0.18.1
 
 Date: 1st October 2020
 
