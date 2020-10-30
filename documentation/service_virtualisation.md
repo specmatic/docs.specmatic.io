@@ -23,6 +23,7 @@ Service Virtualisation
     - [Stub without hardcoding values in the response](#stub-without-hardcoding-values-in-the-response)
     - [Creating dynamic stubs](#creating-dynamic-stubs)
     - [Altering the stubbed response to a request](#altering-the-stubbed-response-to-a-request)
+    - [Introducing a delay in the Stub Response](#introducing-a-delay-in-the-stub-response)
     - [Stub file format](#stub-file-format)
 
 [Read here about contract testing and where Qontract fits in](/contract_testing.html).
@@ -765,6 +766,17 @@ We get the new stubbed response back.
 Note that in both curl calls to /_qontract/expectations, the request is the same, but the response status and body are different.
 
 In short, the newer expectation overrides the older one with the same request parameters.
+
+### Introducing a delay in the Stub Response
+
+At times, it is necessary to simulate a slow response from the application we are stubbing.
+
+```bash
+> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 404, "body": "name not found"}, "delay-in-seconds": 15}' http://localhost:9000/_qontract/expectations
+```
+
+The above dynamics expectation is exactly as in the previous section except the "delay-in-seconds" param. Every request that matches this specific expectation will respond with a 15 second delay.
+On all other requests, Qontract responds immediately.
 
 ### Stub file format
 
