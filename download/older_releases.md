@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.20.1
+
+Date: 21st October 2020
+
+What's new:
+- Added the ability to stub out a delayed response to a request
+
 ### Release 0.19.1
 
 Date: 21st October 2020
