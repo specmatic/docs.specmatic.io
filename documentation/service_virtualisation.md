@@ -24,7 +24,7 @@ Service Virtualisation
     - [Creating dynamic stubs](#creating-dynamic-stubs)
     - [Altering the stubbed response to a request](#altering-the-stubbed-response-to-a-request)
     - [Introducing a delay in the Stub Response](#introducing-a-delay-in-the-stub-response)
-    - [Forward Unrecognized URLs To An Actual Service](#forward-unrecognized-urls-to-an-actual-service)
+    - [Forward Unstubbed Requests To An Actual Service](#forward-unstubbed-requests-to-an-actual-service)
     - [Stub file format](#stub-file-format)
 
 [Read here about contract testing and where Qontract fits in](/contract_testing.html).
@@ -779,9 +779,9 @@ At times, it is necessary to simulate a slow response from the application we ar
 The above dynamics expectation is exactly as in the previous section except the "delay-in-seconds" param. Every request that matches this specific expectation will respond with a 15 second delay.
 On all other requests, Qontract responds immediately.
 
-### Forward Unrecognized URLs To An Actual Service
+### Forward Unstubbed Requests To An Actual Service
 
-You can provide a URL to which Qontract will forward all requests with URLs that it does not recognize.
+You can provide a URL to which Qontract will forward all requests which have not been stubbed out.
 
 This is done by start the stub like this:
 
@@ -789,7 +789,20 @@ This is done by start the stub like this:
 > qontract stub --passThroughTargetBase http://third-party-service.com customer-service.qontract
 ```
 
-Qontract will handle all requests for URLs in the customer-service.qontract file. For any URLs that it does not recognise, it will forward the requests as is to `http://third-party-service.com`, and relay the request back. In doing so, it acts as a plain vanilla proxy.
+Since nothing is stubbed at this point, Qontract will forward all requests as is to `http://third-party-service.com`, and relay the request back. In doing so, it acts as a plain vanilla proxy.
+
+But if you create a stub:
+
+```bash
+> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_qontract/expectations
+```
+
+Qontract will handle the request:
+
+```bash
+> curl -X POST -H 'Content-Type: application/json' -d '{"name": "Jane Doe", "address": "12B Baker Street"}' http://localhost:9000/customers
+success
+```
 
 ### Stub file format
 

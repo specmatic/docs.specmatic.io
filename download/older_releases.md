@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.21.0
+
+Date: 15th December 2020
+
+What's new:
+- Added a new feature in which the stub that forwards unknown urls to another url whose url is provided to it at startup ([Forward Unrecognized URLs To An Actual Service](/documentation/service_virtualisation.html#forward-unstubbed-requests-to-an-actual-service))
+
 ### Release 0.20.1
 
 Date: 21st October 2020
