@@ -50,8 +50,6 @@ Date: 12th September 2020
 What's new:
 - Bug fix to Proxy mode
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
-
 ### Release 0.17.0
 
 Date: 9th September 2020
@@ -114,7 +112,7 @@ What's new:
 - Rewritten support for XML
 - Improved support for CI
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.13.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.13.0/qontract.jar)
 
 ### Release 0.12.2
 
@@ -123,7 +121,7 @@ Date: 30th June 2020
 What's new:
 - Improved support for CI
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.12.2/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.12.2/qontract.jar)
 
 ### Release 0.12.1
 
@@ -134,7 +132,7 @@ What's new:
 - Files in stub directories that are not loaded are logged to the console
 - Improved error messages
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.12.1/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.12.1/qontract.jar)
 
 ### Release 0.12.0
 
@@ -144,7 +142,7 @@ What's new:
 - Improved error message in several areas
 - Added basic instrumentation for when Qontract runs as a server for service virtualisation in a test environment
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.12.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.12.0/qontract.jar)
 
 ### Release 0.11.1
 
@@ -154,7 +152,7 @@ What's new:
 - Added nicer error messages for multipart mismatch errors
 - Added strict flag for stub mode, with which the stub will respond with the concerned mismatch errors in case the stub doesn't match any input, instead of returning random values
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.11.1/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.11.1/qontract.jar)
 
 ### Release 0.11.0
 
@@ -164,7 +162,7 @@ What's new:
 - Big improvements to Postman import
 - Added back the backward compatibility test command
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.11.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.11.0/qontract.jar)
 
 ### Release 0.10.0
 
@@ -175,7 +173,7 @@ What's new:
 - Convert Postman collections into Qontract files
 - Improved support for CORS
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.10.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.10.0/qontract.jar)
 
 ### Release 0.9.0
 
@@ -188,7 +186,7 @@ What's new:
 - Suggestions can be passed as a commandline argument
 - Improvements to XML support
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.9.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.9.0/qontract.jar)
 
 ### Release 0.8.0
 
@@ -198,7 +196,7 @@ What's new:
 - Support for message in Kafka
 - Faster comparison of contracts
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.8.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.8.0/qontract.jar)
 
 ### Release 0.7.0
 
@@ -209,7 +207,7 @@ What's new:
 - Added preliminary support for multipart form data 
 - Added the version checkGitFile command to test whether the latest file checked out is compatible with the file at the same path in the last commit.
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.7.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.7.0/qontract.jar)
 
 ### Release 0.6.1
 
@@ -219,7 +217,7 @@ What's new:
 - Qontract can suggest the version number of a contract using the new command `version`
 - Qontract stub now logs requests and responses
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.6.1/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.6.1/qontract.jar)
 
 ### Release 0.6.0
 
@@ -233,7 +231,7 @@ What's new:
 - A java helper method for setting up stubs with data
 - A java helper to pick up a contract by specifying the major and minor version
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.6.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.6.0/qontract.jar)
 
 ### Release 0.5.0
 
@@ -244,7 +242,7 @@ Notes:
 - Stubs can now contain a type in the expectation instead of only hardcoded values, which will match any incoming input of that type.
 - Multiple contracts can now be loaded into a single process.
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.5.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.5.0/qontract.jar)
 
 ### Release 0.4.0
 
@@ -259,7 +257,7 @@ Notes:
 - Bug fixes
 - Under the hood improvements
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/0.4.0/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/0.4.0/qontract.jar)
 
 ### Release 0.3.1
 
@@ -269,7 +267,7 @@ Notes:
 - Improved commandline output of compare and test commands
 - Fixed a few bugs
 
-Standalone jar - [qontract-0.3.0-all.jar](https://github.com/qontract/qontract/releases/download/0.3.1/qontract-0.3.1-all.jar)
+Standalone jar - [qontract-0.3.0-all.jar](https://github.com/znsio/qontract/releases/download/0.3.1/qontract-0.3.1-all.jar)
 
 ### Release 0.3.0
 
@@ -280,7 +278,7 @@ Notes:
 - Added support for (datetime), (url) and (url https)
 - Added the compare command to the executable. It compares two contracts, and reports on whether they are compatible, or whether one is backward compatible with the other
 
-Standalone jar - [qontract-0.3.0-all.jar](https://github.com/qontract/qontract/releases/download/0.3.0/qontract-0.3.0-all.jar)
+Standalone jar - [qontract-0.3.0-all.jar](https://github.com/znsio/qontract/releases/download/0.3.0/qontract-0.3.0-all.jar)
 
 ### Release 0.2.0
 
@@ -290,7 +288,7 @@ Notes:
 * Added support for nulls
 * Improved test and stub commands, now there's no need to specify run and start respectively at the end
 
-Standalone jar - [qontract-0.2.0-all.jar](https://github.com/qontract/qontract/releases/download/0.2.0/qontract-0.2.0-all.jar)
+Standalone jar - [qontract-0.2.0-all.jar](https://github.com/znsio/qontract/releases/download/0.2.0/qontract-0.2.0-all.jar)
 
 ### Release 0.1
 
@@ -301,7 +299,7 @@ Notes:
 * adding form field support
 * bug fixes
 
-Standalone jar - [qontract-0.1.0-all.jar](https://github.com/qontract/qontract/releases/download/0.1/qontract-0.1.0-all.jar)
+Standalone jar - [qontract-0.1.0-all.jar](https://github.com/znsio/qontract/releases/download/0.1/qontract-0.1.0-all.jar)
 
 ### Release 0.1.0
 
@@ -315,4 +313,4 @@ Features:
 * Programmatic support for Contract as Mock and Contract as Test
 * Commandline support for Contract Stub, Contract as Test
 
-Standalone jar - [qontract-0.0.1-all.jar](https://github.com/qontract/qontract/releases/download/v0.0.1/qontract-0.0.1-all.jar)
+Standalone jar - [qontract-0.0.1-all.jar](https://github.com/znsio/qontract/releases/download/v0.0.1/qontract-0.0.1-all.jar)

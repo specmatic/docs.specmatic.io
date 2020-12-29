@@ -13,7 +13,7 @@ Date: 16th December 2020
 What's new:
 - Bug fixes to new feature: [Forward Unrecognized URLs To An Actual Service](/documentation/service_virtualisation.html#forward-unstubbed-requests-to-an-actual-service)
 
-Standalone jar - [qontract.jar](https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 
 ```
 <dependency>
