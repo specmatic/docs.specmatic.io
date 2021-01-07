@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.21.1
+
+Date: 16th December 2020
+
+What's new:
+- Bug fixes to new feature: [Forward Unrecognized URLs To An Actual Service](/documentation/service_virtualisation.html#forward-unstubbed-requests-to-an-actual-service)
+
 ### Release 0.21.0
 
 Date: 15th December 2020

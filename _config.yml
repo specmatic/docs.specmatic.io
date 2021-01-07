@@ -1,7 +1,7 @@
 remote_theme: pmarsceill/just-the-docs
 markdown: kramdown
 title: "Qontract"
-latest_release: 0.21.1
+latest_release: 0.21.2
 
 qontract_cmd: "java -jar /path/to/qontract"
 
