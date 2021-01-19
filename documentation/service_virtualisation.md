@@ -38,13 +38,15 @@ The way to solve this is to set up a stub API that appears to act like the real 
 
 ### Why Qontract
 
-There are many service virtualisation tools out there. The pitfall with them all is that there is no way to know if the stub is still in sync with real API. If the API ever adds a parameter, changes a type, etc. the stub will be out of sync, and the consumer application will not integrate with the provider API.
+There are many service virtualisation tools out there. The pitfall with them all is that there is no way to know if the stub is in sync with real API. If the API ever adds a parameter, changes a type, etc. the stub will be out of sync, and the consumer application will not integrate with the provider API.
 
 One solution is to define the API first as a specification, and then use it to stub out the provider. For this to be effective, the provider dev must run the same contract spec in test mode against their API. This way, the provider cannot deviate from the contract, assuring the consumers of the fidelity of the stubs.
 
 Qontract can be used to define such an API specification. This can then be used by the consumer as a stub, and by the provider as contract tests against the API that must pass.
 
 ### First Define The Contract
+
+[Read more about how to define a contract here.](/documentation/language.html)
 
 ### Basic stub using just the contract
 
@@ -62,7 +64,7 @@ Feature: Random API
     And response-body (number)
 ```
 
-You can run this as a stub by itself: `{{ site.qontract_cmd }} stub random.qontract`
+You can run this in stub mode by itself: `{{ site.qontract_cmd }} stub random.qontract`
 
 You now have an http server running on port 9000 that responds to requests, such as:
 
