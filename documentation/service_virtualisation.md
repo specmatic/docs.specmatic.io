@@ -32,13 +32,13 @@ Service Virtualisation
 
 ### Why Service Virtualisation
 
-It is not easy to develop an application that depends on 3rd party APIs. These APIs never run on the dev laptop or environment. They must be invoked over the network, during the process of coding, debugging or running component tests. But access to the APIs is usually flaky. The network may be down. The dev laptop may be offline. Sometimes an account has to be setup, data within the account has to be created, orders placed, etc and different developers on the same project overwrite eachother's test data. This results in slow, flaky tests whose feedback cannot be trusted, and a poor overal development experience.
+It is not easy to develop an application that depends on 3rd party APIs. These APIs never run on the dev laptop or environment. They must be invoked over the network, during the process of coding, debugging or running component tests. But access to the APIs is usually flaky. The network may be down. The dev laptop may be offline. Sometimes an account has to be setup, data within the account has to be created, orders placed, etc and different developers on the same project overwrite eachother's test data. Tests can fail for any of these above reasons, over and above actual logical errors, which makes running them quite painful.
 
-The way to solve this is to set up a stub API that appears to act like the real API, and runs on the developer's laptop. The developer must tell it what http requests it will get, and what responses must be given in return. But since it is on the developer's laptop, it is never flaky, and always available. The consuming application that is being developed on that laptop doesn't know that it is talking to a local stub, and in fact cannot tell the difference.
+The solution is to simulate the 3rd party APIs, and run the simulations on the developer's laptop. A service virtualization tool provides this capability. It can be told what request to expect, and what response to return for it. If you feed such a tool all the requests your application makes to the 3rd party service, and all the respective responses, it will completely simulate the 3rd party service. Since it runs on the developer's laptop, it will never be slow or go offline.
 
 ### Why Qontract
 
-There are many service virtualisation tools out there. The pitfall with them all is that there is no way to know if the stub is in sync with real API. If the API ever adds a parameter, changes a type, etc. the stub will be out of sync, and the consumer application will not integrate with the provider API.
+There are many service virtualisation tools out there. The pitfall with them all is that if the API ever adds a parameter, changes a type, etc. the stub will be out of sync, and the consumer application will not integrate with the provider API in higher environments.
 
 One solution is to define the API first as a specification, and then use it to stub out the provider. For this to be effective, the provider dev must run the same contract spec in test mode against their API. This way, the provider cannot deviate from the contract, assuring the consumers of the fidelity of the stubs.
 
