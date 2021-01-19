@@ -10,11 +10,7 @@ Language
 - [Language](#language)
   - [The Contract File](#the-contract-file)
   - [Syntax Reference](#syntax-reference)
-    - [Feature](#feature)
-    - [Scenario](#scenario)
-    - [Given](#given)
-    - [When](#when)
-    - [Then](#then)
+    - [Basic structure](#basic-structure)
     - [Scenario Outline](#scenario-outline)
     - [Built-in Data Types](#built-in-data-types)
       - [datetime type](#datetime-type)
@@ -63,17 +59,19 @@ Visual Studio Code and IntelliJ Idea support [syntax highlighting](syntax_highli
 
 ## Syntax Reference
 
-### Feature
+### Basic structure
 
-A Contract File starts with the Feature at the top.
+Here's a small contract.
 
 ```gherkin
 Feature: Contract for the petstore service
+  Scenario: Should be able to get a pet by petId
+      When GET /pets/(petid:number)
+      Then status 200
+      And response-body {petid: "(number)"}
 ```
 
-This line describes what the API is about.
-
-### Scenario
+A Contract File starts with the Feature at the top. This line describes what the API is about.
 
 Each Feature can have several scenarios. Each scenario describes a single interaction with the Provider.
 It is written in the Given, When and Then Format
@@ -81,20 +79,9 @@ It is written in the Given, When and Then Format
 * When - This represents the request
 * Then - Assertions
 
-```gherkin
-Scenario: Should be able to get a pet by petId
-    When GET /pets/(petid:number)
-    Then status 200
-    And response-body {petid: "(number)"}
-```
+We'll see more examples of how `Given` is used below.
 
-### Given
-
-We usually setup data structures needed by the contract using this keyword. We'll skip this for now, but you'll see examples of how Given is used further below, after we have covered a few basics.
-
-### When
-
-In the above example, let us focus on below line.
+In the above example, let us focus on this line:
 
 ```gherkin
 When GET /pets/(petid:number)
@@ -114,7 +101,7 @@ URL Parameters Definition
 You can also append more information to the request with the "And clause"
 
 ```gherkin
-When POST /pets/
+  When POST /pets/
   And request-body {petid: "(number)"}
   And request-header auth-token (string)
   And request-header traceid (number)
@@ -124,12 +111,10 @@ In above example, there are two more keywords.
 * request-body - As you may have guessed you can only have one request-body for a request
 * request-header - You can add as many request headers as you like
 
-### Then
-
-This section describes response.
+And finally, `Then`. This section describes the response.
 
 ```gherkin
-Then status 200
+  Then status 200
   And response-body {petid: "(number)"}
   And response-header token (string)
   And response-header CONTENT-TYPE application/json

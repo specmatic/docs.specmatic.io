@@ -9,7 +9,8 @@ Service Virtualisation
 
 - [Service Virtualisation](#service-virtualisation)
     - [Why Service Virtualisation](#why-service-virtualisation)
-    - [Why Use Qontract](#why-use-qontract)
+    - [Why Qontract](#why-qontract)
+    - [First Define The Contract](#first-define-the-contract)
     - [Basic stub using just the contract](#basic-stub-using-just-the-contract)
     - [Stubbing out specific responses to specific requests](#stubbing-out-specific-responses-to-specific-requests)
     - [Stubbing requests and responses with complex data](#stubbing-requests-and-responses-with-complex-data)
@@ -35,11 +36,15 @@ It is not easy to develop an application that depends on 3rd party APIs. These A
 
 The way to solve this is to set up a stub API that appears to act like the real API, and runs on the developer's laptop. The developer must tell it what http requests it will get, and what responses must be given in return. But since it is on the developer's laptop, it is never flaky, and always available. The consuming application that is being developed on that laptop doesn't know that it is talking to a local stub, and in fact cannot tell the difference.
 
-### Why Use Qontract
+### Why Qontract
 
-There are many tools you can use for service virtualisation. Qontract however compares the stub setup (called expectations) with the given contract to ensure that they are in sync. The same contract is used by the provider when running [contract tests](/documentation/contract_tests.html). Since the consumer sets expectations on it's stubs that match the contract, and the provider API is built against the same contract, the integration between the consumer and provider stays intact.
+There are many service virtualisation tools out there. The pitfall with them all is that there is no way to know if the stub is still in sync with real API. If the API ever adds a parameter, changes a type, etc. the stub will be out of sync, and the consumer application will not integrate with the provider API.
 
-Additionally, the contract spec is human-readable, which makes getting on the same page much easier.
+One solution is to define the API first as a specification, and then use it to stub out the provider. For this to be effective, the provider dev must run the same contract spec in test mode against their API. This way, the provider cannot deviate from the contract, assuring the consumers of the fidelity of the stubs.
+
+Qontract can be used to define such an API specification. This can then be used by the consumer as a stub, and by the provider as contract tests against the API that must pass.
+
+### First Define The Contract
 
 ### Basic stub using just the contract
 
