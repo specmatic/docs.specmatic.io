@@ -32,23 +32,27 @@ Service Virtualisation
 
 ### Why Service Virtualisation
 
-It is not easy to develop an application that depends on 3rd party APIs. These APIs never run on the dev laptop or environment. They must be invoked over the network, during the process of coding, debugging or running component tests. But access to the APIs is usually flaky. The network may be down. The dev laptop may be offline. Sometimes an account has to be setup, data within the account has to be created, orders placed, etc and different developers on the same project overwrite eachother's test data. Tests can fail for any of these above reasons, over and above actual logical errors, which makes running them quite painful.
+It is not easy to develop an application that depends on 3rd party APIs. These APIs typically run in a staging environment. They must be invoked over the network, during the process of coding, debugging or running component tests. But sometimes the staging environment is down. The local internet connection may be offline. Sometimes an account has to be setup, data within the account has to be created, orders placed, etc and different developers on the same project overwrite eachother's test data.
 
-The solution is to simulate the 3rd party APIs, and run the simulations on the developer's laptop. A service virtualization tool provides this capability. It can be told what request to expect, and what response to return for it. If you feed such a tool all the requests your application makes to the 3rd party service, and all the respective responses, it will completely simulate the 3rd party service. Since it runs on the developer's laptop, it will never be slow or go offline.
+All this is outside our control. Tests can fail for any of these reasons, over and above actual logical errors, which can make running them quite frustrating.
+
+The solution is to simulate the 3rd party APIs, and run the simulations on the developer's laptop. A service virtualization tool provides this capability. A quick google search will yield several such tools. You feed such a tool all the requests your application makes to the 3rd party service, and all the respective responses expected from the service. With this information, the tool will completely simulate the 3rd party service for your application to run on. Since it runs on the developer's laptop, it will never be slow or go offline.
 
 ### Why Qontract
 
-There are many service virtualisation tools out there. The pitfall with them all is that if the API ever adds a parameter, changes a type, etc. the stub will be out of sync, and the consumer application will not integrate with the provider API in higher environments.
+If the API ever adds a parameter, changes a type, etc. the simulation will be out of sync, and the consumer application will not integrate with the provider API in higher environments.
 
-One solution is to define the API first as a specification, and then use it to stub out the provider. For this to be effective, the provider dev must run the same contract spec in test mode against their API. This way, the provider cannot deviate from the contract, assuring the consumers of the fidelity of the stubs.
+One solution is to define the API first as a specification, and then use it to simulate the provider. For this to be effective, the provider dev must run the same contract spec in test mode against their API. This way, the provider cannot deviate from the contract, assuring the consumers of the fidelity of the simulation.
 
-Qontract can be used to define such an API specification. This can then be used by the consumer as a stub, and by the provider as contract tests against the API that must pass.
+Qontract can be used to define such an API specification. This can then be used by the consumer as a simulation, and by the provider as contract tests against the API that must pass.
 
 ### First Define The Contract
 
 [Read more about how to define a contract here.](/documentation/language.html)
 
 ### Basic stub using just the contract
+
+A simulation is also called a stub.
 
 In it's most basic form, you only need the contract.
 
