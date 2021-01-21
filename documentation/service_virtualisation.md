@@ -42,9 +42,9 @@ The solution is to simulate the 3rd party APIs, and run the simulations on the d
 
 If the API ever adds a parameter, changes a type, etc. the simulation will be out of sync, and the consumer application will not integrate with the provider API in higher environments.
 
-One solution is to define the API first as a specification, and then use it to simulate the provider. For this to be effective, the provider dev must run the same contract spec in test mode against their API. This way, the provider cannot deviate from the contract, assuring the consumers of the fidelity of the simulation.
+One solution is to define the API first as a specification, and then use it to simulate the provider. For this to be effective, the provider dev must [run the same contract spec to test their API](/documentation/contract_tests.html). This way, the provider cannot deviate from the contract, assuring consumers of the fidelity of the simulation.
 
-Qontract can be used to define such an API specification. This can then be used by the consumer as a simulation, and by the provider as contract tests against the API that must pass.
+Qontract can be used to define such an API specification.
 
 ### First Define The Contract
 
