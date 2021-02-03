@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 7th January 2021
+Date: 3rd February 2021
 
 What's new:
-- Minor bug fix
+- Bug fix for building the Qontract bundle in a mono repo
 
 Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 
