@@ -340,7 +340,7 @@ And similarly, and improved stub file:
 
 If your remote service runs over HTTPS, use Inbound Proxy Mode. Qontract acts as a transparent proxy between the client (Postman, your application, etc) and the API.
 
-Let's use the same freely provided (again many thanks to it's maintainer) test employee API that we used above.
+Let's use the same freely provided (again many thanks to its maintainer) test employee API that we used above.
 
 ### Start the proxy
 

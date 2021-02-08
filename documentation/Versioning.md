@@ -92,7 +92,7 @@ All updates to a contract file must be backward compatible.
 
 ## Ensuring Backward Compatibility
 
-Since the file is in git, comparing it with it's previous version is easy.
+Since the file is in git, comparing it with its previous version is easy.
 
 ### Compare Working Directory With HEAD
 

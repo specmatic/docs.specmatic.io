@@ -41,7 +41,7 @@ Well, the contract spec is typically stored in a central repository, which is ma
 
 ### Why Use Qontract
 
-The same contract spec that is used for contract testing is also used by the API consumers for [service virtualisation](/documentation/service_virtualisation.html). Since the consumer sets expectations on it's stubs that match the contract, and the provider API is built to adhere to the same contract, the integration between the consumer and provider stays intact.
+The same contract spec that is used for contract testing is also used by the API consumers for [service virtualisation](/documentation/service_virtualisation.html). Since the consumer sets expectations on its stubs that match the contract, and the provider API is built to adhere to the same contract, the integration between the consumer and provider stays intact.
 
 Additionally, the contract spec is human-readable. So contracts can be circulated around by email, chat, etc while the API design is under discussion.
 
@@ -53,7 +53,7 @@ For the purposes of this document, most of our contract test samples will be run
 
 ### Contract Tests Without Examples
 
-Here's a contract for a simple API that takes a number and returns it's square. The contract doesn't validate the value, it just checks that the API takes a number and returns a number.
+Here's a contract for a simple API that takes a number and returns its square. The contract doesn't validate the value, it just checks that the API takes a number and returns a number.
 
 ```gherkin
 #filename: numbers.qontract
@@ -574,7 +574,7 @@ Feature: Order API
 
 See how productid is used both in the value and the example.
 
-When the value contains it's own key, the json key is ignored.
+When the value contains its own key, the json key is ignored.
 
 ### External Suggestions
 
@@ -715,7 +715,7 @@ Feature: Data
   | 1\|2\|3 |
 ```
 
-Let's run this contract as a test against it's own stub.
+Let's run this contract as a test against its own stub.
 
 To run the stub: `{{ site.contract_cmd }} stub user.qontract`
 
