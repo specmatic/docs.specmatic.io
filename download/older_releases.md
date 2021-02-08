@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.22.0
+
+Date: 3rd February 2021
+
+What's new:
+- Bug fix for building the Qontract bundle in a mono repo
+
 ### Release 0.21.2
 
 Date: 7th January 2021
