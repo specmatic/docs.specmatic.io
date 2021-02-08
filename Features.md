@@ -24,7 +24,7 @@ The Examples keyword in Gherkin can be used to provide specific values to use. I
 
 ## Kafka
 
-Qontract supports the contract testing of Kafka messages. A contract describes the message name and it's format.
+Qontract supports the contract testing of Kafka messages. A contract describes the message name and its format.
 
 ## Test Mode
 

@@ -54,7 +54,7 @@ Qontract can be used to define such an API specification.
 
 A simulation is also called a stub.
 
-In it's most basic form, you only need the contract.
+In its most basic form, you only need the contract.
 
 ```gherkin
 # filename: random.qontract
@@ -187,7 +187,7 @@ Let's post 10 to the stub and see:
 384
 ```
 
-We did not have a stub with 10 in the request, but it matched the ontract. Qontract did not have a stubbed response, so it generated one and returned it.
+We did not have a stub with 10 in the request, but it matched the contract. Qontract did not have a stubbed response, so it generated one and returned it.
 
 ### Stubbing requests and responses with complex data
 
@@ -379,7 +379,7 @@ curl -X POST -H 'Content-Type: text/plain' -d 20 http://localhost:9000/number
 Match not found
 ```
 
-Without the URL, Qontract has no clue how to correlate the request with either the contract or it's stubs, and simply responds saying "Match not found".
+Without the URL, Qontract has no clue how to correlate the request with either the contract or its stubs, and simply responds saying "Match not found".
 
 ### Stubbing out multiple contracts in one Qontract instance
 
