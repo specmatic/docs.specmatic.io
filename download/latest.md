@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 8th February 2021
+Date: 10th March 2021
 
 What new:
-- Improvements to type generation of reponse when generating Gherkin out of a json stub file
+- Ability to convert WSDL files into Qontract files
 
 Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 

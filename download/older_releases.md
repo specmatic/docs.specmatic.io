@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+Release 0.22.1
+
+Date: 8th February 2021
+
+What new:
+- Improvements to type generation of reponse when generating Gherkin out of a json stub file
+
 ### Release 0.22.0
 
 Date: 3rd February 2021
