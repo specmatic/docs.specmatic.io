@@ -1,4 +1,4 @@
-# qontract-documentation
+# Specmatic Documentation
 
 Documentation for [Specmatic](//specmatic.in)
 
