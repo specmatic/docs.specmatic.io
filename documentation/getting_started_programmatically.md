@@ -13,7 +13,7 @@ If you are building your application in a JVM language, you are in luck, because
 
 ### Setup
 
-Add jar dependency. Notice this is test only scope. There is no need to ship Qontract jar with your production code.
+Add jar dependency. Notice this is test only scope. There is no need to ship Specmatic jar with your production code.
 
 ```
 <dependency>
@@ -110,7 +110,7 @@ public class PetStoreConsumerTest {
 
 Let us take a closer look at the above test.
 * The objective of this test is to help us build a PetStoreConsumer (API Client) class.
-* The setUP and tearDown methods are responsible for starting a Qontract Stub server (based on the service.qontract) and stopping it respectively.
+* The setUP and tearDown methods are responsible for starting a Specmatic Stub server (based on the service.qontract) and stopping it respectively.
 * In the setUP section, we pass the expectation json file to the stub. This tells it to expect a call to /pets/10, to which it must return the given pet info.
 * The assert section verifies that PetStoreConsumer is able to translate the response to Pet object
 
@@ -162,7 +162,7 @@ Add JUnit Jar dependency. This lets you run the contract as a JUnit 5 test.
 </dependency>
 ```
 
-Qontract leverages testing Frameworks to let you run contract as a test.
+Specmatic leverages testing Frameworks to let you run contract as a test.
 At the moment JUnit 5 is supported. Each Scenario in translated to a junit test so that you get IDE support to run your contract.
 
 Add below test to your Provider.

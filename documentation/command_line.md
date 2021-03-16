@@ -7,9 +7,9 @@ nav_order: 3
 Command Line
 ============
 
-Qontract Standalone Jar severs two purposes.
+Specmatic Standalone Jar severs two purposes.
 * **Zero IDE setup and no code** You can run Contract Tests without a writing a single line of code. Just need to author the Contract to describe your API.
-* **Work with several languages and tech stack** Your provider can be a Python Application and the Consumer a JavaScript application. Qontract can work with that setup in the command line mode.
+* **Work with several languages and tech stack** Your provider can be a Python Application and the Consumer a JavaScript application. Specmatic can work with that setup in the command line mode.
 
 ## Introduction
 
@@ -25,7 +25,7 @@ Then execute any sub command without parameters to see it. For example, try `jav
 
 ## Stub mode
 
-Qontract can be used as a stub, for service virtualisation.
+Specmatic can be used as a stub, for service virtualisation.
 
 ### HTTP stubs
 
@@ -73,7 +73,7 @@ Then try `curl -v -X POST -H "Content-Type: text/plain" -d 20 http://localhost:9
 
 ### Kafka stubs
 
-Kafka stubs are only generated for stub data provided to Qontract in stub files.
+Kafka stubs are only generated for stub data provided to Specmatic in stub files.
 
 Run the command `qontract stub --kafkaHost=<kafka host> --kafkaPort<kafka port> --data=<data dir> contract_file.qontract`. This will load the kafka message from the file, validate it against the specified contract file, and publish a message to the specified topic, on the kafka instance specified by the params named `kafkaHost` and `kafkaPort`.
 
@@ -81,7 +81,7 @@ Read more about the --data param [below](#stub-data-from-single-directory).
 
 If you need a local Kafka instance to use in your testing, you can use `qontract stub --kafkaHost=<kafka host> --kafkaPort<kafka port> --data=<data dir> --startKafka contract_file.qontract`.
 
-Note the `--startKafka` flag. Qontract will start a Kafka instance, load the stub data and validate it, create the needed topic and dump the message onto it.
+Note the `--startKafka` flag. Specmatic will start a Kafka instance, load the stub data and validate it, create the needed topic and dump the message onto it.
 
 ## Multiple Contracts
 
@@ -89,7 +89,7 @@ To run a stub for multiple contracts, and hit the same end point:
 
     java -jar qontract.jar stub payment_api.qontract journey_api.qontract ticket_api.qontract
 
-Qontract accepts any number of .qontract files.
+Specmatic accepts any number of .qontract files.
 
 ## Stub Data From Single Directory
 
@@ -107,11 +107,11 @@ For more information, check out the documentation on [service virtualisation](/s
 The command to run test mode is:
 `java -jar qontract.jar test --host=<hostname> --port=<port> <qontract filename>.qontract`
 
-For each scenario, Qontract will make a request to the server on host:port, and validate the response. The request is generated from the contract spec. If examples are provided, they are used to generate the request. If not, then the request is generated randomly.
+For each scenario, Specmatic will make a request to the server on host:port, and validate the response. The request is generated from the contract spec. If examples are provided, they are used to generate the request. If not, then the request is generated randomly.
 
 Take the math contract above. Use `java -jar qontract.jar samples math.qontract` to see what a request/response pair from this contract looks like.
 
-Qontract will generate a similar request and send it to host:port, where the server application is expected to be running. The response that comes back from the server will be validated against the contract.
+Specmatic will generate a similar request and send it to host:port, where the server application is expected to be running. The response that comes back from the server will be validated against the contract.
 
 And if the server did not understand the request, it means that the contract request format and the server implementation are out of sync.
 
@@ -119,15 +119,15 @@ And if the server did not understand the request, it means that the contract req
 
 You can test whether the available values on a Kafka topic meet the contract.
 
-Use `qontract test --kafkaHost=<kafka host> --kafkaPort=<kafka port> contract_file.qontract`. Qontract will join a Kafka consumer group named `qontract`, subscribe to the topics mentioned in the contract file, pull the messages from those topics from the Kafka instance running on the specified kafkaHost and kafkaPort, and validate them according to the contract.
+Use `qontract test --kafkaHost=<kafka host> --kafkaPort=<kafka port> contract_file.qontract`. Specmatic will join a Kafka consumer group named `qontract`, subscribe to the topics mentioned in the contract file, pull the messages from those topics from the Kafka instance running on the specified kafkaHost and kafkaPort, and validate them according to the contract.
 
 The command will exit with a non-zero value if any errors are found.
 
-If you wish to ack the message you have read, use `qontract test --kafkaHost=<kafka host> --kafkaPort=<kafka port> --commit contract_file.qontract`. Note the `--commit` flag. Qontract will now read and test the message, but will ack them. The next time you run qontract test, there will be no messages available for reading on that topic.
+If you wish to ack the message you have read, use `qontract test --kafkaHost=<kafka host> --kafkaPort=<kafka port> --commit contract_file.qontract`. Note the `--commit` flag. Specmatic will now read and test the message, but will ack them. The next time you run qontract test, there will be no messages available for reading on that topic.
 
 ### Build Server Integration
 
-Qontract "test" command exits with status 0 or 1 to represent success or failure respectively.
+Specmatic "test" command exits with status 0 or 1 to represent success or failure respectively.
 You can configure your Provider builds to fail when it does not satisfy the contract.
 
 For more information, check out the documentation on [running contract tests](/contract_tests.html).

@@ -9,7 +9,7 @@ Contract Tests
 
 - [Contract Tests](#contract-tests)
     - [Why Contract Testing](#why-contract-testing)
-    - [Why Use Qontract](#why-use-qontract)
+    - [Why Use Specmatic](#why-use-qontract)
     - [IMPORTANT: Using Stub As A Sample Application API](#important-using-stub-as-a-sample-application-api)
     - [Contract Tests Without Examples](#contract-tests-without-examples)
     - [When The Application Breaks The Contract](#when-the-application-breaks-the-contract)
@@ -25,11 +25,11 @@ Contract Tests
     - [Examples Of Only Some Values](#examples-of-only-some-values)
     - [Escaping Pipes In Examples](#escaping-pipes-in-examples)
 
-[Read here about contract testing and where Qontract fits in](/contract_testing.html).
+[Read here about contract testing and where Specmatic fits in](/contract_testing.html).
 
 ### Why Contract Testing
 
-Qontract reads the contract spec and generates tests for each scenario in the spec. It then runs these tests on your API end point, which you also provide to Qontract. If your application is built right, it will understand the request sent to each test, and send a response back. Qontract compares the response with the contract spect, and the test passes if they are in sync. These are meant only to test the request and response formats. They do not validate the values in the responses. That is the the role of API tests, which cover many more scenarios in detail.
+Specmatic reads the contract spec and generates tests for each scenario in the spec. It then runs these tests on your API end point, which you also provide to Specmatic. If your application is built right, it will understand the request sent to each test, and send a response back. Specmatic compares the response with the contract spect, and the test passes if they are in sync. These are meant only to test the request and response formats. They do not validate the values in the responses. That is the the role of API tests, which cover many more scenarios in detail.
 
 How then are contract tests different from API tests?
 
@@ -37,9 +37,9 @@ The answer is that the developer alone controls the tests completely. The develo
 
 So what prevents the developer from updating the contract to match the API tests, thus breaking downstream consumers?
 
-Well, the contract spec is typically stored in a central repository, which is managed and updated by multiple teams. So at the very least, developers are conscious of this, and will not change the contract without talking to all concerned. To eliminate concerns around integration breakage, make sure that all changes to the contract are back backward compatible, using the tools that Qontract has provided.
+Well, the contract spec is typically stored in a central repository, which is managed and updated by multiple teams. So at the very least, developers are conscious of this, and will not change the contract without talking to all concerned. To eliminate concerns around integration breakage, make sure that all changes to the contract are back backward compatible, using the tools that Specmatic has provided.
 
-### Why Use Qontract
+### Why Use Specmatic
 
 The same contract spec that is used for contract testing is also used by the API consumers for [service virtualisation](/documentation/service_virtualisation.html). Since the consumer sets expectations on its stubs that match the contract, and the provider API is built to adhere to the same contract, the integration between the consumer and provider stays intact.
 
@@ -49,7 +49,7 @@ Additionally, the contract spec is human-readable. So contracts can be circulate
 
 We try to provide examples that you can run. Contract tests target a provider API. So the examples in this document need a sample API application to run against. Instead of asking you to download some such sample API code, and setup up a tool chain that you may be unfamiliar with to build and run it, we are going to take a shortcut.
 
-For the purposes of this document, most of our contract test samples will be run against [Qontract stubs](/documentation/service_virtualisation.html) as the target, and we will provide the needed stub contracts.
+For the purposes of this document, most of our contract test samples will be run against [Specmatic stubs](/documentation/service_virtualisation.html) as the target, and we will provide the needed stub contracts.
 
 ### Contract Tests Without Examples
 
@@ -95,7 +95,7 @@ In another tab, run the test command again against the "sample" application :-)
 -> 255
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 3
 <- Content-Type: text/plain
 <- Connection: keep-alive
@@ -152,7 +152,7 @@ And in another tab, run the contract test.
     -> 454
     <- 200 OK
     <- Vary: Origin
-    <- X-Qontract-Result: success
+    <- X-Specmatic-Result: success
     <- Content-Length: 5
     <- Content-Type: text/plain
     <- Connection: keep-alive
@@ -170,7 +170,7 @@ And in another tab, run the contract test.
 
     Tests run: 1, Failures: 1
 
-The contract test generated a request with a random number that matched the contract, and sent it to the "sample" application. The test expected a numerical response, but got a string instead. Since the applications response did not not match the contract spec, Qontract reported the problem.
+The contract test generated a request with a random number that matched the contract, and sent it to the "sample" application. The test expected a numerical response, but got a string instead. Since the applications response did not not match the contract spec, Specmatic reported the problem.
 
 ### Contract Tests With Examples
 
@@ -220,7 +220,7 @@ Feature: User API
 
 Note that the id in the URL retains the type. By using types instead of hardcoded values, the contract becomes useful for the consumer as well, for the purpose of [service virtualisation](/documentation/service_virtualisation.html).
 
-However, to avoid randomly generated values, we provide concrete examples. Qontract looks up the url parameter name "id" in the example, and it finds a column named "id" as well. It picks up the value 10.
+However, to avoid randomly generated values, we provide concrete examples. Specmatic looks up the url parameter name "id" in the example, and it finds a column named "id" as well. It picks up the value 10.
 
 First it checks that the example matches the contract, which it does here. The id must be a number, and the example is a number. It then formulates the request (GET /user/10) and sends it to the "sample" application.
 
@@ -238,7 +238,7 @@ In a new tab, run the test:
 ->
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 8
 <- Content-Type: text/plain
 <- Connection: keep-alive
@@ -308,7 +308,7 @@ Now run the tests.
 ->
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 8
 <- Content-Type: text/plain
 <- Connection: keep-alive
@@ -327,7 +327,7 @@ Scenario: Get User Name GET /user/(id:number) SUCCESSFUL
 ->
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 8
 <- Content-Type: text/plain
 <- Connection: keep-alive
@@ -346,7 +346,7 @@ Scenario: Get User Name GET /user/(id:number) SUCCESSFUL
 ->
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 8
 <- Content-Type: text/plain
 <- Connection: keep-alive
@@ -413,7 +413,7 @@ Let's try running user.qontract as a test.
 -> }
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 7
 <- Content-Type: text/plain
 <- Connection: keep-alive
@@ -462,7 +462,7 @@ Expected number, actual was "ten"
 Tests run: 0, Failures: 0
 ```
 
-Qontract didn't even run the test. Instead, it flagged the error in the example.
+Specmatic didn't even run the test. Instead, it flagged the error in the example.
 
 ### When The Application Returns Extra Keys
 
@@ -517,7 +517,7 @@ In a new tab, let's try running user.qontract as a test.
 ->
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 62
 <- Content-Type: application/json
 <- Connection: keep-alive
@@ -647,7 +647,7 @@ In the first example, id is hardcoded but the name will be autogenerated. And in
 
 ### Examples Of Only Some Values
 
-You can provide examples for only the keys you care about. Where there is a type but no example, Qontract will generate it.
+You can provide examples for only the keys you care about. Where there is a type but no example, Specmatic will generate it.
 
 ```gherkin
 #filename: user.qontract
@@ -686,7 +686,7 @@ And then the test.
 -> }
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 0
 <- Content-Type: text/plain
 <- Connection: keep-alive
@@ -731,7 +731,7 @@ And then the test.
 -> 1|2|3
 <- 200 OK
 <- Vary: Origin
-<- X-Qontract-Result: success
+<- X-Specmatic-Result: success
 <- Content-Length: 0
 <- Content-Type: text/plain
 <- Connection: keep-alive

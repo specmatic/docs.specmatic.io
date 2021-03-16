@@ -9,14 +9,14 @@ Service Virtualisation
 
 - [Service Virtualisation](#service-virtualisation)
     - [Why Service Virtualisation](#why-service-virtualisation)
-    - [Why Qontract](#why-qontract)
+    - [Why Specmatic](#why-qontract)
     - [First Define The Contract](#first-define-the-contract)
     - [Basic stub using just the contract](#basic-stub-using-just-the-contract)
     - [Stubbing out specific responses to specific requests](#stubbing-out-specific-responses-to-specific-requests)
     - [Stubbing requests and responses with complex data](#stubbing-requests-and-responses-with-complex-data)
     - [Errors when stubbing requests or reponses that do not match the contract](#errors-when-stubbing-requests-or-reponses-that-do-not-match-the-contract)
     - [Match not found: wrong URL or method in the request](#match-not-found-wrong-url-or-method-in-the-request)
-    - [Stubbing out multiple contracts in one Qontract instance](#stubbing-out-multiple-contracts-in-one-qontract-instance)
+    - [Stubbing out multiple contracts in one Specmatic instance](#stubbing-out-multiple-contracts-in-one-qontract-instance)
     - [Lenient stubbing](#lenient-stubbing)
     - [Strict mode](#strict-mode)
     - [Matching Path and Query Parameters in stub data json](#matching-path-and-query-parameters-in-stub-data-json)
@@ -28,7 +28,7 @@ Service Virtualisation
     - [Forward Unstubbed Requests To An Actual Service](#forward-unstubbed-requests-to-an-actual-service)
     - [Stub file format](#stub-file-format)
 
-[Read here about contract testing and where Qontract fits in](/contract_testing.html).
+[Read here about contract testing and where Specmatic fits in](/contract_testing.html).
 
 ### Why Service Virtualisation
 
@@ -38,13 +38,13 @@ All this is outside our control. Tests can fail for any of these reasons, over a
 
 The solution is to simulate the 3rd party APIs, and run the simulations on the developer's laptop. A service virtualization tool provides this capability. A quick google search will yield several such tools. You feed such a tool all the requests your application makes to the 3rd party service, and all the respective responses expected from the service. With this information, the tool will completely simulate the 3rd party service for your application to run on. Since it runs on the developer's laptop, it will never be slow or go offline.
 
-### Why Qontract
+### Why Specmatic
 
 If the API ever adds a parameter, changes a type, etc. the simulation will be out of sync, and the consumer application will not integrate with the provider API in higher environments.
 
 One solution is to define the API first as a specification, and then use it to simulate the provider. For this to be effective, the provider dev must [run the same contract spec to test their API](/documentation/contract_tests.html). This way, the provider cannot deviate from the contract, assuring consumers of the fidelity of the simulation.
 
-Qontract can be used to define such an API specification.
+Specmatic can be used to define such an API specification.
 
 ### First Define The Contract
 
@@ -164,7 +164,7 @@ Reading the stub files below:
 Stub server is running on http://localhost:9000. Ctrl + C to stop.
 ```
 
-Qontract looks for a directory with the filename of the qontract file, + the suffix "_data". It found it in this case, and loaded it.
+Specmatic looks for a directory with the filename of the qontract file, + the suffix "_data". It found it in this case, and loaded it.
 
 In another tab, let's post 5 to the stub and see what happens:
 
@@ -187,7 +187,7 @@ Let's post 10 to the stub and see:
 384
 ```
 
-We did not have a stub with 10 in the request, but it matched the contract. Qontract did not have a stubbed response, so it generated one and returned it.
+We did not have a stub with 10 in the request, but it matched the contract. Specmatic did not have a stubbed response, so it generated one and returned it.
 
 ### Stubbing requests and responses with complex data
 
@@ -293,11 +293,11 @@ Expected string, actual was number: 10
 Stub server is running on http://localhost:9000. Ctrl + C to stop.
 ```
 
-You can read more about [Qontract reports here](documtation/../reading_reports.html).
+You can read more about [Specmatic reports here](documtation/../reading_reports.html).
 
 You are warned here that the address was supposed to be a string, but was a number, 10.
 
-Qontract will not load this stub. But it will still load and stub out customer.qontract. So you will get random responses matching the contract back for any request that matches the contract.
+Specmatic will not load this stub. But it will still load and stub out customer.qontract. So you will get random responses matching the contract back for any request that matches the contract.
 
 Try invoking the stub now:
 
@@ -379,9 +379,9 @@ curl -X POST -H 'Content-Type: text/plain' -d 20 http://localhost:9000/number
 Match not found
 ```
 
-Without the URL, Qontract has no clue how to correlate the request with either the contract or its stubs, and simply responds saying "Match not found".
+Without the URL, Specmatic has no clue how to correlate the request with either the contract or its stubs, and simply responds saying "Match not found".
 
-### Stubbing out multiple contracts in one Qontract instance
+### Stubbing out multiple contracts in one Specmatic instance
 
 If you want to stub out multiple contracts together:
 
@@ -444,13 +444,13 @@ ILXWG
 
 Note that the stub was expecting Sherlock but not Jane. However, the `name` query parameter can take a string according to the contract and Jane is a string.
 
-So while Qontract doesn't know what to reply in response to the request for a customer named Jane, the request does meet the contract.
+So while Specmatic doesn't know what to reply in response to the request for a customer named Jane, the request does meet the contract.
 
-In this case, Qontract generated a randomised response based on the format in the contract and returned it.
+In this case, Specmatic generated a randomised response based on the format in the contract and returned it.
 
 ### Strict mode
 
-Sometimes when we send a request we thought we had stubbed, we get a randomised response because of lenient stubbing. But we do want the specific response we had stubbed out, and would like Qontract to tell us why it is not returning it.
+Sometimes when we send a request we thought we had stubbed, we get a randomised response because of lenient stubbing. But we do want the specific response we had stubbed out, and would like Specmatic to tell us why it is not returning it.
 
 To do this, we must turn strict mode **on**.
 
@@ -504,7 +504,7 @@ Expected string: "Sherlock", actual was string: "Jane"
 
 This is exactly the same command we ran at the end of the previous section but we were not running in strict mode then.
 
-Now in strict mode, Qontract returns an error indicating what was wrong with our request.
+Now in strict mode, Specmatic returns an error indicating what was wrong with our request.
 
 ### Matching Path and Query Parameters in stub data json
 
@@ -658,11 +658,11 @@ And the result:
 TPVNQ
 ```
 
-The response is a random one, generated by Qontract.
+The response is a random one, generated by Specmatic.
 
 ### Creating dynamic stubs
 
-You can setup a stub over HTTP, after Qontract has been started.
+You can setup a stub over HTTP, after Specmatic has been started.
 
 Let's try this out with a simple contract:
 
@@ -694,7 +694,7 @@ Now run the following curl command:
 > curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_qontract/expectations
 ```
 
-We just posted the stub content using the POST verb to Qontract at the path /_qontract/expectations.
+We just posted the stub content using the POST verb to Specmatic at the path /_qontract/expectations.
 
 Now the stub is setup with real values.
 
@@ -788,11 +788,11 @@ At times, it is necessary to simulate a slow response from the application we ar
 ```
 
 The above dynamics expectation is exactly as in the previous section except the "delay-in-seconds" param. Every request that matches this specific expectation will respond with a 15 second delay.
-On all other requests, Qontract responds immediately.
+On all other requests, Specmatic responds immediately.
 
 ### Forward Unstubbed Requests To An Actual Service
 
-You can provide a URL to which Qontract will forward all requests which have not been stubbed out.
+You can provide a URL to which Specmatic will forward all requests which have not been stubbed out.
 
 This is done by start the stub like this:
 
@@ -800,7 +800,7 @@ This is done by start the stub like this:
 > qontract stub --passThroughTargetBase http://third-party-service.com customer-service.qontract
 ```
 
-Since nothing is stubbed at this point, Qontract will forward all requests as is to `http://third-party-service.com`, and relay the request back. In doing so, it acts as a plain vanilla proxy.
+Since nothing is stubbed at this point, Specmatic will forward all requests as is to `http://third-party-service.com`, and relay the request back. In doing so, it acts as a plain vanilla proxy.
 
 But if you create a stub:
 
@@ -808,7 +808,7 @@ But if you create a stub:
 > curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_qontract/expectations
 ```
 
-Qontract will handle the request:
+Specmatic will handle the request:
 
 ```bash
 > curl -X POST -H 'Content-Type: application/json' -d '{"name": "Jane Doe", "address": "12B Baker Street"}' http://localhost:9000/customers

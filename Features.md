@@ -7,7 +7,7 @@ nav_order: 2
 
 ## Http support
 
-Qontract describes the interaction between two systems over HTTP.
+Specmatic describes the interaction between two systems over HTTP.
 
 It can describe HTTP requests and responses, and within them:
 * Methods (GET, POST, PUT, DELETE)
@@ -24,7 +24,7 @@ The Examples keyword in Gherkin can be used to provide specific values to use. I
 
 ## Kafka
 
-Qontract supports the contract testing of Kafka messages. A contract describes the message name and its format.
+Specmatic supports the contract testing of Kafka messages. A contract describes the message name and its format.
 
 ## Test Mode
 
@@ -34,7 +34,7 @@ This is meant to be used by API providers.
 
 ## Service Virtualisation
 
-In stub mode, Qontract provides random responses to requests that match the contract. It's a way of exploring what the contract looks like.
+In stub mode, Specmatic provides random responses to requests that match the contract. It's a way of exploring what the contract looks like.
 
 This is meant to be used by anyone who wants to take a fake version of the API for a spin.
 
@@ -42,16 +42,16 @@ This mode can also stub out real requests and responses, which will be validated
 
 ## Backward Compatibility Testing
 
-Given an older and a newer contract, Qontract will spin up a stub of the new one, and run the old in test mode against it. If all the tests pass, the new contract is considered backward compatible with the old.
+Given an older and a newer contract, Specmatic will spin up a stub of the new one, and run the old in test mode against it. If all the tests pass, the new contract is considered backward compatible with the old.
 
 ## Versioning
 
-Qontract provides various tools that enable you to version your contracts.
+Specmatic provides various tools that enable you to version your contracts.
 
 ## Support for Callbacks
 
-Qontract enables contract testing for async callbacks with the help of Qontract's stub mode.
+Specmatic enables contract testing for async callbacks with the help of Specmatic's stub mode.
 
-## Converting from Postman to Qontract
+## Converting from Postman to Specmatic
 
-Qontract can read a Postman file and convert it into a Qontract file. It will work even without Postman examples, by using the Postman request to query the service.
+Specmatic can read a Postman file and convert it into a Specmatic file. It will work even without Postman examples, by using the Postman request to query the service.

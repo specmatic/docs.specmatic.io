@@ -11,9 +11,9 @@ Release {{ site.latest_release }}
 Date: 10th March 2021
 
 What new:
-- Ability to convert WSDL files into Qontract files
+- Ability to convert WSDL files into Specmatic files
 
-Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/qontract.jar)
 
 ```
 <dependency>

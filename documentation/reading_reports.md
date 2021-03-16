@@ -14,7 +14,7 @@ Understanding Errors
 
 ## Report Format
 
-Qontract strives to pinpoint the location of the error, and tell you exactly what went amiss there.
+Specmatic strives to pinpoint the location of the error, and tell you exactly what went amiss there.
 
 A report contain 3 components:
 1. the scenario
@@ -69,7 +69,7 @@ The error path pinpoints the location of the error. In this case, the error was 
 Expected number, actual was "hi"
 ```
 
-Qontract helpfully tells you that it expected a number, but the actual value was "hi". It's quoted to indicate that the value was a string.
+Specmatic helpfully tells you that it expected a number, but the actual value was "hi". It's quoted to indicate that the value was a string.
 
 ## Error in JSON request
 
@@ -109,7 +109,7 @@ In scenario "Random number"
 >> REQUEST.BODY.data
 ```
 
-The path indicates that the error is in the request body. `REQUEST` and `BODY` are Qontract keywords.
+The path indicates that the error is in the request body. `REQUEST` and `BODY` are Specmatic keywords.
 
 `data` is inside REQUEST.BODY. This indicates that the request body is a **json object containing the key data**.
 

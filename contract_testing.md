@@ -61,7 +61,7 @@ Contract Tests are Fast and Quick like Unit Tests and still offer a majority of 
 
 ---
 
-# Qontract - Contract First
+# Specmatic - Contract First
 
 Most of the "Contract Testing" tools are "[Consumer Driven Contract](https://martinfowler.com/articles/consumerDrivenContracts.html)" testing tool. Here the contract is generated based on the Provider Stub / Mock server that is defined by Consumers.
 This setup suits the Consumer First Development Style better. Here Provider API design is based on what the Consumers need.
@@ -75,6 +75,6 @@ However there are scenarios where this may not work well.
 
 We believe both "Consumer First" and "Contract First" styles have their place in application architecture and wanted to build a tool that caters to both styles.
 
-We built Qontract for the **Contract First** approach. When you start with the Contract, you can either go the Provider First route or Consumer First route.
+We built Specmatic for the **Contract First** approach. When you start with the Contract, you can either go the Provider First route or Consumer First route.
 This also reduces bias towards Provider or Consumer in API Design.
 

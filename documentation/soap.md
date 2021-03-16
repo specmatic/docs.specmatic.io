@@ -21,7 +21,7 @@ The syntax for XML payloads can be found on the [Language](/documentation/langua
 
 ### Obtaining Payload Samples
 
-Use your application's logging features to obtain requests and responses for your SOAP API, which you can then rewrite using Qontract syntax.
+Use your application's logging features to obtain requests and responses for your SOAP API, which you can then rewrite using Specmatic syntax.
 
 ### Defining SOAP Contracts
 
@@ -37,7 +37,7 @@ Feature: Petstore SOAP API
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
                     <SOAP-ENV:Header/>
                     <SOAP-ENV:Body>
-                            <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+                            <ns2:GetPetRequest xmlns:ns2="http://specmatic.in/petstore/api">
                                 <ns2:id>(number)</ns2:id>
                             </ns2:GetPetRequest>
                     </SOAP-ENV:Body>
@@ -48,7 +48,7 @@ Feature: Petstore SOAP API
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
                     <SOAP-ENV:Header/>
                     <SOAP-ENV:Body>
-                        <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
+                        <ns2:GetPetResponse xmlns:ns2="http://specmatic.in/petstore/api">
                                 <ns2:id>(number)</ns2:id>
                                 <ns2:name>(string)</ns2:name>
                                 <ns2:type>(string)</ns2:type>
@@ -73,7 +73,7 @@ Here's the request for all invoice ids for pet id 100:
     <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
             <SOAP-ENV:Header/>
             <SOAP-ENV:Body>
-                    <ns2:GetPetInvoiceIdsRequest xmlns:ns2="http://qontract.run/petstore/api">
+                    <ns2:GetPetInvoiceIdsRequest xmlns:ns2="http://specmatic.in/petstore/api">
                         <ns2:id>100</ns2:id>
                     </ns2:GetPetInvoiceIdsRequest>
             </SOAP-ENV:Body>
@@ -86,7 +86,7 @@ Here's the request for all invoice ids for pet id 100:
     <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
             <SOAP-ENV:Header/>
             <SOAP-ENV:Body>
-                <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://qontract.run/petstore/api">
+                <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://specmatic.in/petstore/api">
                         <ns2:id>10</ns2:id>
                         <ns2:id>11</ns2:id>
                         <ns2:id>12</ns2:id>
@@ -109,7 +109,7 @@ Feature: Pet store API
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
                     <SOAP-ENV:Header/>
                     <SOAP-ENV:Body>
-                            <ns2:GetPetInvoiceIds xmlns:ns2="http://qontract.run/petstore/api">
+                            <ns2:GetPetInvoiceIds xmlns:ns2="http://specmatic.in/petstore/api">
                                 <ns2:id>(number)</ns2:id>
                             </ns2:GetPetInvoiceIds>
                     </SOAP-ENV:Body>
@@ -121,7 +121,7 @@ Feature: Pet store API
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
                     <SOAP-ENV:Header/>
                     <SOAP-ENV:Body>
-                            <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://qontract.run/petstore/api">
+                            <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://specmatic.in/petstore/api">
                             (Id*)
                             </ns2:GetPetInvoiceIdsResponse>
                     </SOAP-ENV:Body>
@@ -157,7 +157,7 @@ Feature: Pet store API
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
                     <SOAP-ENV:Header/>
                     <SOAP-ENV:Body>
-                        <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+                        <ns2:GetPetRequest xmlns:ns2="http://specmatic.in/petstore/api">
                             <ns2:id>(number)</ns2:id>
                         </ns2:GetPetRequest>
                     </SOAP-ENV:Body>
@@ -168,7 +168,7 @@ Feature: Pet store API
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
                     <SOAP-ENV:Header/>
                     <SOAP-ENV:Body>
-                        <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
+                        <ns2:GetPetResponse xmlns:ns2="http://specmatic.in/petstore/api">
                             <ns2:id>(number)</ns2:id>
                             <ns2:name>(string)</ns2:name>
                             <ns2:type>(string)</ns2:type>
@@ -188,7 +188,7 @@ Feature: Pet store API
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
                     <SOAP-ENV:Header/>
                     <SOAP-ENV:Body>
-                        <ns2:GetPetInvoiceIds xmlns:ns2="http://qontract.run/petstore/api">
+                        <ns2:GetPetInvoiceIds xmlns:ns2="http://specmatic.in/petstore/api">
                             <ns2:id>(number)</ns2:id>
                         </ns2:GetPetInvoiceIds>
                     </SOAP-ENV:Body>
@@ -203,7 +203,7 @@ Feature: Pet store API
             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
                     <SOAP-ENV:Header/>
                     <SOAP-ENV:Body>
-                        <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://qontract.run/petstore/api">
+                        <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://specmatic.in/petstore/api">
                         (Id*)
                         </ns2:GetPetInvoiceIdsResponse>
                     </SOAP-ENV:Body>
@@ -250,13 +250,13 @@ Feature: Pet store API
     Scenario Outline: Get Pet Info
         Given type RequestBody
         """
-            <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+            <ns2:GetPetRequest xmlns:ns2="http://specmatic.in/petstore/api">
                 <ns2:id>(number)</ns2:id>
             </ns2:GetPetRequest>
         """
         And type ResponseBody
         """
-            <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
+            <ns2:GetPetResponse xmlns:ns2="http://specmatic.in/petstore/api">
                 <ns2:id>(number)</ns2:id>
                 <ns2:name>(string)</ns2:name>
                 <ns2:type>(string)</ns2:type>
@@ -267,14 +267,14 @@ Feature: Pet store API
     Scenario: Get pet invoice ids
         Given type RequestBody
         """
-            <ns2:GetPetInvoiceIds xmlns:ns2="http://qontract.run/petstore/api">
+            <ns2:GetPetInvoiceIds xmlns:ns2="http://specmatic.in/petstore/api">
                 <ns2:id>(number)</ns2:id>
             </ns2:GetPetInvoiceIds>
         """
         And type Id <ns2:id>100</ns2:id>
         And type ResponseBody
         """
-            <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://qontract.run/petstore/api">
+            <ns2:GetPetInvoiceIdsResponse xmlns:ns2="http://specmatic.in/petstore/api">
             (Id*)
             </ns2:GetPetInvoiceIdsResponse>
         """
@@ -297,7 +297,7 @@ Feature: Petstore SOAP API
   Scenario Outline: Get Pet Info
     Given type GetPetRequest
     """
-        <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+        <ns2:GetPetRequest xmlns:ns2="http://specmatic.in/petstore/api">
             <ns2:id>(number)</ns2:id>
         </ns2:GetPetRequest>
     """
@@ -310,7 +310,7 @@ Feature: Petstore SOAP API
     """
     Given type GetPetResponse
     """
-        <ns2:GetPetResponse xmlns:ns2="http://qontract.run/petstore/api">
+        <ns2:GetPetResponse xmlns:ns2="http://specmatic.in/petstore/api">
             <ns2:id>(number)</ns2:id>
             <ns2:name>(string)</ns2:name>
             <ns2:type>(string)</ns2:type>
@@ -342,7 +342,7 @@ For example, when getting pet info for pet id 10, the SOAP client library might 
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
             <SOAP-ENV:Header/>
             <SOAP-ENV:Body>
-                <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+                <ns2:GetPetRequest xmlns:ns2="http://specmatic.in/petstore/api">
                     <ns2:id>10</ns2:id>
                 </ns2:GetPetRequest>
             </SOAP-ENV:Body>
@@ -355,7 +355,7 @@ For example, when getting pet info for pet id 10, the SOAP client library might 
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
             <SOAP-ENV:Header/>
             <SOAP-ENV:Body>
-                <ns3:GetPetRequest xmlns:ns3="http://qontract.run/petstore/api">
+                <ns3:GetPetRequest xmlns:ns3="http://specmatic.in/petstore/api">
                     <ns3:id>10</ns3:id>
                 </ns3:GetPetRequest>
             </SOAP-ENV:Body>
@@ -372,7 +372,7 @@ The [Namespace in XML 1.1](https://www.w3.org/TR/xml-names11/#ns-qualnames) docu
 
 The exact prefix name is not important. It's the namespace, not the prefix referring to it that matters. Now since the namespace has remained the same in both request payloads, the SOAP server considers both requests to be identical.
 
-So as a shortcut at this point in time, Qontract completely ignores the namespace, as well as the namespace prefixes, and matches the node name in the actual request payload against the node name in the contract request payload.
+So as a shortcut at this point in time, Specmatic completely ignores the namespace, as well as the namespace prefixes, and matches the node name in the actual request payload against the node name in the contract request payload.
 
 Take the following contract snippet:
 
@@ -383,7 +383,7 @@ Scenario: Get Pet Details
         <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
             <SOAP-ENV:Header/>
             <SOAP-ENV:Body>
-                <ns2:GetPetRequest xmlns:ns2="http://qontract.run/petstore/api">
+                <ns2:GetPetRequest xmlns:ns2="http://specmatic.in/petstore/api">
                     <ns2:id>(number)</ns2:id>
                 </ns2:GetPetRequest>
             </SOAP-ENV:Body>
@@ -398,14 +398,14 @@ This scenario would match the following xml request payload:
     <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
         <SOAP-ENV:Header/>
         <SOAP-ENV:Body>
-            <ns3:GetPetRequest xmlns:ns3="http://qontract.run/petstore/api">
+            <ns3:GetPetRequest xmlns:ns3="http://specmatic.in/petstore/api">
                 <ns3:id>10</ns3:id>
             </ns3:GetPetRequest>
         </SOAP-ENV:Body>
     </SOAP-ENV:Envelope>
 ```
 
-The contract defines a payload with namespace prefix `ns2`, and the actual request uses the namespace prefix `ns3`. But since Qontract completely ignores namespaces, and the node names excluding the namespaces are the same, the request will successfully match the contract.
+The contract defines a payload with namespace prefix `ns2`, and the actual request uses the namespace prefix `ns3`. But since Specmatic completely ignores namespaces, and the node names excluding the namespaces are the same, the request will successfully match the contract.
 
 ### Order of the nodes
 

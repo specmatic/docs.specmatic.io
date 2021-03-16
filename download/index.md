@@ -7,4 +7,4 @@ has_children: true
 Download
 ========
 
-The latest release of Qontract is [{{ site.latest_release }}](/download/latest.html).
+The latest release of Specmatic is [{{ site.latest_release }}](/download/latest.html).

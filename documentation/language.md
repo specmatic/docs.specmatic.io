@@ -46,7 +46,7 @@ Language
     - [Background](#background)
     - [Scenario Outline For Contract Testing](#scenario-outline-for-contract-testing)
 
-Qontract extends the Gherkin syntax by adding some more keywords.
+Specmatic extends the Gherkin syntax by adding some more keywords.
 
 If you are familiar with Gherkin you should feel right at home. But if not, don't worry, Gherkin is easy to pick up. You'll learn as you go.
 
@@ -427,7 +427,7 @@ The Pet type will permit both ```{"name": "Daisy", "description": "Beautiful dog
 
 Note that while the value of description can be null, the key itself is compulsory, and must be passed.
 
-Cyclomatic complexity is 2, so when running in test mode, Qontract will generate two requests, one with description set to a random string, and one with it set to null.
+Cyclomatic complexity is 2, so when running in test mode, Specmatic will generate two requests, one with description set to a random string, and one with it set to null.
 
 ### Rest Operator
 

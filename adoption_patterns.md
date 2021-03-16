@@ -5,11 +5,11 @@ nav_order: 8
 ---
 # Adoption Patterns
 
-Qontract at this point is based on a broker less design. This is because we wanted to make adoption as seamless as possible.
+Specmatic at this point is based on a broker less design. This is because we wanted to make adoption as seamless as possible.
 We are cognizant of the advantages that come with having a Broker or a Results aggregator (such as Compatibility Matrix visualization) and it may become available in future versions.
 
 There are multiple ways to collaborate over contracts between Consumers and Providers.
-Identify which of the modes of operation below best describe your scenario and adopt Qontract accordingly.
+Identify which of the modes of operation below best describe your scenario and adopt Specmatic accordingly.
 
 ---
 
