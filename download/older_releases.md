@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+Release 0.23.1
+
+Date: 10th March 2021
+
+What new:
+- Ability to convert WSDL files into Qontract files
+
 Release 0.22.1
 
 Date: 8th February 2021

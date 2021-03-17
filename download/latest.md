@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 10th March 2021
+Date: 17th March 2021
 
 What new:
-- Ability to convert WSDL files into Qontract files
+- Renamed Qontract to Specmatic
+- Implemented a new variable and environment feature that makes it possible to wire up contracts to authentication APIs
 
 Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
 
