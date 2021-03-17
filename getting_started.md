@@ -39,7 +39,7 @@ Let us try specifying the above interaction as a contract.
 
 Let us start with the Consumer in this example. We will be running a Stub / Mock Server based on the above contract file.
 
-    UI (Consumer)         Qontract Stub <- service.qontract
+    UI (Consumer)         Specmatic Stub <- service.qontract
           | --- getPetById ---> |
           | <-- {Pet JSON} ---- |
 
@@ -64,9 +64,9 @@ We can now start consumer development against this stub without any dependency o
 
 ### Provider Side - Contract as a Test
 
-Qontract runs Contract Tests on API to make sure it adheres to the contract.
+Specmatic runs Contract Tests on API to make sure it adheres to the contract.
 
-    service.qontract -> Qontract Test        API (Provider)
+    service.qontract -> Specmatic Test        API (Provider)
                             | --- getPetById ---> |
                             | <-- {Pet JSON} ---- |
 

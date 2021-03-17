@@ -1,6 +1,6 @@
 Download the standalone Jar.
 
-<https://github.com/qontract/qontract/releases/download/{{ site.latest_release }}/qontract.jar>
+<https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/qontract.jar>
 
 #### Mac / Linux
 

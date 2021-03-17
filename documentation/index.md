@@ -7,7 +7,7 @@ has_children: true
 Introduction
 ============
 
-Qontract can run in two ways.
+Specmatic can run in two ways.
 * **Command Line** - Standalone Jar, you just need a JVM to run it.
 * **Programmatic Approach** - A Java library that can be used with any JVM language.
 

@@ -31,7 +31,7 @@ You could simply write the contract yourself. This is usually done when you don'
 
 ### The contract file
 
-A contract file contains a description of an API or a set of APIs using the [Qontract language](/documentation/language.html). Contract files must have the extension `.qontract`.
+A contract file contains a description of an API or a set of APIs using the [Specmatic language](/documentation/language.html). Contract files must have the extension `.qontract`.
 
 ### Stub files that accompany the contract file
 
@@ -62,7 +62,7 @@ If you know what the request and response should look like, you can start by cre
 
 ### Create the sample file
 
-The file must contain a single json object using the [Qontract stub file format](documentation/service_virtualisation.html#stub-file-format).
+The file must contain a single json object using the [Specmatic stub file format](documentation/service_virtualisation.html#stub-file-format).
 
 Here's a sample file that contains a request for the name of a customer by id:
 
@@ -154,7 +154,7 @@ Make sure the contracts directory does not exist before you start the proxy.
 
 We'll take Postman as an example. Setup proxy in Postman's settings with the proxy host as localhost and the proxy port as 9000.
 
-Here's the documentation on [proxy settings in Postman](https://learning.postman.com/docs/sending-requests/capturing-request-data/proxy/). Use Qontract Proxy as an HTTP proxy, with localhost as the host and 9000 as the port.
+Here's the documentation on [proxy settings in Postman](https://learning.postman.com/docs/sending-requests/capturing-request-data/proxy/). Use Specmatic Proxy as an HTTP proxy, with localhost as the host and 9000 as the port.
 
 Note: All operating systems have a system wide configuration settings for configuring an HTTP proxy. Many applications (such as Postman) provide their own proxy configuration settings.
 
@@ -280,7 +280,7 @@ Similarly, take a look at the stub. Here is a shortened version of it:
 }
 ```
 
-There are many unnecessary headers being declared in the contract and stubbed out as well. Qontract just puts outputs it finds, leaving it you to decide what's important and what isn't.
+There are many unnecessary headers being declared in the contract and stubbed out as well. Specmatic just puts outputs it finds, leaving it you to decide what's important and what isn't.
 
 So here's an improved version of the above contract without the unnecessary headers:
 
@@ -338,7 +338,7 @@ And similarly, and improved stub file:
 \
 ![](/images/qontract-reverse-proxy.svg)
 
-If your remote service runs over HTTPS, use Inbound Proxy Mode. Qontract acts as a transparent proxy between the client (Postman, your application, etc) and the API.
+If your remote service runs over HTTPS, use Inbound Proxy Mode. Specmatic acts as a transparent proxy between the client (Postman, your application, etc) and the API.
 
 Let's use the same freely provided (again many thanks to its maintainer) test employee API that we used above.
 
@@ -353,7 +353,7 @@ Make sure the contracts directory does not exist.
 
 ### Generate contracts
 
-Now use Postman to send a request to Qontract. Create a new Postman request to make a GET request to http://localhost:9000/api/v1/employees
+Now use Postman to send a request to Specmatic. Create a new Postman request to make a GET request to http://localhost:9000/api/v1/employees
 
 Finally, kill the proxy using Ctrl+C on the command prompt, and it will generate contracts from all the reqeusts and responses it has seen.
 
@@ -428,7 +428,7 @@ This command will read the Postman collection, and write the new qontract file i
 
 It will also output logs of the requests it made and responses it received.
 
-The `-o .` option tells Qontract to write the contract into the current directory.
+The `-o .` option tells Specmatic to write the contract into the current directory.
 
 Take a look at the resulting contract:
 
@@ -461,7 +461,7 @@ Feature: Free Test API
     And response-body (ResponseBody)
 ```
 
-We can immediately see a numer of headers in the contract that have nothing to do with the AIP. Qontract dumps them all into the contract and leaves it to you to keep what's important.
+We can immediately see a numer of headers in the contract that have nothing to do with the AIP. Specmatic dumps them all into the contract and leaves it to you to keep what's important.
 
 You should simply remove the unnecessary headers, like so:
 
@@ -482,4 +482,4 @@ Feature: Free Test API
     And response-body (ResponseBody)
   ```
 
-Now with this contract, even if the actual response had those headers, Qontract will in future not concern itself with the unknown headers.
+Now with this contract, even if the actual response had those headers, Specmatic will in future not concern itself with the unknown headers.

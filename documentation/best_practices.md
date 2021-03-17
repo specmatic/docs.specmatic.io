@@ -137,8 +137,8 @@ Note how the [background](documentation/../language.html#background) contains ev
     * This improves ability spot issues when running the contract as a test and in generating meaningful dummy values in stub mode.
     * Example: Prefer date/url over string where possible
 * When your Scenario has several nullable values, use Scenario Outline. In Scenario Outline provide multiple example rows when there are nullable values.
-    * Qontract runs [two tests per nullable value](/documentation/language.html#nullable-operator), one for null and one for non-null value. When there are several nullable values Qontract will attempt running tests for all permutations.
-    * The example rows in [Scenario Outline](/documentation/language.html#scenario-outline) can help Qontract in determining which are the plausible combinations in the context of your application.
+    * Specmatic runs [two tests per nullable value](/documentation/language.html#nullable-operator), one for null and one for non-null value. When there are several nullable values Specmatic will attempt running tests for all permutations.
+    * The example rows in [Scenario Outline](/documentation/language.html#scenario-outline) can help Specmatic in determining which are the plausible combinations in the context of your application.
 * Reduce Duplication. Extract common structures and datatypes to background.
     * Helps reduce verbosity in scenarios
     * Reduces human error that can happen when there is duplication of structure or datatype definition across scenarios

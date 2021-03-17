@@ -14,7 +14,7 @@ What new:
 - Renamed Qontract to Specmatic
 - Implemented a new variable and environment feature that makes it possible to wire up contracts to authentication APIs
 
-Standalone jar - [qontract.jar](https://github.com/znsio/qontract/releases/download/{{ site.latest_release }}/qontract.jar)
+Standalone jar - [qontract.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/qontract.jar)
 
 ```
 <dependency>

@@ -1,13 +1,13 @@
 remote_theme: pmarsceill/just-the-docs
 markdown: kramdown
-title: "Qontract"
+title: "Specmatic"
 latest_release: 0.24.1
 
-qontract_cmd: "java -jar /path/to/qontract"
+qontract_cmd: "java -jar /path/to/specmatic"
 
 aux_links:
-  "Qontract on GitHub":
-    - "//github.com/qontract/qontract"
+  "Specmatic on GitHub":
+    - "//github.com/znsio/specmatic"
 
 plugins:
   - jekyll-remote-theme

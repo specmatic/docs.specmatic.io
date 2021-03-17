@@ -1,6 +1,6 @@
-# qontract-documentation
+# Specmatic Documentation
 
-Documentation for [Qontract](//qontract.run)
+Documentation for [Specmatic](//specmatic.in)
 
 Dev Setup
 * Install Ruby > 2.7 - Preferrably with rbenv
