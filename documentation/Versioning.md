@@ -76,15 +76,15 @@ Here's a sample git repository that contains the math contract:
 ```
 <BASE_DIR>
     /run
-        /qontract
+        /specmatic
             /examples
-                math_1.qontract
-                math_2.qontract
+                math_1.spec
+                math_2.spec
 ```
 
-- The path ./run/qontract/examples acts as a namespace, much like a dot separated package name.
+- The path ./run/specmatic/examples acts as a namespace, much like a dot separated package name.
 - Contract file names can begin with any text (no spaces)
-    - If there is a version number, then they must include version number at the end of the name before ".qontract" extension.
+    - If there is a version number, then they must include version number at the end of the name before ".spec" extension.
     - The underscore separates the name of the contract and version number
     - In above example the name of contract is math and there are two versions of this API.
 
@@ -98,12 +98,12 @@ Since the file is in git, comparing it with its previous version is easy.
 
 Let's say you have the git repo in your home directory with the directory structure mentioned above.
 
-Make a change to math_1.qontract.
+Make a change to math_1.spec.
 
-To check if the change is backward compatible, open a terminal or command prompt and run the command `java -jar qontract.jar compatible git file ./run/qontract/examples/math_1.qontract`. You should see something like this if the change is backward compatible:
+To check if the change is backward compatible, open a terminal or command prompt and run the command `java -jar specmatic.jar compatible git file ./run/specmatic/examples/math_1.spec`. You should see something like this if the change is backward compatible:
 
 ```shell
-> java -jar qontract.jar compatible git file ./run/qontract/examples/math_1.qontract
+> java -jar specmatic.jar compatible git file ./run/specmatic/examples/math_1.spec
 Tests run: 1, Passed: 1, Failed: 0
 
 The newer contract is backward compatible
@@ -120,7 +120,7 @@ This is useful in CI.
 If you wish to compare the changes in a contract between two commits, such as HEAD and HEAD^1, try this:
 
 ```shell
-> java -jar qontract.jar compatible git commits ./remote/random.qontract HEAD HEAD^1
+> java -jar specmatic.jar compatible git commits ./remote/random.spec HEAD HEAD^1
 Tests run: 1, Passed: 1, Failed: 0
 
 The newer contract is backward compatible

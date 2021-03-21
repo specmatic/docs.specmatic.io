@@ -9,7 +9,7 @@ Contract Tests
 
 - [Contract Tests](#contract-tests)
     - [Why Contract Testing](#why-contract-testing)
-    - [Why Use Specmatic](#why-use-qontract)
+    - [Why Use Specmatic](#why-use-specmatic)
     - [IMPORTANT: Using Stub As A Sample Application API](#important-using-stub-as-a-sample-application-api)
     - [Contract Tests Without Examples](#contract-tests-without-examples)
     - [When The Application Breaks The Contract](#when-the-application-breaks-the-contract)
@@ -56,7 +56,7 @@ For the purposes of this document, most of our contract test samples will be run
 Here's a contract for a simple API that takes a number and returns its square. The contract doesn't validate the value, it just checks that the API takes a number and returns a number.
 
 ```gherkin
-#filename: numbers.qontract
+#filename: numbers.spec
 
 Feature: Numerical Operations
   Scenario: Square of a number
@@ -66,12 +66,12 @@ Feature: Numerical Operations
     And response-body (number)
 ```
 
-Run this: `{{ site.qontract_cmd }} test numbers.qontract`, and you'll get an error because the application doesn't exist yet.
+Run this: `{{ site.spec_cmd }} test numbers.spec`, and you'll get an error because the application doesn't exist yet.
 
 Instead of a sample API to hit, as discussed above let's cheat and setup a stub. The contract test won't know the difference :-)
 
 ```gherkin
-#filename: sample_application.qontract
+#filename: sample_application.spec
 
 Feature: Sample application
   Scenario: Takes and returns a number
@@ -81,12 +81,12 @@ Feature: Sample application
     And response-body (number)
 ```
 
-And run it: `{{ site.qontract_cmd }} stub sample_application.qontract`.
+And run it: `{{ site.spec_cmd }} stub sample_application.spec`.
 
 In another tab, run the test command again against the "sample" application :-)
 
 ```
-> qontract test numbers.qontract
+> specmatic test numbers.spec
 >> Request Start At Fri Jun 19 12:35:50 IST 2020
 -> POST /square
 -> Accept-Charset: UTF-8
@@ -116,7 +116,7 @@ All's well, the "application" is in sync with the contract.
 Take the same numbers contract again.
 
 ```gherkin
-#filename: numbers.qontract
+#filename: numbers.spec
 
 Feature: Numerical Operations
   Scenario: Square of a number
@@ -129,7 +129,7 @@ Feature: Numerical Operations
 This time let's modify the "sample" application to return a string instead of a number.
 
 ```gherkin
-#filename: sample_application.qontract
+#filename: sample_application.spec
 
 Feature: Sample application
   Scenario: Takes and returns a number
@@ -139,11 +139,11 @@ Feature: Sample application
     And response-body (string)
 ```
 
-As before, run the stub: `{{ site.qontract_cmd }} stub sample_application.qontract`.
+As before, run the stub: `{{ site.spec_cmd }} stub sample_application.spec`.
 
 And in another tab, run the contract test.
 
-    > qontract test numbers.qontract
+    > specmatic test numbers.spec
     >> Request Start At Fri Jun 19 12:42:49 IST 2020
     -> POST /square
     -> Accept-Charset: UTF-8
@@ -193,7 +193,7 @@ Let's use the Examples feature for this.
 We shall first setup the "sample" application, in which querying for a user with id 10 will get back the username jane_doe:
 
 ```gherkin
-#filename: sample_application.qontract
+#filename: sample_application.spec
 
 Feature: Sample applicatioon
   Scenario: Returns username
@@ -205,7 +205,7 @@ Feature: Sample applicatioon
 Then let's create the contract.
 
 ```gherkin
-#filename: user.qontract
+#filename: user.spec
 
 Feature: User API
   Scenario: Get User Name
@@ -224,12 +224,12 @@ However, to avoid randomly generated values, we provide concrete examples. Specm
 
 First it checks that the example matches the contract, which it does here. The id must be a number, and the example is a number. It then formulates the request (GET /user/10) and sends it to the "sample" application.
 
-Let's run this. Run the "sample" using `{{ cmd.qontract_run }} stub sample_application.qontract`.
+Let's run this. Run the "sample" using `{{ cmd.spec_run }} stub sample_application.spec`.
 
 In a new tab, run the test:
 
 ```
-> qontract test user.qontract
+> specmatic test user.spec
 >> Request Start At Fri Jun 19 13:14:38 IST 2020
 -> GET /user/10
 -> Accept-Charset: UTF-8
@@ -257,7 +257,7 @@ Tests run: 1, Failures: 0
 Why stop at 1 example. You can specify multiple examples, if needed.
 
 ```gherkin
-#filename: user.qontract
+#filename: user.spec
 
 Feature: User API
   Scenario: Get User Name
@@ -275,7 +275,7 @@ Feature: User API
 Let's setup the "sample" application to handle all the user ids.
 
 ```gherkin
-#filename: sample_application.qontract
+#filename: sample_application.spec
 
 Feature: Sample applicatioon
   Scenario: Returns username
@@ -294,12 +294,12 @@ Feature: Sample applicatioon
     And response-body john_doe
 ```
 
-Let's run the "sample", as usual, using `{{ cmd.qontract_run }} stub sample_application.qontract`.
+Let's run the "sample", as usual, using `{{ cmd.spec_run }} stub sample_application.spec`.
 
 Now run the tests.
 
 ```
-> qontract test user.qontract
+> specmatic test user.spec
 >> Request Start At Fri Jun 19 13:32:03 IST 2020
 -> GET /user/10
 -> Accept-Charset: UTF-8
@@ -365,7 +365,7 @@ Tests run: 3, Failures: 0
 Let's try a simple example with JSON.
 
 ```gherkin
-#filename: user.qontract
+#filename: user.spec
 
 Feature: User API
   Scenario: Update user
@@ -384,7 +384,7 @@ Feature: User API
 And the "sample" application that accepts information about Jane Doe:
 
 ```gherkin
-#filename: sample_application.qontract
+#filename: sample_application.spec
 
 Feature: User info
   Scenario: Info about Jane
@@ -396,12 +396,12 @@ Feature: User info
     And response-body success
 ```
 
-Run the stub using `{{ site.qontract_cmd }} stub sample_application.qontract.
+Run the stub using `{{ site.spec_cmd }} stub sample_application.spec.
 
-Let's try running user.qontract as a test.
+Let's try running user.spec as a test.
 
 ```
-> qontract test user.qontract
+> specmatic test user.spec
 >> Request Start At Fri Jun 19 16:23:43 IST 2020
 -> POST /users
 -> Accept-Charset: UTF-8
@@ -430,7 +430,7 @@ Tests run: 1, Failures: 0
 ### When The Example Breaks The Contract
 
 ```gherkin
-#filename: user.qontract
+#filename: user.spec
 
 Feature: User API
   Scenario: Update user
@@ -453,7 +453,7 @@ Look closely:
 Let's see what happens:
 
 ```shell
-> qontract test user.qontract
+> specmatic test user.spec
 In scenario "Update user"
 >> REQUEST.BODY.id
 
@@ -473,7 +473,7 @@ Therefore if the application returns keys in a json object that the contract doe
 Here's the "sample" application:
 
 ```gherkin
-#filename: sample_application.qontract
+#filename: sample_application.spec
 
 Feature: User information
   Scenario: Get user info for id 10
@@ -488,7 +488,7 @@ Feature: User information
 Actually, we only care about the id and name. So although the application returns an address, the contract doesn't care, and looks like this:
 
 ```gherkin
-#filename: user.qontract
+#filename: user.spec
 
 Feature: User information
   Scenario: Get user info
@@ -503,12 +503,12 @@ Feature: User information
   | 10 | John |
 ```
 
-Run the stub using `{{ site.qontract_cmd }} stub sample_application.qontract.
+Run the stub using `{{ site.spec_cmd }} stub sample_application.spec.
 
-In a new tab, let's try running user.qontract as a test.
+In a new tab, let's try running user.spec as a test.
 
 ```
-> qontract test user.qontract
+> specmatic test user.spec
 >> Request Start At Fri Jun 19 16:30:36 IST 2020
 -> GET /user/10
 -> Accept-Charset: UTF-8
@@ -627,7 +627,7 @@ Feature: Examples
 Sometimes you may want to provide specific values for some examples because you don't care about the rest.
 
 ```gherkin
-#filename: user.qontract
+#filename: user.spec
 
 Feature: User information
   Scenario: Get user info
@@ -650,7 +650,7 @@ In the first example, id is hardcoded but the name will be autogenerated. And in
 You can provide examples for only the keys you care about. Where there is a type but no example, Specmatic will generate it.
 
 ```gherkin
-#filename: user.qontract
+#filename: user.spec
 
 Feature: User information
   Scenario: Get user info
@@ -665,16 +665,16 @@ Feature: User information
   | 10 |
 ```
 
-There is an example for the id but not the name. So when generating a test, qontract will generate the name.
+There is an example for the id but not the name. So when generating a test, specmatic will generate the name.
 
 Let's run this as a test against a stub of the same contract.
 
-To run the stub: `{{ site.contract_cmd }} stub user.qontract`
+To run the stub: `{{ site.contract_cmd }} stub user.spec`
 
 And then the test.
 
 ```
-> qontract test user.qontract
+> specmatic test user.spec
 >> Request Start At Fri Jun 19 16:56:02 IST 2020
 -> POST /user/10
 -> Accept-Charset: UTF-8
@@ -717,12 +717,12 @@ Feature: Data
 
 Let's run this contract as a test against its own stub.
 
-To run the stub: `{{ site.contract_cmd }} stub user.qontract`
+To run the stub: `{{ site.contract_cmd }} stub user.spec`
 
 And then the test.
 
 ```
-> qontract test data.qontract
+> specmatic test data.spec
 >> Request Start At Fri Jun 19 16:58:41 IST 2020
 -> POST /data
 -> Accept-Charset: UTF-8

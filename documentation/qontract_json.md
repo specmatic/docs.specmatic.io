@@ -1,10 +1,10 @@
 ---
 layout: default
-title: qontract.json
+title: specmatic.json
 parent: Documentation
 nav_order: 14
 ---
-Format of qontract.json
+Format of specmatic.json
 =======================
 
 ```json
@@ -14,10 +14,10 @@ Format of qontract.json
       "provider": "git",
       "repository": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts2",
       "test": [
-        "com/petstore/2.qontract"
+        "com/petstore/2.spec"
       ],
       "stub": [
-        "com/petstore/payment.qontract"
+        "com/petstore/payment.spec"
       ]
     }
   ],
@@ -50,13 +50,13 @@ Contains a list of git repositories containing contract files.
       // relative paths of all contracts in this repository
       // to be run as test
       "test": [
-        "com/petstore/2.qontract"
+        "com/petstore/2.spec"
       ],
 
       // relative paths of all contracts in this repository
       // to be stubbed out
       "stub": [
-          "com/petstore/payment.qontract"
+          "com/petstore/payment.spec"
       ]
     }
   ],
@@ -74,7 +74,7 @@ Contains details of the project pipeline.
 
   // pipeline details of this project
   //
-  // This is used by qontract install, to register
+  // This is used by specmatic install, to register
   //    a project's build pipeline to run when a contract changes
   // The details below must be replaced with the details relevant
   //   to your project

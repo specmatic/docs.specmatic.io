@@ -26,7 +26,7 @@ A report contain 3 components:
 Let's assume this contract is running as a stub:
 
 ```gherkin
-#Filename: basic.qontract
+#Filename: basic.spec
 Feature: Basic contract
 
 Scenario: Basic API

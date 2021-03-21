@@ -8,11 +8,11 @@ Troubleshooting
 ===============
 
 - [Troubleshooting](#troubleshooting)
-    - [Specmatic test or stub are showing a lot of errors. I am not sure where to start debugging.](#qontract-test-or-stub-are-showing-a-lot-of-errors-i-am-not-sure-where-to-start-debugging)
+    - [Specmatic test or stub are showing a lot of errors. I am not sure where to start debugging.](#specmatic-test-or-stub-are-showing-a-lot-of-errors-i-am-not-sure-where-to-start-debugging)
     - [The stub is serving random values instead of my stubbed data](#the-stub-is-serving-random-values-instead-of-my-stubbed-data)
-    - [My API is responding with errors when invoked with with Specmatic test](#my-api-is-responding-with-errors-when-invoked-with-with-qontract-test)
-    - [Postman request works, Specmatic test does not](#postman-request-works-qontract-test-does-not)
-    - [Specmatic test was working before but it now show errors](#qontract-test-was-working-before-but-it-now-show-errors)
+    - [My API is responding with errors when invoked with with Specmatic test](#my-api-is-responding-with-errors-when-invoked-with-with-specmatic-test)
+    - [Postman request works, Specmatic test does not](#postman-request-works-specmatic-test-does-not)
+    - [Specmatic test was working before but it now show errors](#specmatic-test-was-working-before-but-it-now-show-errors)
     - [Stub says Cookie header is missing, but it is not missing in Postman](#stub-says-cookie-header-is-missing-but-it-is-not-missing-in-postman)
     - [Stub mode returns an error to Postman](#stub-mode-returns-an-error-to-postman)
     - [java.lang.ClassNotFoundException: kotlin.KotlinNothingValueException](#javalangclassnotfoundexception-kotlinkotlinnothingvalueexception)
@@ -36,7 +36,7 @@ If the scenario relevant to the API you are calling had a path variable, e.g. /o
 For example, consider this contract:
 
 ```gherkin
-#File name order.qontract
+#File name order.spec
 Feature: Order contract
 
 Scenario: Order API
@@ -45,7 +45,7 @@ And request-body (number)
 Then status 200
 ```
 
-Run it using `java -jar path/to/qontract.jar stub order.qontract`.
+Run it using `java -jar path/to/specmatic.jar stub order.spec`.
 
 Then run `curl http://localhost:9000/order/abc`, and you'll get an error looking like this.
 
@@ -66,7 +66,7 @@ There are two possible reasons.
 
 To check if this happened, take a look at the stub log on the console at startup. You may find something like this:
 
-    /path/to/math_data/sample.json didn't match math.qontract
+    /path/to/math_data/sample.json didn't match math.spec
     In scenario "Square of a number"
     >> REQUEST.BODY.data
 
@@ -77,7 +77,7 @@ In this case, it means that the contract expectd data to be a number, but it was
 
 2. The request did not match the stub request. If the request from your application, Postman, etc does not match the stubbed request exactly, Specmatic will not send the corresponding stubbed response back. But if it does match the contract, Specmatic will send a random response back in the same shape as what was declared in the contract file.
 
-To check if this is the case, start the stub in strict mode: `java -jar /path/to/qontract.jar stub --strict /path/to/contract.qontract`, and try the requests again.
+To check if this is the case, start the stub in strict mode: `java -jar /path/to/specmatic.jar stub --strict /path/to/contract.spec`, and try the requests again.
 
 In strict mode, if Specmatic cannot find a match amongst the available stubs for the request from your application or Postman, it will show the reasons why the stubs did not match your request.
 

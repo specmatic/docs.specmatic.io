@@ -9,8 +9,8 @@ Best Practices
 
 - [Best Practices](#best-practices)
   - [Design Patterns](#design-patterns)
-    - [All API endpoints in one .qontract file](#all-api-endpoints-in-one-qontract-file)
-    - [One API endpoint per .qontract file](#one-api-endpoint-per-qontract-file)
+    - [All API endpoints in one .spec file](#all-api-endpoints-in-one-specmatic-file)
+    - [One API endpoint per .spec file](#one-api-endpoint-per-specmatic-file)
     - [Multiple scenarios per endpoint](#multiple-scenarios-per-endpoint)
   - [Principles Of Design](#principles-of-design)
   - [Namespacing](#namespacing)
@@ -21,7 +21,7 @@ We have already covered how to author good [scenarios](/documentation/language.h
 
 ## Design Patterns
 
-### All API endpoints in one .qontract file
+### All API endpoints in one .spec file
 
 When all the endpoints are simple, data structures are not too deep, or the list of APIs is small, all the scenarios related to these end points can go into a single file.
 
@@ -29,17 +29,17 @@ When all the endpoints are simple, data structures are not too deep, or the list
     * One single place to look at for all the APIs.
     * Common structures and datatypes that are declared in the Background section can be re-used across many scenarios.
 * Disadvantages / Smells
-    * The .qontract file can become large and becomes a scroll hell.
+    * The .spec file can become large and becomes a scroll hell.
     * All the developers update the same file, resulting in a larger number of merge conflics.
 
-### One API endpoint per .qontract file
+### One API endpoint per .spec file
 
 High complexity of API endpoints may result in too much information stuffed into a single contract file. This often happens when the data structures in the request or response payloads are very deep. When faced with such an API end point, put the definition of the API into a file by itself.
 
 * Advantages
-    * Easier to comprehend .qontract files
+    * Easier to comprehend .spec files
 * Disadvantages / Smells
-    * Common structures / datatypes across endpoints have to be duplicated (because we cannot import one .qontract file inside another)
+    * Common structures / datatypes across endpoints have to be duplicated (because we cannot import one .spec file inside another)
 
 ### Multiple scenarios per endpoint
 
@@ -144,7 +144,7 @@ Note how the [background](documentation/../language.html#background) contains ev
     * Reduces human error that can happen when there is duplication of structure or datatype definition across scenarios
 * Single Responsibility Principle
     * We recommend adhering to SRP in order to achieve well authored contracts.
-    * Each .qontract should have scenarios (regardless of whether they belong one endpoint or several endpoints) that are related to a single axis of change.
+    * Each .spec should have scenarios (regardless of whether they belong one endpoint or several endpoints) that are related to a single axis of change.
     * In other words, a contract file must change for one and only reason (entity, purpose or action).
     * This promotes healthy re-usability of structures and datatypes and helps in reducing merge conflicts
     * It may take time to triangulate on the right set of scenarios per file. In the long term this approach is best suited or applications of any size.
@@ -159,7 +159,7 @@ For example:
 /com
     /shop
         /orders
-            returns.qontract
+            returns.spec
 ```
 
 While this is not mandated, it is highly recommended as a way to improve maintainablity.
@@ -172,7 +172,7 @@ Static stub files should be co-located with their respective contracts. Example:
 /com
     /shop
         /orders
-            returns.qontract
+            returns.spec
             /returns_data
                 returns.json
 ```

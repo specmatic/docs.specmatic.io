@@ -17,8 +17,8 @@ Add jar dependency. Notice this is test only scope. There is no need to ship Spe
 
 ```
 <dependency>
-    <groupId>run.qontract</groupId>
-    <artifactId>qontract-core</artifactId>
+    <groupId>run.spec</groupId>
+    <artifactId>specmatic-core</artifactId>
     <version>{{ site.latest_release }}</version>
     <scope>test</scope>
 </dependency>
@@ -66,14 +66,14 @@ import com.petstore.demo.model.Pet;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import run.qontract.stub.ContractStub;
+import run.spec.stub.ContractStub;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static run.qontract.stub.API.*;
+import static run.spec.stub.API.*;
 
 public class PetStoreConsumerTest {
     private static ContractStub petStoreStub;
@@ -82,7 +82,7 @@ public class PetStoreConsumerTest {
     public static void setUP() {
         // Path to the contract
         List<String> contracts = new ArrayList<String>();
-        contracts.add("/path/to/service.qontract");
+        contracts.add("/path/to/service.spec");
 
         // Path to stub data directory
         List<String> stubDataDir = new ArrayList<String>();
@@ -110,7 +110,7 @@ public class PetStoreConsumerTest {
 
 Let us take a closer look at the above test.
 * The objective of this test is to help us build a PetStoreConsumer (API Client) class.
-* The setUP and tearDown methods are responsible for starting a Specmatic Stub server (based on the service.qontract) and stopping it respectively.
+* The setUP and tearDown methods are responsible for starting a Specmatic Stub server (based on the service.spec) and stopping it respectively.
 * In the setUP section, we pass the expectation json file to the stub. This tells it to expect a call to /pets/10, to which it must return the given pet info.
 * The assert section verifies that PetStoreConsumer is able to translate the response to Pet object
 
@@ -155,7 +155,7 @@ Add JUnit Jar dependency. This lets you run the contract as a JUnit 5 test.
 
 ```
 <dependency>
-    <groupId>run.qontract</groupId>
+    <groupId>run.spec</groupId>
     <artifactId>junit5-support</artifactId>
     <version>{{ site.latest_release }}</version>
     <scope>test</scope>
@@ -168,16 +168,16 @@ At the moment JUnit 5 is supported. Each Scenario in translated to a junit test 
 Add below test to your Provider.
 
 ```java
-import run.qontract.test.QontractJUnitSupport;
+import run.spec.test.specJUnitSupport;
 
 import java.io.File;
 
-public class PetStoreContractTest extends QontractJUnitSupport {
+public class PetStoreContractTest extends SpecmaticJUnitSupport {
     private static ConfigurableApplicationContext context;
 
     @BeforeAll
     public static void setUp() {
-        File contract = new File("contract/service.qontract");
+        File contract = new File("contract/service.spec");
         System.setProperty("contractPaths", contract.getAbsolutePath());
         System.setProperty("host", "localhost");
         System.setProperty("port", "8080");
@@ -195,8 +195,8 @@ public class PetStoreContractTest extends QontractJUnitSupport {
 ```
 
 A closer look at above test.
-* PetStoreContractTest extends QontractJUnitSupport. QontractJUnitSupport leverages JUnit5 Dynamic Tests to translate scenarios in the contract to tests.
-* The setUp method passes the location of contract file, host port etc. to QontractJUnitSupport through System Properties
+* PetStoreContractTest extends SpecmaticJUnitSupport. SpecmaticJUnitSupport leverages JUnit5 Dynamic Tests to translate scenarios in the contract to tests.
+* The setUp method passes the location of contract file, host port etc. to SpecmaticJUnitSupport through System Properties
 * Optional - You can start and stop the application in setUp and tearDown. In this example we are starting a Springboot application.
 * Note - Please do not add any other unit test to the above class. The above test is only supposed to have setUp and optionally tearDown methods.
 

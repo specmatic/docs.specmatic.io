@@ -9,14 +9,14 @@ Service Virtualisation
 
 - [Service Virtualisation](#service-virtualisation)
     - [Why Service Virtualisation](#why-service-virtualisation)
-    - [Why Specmatic](#why-qontract)
+    - [Why Specmatic](#why-specmatic)
     - [First Define The Contract](#first-define-the-contract)
     - [Basic stub using just the contract](#basic-stub-using-just-the-contract)
     - [Stubbing out specific responses to specific requests](#stubbing-out-specific-responses-to-specific-requests)
     - [Stubbing requests and responses with complex data](#stubbing-requests-and-responses-with-complex-data)
     - [Errors when stubbing requests or reponses that do not match the contract](#errors-when-stubbing-requests-or-reponses-that-do-not-match-the-contract)
     - [Match not found: wrong URL or method in the request](#match-not-found-wrong-url-or-method-in-the-request)
-    - [Stubbing out multiple contracts in one Specmatic instance](#stubbing-out-multiple-contracts-in-one-qontract-instance)
+    - [Stubbing out multiple contracts in one Specmatic instance](#stubbing-out-multiple-contracts-in-one-specmatic-instance)
     - [Lenient stubbing](#lenient-stubbing)
     - [Strict mode](#strict-mode)
     - [Matching Path and Query Parameters in stub data json](#matching-path-and-query-parameters-in-stub-data-json)
@@ -57,7 +57,7 @@ A simulation is also called a stub.
 In its most basic form, you only need the contract.
 
 ```gherkin
-# filename: random.qontract
+# filename: random.spec
 
 Feature: Random API
   Scenario: Random number
@@ -68,7 +68,7 @@ Feature: Random API
     And response-body (number)
 ```
 
-You can run this in stub mode by itself: `{{ site.qontract_cmd }} stub random.qontract`
+You can run this in stub mode by itself: `{{ site.spec_cmd }} stub random.spec`
 
 You now have an http server running on port 9000 that responds to requests, such as:
 
@@ -81,11 +81,11 @@ Any request that matches the contract request will be accepted.
 
 The response will be randomly generated, based on the contract. The contract defines the response as a number, so the response was a randomly generated number. In every run, you will get a different, randomly generated response that matches the contract.
 
-The file extension is `.qontract` by convention, and is enforced by the stub command.
-When contract files with extensions other than '.qontract' are supplied as input the command will exit and print all the files that have erroneous extensions
+The file extension is `.spec` by convention, and is enforced by the stub command.
+When contract files with extensions other than '.spec' are supplied as input the command will exit and print all the files that have erroneous extensions
 ```shell
-> {{ site.qontract_cmd }} stub random.contract
-The following files do not end with qontract and cannot be used:
+> {{ site.spec_cmd }} stub random.contract
+The following files do not end with specmatic and cannot be used:
 random.contract
 ```
 
@@ -95,7 +95,7 @@ Often, you'll need the stub to return a specific response for a given request.
 
 For example:
 ```gherkin
-# filename: square.qontract
+# filename: square.spec
 
 Feature: Square API
   Scenario: Square of a number
@@ -108,7 +108,7 @@ Feature: Square API
 A useful stub might be that when we post the number 5, we get 25 back.
 
 Follow these steps:
-- Create a directory named square_data, in the same directory as the square.qontract file.
+- Create a directory named square_data, in the same directory as the square.spec file.
 - In that directory, create a json file, name it what you like. For example, square_of_5.json
 - Put in that file the following text:
 
@@ -147,7 +147,7 @@ The directory structure now looks like this:
 
 ```
 |
- \_ square.qontract [file]
+ \_ square.spec [file]
  \_ square_data     [directory]
     |
      \_ square_of_5.json [file]
@@ -157,14 +157,14 @@ The directory structure now looks like this:
 Try running the stub now:
 
 ```shell
-> {{ site.qontract_cmd }} stub square.qontract
+> {{ site.spec_cmd }} stub square.spec
 Reading the stub files below:
 ./square_data/square_of_5.json
 ./square_data/square_of_6.json
 Stub server is running on http://localhost:9000. Ctrl + C to stop.
 ```
 
-Specmatic looks for a directory with the filename of the qontract file, + the suffix "_data". It found it in this case, and loaded it.
+Specmatic looks for a directory with the filename of the specmatic file, + the suffix "_data". It found it in this case, and loaded it.
 
 In another tab, let's post 5 to the stub and see what happens:
 
@@ -194,7 +194,7 @@ We did not have a stub with 10 in the request, but it matched the contract. Spec
 The contract:
 
 ```gherkin
-# filename: customer.qontract
+# filename: customer.spec
 
 Feature: Customer API
   Scenario: Add customer
@@ -228,7 +228,7 @@ Create a directory named customer_data, and put this stub in it:
 Run the stub:
 
 ```shell
-> {{ site.qontract_cmd }} stub customer.qontract
+> {{ site.spec_cmd }} stub customer.spec
 Reading the stub files below:
 /path/to/customer_data/new_customer.json
 Stub server is running on http://localhost:9000. Ctrl + C to stop.
@@ -246,7 +246,7 @@ success
 The contract:
 
 ```gherkin
-# filename: customer.qontract
+# filename: customer.spec
 
 Feature: Customer API
   Scenario: Add customer
@@ -282,10 +282,10 @@ Create a directory named customer_data, and put this stub in it:
 Run the stub:
 
 ```
-> {{ site.qontract_cmd }} stub customer.qontract
+> {{ site.spec_cmd }} stub customer.spec
 Reading the stub files below:
 /path/to/customer_data/new_customer.json
-/path/to/customer_data/new_customer.json didn't match customer.qontract
+/path/to/customer_data/new_customer.json didn't match customer.spec
 In scenario "Add customer"
 >> REQUEST.BODY.address
 
@@ -297,7 +297,7 @@ You can read more about [Specmatic reports here](documtation/../reading_reports.
 
 You are warned here that the address was supposed to be a string, but was a number, 10.
 
-Specmatic will not load this stub. But it will still load and stub out customer.qontract. So you will get random responses matching the contract back for any request that matches the contract.
+Specmatic will not load this stub. But it will still load and stub out customer.spec. So you will get random responses matching the contract back for any request that matches the contract.
 
 Try invoking the stub now:
 
@@ -312,7 +312,7 @@ When the stub gives you this error, it means that the url in your request does n
 
 Let's try this with an example.
 
-File: square.qontract
+File: square.spec
 ```gherkin
 Feature: Square API
   Scenario: Square number
@@ -342,8 +342,8 @@ File: square_data/stub.json
 Run the stub:
 
 ```bash
-> qontract stub square.qontract
-Loading square.qontract
+> specmatic stub square.spec
+Loading square.spec
   Loading stub expectations from /Users/joelrosario/tmp/square_data
   Reading the following stub files:
     /Users/joelrosario/tmp/square_data/stub.json
@@ -386,7 +386,7 @@ Without the URL, Specmatic has no clue how to correlate the request with either 
 If you want to stub out multiple contracts together:
 
 ```shell
-> {{ site.qontract_cmd }} stub customer.qontract order.qontract
+> {{ site.spec_cmd }} stub customer.spec order.spec
 ```
 
 If the customer_data and order_data directories exist, stub data will be loaded from them automatically.
@@ -398,7 +398,7 @@ So far we have been using examples of lenient stubbing. To reiterate, by default
 Consider this contract:
 
 ```gherkin
-# filename: customer.qontract
+# filename: customer.spec
 
 Feature: Customer API
   Scenario: Add customer
@@ -455,7 +455,7 @@ Sometimes when we send a request we thought we had stubbed, we get a randomised 
 To do this, we must turn strict mode **on**.
 
 ```
-java -jar path/to/qontract.jar stub customer.qontract --strict
+java -jar path/to/specmatic.jar stub customer.spec --strict
 ```
 
 Invariably this happens when the request matches the contract, but does not match any of the stubs. Perhaps it's a small difference, which is why we missed it.
@@ -463,7 +463,7 @@ Invariably this happens when the request matches the contract, but does not matc
 Let's try this with the same contract as above:
 
 ```gherkin
-# filename: customer.qontract
+# filename: customer.spec
 
 Feature: Customer API
   Scenario: Add customer
@@ -510,7 +510,7 @@ Now in strict mode, Specmatic returns an error indicating what was wrong with ou
 
 Consider this contract file.
 
-File: petstore.qontract
+File: petstore.spec
 ```gherkin
 Feature: Contract for the petstore service
 
@@ -558,7 +558,7 @@ MJUKU
 In strict mode (running the stub command with --strict option), the entire URL is matched.
 
 ```bash
-> java -jar ~/Downloads/qontract.jar stub ~/test.qontract --strict
+> java -jar ~/Downloads/specmatic.jar stub ~/test.spec --strict
 ```
 
 And in a new tab:
@@ -618,7 +618,7 @@ The Datatype matching works in ("--strict")[#strict-mode] mode also.
 Sometimes you don't care what values come back in the response, you just need, say, a string.
 
 ```gherkin
-# filename: customer.qontract
+# filename: customer.spec
 
 Feature: Customer API
   Scenario: Add customer
@@ -667,7 +667,7 @@ You can setup a stub over HTTP, after Specmatic has been started.
 Let's try this out with a simple contract:
 
 ```gherkin
-# filename: customer.qontract
+# filename: customer.spec
 
 Feature: Customer API
   Scenario: Add customer
@@ -683,18 +683,18 @@ Feature: Customer API
 Start it as a stub:
 
 ```bash
-> qontract stub customer.qontract
-Loading customer.qontract
+> specmatic stub customer.spec
+Loading customer.spec
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 
 Now run the following curl command:
 
 ```bash
-> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_qontract/expectations
+> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_specmatic/expectations
 ```
 
-We just posted the stub content using the POST verb to Specmatic at the path /_qontract/expectations.
+We just posted the stub content using the POST verb to Specmatic at the path /_specmatic/expectations.
 
 Now the stub is setup with real values.
 
@@ -716,7 +716,7 @@ Sometimes, in the same test suite, different tests may require different respons
 Consider the following contract, in which we have scenarios for success as well as failure.
 
 ```gherkin
-# filename: customer.qontract
+# filename: customer.spec
 
 Feature: Customer API
   Background:
@@ -738,15 +738,15 @@ Feature: Customer API
 Start it as a stub:
 
 ```bash
-> qontract stub customer.qontract
-Loading customer.qontract
+> specmatic stub customer.spec
+Loading customer.spec
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 
 Suppose our first test expects to get success back, we can set it up dynamically using this curl command (which we already know from before):
 
 ```bash
-> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_qontract/expectations
+> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_specmatic/expectations
 ```
 
 And we will be able to invoke the stub:
@@ -763,7 +763,7 @@ For the second test to work, the stub can't return `success` anymore. We need to
 To do this, just call the dynamic expectaion API again.
 
 ```bash
-> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 404, "body": "name not found"}}' http://localhost:9000/_qontract/expectations
+> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 404, "body": "name not found"}}' http://localhost:9000/_specmatic/expectations
 ```
 
 Let's try invoking the /customers API again:
@@ -775,7 +775,7 @@ name not found
 
 We get the new stubbed response back.
 
-Note that in both curl calls to /_qontract/expectations, the request is the same, but the response status and body are different.
+Note that in both curl calls to /_specmatic/expectations, the request is the same, but the response status and body are different.
 
 In short, the newer expectation overrides the older one with the same request parameters.
 
@@ -784,7 +784,7 @@ In short, the newer expectation overrides the older one with the same request pa
 At times, it is necessary to simulate a slow response from the application we are stubbing.
 
 ```bash
-> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 404, "body": "name not found"}, "delay-in-seconds": 15}' http://localhost:9000/_qontract/expectations
+> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 404, "body": "name not found"}, "delay-in-seconds": 15}' http://localhost:9000/_specmatic/expectations
 ```
 
 The above dynamics expectation is exactly as in the previous section except the "delay-in-seconds" param. Every request that matches this specific expectation will respond with a 15 second delay.
@@ -797,7 +797,7 @@ You can provide a URL to which Specmatic will forward all requests which have no
 This is done by start the stub like this:
 
 ```bash
-> qontract stub --passThroughTargetBase http://third-party-service.com customer-service.qontract
+> specmatic stub --passThroughTargetBase http://third-party-service.com customer-service.spec
 ```
 
 Since nothing is stubbed at this point, Specmatic will forward all requests as is to `http://third-party-service.com`, and relay the request back. In doing so, it acts as a plain vanilla proxy.
@@ -805,7 +805,7 @@ Since nothing is stubbed at this point, Specmatic will forward all requests as i
 But if you create a stub:
 
 ```bash
-> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_qontract/expectations
+> curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 200, "body": "success"}}' http://localhost:9000/_specmatic/expectations
 ```
 
 Specmatic will handle the request:

@@ -9,20 +9,20 @@ Specmatic for JavaScript
 
 ### Use Specmatic node module
 
-The easiest way to get started with Specmatic for JavaScript developers is to use the [qontract node module](https://www.npmjs.com/package/qontract).
+The easiest way to get started with Specmatic for JavaScript developers is to use the [specmatic node module](https://www.npmjs.com/package/specmatic).
 
 ## Quick Start
-```npm install qontract```  will install the qontract locally to the node project.
+```npm install specmatic```  will install the specmatic locally to the node project.
 
-### Sample npm scripts to run qontract:
+### Sample npm scripts to run specmatic:
 
 You can just add these npm scripts in your package.json and you should be good to run them using `npm run script-name` in a node environment.
 
-`"qontract-stub": "qontract stub *.qontract --data src/mocks --host=localhost --port=8000"`
+`"specmatic-stub": "specmatic stub *.spec --data src/mocks --host=localhost --port=8000"`
 
-`"qontract-test": "qontract test *.qontract --host=localhost --port=8000"`
+`"specmatic-test": "specmatic test *.spec --host=localhost --port=8000"`
 
-Here, `*.qontract` is the path of qontract files and `src/mocks` is the path for the stub data directory.
+Here, `*.spec` is the path of specmatic files and `src/mocks` is the path for the stub data directory.
 
 (Check [Documentation](https://specmatic.in/documentation.html) for more information on cli commands and arguments.)
 
@@ -30,16 +30,16 @@ Here, `*.qontract` is the path of qontract files and `src/mocks` is the path for
 
 The npm module also provides a set of helper functions to be used in automated tests:
 
-`import { startStubServer, startTestServer, loadDynamicStub } from 'qontract';`
+`import { startStubServer, startTestServer, loadDynamicStub } from 'specmatic';`
 
 Specmatic JS library exposes methods which can be used in your JS project to setup the tests, as well as do advanced things like load stubs dynamically.
 
 
-`startStubServer(qontractDir: string, stubDir: string, host: string, port: string)`
+`startStubServer(specmaticDir: string, stubDir: string, host: string, port: string)`
 
 method to start the stub server.
 
-`startTestServer(qontractDir: string, host: string, port: string)`
+`startTestServer(specmaticDir: string, host: string, port: string)`
 
 method to start test server.
 

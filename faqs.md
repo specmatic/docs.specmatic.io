@@ -11,7 +11,7 @@ Frequently Asked Questions
 
 Specmatic requires you to author the contract first which is then leveraged to run Provider Stubs and Contract Tests.
 
-More on this [here](/contract_testing.html#qontract---contract-first).
+More on this [here](/contract_testing.html#specmatic---contract-first).
 
 ### Does Specmatic work with all programming languages?
 

@@ -1,4 +1,4 @@
-Copy paste below text into a file with name "service.qontract". This, as you can see, uses the Gherkin syntax to describe a basic GET request. 
+Copy paste below text into a file with name "service.spec". This, as you can see, uses the Gherkin syntax to describe a basic GET request. 
 
     Feature: Contract for the petstore service
 

@@ -31,7 +31,7 @@ You could simply write the contract yourself. This is usually done when you don'
 
 ### The contract file
 
-A contract file contains a description of an API or a set of APIs using the [Specmatic language](/documentation/language.html). Contract files must have the extension `.qontract`.
+A contract file contains a description of an API or a set of APIs using the [Specmatic language](/documentation/language.html). Contract files must have the extension `.spec`.
 
 ### Stub files that accompany the contract file
 
@@ -41,7 +41,7 @@ Stub files accompanying a contract can be easily used by anyone referring to the
 
 Stub files must be placed in a directory with the same name as the contract file, suffixed with _data.
 
-For example, given a contract file named orderservice.qontract:
+For example, given a contract file named orderservice.spec:
 * create a directory named orderservice_data in the same directory as the contract file
 * put the stub files in that directory
 
@@ -49,7 +49,7 @@ The resulting directory structure might look something like this:
 
 ```
 |
- \_ orderservice.qontract [file]
+ \_ orderservice.spec [file]
  \_ orderservice_data     [directory]
     |
      \_ placing_an_order.json [file]
@@ -85,13 +85,13 @@ File: customer_stub.json
 
 ### Convert the sample into a contract
 
-Now run the `qontract import stub` command on it:
+Now run the `specmatic import stub` command on it:
 
 ```bash
-> qontract import stub -o <qontract file>.json <stub file>.json
-Written to file /Users/xyz/customer_stub.qontract
+> specmatic import stub -o <specmatic file>.json <stub file>.json
+Written to file /Users/xyz/customer_stub.spec
 
-> cat customer_stub.qontract
+> cat customer_stub.spec
 Feature: New Feature
   Scenario: New scenario
     When GET /customer/name?id=(number)
@@ -108,11 +108,11 @@ The generated contract matches the sample.
 In fact we can use the [sample as a stub](/documentation/service_virtualisation.html). To do so:
 
 ```bash
-> mv customer_stub.qontract customer.qontract
+> mv customer_stub.spec customer.spec
 > mkdir customer_data
 > mv customer_stub.json customer_data
-> qontract stub customer.qontract
-Loading customer.qontract
+> specmatic stub customer.spec
+Loading customer.spec
   Loading stub expectations from /Users/joelrosario/tmp/customer_data
   Reading the following stub files:
     /Users/joelrosario/tmp/customer_data/customer_stub.json
@@ -133,7 +133,7 @@ Note the examples, which are used only when running [contract tests](documentati
 ## From an existing application using outbound proxy mode
 
 \
-![](/images/qontract-proxy.svg)
+![](/images/specmatic-proxy.svg)
 
 This tool will help you generate contract specs when the API exists in some environment and can be invoked.
 
@@ -144,7 +144,7 @@ As an example, let's generate a contract for the /employee API from this helpful
 First let's start the proxy:
 
 ```bash
-> qontract proxy ./contracts
+> specmatic proxy ./contracts
 Proxy server is running on http://localhost:9000. Ctrl + C to stop.
 ```
 
@@ -166,7 +166,7 @@ Finally, kill the proxy using Ctrl+C on the command prompt, and it will generate
 
 You will see something like this:
 ```bash
-Writing contract to ./data/new_feature.qontract
+Writing contract to ./data/new_feature.spec
 Writing stub data to ./data/stub0.json
 ```
 
@@ -174,13 +174,13 @@ When it does, the proxy generates contracts and stubs out of all the request-res
 
 ```bash
 > ls ./contracts
-new_feature.qontract stub0.json
+new_feature.spec stub0.json
 ```
 
 Let's see what's in them.
 
 ```bash
-> cat contracts/new_feature.qontract
+> cat contracts/new_feature.spec
 Feature: New feature
   Scenario: GET http://dummy.restapiexample.com/api/v1/employees
     Given type Data
@@ -336,7 +336,7 @@ And similarly, and improved stub file:
 ## From an existing application using reverse proxy mode
 
 \
-![](/images/qontract-reverse-proxy.svg)
+![](/images/specmatic-reverse-proxy.svg)
 
 If your remote service runs over HTTPS, use Inbound Proxy Mode. Specmatic acts as a transparent proxy between the client (Postman, your application, etc) and the API.
 
@@ -345,7 +345,7 @@ Let's use the same freely provided (again many thanks to its maintainer) test em
 ### Start the proxy
 
 ```bash
-> qontract proxy --target http://dummy.restapiexample.com ./contracts
+> specmatic proxy --target http://dummy.restapiexample.com ./contracts
 Proxy server is running on http://localhost:9000. Ctrl + C to stop.```
 ```
 
@@ -359,7 +359,7 @@ Finally, kill the proxy using Ctrl+C on the command prompt, and it will generate
 
 You will see something like this:
 ```bash
-Writing contract to ./data/new_feature.qontract
+Writing contract to ./data/new_feature.spec
 Writing stub data to ./data/stub0.json
 ```
 
@@ -367,7 +367,7 @@ When it does, the proxy generates contracts and stubs out of all the request-res
 
 ```bash
 > ls ./contracts
-new_feature.qontract stub0.json
+new_feature.spec stub0.json
 ```
 
 These files will look just like what is generated by the outbound proxy mode. So take a look at the previous section to see what is in them, and what to do once you have these files.
@@ -421,10 +421,10 @@ File: postman_employee.json
 ### Generate the contract
 
 ```bash
-> qontract import postman -o . <postman collection file>.json
+> specmatic import postman -o . <postman collection file>.json
 ```
 
-This command will read the Postman collection, and write the new qontract file into "qontract file.json" as specified in the command.
+This command will read the Postman collection, and write the new specmatic file into "specmatic file.json" as specified in the command.
 
 It will also output logs of the requests it made and responses it received.
 
@@ -433,7 +433,7 @@ The `-o .` option tells Specmatic to write the contract into the current directo
 Take a look at the resulting contract:
 
 ```gherkin
-> cat postman_employee-dummy.restapiexample.com.qontract
+> cat postman_employee-dummy.restapiexample.com.spec
 Feature: Free Test API
   Scenario: Employee data
     Given type Data

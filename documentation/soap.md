@@ -413,8 +413,8 @@ Order must be preserved. If the contract defines SOAP-ENV:Header before SOAP-ENV
 
 ### Sample projects
 
-Here is a [SOAP API sample](https://github.com/qontract/petstore-soap-api/). Here is the [SOAP contract, api_1.qontract](https://github.com/qontract/petstore-contracts/tree/master/run/qontract/examples/petstore-soap) for which it declares support. You will find the stub examples in api_1_data.
+Here is a [SOAP API sample](https://github.com/specmatic/petstore-soap-api/). Here is the [SOAP contract, api_1.spec](https://github.com/specmatic/petstore-contracts/tree/master/run/specmatic/examples/petstore-soap) for which it declares support. You will find the stub examples in api_1_data.
 
-The petstore-soap-api project runs api_1.qontract as contract tests.
+The petstore-soap-api project runs api_1.spec as contract tests.
 
-Here is a [SOAP consumer sample](https://github.com/qontract/petstore-soap-website/). This project contains a simple static page, and JSON API which consumes the SOAP service. It declares the same SOAP API contract as a dependency, and the tests use this contract to stub out the SOAP API that it consumes.
+Here is a [SOAP consumer sample](https://github.com/specmatic/petstore-soap-website/). This project contains a simple static page, and JSON API which consumes the SOAP service. It declares the same SOAP API contract as a dependency, and the tests use this contract to stub out the SOAP API that it consumes.

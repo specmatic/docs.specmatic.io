@@ -54,7 +54,7 @@ If you are familiar with Gherkin you should feel right at home. But if not, don'
 
 A contract is an API specification. It describes the provider endpoints, the requests it accepts, the responses it returns and the data types it support etc.
 
-Contracts are text files which you can create with any text editor. Just make sure that the extension is ".qontract".
+Contracts are text files which you can create with any text editor. Just make sure that the extension is ".spec".
 
 Visual Studio Code and IntelliJ Idea support [syntax highlighting](syntax_highlighting.html). We recommend setting up an editor if you want to write these contracts on a regular basis.
 
@@ -407,7 +407,7 @@ Scenario: Create pet
 
 Cyclomatic complexity here is 2. There are 2 types of structures that could be sent in the request, one with description and one without.
 
-So when running in test mode, qontract will run 2 tests for this, one with the description key, and one without.
+So when running in test mode, specmatic will run 2 tests for this, one with the description key, and one without.
 
 ### Nullable Operator
 

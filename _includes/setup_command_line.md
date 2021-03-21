@@ -1,11 +1,11 @@
 Download the standalone Jar.
 
-<https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/qontract.jar>
+<https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar>
 
 #### Mac / Linux
 
 ```
-alias qontract='java -jar <basedir>/qontract.jar'
+alias specmatic='java -jar <basedir>/specmatic.jar'
 ```
 
 #### Windows
@@ -13,7 +13,7 @@ alias qontract='java -jar <basedir>/qontract.jar'
 Create a batch file with below content.
 
 ```
-java -jar <basedir>/qontract.jar %*
+java -jar <basedir>/specmatic.jar %*
 ```
 
 The %* portion tells the batch script to pass all of the parameters it receives to the new command.

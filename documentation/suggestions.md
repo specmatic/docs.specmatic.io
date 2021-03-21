@@ -24,10 +24,10 @@ What if the Examples vary by the environment. Example: Your staging environment 
 Examples that vary by environment should be externalised to environment specific suggestion files.
 
 In order to author a suggestion file, just copy over the same contract content to another file and remove everything except Feature, Scenario and Examples keywords.
-Let us call it suggestions-staging.qontract just to indicate that this file is related to staging. You can call it anything you like.
+Let us call it suggestions-staging.spec just to indicate that this file is related to staging. You can call it anything you like.
 Now we can remove the examples section in the contract. Below is an example.
 
-service.qontract
+service.spec
 
     Feature: Contract for the petstore service
    
@@ -36,7 +36,7 @@ service.qontract
          Then status 200
          And response-body {petid: "(number)"}
 
-suggestions-staging.qontract
+suggestions-staging.spec
 
     Feature: Contract for the petstore service
 
@@ -49,11 +49,11 @@ Note: It is mandatory to name the scenario and also scenario names must be uniqu
 
 ### Command Line
 
-    qontract test --suggestions="../petstore/qontract/suggestions-staging.qontract" --host="staging-server" --port="8000" "../petstore/qontract/service.qontract"
+    specmatic test --suggestions="../petstore/specmatic/suggestions-staging.spec" --host="staging-server" --port="8000" "../petstore/specmatic/service.spec"
 
 Alternatively:
 
-    qontract test --suggestions='{"Contract for the petstore service": [{"petid": 345}]}' service.qontract
+    specmatic test --suggestions='{"Contract for the petstore service": [{"petid": 345}]}' service.spec
 
 Consider the json object in above command. Note that the scenario name is used as the key, and each element of the array consist of a json object, with column names and values as keys and values respectively.
 
