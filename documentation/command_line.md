@@ -23,6 +23,21 @@ You can start with `java -jar specmatic.jar` to see help on the sub commands.
 
 Then execute any sub command without parameters to see it. For example, try `java -jar specmatic.jar stub`.
 
+## Alias on MacOS / Linux
+
+* Create a directory named bin in your home directory.
+* Place the specmatic.jar file in this bin directory.
+* Test that this is done correctly by running this command: `java -jar ~/bin/specmatic.jar --version`. This should display the version of the specmatic jar.
+* Add this line at the end of your .zshrc or .bashrc file: `alias specmatic='java -jar ~/bin/specmatic.jar'`
+* Zsh users, run this command `source ~/.zshrc`. Bash users: `source ~/.bashrc`
+* You should now be able to run this: `specmatic --version`
+
+## On Windows
+
+Keep the specmatic.jar file in an easy to access spot, such as C:\bin
+
+That way, it will be easy to run `java -jar c:\bin\specmatic.jar` when needed.
+
 ## Stub mode
 
 Specmatic can be used as a stub, for service virtualisation.

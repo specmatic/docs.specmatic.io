@@ -8,6 +8,7 @@ Authoring Contracts
 ===================
 
 - [Authoring Contracts](#authoring-contracts)
+  - [Running Specmatic](#running-specmatic)
   - [By hand](#by-hand)
     - [The contract file](#the-contract-file)
     - [Stub files that accompany the contract file](#stub-files-that-accompany-the-contract-file)
@@ -24,6 +25,13 @@ Authoring Contracts
   - [Importing a Postman collection](#importing-a-postman-collection)
     - [Export the collection](#export-the-collection)
     - [Generate the contract](#generate-the-contract)
+  - [Importing a WSDL file](#importing-a-wsdl-file)
+
+## Running Specmatic
+
+All the contracts below assume that you have an alias or script setup to run specmatic as a command. For example, you should be able to run `specmatic --version`.
+
+If not, check out the documentation on [Command Line](documentation/../command_line.html) to see how to setup your OS to run Specmatic easily.
 
 ## By hand
 
@@ -483,3 +491,19 @@ Feature: Free Test API
   ```
 
 Now with this contract, even if the actual response had those headers, Specmatic will in future not concern itself with the unknown headers.
+
+## Importing a WSDL file
+
+The command for this is `specmatic import wsdl <wsdlfilename>`
+
+[Here's a WDSL file](https://raw.githubusercontent.com/strongloop/strong-soap/master/example/wsdls/stockquote.wsdl) for you to try this on.
+
+Download that file, and run this command:
+```bash
+❯ specmatic import wsdl stockquote.wsdl
+Written to file stockquote.spec
+```
+
+Now open the stockquote.spec file and see what it contains.
+
+You can read more about the language 

@@ -40,9 +40,11 @@ Language
     - [XML Attributes](#xml-attributes)
     - [Optional Values In XML Tags](#optional-values-in-xml-tags)
     - [Optional Values In XML Attributes](#optional-values-in-xml-attributes)
-    - [Optional XML Attributes](#optional-xml-attributes)
-    - [Declaring XML Types](#declaring-xml-types)
-    - [XML Types Within Types](#xml-types-within-types)
+    - [Optional XML Nodes](#optional-xml-nodes)
+    - [Multiple Consecutive XML Nodes](#multiple-consecutive-xml-nodes)
+    - [XML Types](#xml-types)
+    - [Reusing XML Nodes](#reusing-xml-nodes)
+    - [XML Child Nodes](#xml-child-nodes)
     - [Background](#background)
     - [Scenario Outline For Contract Testing](#scenario-outline-for-contract-testing)
 
@@ -706,34 +708,103 @@ Specifically, the above contract will NOT match the following:
 <customer><name>John Doe</name></customer>
 ```
 
-### Optional XML Attributes
+### Optional XML Nodes
 
-An optional attribute require special synax because ? is not valid syntax in an XML tag name.
+Consider this XML node for a customer named Jane Holmes:
 
-```gherkin
-When POST /customer
-And request-body
-"""
-<customer enabled:optional="(boolean)">
-  <name>(string)</name>
+```xml
+<customer>
+  <name>Jane Holmes</name>
+  <address>Baker Street</address>
 </customer>
+```
+
+And this one for Sherlock Holmes:
+
+```xml
+<customer>
+  <name>Sherlock Holmes</name>
+</customer>
+```
+
+The `address` node is optional. Specmatic can express this like so:
+
+```xml
+<customer>
+  <name>(string)</name>
+  <address qontract_occurs="optional">(string)</address>
+</customer>
+```
+
+This will match the customer xml data for both Jane and Sherlock Holmes.
+
+### Multiple Consecutive XML Nodes
+
+Consider the following information from a shopping cart:
+
+```xml
+<cart>
+  <id>10</id>
+  <productid>10</productid>
+  <productid>20</productid>
+  <productid>30</productid>
+  <customerid>100</customerid>
+</cart>
+```
+
+There could be any number of product ids.
+
+The following is how we can put it in Specmatic:
+
+```xml
+<cart>
+  <id>(number)</id>
+  <productid qontract_occurs"multiple">(number)</productid>
+  <customerid>(number)</customerid>
+</cart>
+```
+
+The `productid` can now occur 0 or more times.
+
+### XML Types
+
+Consider the following employee record:
+
+```xml
+<employee>
+  <name>(string)</name>
+  <address>(string)</address>
+</employee>
+```
+
+And the following manager record:
+
+```xml
+<manager>
+  <name>(string)</name>
+  <address>(string)</address>
+</manager>
+```
+
+Different node names, but the same tags inside.
+
+We can pull the type out like this:
+
+```xml
+Given type Person
 """
-Then status 200
+<SPECMATIC_TYPE>
+  <name>(string)</name>
+  <address>(string)</address>
+</SPECMATIC_TYPE>
+"""
+And type Manager <manager qontract_type="Person"/>
+And type Employee <employee qontract_type="Person"/>
 ```
 
-This will match a tag with the "enabled" attribute:
+The `Manager` type will match the `manager` node, and the `Employee` type will match the `employee` node.
 
-```xml
-<customer enabled="true"><name>John Doe</name></customer>
-```
-
-and also one without:
-
-```xml
-<customer><name>John Doe</name></customer>
-```
-
-### Declaring XML Types
+### Reusing XML Nodes
 
 ```gherkin
 Given type Customer
@@ -753,7 +824,7 @@ This matches the following XML contract:
 <customer><name>John Doe</name></customer>
 ```
 
-### XML Types Within Types
+### XML Child Nodes
 
 ```gherkin
 Given type Name <name>(string)</name>
