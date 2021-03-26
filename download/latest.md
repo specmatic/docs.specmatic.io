@@ -8,11 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 17th March 2021
+Date: 15th March 2021
 
 What new:
-- Renamed Qontract to Specmatic
-- Implemented a new variable and environment feature that makes it possible to wire up contracts to authentication APIs
+- Bug fixes and improvements to WSDL support
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
