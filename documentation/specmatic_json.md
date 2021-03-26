@@ -31,6 +31,18 @@ Format of specmatic.json
     "organization": "XNSio",
     "project": "XNSIO",
     "definitionId": 4
+  },
+
+  "environments": {
+    "staging": {
+      "baseurls": {
+        "auth.spec": "http://localhost:8080"
+      },
+      "variables": {
+        "username": "jackie",
+        "password": "PaSsWoRd"
+      }
+    }
   }
 }
 ```
@@ -92,3 +104,25 @@ Contains details of the project pipeline.
   }
 }
 ```
+
+### Declare environment configuration
+
+```json
+  "environments": {
+    "staging": {
+      "baseurls": {
+        "auth.spec": "http://localhost:8080"
+      },
+      "variables": {
+        "username": "jackie",
+        "password": "PaSsWoRd"
+      }
+    }
+  }
+```
+
+The environments key in this example contains configuration for the `staging` environment. It can contain configuration for any number of environments.
+
+Each environment configuration can contain
+- `baseurls` - needed when running contracts as test as part of [authentication](documentation/../authentication.html)
+- `variables` - these values are plugged into the Examples rows of an auth contract for [authentication](documentation/../authentication.html), or even when running regular contract tests
