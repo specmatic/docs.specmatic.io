@@ -4,8 +4,8 @@ title: Qontract to Specmatic
 parent: Download
 nav_order: 3
 ---
-Migration Guide
-===============
+Migration Guide - Qontract to Specmatic
+=======================================
 
 `Qontract` has been renamed to `Specmatic`.
 
