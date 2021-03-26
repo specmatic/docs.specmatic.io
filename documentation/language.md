@@ -4,65 +4,59 @@ title: Language
 parent: Documentation
 nav_order: 6
 ---
-Language
-========
-
-- [Language](#language)
-  - [The Contract File](#the-contract-file)
-  - [Syntax Reference](#syntax-reference)
-    - [Basic structure](#basic-structure)
-    - [Slightly More Complex Example](#slightly-more-complex-example)
-    - [Built-in Data Types](#built-in-data-types)
-      - [datetime type](#datetime-type)
-      - [url type](#url-type)
-    - [Arrays](#arrays)
-    - [Variable Length Arrays](#variable-length-arrays)
-    - [Objects](#objects)
-    - [Defining Types](#defining-types)
-    - [Defining Objects As Tables](#defining-objects-as-tables)
-    - [Putting Value In Objects](#putting-value-in-objects)
-    - [List Operator](#list-operator)
-    - [Types In Background](#types-in-background)
-    - [Overriding Types](#overriding-types)
-    - [Optional Operator](#optional-operator)
-    - [Nullable Operator](#nullable-operator)
-    - [Rest Operator](#rest-operator)
-    - [Combining *, ? and ...](#combining---and-)
-    - [Pattern In String](#pattern-in-string)
-    - [Explicit Reference To Examples In Type Declarations](#explicit-reference-to-examples-in-type-declarations)
-    - [Dictionary](#dictionary)
-    - [Form Fields](#form-fields)
-    - [Multipart Form Data](#multipart-form-data)
-    - [Kafka Messages](#kafka-messages)
-    - [XML Tags](#xml-tags)
-    - [Multiline XML Definitions](#multiline-xml-definitions)
-    - [XML Data Types](#xml-data-types)
-    - [XML Attributes](#xml-attributes)
-    - [Optional Values In XML Tags](#optional-values-in-xml-tags)
-    - [Optional Values In XML Attributes](#optional-values-in-xml-attributes)
-    - [Optional XML Nodes](#optional-xml-nodes)
-    - [Multiple Consecutive XML Nodes](#multiple-consecutive-xml-nodes)
-    - [XML Types](#xml-types)
-    - [Reusing XML Nodes](#reusing-xml-nodes)
-    - [XML Child Nodes](#xml-child-nodes)
-    - [Background](#background)
-    - [Scenario Outline For Contract Testing](#scenario-outline-for-contract-testing)
+- [The Contract File](#the-contract-file)
+- [Basic structure](#basic-structure)
+  - [Slightly More Complex Example](#slightly-more-complex-example)
+  - [Built-in Data Types](#built-in-data-types)
+  - [Pattern In String](#pattern-in-string)
+  - [Explicit Reference To Examples In Type Declarations](#explicit-reference-to-examples-in-type-declarations)
+  - [Scenario Outline For Contract Testing](#scenario-outline-for-contract-testing)
+- [JSON Syntax](#json-syntax)
+  - [Arrays](#arrays)
+  - [Variable Length Arrays](#variable-length-arrays)
+  - [Objects](#objects)
+  - [Defining Types](#defining-types)
+  - [Defining Objects As Tables](#defining-objects-as-tables)
+  - [Putting Value In Objects](#putting-value-in-objects)
+  - [List Operator](#list-operator)
+  - [Optional Operator](#optional-operator)
+  - [Nullable Operator](#nullable-operator)
+  - [Rest Operator](#rest-operator)
+  - [Combining *, ? and ...](#combining---and-)
+  - [Dictionary](#dictionary)
+- [XML Syntax](#xml-syntax)
+  - [XML Tags](#xml-tags)
+  - [Multiline XML Definitions](#multiline-xml-definitions)
+  - [XML Data Types](#xml-data-types)
+  - [XML Attributes](#xml-attributes)
+  - [Optional Values In XML Tags](#optional-values-in-xml-tags)
+  - [Optional Values In XML Attributes](#optional-values-in-xml-attributes)
+  - [Optional XML Nodes](#optional-xml-nodes)
+  - [Multiple Consecutive XML Nodes](#multiple-consecutive-xml-nodes)
+  - [XML Types](#xml-types)
+  - [Reusing XML Nodes](#reusing-xml-nodes)
+  - [XML Child Nodes](#xml-child-nodes)
+- [HTTP Protocol](#http-protocol)
+  - [Form Fields](#form-fields)
+  - [Multipart Form Data](#multipart-form-data)
+- [Kafka Messages](#kafka-messages)
+- [The Background section](#the-background-section)
+  - [Common Definitions in the Background](#common-definitions-in-the-background)
+  - [Overriding The Background](#overriding-the-background)
 
 Specmatic extends the Gherkin syntax by adding some more keywords.
 
-If you are familiar with Gherkin you should feel right at home. But if not, don't worry, Gherkin is easy to pick up. You'll learn as you go.
+If you are familiar with Gherkin you should feel right at home. If not, don't worry, Gherkin is easy to pick up.
 
 ## The Contract File
 
 A contract is an API specification. It describes the provider endpoints, the requests it accepts, the responses it returns and the data types it support etc.
 
-Contracts are text files which you can create with any text editor. Just make sure that the extension is ".spec".
+Contracts are text files which you can create with any text editor. Just make sure that the extension is `.spec`.
 
 Visual Studio Code and IntelliJ Idea support [syntax highlighting](syntax_highlighting.html). We recommend setting up an editor if you want to write these contracts on a regular basis.
 
-## Syntax Reference
-
-### Basic structure
+## Basic structure
 
 Here's a small contract.
 
@@ -158,11 +152,11 @@ number, string, boolean and null are all used the same way.
 
 Note: The number type matches decimals numbers too.
 
-#### datetime type
+**datetime type**
 
 `(datetime)` matches and generates ISO standard dates within strings. No other primitive data type will be accepted.
 
-#### url type
+**url type**
 
 `(url)` matches and generates valid urls within strings. No other primitive data type will be accepted.
 
@@ -172,6 +166,76 @@ You can also specifically define the following url types:
 * `(url-http)` declares an http url
 * `(url-https)` declares an https url
 * `(url-path)` declares a url path without the scheme prefix
+
+### Pattern In String
+
+We can explicitly describe types in strings. If for example we know that the value is a number, but it will be inside a string:
+
+```gherkin
+Given type Id (number in string)
+```
+
+### Explicit Reference To Examples In Type Declarations
+
+We can explicitly refer to the example column from within a type declaration.
+
+```gherkin
+When POST /
+  And request-body (orderid:number)
+  Then status 200
+
+Examples:
+| orderid |
+| 10      |
+```
+
+In this example, the request-body looks up the orderid from the examples. When the test request is generated, it contain the value `10` in the request body.
+
+### Scenario Outline For Contract Testing
+
+Let us assume that we need to run below Scenario as a test with two petIds, 2 and 3, instead of autogenerated values.
+
+[Read more about contract tests here.](/documentation/contract_tests.html)
+
+```gherkin
+Scenario: Should be able to get a pet by petId
+    When GET /pets/(petid:number)
+    Then status 200
+    And response-body {petid: "(number)"}
+```
+
+A way to achieve this is by declaring the same scenario twice.
+
+```gherkin
+Scenario: Should be able to get a pet by petId 2
+    When GET /pets/2
+    Then status 200
+    And response-body {petid: "(number)"}
+
+Scenario: Should be able to get a pet by petId 3
+    When GET /pets/3
+    Then status 200
+    And response-body {petid: "(number)"}
+```
+
+This can get repetitive. We can leverage "Scenario Outline" to run this "Scenario" as a test twice with different values.
+
+```gherkin
+Scenario Outline: Should be able to get a pet by petId
+    When GET /pets/(petid:number)
+    Then status 200
+    And response-body {petid: "(number)"}
+
+    Examples:
+    | petid |
+    | 2     |
+    | 3     |
+```
+
+NOTE: Scenario Outline is effective only in the context of request params when running contract as a test.
+To return specific values when running the contract leverage [Stub Mode](/documentation/command_line.html#stub-mode).
+
+## JSON Syntax
 
 ### Arrays
 
@@ -320,58 +384,6 @@ Scenario: Add all numbers
 
 (Numbers) is defined as (number*), and this matches [4, 7, 3, 85, 0]
 
-### Types In Background
-
-If there are multiple APIs using common types, it helps to put them in the Background. All scenarios inherit definitions in the background.
-
-```gherkin
-Feature: Arithmetic API
-
-Background:
-  Given type Numbers (number*)
-
-Scenario: Add numbers
-  When POST /sum
-  And request-body (Numbers)
-  Then status 200
-  And response-body (number)
-
-Scenario: multiply numbers
-  When POST /product
-  And request-body (Numbers)
-  Then status 200
-  And response-body (number)
-```
-
-### Overriding Types
-
-A scenario can override a type defined in the background. Useful when one scenarios needs a slightly different data structure from the rest.
-
-```gherkin
-Feature: Pet Store API
-
-Background:
-  Given type Pet
-    | id   | (number) |
-    | name | (string) |
-    | type | (string) |
-
-Scenario: Get details of a pet
-  When GET /pet/(id:number)
-  Then status 200
-  And response-body (Pet)
-
-Scenario: Create pet
-  Given type Pet
-    | name | (string) |
-    | type | (string) |
-  When POST /pet
-  And request-body (Pet)
-  Then status 200
-  And response-body (number)
-```
-Compare the Pet definition in the background, and in the second scenario. The second one lacks an id, since the id is assigned by the application, and the caller will not have the id when invoking the API
-
 ### Optional Operator
 
 We can describe an object in which a key is optional.
@@ -478,30 +490,6 @@ Given type Operation
 
 ...would match both {"numbers": [1, 2, 3]} and {"numbers": [1, null, 3, 4, null, null]}
 
-### Pattern In String
-
-We can explicitly describe types in strings. If for example we know that the value is a number, but it will be inside a string:
-
-```gherkin
-Given type Id (number in string)
-```
-
-### Explicit Reference To Examples In Type Declarations
-
-We can explicitly refer to the example column from within a type declaration.
-
-```gherkin
-When POST /
-  And request-body (orderid:number)
-  Then status 200
-
-Examples:
-| orderid |
-| 10      |
-```
-
-In this example, the request-body looks up the orderid from the examples. When the test request is generated, it contain the value `10` in the request body.
-
 ###  Dictionary
 
 Sometimes we don't know the exact keys and values, but we know what their types will be.
@@ -521,65 +509,7 @@ The first type in the dictionary refers to the key. The key is always a string, 
 
 The value will be another json object, containing the product info described above.
 
-### Form Fields
-
-We can describe form fields in the request like this:
-
-```gherkin
-When POST /orders
-And form-field name (string)
-And form-field address (string)
-```
-
-This corresponds Postman's x-www-form-urlencoded in the request body.
-
-### Multipart Form Data
-
-We can describe multipart form data in the request like this:
-
-```gherkin
-When POST /orders
-And request-part name (string)
-And request-part address (string)
-```
-
-This corresponds Postman's form-data in the request body.
-
-If the request part contains a file, use the @ symbol to denote the file name, like so:
-
-```gherkin
-When POST /orders
-And request-part customers @customers.csv
-```
-
-When running the test, @customers.csv must actually exist in the working directory.
-
-### Kafka Messages
-
-We can describe Kafka messages.
-
-The syntax:
-
-```gherkin
-* kafka-message <topic> <key type> <value type>
-```
-
-OR
-
-```gherkin
-* kafka-message <topic> <value type>
-```
-
-For example:
-
-```gherkin
-Given json Customer
-  | name  | (string) |
-  | phone | (string) |
-Then kafka-message customerdata (String) (Customer*)
-```
-
-Here the message is expected to be on the customerdata topic, the key should be a string, and the value should be a json string.
+## XML Syntax
 
 ### XML Tags
 
@@ -840,7 +770,92 @@ This matches the following XML contract:
 <customer><name>John Doe</name></customer>
 ```
 
-### Background
+## HTTP Protocol
+
+### Form Fields
+
+We can describe form fields in the request like this:
+
+```gherkin
+When POST /orders
+And form-field name (string)
+And form-field address (string)
+```
+
+This corresponds Postman's x-www-form-urlencoded in the request body.
+
+### Multipart Form Data
+
+We can describe multipart form data in the request like this:
+
+```gherkin
+When POST /orders
+And request-part name (string)
+And request-part address (string)
+```
+
+This corresponds Postman's form-data in the request body.
+
+If the request part contains a file, use the @ symbol to denote the file name, like so:
+
+```gherkin
+When POST /orders
+And request-part customers @customers.csv
+```
+
+When running the test, @customers.csv must actually exist in the working directory.
+
+## Kafka Messages
+
+We can describe Kafka messages.
+
+The syntax:
+
+```gherkin
+* kafka-message <topic> <key type> <value type>
+```
+
+OR
+
+```gherkin
+* kafka-message <topic> <value type>
+```
+
+For example:
+
+```gherkin
+Given json Customer
+  | name  | (string) |
+  | phone | (string) |
+Then kafka-message customerdata (String) (Customer*)
+```
+
+Here the message is expected to be on the customerdata topic, the key should be a string, and the value should be a json string.
+
+## The Background section
+
+If there are multiple APIs using common types, it helps to put them in the Background. All scenarios inherit definitions in the background.
+
+```gherkin
+Feature: Arithmetic API
+
+Background:
+  Given type Numbers (number*)
+
+Scenario: Add numbers
+  When POST /sum
+  And request-body (Numbers)
+  Then status 200
+  And response-body (number)
+
+Scenario: multiply numbers
+  When POST /product
+  And request-body (Numbers)
+  Then status 200
+  And response-body (number)
+```
+
+### Common Definitions in the Background
 
 All Scenarios and Scenario Outlines inherit the Background. So put the parts common to all scenarios into the Background.
 
@@ -885,46 +900,31 @@ Feature: Customer API
     And response-body (Customer*)
 ```
 
-### Scenario Outline For Contract Testing
+### Overriding The Background
 
-Let us assume that we need to run below Scenario as a test with two petIds, 2 and 3, instead of autogenerated values.
-
-[Read more about contract tests here.](/documentation/contract_tests.html)
+A scenario can override a type defined in the background. Useful when one scenarios needs a slightly different data structure from the rest.
 
 ```gherkin
-Scenario: Should be able to get a pet by petId
-    When GET /pets/(petid:number)
-    Then status 200
-    And response-body {petid: "(number)"}
+Feature: Pet Store API
+
+Background:
+  Given type Pet
+    | id   | (number) |
+    | name | (string) |
+    | type | (string) |
+
+Scenario: Get details of a pet
+  When GET /pet/(id:number)
+  Then status 200
+  And response-body (Pet)
+
+Scenario: Create pet
+  Given type Pet
+    | name | (string) |
+    | type | (string) |
+  When POST /pet
+  And request-body (Pet)
+  Then status 200
+  And response-body (number)
 ```
-
-A way to achieve this is by declaring the same scenario twice.
-
-```gherkin
-Scenario: Should be able to get a pet by petId 2
-    When GET /pets/2
-    Then status 200
-    And response-body {petid: "(number)"}
-
-Scenario: Should be able to get a pet by petId 3
-    When GET /pets/3
-    Then status 200
-    And response-body {petid: "(number)"}
-```
-
-This can get repetitive. We can leverage "Scenario Outline" to run this "Scenario" as a test twice with different values.
-
-```gherkin
-Scenario Outline: Should be able to get a pet by petId
-    When GET /pets/(petid:number)
-    Then status 200
-    And response-body {petid: "(number)"}
-
-    Examples:
-    | petid |
-    | 2     |
-    | 3     |
-```
-
-NOTE: Scenario Outline is effective only in the context of request params when running contract as a test.
-To return specific values when running the contract leverage [Stub Mode](/documentation/command_line.html#stub-mode).
+Compare the Pet definition in the background, and in the second scenario. The second one lacks an id, since the id is assigned by the application, and the caller will not have the id when invoking the API
