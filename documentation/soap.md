@@ -8,6 +8,8 @@ SOAP
 ====
 
 - [SOAP](#soap)
+  - [1. Generate the contract from a WSDL file](#1-generate-the-contract-from-a-wsdl-file)
+  - [2. Manually](#2-manually)
     - [Obtaining Payload Samples](#obtaining-payload-samples)
     - [Defining SOAP Contracts](#defining-soap-contracts)
     - [Declaring an array of nodes](#declaring-an-array-of-nodes)
@@ -16,6 +18,18 @@ SOAP
     - [Namespace prefixes](#namespace-prefixes)
     - [Order of the nodes](#order-of-the-nodes)
     - [Sample projects](#sample-projects)
+
+SOAP contracts can be generated in two ways.
+
+## 1. Generate the contract from a WSDL file
+
+The command for this is:
+
+`specmatic import wsdl path/to/wsdlfile.wsdl`
+
+This command will generate a spec file from the wsdl, which you can use for stubbing or running contract tests.
+
+## 2. Manually
 
 The syntax for XML payloads can be found on the [Language](/documentation/language.html) page. Here, we will see how you can use it to define SOAP contracts.
 

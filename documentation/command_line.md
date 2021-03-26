@@ -2,18 +2,38 @@
 layout: default
 title: Command Line
 parent: Documentation
-nav_order: 3
+nav_order: 2
 ---
 Command Line
 ============
+
+## Introduction
 
 Specmatic Standalone Jar severs two purposes.
 * **Zero IDE setup and no code** You can run Contract Tests without a writing a single line of code. Just need to author the Contract to describe your API.
 * **Work with several languages and tech stack** Your provider can be a Python Application and the Consumer a JavaScript application. Specmatic can work with that setup in the command line mode.
 
-## Introduction
+Refer to [getting started](/getting_started.html) to learn how to download the jar.
 
-Refer to [getting started](/documentation/getting_started.html)
+## Setting up the specmatic command
+
+### Alias on MacOS / Linux
+
+1. Install java, make sure you can run `java -version` at your shell prompt.
+2. Download specmatic to ~/bin
+  * Create a directory named bin in your home directory.
+  * Download the [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar) file and place it in this bin directory.
+  * Test that this is done correctly by running this command: `java -jar ~/bin/specmatic.jar --version`. This should display the version of the specmatic jar.
+3. Update your .bashrc or .zshrc file
+  * Add this line at the end of your .zshrc or .bashrc file: `alias specmatic='java -jar ~/bin/specmatic.jar'`
+  * Zsh users, run this command `source ~/.zshrc`. Bash users: `source ~/.bashrc`
+4. Profit! You should now be able to run this: `specmatic --version`
+
+### On Windows
+
+Keep the specmatic.jar file in an easy to access spot, such as C:\bin
+
+That way, it will be easy to run `java -jar c:\bin\specmatic.jar` when needed.
 
 ## In-command help
 
@@ -22,21 +42,6 @@ The specmatic command is full of helpful documentation.
 You can start with `java -jar specmatic.jar` to see help on the sub commands.
 
 Then execute any sub command without parameters to see it. For example, try `java -jar specmatic.jar stub`.
-
-## Alias on MacOS / Linux
-
-* Create a directory named bin in your home directory.
-* Place the specmatic.jar file in this bin directory.
-* Test that this is done correctly by running this command: `java -jar ~/bin/specmatic.jar --version`. This should display the version of the specmatic jar.
-* Add this line at the end of your .zshrc or .bashrc file: `alias specmatic='java -jar ~/bin/specmatic.jar'`
-* Zsh users, run this command `source ~/.zshrc`. Bash users: `source ~/.bashrc`
-* You should now be able to run this: `specmatic --version`
-
-## On Windows
-
-Keep the specmatic.jar file in an easy to access spot, such as C:\bin
-
-That way, it will be easy to run `java -jar c:\bin\specmatic.jar` when needed.
 
 ## Stub mode
 
