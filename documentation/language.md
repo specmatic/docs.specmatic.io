@@ -37,6 +37,7 @@ nav_order: 6
   - [Reusing XML Nodes](#reusing-xml-nodes)
   - [XML Child Nodes](#xml-child-nodes)
 - [HTTP Protocol](#http-protocol)
+  - [Headers](#headers)
   - [Form Fields](#form-fields)
   - [Multipart Form Data](#multipart-form-data)
 - [Kafka Messages](#kafka-messages)
@@ -771,6 +772,19 @@ This matches the following XML contract:
 ```
 
 ## HTTP Protocol
+
+### Headers
+
+We can describe headers in an HTTP request like this:
+
+```gherkin
+When POST /orders
+And header Authentication: (string)
+```
+
+This matches an HTTP request with a header named `Authentication`.
+
+Specmatic ignores all headers in the HTTP request that are not defined in the contract.
 
 ### Form Fields
 
