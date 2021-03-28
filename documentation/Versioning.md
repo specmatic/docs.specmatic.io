@@ -17,9 +17,11 @@ Versioning
 
 ## Backward Compatibility
 
-Specmatic seamlessly ensures Compatibility testing, It can validate cross version backward compatibility amongst the contracts.  This allows Consumers to work with different versions of provider APIs, In other words, an API is backward compatible between releases if the clients are able to work with a new version of the API seamlessly.
+Specmatic seamlessly ensures Compatibility testing, It can validate cross version backward compatibility amongst the contracts.  This allows Consumers to work with different versions of provider APIs.
 
-Let’s understand this with an example,Assume that you have a math contract for squaring a number shown in the code snippet below.
+In other words, an API is backward compatible between releases if the clients are able to work with a new version of the API seamlessly.
+
+Let’s understand this with an example, Assume that you have a math contract for squaring a number shown in the code snippet below.
 
 ```gherkin
 #Version 1
@@ -51,9 +53,9 @@ Then status 200
 And response-body (number)
 ```
 
-We can notice that the old contract for square remains intact, and the new contract for cube API is pinned up on it, hence for the API the newer contract is backward compatible with the older one, and hence is still referred to as version 1.
+We can notice that the old contract for square remains intact, and the new contract for cube API is added on it, hence for the API the newer contract is backward compatible with the older one, and hence is still referred to as version 1.
 
-However, if we had changed the API of square, to take a json object instead of a value in the response, That would not be backward compatible with version 1, and hence this would be versioned 2:
+However, if we had changed the API of square, to take a json object instead of a value in the response, That would not be backward compatible with version 1, and hence would have been versioned 2:
 
 ```gherkin
 Feature: Math API
@@ -65,11 +67,10 @@ Then status 200
 And response-body (number)
 ```
 
-That would not be backward compatible with version 1, and hence this would be version 2.
 
 ## Contract Namespaces And File System Structure
 
-When a git repository is used for tracking changes in any set of Contracts (like in examples above for math), the system structure can look like this:
+When you will use a git repository for tracking changes in any set of Contracts (like in examples above for math), the system structure can look like this:
 
 ```
 <BASE_DIR>
@@ -89,12 +90,11 @@ When a git repository is used for tracking changes in any set of Contracts (like
 
 ## Ensuring Backward Compatibility
 
-Now that we agree that it should be always ensured that all updates to a contract file must be backward compatible, Since in this 
-case the file is in git, comparing it with its previous version is easy, The git repository containing contracts (specs) 
-acts as a single source of truth.
+Now that we know that it should be always ensured that all updates to a contract file must be backward compatible, comparing a contract with its previous version is easy in git,
+The git repository containing contracts (specs) and so acts as a single source of truth.
 
-which leads us to the convenience of running "Contract Vs Contract" backward compatible 
-tests on developers machine and as well as in pipeline for getting feedback on incompatible changes.
+which leads us to the convenience of getting feedback on incompatible changes by running "Contract Vs Contract"
+tests on developers machine or in CI pipeline.
 
 
 ### Compare Working Directory With HEAD
@@ -115,14 +115,14 @@ Tests run: 1, Passed: 1, Failed: 0
 The newer contract is backward compatible
 ```
 
-If not, there will be an error report having a non zero exit status and which makes easy to write scripts around it, if needed.
+If not, there will be an error report having a non-zero exit status, making it easy to write scripts around it.
 
 ### Compare A Contract In Two Different Commits
 
 Now a scenario which is most likely to encounter in CI is:
 
 To compare a contract against multiple commits - lets take an example between two commits, 
-such as HEAD and HEAD^1, which can be easily done by passing names of them as shown below :
+such as HEAD and HEAD^1, which can be easily done by passing names as shown below :
 
 ```shell
 > java -jar specmatic.jar compatible git commits ./remote/random.spec HEAD HEAD^1
@@ -131,16 +131,16 @@ Tests run: 1, Passed: 1, Failed: 0
 The newer contract is backward compatible
 ```
 
-You can observe how specmatic identifies and call out the specific contract which is compatible backwards.
-Yes, This requires that there at least two versions in the git repository, and you can even use commit hashes here if you wish to compare any other pair of commits.
+You can observe how specmatic identifies and call out the specific contract which is compatible backwards. 
+For this to happen its imperative to have at least two versions in the git repository, Also you can even use commit hashes here if you wish to compare any other pair of commits.
 
 ## Handling Contracts in progress
 
-Specmatic also allows you to manage contracts which are being worked upon - in progress or not finalized yet.
-You can easily annotate them as "work in progress" with a tag @WIP. This annotation tag will ensure that the backward 
-compatibility check for such contract is skipped baring extraneous noise in results, this tag is to be provided before the scenario line.
+Specmatic manages your contracts which are being worked upon - in progress or not finalized yet.
+You can easily annotate them as "work in progress" with a tag @WIP before the scenario line, This annotation tag will ensure that the backward 
+compatibility check for such contract is skipped baring extraneous noise in results.
 
-Ofcourse Once the contract is complete you can remove the @WIP tag, allowing specmatic to include the contracts as candidate for backward compatibility tests.
+Once the contract is complete you can remove the @WIP tag, allowing specmatic to include the contracts for tests.
 
 ```gherkin
 @WIP
