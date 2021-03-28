@@ -17,10 +17,9 @@ Versioning
 
 ## Backward Compatibility
 
-Specmatic seamlessly ensures Compatibility testing, It validates cross version backward compatibility amongst the contracts.
-This allows Consumers to work with different versions of provider APIs.
+An API is backward compatible between releases if the clients are able to work with a new version of the API seamlessly.
 
-In other words, an API is backward compatible between releases if the clients are able to work with a new version of the API seamlessly.
+Specmatic lets you ensure backward compatibility, you can validate contracts across versions allowing consumers to work with different versions of provider APIs.
 
 Let’s understand this with an example, Assume that you have a math contract for squaring a number shown in the code snippet below.
 
@@ -35,7 +34,7 @@ Then status 200
 And response-body (number)
 ```
 
-Now if we add a new api for cubing numbers to the same API, the contract will change to accommodate this and hence may look like this:
+Now if we add a new API for cubing numbers to the same API, the contract will change to accommodate this and hence may look like this:
 
 ```gherkin
 #Version 1
