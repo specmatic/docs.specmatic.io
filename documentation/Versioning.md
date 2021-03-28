@@ -93,8 +93,8 @@ When you will use a git repository for tracking changes in Contracts (like in ex
 
 Now that we know all updates to a contract file must be backward compatible, comparing a contract with its previous version is easy in a git repo, which acts as a single source of truth.
 
-which leads us to the convenience of getting feedback on incompatible changes by running "Contract Vs Contract"
-tests on developer's machine or in CI pipeline.
+Which leads us to the convenience of getting feedback on incompatible changes by running "Contract Vs Contract"
+tests on a developer's machine or in CI pipeline.
 
 
 ### Compare Working Directory With HEAD
@@ -140,7 +140,7 @@ Specmatic helps you manage your contracts which are being worked upon - in progr
 You can easily annotate them as "work in progress" with a tag @WIP before the scenario line, This annotation tag will ensure that the backward 
 compatibility check for such contract is skipped baring extraneous noise in results.
 
-Once the contract is complete you can remove the @WIP tag, allowing specmatic to include the contracts for tests.
+After a contract is complete you can remove the @WIP tag, allowing specmatic to include the contract for tests.
 
 ```gherkin
 @WIP
