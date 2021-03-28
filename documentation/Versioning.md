@@ -17,7 +17,8 @@ Versioning
 
 ## Backward Compatibility
 
-Specmatic seamlessly ensures Compatibility testing, It can validate cross version backward compatibility amongst the contracts.  This allows Consumers to work with different versions of provider APIs.
+Specmatic seamlessly ensures Compatibility testing, It validates cross version backward compatibility amongst the contracts.
+This allows Consumers to work with different versions of provider APIs.
 
 In other words, an API is backward compatible between releases if the clients are able to work with a new version of the API seamlessly.
 
@@ -53,9 +54,9 @@ Then status 200
 And response-body (number)
 ```
 
-We can notice that the old contract for square remains intact, and the new contract for cube API is added on it, hence for the API the newer contract is backward compatible with the older one, and hence is still referred to as version 1.
+We can notice that the old contract for square remains intact, and the new contract for cube API is added on it, hence for the API the newer contract is backward compatible with the older one, and so is still referred to as version 1.
 
-However, if we had changed the API of square, to take a json object instead of a value in the response, That would not be backward compatible with version 1, and hence would have been versioned 2:
+However, if we change the API of square, to take a json object instead of a value in the response, That will not be backward compatible with version 1, and hence will be versioned 2:
 
 ```gherkin
 Feature: Math API
@@ -70,7 +71,7 @@ And response-body (number)
 
 ## Contract Namespaces And File System Structure
 
-When you will use a git repository for tracking changes in any set of Contracts (like in examples above for math), the system structure can look like this:
+When you will use a git repository for tracking changes in Contracts (like in examples above for math), the system structure may look like this:
 
 ```
 <BASE_DIR>
@@ -90,11 +91,10 @@ When you will use a git repository for tracking changes in any set of Contracts 
 
 ## Ensuring Backward Compatibility
 
-Now that we know that it should be always ensured that all updates to a contract file must be backward compatible, comparing a contract with its previous version is easy in git,
-The git repository containing contracts (specs) and so acts as a single source of truth.
+Now that we know all updates to a contract file must be backward compatible, comparing a contract with its previous version is easy in a git repo, which acts as a single source of truth.
 
 which leads us to the convenience of getting feedback on incompatible changes by running "Contract Vs Contract"
-tests on developers machine or in CI pipeline.
+tests on developer's machine or in CI pipeline.
 
 
 ### Compare Working Directory With HEAD
@@ -106,7 +106,7 @@ Changes are made to math_1.spec, Now to check if the change is backward compatib
 
 `java -jar specmatic.jar compatible git file ./run/specmatic/examples/math_1.spec`
 
-In case the changes made are backward compatible, the message will assert it with run and status information:
+In case the changes made are backward compatible, the message will assert it with a run and status information:
 
 ```shell
 > java -jar specmatic.jar compatible git file ./run/specmatic/examples/math_1.spec
@@ -115,13 +115,13 @@ Tests run: 1, Passed: 1, Failed: 0
 The newer contract is backward compatible
 ```
 
-If not, there will be an error report having a non-zero exit status, making it easy to write scripts around it.
+If not, there will be an error report having a non-zero exit status, which also makes it easy to write scripts around it.
 
 ### Compare A Contract In Two Different Commits
 
 Now a scenario which is most likely to encounter in CI is:
 
-To compare a contract against multiple commits - lets take an example between two commits, 
+To compare a contract against multiple commits - for example between two commits, 
 such as HEAD and HEAD^1, which can be easily done by passing names as shown below :
 
 ```shell
@@ -132,11 +132,11 @@ The newer contract is backward compatible
 ```
 
 You can observe how specmatic identifies and call out the specific contract which is compatible backwards. 
-For this to happen its imperative to have at least two versions in the git repository, Also you can even use commit hashes here if you wish to compare any other pair of commits.
+For this to happen its imperative to have at least two versions in the git repository, Also you can even use commit hashes here to compare any other pair of commits.
 
 ## Handling Contracts in progress
 
-Specmatic manages your contracts which are being worked upon - in progress or not finalized yet.
+Specmatic helps you manage your contracts which are being worked upon - in progress or not finalized yet.
 You can easily annotate them as "work in progress" with a tag @WIP before the scenario line, This annotation tag will ensure that the backward 
 compatibility check for such contract is skipped baring extraneous noise in results.
 
