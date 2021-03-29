@@ -21,7 +21,7 @@ An API is backward compatible between releases if the clients are able to work w
 
 Specmatic lets you ensure backward compatibility, you can validate contracts across versions allowing consumers to work with different versions of provider APIs.
 
-Let’s understand this with an example, Assume that you have a math contract for squaring a number shown in the code snippet below.
+Let’s understand this with an example. Assume that you have a math contract for squaring a number shown in the code snippet below.
 
 ```gherkin
 #Version 1
@@ -34,7 +34,7 @@ Then status 200
 And response-body (number)
 ```
 
-Now if we add a new API for cubing numbers to the same API, the contract will change to accommodate this and hence may look like this:
+Now if we add a new API for cubing numbers to the same API, the contract will change to accommodate this:
 
 ```gherkin
 #Version 1
@@ -53,9 +53,9 @@ Then status 200
 And response-body (number)
 ```
 
-We can notice that the old contract for square remains intact, and the new contract for cube API is added on it, hence for the API the newer contract is backward compatible with the older one, and so is still referred to as version 1.
+Since the old `scenario` for square remains intact, and the new `scenario` for cube API is added to it, the newer contract is backward compatible with the older one, and so is still referred to as version 1.
 
-However, if we change the API of square, to take a json object instead of a value in the response, That will not be backward compatible with version 1, and hence will be versioned 2:
+However, if we change the API of square to take a json object instead of a value in the response, that will not be backward compatible with version 1, and hence the version number must be incremented to 2:
 
 ```gherkin
 Feature: Math API
@@ -67,45 +67,47 @@ Then status 200
 And response-body (number)
 ```
 
-
 ## Contract Namespaces And File System Structure
 
 When you will use a git repository for tracking changes in Contracts (like in examples above for math), the system structure may look like this:
 
 ```
 <BASE_DIR>
-    /run
+    /in
         /specmatic
             /examples
-                math_1.spec
-                math_2.spec
+                api_math_v1.spec
+                api_math_v2.spec
 ```
 
-- The path ./run/specmatic/examples acts as a namespace, much like a dot separated package name.
-- Contract file names can begin with any text (no spaces)
-    - If there is a version number, then they must include version number at the end of the name before ".spec" extension.
-    - The underscore separates the name of the contract and version number
-    - In above example the name of contract is math and there are two versions of this API.
+- The path ./in/specmatic/examples acts as a namespace, much like a dot separated package name.
+- Contract file names have 4 parts:
+    1. They should start with the prefix `api_`. This indicates that the file contains a contract.
+    2. The second part should be a meaningful name, which would indicate the API being referred to clearly to someone reading the file name.
+    3. The third part should be a version number, such as v1, v2, etc.
+    4. All Specmatic contract files names bear the extension `.spec`
+    5. The underscore separates the name of the contract and version number
+
+In above example the name of contract is math and there are two versions of this API.
   
 
 ## Ensuring Backward Compatibility
 
-Now that we know all updates to a contract file must be backward compatible, comparing a contract with its previous version is easy in a git repo, which acts as a single source of truth.
+Now that we know all updates to a contract file must be backward compatible, comparing a contract with its previous version is easy when the contract is stored in a git repo, which acts as a single source of truth.
 
-Which leads us to the convenience of getting feedback on incompatible changes by running "Contract Vs Contract"
+This brings us to the convenience of getting feedback on incompatible changes by running "Contract Vs Contract"
 tests on a developer's machine or in CI pipeline.
-
 
 ### Compare Working Directory With HEAD
 
-Let's see this working with an example, say you have the git repo in your home directory with the directory structure same as
+Let's see this working with an example, say you have the git repo in your home directory with the directory structure
 mentioned above.
 
-Changes are made to math_1.spec, Now to check if the change is backward compatible, a simple command on a terminal or command prompt can do the trick.
+Changes are made to math_1.spec, Now to check if the change is backward compatible, a simple command on a terminal or command prompt will do the trick.
 
 `java -jar specmatic.jar compatible git file ./run/specmatic/examples/math_1.spec`
 
-In case the changes made are backward compatible, the message will assert it with a run and status information:
+In case the changes made are backward compatible, you'll see something like this:
 
 ```shell
 > java -jar specmatic.jar compatible git file ./run/specmatic/examples/math_1.spec
@@ -118,10 +120,7 @@ If not, there will be an error report having a non-zero exit status, which also 
 
 ### Compare A Contract In Two Different Commits
 
-Now a scenario which is most likely to encounter in CI is:
-
-To compare a contract against multiple commits - for example between two commits, 
-such as HEAD and HEAD^1, which can be easily done by passing names as shown below :
+To compare a contract against multiple commits - for example between two commits, such as HEAD and HEAD^1, which can be easily done by passing names as shown below :
 
 ```shell
 > java -jar specmatic.jar compatible git commits ./remote/random.spec HEAD HEAD^1
@@ -131,13 +130,16 @@ The newer contract is backward compatible
 ```
 
 You can observe how specmatic identifies and call out the specific contract which is compatible backwards. 
+
 For this to happen its imperative to have at least two versions in the git repository, Also you can even use commit hashes here to compare any other pair of commits.
 
 ## Handling Contracts in progress
 
-Specmatic helps you manage your contracts which are being worked upon - in progress or not finalized yet.
-You can easily annotate them as "work in progress" with a tag @WIP before the scenario line, This annotation tag will ensure that the backward 
-compatibility check for such contract is skipped baring extraneous noise in results.
+Specmatic helps you manage contracts which are still a work in progress.
+
+You can annotate any scenario with the `@WIP` tag before the scenario line. This annotation does two things:
+- When running the backward compatibility check as a command, if any failure is encountered for this scenario, the error will be logged, but the command will terminate with an exit code of 0, just as if no error was seen.
+- Similarly, while running the contract as a test using SpecmaticJUnitSupport (programmatically in Java), if this scenario fails, the test will be marked as `ignored`. JUnit will not report a failure, but it will report that some tests were ignored. The API developer should understand that any Specmatic test marked as ignored is actually a failed test which was annotated with @WIP, and needs looking into.
 
 After a contract is complete you can remove the @WIP tag, allowing specmatic to include the contract for tests.
 
