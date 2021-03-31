@@ -5,7 +5,7 @@ parent: Download
 nav_order: 2
 ---
 
-Release 0.24.1
+### Release 0.24.1
 
 Date: 17th March 2021
 
@@ -13,14 +13,14 @@ What new:
 - Renamed Qontract to Specmatic
 - Implemented a new variable and environment feature that makes it possible to wire up contracts to authentication APIs
 
-Release 0.23.1
+### Release 0.23.1
 
 Date: 10th March 2021
 
 What new:
 - Ability to convert WSDL files into Qontract files
 
-Release 0.22.1
+### Release 0.22.1
 
 Date: 8th February 2021
 
