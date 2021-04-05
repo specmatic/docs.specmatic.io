@@ -495,7 +495,7 @@ Now with this contract, even if the actual response had those headers, Specmatic
 
 ### Authenticated APIs in Postman
 
-If any of the APIs in the Postman collection require authentication, Specmatic will not be able to invoke them directly with the needed redentials.
+If any of the APIs in the Postman collection require authentication, Specmatic will not be able to invoke them directly with the needed credentials.
 
 Instead, from within Postman, plugin in the required credentials, invoke the API, and save the request and response as an example.
 
