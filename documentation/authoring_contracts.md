@@ -25,6 +25,7 @@ Authoring Contracts
   - [Importing a Postman collection](#importing-a-postman-collection)
     - [Export the collection](#export-the-collection)
     - [Generate the contract](#generate-the-contract)
+    - [Authenticated APIs in Postman](#authenticated-apis-in-postman)
   - [Importing a WSDL file](#importing-a-wsdl-file)
 
 ## Running Specmatic
@@ -491,6 +492,16 @@ Feature: Free Test API
   ```
 
 Now with this contract, even if the actual response had those headers, Specmatic will in future not concern itself with the unknown headers.
+
+### Authenticated APIs in Postman
+
+If any of the APIs in the Postman collection require authentication, Specmatic will not be able to invoke them directly with the needed redentials.
+
+Instead, from within Postman, plugin in the required credentials, invoke the API, and save the request and response as an example.
+
+Then export the collection, and import it into Qontract.
+
+Qontract will still fail to invoke the API, but it will see and convert the examples. You can then adjust the contract as needed.
 
 ## Importing a WSDL file
 
