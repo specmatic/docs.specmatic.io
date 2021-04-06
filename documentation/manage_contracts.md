@@ -20,10 +20,10 @@ Manage Your Contracts
       - [Review Contracts](#review-contracts)
     - [backward compatibility](#backward-compatibility)
 
-We have seen writing Contracts for single service from Producer and Consumer side in [Getting Started in 5 min](/documentation/getting_started_programmatically.html).
-In reality organization have complex Services and dependencies, and different teams work on different pieces. Each Service may have different consumers, Downstream Services and as well Producers.  With some basic practices handling team dependency becomes Easy. 
-Let's see how to manage contracts for multiples services in your organization with simple practices.
+We have seen writing Contract for single service, and how to use it from Producer and Consumer side in [Getting Started in 5 min](/documentation/getting_started_programmatically.html).
 
+In reality organization have complex Services and dependencies, also different teams work on different pieces. Each Service may have different consumers, Downstream Services and dependencies as well .
+Simple Practices can Help to manage contracts `.spec` well for multiples services in the organization.
 
 ## Naming Convention for contracts
 
@@ -50,23 +50,26 @@ API getOTP needs to be tested with specific scenario for suspended user with Aut
 suspendedUserSession.json
 ```
  
-- Naming Convention Helps in clarity with:
-   - which service 
-   - which endpoint
+- Naming Convention Helps in clarity for:
+   - Which service 
+   - Which endpoint
    - Which version of Spec
-   - any other Architects looking at Shared Repo of contracts can find API/Services relavant to them
+   - Any Architects looking at contracts Shared Repo can find API/Services relevant to them
 
 ## Multiple Services handling
 
 A contract is an API specification. It describes the provider endpoints, the requests it accepts, the responses it returns, and the data types it support etc.
 In Earlier section we defined 1 service and its 2 downstream APIs. In reality there will be many such services dependent on other services, and owned by multiple teams.
-Each Service may have many endpoints, complex data, as well multiple consumer or provider Services.
+Each Service may have many endpoints, complex data, as well as multiple consumers or providers.
 
-Importantly these Contracts are shared among different teams, Having 1 source of truth helps teams to collaborate as well catch the changes early in development cycle.
-How different teams will know where to find their provider contracts?
+Importantly these Contracts are shared among different teams, Having single source of truth helps in collaborating as well as responding to the changes early in development cycle.
+
+
+How different teams will know where to find their relevant contracts?
 
 ### Directory Structure
-Maintaining all the `.spec` for relevant services along with its `.json` in organized manner helps, *code simplicity* and *ease of sharing* among different stakeholders.
+Maintaining all the `.spec` for relevant services along with its `.json` in organized manner helps in, *code simplicity* and *ease of sharing* among different stakeholders.
+
 The resulting directory structure `loginService` example might look something like this:
 
 ```
@@ -91,11 +94,12 @@ refer [Specmatic language](/documentation/language.html).
 
 ### Shared Repo
 
-one contract `.spec` file is defined in collaboration with its consumer and producers. For e.g. FrontEnd and BackEnd developer define the contract together as per the requirement and design.
-Once Contract defined starts working independently, these parties if don't use the common source of truth throughout chances of breech of `.spec` are there.
-This found late in process will be costly to fix and align.
-Hence, the agreed `.spec` should be kept in common place for reference. The best way is to keep it on common `repo` on Git.
-This repo can be reference by all the parties depending on this `.spec`
+A contract `.spec` file is defined in collaboration with Architects of consumer and producer.
+ e.g. FrontEnd and BackEnd developers define the contract together as per the requirement and design.
+Once the Contract is defined, both backend and frontend teams starts working independently. These parties if don't use the single source of truth throughout, chances of breech of contract `.spec` are there.
+This discrepancy found late in process will be costly to respond and fix.
+Hence, the agreed `.spec` should be kept in common place for reference. The best way is to keep it in common `repo` on Git.
+This repo is reference for all the parties.
 
 ```gherkin
 Shared Repo: "https://github.com/contracts/"
@@ -104,35 +108,35 @@ Given repo "https://github.com/contracts/AUTH/loginService/getOTP_loginService"
 ```
 There must be one contract (.spec file) for each Endpoint and Architects\Developers should consume same file.
 
-- Moreover, for entire product one repo to store all the services `.spec` provides the highest visibility and usability.
+- Moreover, for entire product, one repo to store all the services `.spec` provides
+    - Highest visibility and usability,
     - Lesser time to search and maintain different contracts,
-    - easy to refer same repo if you are consuming many contracts `.spec`
-    - your stub are referiing to shared repo location, hence Updates to contract are picked up Immidiatly
+    - Easy to refer same repo if consuming many contracts `.spec`
+    - Updates in contract `.spec` are reported immediately as stub/tests are referring to shared repo location
 
 
 
 ### Run Your Contracts
-One can run contracts directly on there system to get immidiate feedback
+One can run contracts directly on their system to get immediate feedback
 
 ### locally
  One can locally build and use the contracts using SpecMatic. Refer [Getting Started in 5 min](/documentation/getting_started_programmatically.html)
 
 
 ### Configure in CI
-In Organization where multiple teams are involved, multiple services are involved, with each API dependencies on others; collaboration is required.
- Having all contracts configured in CI to run makes more sence and clean way.
+In the Organization having all contracts run (stub and test both) configured in CI with auto-triggers set is clean and efficient.
 
 
 - CI for shared Contracts repo:
-    - Chnage in Contract to trigger Backward compatibity Test
-    - this inturn can Trigger Producer Service CI to run API tests present against the '.spec' contract
+    - Change in Contract to trigger Backward compatibility Test
+    - later it Triggers Producer Service CI to run API tests present against the '.spec' contract
 
 
-  The references of this repo \API is in multiple Service\APIs. Hence the changes in contract repo triggeres
-  <b>CI for Backward Compatibility</b>
+  The contracts are stored in Shared Repo which are referenced in code for stub\test creation. Hence any changes in contract repo triggers
+  <b>CI for Backward Compatibility</b>.
 
 - CI For Consumer Service Codebase
-    -  PROVIDER API Contracts '.spec' file <b>as stub</b> to stub dependencies 
+    -  Provider API Contracts '.spec' file <b>as stub</b> to stub dependencies 
     -  API tests via contracts with dependencies stubbed in source repo against ongoing development
 
 
@@ -140,24 +144,23 @@ In Organization where multiple teams are involved, multiple services are involve
     -  Self Contracts '.spec' <b>as test</b> against ongoing development Service
   
 CI Helps to achieve key points
-  - helps to develope independet of Integration of Mess
-  - At te same time immidiate feedback on dependent Systme changes
-  - CI integration for backward compatibilty of API
+  - Helps to develope independent of Integration of Mess
+  - At the same time immediate feedback on dependent System changes
+  - CI integration for backward compatibility of API
 
-script from JEP to Configure and how to part for CI
 
-All these can be run locally, in dev Environment or any Staging/Automation environments
+All these can run locally, in dev Environment or any Staging/Automation environments
 
 
 ### Environments
 - Dev Environment
 
-  Developer have to just build .spec and run spec.jar. To Locally Run refer <b> Getting Started in 5 min</b>
-  Dev Can use the Producer Contracts as stub for local Development. In case of Producer use Contracts *.spec" as a test to validate changes.
+  Developer has to just build .spec and run spec.jar. To Locally Run refer <b> Getting Started in 5 min</b>
+  Dev Can use the Producer Contracts as stub for local Development. In case of Producer, use Contracts *.spec" as a test to validate changes.
 
 - Automated Test Environment
   Deploy Service\Endpoint under test on Environment. Stub all dependent Downstream API\Endpoints using '.spec'.
-  Keep your all contracts on common repo for immidiate feedback if case of changes.
+  Keep all contracts on a common repo for immediate feedback in case of changes.
 
   TODO
 - Pre -Prod Environment
@@ -168,27 +171,29 @@ All these can be run locally, in dev Environment or any Staging/Automation envir
 
 #### Versioning of Spec & Review
 Once these `.spec` are defined for all services, teams can independently work on their part.
-Where .spec were defined as part of Design or New features,  Development and defect Fixes may need changes in existing contracts. No Team wants to know the change in contracts at the end but immediately in order to encorporate respective changes or challenge the Change.
+Where .spec were defined as part of Design or New features,  Development and defect Fixes may need changes in existing contracts. No Team wants to know the change in contracts at the end but immediately in order to incorporate respective changes or challenge the Change.
 
-The contract is shared among many teams, one team cannot start changing the `.spec` even for valid reasons. Some discipline on Shared contract repo helps in managing Contract changes. We recommon to build some of these traps in CI pipeline itself.
+The contract is shared among many teams, one team cannot start changing the `.spec` even for valid reasons. Some discipline on Shared contract repo helps in managing Contract changes. We recommend to build some of these traps in CI pipeline itself.
 
 *   Review by Provider along with 1 consumer
 *   Versioning refer: [Versioning](/documentation/Versioning.html)
 
 For major changes in contracts where structural changes are done change in versioning is recommended.
-    It helps dependent services to still continue using old version till they upgrade with new contract changes as well till complete rollout of new contract.
+    It helps dependent services to still continue using old version till they upgrade with new contract version.
 
 #### Review Contracts
-Any team consuming contract needs to change the contract should need agreement between a provider and the consumer of the contract.
-Changes can be initiated by either party (consumer or provider) but, the `.spec` should be PR reviewed by other party before merge.
-As a Practice PR to merge the `.spec` to Master
-
+For any team to make any change into the contract, an agreement between a provider and the consumer is required.
+Changes can be initiated by either party (consumer or provider), but the `.spec` should be PR reviewed by other party before merge.
+As a Practice PR merge to the Master for Contract repo must have mandatory reviewers from both (consumer/Provider).
+ 
 
 ### backward compatibility
 Backward Compatibility Testing
-Given an older and a newer contract, Specmatic will spin up a stub of the new one, and run the old in test mode against it. If all the tests pass, the new contract is considered backward compatible with the old.
+Given an older and a newer contract, Specmatic will spin up a stub of the new one, and run the old contract in test mode against it. If all the tests pass, the new contract is considered backward compatible with the old.
 
+Both the Version of Contracts are maintained in Repo:
 
+e.g. getOTP_loginService_v1.spec was version one as name suggests, the new version is: getOTP_loginService_v2.spec
 
 ```gherkin
 getOTP_loginService_v1.spec
