@@ -112,30 +112,42 @@ There must be one contract (.spec file) for each Endpoint and Architects\Develop
 
 
 ### Run Your Contracts
+One can run contracts directly on there system to get immidiate feedback
 
 ### locally
+ One can locally build and use the contracts using SpecMatic. Refer [Getting Started in 5 min](/documentation/getting_started_programmatically.html)
+
 
 ### Configure in CI
-- CI for Contracts repo
+In Organization where multiple teams are involved, multiple services are involved, with each API dependencies on others; collaboration is required.
+ Having all contracts configured in CI to run makes more sence and clean way.
 
-  Producer : uses <b>.spec</b> to test against ongoing Development
 
-  Consumer : uses <b>.spec</b> to Stub Producer to be independent in ongoing development
+- CI for shared Contracts repo:
+    - Chnage in Contract to trigger Backward compatibity Test
+    - this inturn can Trigger Producer Service CI to run API tests present against the '.spec' contract
+
 
   The references of this repo \API is in multiple Service\APIs. Hence the changes in contract repo triggeres
   <b>CI for Backward Compatibility</b>
 
+- CI For Consumer Service Codebase
+    -  PROVIDER API Contracts '.spec' file <b>as stub</b> to stub dependencies 
+    -  API tests via contracts with dependencies stubbed in source repo against ongoing development
+
+
+- CI For Producer Service Codebase
+    -  Self Contracts '.spec' <b>as test</b> against ongoing development Service
+  
+CI Helps to achieve key points
+  - helps to develope independet of Integration of Mess
+  - At te same time immidiate feedback on dependent Systme changes
+  - CI integration for backward compatibilty of API
 
 script from JEP to Configure and how to part for CI
 
-- CI for consumer
+All these can be run locally, in dev Environment or any Staging/Automation environments
 
-  This is the Repo for Codebase of Consumer. This will Have different API\Component tests which will stub provider Contract from Shared COntract Repo.
-  This Also run on Dev Environment.
-
-- CI for Provider
-
-  This is the Repo for Codebase of Provider.
 
 ### Environments
 - Dev Environment
