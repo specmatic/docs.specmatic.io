@@ -6,21 +6,19 @@ nav_order: 7
 ---
 Manage Your Contracts
 ========
-
-- [Manage Your Contracts](#manage-Contracts)
-    - [Naming Convention](#naming-convention)
-    - [Multiple Service's Contracts handling](#built-in-data-types)
-      - [Directory Structure](#dir-structure)
-      - [Shared Repo](#repo-shared-contracts)
-      - [Run Your Contracts](#run-contracts)
-        - [locally](#contracts-locally)
-        - [Configure in CI](#configure-ci)
-        - [Environments](#environments)
-      - [Spec Updates](#spec-updates)
-        - [Versioning Review_Contracts](#versioning-review-contracts)
-        - [Backward Compatibility](#backward-compatibility)
-
-
+- [Manage Your Contracts](#manage-your-contracts)
+  - [Naming Convention for contracts](#naming-convention-for-contracts)
+  - [Multiple Services handling](#multiple-services-handling)
+    - [Directory Structure](#directory-structure)
+    - [Shared Repo](#shared-repo)
+    - [Run Your Contracts](#run-your-contracts)
+    - [locally](#locally)
+    - [Configure in CI](#configure-in-ci)
+    - [Environments](#environments)
+    - [Spec Updates](#spec-updates)
+      - [Versioning of Spec & Review](#versioning-of-spec--review)
+      - [Review Contracts](#review-contracts)
+    - [backward compatibility](#backward-compatibility)
 
 We have seen writing Contracts for single service from Producer and Consumer side in [Getting Started in 5 min](/documentation/getting_started_programmatically.html).
 In reality organization have complex Services and dependencies, and different teams work on different pieces. Each Service may have different consumers, Downstream Services and as well Producers.  With some basic practices handling team dependency becomes Easy. 
@@ -36,9 +34,9 @@ Filename for Contracts Specification:
 e.g. If Service *loginService* have downstream API -> *validateNumber* & *getOTP* then, spec files will be named as below:
 
 ```gherkin
-validateNumber_loginService_v1.spec
+api_validateNumber_loginService_v1.spec
 
-getOTP_loginService_v1.spec
+api_getOTP_loginService_v1.spec
 ```
 
 Test Data Files for each API will have filesNames as below:
@@ -51,7 +49,12 @@ API getOTP needs to be tested with specific scenario for suspended user with Aut
 ```gherkin
 suspendedUserSession.json
 ```
-P.S. These are Best Practices not Syntax or rules.
+ 
+- Naming Convention Helps in clarity with:
+   - which service 
+   - which endpoint
+   - Which version of Spec
+   - any other Architects looking at Shared Repo of contracts can find API/Services relavant to them
 
 ## Multiple Services handling
 
@@ -69,13 +72,13 @@ The resulting directory structure `loginService` example might look something li
 ```
 loginService  [directory]
 | getOTP_loginService                         [directory]
- \_ getOTP_loginService_v1.spec [file]
- \_ getOTP_loginService_data     [directory]
+ \_ api_getOTP_loginService_v1.spec [file]
+ \_ api_getOTP_loginService_data     [directory]
     |
      \_ suspendedUserSession.json [file]
      \_ OAUTHTokenlogin.json [file]
- | validateNumber_loginService  [directory]
- \_ validateNumber_loginService_v1.spec [file]
+ | api_validateNumber_loginService  [directory]
+ \_ api_validateNumber_loginService_v1.spec [file]
  \_ validateNumber_loginService_data          [directory]
     |
      \_ UnregisteredNumber.json [file]
@@ -83,11 +86,6 @@ loginService  [directory]
 ```
 P.S. How do we create `.spec` and relevant test data `.json`?
 refer [Specmatic language](/documentation/language.html).
-
-
-
-
-
 
 
 
@@ -104,10 +102,12 @@ Shared Repo: "https://github.com/contracts/"
   Create Directory structure for each team to publish contracts
 Given repo "https://github.com/contracts/AUTH/loginService/getOTP_loginService"
 ```
-P.S. Only provider or the consumer have to write the contract, there must be one contracts for each Endpoint.
+There must be one contract (.spec file) for each Endpoint and Architects\Developers should consume same file.
 
-Moreover, for entire product one repo to store all the services `.spec` provides the highest productivity.
-( lesser time to search and maintain different contracts, easy to refer same repo if you are consuming many `.spec`).
+- Moreover, for entire product one repo to store all the services `.spec` provides the highest visibility and usability.
+    - Lesser time to search and maintain different contracts,
+    - easy to refer same repo if you are consuming many contracts `.spec`
+    - your stub are referiing to shared repo location, hence Updates to contract are picked up Immidiatly
 
 
 
@@ -125,6 +125,8 @@ Moreover, for entire product one repo to store all the services `.spec` provides
   The references of this repo \API is in multiple Service\APIs. Hence the changes in contract repo triggeres
   <b>CI for Backward Compatibility</b>
 
+
+script from JEP to Configure and how to part for CI
 
 - CI for consumer
 
@@ -159,7 +161,7 @@ Where .spec were defined as part of Design or New features,  Development and def
 The contract is shared among many teams, one team cannot start changing the `.spec` even for valid reasons. Some discipline on Shared contract repo helps in managing Contract changes. We recommon to build some of these traps in CI pipeline itself.
 
 *   Review by Provider along with 1 consumer
-*   Versioning refer: [Versioning](documentation/Versioning.html)
+*   Versioning refer: [Versioning](/documentation/Versioning.html)
 
 For major changes in contracts where structural changes are done change in versioning is recommended.
     It helps dependent services to still continue using old version till they upgrade with new contract changes as well till complete rollout of new contract.
@@ -175,10 +177,14 @@ Backward Compatibility Testing
 Given an older and a newer contract, Specmatic will spin up a stub of the new one, and run the old in test mode against it. If all the tests pass, the new contract is considered backward compatible with the old.
 
 
+
 ```gherkin
 getOTP_loginService_v1.spec
 getOTP_loginService_v2.spec
 ```
+
+
+Refer [backward compatibility](/documentation/Versioning.html) for details.
 
 
 

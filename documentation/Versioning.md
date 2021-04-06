@@ -69,7 +69,13 @@ And response-body (number)
 
 ## Contract Namespaces And File System Structure
 
+<<<<<<< HEAD
 When you will use a git repository for tracking changes in Contracts (like in examples above for math), the system structure may look like this:
+=======
+We share contracts by committing them to a git repository. Refer [Manage Your Contracts](/documentation/manage_contracts.html)
+
+Here's a sample git repository that contains the math contract:
+>>>>>>> Add references of Versioning and Manage contracts
 
 ```
 <BASE_DIR>
@@ -80,6 +86,7 @@ When you will use a git repository for tracking changes in Contracts (like in ex
                 api_math_v2.spec
 ```
 
+<<<<<<< HEAD
 - The path ./in/specmatic/examples acts as a namespace, much like a dot separated package name.
 - Contract file names have 4 parts:
     1. They should start with the prefix `api_`. This indicates that the file contains a contract.
@@ -87,6 +94,12 @@ When you will use a git repository for tracking changes in Contracts (like in ex
     3. The third part should be a version number, such as v1, v2, etc.
     4. All Specmatic contract files names bear the extension `.spec`
     5. The underscore separates the name of the contract and version number
+=======
+- The path ./run/specmatic/examples acts as a namespace, much like a dot separated package name.
+- Contract file names can begin with any text (no spaces)
+    - The underscore separates the name of the contract and version number
+    - In above example the name of contract is math and there are two versions of this API.
+>>>>>>> Add references of Versioning and Manage contracts
 
 In above example the name of contract is math and there are two versions of this API.
   
