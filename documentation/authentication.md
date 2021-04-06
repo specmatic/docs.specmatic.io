@@ -35,7 +35,7 @@ Here's a [the petstore's auth contract](https://github.com/znsio/petstore-contra
 
 ### Setup the auth credentials
 
-Look at the Examples table, in which we use the variables `$username` and `$password`. We do not hardcode them, because each environment (local, staging, etc) will need different auth credentials. These values come from environment configuration, where we can specify the auth credentials needed by each environment. See how this is done in `specmatic.json` in the [sample petstore application](https://github.com/znsio/petstore/blob/master/specmatic.json.
+Look at the Examples table, in which we use the variables `$username` and `$password`. We do not hardcode them, because each environment (local, staging, etc) will need different auth credentials. These values come from environment configuration, where we can specify the auth credentials needed by each environment. See how this is done in `specmatic.json` in the [sample petstore application](https://github.com/znsio/petstore/blob/master/specmatic.json).
 
 Note how we have declared two variables, username and password, in the staging environment:
 
@@ -87,7 +87,7 @@ And export cookie = response-header.Cookie
 
 Next we must connect auth contract with the actual contract that needs it.
 
-Have a look at the sample petstore contract [api_petstore_v1.spec](https://github.com/znsio/petstore-contracts/blob/master/run/qontract/examples/petstore/api_petstore_v1.spec).
+Have a look at the sample petstore contract [api_petstore_v1.spec](https://github.com/znsio/petstore-contracts/blob/master/in/specmatic/examples/petstore/api_petstore_v1.spec).
 
 You'll see in the background:
 
