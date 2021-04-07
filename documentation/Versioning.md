@@ -9,8 +9,10 @@ Versioning
 
 - [Versioning](#versioning)
   - [Backward Compatibility](#backward-compatibility)
-  - [Contract Namespaces And File System Structure](#contract-namespaces-and-file-system-structure)
+  - [Versioning Naming Convention](#versioning-naming-convention)
   - [Ensuring Backward Compatibility](#ensuring-backward-compatibility)
+- [tests on a developer's machine or in CI pipeline.](#tests-on-a-developers-machine-or-in-ci-pipeline)
+  - [Ensuring Backward Compatibility](#ensuring-backward-compatibility-1)
     - [Compare Working Directory With HEAD](#compare-working-directory-with-head)
     - [Compare A Contract In Two Different Commits](#compare-a-contract-in-two-different-commits)
   - [Handling Contracts in progress](#handling-contracts-in-progress)
@@ -67,15 +69,17 @@ Then status 200
 And response-body (number)
 ```
 
-## Contract Namespaces And File System Structure
-
-<<<<<<< HEAD
-When you will use a git repository for tracking changes in Contracts (like in examples above for math), the system structure may look like this:
-=======
 We share contracts by committing them to a git repository. Refer [Manage Your Contracts](/documentation/manage_contracts.html)
 
 Here's a sample git repository that contains the math contract:
->>>>>>> Add references of Versioning and Manage contracts
+
+That would not be backward compatible with version 1, and hence this would be version 2.
+
+## Versioning Naming Convention
+
+We share contracts by committing them to a shared git repository. Refer [Manage Your Contracts](/documentation/manage_contracts.html)
+
+Here's a sample git repository that contains the math contract with two different Versions:
 
 ```
 <BASE_DIR>
@@ -86,20 +90,10 @@ Here's a sample git repository that contains the math contract:
                 api_math_v2.spec
 ```
 
-<<<<<<< HEAD
-- The path ./in/specmatic/examples acts as a namespace, much like a dot separated package name.
-- Contract file names have 4 parts:
-    1. They should start with the prefix `api_`. This indicates that the file contains a contract.
-    2. The second part should be a meaningful name, which would indicate the API being referred to clearly to someone reading the file name.
-    3. The third part should be a version number, such as v1, v2, etc.
-    4. All Specmatic contract files names bear the extension `.spec`
-    5. The underscore separates the name of the contract and version number
-=======
 - The path ./run/specmatic/examples acts as a namespace, much like a dot separated package name.
 - Contract file names can begin with any text (no spaces)
     - The underscore separates the name of the contract and version number
     - In above example the name of contract is math and there are two versions of this API.
->>>>>>> Add references of Versioning and Manage contracts
 
 In above example the name of contract is math and there are two versions of this API.
   
@@ -110,6 +104,13 @@ Now that we know all updates to a contract file must be backward compatible, com
 
 This brings us to the convenience of getting feedback on incompatible changes by running "Contract Vs Contract"
 tests on a developer's machine or in CI pipeline.
+=======
+  The underscore separates the name of the contract and version number. All updates to a contract file must be backward compatible.
+
+## Ensuring Backward Compatibility
+ 
+Since the file is in git, comparing it with its previous version is easy.
+>>>>>>> Corrected Naming convention for spec wherever usedain all places it was used; removed bullet points explaining it as it was duplicate
 
 ### Compare Working Directory With HEAD
 
@@ -118,12 +119,12 @@ mentioned above.
 
 Changes are made to math_1.spec, Now to check if the change is backward compatible, a simple command on a terminal or command prompt will do the trick.
 
-`java -jar specmatic.jar compatible git file ./run/specmatic/examples/math_1.spec`
+Make a change to api_math_1.spec.
 
-In case the changes made are backward compatible, you'll see something like this:
+To check if the change is backward compatible, open a terminal or command prompt and run the command `java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_math_v1.spec`. You should see something like this if the change is backward compatible:
 
 ```shell
-> java -jar specmatic.jar compatible git file ./run/specmatic/examples/math_1.spec
+> java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_math_v1.spec
 Tests run: 1, Passed: 1, Failed: 0
 
 The newer contract is backward compatible
