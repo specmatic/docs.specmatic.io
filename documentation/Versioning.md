@@ -11,8 +11,6 @@ Versioning
   - [Backward Compatibility](#backward-compatibility)
   - [Versioning Naming Convention](#versioning-naming-convention)
   - [Ensuring Backward Compatibility](#ensuring-backward-compatibility)
-- [tests on a developer's machine or in CI pipeline.](#tests-on-a-developers-machine-or-in-ci-pipeline)
-  - [Ensuring Backward Compatibility](#ensuring-backward-compatibility-1)
     - [Compare Working Directory With HEAD](#compare-working-directory-with-head)
     - [Compare A Contract In Two Different Commits](#compare-a-contract-in-two-different-commits)
   - [Handling Contracts in progress](#handling-contracts-in-progress)
@@ -98,19 +96,11 @@ Here's a sample git repository that contains the math contract with two differen
 In above example the name of contract is math and there are two versions of this API.
   
 
-## Ensuring Backward Compatibility
-
-Now that we know all updates to a contract file must be backward compatible, comparing a contract with its previous version is easy when the contract is stored in a git repo, which acts as a single source of truth.
-
-This brings us to the convenience of getting feedback on incompatible changes by running "Contract Vs Contract"
-tests on a developer's machine or in CI pipeline.
-=======
   The underscore separates the name of the contract and version number. All updates to a contract file must be backward compatible.
 
 ## Ensuring Backward Compatibility
  
 Since the file is in git, comparing it with its previous version is easy.
->>>>>>> Corrected Naming convention for spec wherever usedain all places it was used; removed bullet points explaining it as it was duplicate
 
 ### Compare Working Directory With HEAD
 
