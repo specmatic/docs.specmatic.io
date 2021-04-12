@@ -97,7 +97,7 @@ File: customer_stub.json
 Now run the `specmatic import stub` command on it:
 
 ```bash
-> specmatic import stub -o <specmatic file>.json <stub file>.json
+> specmatic import stub -o <specmatic file>.spec <stub file>.json
 Written to file /Users/xyz/customer_stub.spec
 
 > cat customer_stub.spec
