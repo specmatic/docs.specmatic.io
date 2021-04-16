@@ -10,7 +10,7 @@ Release {{ site.latest_release }}
 
 Date: 16th April 2021
 
-What new:
+What's new:
 - Huge speed up of backward compatibility test
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
