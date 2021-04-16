@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.24.2
+
+Date: 15th March 2021
+
+What new:
+- Bug fixes and improvements to WSDL support
+
 ### Release 0.24.1
 
 Date: 17th March 2021

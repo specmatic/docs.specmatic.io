@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 15th March 2021
+Date: 16th April 2021
 
 What new:
-- Bug fixes and improvements to WSDL support
+- Huge speed up of backward compatibility test
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
