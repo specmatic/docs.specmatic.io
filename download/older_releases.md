@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.25.0
+
+Date: 16th April 2021
+
+What's new:
+- Huge speed up of backward compatibility test
+
 ### Release 0.24.2
 
 Date: 15th March 2021
