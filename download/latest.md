@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 19th April 2021
+Date: 23rd April 2021
 
 What's new:
-- Bug fix: The test command now exits with 0, as it should, when WIP scenarios fail
+- Bug fix: Under some cirucmstances, the contract file path was being dropped
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

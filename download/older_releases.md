@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Releases 0.25.1
+
+Date: 19th April 2021
+
+What's new:
+- Bug fix: The test command now exits with 0, as it should, when WIP scenarios fail
+
 ### Release 0.25.0
 
 Date: 16th April 2021
