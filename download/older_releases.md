@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Releases 0.25.2
+
+Date: 23rd April 2021
+
+What's new:
+- Bug fix: Under some cirucmstances, the contract file path was being dropped
+
 ### Releases 0.25.1
 
 Date: 19th April 2021

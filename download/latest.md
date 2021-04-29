@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 23rd April 2021
+Date: 29th April 2021
 
 What's new:
-- Bug fix: Under some cirucmstances, the contract file path was being dropped
+- Stability improvements to backward compatibility check
+- Improvements to XML/SOAP error messages
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
