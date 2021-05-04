@@ -11,8 +11,7 @@ Release {{ site.latest_release }}
 Date: 29th April 2021
 
 What's new:
-- Stability improvements to backward compatibility check
-- Improvements to XML/SOAP error messages
+- Fix to contract tests when specying a file name in `request-part`, in which the specified file name is resolved relative to the contract file in which it was specified.
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
