@@ -24,7 +24,7 @@ Do not add mandatories.
 | Add an optional key | compatible | Existing consumers are not sending this key anyway, but new consumers may do so. |
 | Remove a mandatory key | **incompatible** (exception) | *EXCEPTION* Consumers can send the key but server will henceforth ignore it, which could break consumers assumptions. |
 | Remove an optional key | **incompatible** (exception) | If consumers choose to send the key, the server will now ignore it, which could break consumers assumptions. |
-| Optional key becomes mandatory | **incompatbile** | Consumers who were not sending this key before will now be expected to send it. |
+| Optional key becomes mandatory | **incompatible** | Consumers who were not sending this key before will now be expected to send it. |
 | Mandatory key becomes optional | compatible | Consumers who were not sending this key before will now be expected to send it. |
 
 ## Responses
