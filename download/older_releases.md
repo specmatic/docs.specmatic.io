@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.26.1
+
+Date: 6th May 2021
+
+What's new:
+- Improved error message for xml mismatch
+
 ### Release 0.26.0
 
 Date: 29th April 2021

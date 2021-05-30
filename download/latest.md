@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 6th May 2021
+Date: 30th May 2021
 
 What's new:
-- Improved error message for xml mismatch
+- Added handling for imported WSDL and schema files
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
