@@ -97,7 +97,7 @@ File: customer_stub.json
 Now run the `specmatic import stub` command on it:
 
 ```bash
-> specmatic import stub -o <specmatic file>.spec <stub file>.json
+> specmatic import <stub file>.json
 Written to file /Users/xyz/customer_stub.spec
 
 > cat customer_stub.spec
@@ -430,14 +430,12 @@ File: postman_employee.json
 ### Generate the contract
 
 ```bash
-> specmatic import postman -o . <postman collection file>.json
+> specmatic import <postman collection file>.json
 ```
 
 This command will read the Postman collection, and write the new specmatic file into "specmatic file.json" as specified in the command.
 
 It will also output logs of the requests it made and responses it received.
-
-The `-o .` option tells Specmatic to write the contract into the current directory.
 
 Take a look at the resulting contract:
 
