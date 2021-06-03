@@ -119,7 +119,7 @@ If needed, you can put all the stub information in a single directory.
 
 The format and file extension of the files in `./stubdata` must be the same as the files described above.
 
-For more information, check out the documentation on [service virtualisation](/service_virtualisation.html).
+For more information, check out the documentation on [service virtualisation](/documentation/service_virtualisation.html).
 
 ## Test Mode
 
@@ -150,4 +150,4 @@ If you wish to ack the message you have read, use `specmatic test --kafkaHost=<k
 Specmatic "test" command exits with status 0 or 1 to represent success or failure respectively.
 You can configure your Provider builds to fail when it does not satisfy the contract.
 
-For more information, check out the documentation on [running contract tests](/contract_tests.html).
+For more information, check out the documentation on [running contract tests](/documentation/contract_tests.html).

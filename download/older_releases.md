@@ -5,6 +5,56 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.26.1
+
+Date: 6th May 2021
+
+What's new:
+- Improved error message for xml mismatch
+
+### Release 0.26.0
+
+Date: 29th April 2021
+
+What's new:
+- Fix to contract tests when specying a file name in `request-part`, in which the specified file name is resolved relative to the contract file in which it was specified.
+
+### Release 0.25.5
+
+Date: 29th April 2021
+
+What's new:
+- Stability improvements to backward compatibility check
+- Improvements to XML/SOAP error messages
+
+### Release 0.25.2
+
+Date: 23rd April 2021
+
+What's new:
+- Bug fix: Under some cirucmstances, the contract file path was being dropped
+
+### Release 0.25.1
+
+Date: 19th April 2021
+
+What's new:
+- Bug fix: The test command now exits with 0, as it should, when WIP scenarios fail
+
+### Release 0.25.0
+
+Date: 16th April 2021
+
+What's new:
+- Huge speed up of backward compatibility test
+
+### Release 0.24.2
+
+Date: 15th March 2021
+
+What new:
+- Bug fixes and improvements to WSDL support
+
 ### Release 0.24.1
 
 Date: 17th March 2021
