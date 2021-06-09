@@ -9,9 +9,12 @@ Format of specmatic.json
 =======================
 
 - [Format of specmatic.json](#format-of-specmaticjson)
+    - [Sample specmatic.json](#sample-specmaticjson)
     - [Declare contracts](#declare-contracts)
     - [Declare pipeline details](#declare-pipeline-details)
     - [Declare environment configuration](#declare-environment-configuration)
+
+### Sample specmatic.json
 
 ```json
 {
