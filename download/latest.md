@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 30th May 2021
+Date: 9th June 2021
 
 What's new:
-- Added handling for imported WSDL and schema files
+- Added the ability to specify the specmatic.json configuration file path
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

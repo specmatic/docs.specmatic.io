@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.26.2
+
+Date: 30th May 2021
+
+What's new:
+- Added handling for imported WSDL and schema files
+
 ### Release 0.26.1
 
 Date: 6th May 2021
