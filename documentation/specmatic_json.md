@@ -4,8 +4,14 @@ title: specmatic.json
 parent: Documentation
 nav_order: 14
 ---
+
 Format of specmatic.json
 =======================
+
+- [Format of specmatic.json](#format-of-specmaticjson)
+    - [Declare contracts](#declare-contracts)
+    - [Declare pipeline details](#declare-pipeline-details)
+    - [Declare environment configuration](#declare-environment-configuration)
 
 ```json
 {
