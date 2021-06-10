@@ -126,7 +126,7 @@ You can even use commit hashes here if you wish to compare any other pair of com
 
 ## Handling Contracts in progress
 
-For contracts which are not finalized yet and are in progress, you can annotate them as @WIP. This annotation tag will skip backward compatibility check for the contract. 
+For contracts which are not finalized yet and are in progress, you can annotate them as @WIP. This annotation tag will skip backward compatibility check for the contract. It will also skip the contract while running contracts as tests.
 
 ```gherkin
 @WIP
