@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.26.3
+
+Date: 9th June 2021
+
+What's new:
+- Added the ability to specify the specmatic.json configuration file path
+
 ### Release 0.26.2
 
 Date: 30th May 2021
