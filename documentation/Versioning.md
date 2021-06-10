@@ -126,7 +126,7 @@ You can even use commit hashes here if you wish to compare any other pair of com
 
 ## Handling Contracts in progress
 
-For contracts which are not finalized yet and are in progress, you can annotate them as @WIP. This annotation tag will skip backward compatibility check for the contract. It will also skip the contract while running contracts as tests.
+For contracts which are not finalized yet and are in progress, you can annotate them as @WIP. This annotation tag will skip backward compatibility check for the contract. Note that while running specmatic in test mode, the scenario will still run to give feedback but it will not break the pipeline, instead it will be marked as aborted in the test results.
 
 ```gherkin
 @WIP
