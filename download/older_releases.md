@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.27.0
+
+Date: 10th June 2021
+
+What's new:
+- Added support for OpenAPI
+- Contracts referred to for generating values now get run only once across all contracts in specmatic.json, so for example if several contracts refer to auth.spec, it will execute auth.spec just once.
+
 ### Release 0.26.3
 
 Date: 9th June 2021
