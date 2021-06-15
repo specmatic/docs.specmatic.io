@@ -16,6 +16,7 @@ nav_order: 6
   - [Variable Length Arrays](#variable-length-arrays)
   - [Objects](#objects)
   - [Defining Types](#defining-types)
+  - [Defining Enums](#defining-enums)
   - [Defining Objects As Tables](#defining-objects-as-tables)
   - [Putting Value In Objects](#putting-value-in-objects)
   - [List Operator](#list-operator)
@@ -322,6 +323,42 @@ Scenario: Perform 2 nested operations
 ```
 
 This expresses the intent of the structures much more easily.
+
+### Defining Enums
+
+**Declaration Syntax**
+
+```gherkin
+Given enum <EnumName> <DataType - String Or Number Only> values <Comma separated values>
+```
+
+**Usage Patterns**
+
+Enums can appear as part of url parameters, headers and body.
+Below is an example showing various usage patterns.
+
+```gherkin
+Feature: Contract for employees API
+  Scenario: api call
+    Given enum EmployeeType (string) values contract,permanent,trainee
+    And enum Rating (number) values 1,2,3
+    And enum Organisation (string) values hr,tech,admin
+    And enum ClientType (string) values mobile,web
+    And pattern Employee
+    | name   | (string)       |
+    | id     | (number)       |
+    | type   | (EmployeeType) |
+    | rating | (Rating?)      |
+    When GET /(organisation:Organisation)/employees/?empType=(EmployeeType)
+    And request-header client (ClientType)
+    Then status 200
+    And response-body (Employee*)
+```
+
+**Nullable Enum**
+
+To mark an Enum as Nullable, suffix it with a question mark. Example: See "(Rating?)" in above spec.
+Note: Marking the Data Type (number and string) as nullable is not allowed within the context of Enum declaration.
 
 ### Defining Objects As Tables
 
@@ -690,7 +727,7 @@ The following is how we can put it in Specmatic:
 ```xml
 <cart>
   <id>(number)</id>
-  <productid qontract_occurs"multiple">(number)</productid>
+  <productid qontract_occurs="multiple">(number)</productid>
   <customerid>(number)</customerid>
 </cart>
 ```
@@ -721,7 +758,7 @@ Different node names, but the same tags inside.
 
 We can pull the type out like this:
 
-```xml
+```gherkin
 Given type Person
 """
 <SPECMATIC_TYPE>
