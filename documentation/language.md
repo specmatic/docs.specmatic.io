@@ -690,7 +690,7 @@ The following is how we can put it in Specmatic:
 ```xml
 <cart>
   <id>(number)</id>
-  <productid qontract_occurs"multiple">(number)</productid>
+  <productid qontract_occurs="multiple">(number)</productid>
   <customerid>(number)</customerid>
 </cart>
 ```
@@ -721,7 +721,7 @@ Different node names, but the same tags inside.
 
 We can pull the type out like this:
 
-```xml
+```gherkin
 Given type Person
 """
 <SPECMATIC_TYPE>
