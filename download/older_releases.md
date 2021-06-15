@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.27.1
+
+Date: 14th June 2021
+
+What's new:
+- Fixed edge case in XML backward compatibility
+- Added enum support in OpenAPI
+
 ### Release 0.27.0
 
 Date: 10th June 2021
