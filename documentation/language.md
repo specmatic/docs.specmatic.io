@@ -154,24 +154,29 @@ number, string, boolean and null are all used the same way.
 
 Note: The number type matches decimals numbers too.
 
-**String Length Restrictions**
+**Length Restrictions**
 
-minLength and maxLength can be set on Strings by declaring them as a type.
+String and Number support minLength and maxLength when they are declared as a type.
 
 ```
-Given type <Type Name> (string) minLength <min length> maxLength <max length>
+Given type <Type Name> <(string)/(number)> minLength <min length> maxLength <max length>
 ```
 
-Example: Below syntax shows how to define a String with length restrictions and then refer to it.
+Once declared they can be referred in any part of the specification.
+
+Example:
 
 ```gherkin    
-Feature: String with min and max length API
-
-Scenario: Upper case of a string
-  Given type MyStringParam (string) minLength 12 maxLength 18
-  When POST /uppercase?stringToConvert=(MyStringParam)
-  Then status 200
-  And response-body (MyStringParam)
+Feature: Contract for /employees API
+  Scenario: api call
+    Given type EmployeeName (string) minLength 6 maxLength 12
+    And type EmployeeId (number) minLength 8 maxLength 11
+    And type Employee
+    | name   | (EmployeeName) |
+    | id     | (EmployeeId)   |
+    When GET /employees
+    Then status 200
+    And response-body (Employee*)
 ```
 
 **datetime type**
