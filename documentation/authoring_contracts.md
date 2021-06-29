@@ -71,7 +71,7 @@ If you know what the request and response should look like, you can start by cre
 
 ### Create the sample file
 
-The file must contain a single json object using the [Specmatic stub file format](documentation/service_virtualisation.html#stub-file-format).
+The file must contain a single json object using the [Specmatic stub file format](service_virtualisation.html#stub-file-format).
 
 Here's a sample file that contains a request for the name of a customer by id:
 
