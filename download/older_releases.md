@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.28.0
+
+Date: 15th June 2021
+
+What's new:
+- Improved enum support, added support for enum in gherkin syntax
+
 ### Release 0.27.1
 
 Date: 14th June 2021

@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 15th June 2021
+Date: 30th June 2021
 
 What's new:
-- Improved enum support, added support for enum in gherkin syntax
+- Stub and Test commands now accept yaml files without requiring a gherkin wrapper
+- Fixed edge case in which when a contract referred to a contract which referred to a third contract (two levels of depth), the third contracts values were not cached
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
