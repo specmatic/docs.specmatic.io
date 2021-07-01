@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.28.2
+
+Date: 30th June 2021
+
+What's new:
+- Stub and Test commands now accept yaml files without requiring a gherkin wrapper
+- Fixed edge case in which when a contract referred to a contract which referred to a third contract (two levels of depth), the third contracts values were not cached
+
 ### Release 0.28.0
 
 Date: 15th June 2021
