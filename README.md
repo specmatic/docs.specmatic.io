@@ -16,5 +16,4 @@ Dev Containers
   * ```bundle exec jekyll serve``` to start server
     * Click on the "localhost:4000" link in terminal to launch it in browser at the ephemeral port
     * On my machine it is forwarded to localhost:4001
-    * However, when you click on navigation in left pane, the port goes back to 4000. This is an inconvenience. TODO: need to fix this
   * You can even push to GitHub inside this terminal because Dockerfile maps your keys
