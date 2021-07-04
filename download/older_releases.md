@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.28.3
+
+Date: 30th June 2021
+
+What's new:
+- Fixed support for null open api schema properties
+
 ### Release 0.28.2
 
 Date: 30th June 2021

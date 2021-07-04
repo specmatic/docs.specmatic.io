@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 30th June 2021
+Date: 4th July 2021
 
 What's new:
-- Fixed support for null open api schema properties
+- Bug fixes
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
