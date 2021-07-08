@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.28.5
+
+Date: 5th July 2021
+
+What's new:
+- Fixed: Test mode would accept a custom configuration file in the --config parameter, but would ignore it and look for specmatic.json
+
 ### Release 0.28.4
 
 Date: 4th July 2021

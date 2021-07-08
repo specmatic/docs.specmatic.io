@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 5th July 2021
+Date: 8th July 2021
 
 What's new:
-- Fixed: Test mode would accept a custom configuration file in the --config parameter, but would ignore it and look for specmatic.json
+- Fixed: JSON in string matching in form field values was broken
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
