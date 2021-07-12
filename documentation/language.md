@@ -575,7 +575,7 @@ The first type in the dictionary refers to the key. The key is always a string, 
 
 This would match the following JSON object:
 
-```JSON
+```json
 {
   "cart_id": 25,
   "order": {
