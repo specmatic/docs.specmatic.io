@@ -566,11 +566,30 @@ Given type ProductInfo
 | product_id | (number) |
 | quantity   | (number) |
 And type Order (dictionary number ProductInfo)
+And type Cart
+| cart_id | (number) |
+| order   | (Order)  |
 ```
 
 The first type in the dictionary refers to the key. The key is always a string, and the type refers to what should be in the string, which in this example is a number.
 
-The value will be another json object, containing the product info described above.
+This would match the following JSON object:
+
+```JSON
+{
+  "cart_id": 25,
+  "order": {
+    "10": {
+      "product_id": 174673,
+      "quantity": 5
+    },
+    "20": {
+      "product_id": 89374543,
+      "quantity": 1
+    },
+  }
+}
+```
 
 ## XML Syntax
 
