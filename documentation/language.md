@@ -557,23 +557,7 @@ Given type Operation
 
 Sometimes we don't know the exact keys and values, but we know what their types will be.
 
-For example, a json object of order details, where the keys are product ids and the values are json objects containing quantity and discount.
-
-We can express it like this:
-
-```gherkin
-Given type ProductInfo
-| product_id | (number) |
-| quantity   | (number) |
-And type Order (dictionary number ProductInfo)
-And type Cart
-| cart_id | (number) |
-| order   | (Order)  |
-```
-
-The first type in the dictionary refers to the key. The key is always a string, and the type refers to what should be in the string, which in this example is a number.
-
-This would match the following JSON object:
+For example:
 
 ```json
 {
@@ -590,6 +574,29 @@ This would match the following JSON object:
   }
 }
 ```
+
+This is a json object containing a cart. The `order` value is a JSON value, the structure of which is an `order id` and the `details of the product` being ordered.
+
+The `order id`s will always be numbers. But they will change from cart to cart, so we cannot hard code them in the contract. The product details data structure for each `order id` will always be a json object containing product_id and quantity.
+
+We can express the whole thing like this:
+
+```gherkin
+Given type ProductDetails
+| product_id | (number) |
+| quantity   | (number) |
+
+And type Order (dictionary number ProductDetails)
+
+And type Cart
+| cart_id | (number) |
+| order   | (Order)  |
+```
+
+There are 3 parts to this:
+1. We first declare the `ProductDetails` entry.
+2. Next we declare a dictionary named `Order`, in which all the keys are numbers, and the values are `ProductDetails`.
+3. We declare the enclosing `Cart` type, which contains the the `cart id` and the `order`.
 
 ## XML Syntax
 
