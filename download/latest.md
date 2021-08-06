@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 8th July 2021
+Date: 6th Aug 2021
 
 What's new:
-- Fixed: JSON in string matching in form field values was broken
+- Added support for x-www-form-urlencoded parameters in OpenAPI. This includes support for specifying json as the format of the contents of such a parameter.
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.28.6
+
+Date: 8th July 2021
+
+What's new:
+- Fixed: JSON in string matching in form field values was broken
+
 ### Release 0.28.5
 
 Date: 5th July 2021
