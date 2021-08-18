@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 6th Aug 2021
+Date: 18th Aug 2021
 
 What's new:
-- Added support for x-www-form-urlencoded parameters in OpenAPI. This includes support for specifying json as the format of the contents of such a parameter.
+- Bug fix: specmatic's backward compatibility check would hang when testing contract files larger than 64k
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

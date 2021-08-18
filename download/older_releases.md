@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.29.0
+
+Date: 6th Aug 2021
+
+What's new:
+- Added support for x-www-form-urlencoded parameters in OpenAPI. This includes support for specifying json as the format of the contents of such a parameter.
+
 ### Release 0.28.6
 
 Date: 8th July 2021
