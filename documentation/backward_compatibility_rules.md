@@ -6,7 +6,7 @@ nav_order: 19
 ---
 
 Backward Compatibility Rules
-----------------------------
+============================
 
 There are a few simple rules, and a couple of exceptions.
 
