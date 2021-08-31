@@ -15,6 +15,8 @@ At the time of writing, OpenAPI 3.1.x is new, and many tools are still catching 
 ## Writing Contracts
 [Stoplight Studio](https://stoplight.io/studio/) is a GUI editor for OpenAPI contracts. It is powerful and very easy to use. You can start with the free download, or even just the online version.
 
+Make sure to select OpenAPI 3.0.x when creating a new contract in Stoplight Studio.
+
 ## Stubbing Out Contracts
 You can use it to run contract-based stubs just like you would use a spec file. Simply use the name of the OpenAPI yaml file wherever you would normally use the spec file, in `specmatic.json`. You may also pass the yaml file to the Specmatic stub command — `specmatic stub api_order_v1.yaml`. Nothing else changes.
 
