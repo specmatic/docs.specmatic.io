@@ -6,7 +6,7 @@ nav_order: 20
 ---
 
 OpenAPI Support
----------------
+===============
 
 Specmatic supports OpenAPI 3.0.x
 
