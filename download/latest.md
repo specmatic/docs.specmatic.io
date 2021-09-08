@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 18th Aug 2021
+Date: 8th Sep 2021
 
 What's new:
-- Bug fix: specmatic's backward compatibility check would hang when testing contract files larger than 64k
+- Bug fix to WSDL support
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

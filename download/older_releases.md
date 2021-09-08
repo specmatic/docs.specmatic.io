@@ -5,6 +5,15 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.29.1
+
+Date: 18th Aug 2021
+
+What's new:
+- Bug fix: specmatic's backward compatibility check would hang when testing contract files larger than 64k
+
+Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
+
 ### Release 0.29.0
 
 Date: 6th Aug 2021
