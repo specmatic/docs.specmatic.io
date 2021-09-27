@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.29.2
+
+Date: 8th Sep 2021
+
+What's new:
+- Bug fix to WSDL support
+
 ### Release 0.29.1
 
 Date: 18th Aug 2021
