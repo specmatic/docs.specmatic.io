@@ -38,7 +38,7 @@ Systems interact with each other through several means. Specmatic hopes to addre
 
 * [**Contract First**](/faqs.html#what-is-contract-first) - With an API-first approach, you can use Consumer or Provider driven contracts, whatever suits your needs best.
   - Once a Contract is written, both Consumers and Providers can start development in parallel
-* **Human readable contracts** - Specmatic leverages **Gherkin**'s strength as a specification mechanism to define your services (APIs.) No additional language specific tooling required.
+* **Human readable contracts** - Specmatic leverages API Specification Standards such as [OpenAPI](https://www.openapis.org/) and adds contract testing, stubbing and compatibility check capabilities to those standards spec with **Gherkin** to help define your services (APIs).
   - Anyone 1.Developer (Consumer or Provider), 2.Architect, 3.Tech Leads, 4.Developer, 5.Tester can author the contracts
 * **Backward Compatibility Verification** - Contract vs Contract testing (cross version compatibility checks) etc.
 * **Service Virtualisation** - Run your contract in stub mode and isolate yourself from downstream dependencies (also be sure that your stubs are 100% compatible with the actual provider)

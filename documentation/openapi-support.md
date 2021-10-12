@@ -12,6 +12,12 @@ Specmatic supports OpenAPI 3.0.x
 
 At the time of writing, OpenAPI 3.1.x is new, and many tools are still catching up. The library we use — [swagger-parser](https://github.com/swagger-api/swagger-parser) — currently does not support it either. We will add support as soon as possible.
 
+## Getting Started
+
+Here is an exercise to get you started with both Specmatic and how to leverage OpenAPI Support in Specmatic - [Getting Started with OpenAPI](/documentation/getting_started_openapi)
+
+You can skip this and go to below sections if you are already acquainted with both OpenAPI and Specmatic.
+
 ## Writing Contracts
 [Stoplight Studio](https://stoplight.io/studio/) is a GUI editor for OpenAPI contracts. It is powerful and very easy to use. You can start with the free download, or even just the online version.
 
