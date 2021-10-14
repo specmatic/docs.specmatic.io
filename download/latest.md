@@ -12,6 +12,7 @@ Date: 14th Oct 2021
 
 What's new:
 - CORS support now accepts all headers
+- Specmatic now can dynamically generate a response using a script; the response is validated by the contract
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
