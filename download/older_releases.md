@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.31.0
+
+Date: 14th Oct 2021
+
+What's new:
+- CORS support now accepts all headers
+
 ### Release 0.30.1
 
 Date: 27th Sep 2021
