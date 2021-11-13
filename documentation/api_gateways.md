@@ -49,5 +49,110 @@ Specmatic reads the contract from standard output and proceeds from there onward
 
 Here's a sample of what the load.py file could look like.
 
-```python
+Supposting that
+* the API provider has an API /List, which the API gateway exposes as /customer/list
+* the API provider expects a header x-security, which is added by API gateway, and is not sent by the external consumer
+
+The contract might look like this:
+
+```yaml
+---
+openapi: "3.0.1"
+info:
+  title: "Customers"
+  version: "1"
+paths:
+  /List:
+    get:
+      summary: "List customers"
+      parameters:
+      - name: "x-security"
+        in: "header"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "List customesr"
+          content:
+            text/plain:
+              schema:
+                type: "array"
+                items:
+                  type: "number"
 ```
+
+The script below removes provider-only headers, and changes the provider paths to the ones accepted by the API gateway.
+
+```python
+#filename: load.py
+
+import yaml
+import os
+
+def cleanup_path(contract_file_name, path_map):
+    with open(contract_file_name) as f:
+        data = yaml.safe_load(f)
+
+    paths = data["paths"]
+
+    for pathName in path_map:
+        if pathName in paths:
+            newPathName = path_map[pathName]
+            data["paths"][newPathName] = data["paths"][pathName]
+            del data["paths"][pathName]
+
+
+    return data
+
+def remove_provider_only_headers(data):
+    for pathName in data["paths"]:
+        path = data["paths"][pathName]
+        for methodName in path:
+            method = path[methodName]
+            if methodName in ["post", "get"] and "parameters" in method:
+                params = method["parameters"]
+                deletable = [i for i in range(len(params)) if params[i]["$ref"].endswith("x-security")]
+                
+                for i in reversed(deletable):
+                    del params[i]
+    
+    return data
+
+contract_file_name = os.environ["CONTRACT_FILE"]
+
+path_map = {
+    "/List": "/customer/list"
+}
+
+contract = cleanup_path(contract_file_name, path_map)
+
+contract = remove_provider_only_headers(contract)
+
+print(yaml.dump(contract))
+```
+
+The contract actually seen by Specmatic after passing it through this script would be:
+
+```yaml
+```yaml
+---
+openapi: "3.0.1"
+info:
+  title: "Customers"
+  version: "1"
+paths:
+  /customer/list:
+    get:
+      summary: "List customers"
+      parameters: []
+      responses:
+        "200":
+          description: "List customesr"
+          content:
+            text/plain:
+              schema:
+                type: "array"
+                items:
+                  type: "number"
+``````
