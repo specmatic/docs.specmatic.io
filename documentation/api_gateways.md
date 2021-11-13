@@ -135,7 +135,6 @@ print(yaml.dump(contract))
 The contract actually seen by Specmatic after passing it through this script would be:
 
 ```yaml
-```yaml
 ---
 openapi: "3.0.1"
 info:
