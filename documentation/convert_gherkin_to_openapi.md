@@ -9,7 +9,7 @@ Convert Gherkin To OpenAPI
 
 OpenAPI is now the primary format supported by Specmatic for RESTful APIs.
 
-Specmatic can convert contracts using the older format to OpenAPI 3.0.x.
+Specmatic can convert contracts using the older format to OpenAPI 3.0.x, from 0.32.0 onwards.
 
 The command is `java -jar specmatic.jar gherkin-to-openapi /path/to/contract/file.spec`.
 
