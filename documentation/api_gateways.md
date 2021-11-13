@@ -73,7 +73,7 @@ paths:
           type: "string"
       responses:
         "200":
-          description: "List customesr"
+          description: "List customers"
           content:
             text/plain:
               schema:
@@ -148,7 +148,7 @@ paths:
       parameters: []
       responses:
         "200":
-          description: "List customesr"
+          description: "List customers"
           content:
             text/plain:
               schema:
