@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 27th Oct 2021
+Date: 13th Nov 2021
 
 What's new:
-- Bug fixes
+- Hooks implementation, and the stub_load_contract hook
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
