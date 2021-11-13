@@ -72,7 +72,8 @@ GEM
 
 PLATFORMS
   ruby
-  x86_64-linux-musl
+  universal-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   jekyll

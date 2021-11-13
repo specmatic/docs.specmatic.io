@@ -13,6 +13,7 @@ Format of specmatic.json
     - [Declare contracts](#declare-contracts)
     - [Declare pipeline details](#declare-pipeline-details)
     - [Declare environment configuration](#declare-environment-configuration)
+    - [Hooks](#hooks)
 
 ### Sample specmatic.json
 
@@ -52,6 +53,10 @@ Format of specmatic.json
         "password": "PaSsWoRd"
       }
     }
+  },
+
+  "hooks": {
+    "hook_name": "command"
   }
 }
 ```
@@ -150,3 +155,16 @@ The environments key in this example contains configuration for the `staging` en
 Each environment configuration can contain
 - `baseurls` - needed when running contracts as test as part of [authentication](documentation/../authentication.html)
 - `variables` - these values are plugged into the Examples rows of an auth contract for [authentication](documentation/../authentication.html), or even when running regular contract tests
+
+### Hooks
+
+A hook is simply a command that can run on the Terminal or Command Prompt.
+
+```json
+  "hooks": {
+    "stub_load_contract": "python load.py"
+  }
+```
+
+In the above snippet, `stub_load_contract` is the hook name. "python load.py" runs and is passed the contract file name just before a contract is loaded. The hook can modify the contract and post it to standard output.
+
