@@ -5,6 +5,11 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.33.1
+
+What's new:
+- Hooks implementation, and the stub_load_contract hook
+
 ### Release 0.31.1
 
 Date: 27th Oct 2021

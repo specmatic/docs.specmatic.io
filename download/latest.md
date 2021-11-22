@@ -11,7 +11,8 @@ Release {{ site.latest_release }}
 Date: 13th Nov 2021
 
 What's new:
-- Hooks implementation, and the stub_load_contract hook
+- Lots of conversion-related bug fixes
+- Improvements to logging
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
