@@ -13,6 +13,7 @@ Date: 13th Nov 2021
 What's new:
 - Lots of conversion-related bug fixes
 - Improvements to logging
+- Fixed contract test names in legacy junit output
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
