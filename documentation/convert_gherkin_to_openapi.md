@@ -11,7 +11,7 @@ OpenAPI is now the primary format supported by Specmatic for RESTful APIs.
 
 Specmatic can convert contracts using the older format to OpenAPI 3.0.x, from 0.32.0 onwards.
 
-The command is `java -jar specmatic.jar gherkin-to-openapi /path/to/contract/file.spec`.
+The command is `java -jar specmatic.jar to-openapi /path/to/contract/file.spec`.
 
 For example, here's a contract for an API that generates a random number.
 
@@ -28,7 +28,7 @@ Feature: Random API
 
 Start up Command Prompt (Windows) or Terminal (MacOS). cd into the directory containing this file.
 
-Convert it to yaml using `java -jar specmatic.jar gherkin-to-openapi ./random.spec`
+Convert it to yaml using `java -jar specmatic.jar to-openapi ./random.spec`
 
 NOTE: remember to use the path to specmatic.jar in the above command.
 
