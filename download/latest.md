@@ -8,12 +8,13 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 13th Nov 2021
+Date: 8th Dec 2021
 
 What's new:
-- Lots of conversion-related bug fixes
-- Improvements to logging
-- Fixed contract test names in legacy junit output
+- Samples command supports yaml
+- Improvements to contract testing
+- Improved error messages
+- Bug fixes
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

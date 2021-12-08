@@ -5,6 +5,15 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.34.0
+
+Date: 13th Nov 2021
+
+What's new:
+- Lots of conversion-related bug fixes
+- Improvements to logging
+- Fixed contract test names in legacy junit output
+
 ### Release 0.33.1
 
 What's new:
