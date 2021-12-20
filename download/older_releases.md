@@ -5,6 +5,16 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.34.1
+
+Date: 8th Dec 2021
+
+What's new:
+- Samples command supports yaml
+- Improvements to contract testing
+- Improved error messages
+- Bug fixes
+
 ### Release 0.34.0
 
 Date: 13th Nov 2021
