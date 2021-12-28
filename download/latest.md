@@ -8,10 +8,9 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 20th Dec 2021
+Date: 28th Dec 2021
 
 What's new:
-- Support for simpleType in WSDLs
 - Bug fixes
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)

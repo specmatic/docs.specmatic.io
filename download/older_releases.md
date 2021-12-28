@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.35.0
+
+Date: 20th Dec 2021
+
+What's new:
+- Support for simpleType in WSDLs
+- Bug fixes
+
 ### Release 0.34.1
 
 Date: 8th Dec 2021
