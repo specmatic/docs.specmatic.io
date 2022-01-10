@@ -1,7 +1,7 @@
 remote_theme: pmarsceill/just-the-docs
 markdown: kramdown
 title: "Specmatic"
-latest_release: 0.36.1
+latest_release: 0.37.0
 
 qontract_cmd: "java -jar /path/to/specmatic"
 
