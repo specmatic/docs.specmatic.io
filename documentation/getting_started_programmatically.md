@@ -278,3 +278,7 @@ A closer look at above test.
 To run this test, right click (or use JUnit shortcuts) and run it just like a unit test.
 
 Following the test-first style approach, we haven't written a pet store API yet, so the contract test will fail. We now need to add a pet store API that passes the contract tests. We leave this as an exercise for the reader.
+
+At the moment, we have provided a contract, but no data. The contract tests will therefore send random input to your service. Try to run the contract tests to see this in action.
+
+To see how to provided test data for use with the contract, take a look at this [sample project](https://github.com/znsio/specmatic-order-api).
