@@ -97,7 +97,7 @@ public class PetStoreConsumerTest {
     public static void setUP() {
         // Path to the contract
         List<String> contracts = new ArrayList<String>();
-        contracts.add("/path/to/service/contract/petstore.spec");
+        contracts.add("/path/to/service/contract/service.spec");
 
         // Path to stub data directory
         List<String> stubDataDir = new ArrayList<String>();
@@ -221,12 +221,29 @@ Add JUnit Jar dependency. This lets you run the contract as a JUnit 5 test.
 ```
 
 Specmatic leverages testing Frameworks to let you run contract as a test.
+
+Also add the junit5 dependency so that we can use the BeforeAll and AfterAll annotations.
+
+```
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.8.2</version>
+    <scope>test</scope>
+</dependency>
+```
+
 At the moment JUnit 5 is supported. Each Scenario in translated to a junit test so that you get IDE support to run your contract.
 
-Add below test to your Provider.
+Add below test in your Provider project.
 
 ```java
-import run.spec.test.specJUnitSupport;
+package com.petstore.test;
+
+import in.specmatic.test.SpecmaticJUnitSupport;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.File;
 
@@ -235,13 +252,13 @@ public class PetStoreContractTest extends SpecmaticJUnitSupport {
 
     @BeforeAll
     public static void setUp() {
-        File contract = new File("contract/service.spec");
+        File contract = new File("/path/to/service.spec");
         System.setProperty("contractPaths", contract.getAbsolutePath());
         System.setProperty("host", "localhost");
         System.setProperty("port", "8080");
 
         //Optional
-        context = SpringApplication.run(Application.class);
+        //context = SpringApplication.run(Application.class);
     }
 
     @AfterAll
