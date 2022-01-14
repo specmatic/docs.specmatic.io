@@ -17,13 +17,28 @@ Add jar dependency. Notice this is test only scope. There is no need to ship Spe
 
 ```
 <dependency>
-    <groupId>run.spec</groupId>
+    <groupId>in.specmatic</groupId>
     <artifactId>specmatic-core</artifactId>
     <version>{{ site.latest_release }}</version>
     <scope>test</scope>
 </dependency>
 ```
 
+Also add the following dependencies:
+
+```
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-web</artifactId>
+    <version>5.3.14</version>
+</dependency>
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.8.2</version>
+    <scope>test</scope>
+</dependency>
+```
 ---
 
 ### Author a contract
@@ -63,17 +78,17 @@ package com.petstore.test;
 
 import com.petstore.demo.PetStoreConsumer;
 import com.petstore.demo.model.Pet;
+import in.specmatic.stub.ContractStub;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import run.spec.stub.ContractStub;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static in.specmatic.stub.API.createStubFromContracts;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static run.spec.stub.API.*;
 
 public class PetStoreConsumerTest {
     private static ContractStub petStoreStub;
@@ -82,7 +97,7 @@ public class PetStoreConsumerTest {
     public static void setUP() {
         // Path to the contract
         List<String> contracts = new ArrayList<String>();
-        contracts.add("/path/to/service.spec");
+        contracts.add("/path/to/service/contract/petstore.spec");
 
         // Path to stub data directory
         List<String> stubDataDir = new ArrayList<String>();
@@ -115,6 +130,49 @@ Let us take a closer look at the above test.
 * The assert section verifies that PetStoreConsumer is able to translate the response to Pet object
 
 At this point you will see compilation errors because we do not have PetStoreConsumer and Pet classes. Let us define those.
+
+```java
+package com.petstore.demo.model;
+
+public class Pet {
+    private Integer id;
+    private String name;
+    private String type;
+    private String status;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
+```
 
 ```java
 package com.petstore.demo;
@@ -155,7 +213,7 @@ Add JUnit Jar dependency. This lets you run the contract as a JUnit 5 test.
 
 ```
 <dependency>
-    <groupId>run.spec</groupId>
+    <groupId>in.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
     <version>{{ site.latest_release }}</version>
     <scope>test</scope>
