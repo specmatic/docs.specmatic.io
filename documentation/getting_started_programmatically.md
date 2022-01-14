@@ -97,7 +97,7 @@ public class PetStoreConsumerTest {
     public static void setUP() {
         // Path to the contract
         List<String> contracts = new ArrayList<String>();
-        contracts.add("/path/to/service/contract/service.spec");
+        contracts.add("/path/to/service/contract/service.yaml");
 
         // Path to stub data directory
         List<String> stubDataDir = new ArrayList<String>();
@@ -125,7 +125,7 @@ public class PetStoreConsumerTest {
 
 Let us take a closer look at the above test.
 * The objective of this test is to help us build a PetStoreConsumer (API Client) class.
-* The setUP and tearDown methods are responsible for starting a Specmatic Stub server (based on the service.spec) and stopping it respectively.
+* The setUP and tearDown methods are responsible for starting a Specmatic Stub server (based on the service.yaml) and stopping it respectively.
 * In the setUP section, we pass the expectation json file to the stub. This tells it to expect a call to /pets/10, to which it must return the given pet info.
 * The assert section verifies that PetStoreConsumer is able to translate the response to Pet object
 
@@ -252,7 +252,7 @@ public class PetStoreContractTest extends SpecmaticJUnitSupport {
 
     @BeforeAll
     public static void setUp() {
-        File contract = new File("/path/to/service.spec");
+        File contract = new File("/path/to/service.yaml");
         System.setProperty("contractPaths", contract.getAbsolutePath());
         System.setProperty("host", "localhost");
         System.setProperty("port", "8080");

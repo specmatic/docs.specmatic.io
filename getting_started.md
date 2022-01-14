@@ -39,13 +39,13 @@ Let us try specifying the above interaction as a contract.
 
 Let us start with the Consumer in this example. We will be running a Stub / Mock Server based on the above contract file.
 
-    UI (Consumer)         Specmatic Stub <- service.spec
+    UI (Consumer)         Specmatic Stub <- service.yaml
           | --- getPetById ---> |
           | <-- {Pet JSON} ---- |
 
-To spin up a stub server with the service.spec we authored earlier, run below command.
+To spin up a stub server with the service.yaml we authored earlier, run below command.
 
-    specmatic stub "<base-dir>/petstore/specmatic/service.spec" --host="localhost" --port="8000"
+    specmatic stub "<base-dir>/petstore/specmatic/service.yaml" --host="localhost" --port="8000"
 
 The command has defaults and necessary help to guide you through.
 
@@ -66,13 +66,13 @@ We can now start consumer development against this stub without any dependency o
 
 Specmatic runs Contract Tests on API to make sure it adheres to the contract.
 
-    service.spec -> Specmatic Test        API (Provider)
+    service.yaml -> Specmatic Test        API (Provider)
                             | --- getPetById ---> |
                             | <-- {Pet JSON} ---- |
 
-Below command runs service.spec as a contract test against the provider.
+Below command runs service.yaml as a contract test against the provider.
 
-    specmatic test "<base-dir>/petstore/contract/service.spec" --host="localhost" --port="8000"
+    specmatic test "<base-dir>/petstore/contract/service.yaml" --host="localhost" --port="8000"
     
 You should see below error message.
 
