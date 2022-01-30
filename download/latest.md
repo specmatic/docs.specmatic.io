@@ -8,10 +8,12 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 28th Dec 2021
+Date: 30th Jan 2022
 
 What's new:
-- Bug fixes
+- Support for XML in OpenAPI
+- Support for externalising type definitions
+- Improvements to logging
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
