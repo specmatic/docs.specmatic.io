@@ -15,6 +15,8 @@ Documentation
 
 ## Using the tools
 
+- Getting started quickly
+
 ### Writing contracts
 - How to write contracts (using Stoplight Studio for OpenAPI)
 - Use of OpenAPI features not yet supported by Stoplight Studio, including dictionaries, xml support
