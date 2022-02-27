@@ -11,6 +11,8 @@ Documentation
 - Contract First
 - What is integration hell
 - Contract Driven Development as a solution to integration hell
+  - What is contract testing
+  - What is intelligent service virtualisation
 - Independent development and deployment
 
 ---
@@ -22,15 +24,16 @@ Documentation
 ---
 
 ## Writing Contracts
-- How to write contracts (using Stoplight Studio for OpenAPI)
-- Migrating legacy Gherkin to OpenAPI
+- Stoplight Studio for writing OpenAPI contracts — [Stoplight Studio](https://stoplight.io/studio/) is a powerful, free GUI provided by [Stoplight](https://stoplight.io) for writing OpenAPI contracts.
+- [Migrating legacy Gherkin to OpenAPI](/documentation/convert_gherkin_to_openapi.html)
+- Migrating Postman collections
+- Using Specmatic proxy
 - Use of OpenAPI features not yet supported by Stoplight Studio, including dictionaries, xml support
 
 ---
 
 ## Service Virtualisation For Consumers
-- Review of "intelligent service virtualisation"
-- Specmatic setup
+- Setup Specmatic in the project
   - In Java projects
     - Instructions for Maven dependencies (include instructions on projects that use Spring, which has conflicting versions of kotlin / JUnit)
     - Instructions for Gradle dependencies
@@ -38,7 +41,7 @@ Documentation
   - Node projects (for now, just a link to the node project)
   - Instructions for non-Java projects (e.g. PHP)
   - Setting up specmatic.json
-- How to do service virtualisation
+- Service virtualisation techniques
   - Static service virtualisation
   - Dynamic service virtualisation
   - With contracts in the repo
@@ -48,8 +51,7 @@ Documentation
 ---
 
 ## Contract Tests For Providers
-- Review of "contract testing"
-- Specmatic project setup
+- Setup Specmatic in the project
   - In Java projects
     - Instructions for Maven dependencies (include instructions on projects that use Spring, which has conflicting versions of kotlin / JUnit)
     - Instructions for Gradle dependencies
