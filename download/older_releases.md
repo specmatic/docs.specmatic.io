@@ -5,6 +5,15 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.38.0
+
+Date: 30th Jan 2022
+
+What's new:
+- Support for XML in OpenAPI
+- Support for externalising type definitions
+- Improvements to logging
+
 ### Release 0.37.0
 
 Date: 28th Dec 2021
