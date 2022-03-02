@@ -8,7 +8,7 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 27th Feb 2022
+Date: 2nd March 2022
 
 What's new:
 - Improvement to error message when the request in a stub does not match it's contract
