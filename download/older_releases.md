@@ -5,6 +5,17 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.39.0
+
+Date: 27th Feb 2022
+
+What's new:
+- Added support for query and header API keys
+- Added support for multipart/form-data
+- Added first version of implementation of dependency graph
+- Improved error messages
+- Improved names of OpenAPI operations in contract tests
+
 ### Release 0.38.0
 
 Date: 30th Jan 2022

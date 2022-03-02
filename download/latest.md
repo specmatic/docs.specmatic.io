@@ -11,11 +11,7 @@ Release {{ site.latest_release }}
 Date: 27th Feb 2022
 
 What's new:
-- Added support for query and header API keys
-- Added support for multipart/form-data
-- Added first version of implementation of dependency graph
-- Improved error messages
-- Improved names of OpenAPI operations in contract tests
+- Improvement to error message when the request in a stub does not match it's contract
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
