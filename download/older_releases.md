@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.39.1
+
+Date: 2nd March 2022
+
+What's new:
+- Improvement to error message when the request in a stub does not match it's contract
+
 ### Release 0.39.0
 
 Date: 27th Feb 2022

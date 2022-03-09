@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 2nd March 2022
+Date: 9th March 2022
 
 What's new:
-- Improvement to error message when the request in a stub does not match it's contract
+- Improvements to error messages
+- Ability to specify the git command path using an environment variable
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
