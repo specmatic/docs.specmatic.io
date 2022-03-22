@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.40.0
+
+Date: 9th March 2022
+
+What's new:
+- Improvements to error messages
+- Ability to specify the git command path using an environment variable
+
 ### Release 0.39.1
 
 Date: 2nd March 2022

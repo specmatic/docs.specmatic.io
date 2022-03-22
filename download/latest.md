@@ -8,11 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 9th March 2022
+Date: 22nd March 2022
 
 What's new:
-- Improvements to error messages
-- Ability to specify the git command path using an environment variable
+- Improvements to stub error messages
+- Improvement to bundle command, allows stubs to be loaded from alternate base within the same remote repo
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
