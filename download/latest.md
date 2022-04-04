@@ -8,11 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 22nd March 2022
+Date: 4th April 2022
 
 What's new:
-- Improvements to stub error messages
-- Improvement to bundle command, allows stubs to be loaded from alternate base within the same remote repo
+- Fleshed out ability to run contract tests from a self-contained OpenAPI contract containing examples
+- Improvements and bug-fixes to the use of personal access token for azure authentication
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

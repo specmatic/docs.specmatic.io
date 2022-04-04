@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.41.0
+
+Date: 22nd March 2022
+
+What's new:
+- Improvements to stub error messages
+- Improvement to bundle command, allows stubs to be loaded from alternate base within the same remote repo
+
 ### Release 0.40.0
 
 Date: 9th March 2022
