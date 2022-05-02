@@ -8,11 +8,15 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 4th April 2022
+Date: 2nd May 2022
 
 What's new:
-- Fleshed out ability to run contract tests from a self-contained OpenAPI contract containing examples
-- Improvements and bug-fixes to the use of personal access token for azure authentication
+- Contract test request payload can be specified in it's entirety instead of breaking it up into it's params
+- Improvements to loading externalized xsd from within WSDL
+- Shallow clone when loading contracts
+- Bug fixes to handling of azure auth using a personal access token
+- Improved backward compatibility messages
+- Other improved error messages
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

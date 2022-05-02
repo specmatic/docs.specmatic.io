@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.42.0
+
+Date: 4th April 2022
+
+What's new:
+- Fleshed out ability to run contract tests from a self-contained OpenAPI contract containing examples
+- Improvements and bug-fixes to the use of personal access token for azure authentication
+
 ### Release 0.41.0
 
 Date: 22nd March 2022
