@@ -5,6 +5,18 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.43.0
+
+Date: 2nd May 2022
+
+What's new:
+- Contract test request payload can be specified in it's entirety instead of breaking it up into it's params
+- Improvements to loading externalized xsd from within WSDL
+- Shallow clone when loading contracts
+- Bug fixes to handling of azure auth using a personal access token
+- Improved backward compatibility messages
+- Other improved error messages
+
 ### Release 0.42.0
 
 Date: 4th April 2022
