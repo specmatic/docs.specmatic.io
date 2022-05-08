@@ -8,7 +8,7 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 2nd May 2022
+Date: 8th May 2022
 
 What's new:
 - Support for WIP tag in OpenAPI
