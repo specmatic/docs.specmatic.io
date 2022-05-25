@@ -35,8 +35,6 @@ Well, the contract spec is typically stored in a central repository, which is ma
 
 The same contract spec that is used for contract testing is also used by the API consumers for [service virtualisation](/documentation/service_virtualisation.html). Since the consumer sets expectations on its stubs that match the contract, and the provider API is built to adhere to the same contract, the integration between the consumer and provider stays intact.
 
-Additionally, the contract spec is human-readable. So contracts can be circulated around by email, chat, etc while the API design is under discussion.
-
 ### IMPORTANT: Using Stub As A Sample Application API
 
 We try to provide examples that you can run. Contract tests target a provider API. So the examples in this document need a sample API application to run against. Instead of asking you to download some such sample API code, and setup up a tool chain that you may be unfamiliar with to build and run it, we are going to take a shortcut.
