@@ -3,7 +3,7 @@ markdown: kramdown
 title: "Specmatic"
 latest_release: 0.44.0
 
-qontract_cmd: "java -jar /path/to/specmatic"
+spec_cmd: "java -jar /path/to/specmatic.jar"
 
 aux_links:
   "Specmatic on GitHub":
