@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Language
+title: Gherkin Language
 parent: Documentation
 nav_order: 6
 ---
