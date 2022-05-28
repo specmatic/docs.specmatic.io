@@ -9,6 +9,8 @@ search_exclude: true
 
 Getting Started
 * [5 minute quick start](/documentation/getting_started_programmatically.html)
+
+Using Specmatic In Your Project
 * [Getting Started Programmatically (Java)](/documentation/getting_started_programmatically.html)
 * [Javascript](/documentation/specmatic_for_javascript.html)
 * [Specmatic commandline tool](/documentation/command_line.html)
