@@ -10,8 +10,8 @@ Contract Tests
 - [Contract Tests](#contract-tests)
     - [About Contract Testing](#about-contract-testing)
     - [Contract Testing By Adding Examples](#contract-testing-by-adding-examples)
+    - [When The Application Does Not Match The Contract](#when-the-application-does-not-match-the-contract)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
-    - [Homework](#homework)
 
 [Read here about contract testing and where Specmatic fits in](/contract_testing.html).
 
@@ -167,6 +167,14 @@ There are 4 tests: success, failure, new-employee, updated-employee. You will th
 
 A name represents a single contract test. All named examples by that name comprise a single contract test. For each contract test name, an HTTP request is formulated by combining the examples having name in the API request, and sent to the API. When a response is returned, it is compared with the response containing an example of the same name.
 
+### When The Application Does Not Match The Contract
+
+The above contract matches the dummy API precisely.
+
+Once you are able to run the contract test and see 4 successful tests running, try modifying some of the datatypes and see the different kinds of error responses you get.
+
+Note: If you modify the request, it's possible that the application will respond with a 404 or 500, and you may not see anything more interesting than a mismatched status. But if you modify any response structure in the contract, leaving the request intact, e.g. change an integer to a string or vice versa, the application will send recognize the requests, send response back that do not match the contract which you have modified, and you will see interesting error feedback.
+
 ### Examples For WSDL Contracts
 
 A WSDL contract cannot hold examples within the contract. The format does not support it.
@@ -188,11 +196,3 @@ Feature: WSDL Companion file
 ```
 
 (REQUEST-BODY) contains the request body in a single line, SOAPAction contains the value value of the SOAPAction header, and additional columns must be included for each header sent by the SOAP service.
-
-### Homework
-
-The above contract matches the dummy API precisely.
-
-Once you are able to run the contract test and see 4 successful tests running, try modifying some of the datatypes and see the different kinds of error responses you get.
-
-Note: If you modify the request, it's possible that the application will respond with a 404 or 500, and you may not see anything more interesting than a mismatched status. But if you modify any response structure in the contract, leaving the request intact, e.g. change an integer to a string or vice versa, the application will send recognize the requests, send response back that do not match the contract which you have modified, and you will see interesting error feedback.
