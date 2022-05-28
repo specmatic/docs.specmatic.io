@@ -10,6 +10,7 @@ Contract Tests
 - [Contract Tests](#contract-tests)
     - [About Contract Testing](#about-contract-testing)
     - [Contract Testing By Adding Examples](#contract-testing-by-adding-examples)
+    - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
     - [Homework](#homework)
 
 [Read here about contract testing and where Specmatic fits in](/contract_testing.html).
@@ -165,6 +166,28 @@ Here's what is happening.
 There are 4 tests: success, failure, new-employee, updated-employee. You will the find these names in the named examples across the different APIs in the contract. Take a moment to look for them in the contract.
 
 A name represents a single contract test. All named examples by that name comprise a single contract test. For each contract test name, an HTTP request is formulated by combining the examples having name in the API request, and sent to the API. When a response is returned, it is compared with the response containing an example of the same name.
+
+### Examples For WSDL Contracts
+
+A WSDL contract cannot hold examples within the contract. The format does not support it.
+
+We can instead add examples to a companion file. The companion file should be in the same directory as the wsdl file. It would look like this:
+
+```gherkin
+Feature: WSDL Companion file
+  Background:
+    Given wsdl ./soap-contract-file.wsdl
+
+  Scenario: Add user
+    When POST /soap-service-path
+    Then status 200
+
+    Examples:
+    | (REQUEST-BODY)        | SOAPAction | Any other headers... |
+    | <soapenv>...</soapenv> | "/addUser" | header values        |
+```
+
+(REQUEST-BODY) contains the request body in a single line, SOAPAction contains the value value of the SOAPAction header, and additional columns must be included for each header sent by the SOAP service.
 
 ### Homework
 
