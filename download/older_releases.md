@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.44.0
+
+Date: 8th May 2022
+
+What's new:
+- Support for WIP tag in OpenAPI
+- Improvements to error messages
+
 ### Release 0.43.0
 
 Date: 2nd May 2022
