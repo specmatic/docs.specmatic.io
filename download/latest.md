@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 18th June 2022
+Date: 2nd July 2022
 
 What's new:
-- Minor improvements
+- Added junit xml report generation for backward compatibility tests
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
