@@ -71,6 +71,7 @@ GEM
     unicode-display_width (1.7.0)
 
 PLATFORMS
+  aarch64-linux
   ruby
   universal-darwin-20
   universal-darwin-21

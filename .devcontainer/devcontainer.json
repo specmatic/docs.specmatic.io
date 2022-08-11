@@ -1,34 +1,29 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.241.1/containers/jekyll
 {
-  "name": "Github Pages",
+	"name": "Jekyll",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			// Update 'VARIANT' to pick a Debian OS version: bullseye, buster
+			// Use bullseye when on local arm64/Apple Silicon.
+			"VARIANT": "bullseye",
+			// Enable Node.js: pick the latest LTS version
+			"NODE_VERSION": "lts/*"
+		}	
+	},
 
-  "context": "..",
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+		// Jekyll server
+		4000,
+		// Live reload server
+		35729
+	],
 
-  "dockerFile": "../Dockerfile",
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "sh .devcontainer/post-create.sh",
 
-  "runArgs": [
-    "-u", "jekyll",
-    "-v", "${env:HOME}${env:USERPROFILE}/.ssh:/root/.ssh-localhost:ro",
-    "--publish", "4000"
-  ],
-
-  "remoteUser": "jekyll",
-
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
-  },
-
-  "appPort": [4000],
-
-  "extensions": [
-    "redhat.vscode-yaml",
-    "sissel.shopify-liquid",
-    "ginfuru.ginfuru-vscode-jekyll-syntax",
-    "ginfuru.vscode-jekyll-snippets",
-    "yzhang.markdown-all-in-one",
-    "davidanson.vscode-markdownlint",
-    "ecmel.vscode-html-css",
-    "aeschli.vscode-css-formatter",
-    "streetsidesoftware.code-spell-checker",
-    "ms-vscode.wordcount"
-  ]
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
 }
