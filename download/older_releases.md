@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.46.0
+
+Date: 2nd July 2022
+
+What's new:
+- Added junit xml report generation for backward compatibility tests
+
 ### Release 0.45.0
 
 Date: 18th June 2022

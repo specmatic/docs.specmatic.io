@@ -8,10 +8,14 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 2nd July 2022
+Date: 16th Aug 2022
 
 What's new:
-- Added junit xml report generation for backward compatibility tests
+- Added redeclared command
+- Added support for negative testing
+- Added tests for the bundle command
+- Upgraded to tor 2.0
+- Made header matching case-insensitive
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
