@@ -16,7 +16,7 @@ There are a few simple rules, and a couple of exceptions.
 
 ## Requests
 
-Do not add mandatories.
+Do not add mandatory keys and / or make values non-nullable for existing keys.
 
 | Operation | Verdict | Reason |
 |-----------|---------|--------|
@@ -25,11 +25,11 @@ Do not add mandatories.
 | Remove a mandatory key | **incompatible** (exception) | *EXCEPTION* Consumers can send the key but server will henceforth ignore it, which could break consumers assumptions. |
 | Remove an optional key | **incompatible** (exception) | If consumers choose to send the key, the server will now ignore it, which could break consumers assumptions. |
 | Optional key becomes mandatory | **incompatible** | Consumers who were not sending this key before will now be expected to send it. |
-| Mandatory key becomes optional | compatible | Consumers who were not sending this key before will now be expected to send it. |
+| Mandatory key becomes optional | compatible | Consumers who were sending this key before can either continue sending it or stop sending it. |
 
 ## Responses
 
-Do not remove mandatories.
+Do not remove mandatory keys and / or make values nullable for existing gkeys.
 
 | Operation | Verdict | Reason |
 |-----------|---------|--------|
