@@ -11,11 +11,13 @@ Release {{ site.latest_release }}
 Date: 16th Aug 2022
 
 What's new:
-- Added redeclared command
-- Added support for negative testing
-- Added tests for the bundle command
-- Upgraded to tor 2.0
-- Made header matching case-insensitive
+- Improvements to negative testing
+- Library upgrades of swagger-parser and ktor to latest
+- Added support for default responses
+- Fixed loading of remote refs
+- Fix to sse support
+- Improvement to reading stub with syntax issues
+- Fix to the backward compatibility check
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

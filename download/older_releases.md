@@ -5,6 +5,17 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.47.0
+
+Date: 16th Aug 2022
+
+What's new:
+- Added redeclared command
+- Added support for negative testing
+- Added tests for the bundle command
+- Upgraded to tor 2.0
+- Made header matching case-insensitive
+
 ### Release 0.46.0
 
 Date: 2nd July 2022
