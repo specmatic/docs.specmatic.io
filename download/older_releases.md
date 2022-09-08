@@ -5,6 +5,19 @@ parent: Download
 nav_order: 2
 ---
 
+### Release 0.48.0
+
+Date: 5th Sep 2022
+
+What's new:
+- Improvements to negative testing
+- Library upgrades of swagger-parser and ktor to latest
+- Added support for default responses
+- Fixed loading of remote refs
+- Fix to sse support
+- Improvement to reading stub with syntax issues
+- Fix to the backward compatibility check
+
 ### Release 0.47.0
 
 Date: 16th Aug 2022

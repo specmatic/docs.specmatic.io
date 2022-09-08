@@ -8,16 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 16th Aug 2022
+Date: 8th Sep 2022
 
 What's new:
-- Improvements to negative testing
-- Library upgrades of swagger-parser and ktor to latest
-- Added support for default responses
-- Fixed loading of remote refs
-- Fix to sse support
-- Improvement to reading stub with syntax issues
-- Fix to the backward compatibility check
+- Improvements to example and error handling when loading an OpenAPI contract
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
