@@ -27,7 +27,7 @@ Executing Contracts
 * [Troubleshooting](/documentation/troubleshooting.html)
 
 Authoring Contracts
-* [Authoring Contracts Yourself](/documentation/../authoring_contracts.html)
+* [Authoring Contracts Yourself](/documentation/authoring_contracts.html)
 * [Stoplight Studio](https://stoplight.io/studio)
 * [Convert Legacy Gherkin To OpenAPI](/documentation/convert_gherkin_to_openapi.html)
 * [Backward compatibility rules](/documentation/backward_compatibility_rules.html)
