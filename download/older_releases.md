@@ -5,6 +5,11 @@ parent: Download
 nav_order: 2
 ---
 
+Date: 8th Sep 2022
+
+What's new:
+- Improvements to example and error handling when loading an OpenAPI contract
+
 ### Release 0.48.0
 
 Date: 5th Sep 2022
