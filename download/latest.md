@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 8th Sep 2022
+Date: 11th Sep 2022
 
 What's new:
-- Improvements to example and error handling when loading an OpenAPI contract
+- Added first-class support for security schemas
+- Fixed bug causing generation of too many contract tests
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
