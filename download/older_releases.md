@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.50.0
+
+What's new:
+- Added first-class support for security schemas
+- Fixed bug causing generation of too many contract tests
+
+## Release 0.49.0
+
 Date: 8th Sep 2022
 
 What's new:

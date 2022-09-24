@@ -11,8 +11,8 @@ Release {{ site.latest_release }}
 Date: 11th Sep 2022
 
 What's new:
-- Added first-class support for security schemas
-- Fixed bug causing generation of too many contract tests
+- Security schemas in contract tests now read from examples
+- Added support for nillable nodes in WSDL
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
