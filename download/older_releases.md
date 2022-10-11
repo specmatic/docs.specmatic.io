@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.51.0
+
+Date: 11th Sep 2022
+
+What's new:
+- Security schemas in contract tests now read from examples
+- Added support for nillable nodes in WSDL
+
 ## Release 0.50.0
 
 What's new:
