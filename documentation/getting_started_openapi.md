@@ -233,3 +233,105 @@ Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 * Now when you run a curl to get Product Id 0, you will always get the 404 NOT FOUND response that you have added in JSON file.
 * You can only stub the errors that are already in OpenAPI spec. Example: Specmatic will not allow you to stub a 403 response until you add it to the "products.yaml" as a possible response.
+
+## OpenAPI File Upload and Multipart Forms
+
+The support is as per [OpenAPI specification standards for file upload](https://swagger.io/docs/specification/describing-request-body/file-upload/).
+
+Here is a sample OpenAPI File which is posting an order with a file field.
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+paths:
+  /orders:
+    post:
+      summary: create order
+      description: upload order file
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - "orderId"
+                - "userId"
+                - "fileName"
+              properties:
+                orderId:
+                  type: integer
+                userId:
+                  type: integer
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Says hello
+          content:
+            application/json:
+              schema:
+                type: string
+```
+
+### Contract as Test
+
+When you run the above file as a test, Specmatic generates random byte array for the file field and sets default content type ```application/octet-stream```.
+
+If you want to run tests with specific files, then you can leverage examples to provide the location of the file that needs to be sent as part of the test.
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+paths:
+  /hello:
+    post:
+      summary: Create order
+      description: upload order file
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - "orderId"
+                - "userId"
+                - "fileName"
+              properties:
+                orderId:
+                  type: integer
+                userId:
+                  type: integer
+                fileName:
+                  type: string
+                  format: binary
+            examples:
+              200_OKAY:
+                value:
+                  orderId: 1
+                  userId: 2
+                  fileName:
+                    externalValue: "<fully qualified path / relative path>/input.txt"
+      responses:
+        '200':
+          description: Says hello
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                200_OKAY:
+                  value: {string}
+```
