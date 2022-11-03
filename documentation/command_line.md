@@ -9,7 +9,7 @@ Command Line
 
 ## Introduction
 
-Specmatic Standalone Jar severs two purposes.
+Specmatic Standalone Jar serves two purposes.
 * **Zero IDE setup and no code** You can run Contract Tests without a writing a single line of code. Just need to author the Contract to describe your API.
 * **Work with several languages and tech stack** Your provider can be a Python Application and the Consumer a JavaScript application. Specmatic can work with that setup in the command line mode.
 
