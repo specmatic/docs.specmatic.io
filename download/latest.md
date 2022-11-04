@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 11th Oct 2022
+Date: 4th Nov 2022
 
 What's new:
-- Bug fixes
+- Added support for inline dictionaries
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

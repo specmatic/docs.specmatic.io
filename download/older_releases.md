@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.54.0
+
+Date: 11th Oct 2022
+
+What's new:
+- Bug fixes
+
 ## Release 0.52.0
 
 Date: 11th Oct 2022
