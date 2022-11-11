@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 4th Nov 2022
+Date: 11th Nov 2022
 
 What's new:
-- Added support for inline dictionaries
+- Added support for query param array types
+- Fixed bug with loading contracts having an example that has no value
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

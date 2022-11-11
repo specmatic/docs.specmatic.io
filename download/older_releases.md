@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.55.0
+
+Date: 4th Nov 2022
+
+What's new:
+- Added support for inline dictionaries
+
 ## Release 0.54.0
 
 Date: 11th Oct 2022
