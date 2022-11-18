@@ -8,11 +8,12 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 11th Nov 2022
+Date: 18th Nov 2022
 
 What's new:
-- Added support for query param array types
-- Fixed bug with loading contracts having an example that has no value
+- Added support for arrays in query params and headers
+- Added support for omitting query params in contract test examples
+- Proxy generates stub files in _data directory
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
