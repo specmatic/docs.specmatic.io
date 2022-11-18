@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Comparison with Pact
-nav_order: 9
+nav_exclude: true
 ---
 # Comparison with Pact.io and Pactflow.io
 
