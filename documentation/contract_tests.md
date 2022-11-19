@@ -10,8 +10,8 @@ Contract Tests
 - [Contract Tests](#contract-tests)
     - [Overview](#overview)
     - [The Specmatic Command](#the-specmatic-command)
-      - [JUnit Output](#junit-output)
-      - [When The API Does Not Match The Contract](#when-the-api-does-not-match-the-contract)
+    - [JUnit Output From The Command](#junit-output-from-the-command)
+    - [When The API Does Not Match The Contract](#when-the-api-does-not-match-the-contract)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
     - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
     - [Contracts In A Mono-Repo](#contracts-in-a-mono-repo)
@@ -169,7 +169,7 @@ There are 4 tests: success, failure, new-employee, updated-employee. You will th
 
 A name represents a single contract test. All named examples by that name comprise a single contract test. For each contract test name, an HTTP request is formulated by combining the examples having name in the API request, and sent to the API. When a response is returned, it is compared with the response containing an example of the same name.
 
-#### JUnit Output
+### JUnit Output From The Command
 
 You can get the JUnit output from the Specmatic command using an extra parameter.
 
@@ -177,7 +177,7 @@ You can get the JUnit output from the Specmatic command using an extra parameter
 
 The command will create JUnit test xml output in the specified directory.
 
-#### When The API Does Not Match The Contract
+### When The API Does Not Match The Contract
 
 The above contract matches the dummy API precisely.
 
