@@ -27,8 +27,6 @@ Specmatic reads the contract and generates tests for each API in the contract. I
 
 The same contract spec that is used for contract testing is also used by the API consumers for [service virtualisation](/documentation/service_virtualisation.html). Since the consumer stubs out the API using the same contract which the provider API adheres to, the integration between the consumer and provider stays intact.
 
-Additionally, the contract spec is human-readable. So contracts can be circulated around by email, chat, etc while the API design is under discussion.
-
 ### The Specmatic Command
 
 Here's a contract for an API for fetching and updating employee details.
