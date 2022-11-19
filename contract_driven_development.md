@@ -8,8 +8,6 @@ nav_order: 6
 
 ---
 
-### Context
-
 **Contract Driven Development** leverages API Specifications (such as [OpenAPI](https://www.openapis.org/)) as Executable Contracts to shift-left the contract compatibility issue identification.
 
 At a high level, our goal is to
