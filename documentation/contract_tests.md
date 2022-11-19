@@ -16,7 +16,7 @@ Contract Tests
     - [JUnit Output From Command](#junit-output-from-command)
     - [Contracts In A Mono-Repo](#contracts-in-a-mono-repo)
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
-      - [Using an ssh url for your git repo](#using-an-ssh-url-for-your-git-repo)
+    - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
 
 [Read here about contract testing and where Specmatic fits in](/contract_testing.html).
@@ -24,8 +24,6 @@ Contract Tests
 ### Overview
 
 Specmatic reads the contract and generates tests for each API in the contract. It then runs these tests on your API end point, which you also provide to Specmatic. If your application is built correctly, it will understand the request sent to each test, and send a response back. Specmatic compares the response with the contract, and the test passes if the response format matches the contract.
-
-Contract tests do not validate the values in the responses. That is the the role of API tests, which cover many more scenarios in detail. The developer alone controls the tests completely. The developer can change the tests for legitimate reasons, without realising that there may be changes to the API format, parameters, etc. If there is any such accidental breakage, the contract tests will fail.
 
 The same contract spec that is used for contract testing is also used by the API consumers for [service virtualisation](/documentation/service_virtualisation.html). Since the consumer stubs out the API using the same contract which the provider API adheres to, the integration between the consumer and provider stays intact.
 
@@ -238,37 +236,9 @@ Add the following dependencies to your pom.xml file.
 </dependency>
 ```
 
-Add the following class to your Java project.
+Add a class that inherits from SpecmaticJUnitSupport. See how this is done [here](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTests.java).
 
-```java
-package com.you.application;
-
-import in.specmatic.test.SpecmaticJUnitSupport;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.springframework.context.ConfigurableApplicationContext;
-
-import java.io.File;
-
-public class ContractTests extends SpecmaticJUnitSupport {
-    private static ConfigurableApplicationContext context;
-
-    @BeforeAll
-    public static void setUp() {
-        System.setProperty("host", "localhost");
-        System.setProperty("port", "8080");
-
-        //Optional
-        //context = SpringApplication.run(Application.class);
-    }
-
-    @AfterAll
-    public static void tearDown() {
-        //Optional
-        context.stop();
-    }
-}
-```
+In it, set the "host" and "port" properties to tell Specmatic where to find the application. You can also start the application in that class.
 
 Add specmatic.json at the project root, as described in the previous section.
 
@@ -376,9 +346,9 @@ While we have provided samples for Azure, the same can be done easily in any bui
 
 If you are using different systems for Git and CI, the two will not be integrated. The first step is to fetch the OAuth2 token from the Git repo. The second step is to create the file or environment variable as described above.
 
-#### Using an ssh url for your git repo
+### Authentication In CI For SSH Git Source
 
-If your git repo supports an SSH url, take the help of your DevOps team to generate SSH keys locally and on your CI server, and place the local and CI public keys in .ssh/authorized_keys your Git server. This will enable the Git command to handle authentication seamlessly via SSH authentication.
+You can also use an ssh url as your git source. Take the help of your DevOps team to generate SSH keys locally and on your CI server, and place the local and CI public keys in .ssh/authorized_keys your Git server. This will enable the Git command to handle authentication seamlessly via SSH authentication.
 
 ### Examples For WSDL Contracts
 
