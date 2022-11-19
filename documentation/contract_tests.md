@@ -283,7 +283,7 @@ Note that "repository" is missing. Specamtic will look for the contract in the g
 
 ### Authentication In CI For HTTPS Git Source
 
-Specmatic does a checkout of the git repository from the repository given in specmatic.json. On your laptop, the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without no chance for a user to enter credentials.
+Specmatic does a checkout of the git repository given in specmatic.json. On your laptop, the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without no chance for a user to enter credentials.
 
 Instead, Specmatic can do the checkout using OAuth2 authentication, which is also supported by most git providers.
 
