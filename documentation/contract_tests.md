@@ -10,10 +10,10 @@ Contract Tests
 - [Contract Tests](#contract-tests)
     - [Overview](#overview)
     - [The Specmatic Command](#the-specmatic-command)
+      - [JUnit Output](#junit-output)
       - [When The API Does Not Match The Contract](#when-the-api-does-not-match-the-contract)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
     - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
-    - [JUnit Output From Command](#junit-output-from-command)
     - [Contracts In A Mono-Repo](#contracts-in-a-mono-repo)
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
@@ -169,6 +169,14 @@ There are 4 tests: success, failure, new-employee, updated-employee. You will th
 
 A name represents a single contract test. All named examples by that name comprise a single contract test. For each contract test name, an HTTP request is formulated by combining the examples having name in the API request, and sent to the API. When a response is returned, it is compared with the response containing an example of the same name.
 
+#### JUnit Output
+
+You can get the JUnit output from the Specmatic command using an extra parameter.
+
+`{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output`
+
+The command will create JUnit test xml output in the specified directory.
+
 #### When The API Does Not Match The Contract
 
 The above contract matches the dummy API precisely.
@@ -243,14 +251,6 @@ Add specmatic.json at the project root, as described in the previous section.
 SpecmaticJUnitSupport is a dynamic JUnit5 test. It will read the contracts from specmatic.json, and run them.
 
 Since it is a JUnit5 test, you can run it in all the ways you are used to. If you run it in the IDE, you'll see the results in your IDEs GUI. If you run `mvn test`, Surefire will store the results of the contract tests in the JUnit xml output file alongside any other JUnit tests in your project. The same applies to `./gradlew test`.
-
-### JUnit Output From Command
-
-You can get the JUnit output from the Specmatic command using an extra parameter.
-
-`{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output`
-
-The command will create JUnit test xml output in the specified directory.
 
 ### Contracts In A Mono-Repo
 
