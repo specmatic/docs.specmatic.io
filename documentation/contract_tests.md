@@ -189,7 +189,9 @@ Note: If you modify the request, it's possible that the application will respond
 
 In the last example, we ran run contract tests above by passing the contract path to Specmatic. The drawback here is that the command is not easily machine parseable. It will not be easy for tools to find out which contract is being run as test on which service, and do further analysis. Updating the command to add more contracts will also be more error prone.
 
-So instead, create a file named specmatic.json. 
+So instead:
+
+* Create a file named specmatic.json. 
 
 ```json
 {
@@ -205,18 +207,24 @@ So instead, create a file named specmatic.json.
 }
 ```
 
-Place in the top-level directory of your project. Place the employees.yaml in a git repository. Update the value of "repository" to the url of the git repo. Update the contract path in "test" to the relative path of employees.yaml within the git repository. Specmatic uses the git command under the hood. So make sure that the `git` command works on your laptop.
+* Create a git repository and push the employees.yaml contract into it.
+* Update the value of "repository" to the url of the git repo. This should be a url that could be used by git checkout.
+* Update the contract path in "test" to the relative path of employees.yaml within the git repository.
 
-On the command line / terminal, `cd` into the directory containing specmatic.json.
+Specmatic will use the git command to checkout the git repository provided in specmatic.json. So make sure that the `git` command works on your laptop.
+
+On the command line, `cd` into the directory containing specmatic.json.
 
 Run this command: `{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com`
 
-Note that we are not passing any contracts to Specmatic here. In the absence of any contracts, Specmatic looks for specmatic.json, loads checks out the contract repo, and runs the specified contract as test.
+Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for specmatic.json in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
+
+Since Specmatic uses specmatic.json in the current working directory, it's important to use `cd` into the directory containing specmatic.json. For Java projects, specmatic.json should be in the same directory as the pom.xml or build.gradle file.
 
 Since Specmatic uses git under-the-hood, any authentication requirements of your git server will be handled by the underlying git command.
 
 Note:
-1. The value of "repository" is the Git repository in which the contracts are declared. It can be any Git repo, not just Github.
+1. The value of "repository" is the git repository in which the contracts are declared. It can be any git repo, not just github.
 2. The value of "test" is a list of contract paths, relative to the repository root, which should be run as contract tests.
 3. You may declare multiple contracts in the "test" list.
 4. "sources" holds a list. You may declare multiple sources if required. However we recommend using a single contract repository to be shared across your organisation, or ecosystem within the organisation (if your org is large).
@@ -271,11 +279,13 @@ specmatic.json may look like this:
 }
 ```
 
-Note that "repository" is missing. Specamtic will look for the contract in the git repository containing specmatic.json.
+Note that "repository" is missing. Specamtic will look for the contract in the git repository containing specmatic.json. It's presumed that specmatic.json would be in a git repository, as the project would have to be pushed into some git repository.
 
 ### Authentication In CI For HTTPS Git Source
 
-Most git providers will authenticate the Git checkout using an OAuth2 bearer token.
+Specmatic does a checkout of the git repository from the repository given in specmatic.json. On your laptop, the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without no chance for a user to enter credentials.
+
+Instead, Specmatic can do the checkout using OAuth2 authentication, which is also supported by most git providers.
 
 Add a key named "auth" to specmatic.json, as seen in the example below.
 
@@ -296,9 +306,9 @@ Add a key named "auth" to specmatic.json, as seen in the example below.
 }
 ```
 
-In CI, before running the contract tests, create an oauth2 token with your Git provider, and put it into a file named bearer.txt side-by-side with specmatic.json.
+In CI, the necessary oauth2 token must be fetched and stored in a file named bearer.txt (as configured) side-by-side with specmatic.json, before running contract tests.
 
-If you are using Microsoft Azure as both your git provider as well as CI, you can use a secret build variable named System.AccessToken as your OAuth2 bearer token. Before running the tests, use a script to place the value of this variable in a file. For example:
+If you are using Microsoft Azure as both your git provider as well as CI, you can use a secret build variable named System.AccessToken, provided by Microsoft Azure, as your OAuth2 bearer token. Before running the tests, use a script to place the value of this variable in a file. For example:
 
 ```yaml
 # Sample azure pipeline snippet
@@ -310,7 +320,7 @@ steps:
       mvn test
 ```
 
-You could also use an environment variable.
+You could also use an environment variable to pass the token.
 
 ```json
 {
@@ -340,13 +350,13 @@ steps:
       BEARER: $(System.AccessToken)
 ```
 
-While we have provided samples for Azure, the same can be done easily in any build system.
+We have provided samples for Azure, but the same can be done easily in any build system.
 
-If you are using different systems for Git and CI, the two will not be integrated. The first step is to fetch the OAuth2 token from the Git repo. The second step is to create the file or environment variable as described above.
+ Note that if you are using different systems for git and CI, the two will not be integrated. The first step is to fetch the OAuth2 token from the git repo. The second step is to create the file or environment variable as described above, and finally, you may run the contract tests.
 
 ### Authentication In CI For SSH Git Source
 
-You can also use an ssh url as your git source. Take the help of your DevOps team to generate SSH keys locally and on your CI server, and place the local and CI public keys in .ssh/authorized_keys your Git server. This will enable the Git command to handle authentication seamlessly via SSH authentication.
+You can also use an ssh url as your git source. Take the help of your DevOps team to generate SSH keys locally and on your CI server, and place the local and CI public keys in .ssh/authorized_keys your git server. This will enable the git command to handle authentication seamlessly via SSH authentication.
 
 ### Examples For WSDL Contracts
 
