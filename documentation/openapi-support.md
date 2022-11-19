@@ -2,7 +2,7 @@
 layout: default
 title: OpenAPI Support
 parent: Documentation
-nav_order: 20
+nav_exclude: true
 ---
 
 OpenAPI Support

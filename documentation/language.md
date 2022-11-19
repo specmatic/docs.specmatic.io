@@ -2,7 +2,7 @@
 layout: default
 title: Gherkin Language
 parent: Documentation
-nav_order: 6
+nav_exclude: true
 ---
 - [The Contract File](#the-contract-file)
 - [Basic structure](#basic-structure)

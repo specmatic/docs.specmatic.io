@@ -1,7 +1,7 @@
 ---
 layout: default
 title: How Does Specmatic Work?
-nav_order: 7
+nav_exclude: true
 ---
 ### Specmatic Architecture
 

@@ -11,7 +11,7 @@ nav_order: 1
 ---
 ### Context
 
-In a complex, interdependent eco-system, where each service is evolving rapidly, we want to make the dependencies between them explicit in the form of executable contracts. By doing so, [Contract Testing](/contract_testing.html) allows teams to get instantaneous feedback while making changes to avoid accidental breakage.
+In a complex, interdependent eco-system, where each service is evolving rapidly, we want to make the dependencies between them explicit in the form of executable contracts. By doing so, [Conract Driven Development](/contract_driven_development.html) allows teams to get instantaneous feedback while making changes to avoid accidental breakage.
 
 With this ability, we can now deploy, at will, any service at any time without having to depend on expensive and fragile integration tests.
 
@@ -36,12 +36,12 @@ Systems interact with each other through several means. Specmatic hopes to addre
 ---
 ### Key Features
 
-* [**Contract First**](/faqs.html#what-is-contract-first) - With an API-first approach, you can use Consumer or Provider driven contracts, whatever suits your needs best.
+* [**Parallel Development / Quicker Time to Market**](/faqs.html#what-is-contract-first) - With an API-first approach, you can use Consumer or Provider driven contracts, whatever suits your needs best.
   - Once a Contract is written, both Consumers and Providers can start development in parallel
-* **Human readable contracts** - Specmatic leverages API Specification Standards such as [OpenAPI](https://www.openapis.org/) and adds contract testing, stubbing and compatibility check capabilities to those standards spec with **Gherkin** to help define your services (APIs).
+* **API Specifications as Executable Contracts** - Specmatic leverages API Specification Standards such as [OpenAPI](https://www.openapis.org/) as executable contracts (Contract as Test, Contract as Stub, Backward Compatiblity Testing and more).
   - Anyone 1.Developer (Consumer or Provider), 2.Architect, 3.Tech Leads, 4.Developer, 5.Tester can author the contracts
 * **Backward Compatibility Verification** - Contract vs Contract testing (cross version compatibility checks) etc.
-* **Service Virtualisation** - Run your contract in stub mode and isolate yourself from downstream dependencies (also be sure that your stubs are 100% compatible with the actual provider)
+* **Smart Mocks** - Run your contract in stub mode and isolate yourself from downstream dependencies (also be sure that your stubs are 100% compatible with the actual provider)
 * **Contract as Test** - Test drive your services (APIs) using a contract
 * **Programmatic** (Kotlin, Java and JVM languages) **and Command line support**
 * **Tight integration with CI** - Triger Provider and Consumer CI builds when any of the contracts change.
