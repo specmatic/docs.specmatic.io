@@ -7,15 +7,17 @@ nav_order: 26
 API Gateways
 ============
 
-## Four Party Model
+## Architecture With An API Gateway
 
 A contract represents the interface provided by the API provider to the API consumer.
 
-An API gateway may modify this interface, adding headers, rewriting the URL, etc. As a result, the contract seen by the consumer may be a little different from that seen by the provider.
+Where the consumer calls the provider directly, there are just two parties.
 
-In addition, there may be consumers of the API lying behind the API gateway, consuming the API directly.
+However an API gateway changes this picture. API gateways subtly modify incoming requests, by adding headers or rewriting the URL. As a result, the contract seen by the consumer is slightly different from that provided by the API.
 
-We can think of this as a four party model.
+There are also direct consumers of the API lying behind the API gateway.
+
+In this scenario, there are four parties: the external consumer, the API gateway, the interal consumer, and the API provider.
 
 ![four party model](/images/four-party-model.svg)
 
@@ -23,11 +25,9 @@ Specmatic's approach is to write the contract the way the API provider and inter
 
 This way, the API provider can run contract tests using the contract as is, and the internal consumer can stub it out.
 
-That leaves the external consumer.
+That leaves the external consumer, which needs to use the contract for service virtualisation.
 
-Specmatic provides a hook that can be configured by the external consumer to load whenever the API is stubbed out. The hook is given the contract, and can modify it in memory just before it is loaded.
-
-The hook name is `stub_load_contract`.
+Specmatic provides a hook named `stub_load_contract` in which the necessary modifications can be made to the provider contract, so that it looks exactly the way a consumer sees it.
 
 Register it in [specmatic.json](/documentation/specmatic_json.html#hooks) in the section on hooks.
 
@@ -155,3 +155,5 @@ paths:
                 items:
                   type: "number"
 ``````
+
+Note: the hook should be used when there are very slight differences between the contract seen by the consumer and provided by the API.
