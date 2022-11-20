@@ -23,7 +23,7 @@ Executing Contracts
 * [Contract Testing](/documentation/contract_tests.html)
 * [SOAP](/documentation/soap.html)
 * [Understanding Error Reports](/documentation/reading_reports.html)
-* [Authentication](/documentation/authentication.html)
+* [Authentication](/documentation/authentication-by-reaching-another-service.html)
 * [Troubleshooting](/documentation/troubleshooting.html)
 
 Authoring Contracts
