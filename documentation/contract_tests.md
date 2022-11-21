@@ -14,6 +14,7 @@ Contract Tests
     - [When The API Does Not Match The Contract](#when-the-api-does-not-match-the-contract)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
     - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
+    - [Handling Application authentication](#handling-application-authentication)
     - [Contracts In A Mono-Repo](#contracts-in-a-mono-repo)
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
@@ -259,6 +260,10 @@ Add specmatic.json at the project root, as described in the previous section.
 SpecmaticJUnitSupport is a dynamic JUnit5 test. It will read the contracts from specmatic.json, and run them.
 
 Since it is a JUnit5 test, you can run it in all the ways you are used to. If you run it in the IDE, you'll see the results in your IDEs GUI. If you run `mvn test`, Surefire will store the results of the contract tests in the JUnit xml output file alongside any other JUnit tests in your project. The same applies to `./gradlew test`.
+
+### Handling Application authentication
+
+If the OpenAPI contract defines API authentication using security schemas, these information will be used by Specmatic when running contract tests. Read more about it on the page on [authentication](authentication.html).
 
 ### Contracts In A Mono-Repo
 
