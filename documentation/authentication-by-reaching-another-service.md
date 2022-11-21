@@ -2,7 +2,7 @@
 layout: default
 title: Authentication
 parent: Documentation
-nav_order: 16
+nav_exclude: true
 ---
 - [Authentication](#authentication)
   - [1. Write the auth contract](#1-write-the-auth-contract)
