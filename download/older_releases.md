@@ -5,6 +5,15 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.57.0
+
+Date: 18th Nov 2022
+
+What's new:
+- Added support for arrays in query params and headers
+- Added support for omitting query params in contract test examples
+- Proxy generates stub files in _data directory
+
 ## Release 0.56.0
 
 Date: 11th Nov 2022
