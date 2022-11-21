@@ -17,8 +17,6 @@ Backward Compatibility
 
 ## What It Means
 
-If a change to an API provider would break existing consumers, the change is NOT backward compatible.
-
 If an API provider implementing a change to a contract would become incompatible with existing consumers, the changes to the contract are NOT backward compatible.
 
 Aim to make all changes to a contract backward compatible, to ensure that an updated API provider can be deployed as soon as it is ready, without waiting for consumers to catchup.
