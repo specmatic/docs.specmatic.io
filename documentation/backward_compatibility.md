@@ -9,12 +9,12 @@ Backward Compatibility
 
 - [Backward Compatibility](#backward-compatibility)
   - [What It Means](#what-it-means)
-  - [Comparing Two Contracts](#comparing-two-contracts)
+  - [Demo](#demo)
+  - [Comparing Two Contracts (Contract vs Contract)](#comparing-two-contracts-contract-vs-contract)
   - [Validating Changes In Git On Your Laptop](#validating-changes-in-git-on-your-laptop)
   - [Validating Changes In CI](#validating-changes-in-ci)
   - [Handling Contracts In Progress](#handling-contracts-in-progress)
   - [Rules Of Thumb](#rules-of-thumb)
-  - [Demo Video](#demo-video)
 
 ## What It Means
 
@@ -24,7 +24,11 @@ Aim to make all changes to a contract backward compatible, to ensure that an upd
 
 To that end, Specmatic can provide instant feedback when a change to an API provider will break consumers by looking at the old and new contract. This feedback only requires the contract. No code needs to be written, saving the provider the effort of writing code, and 
 
-## Comparing Two Contracts
+## Demo
+
+[Watch this video](https://www.youtube.com/watch?v=vBwzEpnQ7To&t=1197s) to see it in action. Read on to read about it and even try it out yourself!
+
+## Comparing Two Contracts (Contract vs Contract)
 
 Create a file named api_products_v1.yaml.
 
@@ -325,7 +329,3 @@ Here are some rules of thumb to keep in mind.
 
 1. The provider should not expect existing consumers to send something they were not sending before in the request. For example, don't add a compulsory JSON key to any request contract.
 2. The provider should not send back anything that consumers were not expecting before in the response. For example, don't remove a JSON key from any response.
-
-## Demo Video
-
-[Watch this video](https://www.youtube.com/watch?v=vBwzEpnQ7To&t=1197s) to see it in action.
