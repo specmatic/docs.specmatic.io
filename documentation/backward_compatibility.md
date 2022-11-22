@@ -16,6 +16,8 @@ Backward Compatibility
   - [Handling Contracts In Progress](#handling-contracts-in-progress)
   - [Rules Of Thumb](#rules-of-thumb)
 
+<img href="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="490" height="310" />
+
 ## What It Means
 
 If an API provider implementing a change to a contract would become incompatible with existing consumers due to the change, the changes to the contract are NOT backward compatible.
