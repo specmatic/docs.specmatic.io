@@ -14,7 +14,7 @@ Backward Compatibility
   - [Validating Changes In Git On Your Laptop](#validating-changes-in-git-on-your-laptop)
   - [Validating Changes In CI](#validating-changes-in-ci)
   - [Handling Contracts In Progress](#handling-contracts-in-progress)
-  - [Rules Of Thumb](#rules-of-thumb)
+  - [Backward Compatibility Rules](#backward-compatibility-rules)
 
 <img alt="Contract vs Contract" href="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="490" height="310" />
 
@@ -323,11 +323,8 @@ paths:
 
 Once the contract is complete you can remove the WIP tag.
 
-## Rules Of Thumb
+## Backward Compatibility Rules
 
 Maintaining backward compatibility is about changing the API provider WITHOUT breaking any existing consumer. Consumers should just continue working as-is, without needing to "keep up".
 
-Here are some rules of thumb to keep in mind.
-
-1. The provider should not expect existing consumers to send something they were not sending before in the request. For example, don't add a compulsory JSON key to any request contract.
-2. The provider should not send back anything that consumers were not expecting before in the response. For example, don't remove a JSON key from any response.
+[Read this for more](https://specmatic.in/documentation/backward_compatibility_rules.html).
