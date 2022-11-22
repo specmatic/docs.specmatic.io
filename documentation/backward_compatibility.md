@@ -16,7 +16,7 @@ Backward Compatibility
   - [Handling Contracts In Progress](#handling-contracts-in-progress)
   - [Rules Of Thumb](#rules-of-thumb)
 
-<img href="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="490" height="310" />
+<img alt="Contract vs Contract" href="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="490" height="310" />
 
 ## What It Means
 
