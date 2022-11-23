@@ -8,25 +8,24 @@ Backward Compatibility
 ==========
 
 - [Backward Compatibility](#backward-compatibility)
-  - [What It Means](#what-it-means)
-  - [Demo](#demo)
+  - [About Backward Compatibility](#about-backward-compatibility)
   - [Comparing Two Contracts (Contract vs Contract)](#comparing-two-contracts-contract-vs-contract)
   - [Validating Changes In Git On Your Laptop](#validating-changes-in-git-on-your-laptop)
   - [Validating Changes In CI](#validating-changes-in-ci)
   - [Handling Contracts In Progress](#handling-contracts-in-progress)
   - [Backward Compatibility Rules](#backward-compatibility-rules)
 
-## What It Means
+## About Backward Compatibility
 
 If an API provider implementing a change to a contract would become incompatible with existing consumers due to the change, the changes to the contract are NOT backward compatible.
 
 Aim to make all changes to a contract backward compatible, to ensure that an updated API provider can be deployed as soon as it is ready, without waiting for consumers to catchup.
 
-To that end, Specmatic can provide instant feedback when a change to an API provider will break consumers by looking at the old and new contract. This feedback only requires the contract. No code needs to be written, saving the provider the effort of writing code, and 
+Specmatic can provide instant feedback when a change to an API provider will break consumers by looking at the old and new contract. This feedback only requires the contract. No code needs to be written, saving the provider the effort of writing code.
 
-## Demo
+<img src="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="60%" height="60%" />
 
-[Watch this video](https://www.youtube.com/watch?v=vBwzEpnQ7To&t=1197s) to see it in action. Read on to read about it and even try it out yourself!
+[Watch this video](https://www.youtube.com/watch?v=vBwzEpnQ7To&t=1197s) to see it in action. Read on and even try it out yourself!
 
 ## Comparing Two Contracts (Contract vs Contract)
 
