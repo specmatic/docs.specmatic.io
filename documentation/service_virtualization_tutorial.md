@@ -23,7 +23,7 @@ Service Virtualization Tutorial
 
 Let's prepare to try out service virtaulization step-by-step.
 
-- Download the latest version of Specmatic.
+- [Download the latest version of Specmatic](https://specmatic.in/download/latest.html).
 - Create a file named products-api.yaml on your laptop with the following contents.
 
 ```yaml
