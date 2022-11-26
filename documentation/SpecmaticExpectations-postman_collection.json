@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "1884802c-9ffc-4084-9d8b-5f324ffa3496",
+		"name": "Specmatic Expectations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Set Expectations",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"http-request\": {\n        \"method\": \"POST\",\n        \"path\": \"/data\",\n        \"body\": {\n\n        }\n    },\n    \"http-request\": {\n        \"status\": 200,\n        \"body\": {\n            \n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/_specmatic/expectations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"_specmatic",
+						"expectations"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

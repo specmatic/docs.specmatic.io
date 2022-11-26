@@ -17,6 +17,8 @@ Service Virtualization Tutorial
   - [Accept Any Value For "name" and "sku" And Return A Random Id](#accept-any-value-for-name-and-sku-and-return-a-random-id)
   - [Generating Expecations / Stub JSONs](#generating-the-stub-files)
   - [SSL / Https support](#ssl--https--stubbing)
+  - [Delay Simulation](#delay-simulation)
+  - [Dynamic Mocking](#dynamic-mocking---setting-expecations-over-specmatic-http-api)
   - [Sample Java Project](#sample-java-project)
 
 ## Pre-requisites
@@ -317,6 +319,82 @@ If you already have a keystore and self signed certificate you can pass it to Sp
       --httpsPassword=<keyPassword>
                              Key password if any
 ```
+
+## Delay Simulation
+
+Specmatic allows granular control over simulating a slow response for certain requests.
+
+Let us create another expecation file on the same lines as [expectation.json](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10) in the products-api_data folder and call it expectation-with-delay.json with below content.
+
+```yaml
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/products/11"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "name": "Slow Soap",
+      "sku": "slow1234"
+    }
+  },
+  "delay-in-seconds": 3
+}
+```
+
+We have set the delay to 3 seconds here. Once the Specmatic stub server has loaded this expectation, time the request for product id 11 and you should see a 3 second delay.
+
+```shell
+% time curl http://localhost:9000/products/11
+{
+    "name": "Slow Soap",
+    "sku": "slow1234"
+}curl http://localhost:9000/products/11  0.01s user 0.01s system 0% cpu 3.082 total
+```
+
+All other requests, other than the specific request (product id 11) where a delay has been setup, will continue to behave as usual.
+
+## Dynamic Mocking - Setting expecations over Specmatic Http API
+
+### Context
+It is not always possible to know ahead of time what expecation data needs to be setup. Example: Consider below scenario
+* Let us say our system under test needs to lookup the SKU value from another service (over which we do not have control or cannot mock) before creating products
+* In this scenario we will be unable to create the expectation json file with any specific value of SKU since we will only know this at test runtime / dynamically
+
+**Dynamic Mocks** are helpful in such scenarios which involve a **work flow** with multiple steps where the input of a step depends on output of its previous step.
+
+### Expectations Http Endpoint
+
+Specmatic stub server can accept expectation json through below http endpoint.
+
+```shell
+http://localhost:9000/_specmatic/expectations
+```
+
+Please see <a href="/documentation/SpecmaticExpectations-postman_collection.json" download>postman collection</a> for reference.
+
+Specmatic will verify these expecations against the OpenAPI Specifications and will only return a 2xx response if they are as per API Specifications. Specmatic returns 4xx reponse if the expectation json is not as per the OpenAPI Specifications.
+
+### Anatomy of a Component / API Test
+
+<img alt="Anatomy of a Component / API Test" src="https://specmatic.in/wp-content/uploads/2022/09/Contact-as-stub.png" />
+
+Please see this [video](https://youtu.be/U5Agz-mvYIU?t=998) for reference.
+
+The above image shows how Specmatic Smart Mocking fits into your Component Test. A good component test isolates the system / component under test from its dependencies. Here Specmatic is emulating the dependencies of the mobile application thereby isolating it.
+
+**API Tests are just Component Tests where the System Under Test is a Service / API**. Here is an [example](https://github.com/znsio/specmatic-order-ui/blob/main/src/test/kotlin/controllers/apiTests.feature) of how you can leverage Specmatic dynamic mocking in a Karate API Test. Below are the pieces involved.
+* **Test** - A Karate API Test
+* **System Under Test** - [Find Available Products Service](https://github.com/znsio/specmatic-order-ui/blob/main/src/main/kotlin/controllers/Products.kt) - Invokes products API to get all products and filters out products where inventory is zero.
+* **Dependency** - Products API mocked by Specmatic. Specmatic is setup to leverage [OpenAPI Specification of Products API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) in the [central contract repo](https://github.com/znsio/specmatic-order-contracts) through [specmatic.json](https://github.com/znsio/specmatic-order-ui/blob/main/specmatic.json) configuration.
+
+Let us analyse each phase of this API test.
+* **Arrange** - In this step we setup Specmatic stub server with expectation json through Specmatic http endpoint to emulate the Products API. We set it up to return two products, a laptop (which is available) and a phone (inventory is zero). We also verify that Specmatic has accepted this expectation data by asserting that the response code is 2xx. This confirms that are our expectation data is in line with the OpenAPI Specification of Products OpenAPI Specification.
+* **Act** - Here the Karate test invokes System / Service Under Test (Find Products Service) to exercise the functionality we need to test. This inturn results in the System / Service Under Test invoking its dependency (Products Service) which is being emulated by Specmatic. Specmatic returns the response we have setup in the previous step to the System Under Test. System Under Test processes this data and responds to API Test.
+* **Assert** - We now verify the response from System / Service Under Test to ascertain if it has only returned the laptop, since the phone is not available.
+
+The same approach can be leveraged in other test tools and frameworks such as [Rest-Assured](https://rest-assured.io/) also.
 
 ## Sample Java Project
 
