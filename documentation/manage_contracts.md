@@ -2,7 +2,7 @@
 layout: default
 title: Manage Your Contracts
 parent: Documentation
-nav_order: 7
+nav_exclude: true
 ---
 Manage Your Contracts
 ========

@@ -295,7 +295,4 @@ To know more about smart mocks please refer to below video demos
 
 We can now start consumer development against this stub without any dependency on the real API.
 
----
-
-Got another 10 minutes? Try the [programmatic approach](/documentation/getting_started_programmatically.html)
-
+[**Stubbing / Smart Mocks in detail**](/documentation/service_virtualization_tutorial.html#accept-any-value-for-name-and-sku-and-return-a-random-id)
