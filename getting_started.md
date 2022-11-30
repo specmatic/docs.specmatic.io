@@ -178,6 +178,8 @@ Please refer to below videos for extensive demos on Contract as Test.
 * [Boundary Condition Testing](https://youtu.be/U5Agz-mvYIU?t=51) - Verifying edge cases
 * [Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract as Test to Test Drive your Code
 
+[**Contract Tests in detail**](/documentation/contract_tests.html)
+
 ### Consumer Side - Contract As A Stub / Smart Mock
 
 On the Consumer Side, we can now leverage the OpenAPI Specification as a Smart Mock to isolate our UI development and make progress independent of the Provider / API.

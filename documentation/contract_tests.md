@@ -24,18 +24,15 @@ Contract Tests
 
 ### Overview
 
-Specmatic reads the contract and generates tests for each API in the contract. It then runs these tests on your API end point, which you also provide to Specmatic. If your application is built correctly, it will understand the request sent to each test, and send a response back. Specmatic compares the response with the contract, and the test passes if the response format matches the contract.
+<img alt="Contract Tests" src="https://specmatic.in//wp-content/uploads/2022/09/Contract-as-test.png" />
 
-The same contract spec that is used for contract testing is also used by the API consumers for [service virtualisation](/documentation/service_virtualisation.html). Since the consumer stubs out the API using the same contract which the provider API adheres to, the integration between the consumer and provider stays intact.
+As seen in "[getting started](/getting_started.html#provider-side---contract-as-a-test)" Specmatic is able to leverage your API Specifications as "Contract Tests" to verify if your application is adhering the specification. This step is critical in making sure that your application / provider is honouring its side of the contract in the "Contract Driven Development" process just like how consumers build against a smart mock that is based the same OpenAPI Specification.
 
-### The Specmatic Command
+### Specmatic Contact Test - Command Line
 
-Here's a contract for an API for fetching and updating employee details.
-
-Each API request and response must have named examples. You can see how this looks in the sample contract below.
+Create a file named "employees.yaml" and copy below content into it. This is an API Specification for an employee service which allows fetching and updating employee details.
 
 ```yaml
-#filename: employees.yaml
 
 openapi: 3.0.0
 info:
@@ -162,13 +159,21 @@ components:
           type: string
 ```
 
-Run this command: `{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml`
+Here is a sample application that is is implementing this specification. You can run a curl command on this URL to see the sample data.
+`https://my-json-server.typicode.com/znsio/specmatic/employees/`
 
-Here's what is happening.
+Let us now run the ```employees.yaml``` as a test against the above sample application.
+`{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml`
 
-There are 4 tests: success, failure, new-employee, updated-employee. You will the find these names in the named examples across the different APIs in the contract. Take a moment to look for them in the contract.
+The results should end with below text.
+```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
 
-A name represents a single contract test. All named examples by that name comprise a single contract test. For each contract test name, an HTTP request is formulated by combining the examples having name in the API request, and sent to the API. When a response is returned, it is compared with the response containing an example of the same name.
+And if you further analyse the test logs for ```PUT /znsio/specmatic/employees/{id}```, you will notice that specmatic sent the value 10 and did not generate a random value. How did this happen?
+* Specmatic is able to correlate the request and response examples based on naming convention
+* In the ```employees.yaml``` you will notice several examples for the employeeId parameter each with a different name, these same names are again used in the response examples also. This is what is helping Specmatic tie the request and response together
+* In OpenAPI, while it is possible to define several possible responses for an opeeration, it is not possible to define which input generates which response. This is the reason why Specmatic has to depend on the example names
+
+However if you have a scenario where it is hard to add inline examples / or explore other alternatives please do [reach out to us](https://specmatic.in/contact-us/) with the details.
 
 ### JUnit Output From The Command
 
@@ -176,13 +181,19 @@ You can get the JUnit output from the Specmatic command using an extra parameter
 
 `{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output`
 
-The command will create JUnit test xml output in the specified directory.
+The command will create JUnit test xml output in the specified directory which you can then include as part of CI pipeline results etc.
 
-### When The API Does Not Match The Contract
+### When The API Does Not Match The API Specification
 
-The above contract matches the dummy API precisely.
+As we saw earlier in this page, the [sample application](https://my-json-server.typicode.com/znsio/specmatic/employees/) is adhering to the ```employees.yaml``` OpenAPI Specification.
 
-Once you are able to run the contract test and see 4 successful tests running, try modifying some of the datatypes and see the different kinds of error responses you get.
+Now let us experiment by making some changes to the dataypes in the ```employees.yaml``` and observe the error responses.
+
+Examples:
+* Change the datatype of ```designation``` to integer in scheme component Employee - You will notice that Specmatic will complain that your examples are not as per the Specification
+* Now lets update all the examples for ```designation``` to value ```1``` - Now Specmatic will run the test and you should see a single failure
+
+We encourage you to try more such modifications to the specification such as adding / removing parameters, updating datatypes, etc. This will give you picture of how Contract Tests work.
 
 Note: If you modify the request, it's possible that the application will respond with a 404 or 500, and you may not see anything more interesting than a mismatched status. But if you modify any response structure in the contract, leaving the request intact, e.g. change an integer to a string or vice versa, the application will send recognize the requests, send response back that do not match the contract which you have modified, and you will see interesting error feedback.
 
