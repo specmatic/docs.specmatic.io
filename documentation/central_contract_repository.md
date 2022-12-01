@@ -57,3 +57,4 @@ Both consumers and providers can leverage the specifications in the Central Cont
 
 Specmatic will always pull the latest specification files from the version control system for both applications.
 
+[**specmatic.json in detail**](/documentation/specmatic_json.html)
