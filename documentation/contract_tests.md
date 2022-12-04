@@ -9,7 +9,8 @@ Contract Tests
 
 - [Contract Tests](#contract-tests)
     - [Overview](#overview)
-    - [The Specmatic Command](#the-specmatic-command)
+    - [The Specmatic Command](#specmatic-contract-test---command-line)
+    - [Boundary / Negative Testing](#boundary-condition-testing)
     - [JUnit Output From The Command](#junit-output-from-the-command)
     - [When The API Does Not Match The Contract](#when-the-api-does-not-match-the-contract)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
@@ -28,7 +29,7 @@ Contract Tests
 
 As seen in "[getting started](/getting_started.html#provider-side---contract-as-a-test)" Specmatic is able to leverage your API Specifications as "Contract Tests" to verify if your application is adhering the specification. This step is critical in making sure that your application / provider is honouring its side of the contract in the "Contract Driven Development" process just like how consumers build against a smart mock that is based the same OpenAPI Specification.
 
-### Specmatic Contact Test - Command Line
+### Specmatic Contract Test - Command Line
 
 Create a file named "employees.yaml" and copy below content into it. This is an API Specification for an employee service which allows fetching and updating employee details.
 
@@ -174,6 +175,24 @@ And if you further analyse the test logs for ```PUT /znsio/specmatic/employees/{
 * In OpenAPI, while it is possible to define several possible responses for an opeeration, it is not possible to define which input generates which response. This is the reason why Specmatic has to depend on the example names
 
 However if you have a scenario where it is hard to add inline examples / or explore other alternatives please do [reach out to us](https://specmatic.in/contact-us/) with the details.
+
+### Boundary Condition Testing
+
+In the above example, we only ran the happy path test cases. What if we send an number to a boolean parameter? What if we send a null to a non-nullable parameter? What if we do not send a mandatory parameter? How does the application handle these errors? Input validation is an important aspect of your api security strategy ([OWASP reference]((https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html))).
+
+Specmatic can help you verify / assess such boundary condition behavior and the associated error handling in your application. Let us run the Specmatic tests with the ```SPECMATIC_GENERATIVE_TESTS``` environment variable set to true.
+
+```export SPECMATIC_GENERATIVE_TESTS=true```
+
+```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
+
+Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failires
+
+```Tests run: 26, Successes: 5, Failures: 21, Errors: 0```
+
+Exercise: Analyse the logs to understand what input validations need to be added to the application.
+
+Demo: [Video](https://youtu.be/U5Agz-mvYIU?t=216)
 
 ### JUnit Output From The Command
 
