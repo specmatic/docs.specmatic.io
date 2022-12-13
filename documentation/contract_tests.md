@@ -10,7 +10,7 @@ Contract Tests
 - [Contract Tests](#contract-tests)
     - [Overview](#overview)
     - [The Specmatic Command](#specmatic-contract-test---command-line)
-    - [Externalising Examples](#externalising-the-examples--test-cases)
+    - [Externalising Examples](#externalising-examples--test-cases)
     - [Boundary / Negative Testing](#boundary-condition-testing)
     - [JUnit Output From The Command](#junit-output-from-the-command)
     - [When The API Does Not Match The Contract](#when-the-api-does-not-match-the-contract)
@@ -177,7 +177,7 @@ And if you further analyse the test logs for ```PUT /znsio/specmatic/employees/{
 * In the ```employees.yaml``` you will notice several examples for the employeeId parameter each with a different name, these same names are again used in the response examples also. This is what is helping Specmatic tie the request and response together
 * In OpenAPI, while it is possible to define several possible responses for an opeeration, it is not possible to define which input generates which response. This is the reason why Specmatic has to depend on the example names
 
-### Externalising the examples / test cases
+### Externalising examples / test cases
 
 Sometimes it may not be possible to keep the test cases as examples inline within the OpenAPI YAML file. Example: It may impact readability of specification, you may have different set of examples by environment, etc.
 
