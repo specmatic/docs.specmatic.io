@@ -312,8 +312,14 @@ The results will be exactly the same as the previous run.
 
 Let us understand Specmatic Gherkin syntax in detail.
 * **Background** - This is where we are including the OpenAPI specification file. Relative and absolute paths are supported.
-* **Scenario** - Each scenario represents a path, operation and response code combination under which we can add examples. Specmatic validates each scenario to check if it is part of the OpenAPI Specification.
-* **Examples** - Each column in the table represents the fields / parameters in the employees-without-examples.yaml OpenAPI Specification file. Please note that Specmatic validates your examples for datatype correctness against the specification. So this file will not go out of sync with the Specification.
+* **Scenario** - Scenario should adhere to below syntax
+```
+Scenario: <SCENARIO_NAME>
+    When <OPERATION / HTTP METHOD> <PATH>
+    Then status <HTTP_STATUS_CODE>
+```
+Specmatic validates each scenario to check if it is part of the OpenAPI Specification.
+* **Examples** - Examples belong to scenarios. Each column in the table represents the fields / parameters in the employees-without-examples.yaml OpenAPI Specification file. Please note that Specmatic validates your examples for datatype correctness against the specification. So this file will not go out of sync with the Specification.
 * **RESQUEST-BODY** - This is a special keyword that allows us to send the entire request body instead of adding each parameter as a column in the table. Example: "Update Employee Success" scenario
 * Add examples only where necessary, Specmatic can fill in the rest with auto generated values
   * Scenario "Get Employee Not Found Error" - We have not added any examples because the id is already a path parameter
