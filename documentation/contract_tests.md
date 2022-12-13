@@ -10,6 +10,7 @@ Contract Tests
 - [Contract Tests](#contract-tests)
     - [Overview](#overview)
     - [The Specmatic Command](#specmatic-contract-test---command-line)
+    - [Externalising Examples](#externalising-the-examples--test-cases)
     - [Boundary / Negative Testing](#boundary-condition-testing)
     - [JUnit Output From The Command](#junit-output-from-the-command)
     - [When The API Does Not Match The Contract](#when-the-api-does-not-match-the-contract)
@@ -34,7 +35,6 @@ As seen in "[getting started](/getting_started.html#provider-side---contract-as-
 Create a file named "employees.yaml" and copy below content into it. This is an API Specification for an employee service which allows fetching and updating employee details.
 
 ```yaml
-
 openapi: 3.0.0
 info:
   title: Employees
@@ -44,32 +44,32 @@ paths:
   '/znsio/specmatic/employees':
     post:
       summary: ''
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-              examples:
-                updated-employee:
-                  value:
-                    id: 70
-                    name: Jill Doe
-                    department: Engineering
-                    designation: Director
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Employee'
             examples:
-              updated-employee:
+              CREATE_EMPLOYEE_SUCCESS:
                 value:
                   id: 70
                   name: Jill Doe
                   department: Engineering
                   designation: Director
+      responses:
+        '201':
+          description: Employee Created Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                CREATE_EMPLOYEE_SUCCESS:
+                  value:
+                    id: 70
+                    name: Jill Doe
+                    department: Engineering
+                    designation: Director
   '/znsio/specmatic/employees/{id}':
     parameters:
       - schema:
@@ -78,67 +78,67 @@ paths:
         in: path
         required: true
         examples:
-          success:
+          FETCH_EMPLOYEE_SUCCESS:
             value: 10
-          failure:
+          FETCH_EMPLOYEE_NOT_FOUND_ERROR:
             value: 100
-          new-employee:
+          UPDATE_EMPLOYEE_SUCCESS:
             value: 10
-    put:
-      summary: ''
-      responses:
-        '200':
-          description: Update employee details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-              examples:
-                new-employee:
-                  value:
-                    id: 10
-                    name: Jill Doe
-                    department: Engineering
-                    designation: Director
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-            examples:
-              new-employee:
-                value:
-                  id: 10
-                  name: Jill Doe
-                  department: Engineering
-                  designation: Director
     get:
       summary: Fetch employee details
       tags: []
       responses:
         '200':
-          description: OK
+          description: Details for employee id in request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Employee'
               examples:
-                success:
+                FETCH_EMPLOYEE_SUCCESS:
                   value:
                     id: 10
                     name: Jane Doe
                     department: Engineering
                     designation: Engineering Manager
         '404':
-          description: Not Found
+          description: Employee with given id not found
           content:
             application/json:
               schema:
                 type: object
                 properties: {}
               examples:
-                failure:
+                FETCH_EMPLOYEE_NOT_FOUND_ERROR:
                   value: {}
+    put:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            examples:
+              UPDATE_EMPLOYEE_SUCCESS:
+                value:
+                  id: 10
+                  name: Jill Doe
+                  department: Engineering
+                  designation: Director
+      responses:
+        '200':
+          description: Updated employee details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                UPDATE_EMPLOYEE_SUCCESS:
+                  value:
+                    id: 10
+                    name: Jill Doe
+                    department: Engineering
+                    designation: Director
 components:
   schemas:
     Employee:
@@ -161,12 +161,15 @@ components:
 ```
 
 Here is a sample application that is is implementing this specification. You can run a curl command on this URL to see the sample data.
+
 `https://my-json-server.typicode.com/znsio/specmatic/employees/`
 
 Let us now run the ```employees.yaml``` as a test against the above sample application.
-`{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml`
+
+```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
 
 The results should end with below text.
+
 ```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
 
 And if you further analyse the test logs for ```PUT /znsio/specmatic/employees/{id}```, you will notice that specmatic sent the value 10 and did not generate a random value. How did this happen?
@@ -174,7 +177,159 @@ And if you further analyse the test logs for ```PUT /znsio/specmatic/employees/{
 * In the ```employees.yaml``` you will notice several examples for the employeeId parameter each with a different name, these same names are again used in the response examples also. This is what is helping Specmatic tie the request and response together
 * In OpenAPI, while it is possible to define several possible responses for an opeeration, it is not possible to define which input generates which response. This is the reason why Specmatic has to depend on the example names
 
-However if you have a scenario where it is hard to add inline examples / or explore other alternatives please do [reach out to us](https://specmatic.in/contact-us/) with the details.
+### Externalising the examples / test cases
+
+Sometimes it may not be possible to keep the test cases as examples inline within the OpenAPI YAML file. Example: It may impact readability of specification, you may have different set of examples by environment, etc.
+
+In these circumstances you can leverage Specmatic's Gherkin syntax to define the examples in a tabular format externally thereby keeping the OpenAPI spec itself unaffected.
+
+Here is an example where we have split the ["employees.yaml" we saw in the above section](http://localhost:4000/documentation/contract_tests.html#specmatic-contract-test---command-line) into two files.
+* ```employees-without-examples.yaml``` - OpenAPI Spec file without the examples
+* ```employees.spec``` - Specmatic Gherkin Spec which include the employees.yaml and adds the examples for each path, operation and response thereby making it easily readable
+
+**```employees-without-examples.yaml```***
+```yaml
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/znsio/specmatic/employees':
+    post:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '201':
+          description: Employee Created Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+  '/znsio/specmatic/employees/{id}':
+    parameters:
+      - schema:
+          type: number
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Fetch employee details
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    put:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '200':
+          description: Update employee details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+components:
+  schemas:
+    Employee:
+      title: Employee
+      type: object
+      required:
+        - id
+        - name
+        - department
+        - designation
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string
+```
+
+**```employees.spec```**
+```gherkin
+Feature: Employees API
+
+  Background:
+    Given openapi ./employees-without-examples.yaml
+
+  Scenario: Create Employee
+    When POST /znsio/specmatic/employees
+    Then status 201
+    Examples:
+      | id | name     | department  | designation |
+      | 70 | Jill Doe | Engineering | Director    |
+
+  Scenario: Get Employee Success
+    When GET /znsio/specmatic/employees/10
+    Then status 200
+    Examples:
+      | id | name     | department  | designation         |
+      | 10 | Jane Doe | Engineering | Engineering Manager |
+
+  Scenario: Get Employee Not Found Error
+    When GET /znsio/specmatic/employees/100
+    Then status 404
+
+  Scenario: Update Employee Success
+    When PUT /znsio/specmatic/employees/10
+    Then status 200
+    Examples:
+      | id | REQUEST-BODY                                                                             |
+      | 10 | { "id": 10, "name": "Jill Doe", "department": "Engineering", "designation": "Director" } |
+```
+
+Let us now run the ```employees.spec``` which is referring to / including the ```employees.yaml``` as a test against the above sample application.
+
+```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.spec```
+
+The results will be exactly the same as the previous run.
+
+```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
+
+Let us understand Specmatic Gherkin syntax in detail.
+* **Background** - This is where we are including the OpenAPI specification file. Relative and absolute paths are supported.
+* **Scenario** - Each scenario represents a path, operation and response code combination under which we can add examples. Specmatic validates each scenario to check if it is part of the OpenAPI Specification.
+* **Examples** - Each column in the table represents the fields / parameters in the employees-without-examples.yaml OpenAPI Specification file. Please note that Specmatic validates your examples for datatype correctness against the specification. So this file will not go out of sync with the Specification.
+* **RESQUEST-BODY** - This is a special keyword that allows us to send the entire request body instead of adding each parameter as a column in the table. Example: "Update Employee Success" scenario
+* Add examples only where necessary, Specmatic can fill in the rest with auto generated values
+  * Scenario "Get Employee Not Found Error" - We have not added any examples because the id is already a path parameter
+  * Scenario "Update Employee Success" - We have not added response examples, however Specmatic will still validate the response against the schema in our OpenAPI Specification
+
+We can add as many rows as necesary for our test cases. Example:
+
+```gherkin
+  Scenario: Get Employee Success
+    When GET /znsio/specmatic/employees/10
+    Then status 200
+    Examples:
+      | id | name     | department  | designation         |
+      | 10 | Jane Doe | Engineering | Engineering Manager |
+      | 40 | Jill Doe | Engineering | Principal Engineer  |
+```
 
 ### Boundary Condition Testing
 
