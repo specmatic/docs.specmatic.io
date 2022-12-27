@@ -12,7 +12,7 @@ The quickest approach to getting started is through the command line.
 
 {% include setup_command_line.md %}
 
-For nodejs projects, follow [this document](/documentation/specmatic_for_javascript.html).
+For nodejs projects, please visit [npmjs](https://www.npmjs.com/package/specmatic).
 
 ---
 
