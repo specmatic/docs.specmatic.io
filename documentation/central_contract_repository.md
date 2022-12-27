@@ -7,6 +7,16 @@ nav_order: 28
 
 # Context
 
+- [Context](#context)
+- [Treat Contract as Code](#treat-contract-as-code)
+- [Central Contract Repo - Single source of truth](#central-contract-repo---single-source-of-truth)
+  - [File organization](#file-organization)
+  - [Pull Request / Merge Request Process](#pull-request--merge-request-process)
+    - [Pre-merge checks](#pre-merge-checks)
+    - [Collaborating over API Design](#collaborating-over-api-design)
+  - [Referring to Contracts in Central Contract Repo](#referring-to-contracts-in-central-contract-repo)
+    - [Specmatic.json](#specmaticjson)
+
 **Contract Driven Development** leverages API Specifications as Executable Contracts to keep both consumers and providers working well with each other. If consumers and providers are referring to different versions of the API Specifications then it is not possible to guarantee this. This sort of deviation can happen when API Specifications are shared over documentation sites, email, or other non standard mechanisms.
 
 It is critial to have a **Single Source of Truth** to store the API Specifications for all stakeholders.

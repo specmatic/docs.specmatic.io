@@ -7,6 +7,10 @@ nav_order: 16
 Authentication
 ==============
 
+- [Authentication](#authentication)
+- [Test Configuration - Dummy Authentication](#test-configuration---dummy-authentication)
+- [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication)
+
 Most APIs have some form of security (authentication and authorization). Specmatic reads [OpenAPI Security Schemes](https://swagger.io/docs/specification/authentication/) in your API Specifications to come up with appropriate request parameters. However these parameters will be randomly generated as per the data types of these security schemes.
 
 Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) specification which leverages [ApiKeyAuth](https://swagger.io/docs/specification/authentication/api-keys/) to protect all endpoints that add, modify or delete data.
