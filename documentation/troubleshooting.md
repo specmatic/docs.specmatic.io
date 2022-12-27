@@ -2,7 +2,8 @@
 layout: default
 title: Troubleshooting
 parent: Documentation
-nav_order: 12
+nav_exclude: true
+search_exclude: true
 ---
 Troubleshooting
 ===============

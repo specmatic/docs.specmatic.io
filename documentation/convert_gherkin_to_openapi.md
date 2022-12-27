@@ -2,7 +2,8 @@
 layout: default
 title: Convert Gherkin To OpenAPI
 parent: Documentation
-nav_order: 25
+nav_exclude: true
+search_exclude: true
 ---
 Convert Gherkin To OpenAPI
 ==========================
