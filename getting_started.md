@@ -6,6 +6,13 @@ nav_order: 4
 Getting started
 ===============
 
+- [Getting started](#getting-started)
+    - [Setup](#setup)
+    - [Example Application - PetStore](#example-application---petstore)
+    - [API Specification](#api-specification)
+    - [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
+    - [Consumer Side - Contract As A Stub / Smart Mock](#consumer-side---contract-as-a-stub--smart-mock)
+
 ### Setup
 
 The quickest approach to getting started is through the command line.

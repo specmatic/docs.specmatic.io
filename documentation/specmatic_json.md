@@ -1,17 +1,18 @@
 ---
 layout: default
-title: specmatic.json
+title: Configuration
 parent: Documentation
 nav_order: 14
 ---
 
-Configuration - specmatic.json
-=======================
+Configuration
+=============
 
-- [Getting started](#getting-started)
-    - [Configuring stubs](#configuring-stubs)
-    - [Source control authentication](#source-control-authentication)
-    - [Complete sample specmatic.json](#complete-sample-specmaticjson-with-all-attributes)
+- [Configuration](#configuration)
+    - [Getting started](#getting-started)
+      - [Configuring Stubs](#configuring-stubs)
+      - [Source control authentication](#source-control-authentication)
+      - [Complete sample specmatic.json with all attributes](#complete-sample-specmaticjson-with-all-attributes)
     - [Declare pipeline details](#declare-pipeline-details)
     - [Declare environment configuration](#declare-environment-configuration)
     - [Hooks](#hooks)

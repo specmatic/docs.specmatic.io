@@ -3,6 +3,7 @@ layout: default
 title: Gherkin Language
 parent: Documentation
 nav_exclude: true
+search_exclude: true
 ---
 - [The Contract File](#the-contract-file)
 - [Basic structure](#basic-structure)
@@ -23,7 +24,7 @@ nav_exclude: true
   - [Optional Operator](#optional-operator)
   - [Nullable Operator](#nullable-operator)
   - [Rest Operator](#rest-operator)
-  - [Combining *, ? and ...](#combining---and-)
+  - [Combining \*, ? and ...](#combining---and-)
   - [Dictionary](#dictionary)
 - [XML Syntax](#xml-syntax)
   - [XML Tags](#xml-tags)

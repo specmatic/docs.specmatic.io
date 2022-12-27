@@ -2,7 +2,8 @@
 layout: default
 title: API Gateways
 parent: Documentation
-nav_order: 26
+nav_exclude: true
+search_exclude: true
 ---
 API Gateways
 ============

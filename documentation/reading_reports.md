@@ -2,7 +2,7 @@
 layout: default
 title: Understanding Errors
 parent: Documentation
-nav_order: 8
+nav_order: 30
 ---
 Understanding Errors
 ====================
@@ -25,14 +25,25 @@ A report contain 3 components:
 
 Let's assume this contract is running as a stub:
 
-```gherkin
+```yaml
 #Filename: basic.spec
-Feature: Basic contract
-
-Scenario: Basic API
-When POST /basic
-And request-body (number)
-Then status 200
+openapi: 3.0.1
+info:
+  title: Basic contract
+  version: "1"
+paths:
+  /basic:
+    post:
+      summary: Basic API
+      parameters: []
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: number
+      responses:
+        "200":
+          description: Basic API
 ```
 
 Here's the output of a curl command that invokes the stub API.
@@ -75,14 +86,32 @@ Specmatic helpfully tells you that it expected a number, but the actual value wa
 
 Let's assume this contract is running as a stub:
 
-```gherkin
-Feature: Random API
-  Scenario: Random number
-    When POST /number
-    And request-body
-      | data | (number) |
-    Then status 200
-    And response-body (number)
+```yaml
+openapi: 3.0.1
+info:
+  title: Random API
+  version: "1"
+paths:
+  /number:
+    post:
+      summary: Random number
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - data
+              properties:
+                data:
+                  type: number
+      responses:
+        "200":
+          description: Random number
+          content:
+            text/plain:
+              schema:
+                type: number
 ```
 
 Here's the output of a curl command that invokes the stub API.

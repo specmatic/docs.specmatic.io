@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Authoring Contracts
+title: Generating API Specifications
 parent: Documentation
 nav_order: 11
 ---
-Authoring Contracts
-===================
+Generating API Specifications
+=============================
 
-- [Authoring Contracts](#authoring-contracts)
+- [Generating API Specifications](#generating-api-specifications)
   - [From an existing application using proxy mode](#from-an-existing-application-using-proxy-mode)
     - [Start the proxy](#start-the-proxy)
     - [Generate contracts](#generate-contracts)
