@@ -2,7 +2,8 @@
 layout: default
 title: Qontract to Specmatic
 parent: Download
-nav_order: 3
+nav_exclude: true
+search_exclude: true
 ---
 Migration Guide - Qontract to Specmatic
 =======================================
