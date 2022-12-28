@@ -185,7 +185,7 @@ Sometimes it may not be possible to keep the test cases as examples inline withi
 
 In these circumstances you can leverage **Specmatic's [Gherkin](https://cucumber.io/docs/gherkin/) based Domain Specific Language (DSL)** to define the examples in a tabular format externally thereby keeping the OpenAPI spec itself unaffected.
 
-Here is an example where we have split the ["employees.yaml" we saw in the above section](http://localhost:4000/documentation/contract_tests.html#specmatic-contract-test---command-line) into two files in the same directory.
+Here is an example where we have split the ["employees.yaml" we saw in the above section](/documentation/contract_tests.html#specmatic-contract-test---command-line) into two files in the same directory.
 * ```employees-without-examples.yaml``` - OpenAPI Spec file without the examples
 * ```employees.spec``` - Specmatic Gherkin Spec which includes the employees.yaml and adds the examples for each path, operation and response thereby making it easily readable
 
