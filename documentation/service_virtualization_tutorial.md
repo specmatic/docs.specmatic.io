@@ -25,6 +25,7 @@ Service Virtualization
     - [Context](#context)
     - [Expectations Http Endpoint](#expectations-http-endpoint)
     - [Anatomy of a Component / API Test](#anatomy-of-a-component--api-test)
+  - [Programmatic Approach](#programmatically-starting-stub-server-within-tests)
   - [Sample Java Project](#sample-java-project)
 
 ## Pre-requisites
@@ -402,7 +403,53 @@ Let us analyse each phase of this API test.
 
 The same approach can be leveraged in other test tools and frameworks such as [Rest-Assured](https://rest-assured.io/) also.
 
+## Programmatically starting stub server within tests
+
+If your tests are written in a JVM based language, you can start and stop the stub server within your tests programmatically.
+
+Add `specmatic-core` jar dependency with scope set to test since this need not be shipped as part of your production deliverable.
+
+```
+<dependency>
+    <groupId>in.specmatic</groupId>
+    <artifactId>specmatic-core</artifactId>
+    <version>{{ site.latest_release }}</version>
+    <scope>test</scope>
+</dependency>
+```
+
+Now you can import the utilty to create the stub server. Below code snippets are in Kotlin. However the overall concept is the same across all JVM languages such as Clojure, Scala or plain Java.
+
+```kotlin
+import `in`.specmatic.stub.createStub
+```
+
+This utility can now be used in your test ```setup``` / ```beforeAll``` method to start the stub server. Specmatic automatically looks for your [```specmatic.json```](/documentation/specmatic_json.html) file in project root directory / classpath to locate your API Specification files that need to run as part of the stub server.
+
+```kotlin
+@BeforeAll
+@JvmStatic
+fun setUp() {
+    stub = createStub()
+}
+```
+
+And subsequently once your tests are done, you can shutdown the stub server as part of your ```teardown``` / ```afterAll``` method.
+
+```kotlin
+@AfterAll
+@JvmStatic
+fun tearDown() {
+    service?.stop()
+    stub.close()
+}
+```
+
+Here is a complete [example](https://github.com/znsio/specmatic-order-ui/blob/683f59f5024e02af88fb54a55f03d819f852bb2e/src/test/kotlin/controllers/APITests.kt) of a Karate API test that leverages the above technique.
+
+Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
+
 ## Sample Java Project
 
-https://github.com/znsio/specmatic-order-ui
+[https://github.com/znsio/specmatic-order-ui](https://github.com/znsio/specmatic-order-ui)
 

@@ -2,7 +2,8 @@
 layout: default
 title: Programmatic Approach
 parent: Documentation
-nav_order: 3
+nav_exclude: true
+search_exclude: true
 ---
 Programmatic Approach
 =====================

@@ -21,6 +21,8 @@ Contract Tests
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
+    - [Programmatic Approach](#programmtically-executing-specmatic-contract-as-tests)
+    - [Sample Project](#sample-project)
 
 [Read here about contract testing and where Specmatic fits in](/contract_testing.html).
 
@@ -579,3 +581,47 @@ Feature: WSDL Companion file
 ```
 
 (REQUEST-BODY) contains the request body in a single line, SOAPAction contains the value value of the SOAPAction header, and additional columns must be included for each header sent by the SOAP service.
+
+### Programmtically executing Specmatic Contract as Tests
+
+If your building your application in a JVM based language, you can run Specmatic Contract Tests programmatically just like any other JUnit test and also get similar feedback within your IDE.
+
+Add Specmatic JUnit Support Jar dependency.
+
+```
+<dependency>
+    <groupId>in.specmatic</groupId>
+    <artifactId>junit5-support</artifactId>
+    <version>{{ site.latest_release }}</version>
+    <scope>test</scope>
+</dependency>
+```
+
+Also add the junit5 dependency so that we can use the ```BeforeAll``` and ```AfterAll``` annotations.
+
+```
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.8.2</version>
+    <scope>test</scope>
+</dependency>
+```
+
+No we need to extend ```SpecmaticJUnitSupport``` to run Contract Tests programmatically. Specmatic will locate the API Specifications to run as a test based on the condifurations in your [```specmatic.json```](/documentation/specmatic_json.html) file. All you need to additionally provide is the ```host``` and ```port``` where your application is running.
+
+```java
+public class ContractTests extends SpecmaticJUnitSupport {
+    @BeforeAll
+    public static void setUp() {
+        System.setProperty("host", "localhost");
+        System.setProperty("port", "8080");
+    }
+}
+```
+
+Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTests.java) for a Springboot application.
+
+### Sample Project
+
+[https://github.com/znsio/specmatic-order-api](https://github.com/znsio/specmatic-order-api)
