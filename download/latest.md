@@ -8,11 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 21st Nov 2022
+Date: 29th Dec 2022
 
 What's new:
-- Updated support for omitting queries from contract test examples
-- Improved logging of parser error messages
+- Support for matching of multipart binary content
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

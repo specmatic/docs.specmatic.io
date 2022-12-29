@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.58.0
+
+Date: 21st Nov 2022
+
+What's new:
+- Updated support for omitting queries from contract test examples
+- Improved logging of parser error messages
+
 ## Release 0.57.0
 
 Date: 18th Nov 2022
