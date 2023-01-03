@@ -11,7 +11,7 @@ nav_order: 1
 ---
 ### Context
 
-In a complex, interdependent eco-system, where each service is evolving rapidly, we want to make the dependencies between them explicit in the form of executable contracts. By doing so, [Conract Driven Development](/contract_driven_development.html) allows teams to get instantaneous feedback while making changes to avoid accidental breakage.
+In a complex, interdependent eco-system, where each service is evolving rapidly, we want to make the dependencies between them explicit in the form of executable contracts. By doing so, [Contract Driven Development](/contract_driven_development.html) allows teams to get instantaneous feedback while making changes to avoid accidental breakage.
 
 With this ability, we can now deploy, at will, any service at any time without having to depend on expensive and fragile integration tests.
 
