@@ -182,10 +182,10 @@ Tests run: 1, Successes: 0, Failures: 1, Errors: 0
 This is how Specmatic is able to make sure that your API never deviates from the Specification.
 
 Please refer to below videos for extensive demos on Contract as Test.
-* [Boundary Condition Testing](https://youtu.be/U5Agz-mvYIU?t=51) - Verifying edge cases
-* [Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract as Test to Test Drive your Code
+* [Video: Boundary Condition Testing](https://youtu.be/U5Agz-mvYIU?t=51) - Verifying edge cases
+* [Video: Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract as Test to Test Drive your Code
 
-[**Contract Tests in detail**](/documentation/contract_tests.html)
+[**Learn more about Contract Tests here.**](/documentation/contract_tests.html)
 
 ### Consumer Side - Contract As A Stub / Smart Mock
 
@@ -299,9 +299,9 @@ Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 Specmatic rejects the expectation / canned response since it is not in line with the OpenAPI Specification.
 
 To know more about smart mocks please refer to below video demos
-* [Smart Mocks](https://youtu.be/U5Agz-mvYIU?t=750)
-* [Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
+* [Video: Smart Mocks](https://youtu.be/U5Agz-mvYIU?t=750)
+* [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
 We can now start consumer development against this stub without any dependency on the real API.
 
-[**Stubbing / Smart Mocks in detail**](/documentation/service_virtualization_tutorial.html)
+[**Learn more about Stubbing / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)
