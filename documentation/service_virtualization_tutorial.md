@@ -445,7 +445,9 @@ fun tearDown() {
 }
 ```
 
-Here is a complete [example](https://github.com/znsio/specmatic-order-ui/blob/683f59f5024e02af88fb54a55f03d819f852bb2e/src/test/kotlin/controllers/APITests.kt) of a Karate API test that leverages the above technique.
+Here are complete examples of Karate API test that leverages the above technique.
+* [Kotlin](https://github.com/znsio/specmatic-order-ui/blob/683f59f5024e02af88fb54a55f03d819f852bb2e/src/test/kotlin/controllers/APITests.kt)
+* [Java](https://github.com/znsio/specmatic-order-ui/blob/java_component_test/src/test/java/controllers/APITests.java)
 
 Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
 
