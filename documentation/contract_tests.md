@@ -622,6 +622,20 @@ public class ContractTests extends SpecmaticJUnitSupport {
 
 Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTests.java) for a Springboot application.
 
+### Referring to local specificatons
+
+If you want to temoporarily refer to API specifications on your local machine please use system property ```contractPaths```.
+
+```java
+@BeforeAll
+public static void setUp() {
+    File apiContract = new File("<path to API specification>/orders-api-v1.yaml");
+    System.setProperty("contractPaths", apiContract.getAbsolutePath());
+    System.setProperty("host", "localhost");
+    System.setProperty("port", "8080");
+}
+```
+
 ### Sample Project
 
 [https://github.com/znsio/specmatic-order-api](https://github.com/znsio/specmatic-order-api)
