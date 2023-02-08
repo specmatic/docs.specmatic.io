@@ -108,7 +108,7 @@ paths:
 
 ## Stub Out The Product Service
 
-* Run `java -jar specmatic.jar stub product-api.yaml`
+* Run `java -jar specmatic.jar stub products-api.yaml`
 * Use postman to make a request to http://localhost:9000/products/10
 
 Specmatic returns a contract valid response. The values are randomly generated. We have not yet told Specmatic how to handle this request.
