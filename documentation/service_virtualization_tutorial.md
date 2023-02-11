@@ -26,7 +26,9 @@ Service Virtualization
     - [Context](#context)
     - [Expectations Http Endpoint](#expectations-http-endpoint)
     - [Anatomy of a Component / API Test](#anatomy-of-a-component--api-test)
-  - [Programmatic Approach](#programmatically-starting-stub-server-within-tests)
+  - [Programmatically starting stub server within tests](#programmatically-starting-stub-server-within-tests)
+  - [Transient mocks](#transient-mocks)
+  - [Clearing transient mocks](#clearing-transient-mocks)
   - [Sample Java Project](#sample-java-project)
 
 ## Pre-requisites
@@ -101,7 +103,16 @@ paths:
                 properties:
                   id:
                     type: integer
-
+  /storestatus:
+    get:
+      summary: Get the status of the store
+      responses:
+        '200':
+          description: Status of the store
+          content:
+            text/plain:
+              schema:
+                type: string
 ```
 
 - Create a directory named products-api_data in which we will place these stubs.
@@ -523,6 +534,40 @@ Here are complete examples of Karate API test that leverages the above technique
 * [Java](https://github.com/znsio/specmatic-order-ui/blob/java_component_test/src/test/java/controllers/APITests.java)
 
 Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
+
+## Transient mocks
+
+A transient mock disappears immediately after it has been exercised.
+
+For example, create this stub file for products-api.yaml contract:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/storestatus",
+    "http-stub-token": "123"
+  },
+  "http-response": {
+    "status": 200,
+    "body": "open"
+  }
+}
+```
+
+Make an HTTP request to http://localhost:9000/storestatus with the GET method. The response says "open".
+
+Now try the same request again. The response is a randomized string.
+
+This is useful particularly when there are no distinguishing features of the request like in the above example, and we need to simulate a succession of calls to that API giving different responses.
+
+## Clearing transient mocks
+
+If the test fails and you need to start a new run of the test, you may need to clear all the transient mocks so that the two tests do not step on eachother's toes.
+
+To do that, make an API call to the path /_specmatic/admin/http-stub-token/<http-stub-token> with the DELETE verb.
+
+To clear the transient mock in the above example, you would call http://localhost:9000/_specmatic/http-stub-token/123 with the DELETE verb.
 
 ## Sample Java Project
 
