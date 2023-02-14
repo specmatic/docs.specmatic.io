@@ -10,11 +10,11 @@ nav_order: 2
 Date: 10th Feb 2023
 
 What's new:
-- Added support for oneOf (thanks to @westse)
-- Added support for path params as enum (thanks to @westse)
-- Added support for array of enum in query params (thanks to @westse)
-- Fixed indirect circular component ref bug (thanks to @westse)
-- Fixed bug in DateTimePattern (thanks to @androa)
+- Added support for oneOf — thanks to @westse (Steve West)
+- Added support for path params as enum — thanks to @westse (Steve West)
+- Added support for array of enum in query params — thanks to @westse (Steve West)
+- Fixed indirect circular component ref bug — thanks to @westse (Steve West)
+- Fixed bug in DateTimePattern — thanks to @androa (André Roaldseth)
 - Convert header keys to lower case while loading stub data
 - Improved stub creation Java helpers
 
