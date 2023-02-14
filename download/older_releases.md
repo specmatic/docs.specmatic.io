@@ -5,6 +5,26 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.60.0
+
+Date: 10th Feb 2023
+
+What's new:
+- Added support for oneOf (thanks to @westse)
+- Added support for path params as enum (thanks to @westse)
+- Added support for array of enum in query params (thanks to @westse)
+- Fixed indirect circular component ref bug (thanks to @westse)
+- Fixed bug in DateTimePattern (thanks to @androa)
+- Convert header keys to lower case while loading stub data
+- Improved stub creation Java helpers
+
+## Release 0.59.0
+
+Date: 29th Dec 2022
+
+What's new:
+- Support for matching of multipart binary content
+
 ## Release 0.58.0
 
 Date: 21st Nov 2022

@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 29th Dec 2022
+Date: 14th Feb 2023
 
 What's new:
-- Support for matching of multipart binary content
+- Fixed a in proxy mode when proxying to URLs with a domain name
+- Added support for transient mocks
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
