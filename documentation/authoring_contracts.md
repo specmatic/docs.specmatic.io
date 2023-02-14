@@ -49,6 +49,11 @@ Writing contract to ./contracts/new_feature.yaml
 Writing stub data to ./contracts/stub0.json
 ```
 
+Specmatic can identify parameters in URL path based on the traffic passing through it.
+For example: If you send two requests, ```/employees/10``` and ```/employees/20```, Specmatic will figure out that URL path should be ```/empoyees/{id}``` where id could be any number, and will add an appropriate path parameter in the specification.
+
+So we recommend making atleast two requests in such cases to provide Specmatic with enough data to idenitify such path parameters.
+
 ## From a sample request and response
 
 If you know what the request and response should look like, you can start by creating a file with the sample request and response.
