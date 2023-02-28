@@ -28,7 +28,8 @@ Service Virtualization
     - [Anatomy of a Component / API Test](#anatomy-of-a-component--api-test)
   - [Programmatically starting stub server within tests](#programmatically-starting-stub-server-within-tests)
   - [Transient mocks](#transient-mocks)
-  - [Clearing transient mocks](#clearing-transient-mocks)
+    - [Setting transient expectations](#setting-transient-expectations)
+    - [Clearing transient expectations](#clearing-transient-expectations)
   - [Sample Java Project](#sample-java-project)
 
 ## Pre-requisites
@@ -539,6 +540,8 @@ Please note that this is only a utility for the purpose of convenience in Java p
 
 A transient mock disappears immediately after it has been exercised.
 
+### Setting transient expectations
+
 For example, create this stub file for products-api.yaml contract:
 
 ```json
@@ -561,7 +564,7 @@ Now try the same request again. The response is a randomized string.
 
 This is useful particularly when there are no distinguishing features of the request like in the above example, and we need to simulate a succession of calls to that API giving different responses.
 
-## Clearing transient mocks
+### Clearing transient expectations
 
 If the test fails and you need to start a new run of the test, you may need to clear all the transient mocks so that the two tests do not step on eachother's toes.
 

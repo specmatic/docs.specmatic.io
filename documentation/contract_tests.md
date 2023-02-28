@@ -9,11 +9,11 @@ Contract Tests
 
 - [Contract Tests](#contract-tests)
     - [Overview](#overview)
-    - [The Specmatic Command](#specmatic-contract-test---command-line)
-    - [Externalising Examples](#externalising-examples--test-cases)
-    - [Boundary / Negative Testing](#boundary-condition-testing)
+    - [Specmatic Contract Test - Command Line](#specmatic-contract-test---command-line)
+    - [Externalising examples / test cases](#externalising-examples--test-cases)
+    - [Boundary Condition Testing](#boundary-condition-testing)
     - [JUnit Output From The Command](#junit-output-from-the-command)
-    - [When The API Does Not Match The Contract](#when-the-api-does-not-match-the-contract)
+    - [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
     - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
     - [Handling Application authentication](#handling-application-authentication)
@@ -21,10 +21,9 @@ Contract Tests
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
-    - [Programmatic Approach](#programmtically-executing-specmatic-contract-as-tests)
+    - [Programmtically executing Specmatic Contract as Tests](#programmtically-executing-specmatic-contract-as-tests)
+    - [Referring to local specificatons](#referring-to-local-specificatons)
     - [Sample Project](#sample-project)
-
-[Read here about contract testing and where Specmatic fits in](/contract_testing.html).
 
 ### Overview
 
