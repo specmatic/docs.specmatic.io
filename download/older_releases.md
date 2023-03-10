@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.61.0
+
+Date: 14th Feb 2023
+
+What's new:
+- Fixed a in proxy mode when proxying to URLs with a domain name
+- Added support for transient mocks
+
 ## Release 0.60.0
 
 Date: 10th Feb 2023
