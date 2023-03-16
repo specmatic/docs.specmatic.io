@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.63.0
+
+Date: 14th March 2023
+
+What's new:
+- API coverage report can check actuator for APIs exposed by the application, to figure out which of them are not covered by contract tests
+- Paths in a Specmatic Gherkin file wrapping an OpenAPI specification will match the specification paths even when there are constraints
+
 ## Release 0.62.0
 
 Date: 10th March 2023

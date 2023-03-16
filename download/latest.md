@@ -11,8 +11,7 @@ Release {{ site.latest_release }}
 Date: 14th March 2023
 
 What's new:
-- API coverage report can check actuator for APIs exposed by the application, to figure out which of them are not covered by contract tests
-- Paths in a Specmatic Gherkin file wrapping an OpenAPI specification will match the specification paths even when there are constraints
+- Improvements to how trailing slash is handled
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
