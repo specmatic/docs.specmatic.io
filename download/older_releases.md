@@ -5,6 +5,34 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.63.0
+
+Date: 14th March 2023
+
+What's new:
+- API coverage report can check actuator for APIs exposed by the application, to figure out which of them are not covered by contract tests
+- Paths in a Specmatic Gherkin file wrapping an OpenAPI specification will match the specification paths even when there are constraints
+
+## Release 0.62.0
+
+Date: 10th March 2023
+
+What's new:
+- Allow contract-invalid examples of 400 in the contract
+- Examples can now be marked WIP (by adding [WIP] at the start of the example name), and WIP example tests will not return 1 at the command prompt, nor fail a build
+- Added stats showing how many tests are for each API in the contracts used for contract testing
+- Eliminated stackoverflow error when a cycle exists in the contract  - thanks to @westse (Steve West)
+- Added support for discriminator - thanks to @westse (Steve West)
+- Added support for Dictionary with allOf, oneOf - thanks to @westse (Steve West)
+
+## Release 0.61.0
+
+Date: 14th Feb 2023
+
+What's new:
+- Fixed a in proxy mode when proxying to URLs with a domain name
+- Added support for transient mocks
+
 ## Release 0.60.0
 
 Date: 10th Feb 2023

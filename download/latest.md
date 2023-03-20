@@ -8,11 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 14th Feb 2023
+Date: 16th March 2023
 
 What's new:
-- Fixed a in proxy mode when proxying to URLs with a domain name
-- Added support for transient mocks
+- Improvements to how trailing slash is handled
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
