@@ -225,5 +225,5 @@ A hook is simply a command that can run on the Terminal or Command Prompt.
   }
 ```
 
-In the above snippet, `stub_load_contract` is the hook name. "python load.py" runs and is passed the contract file name just before a contract is loaded. The hook can modify the contract and post it to standard output.
+In the above snippet, `stub_load_contract` is the hook name. "python load.py" is executed, and the name of the contract is provided to it as an environment variable named `CONTRACT_FILE`. The hook must modify the contract and write it out to standard output. Specmatic will read the standard output of the plugin, and load the result as the contract.
 
