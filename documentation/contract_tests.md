@@ -299,7 +299,7 @@ Feature: Employees API
     When PUT /znsio/specmatic/employees/10
     Then status 200
     Examples:
-      | id | REQUEST-BODY                                                                             |
+      | id | (REQUEST-BODY)                                                                             |
       | 10 | { "id": 10, "name": "Jill Doe", "department": "Engineering", "designation": "Director" } |
 ```
 
