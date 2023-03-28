@@ -23,6 +23,7 @@ Contract Tests
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
     - [Programmtically executing Specmatic Contract as Tests](#programmtically-executing-specmatic-contract-as-tests)
     - [Referring to local specificatons](#referring-to-local-specificatons)
+    - [API Coverage](#api-coverage)
     - [Sample Project](#sample-project)
 
 ### Overview
@@ -634,6 +635,18 @@ public static void setUp() {
     System.setProperty("port", "8080");
 }
 ```
+
+### API Coverage
+
+After running the tests, Specmatic will print out a tabular report showing which APIs were covered by the tests.
+
+In addition, it can read the APIs exposed by the application from the actuator module, to indicate in the same report which APIs were not covered by contract tests.
+
+To get this working:
+1. Turn on the actuator module, and enable the mappings endpoint. You can read more about this online.
+2. Set the system property `endpointsAPI` to the mappings endpoint exposed by actuator.
+
+Look at the sample project below to see this in action. Observe the system property, set in the [ContractTests](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTests.java) class, and the actuator-related dependency added in `pom.xml`.
 
 ### Sample Project
 
