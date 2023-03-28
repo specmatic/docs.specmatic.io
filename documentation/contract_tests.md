@@ -23,6 +23,7 @@ Contract Tests
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
     - [Programmtically executing Specmatic Contract as Tests](#programmtically-executing-specmatic-contract-as-tests)
     - [Referring to local specificatons](#referring-to-local-specificatons)
+    - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [API Coverage](#api-coverage)
     - [Sample Project](#sample-project)
 
@@ -635,6 +636,23 @@ public static void setUp() {
     System.setProperty("port", "8080");
 }
 ```
+
+### Examples that are not passing yet
+
+The contract is used as a collaboration tool. Sometimes, a contract violation may take time to fix. It may be useful to add examples that demonstrate the problem to the contract without breaking the build.
+
+To do this, the example name should start with `[WIP]`.
+
+For example, an example of a failing contract tests for a 200 response could look like this:
+
+```yaml
+"[WIP] SUCCESS":
+  value:
+    id: 10
+    name: "Herbie"
+```
+
+Note the quotes around the name, which are necessary because of the space required between `[WIP]` and `SUCCESS`.
 
 ### API Coverage
 
