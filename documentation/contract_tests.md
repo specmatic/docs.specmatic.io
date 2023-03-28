@@ -24,6 +24,7 @@ Contract Tests
     - [Programmtically executing Specmatic Contract as Tests](#programmtically-executing-specmatic-contract-as-tests)
     - [Referring to local specificatons](#referring-to-local-specificatons)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
+    - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
     - [API Coverage](#api-coverage)
     - [Sample Project](#sample-project)
 
@@ -653,6 +654,84 @@ For example, an example of a failing contract tests for a 200 response could loo
 ```
 
 Note the quotes around the name, which are necessary because of the space required between `[WIP]` and `SUCCESS`.
+
+### Examples that trigger 400 responses
+
+To trigger a 400 response, you may need a contract-invalid example. Specmatic will not enforce contract validity for examples that are meant to trigger a 400 response.
+
+For example:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/znsio/specmatic/employees':
+    post:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            examples:
+              SUCCESS:
+                value:
+                  name: "Heidi"
+                  department: "Engineering"
+                  designation: "Team Lead"
+              INVALID_ID:
+                value:
+                  id: "xyz",
+                  name: "Heidi"
+                  department: "Engineering"
+                  designation: "Team Lead"
+      responses:
+        '201':
+          description: Employee Created Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              SUCCESS:
+                value:
+                  id: 10
+                  name: "Heidi"
+                  department: "Engineering"
+                  designation: "Team Lead"
+        '400':
+          description: Invalid request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                INVALID_ID
+components:
+  schemas:
+    Employee:
+      title: Employee
+      type: object
+      required:
+        - name
+        - department
+        - designation
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string
+```
+
+Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accepts it and sends it to the system under test, expecting a 400 response.
+
+A contract-invalid example would not be allowed in the example named `SUCCESS`, as it is an example that should trigger a 200 response (and hence must be a contract-valid example).
 
 ### API Coverage
 
