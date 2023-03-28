@@ -684,7 +684,7 @@ paths:
                   designation: "Team Lead"
               INVALID_ID:
                 value:
-                  id: "xyz",
+                  id: "xyz"
                   name: "Heidi"
                   department: "Engineering"
                   designation: "Team Lead"
