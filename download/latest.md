@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 16th March 2023
+Date: 18th March 2023
 
 What's new:
-- Improvements to how trailing slash is handled
+- Improvement to backward compatibility message
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

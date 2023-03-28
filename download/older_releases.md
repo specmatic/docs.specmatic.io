@@ -5,6 +5,21 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.63.2
+
+Date: 18th March 2023
+
+What's new:
+- Improvement to coverage report
+- Reduce noise in logs - thanks to @westse (Steve West)
+
+## Release 0.63.1
+
+Date: 16th March 2023
+
+What's new:
+- Improvements to how trailing slash in a contract is handled
+
 ## Release 0.63.0
 
 Date: 14th March 2023
