@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.64.0
+
+Date: 29th March 2023
+
+What's new:
+- Reworked the test description to show the example name and key details about the API instead of the API summary or description
+- Deletion of some unnecessary code - thanks to @westse (Steve West)
+
 ## Release 0.63.3
 
 Date: 18th March 2023
