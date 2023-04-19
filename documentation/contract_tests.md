@@ -25,6 +25,7 @@ Contract Tests
     - [Referring to local specificatons](#referring-to-local-specificatons)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
+    - [Run only passing tests in CI](#run-only-passing-tests-in-ci)
     - [API Coverage](#api-coverage)
     - [Sample Project](#sample-project)
 
@@ -732,6 +733,26 @@ components:
 Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accepts it and sends it to the system under test, expecting a 400 response.
 
 A contract-invalid example would not be allowed in the example named `SUCCESS`, as it is an example that should trigger a 200 response (and hence must be a contract-valid example).
+
+### Run only passing tests in CI
+
+If the contract tests are still a work in progress, you can commit what's working and prevent other contract tests that are known to be broken from running.
+
+To do this, in Java, set the `filterName` Java system property in the @BeforeAll method (if you use JUnit 5) like this:
+
+```java
+System.setProperty("filterName", "TEST1");
+```
+
+Now only the contract tests with `TEST1` in their test description will run. Test descriptions conveniently include the name of the tests used in the OpenAPI examples, and so can be used as the filtering value.
+
+`filterName` can also be provided a comma separate value:
+
+```java
+System.setProperty("filterName", "TEST1, TEST2");
+```
+
+Now only the contract tests with either `TEST1` or `TEST2` in their test descriptions will run.
 
 ### API Coverage
 
