@@ -26,6 +26,7 @@ Contract Tests
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
     - [Run only passing tests in CI](#run-only-passing-tests-in-ci)
+    - [Omitting some tests](#omitting-some-tests)
     - [API Coverage](#api-coverage)
     - [Sample Project](#sample-project)
 
@@ -753,6 +754,20 @@ System.setProperty("filterName", "TEST1, TEST2");
 ```
 
 Now only the contract tests with either `TEST1` or `TEST2` in their test descriptions will run.
+
+You can also use the command-line parameter `--filter-name`.
+
+### Omitting some tests
+
+Set the `filterNotName` Java system property in the @BeforeAll method (if you use JUnit 5) like this:
+
+```java
+System.setProperty("filterNotName", "TEST1");
+```
+
+Now only the contract tests which do not have `TEST1` in their test description will run. 
+
+You can also use the command-line parameter `--filter-not-name`.
 
 ### API Coverage
 

@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.65.0
+
+Date: 19th April 2023
+
+What's new:
+- Added the ability to match a string request body against a regex (search for bodyRegex in the documentation)
+- Added the ability to run a selected set of contract tests (search for filterName in documentation)
+
 ## Release 0.64.0
 
 Date: 29th March 2023

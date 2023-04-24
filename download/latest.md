@@ -8,11 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 19th April 2023
+Date: 24th April 2023
 
 What's new:
-- Added the ability to match a string request body against a regex (search for bodyRegex in the documentation)
-- Added the ability to run a selected set of contract tests (search for filterName in documentation)
+- Added the ability to filter out tests by name (search the documentation for filterNotName)
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
