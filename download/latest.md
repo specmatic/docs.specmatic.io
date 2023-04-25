@@ -8,7 +8,7 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 24th April 2023
+Date: 25th April 2023
 
 What's new:
 - Added the ability to filter out tests by name (search the documentation for filterNotName)
