@@ -1,0 +1,36 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/redis",
+    "body": {
+      "operation": "hgetall",
+      "params": [
+        "BxGy:1567782"
+      ]
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "type": "array",
+      "value": [
+        {
+          "type": "string",
+          "value": "Key1"
+        },
+        {
+          "type": "string",
+          "value": "Value1"
+        },
+        {
+          "type": "string",
+          "value": "Key2"
+        },
+        {
+          "type": "string",
+          "value": "Value2"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+    "http-request": {
+        "method": "POST",
+        "path": "/redis",
+        "body": {
+            "operation": "get",
+            "params": ["PO:HEIGHT"]
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "type": "number",
+            "value": "10"
+        }
+    }
+}
