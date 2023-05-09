@@ -10,7 +10,7 @@
     "http-response": {
         "status": 200,
         "body": {
-            "type": "number",
+            "type": "long",
             "value": "10"
         }
     }

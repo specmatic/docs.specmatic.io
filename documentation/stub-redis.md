@@ -54,12 +54,12 @@ redisMock.setExpectation(<expectation json file>);
 ### Stub Format
 Here's the redis [contract](./redis-stubbing/redis-mock.yaml)
 
-[Here's an example](./redis-stubbing/get_a_string.json) of how to stub out a Redis call that sends a key and gets back a string.
+Following lists the examples of the expectations for different data types for Redis :
 
-[Here's an example](./redis-stubbing/get_a_number.json) of how to stub out a Redis call that sends a key and gets back a number.
-
-[Here's an example](./redis-stubbing/pass_an_lrange_and_return_an_array.json) of how to stub out a Redis call that sends an lrange and gets back an array.
-
-[Here's an example](./redis-stubbing/get_a_map.json) of how to stub out a Redis call that sends a key and gets back a map object.
-
+| Data Type | Example |
+|-----------|---------|
+| String    |  [Here's an example](./redis-stubbing/get_a_string.json)       |
+| Number    |   [Here's an example](./redis-stubbing/get_a_number.json)      |
+| Array     |    [Here's an example](./redis-stubbing/pass_an_lrange_and_return_an_array.json)     |
+| Map       |    [Here's an example](./redis-stubbing/get_a_map.json)     |
 
