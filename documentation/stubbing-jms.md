@@ -1,15 +1,10 @@
----
-layout: default
-title: JMS Stubbing
-parent: Documentation
----
 # JMS Stubbing
 
 ## Introduction
 
 JMS (Java Message Service) is an API that allows application components based on the Java Platform to create, send, receive, and read messages.
 
-Using specmatic we can stub out JMS & run the AUT (application under test) independently & below are the steps.
+Using specmatic we can stub out JMS & run the AUT (application under test) independently & below are the steps for stubbing.
 
 1. Add the following dependency to the project `pom.xml`
     ```xml
@@ -27,17 +22,17 @@ Using specmatic we can stub out JMS & run the AUT (application under test) indep
     }}, "localhost", 61616);
     jmsMock.start();
     ```
-   Above code is responsible for starting mocked JMS API on port 61616
+   Above code will start mocked JMS API on port 61616.
 
 
 3. In the `@AfterAll` method, add the following.
     ```java
     jmsMock.stop();
     ```
-   This command closes connection
+   This command closes connection.
 
 
-4. Create a file called `async-api.yaml` in `src/test/resources`(path should be same while creating jmsMock object) with the following content.
+4. Create a file called `async-api.yaml` in `src/test/resources`(use the same path in step 2) with the following content.
     ```yaml
     asyncapi: 2.0.0
     info:
