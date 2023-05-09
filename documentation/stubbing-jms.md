@@ -77,7 +77,7 @@ Above file serves as contract for ActiveMQ server.
 
 ### Implementing ActiveMQ server
 
-Create new [TestInitialContextFactory.java](jms-stub-code/TestInitialContextFactory.java) file into src/test/jms;
+Create new [TestInitialContextFactory.java](jms-stub-code/TestInitialContextFactory.java) file into src/test/jms package.
 
 This will create ActiveMQ server for which client can interact.
 
