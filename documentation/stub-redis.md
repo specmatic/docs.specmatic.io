@@ -1,5 +1,12 @@
+---
+layout: default
+title: Troubleshooting
+parent: Documentation
+nav_exclude: true
+---
 
 ## Introduction to Redis Stubbing
+Redis is an open source, in-memory, key-value data store most commonly used as a primary database, cache, message broker, and queue.
 This documentation describes how to stub out redis using JUnit 5
 
 ### Pre-requisite Setup
