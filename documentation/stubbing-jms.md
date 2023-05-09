@@ -37,7 +37,7 @@ jmsMock = new JmsMock(new ArrayList<String>() {{
 jmsMock.start();
 ```
 
-* This will start JMS server running on port: 61616 on localhost.
+This will start JMS server running on port: 61616 on localhost.
 
 ### Stop JMS Server
 
@@ -49,7 +49,7 @@ jmsMock.stop();
 
 ### Creating yaml file
 
-Create a file called `async-api.yaml` in `src/test/resources`(use the same path in [step 2](#Start JMS Server) ) with
+Create a file called `async-api.yaml` in `src/test/resources`(use the same path in step 2) with
 the following content.
 
 ```
