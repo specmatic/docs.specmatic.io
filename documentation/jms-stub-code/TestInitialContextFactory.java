@@ -1,4 +1,4 @@
-package com.jfs.digitalapi.inventory.dmposting;
+package jms;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 

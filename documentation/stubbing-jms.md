@@ -1,12 +1,21 @@
+---
+layout: default
+title: Troubleshooting
+parent: Documentation
+nav_exclude: true
+---
 # JMS Stubbing
 
 ## Introduction
 
 JMS (Java Message Service) is an API that allows application components based on the Java Platform to create, send, receive, and read messages.
 
-Using specmatic we can stub out JMS & run the AUT (application under test) independently & below are the steps for stubbing.
+Specmatic internally has support for ActiveMQ JMS client.
 
-1. Add the following dependency to the project `pom.xml`
+### Pre-requisite Setup
+
+Below-mentioned dependency needs to be in pom.xml
+
     ```xml
     <dependency>
         <groupId>in.specmatic</groupId>
@@ -14,25 +23,32 @@ Using specmatic we can stub out JMS & run the AUT (application under test) indep
         <version>0.0.1</version>
     </dependency>
     ```
-   
-2. In the `@BeforeAll` method in the `ContractTests` class, add the following snippet.
+
+### Start JMS Server
+
+Below code section shows how to start JMS server.
+
     ```java
     jmsMock = new JmsMock(new ArrayList<String>() {{
         add("src/test/resources/async-api.yaml");
     }}, "localhost", 61616);
     jmsMock.start();
     ```
-   Above code will start mocked JMS API on port 61616.
+* This will start JMS server running on port: 61616 on localhost.
 
 
-3. In the `@AfterAll` method, add the following.
+### Stop JMS Server
+
+Below code section shows how to shut-down JMS server.
+
     ```java
     jmsMock.stop();
     ```
-   This command closes connection.
 
+### Creating yaml file
 
-4. Create a file called `async-api.yaml` in `src/test/resources`(use the same path in step 2) with the following content.
+Create a file called `async-api.yaml` in `src/test/resources`(use the same path in [step 2](#Start JMS Server) ) with the following content.
+
     ```yaml
     asyncapi: 2.0.0
     info:
@@ -53,25 +69,21 @@ Using specmatic we can stub out JMS & run the AUT (application under test) indep
                 amqp:
                     is: queue
     ```
-   Above file serves as contract for JMS stubbing
+   Above file serves as contract for ActiveMQ server.
 
 
-6. Add the [TestInitialContextFactory.java](jms-stub-code/TestInitialContextFactory.java) class into src/test, and make sure that the namespace is com.jio.jms.stub. Once done, the fully qualified name of the class should therefore be com.jio.jms.stub.TestInitialContextFactory.
+### Implementing ActiveMQ server
 
+Create new [TestInitialContextFactory.java](jms-stub-code/TestInitialContextFactory.java) file into src/test/jms;
+ 
+This will create ActiveMQ server for which client can interact.
 
-7. Changing the JMS endpoint in
-     `application-contract-tests.properties`, set the value of JMS endpoint `digital.api.platform.app.jmsconfig.jndi.context-factory` or `spring.jms.jndi-name` to `com.jio.jms.stub.TestInitialContextFactory`
+### Changing the JMS Endpoint 
+Locate `.properties` file, change the value of JMS endpoint `spring.jms.jndi-name` or other custom property to `jms.TestInitialContextFactory`(fully qualified class path).
+On running application, JMS calls are redirected to newly created server.
 
 ## Stubbing out interactions
 
 * Verification of stub interactions is coming soon.
 * For now, a channel represents a queue (e.g. tastQueueText represents a queue).
 * Update the above file and add blocks for all the queues that this application will write to.
-
-## Read about AsyncAPI (contracts for message queues)
-
-* [asyncapi.com](https://asyncapi.com)
-
-## Note
-
-* The current version of `specmatic-jms` at time of writing is 0.0.1, but expect this to change when more capabilities are added.
