@@ -9,10 +9,7 @@ nav_exclude: true
 
 ## Introduction
 
-JMS (Java Message Service) is an API that allows application components based on the Java Platform to create, send,
-receive, and read messages.
-
-Specmatic internally has support for ActiveMQ JMS client.
+The JMS standard comprises a set of Java interfaces. It is not a wire protocol. Specmatic uses the ActiveMQ implementation of JMS to stub out JMS dependencies. This can be used anywhere JMS is used, regardless of the specific implementation of JMS in the concerned project.
 
 ### Pre-requisite Setup
 
@@ -83,12 +80,16 @@ This will create ActiveMQ server for which client can interact.
 
 ### Changing the JMS Endpoint
 
-Locate `.properties` file, change the value of JMS endpoint `spring.jms.jndi-name` or other custom property
+Locate `.properties` file, change the value of JMS endpoint `spring.jms.jndi-name` or `spring.datasource.jndi-name`
 to `jms.TestInitialContextFactory`(fully qualified class path).
 On running application, JMS calls are redirected to newly created server.
 
 ## Stubbing out interactions
 
 * Verification of stub interactions is coming soon.
-* For now, a channel represents a queue (e.g. tastQueueText represents a queue).
-* Update the above file and add blocks for all the queues that this application will write to.
+* For now, a channel will always represent a queue(e.g. testQueueText represents a queue).
+* Update the async-api.yaml and add blocks for all the queues that this application will write to.
+
+## Note
+
+* The current version of `specmatic-jms` at time of writing is 0.0.1, but expect this to change when more capabilities are added.
