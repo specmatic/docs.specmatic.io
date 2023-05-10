@@ -1,0 +1,36 @@
+openapi: 3.0.1
+info:
+  title: DB stub API
+  version: "1"
+paths:
+  /:
+    post:
+      summary: Request to stub out a DB query
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: DB stub response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties:
+                        oneOf:
+                          - type: string
+                          - type: number
+                          - type: boolean
+                          - type: object
+                            nullable: true
+                            properties: {}
+                  affectedRows:
+                    type: integer
+
