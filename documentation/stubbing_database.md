@@ -6,12 +6,11 @@ nav_exclude: true
 ---
 
 ## Introduction to Database Stubbing
-Database is an organized collection of structured information, or data, typically stored electronically in a computer system, so that it can be easily accessed and managed.
 
-This documentation describes how to stub out Database using JUnit 5
+This documentation describes how to stub out Database using JUnit 5.
 
 ### Pre-requisite Setup
-Add Below-mentioned dependencies in pom.xml .Use the latest version of the dependencies.
+Add Below-mentioned dependencies in `pom.xml`.Use the latest version of the dependencies.
 
 ```
 <dependency>
@@ -25,13 +24,6 @@ Add Below-mentioned dependencies in pom.xml .Use the latest version of the depen
            <artifactId>specmatic-core</artifactId>
        </exclusion>
    </exclusions>
-</dependency>
-
-<dependency>
-   <groupId>xerces</groupId>
-   <artifactId>xercesImpl</artifactId>
-   <version>2.12.0</version>
-   <scope>test</scope>
 </dependency>
 
 <dependency>
@@ -52,6 +44,18 @@ Add Below-mentioned dependencies in pom.xml .Use the latest version of the depen
    <groupId>in.specmatic</groupId>
    <artifactId>specmatic-core</artifactId>
    <version>0.65.1</version>
+   <scope>test</scope>
+</dependency>
+```
+
+- Sometimes there is a Xerces library version conflict, and in this case you could find out the version of Xerces used by Specmatic.
+
+- Below is the dependency example for Xerces library.   
+```
+<dependency>
+   <groupId>xerces</groupId>
+   <artifactId>xercesImpl</artifactId>
+   <version>2.12.0</version>
    <scope>test</scope>
 </dependency>
 ```
@@ -79,7 +83,7 @@ Database can be stubbed out like any other http dependency by using database con
 
 * You need to configure your DataSource for database as below by using JdbcMockFactory and pointing to ExternalStub of Specmatic stub server.
 
-Example:- Using JAVA
+  - Example:- Using JAVA
 ```
 DataSource mockDataSource = null;
 
@@ -95,7 +99,7 @@ public JdbcMockFactory jdbcMockFactory() {
  - From above code you can return DataSource object created in jdbcMockFactory method to your DataSource.
  - Add below property in respective profile application properties file.
 
-        spring.main.allow-bean-definition-overriding=true
+   ```spring.main.allow-bean-definition-overriding=true```
 
 ### Setting Expectations
   Refer to [Setting Database stub expectations](#setting-database-stub-expectations) section for setting database expectations for specific queries.
@@ -111,15 +115,16 @@ public JdbcMockFactory jdbcMockFactory() {
 * We can start stub server giving db.yaml file address using Specmatic stub command.
 * If you are using specmatic.json file then In ```specmatic.json``` file in local source give address of `db.yaml` inside stub.
   * Example:-
-
-          "sources":[
-             {
-             "provider": "git",
-             "stub": [
-             "src/test/resources/db_stub_contracts/db.yaml"
-               ]
-             }
-          ]
+```
+    "sources":[
+        {
+           "provider": "git",
+           "stub": [
+           "src/test/resources/db_stub_contracts/db.yaml"
+             ]
+        }
+    ]
+```
 
 ### 2. Approach Second:
 
@@ -155,7 +160,7 @@ public JdbcMockFactory jdbcMockFactory() {
  - From above code you can return DataSource object created in jdbcMockFactory method to your DataSource. 
  - Add below property in respective profile application properties file.
 
-        spring.main.allow-bean-definition-overriding=true
+ ```spring.main.allow-bean-definition-overriding=true```
 
 ### Setting Expectations
 
@@ -172,7 +177,7 @@ We can use following setup to post multiple expectations,
 
 * We can declare database stub server url in variable:- 
 
-       private static final String dbExpectationsURL = "http://localhost:9090/_specmatic/expectations";
+    ```private static final String dbExpectationsURL = "http://localhost:9090/_specmatic/expectations";```
 
 * We need to set the expectations with before each tag.
 ```
