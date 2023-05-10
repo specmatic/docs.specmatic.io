@@ -10,7 +10,7 @@ nav_exclude: true
 This documentation describes how to stub out the Database using JUnit 5.
 
 ### Pre-requisite Setup
-Add the below-mentioned dependencies in `pom.xml`.Use the latest version of the dependencies.
+Add the below-mentioned dependencies in `pom.xml`. Use the latest version of the dependencies.
 
 ```
 <dependency>
@@ -48,7 +48,7 @@ Add the below-mentioned dependencies in `pom.xml`.Use the latest version of the 
 </dependency>
 ```
 
-- Sometimes there is a Xerces library version conflict, and in this case, you could find out the version of Xerces used by Specmatic.
+- Sometimes there is a Xerces library version conflict, and in this case, you could find out the version of Xerces used by Specmatic, and pin it in the pom.xml dependencies.
 
 - Below is the dependency example for Xerces library.   
 ```
@@ -62,7 +62,7 @@ Add the below-mentioned dependencies in `pom.xml`.Use the latest version of the 
 
 ### Setup guidelines
 
-There are two approaches to stub out the database as follows:
+There are two approaches to stub out the database:
 
 ### 1. Approach First:
 
