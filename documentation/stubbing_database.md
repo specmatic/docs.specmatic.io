@@ -99,7 +99,9 @@ public JdbcMockFactory jdbcMockFactory() {
  - From above code you can return DataSource object created in jdbcMockFactory method to your DataSource.
  - Add below property in respective profile application properties file.
 
-   ```spring.main.allow-bean-definition-overriding=true```
+```
+spring.main.allow-bean-definition-overriding=true
+```
 
 ### Setting Expectations
   Refer to [Setting Database stub expectations](#setting-database-stub-expectations) section for setting database expectations for specific queries.
@@ -160,7 +162,9 @@ public JdbcMockFactory jdbcMockFactory() {
  - From above code you can return DataSource object created in jdbcMockFactory method to your DataSource. 
  - Add below property in respective profile application properties file.
 
- ```spring.main.allow-bean-definition-overriding=true```
+```
+spring.main.allow-bean-definition-overriding=true
+```
 
 ### Setting Expectations
 
