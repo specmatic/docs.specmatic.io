@@ -82,6 +82,7 @@ This will create ActiveMQ server for which client can interact.
 
 Locate `.properties` file, change the value of JMS endpoint `spring.jms.jndi-name` or `spring.datasource.jndi-name`
 to `jms.TestInitialContextFactory`(fully qualified class path).
+Above approach is specific to JMS with JNDI, approach would be different for other implementations to consume ActiveMQ JMS client.
 On running application, JMS calls are redirected to newly created server.
 
 ## Stubbing out interactions
