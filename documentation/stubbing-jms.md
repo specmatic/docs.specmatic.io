@@ -25,7 +25,7 @@ Below-mentioned dependency needs to be in pom.xml
 
 ### Start JMS Server
 
-Below code section shows how to start JMS server.
+The below code section shows how to start the JMS server.
 
 ```
 jmsMock = new JmsMock(new ArrayList<String>() {{
@@ -34,11 +34,11 @@ jmsMock = new JmsMock(new ArrayList<String>() {{
 jmsMock.start();
 ```
 
-This will start JMS server running on port: 61616 on localhost.
+This will start the JMS server running on port: 61616 on localhost.
 
 ### Stop JMS Server
 
-Below code section shows how to shut-down JMS server.
+The below code section shows how to shut down JMS server.
 
 ```
 jmsMock.stop();
@@ -70,20 +70,20 @@ asyncapi: 2.0.0
                     is: queue
 ```
 
-Above file serves as contract for ActiveMQ server.
+Above file serves as a contract for the ActiveMQ server.
 
 ### Implementing ActiveMQ server
 
-Create new [TestInitialContextFactory.java](jms-stub-code/TestInitialContextFactory.java) file into src/test/jms package.
+Create a new [TestInitialContextFactory.java](jms-stub-code/TestInitialContextFactory.java) file into src/test/jms package.
 
-This will create ActiveMQ server for which client can interact.
+This will create an ActiveMQ server with which clients can interact.
 
 ### Changing the JMS Endpoint
 
-Locate `.properties` file, change the value of JMS endpoint `spring.jms.jndi-name` or `spring.datasource.jndi-name`
-to `jms.TestInitialContextFactory`(fully qualified class path).
-Above approach is specific to JMS with JNDI, approach would be different for other implementations to consume ActiveMQ JMS client.
-On running application, JMS calls are redirected to newly created server.
+Locate the `.properties` file and change the value of the JMS endpoint `spring.jms.jndi-name` or `spring.datasource.jndi-name`
+to `jms.TestInitialContextFactory`(fully qualified classpath).
+The above approach is specific to JMS with JNDI, the approach would be different for other implementations to consume the ActiveMQ JMS client.
+On running the application, JMS calls are redirected to the newly created server.
 
 ## Stubbing out interactions
 
@@ -93,4 +93,4 @@ On running application, JMS calls are redirected to newly created server.
 
 ## Note
 
-* The current version of `specmatic-jms` at time of writing is 0.0.1, but expect this to change when more capabilities are added.
+* The current version of `specmatic-jms` at the time of writing is 0.0.1, but expect this to change when more capabilities are added.
