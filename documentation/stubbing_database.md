@@ -7,17 +7,17 @@ nav_exclude: true
 
 ## Introduction to Database Stubbing
 
-This documentation describes how to stub out the Database using JUnit 5.
+This documentation describes how to stub out the Database.
 
-### Pre-requisite Setup
-Add the below-mentioned dependencies in `pom.xml`. Use the latest version of the dependencies.
+### Pre-requisites
+The following dependencies should be added to `pom.xml`.
 
-```
+```xml
 <dependency>
    <artifactId>database-mock</artifactId>
    <groupId>in.specmatic</groupId>
    <scope>test</scope>
-   <version>0.61.6-db</version>
+   <version>{{ site.db_release }}</version>
    <exclusions>
        <exclusion>
            <groupId>in.specmatic</groupId>
@@ -43,181 +43,130 @@ Add the below-mentioned dependencies in `pom.xml`. Use the latest version of the
 <dependency>
    <groupId>in.specmatic</groupId>
    <artifactId>specmatic-core</artifactId>
-   <version>0.65.1</version>
+   <version>{{ site.latest_release }}</version>
    <scope>test</scope>
 </dependency>
 ```
 
-- Sometimes there is a Xerces library version conflict, and in this case, you could find out the version of Xerces used by Specmatic, and pin it in the pom.xml dependencies.
+Sometimes there is a Xerces library version conflict. Find out the version of Xerces used by Specmatic, and pin it in the pom.xml dependencies. For example:
 
-- Below is the dependency example for Xerces library.   
-```
+```xml
 <dependency>
-   <groupId>xerces</groupId>
-   <artifactId>xercesImpl</artifactId>
-   <version>2.12.0</version>
-   <scope>test</scope>
+  <groupId>xerces</groupId>
+  <artifactId>xercesImpl</artifactId>
+  <version>2.12.0</version>
+  <scope>test</scope>
 </dependency>
 ```
 
-### Setup guidelines
+### Setup The Stub Server
 
-There are two approaches to stub out the database:
+Specmatic's database mock leverages the Specmatic HTTP server, as the two have a number of features in common.
 
-### 1. Approach First:
+Due to this, there are two ways to start-up a database mock.
 
-A database can be stubbed out like any other HTTP dependency by using a database contract [database specification file](./database_stubbing_files/db.yaml).
+#### Approach 1 (default, recommended)
 
-* We are setting database expectations on the Specmatic stub server (`http://localhost:9000`).
+* Setup the following bean in the test section. Make sure to annotate either the bean or it's `@Configuration` class with `@Primary`.
 
-* Specmatic is using path `/` for database stubbing.
+  ```java
+  DataSource mockDataSource = null;
 
+  JdbcMockFactory jdbcMockFactory = null;
 
-#### How it works
+  @Bean(destroyMethod = "close")
+  public JdbcMockFactory jdbcMockFactory() {
+      if (jdbcMockFactory == null) jdbcMockFactory = new JdbcMockFactory(new DBStub("localhost",9090));
+      if (mockDataSource == null) mockDataSource = jdbcMockFactory.createDataSource();
+      return jdbcMockFactory;
+  }
+  ```
 
-* Specmatic stubs a database using [database specification file](./database_stubbing_files/db.yaml) and sets the database expectations on stub server `http://localhost:9000`.
+* And in the properties file:
 
-* When we hit the database stub server it returns a response with set expectations.
+  ```properties
+  spring.main.allow-bean-definition-overriding=true
+  ```
 
-#### Configuration Setup guidelines
+Note that we are passing port 9090 to the DBStub class.The internal Specmatic server will be started up on this port. All expectations must be set on this port. We will see more on how to set expectations below.
 
-* You need to configure your DataSource for the database as below, by using JdbcMockFactory and pointing to ExternalStub of the Specmatic stub server.
+#### Approach 2
 
-  - Example:- Using JAVA
-```
-DataSource mockDataSource = null;
+Specmatic can leverage an external HTTP stub server. This can prove useful when DB expectations need to be set even before the Spring beans are constructed.
 
-JdbcMockFactory jdbcMockFactory = null;
+* Ensure that [this contract](./database_stubbing_files/db.yaml) is in one of the "stub" sections in `specmatic.json`.
 
-@Bean(destroyMethod = "close")
-public JdbcMockFactory jdbcMockFactory() {
-    if (jdbcMockFactory == null) jdbcMockFactory = new JdbcMockFactory(new ExternalStub("localhost", 9000));
-    if (mockDataSource == null) mockDataSource = jdbcMockFactory.createDataSource();
-    return jdbcMockFactory;
-}
-```
- - From the above code you can return the DataSource object created in the jdbcMockFactory method to your DataSource.
- - Add the below property in the respective profile application properties file.
+* Configure your DataSource for the database as below, by using JdbcMockFactory and pointing to ExternalStub of the Specmatic stub server.
 
-```
-spring.main.allow-bean-definition-overriding=true
-```
+  ```java
+  DataSource mockDataSource = null;
 
-### Setting Expectations
-  Refer to the [Setting Database stub expectations](#setting-database-stub-expectations) section for setting database expectations for specific queries.
+  JdbcMockFactory jdbcMockFactory = null;
 
-  Database expectation setting can be done in two ways as follows:
-1. Post an expectation to `http://localhost:9000/_specmatic/expectations` with the expected data.
-2. By using the `contract-file-name_data` directory
-   * Create the `db_stub_contracts` directory under the   `src/test/resources/` package.
-   * Keep the [database specification file](./database_stubbing_files/db.yaml) inside `db_stub_contracts` directory.
-   * Make a directory `db_data` inside the `db_stub_contracts` directory, which is a similar parent directory of `db.yaml`.
-   * Keep all database query expectation files inside the `db_data` directory.
+  @Bean(destroyMethod = "close")
+  public JdbcMockFactory jdbcMockFactory() {
+      if (jdbcMockFactory == null) jdbcMockFactory = new JdbcMockFactory(new ExternalStub("localhost", 9000));
+      if (mockDataSource == null) mockDataSource = jdbcMockFactory.createDataSource();
+      return jdbcMockFactory;
+  }
+  ```
+ 
+- From the above code you can return the DataSource object created in the jdbcMockFactory method to your DataSource.
+- Add the below property in the respective profile application properties file.
 
-* We can start the stub server by giving the db.yaml file address using the Specmatic stub command.
-* If you are using the specmatic.json file then, In the `specmatic.json` file in a local source add the address of the `db.yaml` file inside the value of the stub attribute.
-  * Example:-
-```
-    "sources":[
-        {
-           "provider": "git",
-           "stub": [
-           "src/test/resources/db_stub_contracts/db.yaml"
-             ]
-        }
-    ]
-```
+  ```properties
+  spring.main.allow-bean-definition-overriding=true
+  ```
 
-### 2. Approach Second:
+### How To Set Expectations
+* We can use the following setup to post multiple expectations,
+  1. Create the `db_stub_expectations` directory under the `src/test/resources/` package. 
+  2. Keep all database query expectation files inside the `db_stub_expectations` directory.
+  3. Dynamically send those expectations to the 
 
-Specmatic runs a stub server on port 9090 dedicated to database stubbing.
+* Post an expectation to `http://localhost:9090/_specmatic/expectations` with the expected data. Set the port in the above URL to port on which the Specmatic HTTP stub is running.
 
-* We are setting database expectations on the Specmatic database stub server (`http://localhost:9090`).
+* We can declare the database stub server URL in a variable
 
-* Specmatic is using path `/` for the database stubbing.
-
-
-#### How it works
-
-1. Specmatic runs a stub server on port 9090 dedicated to database stubbing and sets the data expectations which were posted on the `http://localhost:9090` server.
-2. Specmatic installs a JDBC hook that intercepts DB queries and forwards them to the above stub server on port 9090 and returns the set expectations.
-
-#### Configuration Setup guidelines
-
-* You need to configure your DataSource for the database as below by using JdbcMockFactory and creating a new DBStub server on the 9090 port.
-
-Example:- Using JAVA you can use the following helper code.
-```
-DataSource mockDataSource = null;
-
-JdbcMockFactory jdbcMockFactory = null;
-
-@Bean(destroyMethod = "close")
-public JdbcMockFactory jdbcMockFactory() {
-    if (jdbcMockFactory == null) jdbcMockFactory = new JdbcMockFactory(new DBStub("localhost",9090));
-    if (mockDataSource == null) mockDataSource = jdbcMockFactory.createDataSource();
-    return jdbcMockFactory;
-}
-```
- - From the above code you can return the DataSource object created in the jdbcMockFactory method to your DataSource. 
- - Add the below property in the respective profile application properties file.
-
-```
-spring.main.allow-bean-definition-overriding=true
-```
-
-### Setting Expectations
-
-Refer to the [Setting Database stub expectations](#setting-database-stub-expectations) section for setting database expectations for specific queries.
-
-Database expectation setup is as follows:
-
-- Post an expectation to `http://localhost:9090/_specmatic/expectations` with the expected data.
-
-We can use the following setup to post multiple expectations,
-1. Create the `db_stub_expectations` directory under the `src/test/resources/` package. 
-2. Keep all database query expectation files inside the `db_stub_expectations` directory.
-3. You can use the following code to post multiple expectations to the database stub server.
-
-* We can declare the database stub server URL in a variable:- 
-
-    ```private static final String dbExpectationsURL = "http://localhost:9090/_specmatic/expectations";```
+  ```java
+    private static final String dbExpectationsURL = "http://localhost:9090/_specmatic/expectations";
+  ```
 
 * We need to set expectations inside before each tagged method.
-```
-@BeforeEach
-public void before() throws Exception {
-setDBExpectations();
-}
-```
+
+  ```java
+  @BeforeEach
+  public void before() throws Exception {
+  setDBExpectations();
+  }
+  ```
+
 * Use the following helper methods for database expectation setting:-
 
-```
-private void setDBExpectations() throws IOException {
-    File directoryPath = new File("src/test/resources/db_stub_expectations");
-    File[] filesList = directoryPath.listFiles();
-    assert filesList != null;
-    Arrays.sort(filesList);
-    for (File file : filesList) {
-    setExpectation(FileUtils.readFileToString(new File(file.getPath())),dbExpectationsURL);
-    }
-}
+  ```java
+  private void setDBExpectations() throws IOException {
+      File directoryPath = new File("src/test/resources/db_stub_expectations");
+      File[] filesList = directoryPath.listFiles();
+      assert filesList != null;
+      Arrays.sort(filesList);
+      for (File file : filesList) {
+      setExpectation(FileUtils.readFileToString(new File(file.getPath())),dbExpectationsURL);
+      }
+  }
 
-private static void setExpectation(String expectation, String dbExpectations) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    HttpEntity<String> request = new HttpEntity<>(expectation, headers);
-    ResponseEntity<String> response = new RestTemplate().postForEntity(dbExpectations, request, String.class);
-    assert response.getStatusCode() == HttpStatus.OK;
-}
-```    
+  private static void setExpectation(String expectation, String dbExpectations) {
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+      HttpEntity<String> request = new HttpEntity<>(expectation, headers);
+      ResponseEntity<String> response = new RestTemplate().postForEntity(dbExpectations, request, String.class);
+      assert response.getStatusCode() == HttpStatus.OK;
+  }
+  ```    
 
 ## Setting Database stub expectations.
 
 Below are some examples of how we can set the expectations for database stubbing.
-
-For dynamic queries, we can use the Specmatic feature of [matching the request body with regular expressions](./service_virtualization_tutorial.md).
 
 ### Stubbing out SELECT statements (SELECT * FROM)
 
@@ -271,3 +220,26 @@ To stub out `UPDATE EMPLOYEES set language="English" where country="US"`, which 
 }
 }
 ```
+
+### Regex matching
+
+To match a query where some parameters are hard to guess but where most of the query is known, use `bodyRegex`.
+
+```json
+{
+  "http-request": {
+      "path": "/",
+      "method": "POST",
+      "body": "(string)",
+      "bodyRegex": "UPDATE EMPLOYEES set language=\".*\" where country=\".*\""
+  },
+  "http-response": {
+      "status": "200",
+      "body": {
+          "affectedRows": 2
+      }
+  }
+}
+```
+
+This will match any a query with any language and country.

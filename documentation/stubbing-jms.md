@@ -9,23 +9,27 @@ nav_exclude: true
 
 ## Introduction
 
-The JMS standard comprises a set of Java interfaces. It is not a wire protocol. Specmatic uses the ActiveMQ implementation of JMS to stub out JMS dependencies. This can be used anywhere JMS is used, regardless of the specific implementation of JMS in the concerned project.
+Specmatic spins up an ActiveMQ server, and expects the system under test to use an ActiveMQ JMS client when running tests. This is both vendor-agnostic and easy to do, given that all JMS clients implement a Java JMS interface.
+
+The crux of the solution is, when running tests, to use the ActiveMQ JMS client and point the application at the ActiveMQ server started by Specmatic. This enables Specmatic to both see the messages sent by the system-under-test, as well as send contract-valid message to the system-under-test.
+
+This document describes how to stub out JMS in applications that use JNDI with Spring Boot, as we have found this to be a common enough case. However when you can, we recommend that in your tests you disable JNDI and use Spring annotations to instantiate the application's JMS client object.
 
 ### Pre-requisite Setup
 
-Below-mentioned dependency needs to be in pom.xml
+The below-mentioned dependency needs to be in pom.xml:
 
 ```
 <dependency>
     <groupId>in.specmatic</groupId>
     <artifactId>specmatic-jms</artifactId>
-    <version>0.0.1</version>
+    <version>{{ site.jms_release }}</version>
 </dependency>
 ```    
 
-### Start JMS Server
+### Start the JMS Server
 
-The below code section shows how to start the JMS server.
+The code below shows how to start the JMS server.
 
 ```
 jmsMock = new JmsMock(new ArrayList<String>() {{
@@ -36,15 +40,15 @@ jmsMock.start();
 
 This will start the JMS server running on port: 61616 on localhost.
 
-### Stop JMS Server
+### Stop the JMS Server
 
-The below code section shows how to shut down JMS server.
+The code below shows how to shut down JMS server.
 
 ```
 jmsMock.stop();
 ```
 
-### Creating yaml file
+### Create the specification file
 
 Create a file called `async-api.yaml` in `src/test/resources`(use the same path in step 2) with
 the following content.
@@ -70,27 +74,22 @@ asyncapi: 2.0.0
                     is: queue
 ```
 
-Above file serves as a contract for the ActiveMQ server.
+This file serves as the specification that declares what a JMS message being sent to the queue will look like.
 
-### Implementing ActiveMQ server
+### Inject an ActiveMQ JMS client using JNDI
 
 Create a new [TestInitialContextFactory.java](jms-stub-code/TestInitialContextFactory.java) file into src/test/jms package.
 
 This will create an ActiveMQ server with which clients can interact.
 
-### Changing the JMS Endpoint
+Locate the `.properties` file and change the value of the JMS endpoint `spring.jms.jndi-name` or `spring.datasource.jndi-name` to `jms.TestInitialContextFactory`(fully qualified classpath).
 
-Locate the `.properties` file and change the value of the JMS endpoint `spring.jms.jndi-name` or `spring.datasource.jndi-name`
-to `jms.TestInitialContextFactory`(fully qualified classpath).
-The above approach is specific to JMS with JNDI, the approach would be different for other implementations to consume the ActiveMQ JMS client.
 On running the application, JMS calls are redirected to the newly created server.
 
-## Stubbing out interactions
+Depending on your context, you may need to additional methods in TestInitialContextFactory.
+
+## Stub out interactions
 
 * Verification of stub interactions is coming soon.
-* For now, a channel will always represent a queue(e.g. testQueueText represents a queue).
-* Update the async-api.yaml and add blocks for all the queues that this application will write to.
-
-## Note
-
-* The current version of `specmatic-jms` at the time of writing is 0.0.1, but expect this to change when more capabilities are added.
+* For now, a channel will represents a queue (e.g. testQueueText represents a queue).
+* Update the async-api.yaml and add channels for all the queues that this application will write to.
