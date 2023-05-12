@@ -1,9 +1,11 @@
 ---
 layout: default
-title: Troubleshooting
+title: Database Stubbing
 parent: Documentation
 nav_exclude: true
 ---
+
+# Database Stubbing
 
 ## Introduction to Database Stubbing
 

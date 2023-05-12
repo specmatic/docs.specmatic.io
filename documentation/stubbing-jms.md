@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Troubleshooting
+title: JMS Stubbing
 parent: Documentation
 nav_exclude: true
 ---

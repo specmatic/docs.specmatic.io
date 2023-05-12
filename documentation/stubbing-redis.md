@@ -1,9 +1,11 @@
 ---
 layout: default
-title: Troubleshooting
+title: Redis Stubbing
 parent: Documentation
 nav_exclude: true
 ---
+
+# Redis Stubbing
 
 ## Introduction to Redis Stubbing
 
