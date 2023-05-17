@@ -29,6 +29,7 @@ Contract Tests
     - [Omitting some tests](#omitting-some-tests)
     - [API Coverage](#api-coverage)
     - [Adanced Features](#adanced-features)
+      - [Generative Tests](#generative-tests)
       - [Limiting the Count of Tests](#limiting-the-count-of-tests)
     - [Sample Project](#sample-project)
 
@@ -784,6 +785,90 @@ To get this working:
 Look at the sample project below to see this in action. Observe the system property, set in the [ContractTests](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTests.java) class, and the actuator-related dependency added in `pom.xml`.
 
 ### Adanced Features
+
+#### Generative Tests
+
+Contract testing within the bounds of the contract is not enough. HTTP prescribes what should happen when contract-invalid requests are sent. To ensure that the application operates as required by HTTP, we need to test it with contract-invalid requests.
+
+Given an API specification, we know what an API's request should look like, and hence we can come up with a number of counter examples.
+
+Let's use this specification as an example.
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Products
+  version: '1.0'
+servers: []
+paths:
+  '/znsio/specmatic/products':
+    post:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+            examples:
+              SUCCESS:
+                value:
+                  color: green
+                  category: medicals
+      responses:
+        '201':
+          description: Response to successful product creation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: integer
+              examples:
+                SUCCESS:
+                  value:
+                    id: 10
+        '400':
+          description: Repsonse to a bad product creation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    Product:
+      title: Product
+      type: object
+      required:
+        - color
+        - category
+      properties:
+        color:
+          type: string
+        category:
+          type: string
+```
+
+A contract-valid test is found in the examples named SUCCESS.
+
+If we send a request containing the body `{"color": null, "category": "medicals"}`, the application should respond with a 400, because according to the specification, the value of `color` cannot be null.
+
+Specmatic can generate this test and more to ensure that validations for `color` are in place, and will do the same for `category.
+
+Just set a property or environment variable named `SPECMATIC_GENERATIVE_TESTS` to 'true'.
+
+In Java, you could use this:
+
+```java
+System.setProperty("SPECMATIC_GENERATIVE_TESTS", "true")
+```
 
 #### Limiting the Count of Tests
 
