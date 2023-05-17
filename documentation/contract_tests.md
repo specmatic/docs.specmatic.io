@@ -870,6 +870,8 @@ In Java, you could use this:
 System.setProperty("SPECMATIC_GENERATIVE_TESTS", "true")
 ```
 
+The best way to see it in action is to try it out with one of your micro-services and it's API specifications.
+
 #### Limiting the Count of Tests
 
 Where there are no examples, Specmatic generates tests from the contract. And if there are too many optional headers, query parameters, JSON keys, nullables, and so on, Specmatic may generate too many tests.
