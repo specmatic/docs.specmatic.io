@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.65.1
+
+Date: 25th April 2023
+
+What's new:
+- Added the ability to filter out tests by name (search the documentation for filterNotName)
+
 ## Release 0.65.0
 
 Date: 19th April 2023
