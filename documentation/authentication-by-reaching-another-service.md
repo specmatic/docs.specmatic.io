@@ -125,7 +125,7 @@ Make sure to declare the contract you're running as a test in [specmatic.json](d
 ### Execute the tests
 Finally, run the tests. You must specify the environment while doing so, for Specmatic to pick up the variables and baseurls relevant to that environment.
 
-If you're running the tests from a terminal, the command is `specmatic test --environment=staging specfile.spec`
+If you're running the tests from a terminal, the command is `specmatic test --env=staging specfile.spec`
 
 If you're running the tests from code, set a property named `environments`. Take a look at the [petstore sample](https://github.com/znsio/petstore/blob/master/src/test/java/com/petstore/test/PetStoreContractTest.java) to see an example of this.
 
