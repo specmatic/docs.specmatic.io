@@ -1,3 +1,8 @@
+---
+layout: default
+title: Feature Hub Stubbing
+parent: Documentation
+---
 # FeatureHub Stubbing
 ## Introduction to FeatureHub Stubbing
 Feature Hub refers to a software development concept that promotes modularity and reusability in building applications. It involves decoupling various features or components of an application into separate and independent units called "features."
