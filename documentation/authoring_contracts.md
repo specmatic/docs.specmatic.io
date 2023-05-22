@@ -100,7 +100,7 @@ First you must [export the collection to a file](https://learning.postman.com/do
 
 Here's a sample Postman collection that you can use:
 
-File: postman_employee.json
+File: employee_postman_collection.json
 ```json
 {
         "info": {
@@ -141,6 +141,7 @@ File: postman_employee.json
 ```bash
 > specmatic import <postman collection file>.json
 ```
+_*Note:*_ The file name should end with `postman_collection.json` like `employee_postman_collection.json`.
 
 This command will read the Postman collection, and write the new specmatic file into "specmatic file.json" as specified in the command.
 
