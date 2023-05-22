@@ -1,11 +1,11 @@
 ---
 layout: default
-title: JMS Stubbing
+title: JMS Stubbing (Private Beta)
 parent: Documentation
 nav_exclude: true
 ---
 
-# JMS Stubbing
+# JMS Stubbing (Private Beta)
 
 ## Introduction
 

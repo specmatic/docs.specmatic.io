@@ -5,7 +5,7 @@ parent: Documentation
 nav_exclude: true
 ---
 
-# Redis Stubbing
+# Redis Stubbing (Private Beta)
 
 ## Introduction to Redis Stubbing
 

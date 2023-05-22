@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Database Stubbing
+title: Database Stubbing (Private Beta)
 parent: Documentation
 nav_exclude: true
 ---
 
-# Database Stubbing
+# Database Stubbing (Private Beta)
 
 ## Introduction to Database Stubbing
 
