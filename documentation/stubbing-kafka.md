@@ -7,10 +7,14 @@ nav_exclude: true
 
 # KAFKA Stubbing
 
-## Introduction
+## Introduction to KAFKA stubbing
 
-1. Add the specification file (which will be used to stub kafka) in the src/test/resources directory.
-2. See a sample specification here-
+Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
+
+### Pre-requisite Setup
+
+Add the specification file (which will be used to stub kafka) in the src/test/resources directory. See a sample specification here-
+
     ```yaml
     1  asyncapi: 2.0.0
     2  info:
@@ -55,9 +59,7 @@ nav_exclude: true
 * The AMQP Bindings on lines 16-18 should be declared in all queues (we will use AMQP bindings to declare Kafka queues).
 
 
-## Pre-requisite Setup
-
-**There are 2 ways to stub out Kafka.**
+## **There are 2 ways to stub out Kafka:-**
 
 ### I) Self-managed Kafka instance
 
