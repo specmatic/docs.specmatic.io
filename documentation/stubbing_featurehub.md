@@ -4,10 +4,12 @@ title: Feature Hub Stubbing
 parent: Documentation
 ---
 # FeatureHub Stubbing
-## Introduction to FeatureHub Stubbing
-Feature Hub refers to a software development concept that promotes modularity and reusability in building applications. It involves decoupling various features or components of an application into separate and independent units called "features."
 
-- FeatureHub Stubbing uses SSE(Server Sent Events) which is based on the concept of events. In SSE, the server sends events to the client, which the client can handle and process as they arrive.
+## Introduction to FeatureHub Stubbing
+
+FeatureHub is a scalable cloud-native feature flag service. You can [read more about it here](https://www.featurehub.io).
+
+FeatureHub Stubbing uses SSE(Server Sent Events) which is based on the concept of events. In SSE, the server sends events to the client, which the client can handle and process as they arrive.
 
 
 ### Pre-requisite Setup
