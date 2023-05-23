@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Kafka Stubbing
+title: Kafka Stubbing (Private Beta)
 parent: Documentation
 nav_exclude: true
 ---
 
-# KAFKA Stubbing
+# Kafka Stubbing (Private Beta)
 
-## Introduction to KAFKA stubbing
+## Introduction to Kafka stubbing
 
 Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
 
