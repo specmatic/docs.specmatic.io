@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Redis Stubbing
+title: Redis Stubbing (Private Beta)
 parent: Documentation
 nav_exclude: true
 ---
