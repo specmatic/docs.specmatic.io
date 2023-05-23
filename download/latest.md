@@ -8,11 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 19th May 2023
+Date: 23rd May 2023
 
 What's new:
-- Added the ability to limit the number of contract tests being run by setting the environment variable or Java system property `MAX_TEST_REQUEST_COMBINATIONS` (thanks to @westse)
-- Fixed unecessary restarting of the specmatic stub when spematic tests are run parallelly from the same directory.
+- Bug fix: Specmatic stub restart when running tests in the same project
+- Bug fix: JSON values passed in the header will now get flattened into a single line
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

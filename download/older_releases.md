@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.66.0
+
+Date: 19th May 2023
+
+What's new:
+- Added the ability to limit the number of contract tests being run by setting the environment variable or Java system property `MAX_TEST_REQUEST_COMBINATIONS` (thanks to @westse)
+- Fixed unecessary restarting of the specmatic stub when spematic tests are run parallelly from the same directory.
+
 ## Release 0.65.1
 
 Date: 25th April 2023
