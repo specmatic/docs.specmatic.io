@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Redis Stubbing
+title: Redis Stubbing (Private Beta)
 parent: Documentation
 nav_exclude: true
 ---
 
-# Redis Stubbing
+# Redis Stubbing (Private Beta)
 
 ## Introduction to Redis Stubbing
 
