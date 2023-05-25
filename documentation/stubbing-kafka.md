@@ -132,7 +132,6 @@ Use the code below to start up a Kafka server, and let Specmatic mock subscribe 
 
    ```java
    // Start the Kafka mock instance.
-   // We won't start it though, we will just use some utils.
    
    List<String> fileList= new ArrayList<>();
    fileList.add("src/test/resources/kafka_stub.yaml");
