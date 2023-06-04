@@ -7,7 +7,9 @@ nav_exclude: true
 
 # KAFKA Stubbing
 
-## Introduction to KAFKA stubbing
+The `specmatic-kafka` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
+
+## Introduction to Kafka stubbing
 
 Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance
 data pipelines, streaming analytics, data integration, and mission-critical applications.

@@ -7,6 +7,8 @@ nav_exclude: true
 
 # JMS Stubbing (Private Beta)
 
+The `specmatic-jms` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
+
 ## Introduction
 
 Specmatic spins up an ActiveMQ server, and expects the system under test to use an ActiveMQ JMS client when running tests. This is both vendor-agnostic and easy to do, given that all JMS clients implement a Java JMS interface.

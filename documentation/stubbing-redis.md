@@ -7,6 +7,8 @@ nav_exclude: true
 
 # Redis Stubbing (Private Beta)
 
+The `specmatic-redis` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
+
 ## Introduction to Redis Stubbing
 
 Redis is an open source, in-memory, key-value data store most commonly used as a primary database, cache, message broker, and queue.
