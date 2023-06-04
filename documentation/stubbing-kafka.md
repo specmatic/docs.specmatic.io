@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Kafka Stubbing
+title: Kafka Stubbing (Private Beta)
 parent: Documentation
 nav_exclude: true
 ---
 
-# KAFKA Stubbing
+# Kafka Stubbing (Private Beta)
 
 The `specmatic-kafka` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
 
