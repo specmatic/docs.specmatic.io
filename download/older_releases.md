@@ -5,6 +5,14 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.67.0
+
+Date: 23rd May 2023
+
+What's new:
+- Bug fix: Specmatic stub restart when running tests in the same project
+- Bug fix: JSON values passed in the header will now get flattened into a single line
+
 ## Release 0.66.0
 
 Date: 19th May 2023

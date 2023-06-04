@@ -8,11 +8,13 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 23rd May 2023
+Date: 4th June 2023
 
 What's new:
-- Bug fix: Specmatic stub restart when running tests in the same project
-- Bug fix: JSON values passed in the header will now get flattened into a single line
+- Improvement to error messages for oneOf mismatches
+- Ability to omit headers using "(omit)" in examples
+- Ability to run the stub on a random free port if the default port 9000 is already in use
+- Fixed: transient stub initialisation with static stub data
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
