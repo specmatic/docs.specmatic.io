@@ -547,10 +547,10 @@ For example, create this stub file for products-api.yaml contract:
 
 ```json
 {
+  "http-stub-id": "123",
   "http-request": {
     "method": "GET",
     "path": "/storestatus",
-    "http-stub-id": "123"
   },
   "http-response": {
     "status": 200,
