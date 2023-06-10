@@ -7,7 +7,7 @@ nav_exclude: true
 
 # Kafka Stubbing (Private Beta)
 
-The `specmatic-kafka` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
+> The `specmatic-kafka` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
 
 ## Introduction to Kafka stubbing
 
@@ -16,43 +16,42 @@ data pipelines, streaming analytics, data integration, and mission-critical appl
 
 ### Pre-requisite Setup
 
-Add the specification file (which will be used to stub kafka) in the src/test/resources directory. See a sample
-specification here-
+Add the specification file (which will be used to stub kafka) in the src/test/resources directory. See a sample specification here:
 
-    ```
-    1  asyncapi: 2.0.0
-    2  info:
-    3    title: Kafka Queue Example
-    4    version: '1.0.0'
-    5  servers:
-    6    activemq:
-    7      url: tcp://localhost:61616
-    8      protocol: amqp
-    9  channels:
-    10   taskQueueObject:
-    11     publish:
-    12       operationId: publishObjectMessage
-    13       message:
-    14         payload:
-    15           $ref: "#/components/messages/Task"
-    16     bindings:
-    17       amqp:
-    18         is: queue
-    19 components:
-    20   messages:
-    21     Task:
-    22       name: Task
-    23       title: A Task to be processed
-    24       summary: Inform about a new user task in the system
-    25       contentType: application/json
-    26       payload:
-    27         type: object
-    28         properties:
-    29           id:
-    30             type: integer
-    31           name:
-    32             type: string
-    ```
+```yaml
+asyncapi: 2.0.0
+info:
+  title: Kafka Queue Example
+  version: '1.0.0'
+servers:
+  activemq:
+    url: tcp://localhost:61616
+    protocol: amqp
+channels:
+  taskQueueObject:
+    publish:
+      operationId: publishObjectMessage
+      message:
+        payload:
+          $ref: "#/components/messages/Task"
+    bindings:
+      amqp:
+        is: queue
+components:
+  messages:
+    Task:
+      name: Task
+      title: A Task to be processed
+      summary: Inform about a new user task in the system
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+```
 
 #### Note the following:
 

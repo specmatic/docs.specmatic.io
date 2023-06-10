@@ -7,7 +7,7 @@ nav_exclude: true
 
 # Database Stubbing (Private Beta)
 
-The `database-mock` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
+> The `database-mock` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
 
 ## Introduction to Database Stubbing
 
