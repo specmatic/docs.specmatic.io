@@ -8,13 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 4th June 2023
+Date: 20th June 2023
 
 What's new:
-- Improvement to error messages for oneOf mismatches
-- Ability to omit headers using "(omit)" in examples
-- Ability to run the stub on a random free port if the default port 9000 is already in use
-- Fixed: transient stub initialisation with static stub data
+- Miscellaneous stub improvements and bug fixes
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

@@ -5,6 +5,31 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.70.0
+
+Date: 14th June 2023
+
+What's new:
+- Generative tests for header parameters
+
+## Release 0.69.0
+
+Date: 14th June 2023
+
+What's new:
+- Added Date and UUID pattern support (thanks @androa)
+- adding ability to invoke a hook script before running contract test
+
+## Release 0.68.0
+
+Date: 4th June 2023
+
+What's new:
+- Improvement to error messages for oneOf mismatches
+- Ability to omit headers using "(omit)" in examples
+- Ability to run the stub on a random free port if the default port 9000 is already in use
+- Fixed: transient stub initialisation with static stub data
+
 ## Release 0.67.0
 
 Date: 23rd May 2023
