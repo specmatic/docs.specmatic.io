@@ -8,10 +8,10 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 20th June 2023
+Date: 27th June 2023
 
 What's new:
-- Miscellaneous stub improvements and bug fixes
+- Bug fix for fetching latest contracts
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 

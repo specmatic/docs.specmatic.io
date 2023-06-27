@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.70.1
+
+Date: 20th June 2023
+
+What's new:
+- Miscellaneous stub improvements and bug fixes
+
 ## Release 0.70.0
 
 Date: 14th June 2023
