@@ -44,6 +44,25 @@ Place this file in the root folder of your project (Here is an [example](https:/
 * **repository** - The git repository URL
 * **test** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
 
+You can also specify the branch.
+
+```json
+{
+  "sources": [
+    {
+      "provider": "git",
+      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "branch": "feature-1",
+      "test": [
+        "in/specmatic/examples/store/api_order_v1.yaml"
+      ]
+    }
+  ]
+}
+```
+
+When branch is not specified, default branch will be picked up.
+
 Now if you run the ```specmatic test``` command line executable from the directory that contains the ```specmatic.json``` file Specmatic will pull the API Specifications listed under test and run them as tests.
 
 ```shell
@@ -109,6 +128,7 @@ Usually source control requires authentication. Below are the ways in which you 
     {
       "provider": "git",
       "repository": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts2",
+      "branch": "main",
       "test": [
         "com/petstore/2.spec"
       ],
