@@ -20,4 +20,4 @@ Here is a quick explainer video.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/3HPgpvd8MGg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-**Contract Driven Development** is significantly different from other approaches such as Consumer Driven Contract Testing. Here are [detailed comparisons](https://specmatic.in/blog/comparisons/specmatic-vs-pact-io-and-pactflow-io/#gsc.tab=0) with other tools and approaches.
+**Contract Driven Development** is significantly different from other approaches such as Consumer Driven Contract Testing. Here are [detailed comparisons](https://specmatic.in/category/comparisons) with other tools and approaches.
