@@ -5,6 +5,13 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.71.0
+
+Date: 27th June 2023
+
+What's new:
+- Bug fix for fetching latest contracts
+
 ## Release 0.70.1
 
 Date: 20th June 2023
