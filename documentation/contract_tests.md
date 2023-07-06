@@ -332,7 +332,7 @@ Scenario Outline: <SCENARIO_OUTLINE_NAME>
 ```
 Specmatic validates each scenario to check if it is part of the OpenAPI Specification.
 * **Examples** - As per [Gherkin reference](https://cucumber.io/docs/gherkin/reference/#scenario-outline) - "the Scenario Outline is run once for each row in the Examples section beneath it (not counting the first header row)". Each column in the table represents the fields / parameters in the employees-without-examples.yaml OpenAPI Specification file. Please note that Specmatic validates your examples for datatype correctness against the specification. So this file will not go out of sync with the Specification.
-* **RESQUEST-BODY** - This is a keyword that is specific to Specmatic DSL that allows us to send the entire request body instead of adding each parameter as a column in the table. Example: "**Update Employee Success" scenario
+* **REQUEST-BODY** - This is a keyword that is specific to Specmatic DSL that allows us to send the entire request body instead of adding each parameter as a column in the table. Example: "**Update Employee Success" scenario
 * Add examples only where necessary, Specmatic can fill in the rest with auto generated values
   * Scenario "**Get Employee Success**" - The path parameter id is a placeholder and the value for the same is the example row
   * Scenario "**Get Employee Not Found Error**" - We have not added any examples because the value for the id parameter is already in the path instead of having a placeholder
