@@ -455,7 +455,7 @@ Add the following dependencies to your pom.xml file.
 </dependency>
 ```
 
-Add a class that inherits from SpecmaticJUnitSupport. See how this is done [here](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTests.java).
+Add a class that inherits from SpecmaticJUnitSupport. See how this is done [here](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java).
 
 In it, set the "host" and "port" properties to tell Specmatic where to find the application. You can also start the application in that class.
 
