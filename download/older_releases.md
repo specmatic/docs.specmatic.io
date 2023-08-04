@@ -5,6 +5,22 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.73.0
+
+Date: 28th July 2023
+
+What's new:
+* Added support for additionalProperties having the value false
+* Fix for API coverage report not being accurate when test URL has multiple path parameters
+* Filter the specifications in specmatic.json and load only the OpenAPI specifications
+
+## Release 0.72.0
+
+Date: 4th July 2023
+
+What's new:
+* Add branch support to git sources (thanks to @aeoncl)
+
 ## Release 0.71.0
 
 Date: 27th June 2023
