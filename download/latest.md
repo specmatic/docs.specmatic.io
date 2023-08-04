@@ -8,10 +8,11 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 4th July 2023
+Date: 4th August 2023
 
 What's new:
-* Add branch support to git sources (thanks to @aeoncl)
+* Fixed SOAP action to support quoted and unquoted actions
+* Added basic support for SOAP faults
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
