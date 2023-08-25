@@ -15,11 +15,7 @@ Getting started
 
 ### Setup
 
-The quickest approach to getting started is through the command line.
-
 {% include setup_command_line.md %}
-
-For nodejs projects, please visit [npmjs](https://www.npmjs.com/package/specmatic).
 
 ---
 
@@ -96,9 +92,18 @@ curl https://my-json-server.typicode.com/znsio/specmatic-documentation/pets/1
 ```
 
 Now lets leverage Specmatic to run the above specification as a test against the Provider / API to see if it is adhering the OpenAPI Specification.
+{% tabs test %}
+{% tab test java %}
 ```shell
 specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
+{% endtab %}
+{% tab test npm %}
+```shell
+npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+```
+{% endtab %}
+{% endtabs %}
 
 This should print out a result that looks something like this.
 ```shell
@@ -161,10 +166,18 @@ Now lets try something more interesting. Restore the OpenAPI file to its [origin
 ```
 
 Let us run the specmatic test command again.
+{% tabs test2 %}
+{% tab test2 java %}
 ```shell
 specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
-
+{% endtab %}
+{% tab test2 npm %}
+```shell
+npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+```
+{% endtab %}
+{% endtabs %}
 This time around the test fails because the response from our sample app is not in line with the OpenAPI Specification.
 ```shell
 Unsuccessful Scenarios:
@@ -200,15 +213,22 @@ Here the Specmatic Stub is emulating the Provide / API.
 Before we begin, please make sure that your service.yaml file is restored to its [original shape](/getting_started.html#api-specification).
 
 To spin up a stub server with the service.yaml we authored earlier, run below command.
-
+{% tabs stub %}
+{% tab stub java %}
 ```shell
 specmatic stub service.yaml
 ```
+{% endtab %}
+{% tab stub npm %}
+```shell
+npx specmatic stub service.yaml
+```
+{% endtab %}
+{% endtabs %}
 
-This should start your stub server on port 9000 by default (you can switch the port number by adding ```--port <port of your choice>``` to the above command).
+This should start your stub server on port 9000 by default (you can switch the port number by adding ```--port <port of your choice>``` to the above command) as below.
 
 ```shell
-specmatic stub service.yaml
 Loading service.yaml
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
@@ -249,9 +269,18 @@ The response contains auto-generated values that adhere to the data type defined
 ```
 
 Now let us run the stub command again.
+{% tabs stub2 %}
+{% tab stub2 java %}
 ```shell
 specmatic stub service.yaml
 ```
+{% endtab %}
+{% tab stub2 npm %}
+```shell
+npx specmatic stub service.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 This time you should see Specmatic load your canned response file also.
 ```shell
@@ -277,9 +306,8 @@ Specmatic will now return your canned response for petId 1. For any other petId 
 
 So what is so smart about Specmatic Smart Mocks.
 
-Let us try a few experiments. Remove the "status" field in scooby.json and run the stub command again.
+Let us try a few experiments. Remove the "status" field in scooby.json and run the stub command again. You should an output like below.
 ```shell
-specmatic stub service.yaml
 Loading service.yaml
   Loading stub expectations from /<dir with service.yaml>/service_data
   Reading the following stub files:
