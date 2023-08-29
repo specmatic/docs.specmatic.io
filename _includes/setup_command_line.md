@@ -28,7 +28,7 @@ $ npx specmatic
 ---
 ### Tip to run java jar easily
 
-If you are using the java method to run specmatic then by following below tip, running `java -jar specmatic.jar` everytime can be avoided
+By following below tip running `java -jar specmatic.jar` everytime can be avoided
 
 {% tabs hint-java %}
 {% tab hint-java mac/linux %}
