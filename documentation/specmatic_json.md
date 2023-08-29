@@ -120,6 +120,42 @@ Usually source control requires authentication. Below are the ways in which you 
 * Recommended approach - Provide a Git SSH URL and make sure your environment already has necessary keys loaded. If the git clone command works on your regular command line, it will work within Specmatic too. This is most suitable in CI, because your CI server may already be setup to clone the application code (for which the CI server should already have the necesary keys). So it should already be able clone your API Specifications also. The same also should be applicable for local development and testing environments.
 * Alternatives - With https URLs you can provide the bearer token or other means. Please reach us (raise a [github issue](https://github.com/znsio/specmatic/issues/new/choose)) if you need help with this.
 
+#### Report Configuration
+Specmatic can generate reports based on the below configuration:
+
+```json
+"report": {
+    "formatters": [
+      {
+        "type": "text",
+        "layout": "table"
+      }
+    ],
+    "types": {
+      "APICoverage": {
+        "OpenAPI": {
+          "successCriteria": {
+            "minThresholdPercentage": 100,
+            "maxMissedEndpointsInSpec": 0,
+            "enforce": true
+          },
+          "excludedEndpoints": [
+            "/health"
+          ]
+        }
+      }
+    }
+  }
+```
+ 
+#### Formatters
+Defaults to 'Text' if none specified.  
+The Text formatter will print the report on to the console/terminal.
+
+#### Report Types
+#### API Coverage report
+This gives you a comprehensive analysis of any mismatch between your api specification and implementation. [Here](https://specmatic.in/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) is an article with a detailed write-up about this feature.
+
 #### Complete sample specmatic.json with all attributes
 
 ```json
@@ -163,6 +199,29 @@ Usually source control requires authentication. Below are the ways in which you 
 
   "hooks": {
     "hook_name": "command"
+  },
+
+    "report": {
+    "formatters": [
+      {
+        "type": "text",
+        "layout": "table"
+      }
+    ],
+    "types": {
+      "APICoverage": {
+        "OpenAPI": {
+          "successCriteria": {
+            "minThresholdPercentage": 100,
+            "maxMissedEndpointsInSpec": 0,
+            "enforce": true
+          },
+          "excludedEndpoints": [
+            "/health"
+          ]
+        }
+      }
+    }
   }
 }
 ```
