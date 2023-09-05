@@ -5,6 +5,35 @@ parent: Download
 nav_order: 2
 ---
 
+## Release 0.75.2
+
+Date: 18th August 2023
+
+What's new:
+* Fix to run git fetch with authorisation header (additional fix required)
+
+## Release 0.75.1
+
+Date: 17th August 2023
+
+What's new:
+* Fix to run git fetch with authorisation header
+
+## Release 0.75.0
+
+Date: 17th August 2023
+
+What's new:
+* Fix auth in systemgit fetch command
+
+## Release 0.74.0
+
+Date: 4th August 2023
+
+What's new:
+* Fixed SOAP action to support quoted and unquoted actions
+* Added basic support for SOAP faults
+
 ## Release 0.73.0
 
 Date: 28th July 2023
