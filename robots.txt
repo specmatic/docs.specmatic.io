@@ -1,0 +1,27 @@
+User-agent: Mediapartners
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: YandexImages
+Disallow: /
+
+User-agent: YandexCatalog
+Disallow: /
+
+User-agent: YandexDirect
+Disallow: /
+
+User-agent: YandexNews
+Disallow: /
+
+User-agent: YandexPagechecker
+Disallow: /
+
+User-agent: *
+Disallow: /assets/
+Disallow: /js/
+Disallow: /wp-content/plugins/
+Disallow: /wp-content/themes/
+Disallow: /wp-json/
