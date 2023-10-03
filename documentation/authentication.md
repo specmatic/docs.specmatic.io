@@ -8,8 +8,10 @@ Authentication
 ==============
 
 - [Authentication](#authentication)
-- [Test Configuration - Dummy Authentication](#test-configuration---dummy-authentication)
-- [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication)
+  - [Contract as Test Context](#authentication-and-authorization-in-the-context-of-contract-as-test)
+- [Examples](#examples)
+  - [OAuth2](#oauth2)
+  - [API Key](#api-key-authentication)
 
 Most APIs have some form of security (authentication and authorization). Specmatic reads [OpenAPI Security Schemes](https://spec.openapis.org/oas/v3.0.1#security-scheme-object) in your API Specifications to come up with appropriate request parameters.
 
