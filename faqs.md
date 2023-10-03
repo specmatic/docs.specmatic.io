@@ -27,7 +27,7 @@ Specmatic has a #NOCODE approach to Contract Driven Development and is able to d
 
 ### How does it compare with other tools?
 
-Here are [detailed comparison](https://specmatic.in/category/blog/comparisons) with other tools and approaches
+Here are [detailed comparison](https://specmatic.in/category/comparisons/) with other tools and approaches
 
 ### I need some help adotping Contract Driven Development with Specmatic OR would like to request a feature
 

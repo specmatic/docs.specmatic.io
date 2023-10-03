@@ -352,7 +352,7 @@ We can add as many rows as necesary for our test cases. Example:
 
 ### Boundary Condition Testing
 
-In the above example, we only ran the happy path test cases. What if we send an number to a boolean parameter? What if we send a null to a non-nullable parameter? What if we do not send a mandatory parameter? How does the application handle these errors? Input validation is an important aspect of your api security strategy ([OWASP reference]((https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html))).
+In the above example, we only ran the happy path test cases. What if we send an number to a boolean parameter? What if we send a null to a non-nullable parameter? What if we do not send a mandatory parameter? How does the application handle these errors? Input validation is an important aspect of your api security strategy ([OWASP reference](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)).
 
 Specmatic can help you verify / assess such boundary condition behavior and the associated error handling in your application. Let us run the Specmatic tests with the ```SPECMATIC_GENERATIVE_TESTS``` environment variable set to true.
 
@@ -627,7 +627,7 @@ public class ContractTests extends SpecmaticJUnitSupport {
 }
 ```
 
-Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTests.java) for a Springboot application.
+Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java) for a Springboot application.
 
 ### Referring to local specificatons
 
@@ -782,7 +782,7 @@ To get this working:
 1. Turn on the actuator module, and enable the mappings endpoint. You can read more about this online.
 2. Set the system property `endpointsAPI` to the mappings endpoint exposed by actuator.
 
-Look at the sample project below to see this in action. Observe the system property, set in the [ContractTests](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTests.java) class, and the actuator-related dependency added in `pom.xml`.
+Look at the sample project below to see this in action. Observe the system property, set in the [ContractTest](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java) class, and the actuator-related dependency added in `pom.xml`.
 
 ### Adanced Features
 

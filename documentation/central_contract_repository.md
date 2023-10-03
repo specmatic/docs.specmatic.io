@@ -50,7 +50,7 @@ It is a good idea to prevent any direct commits to your master / main branch of 
 **[Sample Github Action](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml)** - This performs below pre-merge checks
 * **Syntax checks and Linting** - We leverage [Spectral](https://stoplight.io/open-source/spectral) for this. Read more about this [here](https://github.com/znsio/specmatic-order-contracts#linting)
 * **Specmatic Backward Compatibility Testing** This step is crucial in identifying **backward breaking** changes to the specifications.
-  * Specmatic Backwarc Compatiblity Testing can compare two versions of the same file in Git to identify the difference. Please see this [script](https://github.com/znsio/specmatic-order-contracts/blob/main/backward_compatibility.sh) where we are comparing the HEAD (top of the PR branch) and main (top of the master / main branch) for the changed files
+  * Specmatic Backward Compatiblity Testing can compare two versions of the same file in Git to identify the difference. Please see this [script](https://github.com/znsio/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are comparing the HEAD (top of the PR branch) and main (top of the master / main branch) for the changed files
   * Specmatic returns a 0 or 1 just like any command line tool for success and error respectively based on which we can fail the build. At this point the team can decide if they should version bump the specification or change the code such that it is backward compatible
 
 ### Collaborating over API Design
