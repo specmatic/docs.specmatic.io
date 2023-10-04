@@ -12,6 +12,8 @@ Configuration
     - [Getting started](#getting-started)
       - [Configuring Stubs](#configuring-stubs)
       - [Source control authentication](#source-control-authentication)
+      - [Report Configuration](#report-configuration)
+      - [Security - Authentication and Authorisation](#security---authentication-and-authorization)
       - [Complete sample specmatic.json with all attributes](#complete-sample-specmaticjson-with-all-attributes)
     - [Declare pipeline details](#declare-pipeline-details)
     - [Declare environment configuration](#declare-environment-configuration)
@@ -158,7 +160,7 @@ This gives you a comprehensive analysis of any mismatch between your api specifi
 
 #### Security - Authentication and Authorization
 
-When leverating security schemes such as [OAuth2](https://spec.openapis.org/oas/v3.0.1#implicit-oauth2-sample) Specmatic allows setting the token value that needs to be sent as part of `Authorization` header. Please see documentation regarding to [OAuth2 suppor](/documentation/authentication.html#oauth2) to know more. 
+When leverating security schemes such as [OAuth2](https://spec.openapis.org/oas/v3.0.1#implicit-oauth2-sample) Specmatic allows setting the token value that needs to be sent as part of `Authorization` header. Please see documentation regarding to [OAuth2 support](/documentation/authentication.html#oauth2) to know more. 
 
 ```json
   "security": {
