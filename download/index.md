@@ -7,4 +7,21 @@ has_children: true
 Download
 ========
 
-The latest release of Specmatic is [{{ site.latest_release }}](/download/latest.html).
+Get the latest version of Specmatic from [Github](https://github.com/znsio/specmatic/releases).
+
+Maven dependencies:
+```
+<dependency>
+    <groupId>in.specmatic</groupId>
+    <artifactId>specmatic-core</artifactId>
+    <version>{{ site.latest_release }}</version>
+</dependency>
+
+<!-- Optional depdendency to run the contract as test on Provider -->
+<dependency>
+    <groupId>in.specmatic</groupId>
+    <artifactId>junit5-support</artifactId>
+    <version>{{ site.latest_release }}</version>
+</dependency>
+```
+
