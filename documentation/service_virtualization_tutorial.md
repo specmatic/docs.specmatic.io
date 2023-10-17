@@ -450,6 +450,8 @@ components:
 
 If you stub it out, right out the gate, with no further `_data` files or any effort, if you send POST /znsio/specmatic/employees with a JSON object `{"name": "Jill Doe", "department": "Engineering", "designation": "Directory"}`, you'll get back `{"id": 10}`. Note how both the request and response exist as examples in the specification, and are being used directly as expectations with no further effort.
 
+Note that this currently works only for JSON request and response payloads. Support for other parts such as headers, query parameters, etc will be implemented soon.
+
 ## Programmatically starting stub server within tests
 
 If your tests are written in a JVM based language, you can start and stop the stub server within your tests programmatically.
