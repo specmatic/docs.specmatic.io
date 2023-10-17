@@ -31,6 +31,11 @@ Contract Tests
     - [Adanced Features](#adanced-features)
       - [Generative Tests](#generative-tests)
       - [Limiting the Count of Tests](#limiting-the-count-of-tests)
+      - [Externalized test data](#externalized-test-data)
+        - [Example with a path parameter](#example-with-a-path-parameter)
+        - [Example with a request body](#example-with-a-request-body)
+        - [Example with a query parameter](#example-with-a-query-parameter)
+        - [Example with a missing query parameter](#example-with-a-missing-query-parameter)
     - [Sample Project](#sample-project)
 
 ### Overview
@@ -941,6 +946,101 @@ In this example, we may ensure that just the first 2 tests run with the followin
 ```java
 System.setProperty("MAX_TEST_REQUEST_COMBINATIONS", "2");
 ```
+
+#### Externalized test data
+
+Specmatic can execute contract tests using test data loaded from JSON files. This is useful when the specification cannot be modified to add examples, such as a conformance or compliance process where the specification is an industry-wide single-source-of-truth.
+
+Specmatic will validate the test data against the specification before using it. It's not much different from how it uses `examples` within the specification, except that the test data is in an external JSON file.
+
+##### Example with a path parameter
+To convert the `GET_DETAILS`  test from [api_order_with_oauth_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) into an externalised test:
+* Create a new directory named `api_order_with_oauth_v1_tests` in the same directory as `api_order_with_oauth_v1.yaml`.
+* In it, put a file named get_details.json (the name is immaterial) with the following content:
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/products/(id:number)",
+    "path-params": {
+      "id": 10
+    }
+  },
+  "http-response": {
+    "status": 200
+  },
+  "name": "GET_DETAILS"
+}
+```
+
+##### Example with a request body
+To convert `UPDATE_DETAILS`, add a new file called `update_details.json` with the following content:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/products/(id:number)",
+    "path-params": {
+      "id": 10
+    },
+    "body": {
+      "name": "XYZ Phone",
+      "type": "gadget",
+      "inventory": 10,
+      "id": 10
+    }
+  },
+  "http-response": {
+    "status": 200
+  },
+  "name": "UPDATE_DETAILS"
+}
+```
+
+##### Example with a query parameter
+To convert `SEARCH_2`, add a file named `search_2.json` with the following content:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/products/(id:number)",
+    "query-params": {
+      "name": "XYZ",
+      "type": "gadget"
+    }
+  },
+  "http-response": {
+    "status": 200
+  },
+  "name": "SEARCH_2"
+}
+```
+
+##### Example with a missing query parameter
+To convert `SEARCH_1`, add a file named `search_1.json` with the following content:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/products/(id:number)",
+    "query-params": {
+      "name": "(omit)",
+      "type": "gadget"
+    }
+  },
+  "http-response": {
+    "status": 200
+  },
+  "name": "SEARCH_1"
+}
+```
+
+Note: we've modified the example slightly to omit the `name` query parameter entirely instead of passing an empty string.
+
+Put this documentation in `documentation/contract_tests.md` under `Advanced Features`.
 
 ### Sample Project
 
