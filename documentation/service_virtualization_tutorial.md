@@ -24,6 +24,7 @@ Service Virtualization
     - [Context](#context)
     - [Expectations Http Endpoint](#expectations-http-endpoint)
     - [Anatomy of a Component / API Test](#anatomy-of-a-component--api-test)
+  - [Examples as expectations](#examples-as-expectations)
   - [Programmatically starting stub server within tests](#programmatically-starting-stub-server-within-tests)
   - [Transient expectations (a.k.a. transient stubs)](#transient-expectations-aka-transient-stubs)
     - [Setting transient expectations](#setting-transient-expectations)
@@ -382,6 +383,72 @@ Let us analyse each phase of this API test.
 * **Assert** - We now verify the response from System / Service Under Test to ascertain if it has only returned the laptop, since the phone is not available.
 
 The same approach can be leveraged in other test tools and frameworks such as [Rest-Assured](https://rest-assured.io/) also.
+
+## Examples as expectations
+
+If an example in the request and an example in the response of a particular path have the same name, Specmatic will use them together as a stub expectation. It will be the equivalent of creating a stub.json file, specifying the path, method and the request body under http-request, and the status and response body body under http-response.
+
+This only works for request and response JSON bodies right now. It does not work for headers, query params, path params, multi part or form fields. If any of those need to be stubbed out, use the stub.json file or dynamic expectations. Support for these will be added later.
+
+For example, take the following API specification:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/employees':
+    post:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            examples:
+              CREATE_EMPLOYEE_SUCCESS:
+                value:
+                  name: Jill Doe
+                  department: Engineering
+                  designation: Director
+      responses:
+        '201':
+          description: Employee Created Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                  - id
+              examples:
+                CREATE_EMPLOYEE_SUCCESS:
+                  value:
+                    id: 10
+components:
+  schemas:
+    Employee:
+      title: Employee
+      type: object
+      required:
+        - id
+        - name
+        - department
+        - designation
+      properties:
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string
+```
+
+If you stub it out, right out the gate, with no further `_data` files or any effort, if you send POST /znsio/specmatic/employees with a JSON object `{"name": "Jill Doe", "department": "Engineering", "designation": "Directory"}`, you'll get back `{"id": 10}`. Note how both the request and response exist as examples in the specification, and are being used directly as expectations with no further effort.
 
 ## Programmatically starting stub server within tests
 

@@ -1040,8 +1040,6 @@ To convert `SEARCH_1`, add a file named `search_1.json` with the following conte
 
 Note: we've modified the example slightly to omit the `name` query parameter entirely instead of passing an empty string.
 
-Put this documentation in `documentation/contract_tests.md` under `Advanced Features`.
-
 ### Sample Project
 
 [https://github.com/znsio/specmatic-order-api](https://github.com/znsio/specmatic-order-api)
