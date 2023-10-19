@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1884802c-9ffc-4084-9d8b-5f324ffa3496",
+		"_postman_id": "df6c077d-3912-48f7-98c2-3209fa271ab7",
 		"name": "Specmatic Expectations",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"http-request\": {\n        \"method\": \"POST\",\n        \"path\": \"/data\",\n        \"body\": {\n\n        }\n    },\n    \"http-request\": {\n        \"status\": 200,\n        \"body\": {\n            \n        }\n    }\n}",
+					"raw": "{\n  \"http-request\": {\n    \"method\": \"POST\",\n    \"path\": \"/products\",\n    \"body\": {\n      \"name\": \"Pen\",\n      \"sku\": \"abc456\"\n    }\n  },\n  \"http-response\": {\n    \"status\": 200,\n    \"body\": {\n      \"id\": 99\n    }\n  }\n}",
 					"options": {
 						"raw": {
 							"language": "json"

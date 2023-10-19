@@ -8,11 +8,9 @@ nav_order: 1
 Release {{ site.latest_release }}
 =================================
 
-Date: 4th August 2023
-
 What's new:
-* Fixed SOAP action to support quoted and unquoted actions
-* Added basic support for SOAP faults
+* Allow command install to be set in a specific directory even in a Git directory + handle the branch in install command (thanks @Snorkell)
+* API Coverage report enhancements
 
 Standalone jar - [specmatic.jar](https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar)
 
