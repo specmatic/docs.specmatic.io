@@ -59,8 +59,4 @@ It will look something like this:
 }
 ```
 
-How does one get the above payloads?
-
-Some options:
-1. Review the requests from the application and the response from the API using the logs from [Specmatic Proxy](/documentation/authoring_contracts.html). While the proxy does not generate expectations for SOAP/XML yet, it does log requests and responses to the console.
-2. Run the tests and look at application logs. The application may log it's request and response payloads when running tests.
+You can get the actual SOAP requests and response payloads using the logs from [Specmatic Proxy](/documentation/authoring_contracts.html). While the proxy does not generate expectations for SOAP/XML yet, it does log these requests and responses to the console.
