@@ -39,7 +39,7 @@ Once done, create the `specmatic.json` file in the root of your project. It shou
 
 ## Setting SOAP expectations
 
-Once again, you can use the same stub format that is used for REST APIs. The only difference is, put the SOAP payloads where the rest payloads would go.
+Once again, you can use the same stub format that is used for REST APIs. The only difference is, put the SOAP payloads where the REST payloads would go.
 
 It will look something like this:
 
