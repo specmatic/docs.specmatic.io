@@ -35,7 +35,7 @@ Once done, create the `specmatic.json` file in the root of your project. It shou
 }
 ```
 
-*NOTE:* Remember to update the repository and stub section, to reflect the git repository in which you placed the specification, and the stub path.
+**NOTE:** Remember to update the repository and stub section, to reflect the git repository in which you placed the specification, and the stub path.
 
 ## Setting SOAP expectations
 
