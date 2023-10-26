@@ -8,16 +8,8 @@ SOAP
 ====
 
 - [SOAP](#soap)
-  - [1. Generate the contract from a WSDL file](#1-generate-the-contract-from-a-wsdl-file)
-  - [2. Manually author the contract](#2-manually-author-the-contract)
-    - [Obtaining Payload Samples](#obtaining-payload-samples)
-    - [Defining SOAP Contracts](#defining-soap-contracts)
-    - [Declaring an array of nodes](#declaring-an-array-of-nodes)
-    - [Reusing declarations across scenarios](#reusing-declarations-across-scenarios)
-    - [Factoring out sub types](#factoring-out-sub-types)
-    - [Namespace prefixes](#namespace-prefixes)
-    - [Order of the nodes](#order-of-the-nodes)
-    - [Sample projects](#sample-projects)
+  - [Stubbing out a WSDL in component tests](#stubbing-out-a-wsdl-in-component-tests)
+  - [Setting SOAP expectations](#setting-soap-expectations)
 
 Service virtualization of SOAP APIs works in a similar way REST APIs.
 
