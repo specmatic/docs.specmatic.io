@@ -341,7 +341,9 @@ Specmatic validates each scenario to check if it is part of the OpenAPI Specific
 * Add examples only where necessary, Specmatic can fill in the rest with auto generated values
   * Scenario "**Get Employee Success**" - The path parameter id is a placeholder and the value for the same is the example row
   * Scenario "**Get Employee Not Found Error**" - We have not added any examples because the value for the id parameter is already in the path instead of having a placeholder
-  * Scenario "**Update Employee Success**" - We have not added response examples, however Specmatic will still validate the response against the schema in our OpenAPI Specification
+  * Scenario "**Update Employee Success**" - We have not added response examples.  Specmatic will validate the response against the schema in our OpenAPI Specification.
+
+Note that the request in a contract test comes from the example, while the response comes from the application. The request is validated by Specmatic before it is sent, and the response returned by the application is validated against the specification. There is no need to provide any response examples in the example Gherkin rows.
 
 We can add as many rows as necesary for our test cases. Example:
 
