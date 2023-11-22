@@ -266,6 +266,8 @@ paths:
     get:
       summary: Get Products
       description: Get Products
+      tags:
+        - "WIP"
       parameters:
         - in: path
           name: id
