@@ -675,17 +675,7 @@ The above shell script is just an example, the external command can be any execu
 
 Specmatic can modify the specification before loading it.
 
-Let's see a quick example of a frontend that connects to the backend API through a gateway.
-
-```mermaid
-graph LR
-    frontend[Frontend]
-    apigateway[API Gateway]
-    backend[Products API Backend]
-
-    frontend -->|requests| apigateway
-    apigateway -->|transforms and forwards| backend
-```
+Let's see a quick example of a frontend that connects to the backend API through an API gateway.
 
 Here is an API specification for a products API.
 
@@ -758,7 +748,7 @@ The expectation used by the consumer when stubbing out the Products API Backend 
 }
 ```
 
-The consumer sends the header `X-auth-token` in the request but the API gateway replaces it at runtime with `X-internal-id` and forwards the request to the backend.
+Note how the consumer sends the header `X-auth-token` in the request. The API gateway replaces it at runtime with `X-internal-id`, and forwards the request to the backend (note that the specification declares the header `X-internal-id`, not `X-auth-token`).
 
 The specification as-is will not accept the above frontend expectation, without a small modification, which can be achieved using Specmatic's `stub_load_contract` hook.
 
