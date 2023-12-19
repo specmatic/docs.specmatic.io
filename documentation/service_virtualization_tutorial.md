@@ -673,12 +673,23 @@ The above shell script is just an example, the external command can be any execu
 
 ## Hooks
 
-In exceptional circumstances, Specmatic can modify the specification before loading it.
+Specmatic can modify the specification before loading it.
 
-For example, here is a specification provided by the backend perspective.
+Let's see a quick example of a frontend that connects to the backend API through a gateway.
+
+```mermaid
+graph LR
+    frontend[Frontend]
+    apigateway[API Gateway]
+    backend[Products API Backend]
+
+    frontend -->|requests| apigateway
+    apigateway -->|transforms and forwards| backend
+```
+
+Here is an API specification for a products API.
 
 ```yaml
-# file name: products.yaml
 openapi: 3.0.0
 info:
   title: Sample Product API
@@ -687,7 +698,7 @@ servers:
   - url: http://localhost:8080
     description: Local
 paths:
-  /products/{id}:
+  /products:
     get:
       summary: Get Products
       description: Get Products
@@ -710,73 +721,48 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - name
-                  - sku
-                properties:
-                  name:
-                    type: string
-                  sku:
-                    type: string
+                type: array
+                items:
+                  type: object
+                  required:
+                    - name
+                    - sku
+                  properties:
+                    name:
+                      type: string
+                    sku:
+                      type: string
 ```
 
-In our example, the backend is behind an API gateway, which performs a small transformation on the frontends request before sending it to the backend.
 
-So here is a specification representing how the frontend effectively see the API.
+The expectation used by the consumer when stubbing out the Products API Backend looks something like this:
 
-```yaml
-openapi: 3.0.0
-info:
-  title: Sample Product API
-  version: 0.0.1
-servers:
-  - url: http://localhost:8080
-    description: Local
-paths:
-  /products/{id}:
-    get:
-      summary: Get Products
-      description: Get Products
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: number
-          required: true
-          description: Numerical Product Id
-        - in: header
-          name: X-auth-token
-          schema:
-            type: string
-          required: true
-          description: Internal customer id
-      responses:
-        '200':
-          description: Returns Product With Id
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - name
-                  - sku
-                properties:
-                  name:
-                    type: string
-                  sku:
-                    type: string
+```json
+{
+  "http-request": {
+    "headers": {
+      "X-auth-token": "abc 123"
+    },
+    "method": "GET",
+    "path": "/products"
+  },
+  "http-response": {
+    "status": 200,
+    "body": [
+      {
+        "name": "Rice",
+        "sku": "sku123"
+      }
+    ]
+  }
+}
 ```
 
-The difference is in the header name.
+The consumer sends the header `X-auth-token` in the request but the API gateway replaces it at runtime with `X-internal-id` and forwards the request to the backend.
 
-The frontend sends a request with the header `X-auth-token`, and the API gateway translates it into `X-internal-id`, and then forwards the request to the backend.
+The specification as-is will not accept the above frontend expectation, without a small modification, which can be achieved using Specmatic's `stub_load_contract` hook.
 
-Since the frontend expects to send the header `X-auth-token` but the backend requires `X-internal-id`, the frontends expectations do not align with the specification, and hence it cannot use it as-is to stub out the backend.
-
-A slight modification can be made to the specification at load-time through the use of a hook.
-
-To complete the above example, create the `specamtic.json` file with the following content:
+Create the `specamtic.json` file with the following content:
 
 ```json
 {
