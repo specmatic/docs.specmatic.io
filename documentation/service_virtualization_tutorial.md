@@ -32,6 +32,7 @@ Service Virtualization
   - [Matching the request body with regular expressions](#matching-the-request-body-with-regular-expressions)
   - [Delay Simulation](#delay-simulation)
   - [Externalised response generation](#externalised-response-generation)
+  - [Hooks](#hooks)
   - [Priority Of Stubs](#priority-of-stubs)
   - [Sample Java Project](#sample-java-project)
 
@@ -669,6 +670,177 @@ EOF
 ```
 
 The above shell script is just an example, the external command can be any executable / script / program which can read an environment variable. The example shell script here is reading the path parameter and multiplying it by three. The response of this script / command is returned as the response to the request.
+
+## Hooks
+
+In exceptional circumstances, Specmatic can modify the specification before loading it.
+
+For example, here is a specification provided by the backend perspective.
+
+```yaml
+# file name: products.yaml
+openapi: 3.0.0
+info:
+  title: Sample Product API
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Local
+paths:
+  /products/{id}:
+    get:
+      summary: Get Products
+      description: Get Products
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Numerical Product Id
+        - in: header
+          name: X-internal-id
+          schema:
+            type: string
+          required: true
+          description: Internal customer id
+      responses:
+        '200':
+          description: Returns Product With Id
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - sku
+                properties:
+                  name:
+                    type: string
+                  sku:
+                    type: string
+```
+
+In our example, the backend is behind an API gateway, which performs a small transformation on the frontends request before sending it to the backend.
+
+So here is a specification representing how the frontend effectively see the API.
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Sample Product API
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Local
+paths:
+  /products/{id}:
+    get:
+      summary: Get Products
+      description: Get Products
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Numerical Product Id
+        - in: header
+          name: X-auth-token
+          schema:
+            type: string
+          required: true
+          description: Internal customer id
+      responses:
+        '200':
+          description: Returns Product With Id
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - sku
+                properties:
+                  name:
+                    type: string
+                  sku:
+                    type: string
+```
+
+The difference is in the header name.
+
+The frontend sends a request with the header `X-auth-token`, and the API gateway translates it into `X-internal-id`, and then forwards the request to the backend.
+
+Since the frontend expects to send the header `X-auth-token` but the backend requires `X-internal-id`, the frontends expectations do not align with the specification, and hence it cannot use it as-is to stub out the backend.
+
+A slight modification can be made to the specification at load-time through the use of a hook.
+
+To complete the above example, create the `specamtic.json` file with the following content:
+
+```json
+{
+  "sources": [
+    {
+      "provider": "git",
+      "stub": [
+        "products.yaml"
+      ]
+    }
+  ],
+  "hooks": {
+    "stub_load_contract": "python3 header.py"
+  }
+}
+```
+
+Create a file named header.py in the root of your project, with the following code:
+
+```python
+import os
+import sys
+import yaml
+
+def main():
+    # Read the name of the file from the environment variable
+    file_name = os.getenv('CONTRACT_FILE')
+    
+    if not file_name:
+        print("CONTRACT_FILE environment variable not set.")
+        sys.exit(1)
+
+    try:
+        with open(file_name, 'r') as file:
+            # Load the YAML file
+            data = yaml.safe_load(file)
+            
+            # Modify the specified header
+            paths = data.get('paths', {})
+            products_path = paths.get('/products/{id}', {})
+            get_operation = products_path.get('get', {})
+            parameters = get_operation.get('parameters', [])
+            
+            for param in parameters:
+                if param.get('in') == 'header' and param.get('name') == 'X-internal-id':
+                    param['name'] = 'X-auth-token'
+                    break
+
+            # Print the modified data
+            print(yaml.dump(data))
+    except FileNotFoundError:
+        print(f"File not found: {file_name}")
+        sys.exit(2)
+    except Exception as e:
+        print(f"Error processing file: {e}")
+        sys.exit(3)
+
+if __name__ == "__main__":
+    main()
+```
+
+This sample hook code replaces the header name `X-internal-id` with `X-auth-token`.
+
+Now when Specmatic is run in stub mode, it will invoke the hook, pass the specification path to it using through the environment variable `CONTRACT_FILE`, and then load whatever specification is printed by the hook to standard output.
 
 ## Priority Of Stubs
 
