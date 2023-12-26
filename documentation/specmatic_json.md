@@ -158,23 +158,6 @@ The Text formatter will print the report on to the console/terminal.
 #### API Coverage report
 This gives you a comprehensive analysis of any mismatch between your api specification and implementation. [Here](https://specmatic.in/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) is an article with a detailed write-up about this feature.
 
-#### Security - Authentication and Authorization
-
-When leverating security schemes such as [OAuth2](https://spec.openapis.org/oas/v3.0.1#implicit-oauth2-sample) Specmatic allows setting the token value that needs to be sent as part of `Authorization` header. Please see documentation regarding to [OAuth2 support](/documentation/authentication.html#oauth2) to know more. 
-
-```json
-  "security": {
-    "OpenAPI": {
-      "securitySchemes": {
-        "oAuth2AuthCode": {
-          "type": "oauth2",
-          "token": "OAUTH1234"
-        }
-      }
-    }
-  }
-```
-
 #### Complete sample specmatic.json with all attributes
 
 ```json

@@ -8,22 +8,89 @@ Authentication
 ==============
 
 - [Authentication](#authentication)
-  - [Contract as Test Context](#authentication-and-authorization-in-the-context-of-contract-as-test)
-- [Examples](#examples)
-  - [OAuth2](#oauth2)
-  - [API Key](#api-key-authentication)
+  - [Testing with real auth](#testing-with-real-auth)
+    - [Examples](#examples-real)
+      - [OAuth2](#oauth2-real)
+      - [API Key](#api-key-real)
+      - [Bearer](#bearer-real)
+  - [Testing with mock auth](#testing-with-mock-auth)
+    - [Examples](#examples-mock)
+      - [OAuth2](#oauth2-mock)
+      - [API Key](#api-key-mock)
 
-Most APIs have some form of security (authentication and authorization). Specmatic reads [OpenAPI Security Schemes](https://spec.openapis.org/oas/v3.0.1#security-scheme-object) in your API Specifications to come up with appropriate request parameters.
+Most APIs have some form of security (authentication and authorization). Specmatic reads [OpenAPI Security Schemes](https://spec.openapis.org/oas/v3.0.1#security-scheme-object) in your API Specifications to come up with appropriate request parameters.  
+Specmatic supports the following security schemes:
+- **OAuth2**
+- **API Key**
+- **Bearer**
 
-## Authentication and Authorization in the context of Contract as Test
+## Testing with real auth
+To run contract tests in environments which require a valid security token present in the request, we can define environment variables which hold these valid tokens/api keys.  
 
-**Contract as Test** is a component level test and at this point it makes sense to validate if an API application accepts the security parameters it is adverstising in its API Specification. However it is not necessary to validate if the security itself is working. That is for later stages of tests where you can hook up a security service dependency such as DB, OAuth provider, etc.
+The enviornment variable should match the name of the security scheme defined in the open api specification.  
 
-So for Contract as Test we recommend having a "Test Security Configuration" where you are still exercising your security plumbing, however not actually fetching real user information. This is similar to running an in-memory DB in test setup instead of running a real DB in CI.
+When contract tests are executed, Specmatic will look for an environment variable with the same name as that of the security scheme. If such an environment variable exists, Specmatic will use it apporpriately (based on the security scheme) while making an HTTP request.
 
-## Examples
+### Examples: {#examples-real}
 
-### OAuth2
+### OAuth2 {#oauth2-real}
+Here's an example of an OAuth2 security scheme in the open api specification:
+
+```yaml
+components:
+  securitySchemes:
+    oAuth2AuthCode:
+      type: oauth2
+      description: For more information, see https://example.com/docs/oauth
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.example.com/oauth/authorize
+          tokenUrl: https://api.example.com/api/oauth/token
+          scopes:
+            users:read: Read user information
+            users:write: Modify user information
+            im:read: Read messages
+            im:write: Write messages
+            im:history: Access the message archive
+            search:read: Search messages, files, and so on
+```
+To use a real OAuth2 token in contract tests, an environment variable named **oAuth2AuthCode** needs to be defined.
+
+### API Key {#api-key-real}
+Here's an example of a Bearer security scheme in the open api specification:
+
+```yaml
+components:
+  securitySchemes:
+      ApiKeyAuthHeader:
+        type: apiKey
+        in: header
+        name: X-API-KEY
+```
+To use a real api key in contract tests, an environment variable named **ApiKeyAuthHeader** needs to be defined.
+
+### Bearer {#bearer-real}
+Here's an example of a Bearer security scheme in the open api specification:
+
+```yaml
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+```
+To use a real bearer token in contract tests, an environment variable named **BearerAuth** needs to be defined.
+
+
+## Testing with mock auth
+
+While Specmatic supports testing with real authentication as seen above, in a component / contract test like setup, it is recommended to isolate the SUT (System Under Test) which is your service from other dependencies such as auth providers. So at a contract / component test level it is sufficient to validate if an API implementation / service accepts the security parameters it is adverstising in its API Specification. However it is not necessary to validate if the security itself is working. That is for later stages of tests where you can hook up a security service dependency such as DB, OAuth provider, etc.  
+
+So for Contract as Test we recommend having a “Test Security Configuration” where you are still exercise your security plumbing, however not actually fetching real user information. This is similar to running an in-memory DB in test setup instead of running a real DB in CI. Below are some examples of the same.
+
+### Examples: {#examples-mock}
+
+### OAuth2 {#oauth2-mock}
 
 Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) specification which leverages [OAuth2](https://spec.openapis.org/oas/v3.0.1#implicit-oauth2-sample) to protect all endpoints that add, modify or delete data.
 
@@ -33,7 +100,7 @@ Please refer to this [sample API](https://github.com/znsio/specmatic-order-contr
 
 Please refer to [sample springboot application](https://github.com/znsio/specmatic-order-api-java-with-oauth) that implements the [API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) we saw above.
 
-### API Key Authentication
+### API Key Authentication {#api-key-mock}
 
 Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) specification which leverages [ApiKeyAuth](https://spec.openapis.org/oas/v3.0.1#api-key-sample) to protect all endpoints that add, modify or delete data.
 
