@@ -16,7 +16,8 @@ Troubleshooting
     - [Specmatic test was working before but it now show errors](#specmatic-test-was-working-before-but-it-now-show-errors)
     - [Stub says Cookie header is missing, but it is not missing in Postman](#stub-says-cookie-header-is-missing-but-it-is-not-missing-in-postman)
     - [Stub mode returns an error to Postman](#stub-mode-returns-an-error-to-postman)
-    - [java.lang.ClassNotFoundException: kotlin.KotlinNothingValueException](#javalangclassnotfoundexception-kotlinkotlinnothingvalueexception)
+    - [When I try to run contract tests using SpecmaticJUnitSupport, I'm getting an exception saying that XYZ method or class is missing. What do I do?](#when-i-try-to-run-contract-tests-using-specmaticjunitsupport-im-getting-an-exception-saying-that-xyz-method-or-class-is-missing-what-do-i-do)
+    - [Maven properties in Spring projects](#maven-properties-in-spring-projects)
 
 It may seem counter intuitive at first, but Specmatic error reports are good news. Not because we want errors. But if we're breaking integration, we'd rather get Specmatic errors in our dev environment, than integraton errors in staging, testing or worst of all, production.
 
@@ -134,32 +135,33 @@ To resolve this:
 - Make sure you have the latest version of Specmatic.
 - Read the error message, to understand where Specmatic believes the issue is.
 
-### java.lang.ClassNotFoundException: kotlin.KotlinNothingValueException
+### When I try to run contract tests using SpecmaticJUnitSupport, I'm getting an exception saying that XYZ method or class is missing. What do I do?
 
-This is probably because one of your project's dependencies are pulling in an older version of Kotlin.
+Spring-boot declares Kotlin as a dependency, and so does Specmatic (`Specmatic` is written in Kotlin). The two versions may conflict, resulting in errors about missing methods or classes.
 
-Specmatic uses Kotlin 1.4, which defines a new class kotlin.KotlinNothingValueException. This was not present in earlier versions of Kotlin. It's like that oneof your dependencies is pulling in Kotlin 1.3.x or earlier, due to which this class is missing.
+### Maven properties in Spring projects
 
-One way to resolve this is to declare add the stdlib declaration to your pom.
+In a Spring 2.x or 3.x project, in case of errors about a missing Kotlin method/class which indicate a core Kotlin method/class or a coroutines-related method/class, add the following to the pom:
 
-If you are using JDK8, add this snippet:
+**Properties**
 
 ```xml
-<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8 -->
-<dependency>
-    <groupId>org.jetbrains.kotlin</groupId>
-    <artifactId>kotlin-stdlib-jdk8</artifactId>
-    <version>1.4.10</version>
-</dependency>
+<properties>
+    <kotlin.version>1.9.22</kotlin.version>
+    <kotlin-coroutines.version>latest-version-from-github-project<kotlin-coroutines.version>
+</properties>
 ```
 
-If you're using a later version of the JDK:
+*Remember:* Update the version of `kotlin-coroutines.version` above with the latest version from https://github.com/Kotlin/kotlinx.coroutines.
+
+**Dependencies**
+
+If similar errors appear after adding these properties, add the following dependency.
 
 ```xml
-<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
 <dependency>
     <groupId>org.jetbrains.kotlin</groupId>
     <artifactId>kotlin-stdlib</artifactId>
-    <version>1.4.10</version>
+    <version>1.9.22</version>
 </dependency>
 ```
