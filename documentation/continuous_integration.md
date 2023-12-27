@@ -2,6 +2,7 @@
 layout: default
 title: Continuous Integration
 parent: Documentation
+nav_order: 31
 ---
 Contract Tests
 ==============
