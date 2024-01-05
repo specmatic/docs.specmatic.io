@@ -21,168 +21,49 @@ The following dependency needs to be added to pom.xml.
 <dependency>
     <groupId>in.specmatic</groupId>
     <artifactId>specmatic-redis</artifactId>
-    <version>{{ site.jms_release }}</version>
+    <version>{{ site.redis_release }}</version>
 </dependency>
 ```
 
 ### Start Redis Server
 
-The code below starts a Redis mock server:
+The code below starts a Redis stub server:
 
-```
-@BeforeAll
-public void startRedis() throws Exception {
-    RedisMock redisMock = new RedisMock();
-    redisMock.start();
-}
+```java
+RedisStub redisStub = new RedisStub();
+redisStub.start();
 ```
 
-* This will start two servers:
+To shut down the redis stub server:
 
-  * A mock redis server running on port 6379 on localhost,
-  * An internal specmatic stub server running on port 9000 on localhost.
-* You can override the default host/port values of redis server by providing them if required:
-
-    ```
-    RedisMock redisMock = new RedisMock("localhost", 61919);
-    ```
-
-### Stop Redis Server
-
-The code below shuts down the Redis mock server:
-
-```
-@AfterAll
-public void stopRedis() throws Exception {
-    redisMock.stop();
-}
+```java
+redisStub.stop();
 ```
 
-### Set Redis Expectations
-
-Below code sections shows how to set expectation for Redis
-```
-redisMock.setExpectation("/path/to/expectation.json");
-```
-
-Redis calls are translated by Specmatic into Specmatic stub expectations which are very similar to the format used for stubbing out HTTP services.
-
-For example, here's the expectation for stubbing a key lookup.
-
-```json
-{
-    "http-request": {
-        "method": "POST",
-        "path": "/redis",
-        "body": {
-            "operation": "get",
-            "params": ["NAME"]
-        }
-    },
-    "http-response": {
-        "status": 200,
-        "body": {
-            "type": "string",
-            "value": "Sherlock Holmes"
-        }
-    }
-}
+#### Setting expectation for a string response
+```java
+redisStub.when("get")
+        .with(new String[]{"PO:NAME"})
+        .thenReturnString("John Wick");
 ```
 
-Note the path and method.
-
-This stubs out a GET NAME operation, which returns the string `Sherlock Holmes`.
-
-Here's how you can stub out a number:
-
-```json
-{
-    "http-request": {
-        "method": "POST",
-        "path": "/redis",
-        "body": {
-            "operation": "get",
-        "params": ["HEIGHT"]
-        }
-    },
-    "http-response": {
-        "status": 200,
-        "body": {
-            "type": "long",
-            "value": "10"
-        }
-    }
-}
+#### Setting expectation for a JSON string response
+```java
+redisStub.when("get")
+        .with(new String[]{"PO:NAME"})
+        .thenReturnJsonString("{\"name\": \"test\"}");
 ```
 
-An array:
-
-```json
-{
-    "http-request": {
-        "method": "POST",
-        "path": "/redis",
-        "body": {
-            "operation": "lrange",
-            "params": ["address", "1", "2"]
-        }
-    },
-    "http-response": {
-        "status": 200,
-        "body": {
-            "type": "array",
-            "value": [
-                {
-                    "type": "string",
-                    "value": "22B Baker Street"
-                },
-                {
-                    "type": "string",
-                    "value": "London"
-                }
-            ]
-        }
-    }
-}
+#### Setting expectation for a Long/Integer response
+```java
+redisStub.when("decr")
+        .with(new String[]{"PO:ID"})
+        .thenReturnLong(1234567);
 ```
 
-A map:
-
-```json
-{
-  "http-request": {
-    "method": "POST",
-    "path": "/redis",
-    "body": {
-      "operation": "hgetall",
-      "params": [
-        "data"
-      ]
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "type": "array",
-      "value": [
-        {
-          "type": "string",
-          "value": "Key1"
-        },
-        {
-          "type": "string",
-          "value": "Value1"
-        },
-        {
-          "type": "string",
-          "value": "Key2"
-        },
-        {
-          "type": "string",
-          "value": "Value2"
-        }
-      ]
-    }
-  }
-}
+#### Setting expectation for an array response
+```java
+redisStub.when("lrange")
+      .with(new String[]{"address", "1", "2"})
+      .thenReturnArray(new String[]{"22B Baker Street", "London"});
 ```
