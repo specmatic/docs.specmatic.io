@@ -180,7 +180,7 @@ Here is a sample application that is is implementing this specification. You can
 
 Let us now run the ```employees.yaml``` as a test against the above sample application.
 
-```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
+```{{ site.spec_cmd }} test employees.yaml --testBaseURL https://my-json-server.typicode.com```
 
 The results should end with below text.
 
