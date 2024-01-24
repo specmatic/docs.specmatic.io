@@ -11,9 +11,12 @@ Configuration
 - [Configuration](#configuration)
     - [Getting started](#getting-started)
       - [Configuring Stubs](#configuring-stubs)
+      - [Use specifications on local file system](#use-specifications-on-local-file-system)
       - [Source control authentication](#source-control-authentication)
       - [Report Configuration](#report-configuration)
-      - [Security - Authentication and Authorisation](#security---authentication-and-authorization)
+      - [Formatters](#formatters)
+      - [Report Types](#report-types)
+      - [API Coverage report](#api-coverage-report)
       - [Complete sample specmatic.json with all attributes](#complete-sample-specmaticjson-with-all-attributes)
     - [Declare pipeline details](#declare-pipeline-details)
     - [Declare environment configuration](#declare-environment-configuration)
@@ -115,6 +118,31 @@ A single application may need to list the API Specifications it is implementing 
   ]
 }
 ```
+
+#### Use specifications on local file system
+
+If you just need to use specifications from your local file system, specify `provider` as `filesystem`, as shown below.
+
+```json
+{
+  "sources": [
+    {
+      "provider": "filesystem",
+      "stub": [
+        "api_order_v1.yaml",
+        "api_user_v1.yaml"
+      ],
+      "test": [
+        "api_auth_v1.yaml",  
+      ]
+    }
+  ]
+}
+```
+
+Note that the `stub` and `test` specifications are relative paths. This means that they must be in the same directory as the current directory.
+
+You can also provide absolute paths in case they are somewhere else on the filesystem.
 
 #### Source control authentication
 
