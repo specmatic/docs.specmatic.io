@@ -150,11 +150,22 @@ The newer contract is backward compatible with the older, as existing consumers 
 
 Run the specmatic compare command to confirm this, and see the result:
 
+{% tabs compare %}
+{% tab compare java %}
 ```bash
 > java -jar specmatic.jar compare api_products_v1.yaml api_products_v1-2.yaml
 
 The newer contract is backward compatible
 ```
+{% endtab %}
+{% tab compare docker %}
+```bash
+> docker run -v "/local-directory/api_products_v1.yaml:/api_products_v1.yaml" -v "/local-directory/api_products_v2.yaml:/api_products_v2.yaml" specmatic compare "/api_products_v1.yaml" "/api_products_v2.yaml" 
+
+The newer contract is backward compatible
+```
+{% endtab %}
+{% endtabs %}
 
 Let's change the original contract of square to return "sku" as a numeric value instead of string in the response:
 
@@ -202,6 +213,8 @@ Note that the file name of the above file is api_products_v2.yaml.
 
 Now try it again:
 
+{% tabs compare2 %}
+{% tab compare2 java %}
 ```bash
 > java -jar specmatic.jar compare api_math_v1.yaml api_math_v2.yaml
 
@@ -214,6 +227,22 @@ API: GET /products/(id:number) -> 200
 
 The newer contract is not backward compatible.
 ```
+{% endtab %}
+{% tab compare2 docker %}
+```bash
+> docker run -v "/local-directory/api_products_v1.yaml:/api_products_v1.yaml" -v "/local-directory/api_products_v2.yaml:/api_products_v2.yaml" specmatic compare "/api_products_v1.yaml" "/api_products_v2.yaml" 
+
+In scenario "Get Products. Response: Returns Product With Id"
+API: GET /products/(id:number) -> 200
+
+  >> RESPONSE.BODY.sku
+
+     This is number in the new contract response but string in the old contract
+
+The newer contract is not backward compatible.
+```
+{% endtab %}
+{% endtabs %}
 
 Specmatic will show you an error message, saying that the change is not backward compatible. The reason for this is that existing consumers are expecting a string "sku", but will get an "integer" instead.
 
@@ -225,9 +254,22 @@ If api_products_v1.yaml is in a git repository, and the change is backward compa
 
 Then to confirm that it is a backward compatible change, before committing the change, run this command:
 
+{% tabs git-compare %}
+{% tab git-compare java %}
 ```bash
-java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_products_v1.yaml
+> java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_products_v1.yaml
+
+The newer contract is backward compatible
 ```
+{% endtab %}
+{% tab git-compare docker %}
+```bash
+> docker run -v "/git-repo:/git-repo" specmatic compatible git file "/git-repo/api_products_v1.yaml"
+
+The newer contract is backward compatible
+```
+{% endtab %}
+{% endtabs %}
 
 This command exits with exit code 1 if the change is backward incompatible. It can be configured as a git pre-commit hook.
 
@@ -237,9 +279,22 @@ In CI, you will need to compare the changes in a contract from one commit to the
 
 You can do this with the following command:
 
+{% tabs ci-compare %}
+{% tab ci-compare java %}
 ```bash
 > java -jar specmatic.jar compatible git commits api_products_v1.yaml HEAD HEAD^1
+
+The newer contract is backward compatible
 ```
+{% endtab %}
+{% tab ci-compare docker %}
+```bash
+> docker run -v "/git-repo:/git-repo" specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
+
+The newer contract is backward compatible
+```
+{% endtab %}
+{% endtabs %}
 
 You can even use commit hashes here if you wish to compare any other pair of commits.
 

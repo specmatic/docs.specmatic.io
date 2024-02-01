@@ -103,6 +103,11 @@ specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/zn
 npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
 {% endtab %}
+{% tab test docker %}
+```shell
+ > docker run -v "/local-directory/service.yaml:/container-directory" specmatic test "/container-directory/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+```
+{% endtab %}
 {% endtabs %}
 
 This should print out a result that looks something like this.
@@ -177,6 +182,11 @@ specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/zn
 npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
 {% endtab %}
+{% tab test2 docker %}
+```shell
+ > docker run -v "/local-directory/service.yaml:/container-directory" specmatic test "/container-directory/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+```
+{% endtab %}
 {% endtabs %}
 This time around the test fails because the response from our sample app is not in line with the OpenAPI Specification.
 ```shell
@@ -222,6 +232,11 @@ specmatic stub service.yaml
 {% tab stub npm %}
 ```shell
 npx specmatic stub service.yaml
+```
+{% endtab %}
+{% tab stub docker %}
+```shell
+> docker run -v "/local-directory/service.yaml:/service.yaml" specmatic stub "/service.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -278,6 +293,11 @@ specmatic stub service.yaml
 {% tab stub2 npm %}
 ```shell
 npx specmatic stub service.yaml
+```
+{% endtab %}
+{% tab stub2 docker %}
+```shell
+> docker run -v "/local-directory/service.yaml:/service.yaml" specmatic stub "/service.yaml"
 ```
 {% endtab %}
 {% endtabs %}
