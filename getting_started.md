@@ -105,7 +105,7 @@ npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.co
 {% endtab %}
 {% tab test docker %}
 ```shell
- > docker run -v "/local-directory/service.yaml:/container-directory" specmatic test "/container-directory/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+ > docker run -v "/local-directory/service.yaml:/service.yaml" specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
 {% endtab %}
 {% endtabs %}
@@ -184,7 +184,7 @@ npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.co
 {% endtab %}
 {% tab test2 docker %}
 ```shell
- > docker run -v "/local-directory/service.yaml:/container-directory" specmatic test "/container-directory/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+ > docker run -v "/local-directory/service.yaml:/service.yaml" specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
 {% endtab %}
 {% endtabs %}
