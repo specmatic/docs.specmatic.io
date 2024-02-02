@@ -30,14 +30,14 @@ Docker Pull Command for specmatic docker image
 
 ``` bash
 > docker pull znsio/specmatic
-> docker tag znsio/specmatic:latest specmatic
 ```
 
 Run specmatic by
 
 ``` bash
-> docker run specmatic
+docker run znsio/specmatic
 ```
+
 {% endtab %}
 {% endtabs %}
 

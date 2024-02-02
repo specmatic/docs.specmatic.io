@@ -105,7 +105,7 @@ npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.co
 {% endtab %}
 {% tab test docker %}
 ```shell
- > docker run -v "/local-directory/service.yaml:/service.yaml" specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+ docker run -v "/local-directory/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
 {% endtab %}
 {% endtabs %}
@@ -184,7 +184,7 @@ npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.co
 {% endtab %}
 {% tab test2 docker %}
 ```shell
- > docker run -v "/local-directory/service.yaml:/service.yaml" specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+ docker run -v "/local-directory/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
 {% endtab %}
 {% endtabs %}
@@ -236,7 +236,7 @@ npx specmatic stub service.yaml
 {% endtab %}
 {% tab stub docker %}
 ```shell
-> docker run -v "/local-directory/service.yaml:/service.yaml" specmatic stub "/service.yaml"
+docker run -v "/local-directory/service.yaml:/service.yaml" znsio/specmatic stub "/service.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -297,7 +297,7 @@ npx specmatic stub service.yaml
 {% endtab %}
 {% tab stub2 docker %}
 ```shell
-> docker run -v "/local-directory/service.yaml:/service.yaml" specmatic stub "/service.yaml"
+docker run -v "/local-directory/service.yaml:/service.yaml" specmatic stub "/service.yaml"
 ```
 {% endtab %}
 {% endtabs %}

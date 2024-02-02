@@ -160,7 +160,7 @@ The newer contract is backward compatible
 {% endtab %}
 {% tab compare docker %}
 ```bash
-> docker run -v "/local-directory/api_products_v1.yaml:/api_products_v1.yaml" -v "/local-directory/api_products_v2.yaml:/api_products_v2.yaml" specmatic compare "/api_products_v1.yaml" "/api_products_v2.yaml" 
+docker run -v "/local-directory/api_products_v1.yaml:/api_products_v1.yaml" -v "/local-directory/api_products_v2.yaml:/api_products_v2.yaml" znsio/specmatic compare "/api_products_v1.yaml" "/api_products_v2.yaml" 
 
 The newer contract is backward compatible
 ```
@@ -230,7 +230,7 @@ The newer contract is not backward compatible.
 {% endtab %}
 {% tab compare2 docker %}
 ```bash
-> docker run -v "/local-directory/api_products_v1.yaml:/api_products_v1.yaml" -v "/local-directory/api_products_v2.yaml:/api_products_v2.yaml" specmatic compare "/api_products_v1.yaml" "/api_products_v2.yaml" 
+docker run -v "/local-directory/api_products_v1.yaml:/api_products_v1.yaml" -v "/local-directory/api_products_v2.yaml:/api_products_v2.yaml" znsio/specmatic compare "/api_products_v1.yaml" "/api_products_v2.yaml" 
 
 In scenario "Get Products. Response: Returns Product With Id"
 API: GET /products/(id:number) -> 200
@@ -264,7 +264,7 @@ The newer contract is backward compatible
 {% endtab %}
 {% tab git-compare docker %}
 ```bash
-> docker run -v "/git-repo:/git-repo" specmatic compatible git file "/git-repo/api_products_v1.yaml"
+docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git file "/git-repo/api_products_v1.yaml"
 
 The newer contract is backward compatible
 ```
@@ -289,7 +289,7 @@ The newer contract is backward compatible
 {% endtab %}
 {% tab ci-compare docker %}
 ```bash
-> docker run -v "/git-repo:/git-repo" specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
+docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
 
 The newer contract is backward compatible
 ```
