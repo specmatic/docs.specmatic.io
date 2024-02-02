@@ -137,23 +137,48 @@ Tests run: 1, Successes: 1, Failures: 0, Errors: 0
 
 How did Specmatic know to make the exact request to ```GET /znsio/specmatic-documentation/pets/1``` with petId as "1"? And not just any other number?
 
-If you notice the OpenAPI, we have an example section for PetId which sets up our petId as per the test data.
+In the OpenAPI spec you may have noticed that there is an examples section for petid.
 
 ```yaml
   - name: "petid"
     in: "path"
     required: true
     schema:
-    type: "number"
+      type: "number"
     examples:
-    200_OKAY:
+      200_OKAY:
         value: 1
 ```
 
-Try removing this example value and try running the specmatic test command again.
+Remove the examples section such that the `petid` param look as shown below.
+
+```yaml
+  - name: "petid"
+    in: "path"
+    required: true
+    schema:
+      type: "number"
+```
+
+And try running the specmatic test command again.
+
+{% tabs test3 %}
+{% tab test3 java %}
 ```shell
 specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
 ```
+{% endtab %}
+{% tab test3 npm %}
+```shell
+npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+```
+{% endtab %}
+{% tab test3 docker %}
+```shell
+ docker run -v "/local-directory/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+```
+{% endtab %}
+{% endtabs %}
 
 Specmatic will generate a random petId based on the datatype of the petId path parameter which results in a 404 since test data does not exist.
 ```shell
@@ -236,7 +261,7 @@ npx specmatic stub service.yaml
 {% endtab %}
 {% tab stub docker %}
 ```shell
-docker run -v "/local-directory/service.yaml:/service.yaml" znsio/specmatic stub "/service.yaml"
+docker run -v "/local-directory/service.yaml:/service.yaml" -p 9000:9000 znsio/specmatic stub "/service.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -248,10 +273,15 @@ Loading service.yaml
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 
-Once the stub server is running you can verify the API by accessing it through Postman, Chrome, Curl etc. to see the response.
+Once the stub server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
 
 ```shell
 curl http://localhost:9000/pets/123
+```
+
+You should now be able to see the response that matches the schema defined in your OpenAPI spec.
+
+```shell
 {
     "id": 864,
     "name": "VRIQA",
