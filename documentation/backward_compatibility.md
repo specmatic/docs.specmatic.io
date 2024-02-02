@@ -274,21 +274,21 @@ You can do this with the following command:
 {% tabs ci-compare %}
 {% tab ci-compare java %}
 ```bash
-> java -jar specmatic.jar compatible git commits api_products_v1.yaml HEAD HEAD^1
-
-The newer contract is backward compatible
+java -jar specmatic.jar compatible git commits api_products_v1.yaml HEAD HEAD^1
 ```
 {% endtab %}
 {% tab ci-compare docker %}
 ```bash
 docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
-
-The newer contract is backward compatible
 ```
 {% endtab %}
 {% endtabs %}
 
 You can even use commit hashes here if you wish to compare any other pair of commits.
+
+```bash
+The newer contract is backward compatible
+```
 
 This command exits with exit code 1 if the change is backward incompatible.
 
