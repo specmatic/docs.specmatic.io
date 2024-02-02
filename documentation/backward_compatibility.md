@@ -242,28 +242,28 @@ If the change is not backward compatible, the compare command exits with exit co
 
 ## Validating Changes In Git On Your Laptop
 
-If api_products_v1.yaml is in a git repository, and the change is backward compatible, make the change directly to the v1 file instead of creating a new one.
+If `api_products_v1.yaml` is part of a git repository, changes can be made directly to this file instead of creating a new one.
 
 Then to confirm that it is a backward compatible change, before committing the change, run this command:
 
 {% tabs git-compare %}
 {% tab git-compare java %}
 ```bash
-> java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_products_v1.yaml
-
-The newer contract is backward compatible
+java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_products_v1.yaml
 ```
 {% endtab %}
 {% tab git-compare docker %}
 ```bash
 docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git file "/git-repo/api_products_v1.yaml"
-
-The newer contract is backward compatible
 ```
 {% endtab %}
 {% endtabs %}
 
 This command exits with exit code 1 if the change is backward incompatible. It can be configured as a git pre-commit hook.
+
+```bash
+The newer contract is backward compatible
+```
 
 ## Validating Changes In CI
 
