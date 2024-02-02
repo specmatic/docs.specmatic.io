@@ -76,7 +76,7 @@ This contract contains an API for fetching the details of a product.
 Let's add a new api to create a product record:
 
 ```yaml
-# filename api_products_v1-2.yaml
+# filename api_products_v2.yaml
 openapi: 3.0.0
 info:
   title: Sample Product API
@@ -153,21 +153,22 @@ Run the specmatic compare command to confirm this, and see the result:
 {% tabs compare %}
 {% tab compare java %}
 ```bash
-> java -jar specmatic.jar compare api_products_v1.yaml api_products_v1-2.yaml
-
-The newer contract is backward compatible
+java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
 ```
 {% endtab %}
 {% tab compare docker %}
 ```bash
-docker run -v "/local-directory/api_products_v1.yaml:/api_products_v1.yaml" -v "/local-directory/api_products_v2.yaml:/api_products_v2.yaml" znsio/specmatic compare "/api_products_v1.yaml" "/api_products_v2.yaml" 
-
-The newer contract is backward compatible
+docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml" 
 ```
 {% endtab %}
 {% endtabs %}
 
-Let's change the original contract of square to return "sku" as a numeric value instead of string in the response:
+You should now see an output as shown below.
+```bash
+The newer contract is backward compatible
+```
+
+Let's change the original contract of square to return `sku` as a num `integer` instead of `string` in the response:
 
 ```yaml
 # filename api_products_v2.yaml
@@ -205,46 +206,37 @@ paths:
                 properties:
                   name:
                     type: string
-                  sku:
+                  sku: #this has changed from string to integer
                     type: integer
 ```
-
-Note that the file name of the above file is api_products_v2.yaml.
 
 Now try it again:
 
 {% tabs compare2 %}
 {% tab compare2 java %}
 ```bash
-> java -jar specmatic.jar compare api_math_v1.yaml api_math_v2.yaml
-
-In scenario "Get Products. Response: Returns Product With Id"
-API: GET /products/(id:number) -> 200
-
-  >> RESPONSE.BODY.sku
-
-     This is number in the new contract response but string in the old contract
-
-The newer contract is not backward compatible.
+java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
 ```
 {% endtab %}
 {% tab compare2 docker %}
 ```bash
-docker run -v "/local-directory/api_products_v1.yaml:/api_products_v1.yaml" -v "/local-directory/api_products_v2.yaml:/api_products_v2.yaml" znsio/specmatic compare "/api_products_v1.yaml" "/api_products_v2.yaml" 
-
-In scenario "Get Products. Response: Returns Product With Id"
-API: GET /products/(id:number) -> 200
-
-  >> RESPONSE.BODY.sku
-
-     This is number in the new contract response but string in the old contract
-
-The newer contract is not backward compatible.
+docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml" 
 ```
 {% endtab %}
 {% endtabs %}
 
 Specmatic will show you an error message, saying that the change is not backward compatible. The reason for this is that existing consumers are expecting a string "sku", but will get an "integer" instead.
+
+```bash
+In scenario "Get Products. Response: Returns Product With Id"
+API: GET /products/(id:number) -> 200
+
+  >> RESPONSE.BODY.sku
+
+     This is number in the new contract response but string in the old contract
+
+The newer contract is not backward compatible.
+```
 
 If the change is not backward compatible, the compare command exits with exit code 1. You can use this in a script.
 
