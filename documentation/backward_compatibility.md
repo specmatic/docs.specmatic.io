@@ -76,7 +76,7 @@ This contract contains an API for fetching the details of a product.
 Let's add a new api to create a product record:
 
 ```yaml
-# filename api_products_v1-2.yaml
+# filename api_products_v2.yaml
 openapi: 3.0.0
 info:
   title: Sample Product API
@@ -150,13 +150,25 @@ The newer contract is backward compatible with the older, as existing consumers 
 
 Run the specmatic compare command to confirm this, and see the result:
 
+{% tabs compare %}
+{% tab compare java %}
 ```bash
-> java -jar specmatic.jar compare api_products_v1.yaml api_products_v1-2.yaml
+java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
+```
+{% endtab %}
+{% tab compare docker %}
+```bash
+docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml" 
+```
+{% endtab %}
+{% endtabs %}
 
+You should now see an output as shown below.
+```bash
 The newer contract is backward compatible
 ```
 
-Let's change the original contract of square to return "sku" as a numeric value instead of string in the response:
+Let's change the original contract of square to return `sku` as a num `integer` instead of `string` in the response:
 
 ```yaml
 # filename api_products_v2.yaml
@@ -194,17 +206,28 @@ paths:
                 properties:
                   name:
                     type: string
-                  sku:
+                  sku: #this has changed from string to integer
                     type: integer
 ```
 
-Note that the file name of the above file is api_products_v2.yaml.
-
 Now try it again:
 
+{% tabs compare2 %}
+{% tab compare2 java %}
 ```bash
-> java -jar specmatic.jar compare api_math_v1.yaml api_math_v2.yaml
+java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
+```
+{% endtab %}
+{% tab compare2 docker %}
+```bash
+docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml" 
+```
+{% endtab %}
+{% endtabs %}
 
+Specmatic will show you an error message, saying that the change is not backward compatible. The reason for this is that existing consumers are expecting a string "sku", but will get an "integer" instead.
+
+```bash
 In scenario "Get Products. Response: Returns Product With Id"
 API: GET /products/(id:number) -> 200
 
@@ -215,21 +238,32 @@ API: GET /products/(id:number) -> 200
 The newer contract is not backward compatible.
 ```
 
-Specmatic will show you an error message, saying that the change is not backward compatible. The reason for this is that existing consumers are expecting a string "sku", but will get an "integer" instead.
-
 If the change is not backward compatible, the compare command exits with exit code 1. You can use this in a script.
 
 ## Validating Changes In Git On Your Laptop
 
-If api_products_v1.yaml is in a git repository, and the change is backward compatible, make the change directly to the v1 file instead of creating a new one.
+If `api_products_v1.yaml` is part of a git repository, changes can be made directly to this file instead of creating a new one.
 
 Then to confirm that it is a backward compatible change, before committing the change, run this command:
 
+{% tabs git-compare %}
+{% tab git-compare java %}
 ```bash
 java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_products_v1.yaml
 ```
+{% endtab %}
+{% tab git-compare docker %}
+```bash
+docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git file "/git-repo/api_products_v1.yaml"
+```
+{% endtab %}
+{% endtabs %}
 
 This command exits with exit code 1 if the change is backward incompatible. It can be configured as a git pre-commit hook.
+
+```bash
+The newer contract is backward compatible
+```
 
 ## Validating Changes In CI
 
@@ -237,11 +271,24 @@ In CI, you will need to compare the changes in a contract from one commit to the
 
 You can do this with the following command:
 
+{% tabs ci-compare %}
+{% tab ci-compare java %}
 ```bash
-> java -jar specmatic.jar compatible git commits api_products_v1.yaml HEAD HEAD^1
+java -jar specmatic.jar compatible git commits api_products_v1.yaml HEAD HEAD^1
 ```
+{% endtab %}
+{% tab ci-compare docker %}
+```bash
+docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
+```
+{% endtab %}
+{% endtabs %}
 
 You can even use commit hashes here if you wish to compare any other pair of commits.
+
+```bash
+The newer contract is backward compatible
+```
 
 This command exits with exit code 1 if the change is backward incompatible.
 

@@ -23,6 +23,22 @@ Run specmatic by
 $ npx specmatic
 ```
 {% endtab %}
+
+{% tab install docker %}
+
+Docker Pull Command for specmatic docker image
+
+``` bash
+> docker pull znsio/specmatic
+```
+
+Run specmatic by
+
+``` bash
+docker run znsio/specmatic
+```
+
+{% endtab %}
 {% endtabs %}
 
 ---
