@@ -29,7 +29,7 @@ $ npx specmatic
 Docker Pull Command for specmatic docker image
 
 ``` bash
-> docker pull znsio/specmatic
+docker pull znsio/specmatic
 ```
 
 Run specmatic by
