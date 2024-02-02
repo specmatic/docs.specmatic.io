@@ -156,6 +156,11 @@ Run the specmatic compare command to confirm this, and see the result:
 java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
 ```
 {% endtab %}
+{% tab compare npm %}
+```bash
+npx specmaitc compare api_products_v1.yaml api_products_v2.yaml
+```
+{% endtab %}
 {% tab compare docker %}
 ```bash
 docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml" 
@@ -218,6 +223,11 @@ Now try it again:
 java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
 ```
 {% endtab %}
+{% tab compare2 npm %}
+```bash
+npx specmaitc compare api_products_v1.yaml api_products_v2.yaml
+```
+{% endtab %}
 {% tab compare2 docker %}
 ```bash
 docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml" 
@@ -252,6 +262,11 @@ Then to confirm that it is a backward compatible change, before committing the c
 java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_products_v1.yaml
 ```
 {% endtab %}
+{% tab git-compare npm %}
+```bash
+npx specmatic compatible git file api_products_v1.yaml
+```
+{% endtab %}
 {% tab git-compare docker %}
 ```bash
 docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git file "/git-repo/api_products_v1.yaml"
@@ -275,6 +290,11 @@ You can do this with the following command:
 {% tab ci-compare java %}
 ```bash
 java -jar specmatic.jar compatible git commits api_products_v1.yaml HEAD HEAD^1
+```
+{% endtab %}
+{% tab ci-compare npm %}
+```bash
+npx specmatic compatible git commits api_products_v1.yaml HEAD HEAD^1
 ```
 {% endtab %}
 {% tab ci-compare docker %}

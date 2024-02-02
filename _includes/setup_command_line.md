@@ -11,16 +11,16 @@ java -jar specmatic.jar
 {% endtab %}
 {% tab install npm %}
 
-Install specmatic npm package
+Install specmatic npm package globally 
 
 ``` bash
 npm install -g specmatic
 ```
 
-Run specmatic by
+Or you can run specmatic without installing it as below 
 
 ``` bash
-$ npx specmatic
+npx specmatic
 ```
 {% endtab %}
 
