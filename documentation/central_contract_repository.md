@@ -31,13 +31,17 @@ API Specifications are code and they are best stored in a version control system
 
 ## File organization
 
-**[Sample Central Contract Repository](https://github.com/znsio/specmatic-order-contracts)**
-
 * Package Naming Convention - In the [sample repo](https://github.com/znsio/specmatic-order-contracts) we have the OpenAPI API Specifications organized in a manner similar to [package naming convention](https://github.com/znsio/specmatic-order-contracts). This helps in easy identifition of the approapriate files for organizations with large number of microservices and API Specifications.
 * Specification file name - It is helpful to have the version number appended to the API Specification file name
 * Extracting common schema - We recommend extracting common schema components to avoid duplications. Example: [common.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/common.yaml) contains only schema components which are leveraged as remote references in [api_order_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml). This has other advantages too
   * Consistency and standardisation - Commonly used parameter such as traceIds can be defined in one place and used across schemas
   * Avoid duplication related issues - It is common to miss updating / renaming some parts of a schema, by extracting common code we can significantly reduce it
+
+## Sample Central Contract Repository Repositories
+ Link to examples of a **Central Contract Repository** with pre-merge checks to valid API spec standards and backward compatibility validation with Specmatic are given below.
+
+ - [Github](https://github.com/znsio/specmatic-order-contracts)
+ - [Gitlab](https://gitlab.com/znsio/contract-driven-development/central-contract-repository)
 
 ## Pull Request / Merge Request Process
 
