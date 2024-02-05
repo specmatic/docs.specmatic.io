@@ -31,17 +31,13 @@ API Specifications are code and they are best stored in a version control system
 
 ## File organization
 
+**[Sample Central Contract Repository](https://github.com/znsio/specmatic-order-contracts)**
+
 * Package Naming Convention - In the [sample repo](https://github.com/znsio/specmatic-order-contracts) we have the OpenAPI API Specifications organized in a manner similar to [package naming convention](https://github.com/znsio/specmatic-order-contracts). This helps in easy identifition of the approapriate files for organizations with large number of microservices and API Specifications.
 * Specification file name - It is helpful to have the version number appended to the API Specification file name
 * Extracting common schema - We recommend extracting common schema components to avoid duplications. Example: [common.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/common.yaml) contains only schema components which are leveraged as remote references in [api_order_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml). This has other advantages too
   * Consistency and standardisation - Commonly used parameter such as traceIds can be defined in one place and used across schemas
   * Avoid duplication related issues - It is common to miss updating / renaming some parts of a schema, by extracting common code we can significantly reduce it
-
-## Sample Central Contract Repository Repositories
- Link to examples of a **Central Contract Repository** with pre-merge checks to valid API spec standards and backward compatibility validation with Specmatic are given below.
-
- - [Github](https://github.com/znsio/specmatic-order-contracts)
- - [Gitlab](https://gitlab.com/znsio/contract-driven-development/central-contract-repository)
 
 ## Pull Request / Merge Request Process
 
@@ -51,11 +47,15 @@ It is a good idea to prevent any direct commits to your master / main branch of 
 
 ### Pre-merge checks
 
-**[Sample Github Action](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml)** - This performs below pre-merge checks
 * **Syntax checks and Linting** - We leverage [Spectral](https://stoplight.io/open-source/spectral) for this. Read more about this [here](https://github.com/znsio/specmatic-order-contracts#linting)
 * **Specmatic Backward Compatibility Testing** This step is crucial in identifying **backward breaking** changes to the specifications.
   * Specmatic Backward Compatiblity Testing can compare two versions of the same file in Git to identify the difference. Please see this [script](https://github.com/znsio/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are comparing the HEAD (top of the PR branch) and main (top of the master / main branch) for the changed files
   * Specmatic returns a 0 or 1 just like any command line tool for success and error respectively based on which we can fail the build. At this point the team can decide if they should version bump the specification or change the code such that it is backward compatible
+
+### Sample Central Contract Repository Repositories
+ Link to examples of a **Central Contract Repository** with pre-merge checks to validate API spec standards and backward compatibility validation with Specmatic are given below.
+  - [Github](https://github.com/znsio/specmatic-order-contracts)
+  - [Gitlab](https://gitlab.com/znsio/contract-driven-development/central-contract-repository)
 
 ### Collaborating over API Design
 
