@@ -306,11 +306,11 @@ However for petId 1, it will always return below values.
 }
 ```
 
-This is because the example `200_OKAY`, which we earlier saw being used while running contract test, also serves a stub data when we run Specmatic stub.
+This is because the example `200_OKAY` in the `service.yaml` spec file, which we earlier saw being used while running contract test, also serves a stub data when we run Specmatic stub.
 
 With this we have effectively achived three goals in one go.
-* Examples serve as reference for people referring to the API specification as documentation
-* The same examples are used while contract tests to create the HTTP request
+* Examples serve as sample data for people referring to the API specification as documentation
+* The same examples are used in contract tests to create the HTTP request
 * And these examples also serve as stub data when we run Spemcatic stub command
 
 #### Intelligent Service Virtualisation
