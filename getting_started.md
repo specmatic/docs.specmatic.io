@@ -249,7 +249,7 @@ On the Consumer Side, we can now leverage the OpenAPI Specification as a Smart M
 
 Here the Specmatic Stub is emulating the Provide / API.
 
-Before we begin, please make sure that your service.yaml file is restored to its [original shape](/getting_started.html#api-specification).
+Before we begin, please make sure that your service.yaml file is restored to its [original state](/getting_started.html#api-specification).
 
 To spin up a stub server with the service.yaml we authored earlier, run below command.
 {% tabs stub %}
@@ -306,7 +306,7 @@ However for petId 1, it will always return below values.
 }
 ```
 
-This is because the example `200_OKAY`, which we earlier saw being used while running contract test, also servers a stub data when we run Specmatic stub.
+This is because the example `200_OKAY`, which we earlier saw being used while running contract test, also serves a stub data when we run Specmatic stub.
 
 With this we have effectively achived three goals in one go.
 * Examples serve as reference for people referring to the API specification as documentation
