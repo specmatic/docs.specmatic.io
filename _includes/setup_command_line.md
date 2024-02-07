@@ -11,17 +11,33 @@ java -jar specmatic.jar
 {% endtab %}
 {% tab install npm %}
 
-Install specmatic npm package
+Install specmatic npm package globally 
 
 ``` bash
 npm install -g specmatic
 ```
 
+Or you can run specmatic without installing it as below 
+
+``` bash
+npx specmatic
+```
+{% endtab %}
+
+{% tab install docker %}
+
+Docker Pull Command for specmatic docker image
+
+``` bash
+docker pull znsio/specmatic
+```
+
 Run specmatic by
 
 ``` bash
-$ npx specmatic
+docker run znsio/specmatic
 ```
+
 {% endtab %}
 {% endtabs %}
 
