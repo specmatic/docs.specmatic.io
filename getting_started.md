@@ -313,7 +313,7 @@ With this we have effectively achived three goals in one go.
 * The same examples are used in contract tests to create the HTTP request
 * And these examples also serve as stub data when we run Spemcatic stub command
 
-#### Intelligent Service Virtualisation
+#### **Intelligent Service Virtualisation**
 
 Let us try a few experiments. Remove the `status` field in the `200_OKAY` response example in `service.yaml` (the very last line in that file) and run the stub command again.
 
@@ -327,7 +327,7 @@ examples:
       status: "Adopted" # Remove this line
 ```
 
-You should an output like below.
+You should see an output like below.
 
 ```bash
 Loading /service.yaml
@@ -348,7 +348,7 @@ API Specification Summary: /service.yaml
 
 Specmatic rejects the expectation / canned response since it is not in line with the OpenAPI Specification.
 
-#### Externalising stub responses
+#### **Externalising stub responses**
 
 Please restore `service.yaml` to its [original state](/getting_started.html#api-specification)(by adding back the `status` field in the `200_OKAY` example) before proceeding with this section.
 
@@ -423,7 +423,31 @@ You should now be able to see the data pertaining to the `togo.json` file that y
 }
 ```
 
-Specmatic validates this externalised stub JSON file `togo.json` against the `service.yaml`. Let us try this by removing the `status` field within http-response body in `togo.json` and run the stub command again. You should an output like below.
+Specmatic validates this externalised stub JSON file `togo.json` against the `service.yaml`. Let us try this by removing the `status` field within http-response body in `togo.json` and run the stub command again. 
+
+{% tabs stub3 %}
+{% tab stub3 java %}
+```shell
+specmatic stub service.yaml
+```
+{% endtab %}
+{% tab stub3 npm %}
+```shell
+npx specmatic stub service.yaml
+```
+{% endtab %}
+{% tab stub3 docker %}
+```shell
+# Please note docker command here has to volume map the directory containing service.yaml 
+# to a directory within the container so that both service.yaml and folder service_data along 
+# with togo.json are available to Specmatic docker container
+docker run -v "/local-directory/:/specs" -p 9000:9000 znsio/specmatic stub "/specs/service.yaml"
+```
+{% endtab %}
+{% endtabs %}
+
+You should see an output like below.
+
 ```shell
 Loading service.yaml
   Loading stub expectations from /<dir with service.yaml>/service_data
