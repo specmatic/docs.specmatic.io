@@ -279,18 +279,18 @@ Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 
 **Tip:** You can switch the port number by adding ```--port <port of your choice>``` in the command.
 
-{% tabs stub %}
-{% tab stub java %}
+{% tabs stub-custom-port %}
+{% tab stub-custom-port java %}
 ```shell
 specmatic stub service.yaml --port 9002
 ```
 {% endtab %}
-{% tab stub npm %}
+{% tab stub-custom-port npm %}
 ```shell
 npx specmatic stub service.yaml --port 9002
 ```
 {% endtab %}
-{% tab stub docker %}
+{% tab stub-custom-port docker %}
 ```shell
 docker run -v "/local-directory/service.yaml:/service.yaml" -p 9000:9002 znsio/specmatic stub "/service.yaml" --port 9002
 ```
