@@ -270,12 +270,33 @@ docker run -v "/local-directory/service.yaml:/service.yaml" -p 9000:9000 znsio/s
 {% endtab %}
 {% endtabs %}
 
-This should start your stub server on port 9000 by default (you can switch the port number by adding ```--port <port of your choice>``` to the above command) as below.
+This should start your stub server on port 9000 by default as below.
 
 ```shell
 Loading service.yaml
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
+
+**Tip:** You can switch the port number by adding ```--port <port of your choice>``` in the command.
+
+{% tabs stub %}
+{% tab stub java %}
+```shell
+specmatic stub service.yaml --port 9002
+```
+{% endtab %}
+{% tab stub npm %}
+```shell
+npx specmatic stub service.yaml --port 9002
+```
+{% endtab %}
+{% tab stub docker %}
+```shell
+docker run -v "/local-directory/service.yaml:/service.yaml" -p 9000:9002 znsio/specmatic stub "/service.yaml" --port 9002
+```
+**Note:** Ensure that the port you specify matches the one assigned to the container port.
+{% endtab %}
+{% endtabs %}
 
 Once the stub server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
 
