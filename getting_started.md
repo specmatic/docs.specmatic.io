@@ -292,9 +292,12 @@ npx specmatic stub service.yaml --port 9002
 {% endtab %}
 {% tab stub-custom-port docker %}
 ```shell
+# Note that --port 9002 at the end of the command is crucial. It ensures that the stub 
+# server inside the Docker container is listening on the same port (9002) that's being
+# mapped to port 9000 on your machine. If these ports don't match, you won't be able to
+# access the stub server from your machine.
 docker run -v "/local-directory/service.yaml:/service.yaml" -p 9000:9002 znsio/specmatic stub "/service.yaml" --port 9002
 ```
-**Note:** Ensure that the port you specify matches the one assigned to the container port.
 {% endtab %}
 {% endtabs %}
 
