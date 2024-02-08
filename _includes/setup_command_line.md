@@ -38,6 +38,16 @@ Run specmatic by
 docker run znsio/specmatic
 ```
 
+**Important**: If you're using a machine with an Apple Silicon chip, you'll need to enable Rosetta for accelerated x86/amd64 binary emulation.
+
+Please follow these steps to do so:
+
+1. Update your Docker Desktop application to the latest version.
+2. Navigate to 'Settings', then 'General Settings'.
+3. Ensure the `Use Rosetta for x86/amd64 emulation on Apple Silicon` option is checked.
+4. Save your settings and restart Docker Desktop for the changes to take effect.
+
+
 {% endtab %}
 {% endtabs %}
 
