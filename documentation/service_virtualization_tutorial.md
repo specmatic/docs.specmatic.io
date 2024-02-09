@@ -539,9 +539,9 @@ This is useful particularly when there are no distinguishing features of the req
 
 If the test fails and you need to start a new run of the test, you may need to clear all the transient mocks so that the two tests do not step on eachother's toes.
 
-To do that, make an API call to the path /_specmatic/http-stub-id/<http-stub-token> with the DELETE verb.
+To do that, make an API call to the path /_specmatic/http-stub/<http-stub-token> with the DELETE verb.
 
-To clear the transient mock in the above example, you would call http://localhost:9000/_specmatic/http-stub-id/123 with the DELETE verb.
+To clear the transient mock in the above example, you would call http://localhost:9000/_specmatic/http-stub/123 with the DELETE verb.
 
 ## Matching the request body with regular expressions
 
