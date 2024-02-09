@@ -6,7 +6,7 @@ nav_order: 3
 Download
 ========
 
-Get the latest version of the Specmatic binary from [Github](https://github.com/znsio/specmatic/releases). You can use this from the command-line or terminal.
+Get the latest version of the Specmatic executable from [Github](https://github.com/znsio/specmatic/releases), or [Maven Central](https://repo1.maven.org/maven2/in/specmatic/specmatic-executable/{{ site.latest_release }}/specmatic-executable-{{ site.latest_release }}-all.jar). You can use this from the command-line or terminal.
 
 ### Maven dependencies
 
