@@ -791,7 +791,7 @@ To get this working:
 
 Look at the sample project below to see this in action. Observe the system property, set in the [ContractTest](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java) class, and the actuator-related dependency added in `pom.xml`.
 
-The data in the coverage report is available at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed.
+The data in the coverage report is written to a file at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed.
 
 ### Adanced Features
 
