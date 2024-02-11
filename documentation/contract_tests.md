@@ -10,7 +10,7 @@ Contract Tests
 - [Contract Tests](#contract-tests)
     - [Overview](#overview)
     - [Specmatic Contract Test - Command Line](#specmatic-contract-test---command-line)
-    - [Anatomy of a contract test](#anatomy-of-a-contract-test)
+    - [How the contract test works (step-by-step)](#how-the-contract-test-works-step-by-step)
     - [Externalising examples / test cases](#externalising-examples--test-cases)
     - [Boundary Condition Testing](#boundary-condition-testing)
     - [JUnit Output From The Command](#junit-output-from-the-command)
@@ -188,23 +188,25 @@ The results should end with below text.
 ```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
 
 And if you further analyse the test logs for ```PUT /znsio/specmatic/employees/{id}```, you will notice that specmatic sent the value 10 and did not generate a random value. How did this happen?
-* Specmatic is able to correlate the request and response examples based on naming convention
-* In the ```employees.yaml``` you will notice several examples for the employeeId parameter each with a different name, these same names are again used in the response examples also. This is what is helping Specmatic tie the request and response together
-* In OpenAPI, while it is possible to define several possible responses for an operation, it is not possible to define which input generates which response. This is the reason why Specmatic has to depend on the example names
+* Specmatic is able to correlate the request and response examples based on naming convention.
+* In the ```employees.yaml``` you will notice several examples for the employeeId parameter each with a different name, these same names are again used in the response examples also. This is what is helping Specmatic tie the request and response together.
+* In OpenAPI, while it is possible to define several possible responses for an operation, it is not possible to define which input generates which response. This is the reason why Specmatic has to depend on the example names.
 
-### Anatomy of a contract test
+### How the contract test works (step-by-step)
 
-The contract test is comprised of named examples in the specification.
+Let's go over the how the above contract test works once again.
 
-For instance, Specmatic collects all the examples named `FETCH_EMPLOYEE_SUCCESS` in `parameters` section, and sends a GET request with these values to `/znsio/specmatic/employees/{id}`. These examples serve both as test data for Specmatic. And given that they comprise a contract test, they are examples of valid requests for anyone reading the specification.
+The purpose of the contract test is to check if the application understands a specification-valid request and returns a specification-valid response. A contract test is comprised of named examples in the specification.
 
-But this API has a `200` and a `404` response. So which one is expected? Specmatic now looks for a response example named `FETCH_EMPLOYEE_SUCCESS`. It finds it under the `200` response of `/znsio/specmatic/employees/{id}`. Hence, the application's response code is expected to be `200`, and the payload must match that defined under the 200 response.
+For instance, Specmatic's `test` command collects all the examples named `FETCH_EMPLOYEE_SUCCESS` in the `parameters` section of `/znsio/specmatic/employees/{id}` in the above specification, and sends a GET request with these values to `/znsio/specmatic/employees/{id}`. These examples serve as test data for Specmatic. Specmatic expects that the application will understand them and return the expected response.
 
-The request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken together comprise a test named `FETCH_EMPLOYEE_SUCCESS`.
+Needless to say, the application must be setup before the contract tests run to return the required response.
 
-Note that the actual response example named `FETCH_EMPLOYEE_SUCCESS` is not leveraged in the contract test. The contract test checks if the application can understand a specification-valid request and return a specification-valid response. So any response from the application with a `200` status code matching the `200` response specification will be accepted by Specmatic, and the test would pass. The response example does come in handy for [service virtualisation](/documentation/service_virtualisation.html#examples-as-expectations).
+When the application sends back a responds, Specmatic must validate it against the specification. But `/znsio/specmatic/employees/{id}` has a `200` and a `404` response in the spec. How does Specmatic know which of the two to expect? Specmatic just looks for a response example named `FETCH_EMPLOYEE_SUCCESS`, and finds it under the `200`. Hence, the response code is expected to be `200`, and the payload must match that defined under the 200 response. Any response from the application with a `200` status code matching the `200` response specification will be accepted by Specmatic.
 
-Needless to say, the application must be setup before the contract tests run to return a 200 response to this request.
+The request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken together comprise a contract test named `FETCH_EMPLOYEE_SUCCESS`.
+
+Note that the actual response example named `FETCH_EMPLOYEE_SUCCESS` is not leveraged in the contract test. But the response example does come in handy for [service virtualisation](/documentation/service_virtualisation.html#examples-as-expectations).
 
 ### Externalising examples / test cases
 
