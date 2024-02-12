@@ -194,9 +194,9 @@ And if you further analyse the test logs for ```PUT /znsio/specmatic/employees/{
 
 ### How the contract test works (step-by-step)
 
-Let's go over the how the above contract test works once again.
+Let's go over how the above contract test works once again.
 
-The purpose of the contract test is to check if the application understands a specification-valid request and returns a specification-valid response. A contract test is comprised of named examples in the specification.
+The purpose of the contract test is to check if the application understands a specification-valid request and returns a specification-valid response.
 
 Let's take the example of `FETCH_EMPLOYEE_SUCCESS` in the above specification.
 
@@ -204,11 +204,13 @@ First, Specmatic's `test` command collects all the examples named `FETCH_EMPLOYE
 
 Needless to say, the application must be setup before the contract tests run to return the required response.
 
-Next, when the application sends back a responds, Specmatic must validate it against the specification. But `/znsio/specmatic/employees/{id}` has a `200` and a `404` response in the spec. How does Specmatic know which of the two to expect? Specmatic just looks for a response example named `FETCH_EMPLOYEE_SUCCESS`, and finds it under the `200`. Hence, the response code is expected to be `200`, and the payload must match that defined under the 200 response. Any response from the application with a `200` status code matching the `200` response specification will be accepted by Specmatic.
+Next, when the application sends back a response, Specmatic must validate it against the specification. But `/znsio/specmatic/employees/{id}` has a `200` and a `404` response in the spec. How does Specmatic know which of the two to expect? Specmatic just looks for a response example named `FETCH_EMPLOYEE_SUCCESS`, and finds it under the `200`. Hence, the response code is expected to be `200`, and the payload must match that defined under the 200 response. Any response from the application with a `200` status code matching the `200` response specification will be accepted by Specmatic.
 
-The request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken together comprise a contract test named `FETCH_EMPLOYEE_SUCCESS`.
+Thus, The request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken together comprise a contract test named `FETCH_EMPLOYEE_SUCCESS`.
 
-Note that the actual response example named `FETCH_EMPLOYEE_SUCCESS` is not leveraged in the contract test. But the response example does come in handy for [service virtualisation](/documentation/service_virtualisation.html#examples-as-expectations).
+Note that the response example named `FETCH_EMPLOYEE_SUCCESS` is not compared with values returned by the application. This is what sets a Contract Test apart from an API Test. A Contract Test is concerned with checking the APIs signature, while API tests are concerned wtih checking the APIs logic.
+
+However the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualisation](/documentation/service_virtualisation.html#examples-as-expectations).
 
 ### Externalising examples / test cases
 
