@@ -9,9 +9,9 @@ Getting started
 - [Getting started](#getting-started)
     - [Setup](#setup)
     - [Example Application - PetStore](#example-application---petstore)
-    - [API Specification](#api-specification)
+    - [API Specification](#petstore-api-specification)
     - [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
-    - [Consumer Side - Contract As A Stub / Smart Mock](#consumer-side---contract-as-a-stub--smart-mock)
+    - [Consumer Side - Contract As A Stub / Smart Mock](#consumer-side---contract-as-a-stub--intelligent-service-virtualisation)
 
 ### Setup
 
