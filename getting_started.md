@@ -22,80 +22,79 @@ Getting started
 ### Example Application - PetStore
 
 PetStore application has a backend API (Provider) and a front-end client application (Consumer).
-Below is a sequence diagram.
+Here is a sequence diagram representing the `getPetById` operation.
 
     UI (Consumer)          API (Provider)
           | --- getPetById ---> |
           | <-- {Pet JSON} ---- |
 
-Just to be clear on vocabulary
+Before we get started, here is a quick refresher on the terminology used in the documentation.
 * Consumer - The application requesting the data (in this case UI)
 * Provider - The application responding with the data (in this case API)
 
 ---
 
-### API Specification
+### PetStore API Specification
     
-Below is the OpenAPI specification that represents the communication between UI and API in the above sample application. Save this to a file called service.yaml.
+Below is the OpenAPI specification that represents the communication between UI and Backend in the above example application. Please save this to a file called `service.yaml`.
 
 ```yaml
----
-openapi: "3.0.1"
+openapi: 3.0.1
 info:
-  title: "Contract for the petstore service"
-  version: "1"
+  title: Contract for the petstore service
+  version: '1'
 paths:
   /pets/{petid}:
     get:
-      summary: "Should be able to get a pet by petId"
+      summary: Should be able to get a pet by petId
       parameters:
-        - name: "petid"
-          in: "path"
+        - name: petid
+          in: path
           required: true
           schema:
-            type: "number"
+            type: number
           examples:
-            200_OKAY:
+            SCOOBY_200_OK:
               value: 1
       responses:
-        "200":
-          description: "Should be able to get a pet by petId"
+        '200':
+          description: Should be able to get a pet by petId
           content:
             application/json:
               schema:
                 required:
-                  - "id"
-                  - "name"
-                  - "status"
-                  - "type"
+                  - id
+                  - name
+                  - status
+                  - type
                 properties:
                   id:
-                    type: "number"
+                    type: number
                   name:
-                    type: "string"
+                    type: string
                   type:
-                    type: "string"
+                    type: string
                   status:
-                    type: "string"
+                    type: string
               examples:
-                200_OKAY:
+                SCOOBY_200_OK:
                   value:
                     id: 1
-                    type: "Golden Retriever"
-                    name: "Scooby"
-                    status: "Adopted"
+                    name: Scooby
+                    type: Golden Retriever
+                    status: Adopted
 ```
 
 ---
 
 ### Provider Side - Contract as a Test
 
-We have a sample API running which you can access through curl or other tools.
+We have a sample implementation of the PetStore API running which you can access through curl or any other tool of your choice.
 ```shell
 curl https://my-json-server.typicode.com/znsio/specmatic-documentation/pets/1
 ```
 
-Now lets leverage Specmatic to run the above specification as a test against the Provider / API to see if it is adhering the OpenAPI Specification.
+Now lets use Specmatic to run the above **API specification as a contract test** against the Provider / API to see if it is adhering the OpenAPI Specification.
 {% tabs test %}
 {% tab test java %}
 ```shell
@@ -114,19 +113,22 @@ npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.co
 {% endtab %}
 {% endtabs %}
 
-This should print out a result that looks something like this.
-```shell
+Your output will look as shown in below (a few lines have been deleted in the interest of brevity).
+```
+API Specification Summary: service.yaml
+  OpenAPI Version: 3.0.1
+  API Paths: 1, API Operations: 1
+
+Executing 1 tests
 
 --------------------
-  Request to https://my-json-server.typicode.com/znsio/specmatic-documentation at 2022-11-19 4:4:12.154
+  Request to https://my-json-server.typicode.com/znsio/specmatic-documentation at 2024-2-12 1:54:58.570
     GET /znsio/specmatic-documentation/pets/1
-    Host: my-json-server.typicode.com
-    Accept-Charset: UTF-8
-    Accept: */*
+    
 
-  Response at 2022-11-19 4:4:12.165
+  Response at 2024-2-12 1:54:58.572
     200 OK
-
+    Content-Type: application/json; charset=utf-8
     {
         "id": 1,
         "name": "Scooby",
@@ -134,14 +136,39 @@ This should print out a result that looks something like this.
         "status": "Adopted"
     }
 
-Scenario: Should be able to get a pet by petId. Response: Should be able to get a pet by petId GET /pets/(petid:number) SUCCESSFUL
 
+Tests run: 1/1 (100%)
+
+ Scenario: GET /pets/(petid:number) -> 200 | EX:SCOOBY_200_OK has SUCCEEDED
+
+Could not load report configuration, coverage will be calculated but no coverage threshold will be enforced
+|----------------------------------------------------------------------|
+| API COVERAGE SUMMARY                                                 |
+|----------------------------------------------------------------------|
+| coverage | path          | method | response | # exercised | remarks |
+|----------|---------------|--------|----------|-------------|---------|
+|     100% | /pets/{petid} | GET    |      200 |           1 | covered |
+|----------------------------------------------------------------------|
+| 100% API Coverage reported from 1 path                               |
+|----------------------------------------------------------------------|
+
+
+Saving Open API Coverage Report json to ./build/reports/specmatic ...
 Tests run: 1, Successes: 1, Failures: 0, Errors: 0
 ```
 
+#### Understanding the output
+
+* Specmatic parsed your API specification and printed a brief `API Specification Summary`
+* Then it generated and started `Executing 1 tests` because our API specification contains only one endpoint with a single GET operation
+* Specmatic then logged the `HTTP Request` that it generated and the `HTTP response` it received from the API implementation
+* And finally it prints out the test results along with an API Coverage Report (Read our detailed post on [API Converage Report](https://specmatic.in/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) to know more.)
+
+#### Where did Specmatic get the test data to generate the HTTP request
+
 How did Specmatic know to make the exact request to ```GET /znsio/specmatic-documentation/pets/1``` with petId as "1"? And not just any other number?
 
-In the OpenAPI spec you may have noticed that there is an examples section for petid.
+In the OpenAPI spec you may have noticed that there is an examples section for `petid` with a named example called `SCOOBY_200_OK`.
 
 ```yaml
   - name: "petid"
@@ -150,7 +177,7 @@ In the OpenAPI spec you may have noticed that there is an examples section for p
     schema:
       type: "number"
     examples:
-      200_OKAY:
+      SCOOBY_200_OK:
         value: 1
 ```
 
@@ -184,14 +211,40 @@ npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.co
 {% endtab %}
 {% endtabs %}
 
-Specmatic will generate a random petId based on the datatype of the petId path parameter which results in a 404 since test data does not exist.
-```shell
---------------------
-  Request to https://my-json-server.typicode.com/znsio/specmatic-documentation at 2022-11-19 4:19:18.752
-    GET /znsio/specmatic-documentation/pets/616
+This will result in a test failure because the sample application returns a `404`.
+
+```
+Unsuccessful Scenarios:
+  " Scenario: GET /pets/(petid:number) -> 200 FAILED"
+        Reason: Testing scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
+        API: GET /pets/(petid:number) -> 200
+  
+          >> RESPONSE.STATUS
+          
+             Expected status 200, actual was status 404
+
+Tests run: 1, Successes: 0, Failures: 1, Errors: 0
 ```
 
-Now lets try something more interesting. Restore the OpenAPI file to its [original state](/getting_started.html#api-specification) (add back the example petId value) and change the datatype of the "status" field of response in OpenAPI file to "number" and save it.
+This is because we removed the named example `SCOOBY_200_OK`, Specmatic generated a random petId based on the datatype of the petId path parameter. And since test data does not exist for this petId in the sample application, we get a 404.
+```shell
+--------------------
+  Request to https://my-json-server.typicode.com/znsio/specmatic-documentation at 2024-2-11 5:44:5.791
+    GET /znsio/specmatic-documentation/pets/318
+```
+
+Once you restore the OpenAPI file to its [original state](/getting_started.html#api-specification) (add back the example petId value) the tests should passing again.
+
+#### How does this all work?
+
+* Specmatic is able to tie the **named example** `SCOOBY_200_OK` listed under the request parameters and the response sections of the OpenAPI spec to create a test.
+* This is also reflected in the name of the test where Specmatic displays the `SCOOBY_200_OK` in the test logs
+
+`Scenario: GET /pets/(petid:number) -> 200 | EX:SCOOBY_200_OK has SUCCEEDED`
+
+#### What happens when OpenAPI goes out of sync with the application or vice versa?
+
+Now lets try something more interesting and change the datatype of the "status" field of response in OpenAPI file to "number" and save it.
 
 ```yaml
   properties:
@@ -220,13 +273,13 @@ npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.co
 This time around the test fails because the response from our sample app is not in line with the OpenAPI Specification.
 ```shell
 Unsuccessful Scenarios:
-  "Scenario: Should be able to get a pet by petId. Response: Should be able to get a pet by petId GET /pets/(petid:number) FAILED"
+  " Scenario: GET /pets/(petid:number) -> 200 | EX:SCOOBY_200_OK FAILED"
         Reason: Testing scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
-    	API: GET /pets/(petid:number) -> 200
-
-    	  >> RESPONSE.BODY.status
-
-    	     Contract expected number but response contained "Adopted"
+        API: GET /pets/(petid:number) -> 200
+  
+          >> RESPONSE.BODY.status
+          
+             Contract expected number but response contained "Adopted"
 
 Tests run: 1, Successes: 0, Failures: 1, Errors: 0
 ```
@@ -239,17 +292,15 @@ Please refer to below videos for extensive demos on Contract as Test.
 
 [**Learn more about Contract Tests here.**](/documentation/contract_tests.html)
 
-### Consumer Side - Contract As A Stub / Smart Mock
+### Consumer Side - Contract As A Stub / Intelligent Service Virtualisation
 
-On the Consumer Side, we can now leverage the OpenAPI Specification as a Smart Mock to isolate our UI development and make progress independent of the Provider / API.
+We have so far established that Specmatic will keep OpenAPI spec and the API implementation in sync. This gives us the confidence to use the same OpenAPI spec `service.yaml` on the Consumer side for **Intelligent Service Virtualisation** with Specmatic. This will help us isolate our UI development and make progress independent of the Provider / API. Here is a sequence diagram illustrating the same where UI no longer has to interact with the real backend for testing purposes. UI can instead rely on Specmatic Stub which is emulating the Provider / API.
 
     UI (Consumer)         Specmatic Stub <- service.yaml
           | --- getPetById ---> |
           | <-- {Pet JSON} ---- |
 
-Here the Specmatic Stub is emulating the Provide / API.
-
-Before we begin, please make sure that your service.yaml file is restored to its [original state](/getting_started.html#api-specification).
+Before we begin, please make sure that your `service.yaml` file is restored to its [original state](/getting_started.html#api-specification).
 
 To spin up a stub server with the service.yaml we authored earlier, run below command.
 {% tabs stub %}
@@ -274,6 +325,11 @@ This should start your stub server on port 9000 by default as below.
 
 ```shell
 Loading service.yaml
+API Specification Summary: service.yaml
+  OpenAPI Version: 3.0.1
+  API Paths: 1, API Operations: 1
+
+
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 
@@ -330,7 +386,7 @@ However for petId 1, it will always return below values.
 }
 ```
 
-This is because the example `200_OKAY` in the `service.yaml` spec file, which we earlier saw being used while running contract test, also serves a stub data when we run Specmatic stub.
+This is because the example `SCOOBY_200_OK` in the `service.yaml` spec file, which we earlier saw being used while running contract test, also serves a stub data when we run Specmatic stub.
 
 With this we have effectively achived three goals in one go.
 * Examples serve as sample data for people referring to the API specification as documentation
@@ -351,30 +407,30 @@ examples:
       status: "Adopted" # Remove this line
 ```
 
-You should see an output like below.
+The stub server will auto reload your `service.yaml` file as soon as you save it. And you should see an output as shown below.
 
 ```bash
-Loading /service.yaml
-API Specification Summary: /service.yaml
+Loading service.yaml
+API Specification Summary: service.yaml
   OpenAPI Version: 3.0.1
   API Paths: 1, API Operations: 1
 
 
-[Example 200_OKAY]: Error from contract /service.yaml
+[Example SCOOBY_200_OK]: Error from contract service.yaml
 
   In scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
   API: GET /pets/(petid:number) -> 200
-
+  
     >> RESPONSE.BODY.status
-
-       key named status in the spec was not found in the "200_OKAY" example
+  
+       key named status in the spec was not found in the "SCOOBY_200_OK" example
 ```
 
 Specmatic rejects the expectation / canned response since it is not in line with the OpenAPI Specification.
 
 #### **Externalising stub responses**
 
-Please restore `service.yaml` to its [original state](/getting_started.html#api-specification)(by adding back the `status` field in the `200_OKAY` example) before proceeding with this section.
+Please restore `service.yaml` to its [original state](/getting_started.html#api-specification)(by adding back the `status` field in the `SCOOBY_200_OK` example) before proceeding with this section.
 
 If you would like to add more stub responses, however you do not wish to bloat your specification with a lot of examples, we can also externalise the stub / canned responses to json files also.
 * Create a folder named `service_data` in the same folder as your `service.yaml` file (`_data` suffix is a naming convention that tell Specmatic to look for canned responses in that directory)
@@ -424,9 +480,14 @@ docker run -v "/local-directory/:/specs" -p 9000:9000 znsio/specmatic stub "/spe
 This time you should see Specmatic load your canned response file also.
 ```shell
 Loading service.yaml
-  Loading stub expectations from /<dir with service.yaml>/service_data
+API Specification Summary: service.yaml
+  OpenAPI Version: 3.0.1
+  API Paths: 1, API Operations: 1
+
+  Loading stub expectations from /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data
   Reading the following stub files:
-    /<dir with service.yaml>/service_data/togo.json
+    /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data/togo.json
+
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 
@@ -473,28 +534,28 @@ docker run -v "/local-directory/:/specs" -p 9000:9000 znsio/specmatic stub "/spe
 You should see an output like below.
 
 ```shell
-Loading service.yaml
-  Loading stub expectations from /<dir with service.yaml>/service_data
+Loading stub expectations from /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data
   Reading the following stub files:
-    /<dir with service.yaml>/service_data/togo.json
-  /<dir with service.yaml>/service_data/togo.json didnt match service.yaml
+    /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data/togo.json
+  /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data/togo.json didn't match service.yaml
     Error from contract service.yaml
-
-      In scenario Should be able to get a pet by petId. Response: Should be able to get a pet by petId
+  
+      In scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
       API: GET /pets/(petid:number) -> 200
-
+  
         >> RESPONSE.BODY.status
-
+  
            Key named status in the contract was not found in the stub
+
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 
 Specmatic again rejects the expectation / canned response since it is not in line with the OpenAPI Specification.
 
-To know more about smart mocks please refer to below video demos
-* [Video: Smart Mocks](https://youtu.be/U5Agz-mvYIU?t=750)
-* [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
-
 We can now start consumer development against this stub without any dependency on the real API.
+
+To know more about **Intelligent Service Virtualisation** please refer to below video demos
+* [Video: Intelligent Service Virtualisation](https://youtu.be/U5Agz-mvYIU?t=750)
+* [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
 [**Learn more about Stubbing / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)
