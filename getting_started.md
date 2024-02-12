@@ -233,7 +233,7 @@ This is because we removed the named example `SCOOBY_200_OK`, Specmatic generate
     GET /znsio/specmatic-documentation/pets/318
 ```
 
-Once you restore the OpenAPI file to its [original state](/getting_started.html#api-specification) (add back the example petId value) the tests should passing again.
+Once you restore the OpenAPI file to its [original state](/getting_started.html#api-specification) (add back the example petId value) the tests should start passing again.
 
 #### How does this all work?
 
