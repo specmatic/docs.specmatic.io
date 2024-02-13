@@ -22,3 +22,4 @@ Quick links
 * [Understanding error reports](/documentation/reading_reports.html)
 * [Authentication](/documentation/authentication.html)
 * [Troubleshooting](/documentation/troubleshooting.html)
+* [Sample Projects](/documentation/sample_projects.html)
