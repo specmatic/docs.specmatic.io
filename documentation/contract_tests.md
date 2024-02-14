@@ -680,38 +680,22 @@ Here is a complete [Specmatic Contract Test example](https://github.com/znsio/sp
 
    ```python
    import os
-   from specmatic import Specmatic
+   from specmatic.core.specmatic import Specmatic
    from your_project import app, 
    PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+   app_host = "127.0.0.1"
+   app_port = 5000
 
    Specmatic() \
        .with_project_root(PROJECT_ROOT_DIR) \
-       .with_wsgi_app(app) \
+       .with_wsgi_app(app, app_host, app_port) \
        .test(TestContract) \
        .run()
    ```
 
    In this example, replace `your_project` with your project's name and `app` with your Flask application object.
 
-5. **Run Tests with a Stub**: If you want to run the tests with a stub, you can do so like this:
-
-   ```python
-   import os
-   from specmatic import Specmatic
-   from your_project import app
-   PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-   Specmatic() \
-       .with_project_root(PROJECT_ROOT_DIR) \
-       .with_stub(stub_host, stub_port, [expectation_json_file]) \
-       .with_wsgi_app(app) \
-       .test(TestContract) \
-       .run()
-   ```
-
-   In this example, replace `stub_host`, `stub_port`, and `expectation_json_file` with the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively.
-
-6. **Run the Tests**: You can run the tests from either your IDE or command line by pointing pytest to your test folder:
+5. **Run the Tests**: You can run the tests from either your IDE or command line by pointing pytest to your test folder:
 
    ```bash
    pytest test -v -s

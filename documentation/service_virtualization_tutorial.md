@@ -459,6 +459,8 @@ Note that this currently works only for JSON request and response payloads. Supp
 
 ## Programmatically starting stub server within tests
 
+{% tabs virtualization %}
+{% tab virtualization java %}
 If your tests are written in a JVM based language, you can start and stop the stub server within your tests programmatically.
 
 Add `specmatic-core` jar dependency with scope set to test since this need not be shipped as part of your production deliverable.
@@ -505,11 +507,76 @@ fun tearDown() {
 }
 ```
 
-Here are complete examples of Karate API test that leverages the above technique.
-* [Kotlin](https://github.com/znsio/specmatic-order-ui/blob/683f59f5024e02af88fb54a55f03d819f852bb2e/src/test/kotlin/controllers/APITests.kt)
-* [Java](https://github.com/znsio/specmatic-order-ui/blob/java_component_test/src/test/java/controllers/APITests.java)
+   Here are complete examples of Karate API test that leverages the above technique.
 
-Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
+  1. [Kotlin](https://github.com/znsio/specmatic-order-ui/blob/683f59f5024e02af88fb54a55f03d819f852bb2e/src/test/kotlin/controllers/APITests.kt)
+
+  2. [Java](https://github.com/znsio/specmatic-order-ui/blob/java_component_test/src/test/java/controllers/APITests.java)
+
+   Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
+{% endtab %}
+{% tab virtualization python %}
+If your tests are written in Python, you can start and stop the stub server within your tests programmatically.
+
+1. **Install the Specmatic Python library**: Use pip, a package installer for Python, to install the Specmatic library.
+
+   ```bash
+   pip install specmatic
+   ```
+
+2. **Run Tests with a Stub**: If you want to run the tests with a stub, you can do so like this:
+
+   ```python
+   import os
+   from specmatic.core.specmatic import Specmatic
+   from your_project import app
+   PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+   stub_host = "127.0.0.1"
+   stub_port = 5000
+
+   Specmatic() \
+       .with_project_root(PROJECT_ROOT_DIR) \
+       .with_stub(stub_host, stub_port, [expectation_json_file]) \
+       .with_wsgi_app(app) \
+       .test(TestContract) \
+       .run()
+   ```
+
+   In this example, we are passing an instance of wsgi app like flask. `stub_host`, `stub_port`, and `expectation_json_file` are the the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively. Replace `app` with your Flask application object.¸
+{% endtab %}
+{% endtabs %}
+
+<!-- 
+{% tab virtualization python %}
+
+If your tests are written in Python, you can start and stop the stub server within your tests programmatically.
+
+1. **Install the Specmatic Python library**: Use pip, a package installer for Python, to install the Specmatic library.
+
+   ```bash
+   pip install specmatic
+   ```
+
+2. **Run Tests with a Stub**: If you want to run the tests with a stub, you can do so like this:
+
+   ```python
+   import os
+   from specmatic.core.specmatic import Specmatic
+   from your_project import app
+   PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+   stub_host = "127.0.0.1"
+   stub_port = 5000
+
+   Specmatic() \
+       .with_project_root(PROJECT_ROOT_DIR) \
+       .with_stub(stub_host, stub_port, [expectation_json_file]) \
+       .with_wsgi_app(app) \
+       .test(TestContract) \
+       .run()
+   ```
+
+   In this example, we are passing an instance of wsgi app like flask. `stub_host`, `stub_port`, and `expectation_json_file` are the the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively. Replace `app` with your Flask application object.¸
+{% endtab %} -->
 
 ## Transient expectations (a.k.a. transient stubs)
 
