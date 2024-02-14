@@ -22,7 +22,7 @@ Contract Tests
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
-    - [Programmtically executing Specmatic Contract as Tests](#programmtically-executing-specmatic-contract-as-tests)
+    - [programmatically executing Specmatic Contract as Tests](#programmatically-executing-specmatic-contract-as-tests)
     - [Referring to local specificatons](#referring-to-local-specificatons)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
@@ -616,8 +616,10 @@ Feature: WSDL Companion file
 
 (REQUEST-BODY) contains the request body in a single line, SOAPAction contains the value value of the SOAPAction header, and additional columns must be included for each header sent by the SOAP service.
 
-### Programmtically executing Specmatic Contract as Tests
+### programmatically executing Specmatic Contract as Tests
 
+{% tabs programmatically %}
+{% tab programmatically java %}
 If your building your application in a JVM based language, you can run Specmatic Contract Tests programmatically just like any other JUnit test and also get similar feedback within your IDE.
 
 Add Specmatic JUnit Support Jar dependency.
@@ -656,9 +658,74 @@ public class ContractTests extends SpecmaticJUnitSupport {
 
 Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java) for a Springboot application.
 
+{% endtab %}
+{% tab programmatically python %}
+
+1. **Install the Specmatic Python library**: Use pip, a package installer for Python, to install the Specmatic library.
+
+   ```bash
+   pip install specmatic
+   ```
+
+2. **Create a test file**: In your project's test directory, create a new Python file named `test_contract.py`.
+
+3. **Declare a Test Class**: In `test_contract.py`, declare a class named `TestContract`. This class will serve as the container for your contract tests.
+
+   ```python
+   class TestContract:
+      pass
+   ```
+
+4. **Configure and Run Contract Tests**: Use the Specmatic class to configure and run your contract tests. Here's an example of how to do this for a Flask application:
+
+   ```python
+   import os
+   from specmatic import Specmatic
+   from your_project import app, 
+   PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+   Specmatic() \
+       .with_project_root(PROJECT_ROOT_DIR) \
+       .with_wsgi_app(app) \
+       .test(TestContract) \
+       .run()
+   ```
+
+   In this example, replace `your_project` with your project's name and `app` with your Flask application object.
+
+5. **Run Tests with a Stub**: If you want to run the tests with a stub, you can do so like this:
+
+   ```python
+   import os
+   from specmatic import Specmatic
+   from your_project import app
+   PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+   Specmatic() \
+       .with_project_root(PROJECT_ROOT_DIR) \
+       .with_stub(stub_host, stub_port, [expectation_json_file]) \
+       .with_wsgi_app(app) \
+       .test(TestContract) \
+       .run()
+   ```
+
+   In this example, replace `stub_host`, `stub_port`, and `expectation_json_file` with the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively.
+
+6. **Run the Tests**: You can run the tests from either your IDE or command line by pointing pytest to your test folder:
+
+   ```bash
+   pytest test -v -s
+   ```
+
+   Note: Please ensure that you set the '-v' and '-s' flags while running pytest so that pytest will run all the tests in the test directory and provide detailed output, including any output from the tests themselves.
+
+In this example, replace `app` with your Flask application object.
+{% endtab %}
+{% endtabs %}
+
 ### Referring to local specificatons
 
-If you want to temoporarily refer to API specifications on your local machine please use system property ```contractPaths```.
+If you want to temporarily refer to API specifications on your local machine please use system property ```contractPaths```.
 
 ```java
 @BeforeAll
