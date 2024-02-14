@@ -375,6 +375,8 @@ The results will be exactly the same as the previous run.
 
 ```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
 
+Read more about the format for these files [here](/documentation/test_data_format.html).
+
 ### Boundary Condition Testing
 
 In the above example, we only ran the happy path test cases. What if we send an number to a boolean parameter? What if we send a null to a non-nullable parameter? What if we do not send a mandatory parameter? How does the application handle these errors? Input validation is an important aspect of your api security strategy ([OWASP reference](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)).
