@@ -216,9 +216,9 @@ However the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used
 
 You can store test data in json files side-by-side to be used in the contract test, instead of inline examples.
 
-Here is the ["employees.yaml"](/documentation/contract_tests.html#specmatic-contract-test---command-line) specification without examples.
+Let's try it out. Use the following specification (it is the same specification from the above section without the inline examples):
 
-**employees_without_examples.yaml**
+*filename: employees_without_examples.yaml*
 
 ```yaml
 openapi: 3.0.0
@@ -303,7 +303,7 @@ components:
 
 Create a directory named `employees_without_examples_tests`, and store the following json files in it:
 
-**create_employee.json**
+*filename: create_employee.json*
 ```json
 {
   "http-request": {
@@ -322,7 +322,7 @@ Create a directory named `employees_without_examples_tests`, and store the follo
 }
 ```
 
-**fetch_employee_details.json**
+*filename: fetch_employee_details.json*
 ```json
 {
   "http-request": {
@@ -335,7 +335,7 @@ Create a directory named `employees_without_examples_tests`, and store the follo
 }
 ```
 
-**employee_not_found.json**
+*filename: employee_not_found.json*
 ```json
 {
   "http-request": {
@@ -348,7 +348,7 @@ Create a directory named `employees_without_examples_tests`, and store the follo
 }
 ```
 
-**update_employee.json**
+*filename: update_employee.json*
 ```json
 {
   "http-request": {
@@ -375,7 +375,7 @@ The results will be exactly the same as the previous run.
 
 ```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
 
-Read more about the format for these files [here](/documentation/test_data_format.html).
+The complete test data format can be referred to [here](/documentation/test_data_format.html).
 
 ### Boundary Condition Testing
 

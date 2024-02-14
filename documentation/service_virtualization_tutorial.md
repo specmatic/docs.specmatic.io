@@ -152,6 +152,10 @@ Specmatic returns a contract valid response. The values are randomly generated. 
 * Wait a few seconds for Specmatic to load the file.
 * Make the above request again from Postman.
 
+## Expectation File Format
+
+The complete expectaion file format can be referred to [here](/documentation/test_data_format.html).
+
 ## Add A Second Expectation
 
 * Rename the above json file to soap.expectation
