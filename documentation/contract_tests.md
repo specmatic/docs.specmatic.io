@@ -214,15 +214,12 @@ However the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used
 
 ### Externalising examples / test cases
 
-Sometimes it may not be possible to keep the test cases as examples inline within the OpenAPI YAML file. Example: It may impact readability of specification, you may have different set of examples by environment, etc.
+You can store test data in json files side-by-side to be used in the contract test, instead of inline examples.
 
-In these circumstances you can leverage **Specmatic's [Gherkin](https://cucumber.io/docs/gherkin/) based Domain Specific Language (DSL)** to define the examples in a tabular format externally thereby keeping the OpenAPI spec itself unaffected.
+Here is the ["employees.yaml"](/documentation/contract_tests.html#specmatic-contract-test---command-line) specification without examples.
 
-Here is an example where we have split the ["employees.yaml" we saw in the above section](/documentation/contract_tests.html#specmatic-contract-test---command-line) into two files in the same directory.
-* ```employees-without-examples.yaml``` - OpenAPI Spec file without the examples
-* ```employees.spec``` - Specmatic Gherkin Spec which includes the employees.yaml and adds the examples for each path, operation and response thereby making it easily readable
+**employees_without_examples.yaml**
 
-**```employees-without-examples.yaml```**
 ```yaml
 openapi: 3.0.0
 info:
@@ -304,79 +301,79 @@ components:
           type: string
 ```
 
-**```employees.spec```**
-```gherkin
-Feature: Employees API
+Create a directory named `employees_without_examples_tests`, and store the following json files in it:
 
-  Background:
-    Given openapi ./employees-without-examples.yaml
-
-  Scenario Outline: Create Employee
-    When POST /znsio/specmatic/employees
-    Then status 201
-    Examples:
-      | id | name     | department  | designation |
-      | 70 | Jill Doe | Engineering | Director    |
-
-  Scenario Outline: Get Employee Success
-    When GET /znsio/specmatic/employees/(id:number)
-    Then status 200
-    Examples:
-      | id | name     | department  | designation         |
-      | 10 | Jane Doe | Engineering | Engineering Manager |
-
-  Scenario Outline: Get Employee Not Found Error
-    When GET /znsio/specmatic/employees/100
-    Then status 404
-
-  Scenario Outline: Update Employee Success
-    When PUT /znsio/specmatic/employees/10
-    Then status 200
-    Examples:
-      | id | (REQUEST-BODY)                                                                             |
-      | 10 | { "id": 10, "name": "Jill Doe", "department": "Engineering", "designation": "Director" } |
+**create_employee.json**
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/znsio/specmatic/employees",
+    "body": {
+      "id": 70,
+      "name": "Jill Doe",
+      "department": "Engineering",
+      "designation": "Director"
+    }
+  },
+  "http-response": {
+    "status": 201
+  }
+}
 ```
 
-Let us now run the ```employees.spec``` which is referring to / including the ```employees.yaml``` as a test against the above sample application.
+**fetch_employee_details.json**
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/znsio/specmatic/employees/10"
+  },
+  "http-response": {
+    "status": 200
+  }
+}
+```
 
-```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.spec```
+**employee_not_found.json**
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/znsio/specmatic/employees/100"
+  },
+  "http-response": {
+    "status": 404
+  }
+}
+```
+
+**update_employee.json**
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/znsio/specmatic/employees/10",
+    "body": {
+      "id": 10,
+      "name": "Jill Doe",
+      "department": "Engineering",
+      "designation": "Director"
+    }
+  },
+  "http-response": {
+    "status": 200
+  }
+}
+```
+
+Let us now run `employees_without_examples.yaml` as a test against the sample application.
+
+```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees_without_examples.yaml```
 
 The results will be exactly the same as the previous run.
 
 ```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
-
-Let us understand Specmatic Gherkin DSL in detail.
-* **Background** - We are including the OpenAPI specification file in the [Background](https://cucumber.io/docs/gherkin/reference/#background) section of the spec.
-  * The entire spec file is bound to this OpenAPI Specification.
-  * One OpenAPI Spec can be referenced by any number of Specmatic Gherkin spec files. However within a Specmatic Gherkin spec file we can only reference one OpenAPI specification file.
-  * Relative and absolute paths are supported.
-* **Scenario Outline** - [Scenario Outline](https://cucumber.io/docs/gherkin/reference/#scenario-outline) should adhere to below **Specmatic** DSL (Http method, http status code etc. are keywords specific to Specmatic DSL in addition to the standard [Gherkin keywords](https://cucumber.io/docs/gherkin/reference/#keywords))
-```
-Scenario Outline: <SCENARIO_OUTLINE_NAME>
-    When <OPERATION / HTTP METHOD> <PATH>
-    Then status <HTTP_STATUS_CODE>
-```
-Specmatic validates each scenario to check if it is part of the OpenAPI Specification.
-* **Examples** - As per [Gherkin reference](https://cucumber.io/docs/gherkin/reference/#scenario-outline) - "the Scenario Outline is run once for each row in the Examples section beneath it (not counting the first header row)". Each column in the table represents the fields / parameters in the employees-without-examples.yaml OpenAPI Specification file. Please note that Specmatic validates your examples for datatype correctness against the specification. So this file will not go out of sync with the Specification.
-* **REQUEST-BODY** - This is a keyword that is specific to Specmatic DSL that allows us to send the entire request body instead of adding each parameter as a column in the table. Example: "**Update Employee Success" scenario
-* Add examples only where necessary, Specmatic can fill in the rest with auto generated values
-  * Scenario "**Get Employee Success**" - The path parameter id is a placeholder and the value for the same is the example row
-  * Scenario "**Get Employee Not Found Error**" - We have not added any examples because the value for the id parameter is already in the path instead of having a placeholder
-  * Scenario "**Update Employee Success**" - We have not added response examples.  Specmatic will validate the response against the schema in our OpenAPI Specification.
-
-Note that the request in a contract test comes from the example, while the response comes from the application. The request is validated by Specmatic before it is sent, and the response returned by the application is validated against the specification. There is no need to provide any response examples in the example Gherkin rows.
-
-We can add as many rows as necesary for our test cases. Example:
-
-```gherkin
-  Scenario Outline: Get Employee Success
-    When GET /znsio/specmatic/employees/(number:id)
-    Then status 200
-    Examples:
-      | id | name     | department  | designation         |
-      | 10 | Jane Doe | Engineering | Engineering Manager |
-      | 40 | Jill Doe | Engineering | Principal Engineer  |
-```
 
 ### Boundary Condition Testing
 
