@@ -22,7 +22,7 @@ Contract Tests
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
-    - [programmatically executing Specmatic Contract as Tests](#programmatically-executing-specmatic-contract-as-tests)
+    - [Programmatically executing Specmatic Contract as Tests](#programmatically-executing-specmatic-contract-as-tests)
     - [Referring to local specificatons](#referring-to-local-specificatons)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
@@ -616,7 +616,7 @@ Feature: WSDL Companion file
 
 (REQUEST-BODY) contains the request body in a single line, SOAPAction contains the value value of the SOAPAction header, and additional columns must be included for each header sent by the SOAP service.
 
-### programmatically executing Specmatic Contract as Tests
+### Programmatically executing Specmatic Contract as Tests
 
 {% tabs programmatically %}
 {% tab programmatically java %}
@@ -693,7 +693,8 @@ Here is a complete [Specmatic Contract Test example](https://github.com/znsio/sp
        .run()
    ```
 
-   In this example, replace `your_project` with your project's name and `app` with your Flask application object.
+   In this example, replace `your_project` with your project's name and `app` with your Flask application object. If
+   app_host and app_port are not specified, the app will be started on a random available port on 127.0.0.1.
 
 5. **Run the Tests**: You can run the tests from either your IDE or command line by pointing pytest to your test folder:
 
@@ -703,7 +704,7 @@ Here is a complete [Specmatic Contract Test example](https://github.com/znsio/sp
 
    Note: Please ensure that you set the '-v' and '-s' flags while running pytest so that pytest will run all the tests in the test directory and provide detailed output, including any output from the tests themselves.
 
-In this example, replace `app` with your Flask application object.
+Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api-python/blob/main/test/test_contract_with_coverage.py) for a flask application.
 {% endtab %}
 {% endtabs %}
 

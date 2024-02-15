@@ -531,52 +531,25 @@ If your tests are written in Python, you can start and stop the stub server with
    from specmatic.core.specmatic import Specmatic
    from your_project import app
    PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+   app_host = "127.0.0.1"
+   app_port = 5000
    stub_host = "127.0.0.1"
    stub_port = 5000
+   expectation_json_file = PROJECT_ROOT_DIR + '/test/data/expectation.json'
 
    Specmatic() \
        .with_project_root(PROJECT_ROOT_DIR) \
        .with_stub(stub_host, stub_port, [expectation_json_file]) \
-       .with_wsgi_app(app) \
+       .with_wsgi_app(app, app_host, app_port) \
        .test(TestContract) \
        .run()
    ```
 
-   In this example, we are passing an instance of wsgi app like flask. `stub_host`, `stub_port`, and `expectation_json_file` are the the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively. Replace `app` with your Flask application object.¸
+   In this example, we are passing an instance of wsgi app like flask. `stub_host`, `stub_port`, and `expectation_json_file` are the the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively. Replace `app` with your Flask application object.
+
+   Here are complete example of [Specmatic stub server](https://github.com/znsio/specmatic-order-bff-python/blob/main/test/test_contract.py) usage in Python.
 {% endtab %}
 {% endtabs %}
-
-<!-- 
-{% tab virtualization python %}
-
-If your tests are written in Python, you can start and stop the stub server within your tests programmatically.
-
-1. **Install the Specmatic Python library**: Use pip, a package installer for Python, to install the Specmatic library.
-
-   ```bash
-   pip install specmatic
-   ```
-
-2. **Run Tests with a Stub**: If you want to run the tests with a stub, you can do so like this:
-
-   ```python
-   import os
-   from specmatic.core.specmatic import Specmatic
-   from your_project import app
-   PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-   stub_host = "127.0.0.1"
-   stub_port = 5000
-
-   Specmatic() \
-       .with_project_root(PROJECT_ROOT_DIR) \
-       .with_stub(stub_host, stub_port, [expectation_json_file]) \
-       .with_wsgi_app(app) \
-       .test(TestContract) \
-       .run()
-   ```
-
-   In this example, we are passing an instance of wsgi app like flask. `stub_host`, `stub_port`, and `expectation_json_file` are the the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively. Replace `app` with your Flask application object.¸
-{% endtab %} -->
 
 ## Transient expectations (a.k.a. transient stubs)
 
