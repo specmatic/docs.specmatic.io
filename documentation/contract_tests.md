@@ -461,6 +461,25 @@ Note:
 3. You may declare multiple contracts in the "test" list.
 4. "sources" holds a list. You may declare multiple sources if required. However we recommend using a single contract repository to be shared across your organisation, or ecosystem within the organisation (if your org is large).
 
+If you need to experiment with files on the local filesystem, here's how you can declare specifications locally, in `specmatic.json`:
+
+```json
+{
+  "sources": [
+    {
+      "provider": "filesystem",
+      "test": [
+        "path/to/employees.yaml"
+      ]
+    }
+  ]
+}
+```
+
+The filesystem path above is a relative path, but it can also be an absolute path to a file.
+
+
+
 ### The Java Helper For Java Projects
 
 For Java projects, you can use the Java helper that ships with Specmatic.
@@ -644,7 +663,7 @@ Also add the junit5 dependency so that we can use the ```BeforeAll``` and ```Aft
 </dependency>
 ```
 
-No we need to extend ```SpecmaticJUnitSupport``` to run Contract Tests programmatically. Specmatic will locate the API Specifications to run as a test based on the condifurations in your [```specmatic.json```](/documentation/specmatic_json.html) file. All you need to additionally provide is the ```host``` and ```port``` where your application is running.
+No we need to extend ```SpecmaticJUnitSupport``` to run Contract Tests programmatically. Specmatic will locate the API Specifications to run as a test based on the configurations in your [```specmatic.json```](/documentation/specmatic_json.html) file. All you need to additionally provide is the ```host``` and ```port``` where your application is running.
 
 ```java
 public class ContractTests extends SpecmaticJUnitSupport {
@@ -707,6 +726,8 @@ Here is a complete [Specmatic Contract Test example](https://github.com/znsio/sp
 Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api-python/blob/main/test/test_contract_with_coverage.py) for a flask application.
 {% endtab %}
 {% endtabs %}
+
+Note: declare your specifications in `specmatic.json` as described above in the section on [declaring contracts in configuration](#declaring-contracts-in-configuration). `specmatic.json` should be created at the root of your project.
 
 ### Referring to local specificatons
 
