@@ -12,6 +12,7 @@ Configuration
     - [Getting started](#getting-started)
       - [Configuring Stubs](#configuring-stubs)
       - [Use specifications on local file system](#use-specifications-on-local-file-system)
+      - [Use specifications from the web](#use-specifications-from-the-web)
       - [Source control authentication](#source-control-authentication)
       - [Report Configuration](#report-configuration)
       - [Formatters](#formatters)
@@ -143,6 +144,26 @@ If you just need to use specifications from your local file system, specify `pro
 Note that the `stub` and `test` specifications are relative paths. This means that they must be in the same directory as the current directory.
 
 You can also provide absolute paths in case they are somewhere else on the filesystem.
+
+#### Use specifications from the web
+
+```json
+{
+  "sources": [
+    {
+      "provider": "web",
+      "stub": [
+        "http://third.party.com/products.yaml"
+      ],
+      "test": [
+        "api_auth_v1.yaml",  
+      ]
+    }
+  ]
+}
+```
+
+Note that the `stub` and `test` can both contain URLS. `http` and `https` are both supported.
 
 #### Source control authentication
 
