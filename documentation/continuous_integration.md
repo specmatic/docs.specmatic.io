@@ -7,7 +7,7 @@ nav_order: 31
 Contract Tests
 ==============
 
-Specmatic is a platform and programming language independent execuable. We can run it in all CI environments through [command line](http://localhost:4000/getting_started.html#setup).
+Specmatic is a platform and programming language independent execuable. We can run it in all CI environments through [command line](/documentation/getting_started.html#setup).
 
 ## Featured utilities
 
