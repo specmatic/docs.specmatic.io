@@ -641,7 +641,7 @@ Then status 200
 
 ### XML Data Types
 
-You can use all the scalar data types described [earlier in this document](built-in-data-types) except for null.
+You can use all the scalar data types described [earlier in this document](#built-in-data-types) except for null.
 
 ### XML Attributes
 

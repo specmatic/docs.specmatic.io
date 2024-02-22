@@ -28,7 +28,7 @@ Service Virtualisation
     - [Forward Unstubbed Requests To An Actual Service](#forward-unstubbed-requests-to-an-actual-service)
     - [Stub file format](#stub-file-format)
 
-[Read here about contract testing and where Specmatic fits in](/contract_testing.html).
+[Read here about contract testing and where Specmatic fits in](/documentation/contract_tests.html).
 
 ### Why Service Virtualisation
 

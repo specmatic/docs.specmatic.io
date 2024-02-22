@@ -1,6 +1,6 @@
 Specmatic can be used as a standalone executable and also included [programmatically](https://specmatic.in/documentation/service_virtualization_tutorial.html#programmatically-starting-stub-server-within-tests) as part of your test suite.
 
-For getting started quickly, let us use Specmatic standalone execuable within our command line.
+For getting started quickly, let us use Specmatic standalone executable within our command line.
 
 The Specmatic standalone executable is accessible through various prominent distribution channels.
 
@@ -64,7 +64,7 @@ Please follow these steps to do so:
 ---
 ### Tip to run java jar easily
 
-By following below tip running `java -jar specmatic.jar` everytime can be avoided
+By following below tip running `java -jar specmatic.jar` every time can be avoided
 
 {% tabs hint-java %}
 {% tab hint-java mac/linux %}
