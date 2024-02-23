@@ -158,7 +158,7 @@ The complete expectaion file format can be referred to [here](/documentation/tes
 
 ## Add A Second Expectation
 
-* Rename the above json file to soap.expectation
+* Rename the above json file to soap.json
 * Create a new json file named batteries.json in the same directory with the following data:
 
 ```json
