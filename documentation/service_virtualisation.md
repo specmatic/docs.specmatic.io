@@ -3,6 +3,7 @@ layout: default
 title: Service Virtualisation
 parent: Documentation
 nav_exclude: true
+search_exclude: true
 ---
 Service Virtualisation
 ======================

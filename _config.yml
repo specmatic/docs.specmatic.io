@@ -18,3 +18,7 @@ plugins:
   - jekyll-tabs
 
 logo: "/images/specmatic-logo.png"
+
+exclude:
+  - "documentation/service_virtualisation.md"
+  - "documentation/language.md"

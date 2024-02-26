@@ -11,6 +11,7 @@ Service Virtualization
   - [Pre-requisites](#pre-requisites)
   - [Stub Out The Product Service](#stub-out-the-product-service)
   - [Fix The Response To /products/10](#fix-the-response-to-products10)
+  - [Expectation File Format](#expectation-file-format)
   - [Add A Second Expectation](#add-a-second-expectation)
   - [Generate The SKU](#generate-the-sku)
   - [Try Setting Up An Invalid Expectation](#try-setting-up-an-invalid-expectation)
@@ -40,7 +41,7 @@ Service Virtualization
 
 Let's prepare to try out service virtaulization step-by-step.
 
-- [Download the latest version of Specmatic](https://specmatic.in/download/latest.html).
+- [Download the latest version of Specmatic](/download.html).
 - Create a file named products-api.yaml on your laptop with the following contents.
 
 ```yaml
