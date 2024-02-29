@@ -48,5 +48,3 @@ Systems interact with each other through several means. Specmatic hopes to addre
 * Versioning
 * Support for **SOAP/XML**, **Kafka**, **callbacks** and more
 * Already have a lot of APIs? Don't worry, we can take your **Postman Collection** and easily generate contracts from it
-
-[**Read more about them here**](/Features.html)

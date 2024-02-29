@@ -210,7 +210,7 @@ Thus, the request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken tog
 
 Note that the response example named `FETCH_EMPLOYEE_SUCCESS` is not compared with values returned by the application. This is what sets a Contract Test apart from an API Test. A Contract Test is concerned with checking the APIs signature, while API tests are concerned wtih checking the APIs logic.
 
-However the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualisation](/documentation/service_virtualisation.html#examples-as-expectations).
+However the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualization](/documentation/service_virtualization_tutorial.html#examples-as-expectations).
 
 ### Externalising examples / test cases
 
