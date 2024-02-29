@@ -56,7 +56,7 @@ components:
 
 To use a real OAuth2 token in contract tests, an environment variable with the name of the security scheme needs to be defined.
 
-For the above example, define an environment variable named `oAuth2AuthCode` having the bearer auth token (the part that comes after `Bearer `) as it's value.
+For example, in the above case, we would define an environment variable named `oAuth2AuthCode`. Assuming that Authorization header value has to be `Bearer abc123`, set the value of this environment variable to `abc123` (leaving out the `Bearer ` prefix).
 
 ### API Key
 Here's an example of a Bearer security scheme in the open api specification:
@@ -74,6 +74,8 @@ To use a real API key header in contract tests, an environment variable with the
 
 For the above example, define an environment variable named `ApiKeyAuthHeader` having the API key as it's value.
 
+For example, in the above case, we would define an environment variable named `ApiKeyAuthHeader`. Assuming that Authorization header value has to be `my-api-key-abc123`, set the value of this environment variable to `my-api-key-abc123`.
+
 ### Bearer
 Here's an example of a Bearer security scheme in the open api specification:
 
@@ -85,9 +87,9 @@ components:
       scheme: bearer
 ```
 
-To use a real bearer token in contract tests, an environment variable with the name of the security scheme needs to be defined.
+To use a real bearer auth token in contract tests, an environment variable with the name of the security scheme needs to be defined.
 
-For the above example, define an environment variable named `BearerAuth` having the bearer auth token (the part that comes after `Bearer `) as it's value.
+For example, in the above case, we would define an environment variable named `BearerAuth`. Assuming that Authorization header value has to be `Bearer abc123`, set the value of this environment variable to `abc123` (leaving out the `Bearer ` prefix).
 
 ### Basic Authentication
 
@@ -100,9 +102,10 @@ components:
       type: http
       scheme: basic
 ```
-To use a real basic token in contract tests, an environment variable with the name of the security scheme needs to be defined.
 
-For the above example, define an environment variable named `BasicAuth` having the basic auth token (the part that comes after `Basic `) as it's value.
+To use a real basic auth token in contract tests, an environment variable with the name of the security scheme needs to be defined.
+
+For example, in the above case, we would define an environment variable named `BasicAuth`. Assuming that Authorization header value has to be `Basic abc123`, set the value of this environment variable to `abc123` (leaving out the `Basic ` prefix).
 
 
 ## Testing with mock auth
