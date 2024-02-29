@@ -9,14 +9,15 @@ Authentication
 
 - [Authentication](#authentication)
   - [Testing with real auth](#testing-with-real-auth)
-    - [Examples](#examples-real)
-      - [OAuth2](#oauth2-real)
-      - [API Key](#api-key-real)
-      - [Bearer](#bearer-real)
+    - [OAuth2](#oauth2)
+    - [API Key](#api-key)
+    - [Bearer](#bearer)
+    - [Basic Authentication](#basic-authentication)
   - [Testing with mock auth](#testing-with-mock-auth)
-    - [Examples](#examples-mock)
-      - [OAuth2](#oauth2-mock)
-      - [API Key](#api-key-mock)
+    - [OAuth2](#oauth2-1)
+      - [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication)
+    - [API Key Authentication](#api-key-authentication)
+      - [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication-1)
 
 Most APIs have some form of security (authentication and authorization). Specmatic reads [OpenAPI Security Schemes](https://spec.openapis.org/oas/v3.0.1#security-scheme-object) in your API Specifications to come up with appropriate request parameters.  
 Specmatic supports the following security schemes:
@@ -31,9 +32,7 @@ The enviornment variable should match the name of the security scheme defined in
 
 When contract tests are executed, Specmatic will look for an environment variable with the same name as that of the security scheme. If such an environment variable exists, Specmatic will use it apporpriately (based on the security scheme) while making an HTTP request.
 
-### Examples: {#examples-real}
-
-### OAuth2 {#oauth2-real}
+### OAuth2
 Here's an example of an OAuth2 security scheme in the open api specification:
 
 ```yaml
@@ -54,9 +53,12 @@ components:
             im:history: Access the message archive
             search:read: Search messages, files, and so on
 ```
-To use a real OAuth2 token in contract tests, an environment variable named **oAuth2AuthCode** needs to be defined.
 
-### API Key {#api-key-real}
+To use a real OAuth2 token in contract tests, an environment variable with the name of the security scheme needs to be defined.
+
+For the above example, define an environment variable named `oAuth2AuthCode` having the bearer auth token (the part that comes after `Bearer `) as it's value.
+
+### API Key
 Here's an example of a Bearer security scheme in the open api specification:
 
 ```yaml
@@ -67,9 +69,12 @@ components:
         in: header
         name: X-API-KEY
 ```
-To use a real api key in contract tests, an environment variable named **ApiKeyAuthHeader** needs to be defined.
 
-### Bearer {#bearer-real}
+To use a real API key header in contract tests, an environment variable with the name of the security scheme needs to be defined.
+
+For the above example, define an environment variable named `ApiKeyAuthHeader` having the API key as it's value.
+
+### Bearer
 Here's an example of a Bearer security scheme in the open api specification:
 
 ```yaml
@@ -79,7 +84,25 @@ components:
       type: http
       scheme: bearer
 ```
-To use a real bearer token in contract tests, an environment variable named **BearerAuth** needs to be defined.
+
+To use a real bearer token in contract tests, an environment variable with the name of the security scheme needs to be defined.
+
+For the above example, define an environment variable named `BearerAuth` having the bearer auth token (the part that comes after `Bearer `) as it's value.
+
+### Basic Authentication
+
+Here's an example of a Bearer security scheme in the open api specification:
+
+```yaml
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+```
+To use a real basic token in contract tests, an environment variable with the name of the security scheme needs to be defined.
+
+For the above example, define an environment variable named `BasicAuth` having the basic auth token (the part that comes after `Basic `) as it's value.
 
 
 ## Testing with mock auth
@@ -88,9 +111,7 @@ While Specmatic supports testing with real authentication as seen above, in a co
 
 So for Contract as Test we recommend having a “Test Security Configuration” where you are still exercise your security plumbing, however not actually fetching real user information. This is similar to running an in-memory DB in test setup instead of running a real DB in CI. Below are some examples of the same.
 
-### Examples: {#examples-mock}
-
-### OAuth2 {#oauth2-mock}
+### OAuth2
 
 Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) specification which leverages [OAuth2](https://spec.openapis.org/oas/v3.0.1#implicit-oauth2-sample) to protect all endpoints that add, modify or delete data.
 
@@ -100,7 +121,7 @@ Please refer to this [sample API](https://github.com/znsio/specmatic-order-contr
 
 Please refer to [sample springboot application](https://github.com/znsio/specmatic-order-api-java-with-oauth) that implements the [API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) we saw above.
 
-### API Key Authentication {#api-key-mock}
+### API Key Authentication
 
 Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) specification which leverages [ApiKeyAuth](https://spec.openapis.org/oas/v3.0.1#api-key-sample) to protect all endpoints that add, modify or delete data.
 
