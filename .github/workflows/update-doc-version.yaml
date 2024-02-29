@@ -1,0 +1,33 @@
+name: Documentation Update
+
+on:
+  repository_dispatch:
+    types: [new_release]
+
+jobs:
+  update_docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout documentation repository
+      uses: actions/checkout@v4
+      with:
+        repository: znsio/specmatic-documentation
+        token: ${{ secrets.VERSION_UPDATE_TOKEN }}
+        path: documentation
+    - name: Update version in _config.yaml
+      run: |
+        version=${{ github.event.client_payload.version }}
+        version=${version#refs/tags/}
+        sed -i "s/latest_release: .*/latest_release: $version/" documentation/_config.yaml
+    - name: Commit and push    
+      run: |
+        version=${{ github.event.client_payload.version }}
+        version=${version#refs/tags/}
+        git config --global user.name '${{ secrets.USER_NAME }}'
+        git config --global user.email '${{ secrets.USER_EMAIL }}'
+        git add .
+        git commit -m "Updated Specmatic Documnentation Version To $version"
+        git push
+      working-directory: documentation
