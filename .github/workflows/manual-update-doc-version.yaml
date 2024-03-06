@@ -25,12 +25,12 @@ jobs:
         ref: master
         token: ${{ secrets.SPECMATIC_CORE_VERSION_UPDATE_TOKEN }}
         path: documentation
-    - name: Update version in _config.yaml
+    - name: Update version in _config.yml
       run: |
         echo $(pwd)
         ls -la
         ls -la documentation
-        sed -i "s/latest_release: .*/latest_release: $SPECMATIC_LATEST_RELEASE_VERSION/" documentation/_config.yaml
+        sed -i "s/latest_release: .*/latest_release: $SPECMATIC_LATEST_RELEASE_VERSION/" documentation/_config.yml
     - name: Commit and push    
       run: |
         git config --global user.name '${{ secrets.SPECMATIC_CORE_VERSION_UPDATE_USER_NAME }}'
