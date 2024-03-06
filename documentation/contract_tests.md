@@ -1124,7 +1124,6 @@ To convert `SEARCH_1`, add a file named `search_1.json` with the following conte
     "method": "GET",
     "path": "/products/(id:number)",
     "query-params": {
-      "name": "(omit)",
       "type": "gadget"
     }
   },
@@ -1135,7 +1134,9 @@ To convert `SEARCH_1`, add a file named `search_1.json` with the following conte
 }
 ```
 
-Note: we've modified the example slightly to omit the `name` query parameter entirely instead of passing an empty string.
+We've modified the example slightly to omit the `name` query parameter entirely instead of passing an empty string. Since the name is optional, Specmatic does not send requests with `name`.
+
+However if the query parameter in question is mandatory, and is omitted from the example, Specmatic generates it.
 
 ### Sample Project
 
