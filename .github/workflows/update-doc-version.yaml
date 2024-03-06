@@ -12,7 +12,8 @@ on:
             default: ''
 
 env:
-  SPECMATIC_LATEST_RELEASE_VERSION: ${{ github.event.client_payload.latest-release }}    
+  SPECMATIC_LATEST_RELEASE_VERSION: ${{ github.event.client_payload.latest-release }}
+  SPECMATIC_LATEST_RELEASE_VERSION_MANUAL: ${{ github.event.inputs.SPECMATIC_LATEST_RELEASE_VERSION_MANUAL }}
    
 jobs:
   update_docs:
