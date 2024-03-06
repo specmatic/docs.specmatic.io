@@ -36,7 +36,7 @@ Contract Tests
         - [Example with a path parameter](#example-with-a-path-parameter)
         - [Example with a request body](#example-with-a-request-body)
         - [Example with a query parameter](#example-with-a-query-parameter)
-        - [Example with a missing query parameter](#example-with-a-missing-query-parameter)
+        - [Example with an omitted query parameter](#example-with-an-omitted-query-parameter)
     - [Sample Project](#sample-project)
 
 ### Overview
@@ -1115,7 +1115,7 @@ To convert `SEARCH_2`, add a file named `search_2.json` with the following conte
 }
 ```
 
-##### Example with a missing query parameter
+##### Example with an omitted query parameter
 To convert `SEARCH_1`, add a file named `search_1.json` with the following content:
 
 ```json
@@ -1134,9 +1134,9 @@ To convert `SEARCH_1`, add a file named `search_1.json` with the following conte
 }
 ```
 
-We've modified the example slightly to omit the `name` query parameter entirely instead of passing an empty string. Since the name is optional, Specmatic does not send requests with `name`.
+In the above example, we have completely omitted the `name` query parameter. Since the name is optional, Specmatic does not send requests with `name`.
 
-However if the query parameter in question is mandatory, and is omitted from the example, Specmatic generates it.
+However if the query parameter in question is mandatory, and is omitted from the example, Specmatic generates a randomized value and sends this query parameter when sending the request in the contract test.
 
 ### Sample Project
 
