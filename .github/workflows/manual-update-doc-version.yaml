@@ -27,6 +27,9 @@ jobs:
         path: documentation
     - name: Update version in _config.yaml
       run: |
+        echo $(pwd)
+        ls -la
+        ls -la documentation
         sed -i "s/latest_release: .*/latest_release: $SPECMATIC_LATEST_RELEASE_VERSION/" documentation/_config.yaml
     - name: Commit and push    
       run: |
