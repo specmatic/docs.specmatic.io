@@ -1,4 +1,4 @@
-name: Documentation Update
+name: Manual Update Document Version
 
 on: 
  workflow_dispatch:
