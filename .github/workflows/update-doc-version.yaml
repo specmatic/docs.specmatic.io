@@ -5,7 +5,7 @@ on:
     types: [specmatic-core-release]
 
 env:
-  VERSION: ${{ github.event.client_payload.version }}  
+  SPECMATIC_LATEST_RELEASE_VERSION: ${{ github.event.client_payload.latest-release }}    
    
 jobs:
   update_docs:
@@ -21,16 +21,14 @@ jobs:
         ref: main
         token: ${{ secrets.SPECMATIC_CORE_VERSION_UPDATE_TOKEN }}
         path: documentation
-    - name: Set version in environment
-      run: echo "VERSION=${VERSION#refs/tags/}" >> $GITHUB_ENV
     - name: Update version in _config.yaml
       run: |
-        sed -i "s/latest_release: .*/latest_release: $VERSION/" documentation/_config.yaml
+        sed -i "s/latest_release: .*/latest_release: $SPECMATIC_LATEST_RELEASE_VERSION/" documentation/_config.yaml
     - name: Commit and push    
       run: |
         git config --global user.name '${{ secrets.SPECMATIC_CORE_VERSION_UPDATE_USER_NAME }}'
         git config --global user.email '${{ secrets.SPECMATIC_CORE_VERSION_UPDATE_USER_EMAIL }}'
         git add .
-        git commit -m "Updated Specmatic Documnentation Version To $VERSION"
+        git commit -m "Updated Specmatic Documnentation Version To $SPECMATIC_LATEST_RELEASE_VERSION"
         git push
       working-directory: documentation
