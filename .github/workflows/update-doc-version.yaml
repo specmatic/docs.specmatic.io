@@ -18,7 +18,7 @@ jobs:
       with:
         repository: znsio/specmatic-documentation
         fetch-depth: 0
-        ref: main
+        ref: master
         token: ${{ secrets.SPECMATIC_CORE_VERSION_UPDATE_TOKEN }}
         path: documentation
     - name: Update version in _config.yaml
