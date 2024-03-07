@@ -16,8 +16,8 @@ Getting started
       - [How does this all work?](#how-does-this-all-work)
       - [What happens when OpenAPI goes out of sync with the application or vice versa?](#what-happens-when-openapi-goes-out-of-sync-with-the-application-or-vice-versa)
     - [Consumer Side - Contract As A Stub / Intelligent Service Virtualization](#consumer-side---contract-as-a-stub--intelligent-service-virtualization)
-      - [**Intelligent Service Virtualization**](#intelligent-service-virtualization)
-      - [**Externalizing stub responses**](#externalizing-stub-responses)
+      - [Intelligent Service Virtualization](#intelligent-service-virtualization)
+      - [Externalizing stub responses](#externalizing-stub-responses)
 
 ### Setup
 
@@ -399,7 +399,7 @@ With this we have effectively archived three goals in one go.
 * The same examples are used in contract tests to create the HTTP request
 * And these examples also serve as stub data when we run Spemcatic stub command
 
-#### **Intelligent Service Virtualization**
+#### Intelligent Service Virtualization
 
 Let us try a few experiments. Remove the `status` field in the `200_OKAY` response example in `service.yaml` (the very last line in that file) and run the stub command again.
 
@@ -434,7 +434,7 @@ API Specification Summary: service.yaml
 
 Specmatic rejects the expectation / canned response since it is not in line with the OpenAPI Specification.
 
-#### **Externalizing stub responses**
+#### Externalizing stub responses
 
 Please restore `service.yaml` to its [original state](/getting_started.html#api-specification)(by adding back the `status` field in the `SCOOBY_200_OK` example) before proceeding with this section.
 
