@@ -35,6 +35,7 @@ Service Virtualization
   - [Externalised response generation](#externalised-response-generation)
   - [Hooks](#hooks)
   - [Priority Of Stubs](#priority-of-stubs)
+  - [Generating examples](#generating-examples)
   - [Sample Java Project](#sample-java-project)
 
 ## Pre-requisites
@@ -875,6 +876,16 @@ There are now several ways in which to provide expectations.
 They are resolved in the order in which they appear above.
 
 This means, if a request matches an example in the specification, but also matches a dynamic expectation, the response will be served from the dynamic expectations. Put differently, dynamic expectations override expectations from examples.
+
+## Generating examples
+
+You can generate sample data from a specification as a starting point or scaffolding for your contract tests, using the `examples` command:
+
+```bash
+java -jar specmatic.jar examples employees.yaml
+```
+
+In the above case, sample files will be written into the directory named `employees_data`.
 
 ## Sample Java Project
 

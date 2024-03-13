@@ -37,6 +37,7 @@ Contract Tests
         - [Example with a request body](#example-with-a-request-body)
         - [Example with a query parameter](#example-with-a-query-parameter)
         - [Example with an omitted query parameter](#example-with-an-omitted-query-parameter)
+    - [Generating examples](#generating-examples)
     - [Sample Project](#sample-project)
 
 ### Overview
@@ -1137,6 +1138,16 @@ To convert `SEARCH_1`, add a file named `search_1.json` with the following conte
 In the above example, we have completely omitted the `name` query parameter. Since the name is optional, Specmatic does not send requests with `name`.
 
 However if the query parameter in question is mandatory, and is omitted from the example, Specmatic generates a randomized value and sends this query parameter when sending the request in the contract test.
+
+### Generating examples
+
+You can generate sample data from a specification as a starting point or scaffolding for your contract tests, using the `examples` command:
+
+```bash
+java -jar specmatic.jar examples employees.yaml
+```
+
+In the above case, sample files will be written into the directory named `employees_data`.
 
 ### Sample Project
 
