@@ -38,13 +38,13 @@ Systems interact with each other through several means. Specmatic hopes to addre
 
 * [**Parallel Development / Quicker Time to Market**](/faqs.html#what-is-contract-first) - With an API-first approach, you can use Consumer or Provider driven contracts, whatever suits your needs best.
   - Once a Contract is written, both Consumers and Providers can start development in parallel
-* **API Specifications as Executable Contracts** - Specmatic leverages API Specification Standards such as [OpenAPI](https://www.openapis.org/) as executable contracts (Contract as Test, Contract as Stub, Backward Compatiblity Testing and more).
+* **API Specifications as Executable Contracts** - Specmatic leverages API Specification Standards such as [OpenAPI](https://www.openapis.org/) as executable contracts (Contract as Test, Contract as Stub, Backward Compatibility Testing and more).
   - Anyone 1.Developer (Consumer or Provider), 2.Architect, 3.Tech Leads, 4.Developer, 5.Tester can author the contracts
 * **Backward Compatibility Verification** - Contract vs Contract testing (cross version compatibility checks) etc.
 * **Smart Mocks** - Run your contract in stub mode and isolate yourself from downstream dependencies (also be sure that your stubs are 100% compatible with the actual provider)
 * **Contract as Test** - Test drive your services (APIs) using a contract
 * **Programmatic** (Kotlin, Java and JVM languages) **and Command line support**
-* **Tight integration with CI** - Triger Provider and Consumer CI builds when any of the contracts change.
+* **Tight integration with CI** - Trigger Provider and Consumer CI builds when any of the contracts change.
 * Versioning
 * Support for **SOAP/XML**, **Kafka**, **callbacks** and more
 * Already have a lot of APIs? Don't worry, we can take your **Postman Collection** and easily generate contracts from it

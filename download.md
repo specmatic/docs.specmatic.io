@@ -11,7 +11,7 @@ Download the latest Specmatic standalone executable from the following sources:
 * [Maven Central](https://repo1.maven.org/maven2/in/specmatic/specmatic-executable/{{ site.latest_release }}/specmatic-executable-{{ site.latest_release }}-all.jar)
 * [Docker Hub](https://hub.docker.com/r/znsio/specmatic)
 
-Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standlone executable.
+Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standalone executable.
 
 ### Maven dependencies
 
@@ -22,7 +22,7 @@ Read our "[Getting started (in 5 min)](/getting_started.html)" section learn mor
     <version>{{ site.latest_release }}</version>
 </dependency>
 
-<!-- Optional depdendency to run the contract as test on Provider -->
+<!-- Optional dependency to run the contract as test on Provider -->
 <dependency>
     <groupId>in.specmatic</groupId>
     <artifactId>junit5-support</artifactId>

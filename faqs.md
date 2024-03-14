@@ -15,7 +15,7 @@ More on this [here](/contract_driven_development).
 
 ### Does Specmatic work with all programming languages?
 
-Yes, Specmatic is a standalone executable that is compeletely programming language and technology stack agnostic. This is because it works at the level of communication protocols such as http.
+Yes, Specmatic is a standalone executable that is completely programming language and technology stack agnostic. This is because it works at the level of communication protocols such as http.
 
 Programmatic support is available in JVM languages as a convenience.
 * [Programmatically running stub server](/documentation/service_virtualization_tutorial.html#programmatically-starting-stub-server-within-tests)
@@ -29,7 +29,7 @@ Specmatic has a #NOCODE approach to Contract Driven Development and is able to d
 
 Here are [detailed comparison](https://specmatic.in/category/comparisons/) with other tools and approaches
 
-### I need some help adotping Contract Driven Development with Specmatic OR would like to request a feature
+### I need some help adopting Contract Driven Development with Specmatic OR would like to request a feature
 
 Please do reach us through any of below mechanisms
 * Raise [issues / feature request](https://github.com/znsio/specmatic/issues/new/choose) on [Github](https://github.com/znsio/specmatic)
