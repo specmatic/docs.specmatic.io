@@ -394,7 +394,7 @@ However for petId 1, it will always return below values.
 
 This is because the example `SCOOBY_200_OK` in the `service.yaml` spec file, which we earlier saw being used while running contract test, also serves a stub data when we run Specmatic stub.
 
-With this we have effectively archived three goals in one go.
+With this we have effectively achieved three goals in one go.
 * Examples serve as sample data for people referring to the API specification as documentation
 * The same examples are used in contract tests to create the HTTP request
 * And these examples also serve as stub data when we run Spemcatic stub command
