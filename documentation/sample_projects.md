@@ -38,7 +38,7 @@ We have the BFF and Backend APIs implemented in different languages and framewor
 
 
 ## OAuth
-We have a [Kotlin based SpringBoot project](https://github.com/znsio/specmatic-order-api-java-with-oauth)to demonstrate how Specmatic can be used to run contract tests againt a service which is secured by an OAuth provider.
+We have a [Kotlin based SpringBoot project](https://github.com/znsio/specmatic-order-api-java-with-oauth) to demonstrate how Specmatic can be used to run contract tests againt a service which is secured by an OAuth provider.
 
 ## Private Beta
 Here's a list of sample projects which demonstrates the capabailities in Specmatic's private beta offering.  
