@@ -151,6 +151,6 @@ If any of the APIs in the Postman collection require authentication, Specmatic w
 
 Instead, from within Postman, plug in in the required credentials, invoke the API, and save the request and response as an example.
 
-Then export the collection, and import it into Qontract.
+Then export the collection, and import it into Specmatic.
 
-Qontract will still fail to invoke the API, but it will see and convert the examples. You can then adjust the contract as needed.
+Specmatic will still fail to invoke the API, but it will see and convert the examples. You can then adjust the contract as needed.
