@@ -9,15 +9,9 @@ Getting started
 - [Getting started](#getting-started)
     - [Setup](#setup)
     - [Example Application - PetStore](#example-application---petstore)
-    - [PetStore API Specification](#petstore-api-specification)
+    - [API Specification](#petstore-api-specification)
     - [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
-      - [Understanding the output](#understanding-the-output)
-      - [Where did Specmatic get the test data to generate the HTTP request](#where-did-specmatic-get-the-test-data-to-generate-the-http-request)
-      - [How does this all work?](#how-does-this-all-work)
-      - [What happens when OpenAPI goes out of sync with the application or vice versa?](#what-happens-when-openapi-goes-out-of-sync-with-the-application-or-vice-versa)
-    - [Consumer Side - Contract As A Stub / Intelligent Service Virtualization](#consumer-side---contract-as-a-stub--intelligent-service-virtualization)
-      - [Intelligent Service Virtualization](#intelligent-service-virtualization)
-      - [Externalizing stub responses](#externalizing-stub-responses)
+    - [Consumer Side - Contract As A Stub / Smart Mock](#consumer-side---contract-as-a-stub--intelligent-service-virtualisation)
 
 ### Setup
 
@@ -168,7 +162,7 @@ Tests run: 1, Successes: 1, Failures: 0, Errors: 0
 * Specmatic parsed your API specification and printed a brief `API Specification Summary`
 * Then it generated and started `Executing 1 tests` because our API specification contains only one endpoint with a single GET operation
 * Specmatic then logged the `HTTP Request` that it generated and the `HTTP response` it received from the API implementation
-* And finally it prints out the test results along with an API Coverage Report (Read our detailed post on [API Coverage Report](https://specmatic.in/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) to know more.)
+* And finally it prints out the test results along with an API Coverage Report (Read our detailed post on [API Converage Report](https://specmatic.in/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) to know more.)
 
 #### Where did Specmatic get the test data to generate the HTTP request
 
@@ -243,8 +237,13 @@ Once you restore the OpenAPI file to its [original state](/getting_started.html#
 
 #### How does this all work?
 
-* Specmatic is able to tie the **named example** `SCOOBY_200_OK` listed under the request parameters and the response sections of the OpenAPI spec to create a test.
+* Specmatic is able to tie the **named example** `SCOOBY_200_OK` listed under the request parameters and the response sections of the OpenAPI spec to create a test. 
 * This is also reflected in the name of the test where Specmatic displays the `SCOOBY_200_OK` in the test logs
+* Here's a detailed breakdown of the contract test:
+  - **Request:** Specmatic uses the value defined for the **petId** request paramter from the `SCOOBY_200_OK` request example to make a HTTP request.
+  - **Response:** In order to tie the above request with a HTTP response code in the spec, Specmatic looks for an example with same name: `SCOOBY_200_OK` under responses. In this case the response code happens to be 200. This request/response pair now forms a test case.
+  - **Response Validation:** Note that we are running the specification as a contract test here, in which we are interested in validating only the API signature and not the API logic. Hence, Specmatic does not validate the actual response values defined in the `SCOOBY_200_OK` example against the values returned by the application. It only validates the response code. However, if you do wish to validate response values, you can find more details in our discussion [here](https://github.com/znsio/specmatic/discussions/1029).
+  
 
 `Scenario: GET /pets/(petid:number) -> 200 | EX:SCOOBY_200_OK has SUCCEEDED`
 
@@ -298,9 +297,9 @@ Please refer to below videos for extensive demos on Contract as Test.
 
 [**Learn more about Contract Tests here.**](/documentation/contract_tests.html)
 
-### Consumer Side - Contract As A Stub / Intelligent Service Virtualization
+### Consumer Side - Contract As A Stub / Intelligent Service Virtualisation
 
-We have so far established that Specmatic will keep OpenAPI spec and the API implementation in sync. This gives us the confidence to use the same OpenAPI spec `service.yaml` on the Consumer side for **Intelligent Service Virtualization** with Specmatic. This will help us isolate our UI development and make progress independent of the Provider / API. Here is a sequence diagram illustrating the same where UI no longer has to interact with the real backend for testing purposes. UI can instead rely on Specmatic Stub which is emulating the Provider / API.
+We have so far established that Specmatic will keep OpenAPI spec and the API implementation in sync. This gives us the confidence to use the same OpenAPI spec `service.yaml` on the Consumer side for **Intelligent Service Virtualisation** with Specmatic. This will help us isolate our UI development and make progress independent of the Provider / API. Here is a sequence diagram illustrating the same where UI no longer has to interact with the real backend for testing purposes. UI can instead rely on Specmatic Stub which is emulating the Provider / API.
 
     UI (Consumer)         Specmatic Stub <- service.yaml
           | --- getPetById ---> |
@@ -394,12 +393,12 @@ However for petId 1, it will always return below values.
 
 This is because the example `SCOOBY_200_OK` in the `service.yaml` spec file, which we earlier saw being used while running contract test, also serves a stub data when we run Specmatic stub.
 
-With this we have effectively achieved three goals in one go.
+With this we have effectively achived three goals in one go.
 * Examples serve as sample data for people referring to the API specification as documentation
 * The same examples are used in contract tests to create the HTTP request
 * And these examples also serve as stub data when we run Spemcatic stub command
 
-#### Intelligent Service Virtualization
+#### **Intelligent Service Virtualisation**
 
 Let us try a few experiments. Remove the `status` field in the `200_OKAY` response example in `service.yaml` (the very last line in that file) and run the stub command again.
 
@@ -434,11 +433,11 @@ API Specification Summary: service.yaml
 
 Specmatic rejects the expectation / canned response since it is not in line with the OpenAPI Specification.
 
-#### Externalizing stub responses
+#### **Externalising stub responses**
 
 Please restore `service.yaml` to its [original state](/getting_started.html#api-specification)(by adding back the `status` field in the `SCOOBY_200_OK` example) before proceeding with this section.
 
-If you would like to add more stub responses, however you do not wish to bloat your specification with a lot of examples, we can also externalize the stub / canned responses to json files also.
+If you would like to add more stub responses, however you do not wish to bloat your specification with a lot of examples, we can also externalise the stub / canned responses to json files also.
 * Create a folder named `service_data` in the same folder as your `service.yaml` file (`_data` suffix is a naming convention that tell Specmatic to look for canned responses in that directory)
 * Create a json file with the name `togo.json` and add below contents to it
 
@@ -514,7 +513,7 @@ You should now be able to see the data pertaining to the `togo.json` file that y
 }
 ```
 
-Specmatic validates this externalized stub JSON file `togo.json` against the `service.yaml`. Let us try this by removing the `status` field within http-response body in `togo.json` and run the stub command again. 
+Specmatic validates this externalised stub JSON file `togo.json` against the `service.yaml`. Let us try this by removing the `status` field within http-response body in `togo.json` and run the stub command again. 
 
 {% tabs stub3 %}
 {% tab stub3 java %}
@@ -560,8 +559,8 @@ Specmatic again rejects the expectation / canned response since it is not in lin
 
 We can now start consumer development against this stub without any dependency on the real API.
 
-To know more about **Intelligent Service Virtualization** please refer to below video demos
-* [Video: Intelligent Service Virtualization](https://youtu.be/U5Agz-mvYIU?t=750)
+To know more about **Intelligent Service Virtualisation** please refer to below video demos
+* [Video: Intelligent Service Virtualisation](https://youtu.be/U5Agz-mvYIU?t=750)
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
 [**Learn more about Stubbing / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)
