@@ -35,6 +35,7 @@ We have the BFF and Backend APIs implemented in different languages and framewor
 ### Backend
 - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-java)
 - [Python (Flask)](https://github.com/znsio/specmatic-order-api-python/)
+- [Node.js (Express)](https://github.com/znsio/specmatic-order-api-nodejs)
 
 
 ## OAuth
