@@ -548,7 +548,7 @@ Add a key named "auth" to specmatic.json, as seen in the example below.
 ```json
 {
   "auth": {
-    "bearer-file": "bearer.txt"
+    "bearer-file": "central_repo_auth_token.txt"
   },
   "sources": [
     {
@@ -562,7 +562,7 @@ Add a key named "auth" to specmatic.json, as seen in the example below.
 }
 ```
 
-In CI, the necessary oauth2 token must be fetched and stored in a file named bearer.txt (as configured) side-by-side with specmatic.json, before running contract tests.
+In CI, the necessary oauth2 token must be fetched and stored in a file named central_repo_auth_token.txt (as configured) side-by-side with specmatic.json, before running contract tests.
 
 If you are using Microsoft Azure as both your git provider as well as CI, you can use a secret build variable named System.AccessToken, provided by Microsoft Azure, as your OAuth2 bearer token. Before running the tests, use a script to place the value of this variable in a file. For example:
 
@@ -570,7 +570,7 @@ If you are using Microsoft Azure as both your git provider as well as CI, you ca
 # Sample azure pipeline snippet
 steps:
   - bash: |
-      echo $(System.AccessToken) > bearer.txt
+      echo $(System.AccessToken) > central_repo_auth_token.txt
     displayName: Create auth token file
   - bash: |
       mvn test

@@ -226,7 +226,7 @@ This gives you a comprehensive analysis of any mismatch between your api specifi
   ],
 
   "auth": {
-    "bearer-file": "bearer.txt"
+    "bearer-file": "central_repo_auth_token.txt"
   },
 
   "pipeline": {
@@ -284,7 +284,7 @@ Contains details of the project pipeline.
 ```json
 {
   "auth": {
-    "bearer-file": "./bearer.txt"
+    "bearer-file": "./central_repo_auth_token.txt"
   },
 
   "pipeline": {
@@ -303,13 +303,13 @@ Contains details of the project pipeline.
 
 Specmatic fetches contracts from git repositories in Azure using the value of the pipeline variable `System.AccessToken` for authentication. This is a predefined variable in Azure build pipelines.
 
-It looks for this value in the file specified by `bearer-file`. `bearer.txt` is our recommended name for the file. This file should be in your project root.
+It looks for this value in the file specified by `bearer-file`. `central_repo_auth_token.txt` is our recommended name for the file. This file should be in your project root.
 
 You can set it up by placing this snippet in the `steps` section of your Azure pipeline:
 
 ```yaml
 steps:
-  - script: echo $SYSTEM_ACCESSTOKEN > bearer.txt
+  - script: echo $SYSTEM_ACCESSTOKEN > central_repo_auth_token.txt
     env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 ```
