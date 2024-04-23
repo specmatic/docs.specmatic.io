@@ -156,7 +156,7 @@ You can also provide absolute paths in case they are somewhere else on the files
         "http://third.party.com/products.yaml"
       ],
       "test": [
-        "api_auth_v1.yaml",  
+        "http://third.party.com/api_auth_v1.yaml",
       ]
     }
   ]
