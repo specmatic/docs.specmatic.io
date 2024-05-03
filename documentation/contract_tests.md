@@ -485,7 +485,7 @@ The filesystem path above is a relative path, but it can also be an absolute pat
 
 For Java projects, you can use the Java helper that ships with Specmatic.
 
-Add the following dependencies to your pom.xml file.
+Add the following dependencies to your `pom.xml` file:
 
 ```xml
 <dependency>
@@ -502,15 +502,17 @@ Add the following dependencies to your pom.xml file.
 </dependency>
 ```
 
-Add a class that inherits from SpecmaticJUnitSupport. See how this is done [here](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java).
+Add a class that inherits from `SpecmaticJUnitSupport` or implements `SpecmaticContractTest`. See how this is done -
+1. [Class based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
+2. [Interface based contract test example (Recommended)](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTestV2.java)
 
 In it, set the "host" and "port" properties to tell Specmatic where to find the application. You can also start the application in that class.
 
-Add specmatic.json at the project root, as described in the previous section.
+Add `specmatic.json` at the project root, as described in the previous section.
 
-SpecmaticJUnitSupport is a dynamic JUnit5 test. It will read the contracts from specmatic.json, and run them.
+`SpecmaticJUnitSupport` is a dynamic JUnit5 test. It will read the contracts from `specmatic.json` and run them. Alternatively, you can implement `SpecmaticContractTest` interface to customize your contract tests.
 
-Since it is a JUnit5 test, you can run it in all the ways you are used to. If you run it in the IDE, you'll see the results in your IDEs GUI. If you run `mvn test`, Surefire will store the results of the contract tests in the JUnit xml output file alongside any other JUnit tests in your project. The same applies to `./gradlew test`.
+Since it is a JUnit5 test, you can run it in all the ways you are used to. If you run it in the IDE, you'll see the results in your IDEs GUI. If you run `mvn test`, Surefire will store the results of the contract tests in the JUnit XML output file alongside any other JUnit tests in your project. The same applies to `./gradlew test`.
 
 ### Handling Application authentication
 
@@ -640,22 +642,22 @@ Feature: WSDL Companion file
 
 {% tabs programmatically %}
 {% tab programmatically java %}
-If your building your application in a JVM based language, you can run Specmatic Contract Tests programmatically just like any other JUnit test and also get similar feedback within your IDE.
+If you're building your application in a JVM-based language, you can run Specmatic Contract Tests programmatically, either by extending `SpecmaticJUnitSupport` or implementing `SpecmaticContractTest`. Here's how:
 
-Add Specmatic JUnit Support Jar dependency.
+**1. Add Specmatic JUnit Support Jar Dependency:**
 
-```
+```xml
 <dependency>
     <groupId>in.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
-    <version>{{ site.latest_release }}</version>
+    <version>1.3.14</version>
     <scope>test</scope>
 </dependency>
 ```
 
-Also add the junit5 dependency so that we can use the ```BeforeAll``` and ```AfterAll``` annotations.
+**2. Add JUnit 5 Dependency:**
 
-```
+```xml
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter</artifactId>
@@ -664,9 +666,12 @@ Also add the junit5 dependency so that we can use the ```BeforeAll``` and ```Aft
 </dependency>
 ```
 
-No we need to extend ```SpecmaticJUnitSupport``` to run Contract Tests programmatically. Specmatic will locate the API Specifications to run as a test based on the configurations in your [```specmatic.json```](/documentation/specmatic_json.html) file. All you need to additionally provide is the ```host``` and ```port``` where your application is running.
+**3. Extend SpecmaticJUnitSupport (Class-based approach):**
 
 ```java
+import in.specmatic.core.SpecmaticJUnitSupport;
+import org.junit.jupiter.api.BeforeAll;
+
 public class ContractTests extends SpecmaticJUnitSupport {
     @BeforeAll
     public static void setUp() {
@@ -676,7 +681,25 @@ public class ContractTests extends SpecmaticJUnitSupport {
 }
 ```
 
-Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java) for a Springboot application.
+**OR**
+
+**3. Implement SpecmaticContractTest (Interface-based approach) [Recommended]:**
+
+```java
+import in.specmatic.core.SpecmaticContractTest;
+
+public class ContractTests implements SpecmaticContractTest {
+    @Override
+    public void configureTest() {
+        System.setProperty("host", "localhost");
+        System.setProperty("port", "8080");
+    }
+}
+```
+
+**4. Example for a Spring Boot Application:**
+1. [Class based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
+2. [Interface based contract test example (Recommended)](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTestV2.java)
 
 {% endtab %}
 {% tab programmatically python %}
@@ -728,7 +751,7 @@ Here is a complete [Specmatic Contract Test example](https://github.com/znsio/sp
 {% endtab %}
 {% endtabs %}
 
-Note: declare your specifications in `specmatic.json` as described above in the section on [declaring contracts in configuration](#declaring-contracts-in-configuration). `specmatic.json` should be created at the root of your project.
+Note: Declare your specifications in `specmatic.json` as described above in the section on [declaring contracts in configuration](#declaring-contracts-in-configuration). `specmatic.json` should be created at the root of your project.
 
 ### Referring to local specificatons
 
