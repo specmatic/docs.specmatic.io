@@ -30,6 +30,17 @@ Specmatic requires appropriate auth setup in order to pull the latest API specif
 
 * Then Specmatic automatically detects the presence of `PERSONAL_ACCESS_TOKEN` env variable and is able to clone the  central contract repo to the CI server by leveraging the same.
 
+### Gitlab
+
+Include your auth params (username/password, PAT and any other access tokens) as env variables (be sure to mask the values for security). Here are some examples:
+
+* CI_JOB_TOKEN - `https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/contract-testing/central-contract-repo.git/`
+* Username / Password - `https://${USERNAME}:${PASSWORD}@gitlab.com/contract-testing/central-contract-repo.git/`
+
+As long as the env variables are available in the CI build machine, Specmatic will evaluate them and execute Git clone on the fully evaluated URL.
+
+A quick test to see if your Git Repo URI is correct will be to run a command line Git clone in your CI pipeline with it. If the it works with command line Specmatic will also be able to use the same to clone your central contract repo to the CI build machine.
+
 ### Generic settings for any other CI setup
 
 * [Authentication In CI For HTTPS Git Source](/documentation/contract_tests.html#authentication-in-ci-for-https-git-source)
