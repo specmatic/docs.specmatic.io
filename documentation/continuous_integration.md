@@ -16,17 +16,63 @@ Specmatic requires appropriate auth setup in order to pull the latest API specif
 
 ### Authentication params in Git Repo URI
 
-This approach works across any CI setup which can include the auth params as part of the URI. Simply include your auth params (username/password, PAT and any other access tokens) as env variables (be sure to mask the values for security). Here are some example from Gitlab.
+This approach works across any CI setup which can include the auth params as part of the URI. Simply include your auth params (username/password, PAT and any other access tokens) as env variables (be sure to mask the values for security). Here is an example of Git repo URI in `specmatic.json` in this approach.
+
+```json
+{
+  "provider": "git",
+  "repository": "https://${TOKEN}@github.com/znsio/central-contract-repo-private.git",
+  "test": [
+    "in/specmatic/examples/store/api_order_v3.yaml"
+  ]
+}
+```
+
+As long as the env variables are available in the CI build machine (in this example `TOKEN`), Specmatic will evaluate them and execute Git clone on the fully evaluated URL.
+
+A quick test to see if your Git Repo URI is correct will be to run a command line Git clone in your CI pipeline with it. If the it works with command line Specmatic will also be able to use the same to clone your central contract repo to the CI build machine. Here are detailed examples.
+
+#### Gitlab
+
+Examples: 
 
 * CI_JOB_TOKEN - `https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/contract-testing/central-contract-repo.git/`
 * Username / Password - `https://${USERNAME}:${PASSWORD}@gitlab.com/contract-testing/central-contract-repo.git/`
 
+#### Github Actions
 
-As long as the env variables are available in the CI build machine, Specmatic will evaluate them and execute Git clone on the fully evaluated URL.
+Examples:
 
-A quick test to see if your Git Repo URI is correct will be to run a command line Git clone in your CI pipeline with it. If the it works with command line Specmatic will also be able to use the same to clone your central contract repo to the CI build machine.
+* Personal Access Token - `https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/znsio/central-contract-repo-private.git`
+
+Detailed steps
+* Setup a [Personal Access Token in Github](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with "Read" access for contents on your Central Contract Repository (we recommend using [fine grained tokens](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/))
+* Add this PAT as a [repo secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) in your repository where Specmatic Contract Test / and or Service Virtualisation is used. Example: `CENTRAL_CONTRACT_REPO_ACCESS_TOKEN=<your PAT>`
+* In your Github workflow file, for steps involving Specmatic Contract Test and / or Service Virtualisation, setup env variable `CENTRAL_CONTRACT_REPO_PAT` and set its value to the secret that we added above. Example: ```CENTRAL_CONTRACT_REPO_PAT: {% raw %}${{ secrets.CENTRAL_CONTRACT_REPO_ACCESS_TOKEN }}{% raw %}```. Here is a complete snippet.
+
+```yaml
+    - name: Build with Maven
+      working-directory: main
+      env:
+        CENTRAL_CONTRACT_REPO_PAT: ${{ secrets.CENTRAL_CONTRACT_REPO_ACCESS_TOKEN }}
+      run: mvn test package jacoco:report
+```
+
+And your `specmatic.json` itself will look as shown below. It now leverages the `CENTRAL_CONTRACT_REPO_PAT` that was setup in the workflow file as a env variable.
+
+```json
+{
+  "provider": "git",
+  "repository": "https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/znsio/central-contract-repo-private.git",
+  "test": [
+    "in/specmatic/examples/store/api_order_v3.yaml"
+  ]
+}
+```
 
 ### Github Actions
+
+**Note:** We are in the process of standardising on a uniform approach ([Authentication params in Git Repo URI](/documentation/continuous_integration.html#authentication-params-in-git-repo-uri)) across Github, Gitlab, Azure and more. We suggest considering the [steps listed here](/documentation/continuous_integration.html#github-actions) before going ahead with below technique. Below approach will also continue to be supported.
 
 * Setup a [Personal Access Token in Github](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with "Read" access for contents on your Central Contract Repository (we recommend using [fine grained tokens](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/))
 * Add this PAT as a [repo secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) in your repository where Specmatic Contract Test / and or Service Virtualisation is used. Example: `CENTRAL_CONTRACT_REPO_ACCESS_TOKEN=<your PAT>`
