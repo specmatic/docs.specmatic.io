@@ -16,8 +16,10 @@ Specmatic requires appropriate auth setup in order to pull the latest API specif
 
 ### Authentication params in Git Repo URI
 
-This approach works across any CI setup which can include the auth params as part of the URI. Simply include your auth params (username/password, PAT and any other access tokens) as env variables (be sure to mask the values for security). Here is an example of Git repo URI in `specmatic.json` in this approach.
+This approach works across any CI setup which can include the auth params as part of the URI. Simply include your auth params (username/password, PAT and any other access tokens) as env variables (be sure to mask the values for security). Here is an example of Git repo URI in the Specmatic configuration file in this approach.
 
+{% tabs config %}
+{% tab config specmatic.json %}
 ```json
 {
   "provider": "git",
@@ -27,6 +29,16 @@ This approach works across any CI setup which can include the auth params as par
   ]
 }
 ```
+{% endtab %}
+{% tab config specmatic.yaml %}
+```yaml
+provider: git
+repository: https://${TOKEN}@github.com/znsio/central-contract-repo-private.git
+test:
+  - in/specmatic/examples/store/api_order_v3.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 As long as the env variables are available in the CI build machine (in this example `TOKEN`), Specmatic will evaluate them and execute Git clone on the fully evaluated URL.
 
@@ -58,8 +70,10 @@ Detailed steps
       run: mvn test package jacoco:report
 ```
 
-And your `specmatic.json` itself will look as shown below. It now leverages the `CENTRAL_CONTRACT_REPO_PAT` that was setup in the workflow file as a env variable.
+And your Specmatic configuration itself will look as shown below. It now leverages the `CENTRAL_CONTRACT_REPO_PAT` that was setup in the workflow file as a env variable.
 
+{% tabs config %}
+{% tab config specmatic.json %}
 ```json
 {
   "provider": "git",
@@ -69,6 +83,16 @@ And your `specmatic.json` itself will look as shown below. It now leverages the 
   ]
 }
 ```
+{% endtab %}
+{% tab config specmatic.yaml %}
+```yaml
+provider: git
+repository: https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/znsio/central-contract-repo-private.git
+test:
+  - in/specmatic/examples/store/api_order_v3.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 ### Github Actions
 
