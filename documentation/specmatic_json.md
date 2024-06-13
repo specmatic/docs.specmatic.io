@@ -678,8 +678,6 @@ Each environment configuration can contain
 
 A hook is simply a command that can run on the Terminal or Command Prompt.
 
-Here is the tabbed version for the provided JSON code:
-
 {% tabs hooks %}
 {% tab hooks specmatic.json %}
 ```json
