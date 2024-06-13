@@ -19,21 +19,34 @@ However the API format for SOAP services is WSDL (not YAML). So you will need th
 
 Commit the WSDL for the SOAP API into your central contract repository.
 
-Once done, create the `specmatic.json` file in the root of your project. It should contain the following json configuration: 
+Once done, create the Specmatic configuration file in the root of your project. It should contain the following json configuration: 
 
+{% tabs config %}
+{% tab config specmatic.json %}
 ```json
 {
-    "sources": [
-        {
-            "provider": "git",
-            "repository": "https://your-central-contract-repo.com",
-            "stub": [
-                "/path/to/soap-api.wsdl"
-            ]
-        }
-    ]
+  "sources": [
+    {
+      "provider": "git",
+      "repository": "https://your-central-contract-repo.com",
+      "stub": [
+        "/path/to/soap-api.wsdl"
+      ]
+    }
+  ]
 }
 ```
+{% endtab %}
+{% tab config specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    repository: https://your-central-contract-repo.com
+    stub:
+      - /path/to/soap-api.wsdl
+```
+{% endtab %}
+{% endtabs %}
 
 **NOTE:** Remember to update the repository and stub section, to reflect the git repository in which you placed the specification, and the stub path.
 

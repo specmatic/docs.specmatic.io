@@ -451,15 +451,6 @@ sources:
       - path/to/employees.yaml
 ```
 {% endtab %}
-{% tab config specmatic.yml %}
-```yaml
-sources:
-  - provider: git
-    repository: https://github.com/your-username-or-org/your-repo.git
-    test:
-      - path/to/employees.yaml
-```
-{% endtab %}
 {% endtabs %}
 
 * Create a git repository and push the employees.yaml contract into it.
@@ -502,14 +493,6 @@ If you need to experiment with files on the local filesystem, here's how you can
 ```
 {% endtab %}
 {% tab config specmatic.yaml %}
-```yaml
-sources:
-  - provider: filesystem
-    test:
-      - path/to/employees.yaml
-```
-{% endtab %}
-{% tab config specmatic.yml %}
 ```yaml
 sources:
   - provider: filesystem
@@ -589,14 +572,6 @@ sources:
       - contracts/path/to/employees.yaml
 ```
 {% endtab %}
-{% tab sources specmatic.yml %}
-```yaml
-sources:
-  - provider: git
-    test:
-      - contracts/path/to/employees.yaml
-```
-{% endtab %}
 {% endtabs %}
 
 Note that "repository" is missing. Specamtic will look for the contract in the git repository containing the Specmatic configuration file. It's presumed that the Specmatic configuration file would be in a git repository, as the project would have to be pushed into some git repository.
@@ -629,18 +604,6 @@ Add a key named "auth" to the Specmatic configuration, as seen in the example be
 ```
 {% endtab %}
 {% tab config specmatic.yaml %}
-```yaml
-auth:
-  bearer-file: central_repo_auth_token.txt
-
-sources:
-  - provider: git
-    repository: https://github.com/your-username-or-org/your-repo.git
-    test:
-      - path/to/employees.yaml
-```
-{% endtab %}
-{% tab config specmatic.yml %}
 ```yaml
 auth:
   bearer-file: central_repo_auth_token.txt
@@ -690,18 +653,6 @@ You could also use an environment variable to pass the token.
 ```
 {% endtab %}
 {% tab config specmatic.yaml %}
-```yaml
-auth:
-  bearer-environment-variable: BEARER
-
-sources:
-  - provider: git
-    repository: https://github.com/your-username-or-org/your-repo.git
-    test:
-      - path/to/employees.yaml
-```
-{% endtab %}
-{% tab config specmatic.yml %}
 ```yaml
 auth:
   bearer-environment-variable: BEARER

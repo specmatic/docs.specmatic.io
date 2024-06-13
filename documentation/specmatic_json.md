@@ -56,15 +56,6 @@ sources:
       - in/specmatic/examples/store/api_order_v1.yaml
 ```
 {% endtab %}
-{% tab config specmatic.yml %}
-```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
-    test:
-      - in/specmatic/examples/store/api_order_v1.yaml
-```
-{% endtab %}
 {% endtabs %}
 
 Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api)). Let us now go through each of the lines in this file.
@@ -92,16 +83,6 @@ You can also specify the branch.
 ```
 {% endtab %}
 {% tab branch specmatic.yaml %}
-```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
-    branch: feature-1
-    test:
-      - in/specmatic/examples/store/api_order_v1.yaml
-```
-{% endtab %}
-{% tab branch specmatic.yml %}
 ```yaml
 sources:
   - provider: git
@@ -155,15 +136,6 @@ sources:
       - in/specmatic/examples/store/api_order_v1.yaml
 ```
 {% endtab %}
-{% tab stubs specmatic.yml %}
-```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
-    stub:
-      - in/specmatic/examples/store/api_order_v1.yaml
-```
-{% endtab %}
 {% endtabs %}
 
 Please note that now we are now listing the ```api_order_v1.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/znsio/specmatic-order-ui/blob/main/specmatic.json).
@@ -191,18 +163,6 @@ A single application may need to list the API Specifications it is implementing 
 ```
 {% endtab %}
 {% tab dependencies specmatic.yaml %}
-```yaml
-sources:
-  - provider: git
-    repository: <Git URL>
-    stub:
-      - com/example/api_order_v1.yaml
-      - com/example/api_user_v1.yaml
-    test:
-      - com/example/api_auth_v1.yaml
-```
-{% endtab %}
-{% tab dependencies specmatic.yml %}
 ```yaml
 sources:
   - provider: git
@@ -250,17 +210,6 @@ sources:
       - api_auth_v1.yaml
 ```
 {% endtab %}
-{% tab local specmatic.yml %}
-```yaml
-sources:
-  - provider: filesystem
-    stub:
-      - api_order_v1.yaml
-      - api_user_v1.yaml
-    test:
-      - api_auth_v1.yaml
-```
-{% endtab %}
 {% endtabs %}
 
 Note that the `stub` and `test` specifications are relative paths. This means that they must be in the same directory as the current directory.
@@ -295,18 +244,6 @@ sources:
       - http://third.party.com/products.yaml
     test:
       - http://third.party.com/api_auth_v1.yaml
-```
-{% endtab %}
-{% tab web specmatic.yml %}
-```yaml
-sources:
-  - provider: web
-    stub:
-      - http://third.party.com/products.yaml
-    test:
-      - http://third.party.com/api_auth_v1.yaml
-
-
 ```
 {% endtab %}
 {% endtabs %}
@@ -350,23 +287,6 @@ Specmatic can generate reports based on the below configuration:
 ```
 {% endtab %}
 {% tab report specmatic.yaml %}
-```yaml
-report:
-  formatters:
-    - type: text
-      layout: table
-  types:
-    APICoverage:
-      OpenAPI:
-        successCriteria:
-          minThresholdPercentage: 100
-          maxMissedEndpointsInSpec: 0
-          enforce: true
-        excludedEndpoints:
-          - /health
-```
-{% endtab %}
-{% tab report specmatic.yml %}
 ```yaml
 report:
   formatters:
@@ -511,52 +431,6 @@ report:
           - /health
 ```
 {% endtab %}
-{% tab complete specmatic.yml %}
-```yaml
-sources:
-  - provider: git
-    repository: https://azure.com/XNSio/XNSIO/_git/petstore-contracts2
-    branch: main
-    test:
-      - com/petstore/2.spec
-    stub:
-      - com/petstore/payment.spec
-
-auth:
-  bearer-file: central_repo_auth_token.txt
-
-pipeline:
-  provider: azure
-  organization: XNSio
-  project: XNSIO
-  definitionId: 4
-
-environments:
-  staging:
-    baseurls:
-      auth.spec: http://localhost:8080
-    variables:
-      username: jackie
-      password: PaSsWoRd
-
-hooks:
-  hook_name: command
-
-report:
-  formatters:
-    - type: text
-      layout: table
-  types:
-    APICoverage:
-      OpenAPI:
-        successCriteria:
-          minThresholdPercentage: 100
-          maxMissedEndpointsInSpec: 0
-          enforce: true
-        excludedEndpoints:
-          - /health
-```
-{% endtab %}
 {% endtabs %}
 
 ### Declare pipeline details
@@ -581,18 +455,6 @@ Contains details of the project pipeline.
 ```
 {% endtab %}
 {% tab pipeline specmatic.yaml %}
-```yaml
-auth:
-  bearer-file: ./central_repo_auth_token.txt
-
-pipeline:
-  provider: azure
-  organization: XNSio
-  project: XNSIO
-  definitionId: 4
-```
-{% endtab %}
-{% tab pipeline specmatic.yml %}
 ```yaml
 auth:
   bearer-file: ./central_repo_auth_token.txt
@@ -655,17 +517,6 @@ environments:
       password: PaSsWoRd
 ```
 {% endtab %}
-{% tab environment specmatic.yml %}
-```yaml
-environments:
-  staging:
-    baseurls:
-      auth.spec: http://localhost:8080
-    variables:
-      username: jackie
-      password: PaSsWoRd
-```
-{% endtab %}
 {% endtabs %}
 
 The environments key in this example contains configuration for the `staging` environment. It can contain configuration for any number of environments.
@@ -689,12 +540,6 @@ A hook is simply a command that can run on the Terminal or Command Prompt.
 ```
 {% endtab %}
 {% tab hooks specmatic.yaml %}
-```yaml
-hooks:
-  stub_load_contract: python load.py
-```
-{% endtab %}
-{% tab hooks specmatic.yml %}
 ```yaml
 hooks:
   stub_load_contract: python load.py
