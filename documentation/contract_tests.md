@@ -424,8 +424,10 @@ In the last example, we ran run contract tests above by passing the contract pat
 
 So instead:
 
-* Create a file named specmatic.json. 
+* Create a file named specmatic.json OR specmatic.yaml OR specmatic.yml which contains the Specmatic configuration.
 
+{% tabs config %}
+{% tab config specmatic.json %}
 ```json
 {
   "sources": [
@@ -439,20 +441,40 @@ So instead:
   ]
 }
 ```
+{% endtab %}
+{% tab config specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    repository: https://github.com/your-username-or-org/your-repo.git
+    test:
+      - path/to/employees.yaml
+```
+{% endtab %}
+{% tab config specmatic.yml %}
+```yaml
+sources:
+  - provider: git
+    repository: https://github.com/your-username-or-org/your-repo.git
+    test:
+      - path/to/employees.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 * Create a git repository and push the employees.yaml contract into it.
 * Update the value of "repository" to the url of the git repo. This should be a url that could be used by git checkout.
 * Update the contract path in "test" to the relative path of employees.yaml within the git repository.
 
-Specmatic will use the git command to checkout the git repository provided in specmatic.json. So make sure that the `git` command works on your laptop.
+Specmatic will use the git command to checkout the git repository provided in the Specmatic configuration file. So make sure that the `git` command works on your laptop.
 
-On the command line, `cd` into the directory containing specmatic.json.
+On the command line, `cd` into the directory containing the Specmatic configuration file.
 
 Run this command: `{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com`
 
-Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for specmatic.json in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
+Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
-Since Specmatic uses specmatic.json in the current working directory, it's important to use `cd` into the directory containing specmatic.json. For Java projects, specmatic.json should be in the same directory as the pom.xml or build.gradle file.
+Since Specmatic uses the Specmatic configuration file in the current working directory, it's important to use `cd` into the directory containing the Specmatic configuration. For Java projects, the Specmatic configuration file should be in the same directory as the pom.xml or build.gradle file.
 
 Since Specmatic uses git under-the-hood, any authentication requirements of your git server will be handled by the underlying git command.
 
@@ -462,8 +484,10 @@ Note:
 3. You may declare multiple contracts in the "test" list.
 4. "sources" holds a list. You may declare multiple sources if required. However we recommend using a single contract repository to be shared across your organisation, or ecosystem within the organisation (if your org is large).
 
-If you need to experiment with files on the local filesystem, here's how you can declare specifications locally, in `specmatic.json`:
+If you need to experiment with files on the local filesystem, here's how you can declare specifications locally, in the Specmatic configuration file:
 
+{% tabs config %}
+{% tab config specmatic.json %}
 ```json
 {
   "sources": [
@@ -476,6 +500,24 @@ If you need to experiment with files on the local filesystem, here's how you can
   ]
 }
 ```
+{% endtab %}
+{% tab config specmatic.yaml %}
+```yaml
+sources:
+  - provider: filesystem
+    test:
+      - path/to/employees.yaml
+```
+{% endtab %}
+{% tab config specmatic.yml %}
+```yaml
+sources:
+  - provider: filesystem
+    test:
+      - path/to/employees.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 The filesystem path above is a relative path, but it can also be an absolute path to a file.
 
@@ -508,9 +550,9 @@ Add a class that inherits from `SpecmaticJUnitSupport` or implements `SpecmaticC
 
 In it, set the "host" and "port" properties to tell Specmatic where to find the application. You can also start the application in that class.
 
-Add `specmatic.json` at the project root, as described in the previous section.
+Add the Specmatic configuration file at the project root, as described in the previous section.
 
-`SpecmaticJUnitSupport` is a dynamic JUnit5 test. It will read the contracts from `specmatic.json` and run them. Alternatively, you can implement `SpecmaticContractTest` interface to customize your contract tests.
+`SpecmaticJUnitSupport` is a dynamic JUnit5 test. It will read the contracts from the Specmatic configuration file and run them. Alternatively, you can implement `SpecmaticContractTest` interface to customize your contract tests.
 
 Since it is a JUnit5 test, you can run it in all the ways you are used to. If you run it in the IDE, you'll see the results in your IDEs GUI. If you run `mvn test`, Surefire will store the results of the contract tests in the JUnit XML output file alongside any other JUnit tests in your project. The same applies to `./gradlew test`.
 
@@ -522,8 +564,10 @@ If the OpenAPI contract defines API authentication using security schemas, these
 
 If you are using a mono-repo, in which all the projects in the ecosystem are in the same repository, the contracts used by these projects may also be kept in the same repository.
 
-specmatic.json may look like this:
+The Specmatic configuration may look like this:
 
+{% tabs sources %}
+{% tab sources specmatic.json %}
 ```json
 {
   "sources": [
@@ -536,17 +580,37 @@ specmatic.json may look like this:
   ]
 }
 ```
+{% endtab %}
+{% tab sources specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    test:
+      - contracts/path/to/employees.yaml
+```
+{% endtab %}
+{% tab sources specmatic.yml %}
+```yaml
+sources:
+  - provider: git
+    test:
+      - contracts/path/to/employees.yaml
+```
+{% endtab %}
+{% endtabs %}
 
-Note that "repository" is missing. Specamtic will look for the contract in the git repository containing specmatic.json. It's presumed that specmatic.json would be in a git repository, as the project would have to be pushed into some git repository.
+Note that "repository" is missing. Specamtic will look for the contract in the git repository containing the Specmatic configuration file. It's presumed that the Specmatic configuration file would be in a git repository, as the project would have to be pushed into some git repository.
 
 ### Authentication In CI For HTTPS Git Source
 
-Specmatic does a checkout of the git repository given in specmatic.json using the git command. On your laptop, the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without no chance for a user to enter credentials, so the git checkout fails when it gets an authentication failure from the repository.
+Specmatic does a checkout of the git repository given in the Specmatic configuration using the git command. On your laptop, the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without no chance for a user to enter credentials, so the git checkout fails when it gets an authentication failure from the repository.
 
 Instead, Specmatic can do the checkout using OAuth2 authentication, which is also supported by most git providers.
 
-Add a key named "auth" to specmatic.json, as seen in the example below.
+Add a key named "auth" to the Specmatic configuration, as seen in the example below.
 
+{% tabs config %}
+{% tab config specmatic.json %}
 ```json
 {
   "auth": {
@@ -563,8 +627,34 @@ Add a key named "auth" to specmatic.json, as seen in the example below.
   ]
 }
 ```
+{% endtab %}
+{% tab config specmatic.yaml %}
+```yaml
+auth:
+  bearer-file: central_repo_auth_token.txt
 
-In CI, the necessary oauth2 token must be fetched and stored in a file named central_repo_auth_token.txt (as configured) side-by-side with specmatic.json, before running contract tests.
+sources:
+  - provider: git
+    repository: https://github.com/your-username-or-org/your-repo.git
+    test:
+      - path/to/employees.yaml
+```
+{% endtab %}
+{% tab config specmatic.yml %}
+```yaml
+auth:
+  bearer-file: central_repo_auth_token.txt
+
+sources:
+  - provider: git
+    repository: https://github.com/your-username-or-org/your-repo.git
+    test:
+      - path/to/employees.yaml
+```
+{% endtab %}
+{% endtabs %}
+
+In CI, the necessary oauth2 token must be fetched and stored in a file named central_repo_auth_token.txt (as configured) side-by-side with the Specmatic configuration file, before running contract tests.
 
 If you are using Microsoft Azure as both your git provider as well as CI, you can use a secret build variable named System.AccessToken, provided by Microsoft Azure, as your OAuth2 bearer token. Before running the tests, use a script to place the value of this variable in a file. For example:
 
@@ -580,6 +670,8 @@ steps:
 
 You could also use an environment variable to pass the token.
 
+{% tabs config %}
+{% tab config specmatic.json %}
 ```json
 {
   "auth": {
@@ -596,6 +688,32 @@ You could also use an environment variable to pass the token.
   ]
 }
 ```
+{% endtab %}
+{% tab config specmatic.yaml %}
+```yaml
+auth:
+  bearer-environment-variable: BEARER
+
+sources:
+  - provider: git
+    repository: https://github.com/your-username-or-org/your-repo.git
+    test:
+      - path/to/employees.yaml
+```
+{% endtab %}
+{% tab config specmatic.yml %}
+```yaml
+auth:
+  bearer-environment-variable: BEARER
+
+sources:
+  - provider: git
+    repository: https://github.com/your-username-or-org/your-repo.git
+    test:
+      - path/to/employees.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 Again, using an example for Microsoft Azure:
 
@@ -751,7 +869,7 @@ Here is a complete [Specmatic Contract Test example](https://github.com/znsio/sp
 {% endtab %}
 {% endtabs %}
 
-Note: Declare your specifications in `specmatic.json` as described above in the section on [declaring contracts in configuration](#declaring-contracts-in-configuration). `specmatic.json` should be created at the root of your project.
+Note: Declare your specifications in the Specmatic configuration file as described above in the section on [declaring contracts in configuration](#declaring-contracts-in-configuration). The Specmatic configuration file should be created at the root of your project.
 
 ### Referring to local specificatons
 
