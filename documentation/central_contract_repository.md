@@ -69,10 +69,10 @@ The goal of Central Contract Repo is to help all stakeholders collaborate over A
 
 ### Specmatic Configuration
 
-Both consumers and providers can leverage the specifications in the Central Contract Repository by listing it in [Specmatic config](https://specmatic.in/documentation/specmatic_json.html). Example:
+Both consumers and providers can leverage the specifications in the Central Contract Repository by listing it in [Specmatic configuration](https://specmatic.in/documentation/configuration.html). Example:
 * [Sample Consumer](https://github.com/znsio/specmatic-order-ui) referring to [api_order_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) as [Smart Mock](https://github.com/znsio/specmatic-order-ui/blob/main/specmatic.json)
 * [Sample Provider / API](https://github.com/znsio/specmatic-order-api) referring [api_order_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) as [Contract as Test](https://github.com/znsio/specmatic-order-api)
 
 Specmatic will always pull the latest specification files from the version control system for both applications.
 
-[**Specmatic Configuration in detail**](/documentation/specmatic_json.html)
+[**Specmatic Configuration in detail**](/documentation/configuration.html)

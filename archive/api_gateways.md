@@ -30,7 +30,7 @@ That leaves the external consumer, which needs to use the contract for service v
 
 Specmatic provides a hook named `stub_load_contract` in which the necessary modifications can be made to the provider contract, so that it looks exactly the way a consumer sees it.
 
-Register it in [specmatic.json](/documentation/specmatic_json.html#hooks) in the section on hooks.
+Register it in [specmatic.json](/documentation/configuration.html#hooks) in the section on hooks.
 
 The hooks snippet in specmatic.json would look like this:
 

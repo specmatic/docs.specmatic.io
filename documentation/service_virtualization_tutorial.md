@@ -482,7 +482,7 @@ Now you can import the utilty to create the stub server. Below code snippets are
 import `in`.specmatic.stub.createStub
 ```
 
-This utility can now be used in your test ```setup``` / ```beforeAll``` method to start the stub server. Specmatic automatically looks for your [Specmatic configuration](/documentation/specmatic_json.html) file in project root directory / classpath to locate your API Specification files that need to run as part of the stub server.
+This utility can now be used in your test ```setup``` / ```beforeAll``` method to start the stub server. Specmatic automatically looks for your [Specmatic configuration](/documentation/configuration.html) file in project root directory / classpath to locate your API Specification files that need to run as part of the stub server.
 
 ```kotlin
 @BeforeAll
