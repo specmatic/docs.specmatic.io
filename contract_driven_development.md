@@ -18,6 +18,6 @@ At a high level, our goal is to
 
 Here is a quick explainer video.
 
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=CSIrlayMZcU&list=PL9Z-JgiTsOYRERcsy9o3y6nsi5yK3IB_w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CSIrlayMZcU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 **Contract Driven Development** is significantly different from other approaches such as Consumer Driven Contract Testing. Here are [detailed comparisons](https://specmatic.in/category/comparisons) with other tools and approaches.
