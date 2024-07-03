@@ -1158,8 +1158,7 @@ To convert the `GET_DETAILS`  test from [api_order_with_oauth_v1.yaml](https://g
   },
   "http-response": {
     "status": 200
-  },
-  "name": "GET_DETAILS"
+  }
 }
 ```
 
@@ -1183,8 +1182,7 @@ To convert `UPDATE_DETAILS`, add a new file called `update_details.json` with th
   },
   "http-response": {
     "status": 200
-  },
-  "name": "UPDATE_DETAILS"
+  }
 }
 ```
 
@@ -1203,8 +1201,7 @@ To convert `SEARCH_2`, add a file named `search_2.json` with the following conte
   },
   "http-response": {
     "status": 200
-  },
-  "name": "SEARCH_2"
+  }
 }
 ```
 
@@ -1222,8 +1219,7 @@ To convert `SEARCH_1`, add a file named `search_1.json` with the following conte
   },
   "http-response": {
     "status": 200
-  },
-  "name": "SEARCH_1"
+  }
 }
 ```
 
