@@ -122,7 +122,7 @@ paths:
                 type: string
 ```
 
-- Create a directory named products-api_data in which we will place these stubs.
+- Create a directory named products-api_examples in which we will place these stubs.
 
 ## Stub Out The Product Service
 
@@ -133,7 +133,7 @@ Specmatic returns a contract valid response. The values are randomly generated. 
 
 ## Fix The Response To /products/10
 
-* Create a file named expectation.json, inside products-api_data, with the following contents:
+* Create a file named expectation.json, inside products-api_examples, with the following contents:
 
 ```json
 {
@@ -455,7 +455,7 @@ components:
           type: string
 ```
 
-If you stub it out, right out the gate, with no further `_data` files or any effort, if you send POST /znsio/specmatic/employees with a JSON object `{"name": "Jill Doe", "department": "Engineering", "designation": "Directory"}`, you'll get back `{"id": 10}`. Note how both the request and response exist as examples in the specification, and are being used directly as expectations with no further effort.
+If you stub it out, right out the gate, with no further `_examples` files or any effort, if you send POST /znsio/specmatic/employees with a JSON object `{"name": "Jill Doe", "department": "Engineering", "designation": "Directory"}`, you'll get back `{"id": 10}`. Note how both the request and response exist as examples in the specification, and are being used directly as expectations with no further effort.
 
 Note that this currently works only for JSON request and response payloads. Support for other parts such as headers, query parameters, etc will be implemented soon.
 
@@ -620,7 +620,7 @@ A regular expression could be added as a constraint to the contract, but it woul
 
 Specmatic allows granular control over simulating a slow response for certain requests.
 
-Let us create another expecation file on the same lines as [expectation.json](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10) in the products-api_data folder and call it expectation-with-delay.json with below content.
+Let us create another expectation file on the same lines as [expectation.json](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10) in the products-api_examples folder and call it expectation-with-delay.json with below content.
 
 ```yaml
 {
@@ -885,7 +885,7 @@ You can generate sample data from a specification as a starting point or scaffol
 java -jar specmatic.jar examples employees.yaml
 ```
 
-In the above case, sample files will be written into the directory named `employees_data`.
+In the above case, sample files will be written into the directory named `employees_examples`.
 
 ## Sample Java Project
 

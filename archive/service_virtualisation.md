@@ -109,7 +109,7 @@ Feature: Square API
 A useful stub might be that when we post the number 5, we get 25 back.
 
 Follow these steps:
-- Create a directory named square_data, in the same directory as the square.spec file.
+- Create a directory named square_examples, in the same directory as the square.spec file.
 - In that directory, create a json file, name it what you like. For example, square_of_5.json
 - Put in that file the following text:
 
@@ -149,7 +149,7 @@ The directory structure now looks like this:
 ```
 |
  \_ square.spec [file]
- \_ square_data     [directory]
+ \_ square_examples     [directory]
     |
      \_ square_of_5.json [file]
      \_ square_of_6.json [file]
@@ -160,12 +160,12 @@ Try running the stub now:
 ```shell
 > {{ site.spec_cmd }} stub square.spec
 Reading the stub files below:
-./square_data/square_of_5.json
-./square_data/square_of_6.json
+./square_examples/square_of_5.json
+./square_examples/square_of_6.json
 Stub server is running on http://localhost:9000. Ctrl + C to stop.
 ```
 
-Specmatic looks for a directory with the filename of the specmatic file, + the suffix "_data". It found it in this case, and loaded it.
+Specmatic looks for a directory with the filename of the specmatic file, + the suffix "_examples". It found it in this case, and loaded it.
 
 In another tab, let's post 5 to the stub and see what happens:
 
@@ -207,7 +207,7 @@ Feature: Customer API
     Then status 200
 ```
 
-Create a directory named customer_data, and put this stub in it:
+Create a directory named customer_examples, and put this stub in it:
 
 ```json
 // filename: new_customer.json
@@ -231,7 +231,7 @@ Run the stub:
 ```shell
 > {{ site.spec_cmd }} stub customer.spec
 Reading the stub files below:
-/path/to/customer_data/new_customer.json
+/path/to/customer_examples/new_customer.json
 Stub server is running on http://localhost:9000. Ctrl + C to stop.
 ```
 
@@ -260,7 +260,7 @@ Feature: Customer API
     And response-body (string)
 ```
 
-Create a directory named customer_data, and put this stub in it:
+Create a directory named customer_examples, and put this stub in it:
 
 ```json
 // filename: new_customer.json
@@ -285,8 +285,8 @@ Run the stub:
 ```
 > {{ site.spec_cmd }} stub customer.spec
 Reading the stub files below:
-/path/to/customer_data/new_customer.json
-/path/to/customer_data/new_customer.json didn't match customer.spec
+/path/to/customer_examples/new_customer.json
+/path/to/customer_examples/new_customer.json didn't match customer.spec
 In scenario "Add customer"
 >> REQUEST.BODY.address
 
@@ -325,7 +325,7 @@ Feature: Square API
 
 Create a stub for it:
 
-File: square_data/stub.json
+File: square_examples/stub.json
 ```json
 {
     "http-request": {
@@ -345,9 +345,9 @@ Run the stub:
 ```bash
 > specmatic stub square.spec
 Loading square.spec
-  Loading stub expectations from /Users/joelrosario/tmp/square_data
+  Loading stub expectations from /Users/joelrosario/tmp/square_examples
   Reading the following stub files:
-    /Users/joelrosario/tmp/square_data/stub.json
+    /Users/joelrosario/tmp/square_examples/stub.json
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 
@@ -390,7 +390,7 @@ If you want to stub out multiple contracts together:
 > {{ site.spec_cmd }} stub customer.spec order.spec
 ```
 
-If the customer_data and order_data directories exist, stub data will be loaded from them automatically.
+If the customer_examples and order_examples directories exist, stub data will be loaded from them automatically.
 
 ### Lenient stubbing
 
@@ -408,10 +408,10 @@ Feature: Customer API
     And response-body (string)
 ```
 
-Create a directory named customer_data, and inside it a file named stub.json, with the following contents:
+Create a directory named customer_examples, and inside it a file named stub.json, with the following contents:
 
 ```json
-// filename: customer_data/stub.json
+// filename: customer_examples/stub.json
 {
     "http-request": {
         "method": "GET",
@@ -473,10 +473,10 @@ Feature: Customer API
     And response-body (string)
 ```
 
-Create a directory named customer_data, and inside it a file named stub.json, with the following contents:
+Create a directory named customer_examples, and inside it a file named stub.json, with the following contents:
 
 ```json
-// filename: customer_data/stub.json
+// filename: customer_examples/stub.json
 {
     "http-request": {
         "method": "GET",
@@ -523,7 +523,7 @@ Feature: Contract for the petstore service
 
 The path parameter id and query parameter name can be setup in the corresponding data json file with below syntax.
 
-File: petstore_data/petstore.json
+File: petstore_examples/petstore.json
 ```json
 {
      "http-request": {
@@ -632,10 +632,10 @@ Feature: Customer API
     And response-body (string)
 ```
 
-Create a directory named customer_data, and a file named stub.json within it that contains this:
+Create a directory named customer_examples, and a file named stub.json within it that contains this:
 
 ```json
-// filepath: customer_data/stub.json
+// filepath: customer_examples/stub.json
 {
     "http-request": {
         "method": "POST",

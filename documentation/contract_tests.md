@@ -219,7 +219,7 @@ You can store test data in json files side-by-side to be used in the contract te
 
 Let's try it out. Use the following specification (it is the same specification from the above section without the inline examples):
 
-*filename: employees_without_examples.yaml*
+*filename: employees.yaml*
 
 ```yaml
 openapi: 3.0.0
@@ -302,7 +302,7 @@ components:
           type: string
 ```
 
-Create a directory named `employees_without_examples_tests`, and store the following json files in it:
+Create a directory named `employees_examples`, and store the following json files in it:
 
 *filename: create_employee.json*
 ```json
@@ -368,9 +368,9 @@ Create a directory named `employees_without_examples_tests`, and store the follo
 }
 ```
 
-Let us now run `employees_without_examples.yaml` as a test against the sample application.
+Let us now run `employees.yaml` as a test against the sample application.
 
-```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees_without_examples.yaml```
+```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
 
 The results will be exactly the same as the previous run.
 
@@ -1145,7 +1145,7 @@ Specmatic will validate the test data against the specification before using it.
 
 ##### Example with a path parameter
 To convert the `GET_DETAILS`  test from [api_order_with_oauth_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) into an externalised test:
-* Create a new directory named `api_order_with_oauth_v1_tests` in the same directory as `api_order_with_oauth_v1.yaml`.
+* Create a new directory named `api_order_with_oauth_v1_examples` in the same directory as `api_order_with_oauth_v1.yaml`.
 * In it, put a file named get_details.json (the name is immaterial) with the following content:
 ```json
 {
@@ -1239,7 +1239,7 @@ You can generate sample data from a specification as a starting point or scaffol
 java -jar specmatic.jar examples employees.yaml
 ```
 
-In the above case, sample files will be written into the directory named `employees_data`.
+In the above case, sample files will be written into the directory named `employees_examples`.
 
 ### Sample Project
 

@@ -438,7 +438,7 @@ Specmatic rejects the expectation / canned response since it is not in line with
 Please restore `service.yaml` to its [original state](/getting_started.html#api-specification)(by adding back the `status` field in the `SCOOBY_200_OK` example) before proceeding with this section.
 
 If you would like to add more stub responses, however you do not wish to bloat your specification with a lot of examples, we can also externalise the stub / canned responses to json files also.
-* Create a folder named `service_data` in the same folder as your `service.yaml` file (`_data` suffix is a naming convention that tell Specmatic to look for canned responses in that directory)
+* Create a folder named `service_examples` in the same folder as your `service.yaml` file (`_examples` suffix is a naming convention that tell Specmatic to look for canned responses in that directory)
 * Create a json file with the name `togo.json` and add below contents to it
 
 ```json
@@ -475,7 +475,7 @@ npx specmatic stub service.yaml
 {% tab stub2 docker %}
 ```shell
 # Please note docker command here has to volume map the directory containing service.yaml 
-# to a directory within the container so that both service.yaml and folder service_data along 
+# to a directory within the container so that both service.yaml and folder service_examples along 
 # with togo.json are available to Specmatic docker container
 docker run -v "/local-directory/:/specs" -p 9000:9000 znsio/specmatic stub "/specs/service.yaml"
 ```
@@ -489,9 +489,9 @@ API Specification Summary: service.yaml
   OpenAPI Version: 3.0.1
   API Paths: 1, API Operations: 1
 
-  Loading stub expectations from /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data
+  Loading stub expectations from /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_examples
   Reading the following stub files:
-    /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data/togo.json
+    /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_examples/togo.json
 
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
@@ -529,7 +529,7 @@ npx specmatic stub service.yaml
 {% tab stub3 docker %}
 ```shell
 # Please note docker command here has to volume map the directory containing service.yaml 
-# to a directory within the container so that both service.yaml and folder service_data along 
+# to a directory within the container so that both service.yaml and folder service_examples along 
 # with togo.json are available to Specmatic docker container
 docker run -v "/local-directory/:/specs" -p 9000:9000 znsio/specmatic stub "/specs/service.yaml"
 ```
@@ -539,10 +539,10 @@ docker run -v "/local-directory/:/specs" -p 9000:9000 znsio/specmatic stub "/spe
 You should see an output like below.
 
 ```shell
-Loading stub expectations from /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data
+Loading stub expectations from /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_examples
   Reading the following stub files:
-    /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data/togo.json
-  /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_data/togo.json didn't match service.yaml
+    /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_examples/togo.json
+  /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_examples/togo.json didn't match service.yaml
     Error from contract service.yaml
   
       In scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
