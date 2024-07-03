@@ -498,6 +498,24 @@ We can now programmatically set [dynamic expectations](/documentation/service_vi
 stub.setExpectation(expectationJson);
 ```
 
+If you have several such JSON expectation files that you would like to setup at once, you can pass a list of files or dir containing these expectation JSON files while creating the stub.
+
+```kotlin
+httpStub = createStub(listOf("./src/test/resources"))
+```
+
+The above `createStub()` function creates your Specmatic HTTP stub with default host, port, etc. Below is an example with all values being passedin 
+
+```kotlin
+@BeforeAll
+@JvmStatic
+fun setUp() {
+    stub = createStub(listOf("./src/test/resources"), "localhost", 8090, strict = true)
+}
+```
+
+The last parameter (`strict = true`), enables **strict** mode where Specmatic HTTP Stub will only respond to requests where expectations have been set. For any other requests, `400 Bad Request` is returned.
+
 And subsequently once your tests are done, you can shutdown the stub server as part of your ```teardown``` / ```afterAll``` method.
 
 ```kotlin
@@ -509,13 +527,12 @@ fun tearDown() {
 }
 ```
 
-   Here are complete examples of Karate API test that leverages the above technique.
+Here is a complete example of Specmatic Contract Tests that leverages the above technique.
 
-  1. [Kotlin](https://github.com/znsio/specmatic-order-ui/blob/683f59f5024e02af88fb54a55f03d819f852bb2e/src/test/kotlin/controllers/APITests.kt)
+[Kotlin Example](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/contract/ContractTests.kt)
 
-  2. [Java](https://github.com/znsio/specmatic-order-ui/blob/java_component_test/src/test/java/controllers/APITests.java)
+Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
 
-   Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
 {% endtab %}
 {% tab virtualization python %}
 If your tests are written in Python, you can start and stop the stub server within your tests programmatically.
