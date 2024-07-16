@@ -1,7 +1,7 @@
 remote_theme: pmarsceill/just-the-docs
 markdown: kramdown
 title: "Specmatic"
-latest_release: 1.3.37
+latest_release: 1.3.38
 jms_release: 0.1.0
 kafka_release: 0.4.0
 db_release: 0.61.8-db
