@@ -434,7 +434,7 @@ So instead:
     {
       "provider": "git",
       "repository": "https://github.com/your-username-or-org/your-repo.git",
-      "test": [
+      "exposes": [
         "path/to/employees.yaml"
       ]
     }
@@ -447,7 +447,7 @@ So instead:
 sources:
   - provider: git
     repository: https://github.com/your-username-or-org/your-repo.git
-    test:
+    exposes:
       - path/to/employees.yaml
 ```
 {% endtab %}
@@ -455,7 +455,7 @@ sources:
 
 * Create a git repository and push the employees.yaml contract into it.
 * Update the value of "repository" to the url of the git repo. This should be a url that could be used by git checkout.
-* Update the contract path in "test" to the relative path of employees.yaml within the git repository.
+* Update the contract path in "exposes" to the relative path of employees.yaml within the git repository.
 
 Specmatic will use the git command to checkout the git repository provided in the Specmatic configuration file. So make sure that the `git` command works on your laptop.
 
@@ -471,8 +471,8 @@ Since Specmatic uses git under-the-hood, any authentication requirements of your
 
 Note:
 1. The value of "repository" is the git repository in which the contracts are declared. It can be any git repo, not just github.
-2. The value of "test" is a list of contract paths, relative to the repository root, which should be run as contract tests.
-3. You may declare multiple contracts in the "test" list.
+2. The value of "exposes" is a list of contract paths, relative to the repository root, which should be run as contract tests.
+3. You may declare multiple contracts in the "exposes" list.
 4. "sources" holds a list. You may declare multiple sources if required. However we recommend using a single contract repository to be shared across your organisation, or ecosystem within the organisation (if your org is large).
 
 If you need to experiment with files on the local filesystem, here's how you can declare specifications locally, in the Specmatic configuration file:
@@ -484,7 +484,7 @@ If you need to experiment with files on the local filesystem, here's how you can
   "sources": [
     {
       "provider": "filesystem",
-      "test": [
+      "exposes": [
         "path/to/employees.yaml"
       ]
     }
@@ -496,7 +496,7 @@ If you need to experiment with files on the local filesystem, here's how you can
 ```yaml
 sources:
   - provider: filesystem
-    test:
+    exposes:
       - path/to/employees.yaml
 ```
 {% endtab %}
@@ -556,7 +556,7 @@ The Specmatic configuration may look like this:
   "sources": [
     {
       "provider": "git",
-      "test": [
+      "exposes": [
         "contracts/path/to/employees.yaml"
       ]
     }
@@ -568,7 +568,7 @@ The Specmatic configuration may look like this:
 ```yaml
 sources:
   - provider: git
-    test:
+    exposes:
       - contracts/path/to/employees.yaml
 ```
 {% endtab %}
@@ -595,7 +595,7 @@ Add a key named "auth" to the Specmatic configuration, as seen in the example be
     {
       "provider": "git",
       "repository": "https://github.com/your-username-or-org/your-repo.git",
-      "test": [
+      "exposes": [
         "path/to/employees.yaml"
       ]
     }
@@ -611,7 +611,7 @@ auth:
 sources:
   - provider: git
     repository: https://github.com/your-username-or-org/your-repo.git
-    test:
+    exposes:
       - path/to/employees.yaml
 ```
 {% endtab %}
@@ -644,7 +644,7 @@ You could also use an environment variable to pass the token.
     {
       "provider": "git",
       "repository": "https://github.com/your-username-or-org/your-repo.git",
-      "test": [
+      "exposes": [
         "path/to/employees.yaml"
       ]
     }
@@ -660,7 +660,7 @@ auth:
 sources:
   - provider: git
     repository: https://github.com/your-username-or-org/your-repo.git
-    test:
+    exposes:
       - path/to/employees.yaml
 ```
 {% endtab %}

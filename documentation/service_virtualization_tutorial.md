@@ -822,7 +822,7 @@ Create the `specamtic.json` file with the following content:
   "sources": [
     {
       "provider": "git",
-      "stub": [
+      "dependencies": [
         "products.yaml"
       ]
     }

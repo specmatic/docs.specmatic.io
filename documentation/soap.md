@@ -29,7 +29,7 @@ Once done, create the Specmatic configuration file in the root of your project. 
     {
       "provider": "git",
       "repository": "https://your-central-contract-repo.com",
-      "stub": [
+      "dependencies": [
         "/path/to/soap-api.wsdl"
       ]
     }
@@ -42,7 +42,7 @@ Once done, create the Specmatic configuration file in the root of your project. 
 sources:
   - provider: git
     repository: https://your-central-contract-repo.com
-    stub:
+    dependencies:
       - /path/to/soap-api.wsdl
 ```
 {% endtab %}
