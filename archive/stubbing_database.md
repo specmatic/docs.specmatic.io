@@ -98,7 +98,7 @@ Note that we are passing port 9090 to the DBStub class.The internal Specmatic se
 
 Specmatic can leverage an external HTTP stub server. This can prove useful when DB expectations need to be set even before the Spring beans are constructed.
 
-* Ensure that [this contract](./database_stubbing_files/db.yaml) is in one of the "stub" sections in `specmatic.json`.
+* Ensure that [this contract](./database_stubbing_files/db.yaml) is in one of the "consumes" sections in `specmatic.json`.
 
 * Configure your DataSource for the database as below, by using JdbcMockFactory and pointing to ExternalStub of the Specmatic stub server.
 

@@ -32,7 +32,7 @@ Here is a sample configuration to get you started.
     {
       "provider": "git",
       "repository": "https://github.com/znsio/specmatic-order-contracts.git",
-      "test": [
+      "provides": [
         "in/specmatic/examples/store/api_order_v1.yaml"
       ]
     }
@@ -45,7 +45,7 @@ Here is a sample configuration to get you started.
 sources:
   - provider: git
     repository: https://github.com/znsio/specmatic-order-contracts.git
-    test:
+    provides:
       - in/specmatic/examples/store/api_order_v1.yaml
 ```
 {% endtab %}
@@ -54,7 +54,7 @@ sources:
 Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api)). Let us now go through each of the lines in this file.
 * **provider** - At the moment we support all git based source control systems. Example: GitHub, Gitlab, Azure, etc.
 * **repository** - The git repository URL
-* **test** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
+* **provides** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
 
 You can also specify the branch.
 
@@ -67,7 +67,7 @@ You can also specify the branch.
       "provider": "git",
       "repository": "https://github.com/znsio/specmatic-order-contracts.git",
       "branch": "feature-1",
-      "test": [
+      "provides": [
         "in/specmatic/examples/store/api_order_v1.yaml"
       ]
     }
@@ -81,7 +81,7 @@ sources:
   - provider: git
     repository: https://github.com/znsio/specmatic-order-contracts.git
     branch: feature-1
-    test:
+    provides:
       - in/specmatic/examples/store/api_order_v1.yaml
 ```
 {% endtab %}
@@ -89,7 +89,7 @@ sources:
 
 When branch is not specified, default branch will be picked up.
 
-Now if you run the ```specmatic test``` command line executable from the directory that contains the ```specmatic.json``` file Specmatic will pull the API Specifications listed under test and run them as tests.
+Now if you run the ```specmatic test``` command line executable from the directory that contains the ```specmatic.json``` file Specmatic will pull the API Specifications listed under provides and run them as tests.
 
 ```shell
 % {{ site.spec_cmd }} test
@@ -112,7 +112,7 @@ The same configuration file can be leveraged to define stubs also.
     {
       "provider": "git",
       "repository": "https://github.com/znsio/specmatic-order-contracts.git",
-      "stub": [
+      "consumes": [
         "in/specmatic/examples/store/api_order_v1.yaml"
       ]
     }
@@ -125,7 +125,7 @@ The same configuration file can be leveraged to define stubs also.
 sources:
   - provider: git
     repository: https://github.com/znsio/specmatic-order-contracts.git
-    stub:
+    consumes:
       - in/specmatic/examples/store/api_order_v1.yaml
 ```
 {% endtab %}
@@ -133,7 +133,7 @@ sources:
 
 Please note that now we are now listing the ```api_order_v1.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/znsio/specmatic-order-ui/blob/main/specmatic.json).
 
-A single application may need to list the API Specifications it is implementing under the test attribute and the API Specifications of its dependencies under the stub attribute.
+A single application may need to list the API Specifications it is implementing under the provides attribute and the API Specifications of its dependencies under the consumes attribute.
 
 {% tabs dependencies %}
 {% tab dependencies specmatic.json %}
@@ -143,11 +143,11 @@ A single application may need to list the API Specifications it is implementing 
     {
       "provider": "git",
       "repository": "<Git URL>",
-      "stub": [
+      "consumes": [
         "com/example/api_order_v1.yaml",
         "com/example/api_user_v1.yaml"
       ],
-      "test": [
+      "provides": [
         "com/example/api_auth_v1.yaml",  
       ]
     }
@@ -160,10 +160,10 @@ A single application may need to list the API Specifications it is implementing 
 sources:
   - provider: git
     repository: <Git URL>
-    stub:
+    consumes:
       - com/example/api_order_v1.yaml
       - com/example/api_user_v1.yaml
-    test:
+    provides:
       - com/example/api_auth_v1.yaml
 ```
 {% endtab %}
@@ -180,11 +180,11 @@ If you just need to use specifications from your local file system, specify `pro
   "sources": [
     {
       "provider": "filesystem",
-      "stub": [
+      "consumes": [
         "api_order_v1.yaml",
         "api_user_v1.yaml"
       ],
-      "test": [
+      "provides": [
         "api_auth_v1.yaml",  
       ]
     }
@@ -196,16 +196,16 @@ If you just need to use specifications from your local file system, specify `pro
 ```yaml
 sources:
   - provider: filesystem
-    stub:
+    consumes:
       - api_order_v1.yaml
       - api_user_v1.yaml
-    test:
+    provides:
       - api_auth_v1.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-Note that the `stub` and `test` specifications are relative paths. This means that they must be in the same directory as the current directory.
+Note that the `consumes` and `provides` specifications are relative paths. This means that they must be in the same directory as the current directory.
 
 You can also provide absolute paths in case they are somewhere else on the filesystem.
 
@@ -218,10 +218,10 @@ You can also provide absolute paths in case they are somewhere else on the files
   "sources": [
     {
       "provider": "web",
-      "stub": [
+      "consumes": [
         "http://third.party.com/products.yaml"
       ],
-      "test": [
+      "provides": [
         "http://third.party.com/api_auth_v1.yaml",
       ]
     }
@@ -233,15 +233,15 @@ You can also provide absolute paths in case they are somewhere else on the files
 ```yaml
 sources:
   - provider: web
-    stub:
+    consumes:
       - http://third.party.com/products.yaml
-    test:
+    provides:
       - http://third.party.com/api_auth_v1.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-Note that the `stub` and `test` can both contain URLs. `http` and `https` are both supported.
+Note that the `consumes` and `provides` can both contain URLs. `http` and `https` are both supported.
 
 #### Source control authentication
 
@@ -317,10 +317,10 @@ This gives you a comprehensive analysis of any mismatch between your api specifi
       "provider": "git",
       "repository": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts2",
       "branch": "main",
-      "test": [
+      "provides": [
         "com/petstore/2.spec"
       ],
-      "stub": [
+      "consumes": [
         "com/petstore/payment.spec"
       ]
     }
@@ -384,9 +384,9 @@ sources:
   - provider: git
     repository: https://azure.com/XNSio/XNSIO/_git/petstore-contracts2
     branch: main
-    test:
+    provides:
       - com/petstore/2.spec
-    stub:
+    consumes:
       - com/petstore/payment.spec
 
 auth:
