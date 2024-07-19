@@ -30,7 +30,7 @@ Read our "[Getting started (in 5 min)](/getting_started.html)" section learn mor
 </dependency>
 ```
 
-### Deprecation Notice
+## NOTE: Group ID `in.specmatic` has moved to `io.specmatic`
 
-The artifact under group ID `in.specmatic` is now deprecated and will no longer receive updates.
-We kindly request that you update your dependencies to use the new group ID `io.specmatic` instead.
+Updates will no longer be available under the deprecated Group ID `in.specmatic`,
+We kindly request that you update your dependencies to use the new Group ID `io.specmatic` instead.
