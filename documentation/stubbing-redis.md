@@ -19,7 +19,7 @@ The following dependency needs to be added to pom.xml.
 
 ```
 <dependency>
-    <groupId>in.specmatic</groupId>
+    <groupId>io.specmatic</groupId>
     <artifactId>specmatic-redis</artifactId>
     <version>{{ site.redis_release }}</version>
 </dependency>

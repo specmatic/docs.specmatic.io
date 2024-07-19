@@ -514,7 +514,7 @@ Add the following dependencies to your `pom.xml` file:
 
 ```xml
 <dependency>
-    <groupId>in.specmatic</groupId>
+    <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
     <version>{{ site.latest_release }}</version>
     <scope>test</scope>
@@ -717,7 +717,7 @@ If you're building your application in a JVM-based language, you can run Specmat
 
 ```xml
 <dependency>
-    <groupId>in.specmatic</groupId>
+    <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
     <version>1.3.14</version>
     <scope>test</scope>
@@ -738,7 +738,7 @@ If you're building your application in a JVM-based language, you can run Specmat
 **3. Extend SpecmaticJUnitSupport (Class-based approach):**
 
 ```java
-import in.specmatic.core.SpecmaticJUnitSupport;
+import io.specmatic.core.SpecmaticJUnitSupport;
 import org.junit.jupiter.api.BeforeAll;
 
 public class ContractTests extends SpecmaticJUnitSupport {
@@ -755,7 +755,7 @@ public class ContractTests extends SpecmaticJUnitSupport {
 **3. Implement SpecmaticContractTest (Interface-based approach) [Recommended]:**
 
 ```java
-import in.specmatic.core.SpecmaticContractTest;
+import io.specmatic.core.SpecmaticContractTest;
 
 public class ContractTests implements SpecmaticContractTest {
     @Override

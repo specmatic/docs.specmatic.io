@@ -74,7 +74,7 @@ In this approach, Specmatic manages an in-memory instance of Kafka that the syst
 1. Add the specmatic Kafka dependency to `pom.xml`:
     ```xml
         <dependency>
-            <groupId>in.specmatic</groupId>
+            <groupId>io.specmatic</groupId>
             <artifactId>specmatic-kafka</artifactId>
             <version>0.3.0</version>
         </dependency>
@@ -108,7 +108,7 @@ Use the code below to start up a Kafka server, and let Specmatic mock subscribe 
 
     ```xml
     <dependency>
-       <groupId>in.specmatic</groupId>
+       <groupId>io.specmatic</groupId>
        <artifactId>specmatic-kafka</artifactId>
        <version>0.6.0</version>
    </dependency>

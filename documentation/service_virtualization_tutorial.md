@@ -469,7 +469,7 @@ Add `specmatic-core` jar dependency with scope set to test since this need not b
 
 ```
 <dependency>
-    <groupId>in.specmatic</groupId>
+    <groupId>io.specmatic</groupId>
     <artifactId>specmatic-core</artifactId>
     <version>{{ site.latest_release }}</version>
     <scope>test</scope>
@@ -479,7 +479,7 @@ Add `specmatic-core` jar dependency with scope set to test since this need not b
 Now you can import the utilty to create the stub server. Below code snippets are in Kotlin. However the overall concept is the same across all JVM languages such as Clojure, Scala or plain Java.
 
 ```kotlin
-import `in`.specmatic.stub.createStub
+import io.specmatic.stub.createStub
 ```
 
 This utility can now be used in your test ```setup``` / ```beforeAll``` method to start the stub server. Specmatic automatically looks for your [Specmatic configuration](/documentation/configuration.html) file in project root directory / classpath to locate your API Specification files that need to run as part of the stub server.
