@@ -19,12 +19,12 @@ The following dependencies should be added to `pom.xml`.
 ```xml
 <dependency>
    <artifactId>database-mock</artifactId>
-   <groupId>in.specmatic</groupId>
+   <groupId>io.specmatic</groupId>
    <scope>test</scope>
    <version>{{ site.db_release }}</version>
    <exclusions>
        <exclusion>
-           <groupId>in.specmatic</groupId>
+           <groupId>io.specmatic</groupId>
            <artifactId>specmatic-core</artifactId>
        </exclusion>
    </exclusions>
@@ -45,7 +45,7 @@ The following dependencies should be added to `pom.xml`.
 </dependency>
 
 <dependency>
-   <groupId>in.specmatic</groupId>
+   <groupId>io.specmatic</groupId>
    <artifactId>specmatic-core</artifactId>
    <version>{{ site.latest_release }}</version>
    <scope>test</scope>

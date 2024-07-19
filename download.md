@@ -17,15 +17,20 @@ Read our "[Getting started (in 5 min)](/getting_started.html)" section learn mor
 
 ```
 <dependency>
-    <groupId>in.specmatic</groupId>
+    <groupId>io.specmatic</groupId>
     <artifactId>specmatic-core</artifactId>
     <version>{{ site.latest_release }}</version>
 </dependency>
 
 <!-- Optional dependency to run the contract as test on Provider -->
 <dependency>
-    <groupId>in.specmatic</groupId>
+    <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
     <version>{{ site.latest_release }}</version>
 </dependency>
 ```
+
+### Deprecation Notice
+
+The artifact under group ID `in.specmatic` is now deprecated and will no longer receive updates.
+We kindly request that you update your dependencies to use the new group ID `io.specmatic` instead.

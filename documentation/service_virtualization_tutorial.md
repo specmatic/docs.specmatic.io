@@ -469,7 +469,7 @@ Add `specmatic-core` jar dependency with scope set to test since this need not b
 
 ```
 <dependency>
-    <groupId>in.specmatic</groupId>
+    <groupId>io.specmatic</groupId>
     <artifactId>specmatic-core</artifactId>
     <version>{{ site.latest_release }}</version>
     <scope>test</scope>

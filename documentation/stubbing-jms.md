@@ -23,7 +23,7 @@ The below-mentioned dependency needs to be in pom.xml:
 
 ```
 <dependency>
-    <groupId>in.specmatic</groupId>
+    <groupId>io.specmatic</groupId>
     <artifactId>specmatic-jms</artifactId>
     <version>{{ site.jms_release }}</version>
 </dependency>
