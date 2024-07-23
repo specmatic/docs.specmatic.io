@@ -70,8 +70,8 @@ The goal of Central Contract Repo is to help all stakeholders collaborate over A
 ### Specmatic Configuration
 
 Both consumers and providers can leverage the specifications in the Central Contract Repository by listing it in [Specmatic configuration](https://specmatic.in/documentation/configuration.html). Example:
-* [Sample Consumer](https://github.com/znsio/specmatic-order-ui) referring to [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Smart Mock](https://github.com/znsio/specmatic-order-ui/blob/main/specmatic.json)
-* [Sample Provider / API](https://github.com/znsio/specmatic-order-api) referring [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Contract as Test](https://github.com/znsio/specmatic-order-api)
+* [Sample Consumer](https://github.com/znsio/specmatic-order-bff-java) referring to [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Smart Mock](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml)
+* [Sample Provider / API](https://github.com/znsio/specmatic-order-api-java) referring [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Contract as Test](https://github.com/znsio/specmatic-order-api-java/blob/main/specmatic.yaml)
 
 Specmatic will always pull the latest specification files from the version control system for both applications.
 

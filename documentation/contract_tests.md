@@ -528,8 +528,8 @@ Add the following dependencies to your `pom.xml` file:
 ```
 
 Add a class that inherits from `SpecmaticJUnitSupport` or implements `SpecmaticContractTest`. See how this is done -
-1. [Class based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
-2. [Interface based contract test example (Recommended)](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTestV2.java)
+1. [Class based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTestV2.java)
+2. [Interface based contract test example (Recommended)](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
 
 In it, set the "host" and "port" properties to tell Specmatic where to find the application. You can also start the application in that class.
 
@@ -719,7 +719,7 @@ If you're building your application in a JVM-based language, you can run Specmat
 <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
-    <version>1.3.14</version>
+    <version>{{ site.latest_release }}</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -767,8 +767,8 @@ public class ContractTests implements SpecmaticContractTest {
 ```
 
 **4. Example for a Spring Boot Application:**
-1. [Class based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
-2. [Interface based contract test example (Recommended)](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTestV2.java)
+1. [Class based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTestV2.java)
+2. [Interface based contract test example (Recommended)](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
 
 {% endtab %}
 {% tab programmatically python %}
@@ -975,7 +975,7 @@ To get this working:
 1. Turn on the actuator module, and enable the mappings endpoint. You can read more about this online.
 2. Set the system property `endpointsAPI` to the mappings endpoint exposed by actuator.
 
-Look at the sample project below to see this in action. Observe the system property, set in the [ContractTest](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java) class, and the actuator-related dependency added in `pom.xml`.
+Look at the sample project below to see this in action. Observe the system property, set in the [ContractTest](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) class, and the actuator-related dependency added in `pom.xml`.
 
 The data in the coverage report is written to a file at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed.
 
@@ -1145,7 +1145,7 @@ Specmatic will validate the test data against the specification before using it.
 
 ##### Example with a path parameter
 To convert the `GET_DETAILS`  test from [api_order_with_oauth_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_with_oauth_v3.yaml) into an externalised test:
-* Create a new directory named `api_order_with_oauth_v1_examples` in the same directory as `api_order_with_oauth_v3.yaml`.
+* Create a new directory named `api_order_with_oauth_v3_examples` in the same directory as `api_order_with_oauth_v3.yaml`.
 * In it, put a file named get_details.json (the name is immaterial) with the following content:
 ```json
 {
@@ -1239,4 +1239,4 @@ In the above case, sample files will be written into the directory named `employ
 
 ### Sample Project
 
-[https://github.com/znsio/specmatic-order-api](https://github.com/znsio/specmatic-order-api)
+[https://github.com/znsio/specmatic-order-api-java](https://github.com/znsio/specmatic-order-api-java)

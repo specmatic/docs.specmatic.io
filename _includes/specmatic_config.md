@@ -51,7 +51,7 @@ sources:
 {% endtab %}
 {% endtabs %}
 
-Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api)). Let us now go through each of the lines in this file.
+Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api-java)). Let us now go through each of the lines in this file.
 * **provider** - At the moment we support all git based source control systems. Example: GitHub, Gitlab, Azure, etc.
 * **repository** - The git repository URL
 * **provides** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
@@ -131,7 +131,7 @@ sources:
 {% endtab %}
 {% endtabs %}
 
-Please note that now we are now listing the ```api_order_v3.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/znsio/specmatic-order-ui/blob/main/specmatic.json).
+Please note that now we are now listing the ```api_order_v3.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml).
 
 A single application may need to list the API Specifications it is implementing under the provides attribute and the API Specifications of its dependencies under the consumes attribute.
 

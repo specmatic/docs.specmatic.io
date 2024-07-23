@@ -24,7 +24,7 @@ We have the BFF and Backend APIs implemented in different languages and framewor
 
 
 ### Website UI
-- [React and NodeJS](https://github.com/znsio/specmatic-order-ui-js)
+- [React and NodeJS](https://github.com/znsio/specmatic-order-ui-react)
 
 ### BFF
 - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
