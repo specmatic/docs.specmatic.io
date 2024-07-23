@@ -527,9 +527,8 @@ Add the following dependencies to your `pom.xml` file:
 </dependency>
 ```
 
-Add a class that inherits from `SpecmaticJUnitSupport` or implements `SpecmaticContractTest`. See how this is done -
-1. [Class based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTestV2.java)
-2. [Interface based contract test example (Recommended)](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
+Add a class that implements `SpecmaticContractTest`. See how this is done -
+[Interface based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
 
 In it, set the "host" and "port" properties to tell Specmatic where to find the application. You can also start the application in that class.
 
@@ -735,7 +734,22 @@ If you're building your application in a JVM-based language, you can run Specmat
 </dependency>
 ```
 
-**3. Extend SpecmaticJUnitSupport (Class-based approach):**
+**3. Implement SpecmaticContractTest (Interface-based approach) [Recommended]:**
+
+```java
+import io.specmatic.core.SpecmaticContractTest;
+
+public class ContractTests implements SpecmaticContractTest {
+    @Override
+    public void configureTest() {
+        System.setProperty("host", "localhost");
+        System.setProperty("port", "8080");
+    }
+}
+```
+**OR**
+
+**4. Extend SpecmaticJUnitSupport (Class-based approach):**
 
 ```java
 import io.specmatic.core.SpecmaticJUnitSupport;
@@ -750,25 +764,8 @@ public class ContractTests extends SpecmaticJUnitSupport {
 }
 ```
 
-**OR**
-
-**3. Implement SpecmaticContractTest (Interface-based approach) [Recommended]:**
-
-```java
-import io.specmatic.core.SpecmaticContractTest;
-
-public class ContractTests implements SpecmaticContractTest {
-    @Override
-    public void configureTest() {
-        System.setProperty("host", "localhost");
-        System.setProperty("port", "8080");
-    }
-}
-```
-
 **4. Example for a Spring Boot Application:**
-1. [Class based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTestV2.java)
-2. [Interface based contract test example (Recommended)](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
+[Interface based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
 
 {% endtab %}
 {% tab programmatically python %}
