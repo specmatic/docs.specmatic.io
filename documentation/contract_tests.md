@@ -1144,8 +1144,8 @@ Specmatic can execute contract tests using test data loaded from JSON files. Thi
 Specmatic will validate the test data against the specification before using it. It's not much different from how it uses `examples` within the specification, except that the test data is in an external JSON file.
 
 ##### Example with a path parameter
-To convert the `GET_DETAILS`  test from [api_order_with_oauth_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) into an externalised test:
-* Create a new directory named `api_order_with_oauth_v1_examples` in the same directory as `api_order_with_oauth_v1.yaml`.
+To convert the `GET_DETAILS`  test from [api_order_with_oauth_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_with_oauth_v3.yaml) into an externalised test:
+* Create a new directory named `api_order_with_oauth_v1_examples` in the same directory as `api_order_with_oauth_v3.yaml`.
 * In it, put a file named get_details.json (the name is immaterial) with the following content:
 ```json
 {

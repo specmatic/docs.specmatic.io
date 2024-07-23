@@ -25,7 +25,7 @@ This approach works across any CI setup which can include the auth params as par
   "provider": "git",
   "repository": "https://${TOKEN}@github.com/znsio/central-contract-repo-private.git",
   "provides": [
-    "in/specmatic/examples/store/api_order_v3.yaml"
+    "io/specmatic/examples/store/openapi/api_order_v3.yaml"
   ]
 }
 ```
@@ -35,7 +35,7 @@ This approach works across any CI setup which can include the auth params as par
 provider: git
 repository: https://${TOKEN}@github.com/znsio/central-contract-repo-private.git
 provides:
-  - in/specmatic/examples/store/api_order_v3.yaml
+  - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% endtabs %}
@@ -79,7 +79,7 @@ And your Specmatic configuration itself will look as shown below. It now leverag
   "provider": "git",
   "repository": "https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/znsio/central-contract-repo-private.git",
   "provides": [
-    "in/specmatic/examples/store/api_order_v3.yaml"
+    "io/specmatic/examples/store/openapi/api_order_v3.yaml"
   ]
 }
 ```
@@ -89,7 +89,7 @@ And your Specmatic configuration itself will look as shown below. It now leverag
 provider: git
 repository: https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/znsio/central-contract-repo-private.git
 provides:
-  - in/specmatic/examples/store/api_order_v3.yaml
+  - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% endtabs %}
