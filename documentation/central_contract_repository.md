@@ -35,7 +35,7 @@ API Specifications are code and they are best stored in a version control system
 
 * Package Naming Convention - In the [sample repo](https://github.com/znsio/specmatic-order-contracts) we have the OpenAPI API Specifications organized in a manner similar to [package naming convention](https://github.com/znsio/specmatic-order-contracts). This helps in easy identifition of the approapriate files for organizations with large number of microservices and API Specifications.
 * Specification file name - It is helpful to have the version number appended to the API Specification file name
-* Extracting common schema - We recommend extracting common schema components to avoid duplications. Example: [common.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/common.yaml) contains only schema components which are leveraged as remote references in [api_order_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml). This has other advantages too
+* Extracting common schema - We recommend extracting common schema components to avoid duplications. Example: [common.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/common.yaml) contains only schema components which are leveraged as remote references in [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml). This has other advantages too
   * Consistency and standardisation - Commonly used parameter such as traceIds can be defined in one place and used across schemas
   * Avoid duplication related issues - It is common to miss updating / renaming some parts of a schema, by extracting common code we can significantly reduce it
 
@@ -70,8 +70,8 @@ The goal of Central Contract Repo is to help all stakeholders collaborate over A
 ### Specmatic Configuration
 
 Both consumers and providers can leverage the specifications in the Central Contract Repository by listing it in [Specmatic configuration](https://specmatic.in/documentation/configuration.html). Example:
-* [Sample Consumer](https://github.com/znsio/specmatic-order-ui) referring to [api_order_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) as [Smart Mock](https://github.com/znsio/specmatic-order-ui/blob/main/specmatic.json)
-* [Sample Provider / API](https://github.com/znsio/specmatic-order-api) referring [api_order_v1.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) as [Contract as Test](https://github.com/znsio/specmatic-order-api)
+* [Sample Consumer](https://github.com/znsio/specmatic-order-bff-java) referring to [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Smart Mock](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml)
+* [Sample Provider / API](https://github.com/znsio/specmatic-order-api-java) referring [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Contract as Test](https://github.com/znsio/specmatic-order-api-java/blob/main/specmatic.yaml)
 
 Specmatic will always pull the latest specification files from the version control system for both applications.
 

@@ -33,7 +33,7 @@ Here is a sample configuration to get you started.
       "provider": "git",
       "repository": "https://github.com/znsio/specmatic-order-contracts.git",
       "provides": [
-        "in/specmatic/examples/store/api_order_v1.yaml"
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
     }
   ]
@@ -46,12 +46,12 @@ sources:
   - provider: git
     repository: https://github.com/znsio/specmatic-order-contracts.git
     provides:
-      - in/specmatic/examples/store/api_order_v1.yaml
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api)). Let us now go through each of the lines in this file.
+Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api-java)). Let us now go through each of the lines in this file.
 * **provider** - At the moment we support all git based source control systems. Example: GitHub, Gitlab, Azure, etc.
 * **repository** - The git repository URL
 * **provides** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
@@ -68,7 +68,7 @@ You can also specify the branch.
       "repository": "https://github.com/znsio/specmatic-order-contracts.git",
       "branch": "feature-1",
       "provides": [
-        "in/specmatic/examples/store/api_order_v1.yaml"
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
     }
   ]
@@ -82,7 +82,7 @@ sources:
     repository: https://github.com/znsio/specmatic-order-contracts.git
     branch: feature-1
     provides:
-      - in/specmatic/examples/store/api_order_v1.yaml
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% endtabs %}
@@ -113,7 +113,7 @@ The same configuration file can be leveraged to define stubs also.
       "provider": "git",
       "repository": "https://github.com/znsio/specmatic-order-contracts.git",
       "consumes": [
-        "in/specmatic/examples/store/api_order_v1.yaml"
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
     }
   ]
@@ -126,12 +126,12 @@ sources:
   - provider: git
     repository: https://github.com/znsio/specmatic-order-contracts.git
     consumes:
-      - in/specmatic/examples/store/api_order_v1.yaml
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-Please note that now we are now listing the ```api_order_v1.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/znsio/specmatic-order-ui/blob/main/specmatic.json).
+Please note that now we are now listing the ```api_order_v3.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml).
 
 A single application may need to list the API Specifications it is implementing under the provides attribute and the API Specifications of its dependencies under the consumes attribute.
 

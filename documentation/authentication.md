@@ -116,27 +116,27 @@ So for Contract as Test we recommend having a “Test Security Configuration” 
 
 ### OAuth2
 
-Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) specification which leverages [OAuth2](https://spec.openapis.org/oas/v3.0.1#implicit-oauth2-sample) to protect all endpoints that add, modify or delete data.
+Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_with_oauth_v3.yaml) specification which leverages [OAuth2](https://spec.openapis.org/oas/v3.0.1#implicit-oauth2-sample) to protect all endpoints that add, modify or delete data.
 
 #### Wiring up dummy / mock authentication
 
 ![Specmatic Sample Application to demonstrate OpenAPI OAuth2 security scheme support](/images/SpecmaticOAuth.gif)
 
-Please refer to [sample springboot application](https://github.com/znsio/specmatic-order-api-java-with-oauth) that implements the [API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_with_oauth_v1.yaml) we saw above.
+Please refer to [sample springboot application](https://github.com/znsio/specmatic-order-api-java-with-oauth) that implements the [API](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_with_oauth_v3.yaml) we saw above.
 
 ### API Key Authentication
 
-Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) specification which leverages [ApiKeyAuth](https://spec.openapis.org/oas/v3.0.1#api-key-sample) to protect all endpoints that add, modify or delete data.
+Please refer to this [sample API](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) specification which leverages [ApiKeyAuth](https://spec.openapis.org/oas/v3.0.1#api-key-sample) to protect all endpoints that add, modify or delete data.
 
 #### Wiring up dummy / mock authentication
 
-Please refer to [sample springboot application](https://github.com/znsio/specmatic-order-api) that implements the [API](https://github.com/znsio/specmatic-order-contracts/blob/main/in/specmatic/examples/store/api_order_v1.yaml) we saw above.
+Please refer to [sample springboot application](https://github.com/znsio/specmatic-order-api-java) that implements the [API](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) we saw above.
 
 This has two API security configurations
-* [Production Security Config](https://github.com/znsio/specmatic-order-api/blob/main/src/main/java/com/store/config/SecurityConfig.kt) - This fetches user from the DB based on api token in request header
-* [Test Security Config](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/config/TestSecurityConfig.kt) - This always returns a dummy user principal. However rest of the code such as reading the authentication token from header etc. are still tested.
+* [Production Security Config](https://github.com/znsio/specmatic-order-api-java/blob/main/src/main/java/com/store/config/SecurityConfig.kt) - This fetches user from the DB based on api token in request header
+* [Test Security Config](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/config/TestSecurityConfig.kt) - This always returns a dummy user principal. However rest of the code such as reading the authentication token from header etc. are still tested.
 
-So when you run the [ContractTest](https://github.com/znsio/specmatic-order-api/blob/main/src/test/java/com/store/ContractTest.java) it will still exercise your security plumbing (does the application accept the proper header name, datatype, etc.).
+So when you run the [ContractTest](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) it will still exercise your security plumbing (does the application accept the proper header name, datatype, etc.).
 
 This is just an example of how we can wire up security configurations for test and production environments. Even in SpringBoot you can leverage other techniques such as [Spring Profiles](https://docs.spring.io/spring-boot/docs/1.2.0.M1/reference/html/boot-features-profiles.html) to achieve the same effect.
 
