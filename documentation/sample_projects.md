@@ -97,7 +97,7 @@ Below sections showcase these components implemented in various languages, frame
     
 ### Kafka
 
-![Kafka Architecture](/images/specmatic-http-architecture.gif)
+![Kafka Architecture](/images/specmatic-kafka-architecture.gif)
 
 **Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
     
