@@ -30,9 +30,11 @@ The sample projects consist of 3 components:
 
 Below sections showcase these components implemented in various languages, frameworks and communication protocols.
 
+---
+
 ### OpenAPI
 
-![OpenAPI Architecture](/images/specmatic-http-architecture.gif)
+![OpenAPI Architecture](/images/specmatic-openapi-architecture.gif)
 
 **Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
@@ -50,6 +52,8 @@ Below sections showcase these components implemented in various languages, frame
     - [Python (Flask)](https://github.com/znsio/specmatic-order-api-python/)
     - [NodeJS (Express)](https://github.com/znsio/specmatic-order-api-nodejs)
 
+---
+
 ### Authentication and Authorization
 
 ![OAuth Architecture](/images/specmatic-oauth-architecture.gif)
@@ -58,6 +62,8 @@ Below sections showcase these components implemented in various languages, frame
 
 - #### OAuth
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-java-with-oauth)
+
+---
 
 ### gRPC
 
@@ -72,6 +78,8 @@ Below sections showcase these components implemented in various languages, frame
 - #### Backend
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-grpc-kotlin)
 
+---
+
 ### GraphQL
 
 ![GraphQL Architecture](/images/specmatic-graphql-architecture.gif)
@@ -84,6 +92,8 @@ Below sections showcase these components implemented in various languages, frame
 - #### BFF
     - [Kotlin (SpringBoot) that provides the GraphQL Service](https://github.com/znsio/specmatic-order-bff-graphql-java)
     - [Kotlin (SpringBoot) that consumes the GraphQL Service](https://github.com/znsio/specmatic-order-graphql-consumer-java)
+
+---
     
 ### Kafka
 
@@ -95,6 +105,8 @@ Below sections showcase these components implemented in various languages, frame
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
     - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
 
+---
+
 ### Google PubSub
 
 ![Google PubSub Architecture](/images/specmatic-gpubsub-architecture.gif)
@@ -103,6 +115,8 @@ Below sections showcase these components implemented in various languages, frame
 
 - #### Backend
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-google-pubsub-sample)
+
+---
 
 ### JMS
 
@@ -113,6 +127,8 @@ Below sections showcase these components implemented in various languages, frame
 - #### BFF
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-jms/)
 
+---
+
 ### JDBC
 
 ![JDBC Architecture](/images/specmatic-jdbc-architecture.gif)
@@ -121,6 +137,8 @@ Below sections showcase these components implemented in various languages, frame
 
 - #### BFF
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-jdbc-sample)
+
+---
 
 ### Redis
 
