@@ -4,48 +4,147 @@ title: Sample Projects
 parent: Documentation
 nav_order: 17
 ---
-
 # Sample Projects
 
-We have a bunch of sample projects to help you get acquainted with Specmatic and discover all its features. 
+- [Sample Projects](#sample-projects)
+    - [Sample Application Architecture](#sample-application-architecture)
+    - [OpenAPI](#openapi)
+    - [Authentication and Authorization](#authentication-and-authorization)
+    - [gRPC](#grpc)
+    - [GraphQL](#graphql)
+    - [Kafka](#kafka)
+    - [Google PubSub](#google-pubsub)
+    - [JMS](#jms)
+    - [JDBC](#jdbc)
+    - [Redis](#redis)
 
-## Contract Tests and Service Virtualization(Stubbing)
+Below Sample Projects demonstrate various capabilities of Specmatic in the context of a fairly realistic microservices application.
 
-We have a standard 3 layered architecture implemented in our sample projects:
+## Sample Application Architecture
 
-![HTML client talks to client API which talks to backend api](/images/specmatic-sample-architecture.svg)
+The sample projects consist of 3 components:
 
-We have:
-- A front end application (Website UI)
-- BFF (Backend For Frontend), the API invoked by the HTTP calls in the client HTML page (Website UI).
-- Backend Service, the API invoked by the BFF layer
+- A Frontend application.
+- BFF (Backend For Frontend), the API invoked by the Frontend.
+- Backend Service, the API invoked by the BFF layer.
 
-We have the BFF and Backend APIs implemented in different languages and frameworks so that you can mix and match them as you like.
+Below sections showcase these components implemented in various languages, frameworks and communication protocols.
 
+---
 
-### Website UI
-- [React and NodeJS](https://github.com/znsio/specmatic-order-ui-react)
+### OpenAPI
 
-### BFF
-- [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
-- [NodeJS](https://github.com/znsio/specmatic-order-bff-nodejs/)
-- [Python (Flask)](https://github.com/znsio/specmatic-order-bff-python/)
-- [Python (Sanic)](https://github.com/znsio/specmatic-order-bff-python-sanic/)
+![OpenAPI Architecture](/images/specmatic-openapi-architecture.gif)
 
-### Backend
-- [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-java)
-- [Python (Flask)](https://github.com/znsio/specmatic-order-api-python/)
-- [Node.js (Express)](https://github.com/znsio/specmatic-order-api-nodejs)
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
+- #### Frontend
+    - [React and NodeJS](https://github.com/znsio/specmatic-order-ui-react) 
 
-## OAuth
-We have a [Kotlin based SpringBoot project](https://github.com/znsio/specmatic-order-api-java-with-oauth) to demonstrate how Specmatic can be used to run contract tests againt a service which is secured by an OAuth provider.
+- #### BFF
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
+    - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
+    - [Python (Flask)](https://github.com/znsio/specmatic-order-bff-python/)
+    - [Python (Sanic)](https://github.com/znsio/specmatic-order-bff-python-sanic/)
 
-## Private Beta
-Here's a list of sample projects which demonstrates the capabailities in Specmatic's private beta offering.  
-**Note:** To be able to run these projects locally on your machine, please reach out to us at **specmatic@xnsio.com** to sign up for our private beta program.
+- #### Backend
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-java)
+    - [Python (Flask)](https://github.com/znsio/specmatic-order-api-python/)
+    - [NodeJS (Express)](https://github.com/znsio/specmatic-order-api-nodejs)
 
-- [Kafka Mock](https://github.com/znsio/specmatic-order-bff-java/)
-- [JMS Mock](https://github.com/znsio/specmatic-order-bff-jms/)
-- [Redis Mock](https://github.com/znsio/specmatic-redis-sample/)
-- [JDBC Mock](https://github.com/znsio/specmatic-jdbc-sample)
+---
+
+### Authentication and Authorization
+
+![OAuth Architecture](/images/specmatic-oauth-architecture.gif)
+
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
+
+- #### OAuth
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-java-with-oauth)
+
+---
+
+### gRPC
+
+![gRPC architecture](/images/specmatic-grpc-architecture.gif)
+
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
+
+- #### BFF
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-grpc-kotlin)
+    - [Go (Gin)](https://github.com/znsio/specmatic-order-bff-grpc-go)
+
+- #### Backend
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-grpc-kotlin)
+
+---
+
+### GraphQL
+
+![GraphQL Architecture](/images/specmatic-graphql-architecture.gif)
+
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
+
+- #### Frontend
+    - [React and NodeJS](https://github.com/znsio/specmatic-order-graphql-ui-react)
+
+- #### BFF
+    - [Kotlin (SpringBoot) that provides the GraphQL Service](https://github.com/znsio/specmatic-order-bff-graphql-java)
+    - [Kotlin (SpringBoot) that consumes the GraphQL Service](https://github.com/znsio/specmatic-order-graphql-consumer-java)
+
+---
+    
+### Kafka
+
+![Kafka Architecture](/images/specmatic-http-architecture.gif)
+
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
+    
+- #### BFF
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
+    - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
+
+---
+
+### Google PubSub
+
+![Google PubSub Architecture](/images/specmatic-gpubsub-architecture.gif)
+
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
+
+- #### Backend
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-google-pubsub-sample)
+
+---
+
+### JMS
+
+![JMS Architecture](/images/specmatic-jms-architecture.gif)
+
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
+
+- #### BFF
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-jms/)
+
+---
+
+### JDBC
+
+![JDBC Architecture](/images/specmatic-jdbc-architecture.gif)
+
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
+
+- #### BFF
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-jdbc-sample)
+
+---
+
+### Redis
+
+![Redis Architecture](/images/specmatic-redis-architecture.gif)
+
+**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
+
+- #### BFF
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-redis-sample)
