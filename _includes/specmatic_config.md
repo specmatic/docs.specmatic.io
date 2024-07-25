@@ -315,13 +315,13 @@ This gives you a comprehensive analysis of any mismatch between your api specifi
   "sources": [
     {
       "provider": "git",
-      "repository": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts2",
+      "repository": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts",
       "branch": "main",
       "provides": [
-        "com/petstore/2.spec"
+        "com/petstore/store.yaml"
       ],
       "consumes": [
-        "com/petstore/payment.spec"
+        "com/petstore/payment.yaml"
       ]
     }
   ],
@@ -382,12 +382,12 @@ This gives you a comprehensive analysis of any mismatch between your api specifi
 ```yaml
 sources:
   - provider: git
-    repository: https://azure.com/XNSio/XNSIO/_git/petstore-contracts2
+    repository: https://azure.com/XNSio/XNSIO/_git/petstore-contracts
     branch: main
     provides:
-      - com/petstore/2.spec
+      - com/petstore/store.yaml
     consumes:
-      - com/petstore/payment.spec
+      - com/petstore/payment.yaml
 
 auth:
   bearer-file: central_repo_auth_token.txt
