@@ -32,11 +32,9 @@ Below sections showcase these components implemented in various languages, frame
 
 ---
 
-### OpenAPI
+## OpenAPI
 
 ![OpenAPI Architecture](/images/specmatic-openapi-architecture.gif)
-
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
 - #### Frontend
     - [React and NodeJS](https://github.com/znsio/specmatic-order-ui-react) 
@@ -54,22 +52,18 @@ Below sections showcase these components implemented in various languages, frame
 
 ---
 
-### Authentication and Authorization
+## Authentication and Authorization
 
 ![OAuth Architecture](/images/specmatic-oauth-architecture.gif)
-
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
 - #### OAuth
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-java-with-oauth)
 
 ---
 
-### gRPC
+## gRPC
 
 ![gRPC architecture](/images/specmatic-grpc-architecture.gif)
-
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
 - #### BFF
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-grpc-kotlin)
@@ -80,11 +74,9 @@ Below sections showcase these components implemented in various languages, frame
 
 ---
 
-### GraphQL
+## GraphQL
 
 ![GraphQL Architecture](/images/specmatic-graphql-architecture.gif)
-
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
 - #### Frontend
     - [React and NodeJS](https://github.com/znsio/specmatic-order-graphql-ui-react)
@@ -95,56 +87,46 @@ Below sections showcase these components implemented in various languages, frame
 
 ---
     
-### Kafka
+## Kafka
 
 ![Kafka Architecture](/images/specmatic-kafka-architecture.gif)
 
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
-    
 - #### BFF
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
     - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
 
 ---
 
-### Google PubSub
+## Google PubSub
 
 ![Google PubSub Architecture](/images/specmatic-gpubsub-architecture.gif)
-
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
 - #### Backend
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-google-pubsub-sample)
 
 ---
 
-### JMS
+## JMS
 
 ![JMS Architecture](/images/specmatic-jms-architecture.gif)
-
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
 - #### BFF
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-jms/)
 
 ---
 
-### JDBC
+## JDBC
 
 ![JDBC Architecture](/images/specmatic-jdbc-architecture.gif)
-
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
 - #### BFF
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-jdbc-sample)
 
 ---
 
-### Redis
+## Redis
 
 ![Redis Architecture](/images/specmatic-redis-architecture.gif)
-
-**Note**: Above is a high-level architecture. Architecture specific to the sample project can be found in their corresponding repositories.
 
 - #### BFF
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-redis-sample)
