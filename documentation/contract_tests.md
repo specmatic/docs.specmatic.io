@@ -962,6 +962,20 @@ Now only the contract tests which do not have `TEST1` in their test description 
 
 You can also use the command-line parameter `--filter-not-name`.
 
+### Filtering tests by HTTP method name
+
+Both of the above options `filter-name` and `filter-not-name` can also be used in conjunction with HTTP methods to only run those operations or exclude the particular options respectively.
+
+```java
+System.setProperty("filterName", "GET /items");
+```
+
+```
+--filter-name "GET /items"
+```
+
+This will only run the `GET` operation under `/items` and exclude other methods if available.
+
 ### API Coverage
 
 After running the tests, Specmatic will print out a tabular report showing which APIs were covered by the tests.
