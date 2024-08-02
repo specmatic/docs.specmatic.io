@@ -27,11 +27,11 @@ Specmatic now supports service virtualization and testing for gRPC APIs, similar
 
 Specmatic's gRPC support allows you to:
 
-1. Stub out gRPC services for testing and development
-2. Validate requests and responses against your gRPC contracts
-3. Generate test cases automatically from your gRPC service definitions
-4. Ensure API consistency across your microservices architecture
-5. Perform contract testing to catch integration issues early
+1. Central Contract Repo: Single source of truth for both providers and consumers
+2. Intelligent Service Virtualisation: Stub out gRPC services for testing and development
+3. Contract Testing: Validate requests and responses against your gRPC contracts
+4. Backward Compatibility Checks and Linting (for specification standards)
+5. API resiliency : Generate negative and edge cases to test against them and accomplish resilient APIs
 
 These capabilities enable you to develop and test gRPC-based applications more efficiently and with greater confidence in your API contracts.
 
@@ -104,40 +104,11 @@ After running tests, Specmatic provides a detailed output of the test results. H
    - Number of passed tests
    - Number of failed tests
 
-For example:
-
-```
-API COVERAGE SUMMARY
-|-------------------------------------------------------------------------------------------------------------------------|
-| coverage   | fullMethodName                                           | responseStatusCode   | #exercised   | remarks   |
-|------------|----------------------------------------------------------|----------------------|--------------|-----------|
-| 100%       | com.store.order.bff.OrderService/findAvailableProducts   | INVALID_ARGUMENT     | 1            | covered   |
-|            |                                                          | OK                   | 5            | covered   |
-| 100%       | com.store.order.bff.OrderService/createOrder             | INVALID_ARGUMENT     | 4            | covered   |
-|            |                                                          | OK                   | 3            | covered   |
-| 100%       | com.store.order.bff.OrderService/createProduct           | INVALID_ARGUMENT     | 18           | covered   |
-|            |                                                          | OK                   | 24           | covered   |
-|-------------------------------------------------------------------------------------------------------------------------|
-| 100% API Coverage reported from 3 RPC methods                                                                           |
-|-------------------------------------------------------------------------------------------------------------------------|
-
-[Specmatic] Total Tests Run: 55
-Passed Tests: 55
-Failed Tests: 0
-```
-
-This output shows that all 55 tests passed, with 100% API coverage across 3 RPC methods. It also breaks down how many times each response status (OK or INVALID_ARGUMENT) was exercised for each method.
-
 ## Sample Projects
 
-We have created sample projects to demonstrate how to use Specmatic with gRPC in different languages and scenarios:
+We have created sample projects to demonstrate how to use Specmatic with gRPC in different languages and scenarios, please follow the link for the latest sample projects 
 
-1. Domain Service for gRPC (usable across languages):
-   [https://github.com/znsio/specmatic-order-api-grpc-kotlin](https://github.com/znsio/specmatic-order-api-grpc-kotlin)
-
-2. BFF (Backend for Frontend) Apps:
-   - Go: [https://github.com/znsio/specmatic-order-bff-grpc-go](https://github.com/znsio/specmatic-order-bff-grpc-go)
-   - Kotlin: [https://github.com/znsio/specmatic-order-bff-grpc-kotlin](https://github.com/znsio/specmatic-order-bff-grpc-kotlin)
+* [gRPC sample projects](https://specmatic.io/documentation/sample_projects.html#grpc)
 
 These projects provide practical examples of how to integrate Specmatic into your gRPC workflow, including setting up stubs, writing tests, and handling different languages and frameworks.
 
