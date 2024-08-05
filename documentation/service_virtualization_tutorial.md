@@ -384,7 +384,7 @@ The above image shows how Specmatic Smart Mocking fits into your Component Test.
 * **Dependency** - Products API mocked by Specmatic. Specmatic is setup to leverage [OpenAPI Specification of Products API](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) in the [central contract repo](https://github.com/znsio/specmatic-order-contracts) through [specmatic.yaml](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml) configuration.
 
 Let us analyse each phase of this API test.
-* **Arrange** - In this step, we setup Specmatic stub server with expectation json through Specmatic http endpoint to emulate the Products API to return expected response. 
+* **Arrange** - In this step, we setup Specmatic stub server with expectation json through Specmatic http endpoint to emulate the Products API to return expected response. We also verify that Specmatic has accepted this expectation data by asserting that the response code is 2xx. This confirms that are our expectation data is in line with the OpenAPI Specification of Products OpenAPI Specification.
 * **Act** - Here the test invokes System Under Test to exercise the functionality we need to test. This inturn results in the System Under Test invoking its dependency (Products Service) which is being emulated by Specmatic. Specmatic returns the response we have setup in the previous step to the System Under Test. System Under Test processes this data and responds to API Test.
 * **Assert** - We now verify the response from System Under Test to ascertain if it has returned the correct response.
 
