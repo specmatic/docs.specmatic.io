@@ -54,7 +54,7 @@ It is a good idea to prevent any direct commits to your master / main branch of 
     * **Github Action** -  Please see this [Github Workflow file](https://github.com/znsio/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are running the `specmatic backwardCompatibilityCheck` on the central repo. This command does two levels of checks.
       * Any files that have changed in the Pull Request branch and compares them against their respective version in default branch (which is target of the PR)
       * Also any files which refer to the change set are also tested for breaking changes (this is necessary to cover the scenario where common schema has been extracted to a separate file and changes to this file impacts backward compatibility of other files that refer to it)
-    * The `specmatic backwardCompatibilityCheck` fails when backward-incompatible changes are detected, and when named examples are out of line with their schema.
+    * **Example Validation** - The `specmatic backwardCompatibilityCheck` fails when backward-incompatible changes are detected, and when named examples are out of line with their schema.
   * Specmatic returns a 0 or 1 just like any command line tool for success and error respectively based on which we can fail the build. At this point the team can decide if they should version bump the specification or change the code such that it is backward compatible
 
 #### Sample Central Contract Repository with Pre-merge checks
