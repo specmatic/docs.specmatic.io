@@ -1,3 +1,9 @@
+---
+layout: default
+title: Kafka
+parent: Documentation
+nav_order: 18
+---
 # Starting Kafka Mock Server from command line
 
 Create a file named `specmatic.yaml` with below content.
