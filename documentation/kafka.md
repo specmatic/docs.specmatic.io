@@ -26,7 +26,6 @@ Now we can run below command to spin a Kafka mock server. Please note the volume
 ```shell
 docker run -p 9092:9092 -p 2181:2181 -p 29092:29092 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka-trial
 ```
-
 This should produce logs that shows that Specmatic Kafka server has started and listening on topics.
 
 ```bash
@@ -121,6 +120,40 @@ components:
         - errors
 ```
 
-## Sample project to see full usage
+# Running Contract Tests Against a Kafka-Based Request-Reply Service
 
-[Order BFF Application](https://github.com/znsio/specmatic-order-bff)
+Create a service which implements the kafka messaging architecture as per the [order_service_async.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/asyncapi/order_service_async_v1.yaml) specification.
+
+This service will use a Kafka consumer to listen to the `place-order` topic, and upon receiving a message, it will publish one message each to the `process-order` and `notification` topics. This architecture pattern is known as the request-reply pattern.
+
+### Service Implementation
+1. Consumer: Listens to the place-order topic.
+2. Producer: Publish messages to process-order and notification topics.
+
+### Specmatic Configuration
+Create a specmatic.yaml configuration file to specify the contract for the service:
+```yaml
+sources:
+- provider: "git"
+  repository: "https://github.com/znsio/specmatic-order-contracts.git"
+  provides:
+  - "io/specmatic/examples/store/asyncapi/order_service_async_v1.yaml"
+```
+This configuration informs Specmatic that the service provides the implementation as per the specification listed under the provides key. This setup allows Specmatic to run tests against the service using the provided spec.
+
+### Testing the Service
+To test this service from the command line, follow the below steps.
+1. **Start Kafka Broker**: Launch a local instance of the Kafka broker on the desired host and port.
+2. **Run the Service**: Start your service locally.
+3. **Run Contract Tests**: Use the following command to run the contract tests against the service by replacing `kafka_broker_host` and `kafka_broker_port` with appropriate values:
+```shell
+docker run --network="host" -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka-trial test --host=<kafka_broker_host> --port=<kafka_broker_port>
+```
+
+To get information around all the CLI args of the `test` command, run the following command.
+```shell
+docker run znsio/specmatic-kafka-trial test --help
+```
+
+To get a hands-on experience, refer to [these](https://specmatic.io/documentation/sample_projects.html#kafka) sample projects.
+
