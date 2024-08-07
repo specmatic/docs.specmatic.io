@@ -95,6 +95,9 @@ Below sections showcase these components implemented in various languages, frame
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
     - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
 
+- #### Request-Reply pattern based order-service
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-kafka-sample)
+
 ---
 
 ## Google PubSub
