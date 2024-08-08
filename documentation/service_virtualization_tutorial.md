@@ -379,17 +379,14 @@ Please see this [video](https://youtu.be/U5Agz-mvYIU?t=998) for reference.
 
 The above image shows how Specmatic Smart Mocking fits into your Component Test. A good component test isolates the system / component under test from its dependencies. Here Specmatic is emulating the dependencies of the mobile application thereby isolating it.
 
-**API Tests are just Component Tests where the System Under Test is a Service / API**. Here is an [example](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/api/apiTests.feature) of how you can leverage Specmatic dynamic mocking in a Karate API Test. Below are the pieces involved.
-* **Test** - A Karate API Test
+**API Tests are just Component Tests where the System Under Test is a Service / API**. Here is an [example](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/ApiTests.kt) of how you can leverage Specmatic dynamic mocking in an API Test. Below are the pieces involved.
 * **System Under Test** - [Find Available Products Service](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/main/kotlin/com/component/orders/controllers/Products.kt) - Invokes products API to get all products and filters out products where inventory is zero.
 * **Dependency** - Products API mocked by Specmatic. Specmatic is setup to leverage [OpenAPI Specification of Products API](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) in the [central contract repo](https://github.com/znsio/specmatic-order-contracts) through [specmatic.yaml](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml) configuration.
 
 Let us analyse each phase of this API test.
-* **Arrange** - In this step we setup Specmatic stub server with expectation json through Specmatic http endpoint to emulate the Products API. We set it up to return two products, a laptop (which is available) and a phone (inventory is zero). We also verify that Specmatic has accepted this expectation data by asserting that the response code is 2xx. This confirms that are our expectation data is in line with the OpenAPI Specification of Products OpenAPI Specification.
-* **Act** - Here the Karate test invokes System / Service Under Test (Find Products Service) to exercise the functionality we need to test. This inturn results in the System / Service Under Test invoking its dependency (Products Service) which is being emulated by Specmatic. Specmatic returns the response we have setup in the previous step to the System Under Test. System Under Test processes this data and responds to API Test.
-* **Assert** - We now verify the response from System / Service Under Test to ascertain if it has only returned the laptop, since the phone is not available.
-
-The same approach can be leveraged in other test tools and frameworks such as [Rest-Assured](https://rest-assured.io/) also.
+* **Arrange** - In this step, we setup Specmatic stub server with expectation json through Specmatic http endpoint to emulate the Products API to return expected response. We also verify that Specmatic has accepted this expectation data by asserting that the response code is 2xx. This confirms that are our expectation data is in line with the OpenAPI Specification of Products OpenAPI Specification.
+* **Act** - Here the test invokes System Under Test to exercise the functionality we need to test. This inturn results in the System Under Test invoking its dependency (Products Service) which is being emulated by Specmatic. Specmatic returns the response we have setup in the previous step to the System Under Test. System Under Test processes this data and responds to API Test.
+* **Assert** - We now verify the response from System Under Test to ascertain if it has returned the correct response.
 
 ## Examples as expectations
 
