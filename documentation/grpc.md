@@ -10,12 +10,12 @@ nav_order: 18
 - [gRPC](#grpc)
   - [Introduction](#introduction)
   - [What Can You Achieve with Specmatic's gRPC Support?](#what-can-you-achieve-with-specmatics-grpc-support)
-  - [Getting Started with Specmatic gRPC](#getting-started-with-specmatic-grpc)
-  - [Defining and Managing Contracts](#defining-and-managing-contracts)
-  - [Using the Docker Image](#using-the-docker-image)
-    - [Starting the Stub Service](#starting-the-stub-service)
-    - [Running Tests](#running-tests)
-  - [Interpreting Test Results](#interpreting-test-results)
+  - [Quick Start](#quick-start)
+  - [Detailed explanation](#detailed-explanation)
+    - [Using your proto files as your API Contracts](#using-your-proto-files-as-your-api-contracts)
+    - [Using the Docker Image](#using-the-docker-image)
+      - [Starting the Stub Service](#starting-the-stub-service)
+      - [Running Tests](#running-tests)
   - [Sample Projects](#sample-projects)
   
 
@@ -63,13 +63,13 @@ sources:
 
 Make sure to update the `repository` and `consumes` sections to reflect your actual contract repository and .proto file locations.
 
-## Using the Docker Image
+### Using the Docker Image
 
 For easy integration and trial purposes, we provide a Docker image that includes the Specmatic gRPC service. You can use this in your projects to quickly get started with Specmatic and gRPC.
 
 The Docker image is available at: `znsio/specmatic-grpc-trial`
 
-### Starting the Stub Service
+#### Starting the Stub Service
 
 To start the stub service for your domain API, use the following command:
 
@@ -79,7 +79,7 @@ docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" zns
 
 This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualisation server.
 
-### Running Tests
+#### Running Tests
 
 To run tests, again update your `specmatic.yaml` to include a `provides` section.
 
