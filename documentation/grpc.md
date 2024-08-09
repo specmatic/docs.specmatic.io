@@ -21,27 +21,32 @@ nav_order: 18
 
 ## Introduction
 
-Specmatic now supports service virtualization and testing for gRPC APIs, similar to its support for REST and SOAP APIs. This document will guide you through using Specmatic for gRPC services.
+Specmatic supports service virtualization, contract testing and backward compatibility for gRPC APIs, similar to its support for REST (OpenAPI) and SOAP APIs. This document will guide you through using Specmatic for gRPC services.
 
 ## What Can You Achieve with Specmatic's gRPC Support?
 
-Specmatic's gRPC support allows you to:
+With Specmatic gRPC support you will be to leverage your proto files as executable contracts.
 
-1. Central Contract Repo: Single source of truth for both providers and consumers
-2. Intelligent Service Virtualisation: Stub out gRPC services for testing and development
-3. Contract Testing: Validate requests and responses against your gRPC contracts
-4. Backward Compatibility Checks and Linting (for specification standards)
-5. API resiliency : Generate negative and edge cases to test against them and accomplish resilient APIs
+1. Intelligent Service Virtualisation: Stub out gRPC services for testing and development
+2. Contract Testing: Validate requests and responses against your proto files
+3. Backward Compatibility Checks: Compare two versions of your proto files to identify breaking changes without writing any code
+4. Central Contract Repo: Store your proto files in central Git repo which will serve as single source of truth for both providers and consumers
+5. API resiliency : Generate negative and edge cases to verify the resiliency of your API impementation again based on your proto files and validations rules within them.
 
 These capabilities enable you to develop and test gRPC-based applications more efficiently and with greater confidence in your API contracts.
 
-## Getting Started with Specmatic gRPC
+## Quick Start
 
-To begin using Specmatic with gRPC, you'll need to use our gRPC module. This module enables stubbing and testing of gRPC services.
+Here is a [sample project](https://github.com/znsio/specmatic-order-bff-grpc-kotlin) which has detailed animated architecture diagram along with explanation about how we are isolating the System Under Test during Contract Tests.
 
-You can find the module at: [https://github.com/znsio/specmatic-grpc](https://github.com/znsio/specmatic-grpc)
+1. [Clone the project](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#project-setup)
+2. [Use Docker to run the contract tests](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-docker)
 
-## Defining and Managing Contracts
+Alternatively if you have Java (JDK 17 and above) on your machine, you can [run the contract tests using gradl](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-gradle) also.
+
+## Detailed explanation
+
+### Using your proto files as your API Contracts
 
 Before you can use Specmatic with your gRPC services, you need to define your service contracts using Protocol Buffer (.proto) files. Here's how to manage these contracts:
 
@@ -72,9 +77,21 @@ To start the stub service for your domain API, use the following command:
 docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial stub
 ```
 
-This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000.
+This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualisation server.
 
 ### Running Tests
+
+To run tests, again update your `specmatic.yaml` to include a `provides` section.
+
+```yaml
+sources:
+  - provider: git
+    repository: https://your-central-contract-repo.com
+    consumes:
+      - /path/to/your/dependency_service.proto
+    provides:
+      - /path/to/your/your_service.proto
+```
 
 To run tests against your BFF (Backend for Frontend), use this command:
 
@@ -82,27 +99,7 @@ To run tests against your BFF (Backend for Frontend), use this command:
 docker run -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial test --port=8080
 ```
 
-This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080.
-
-## Interpreting Test Results
-
-After running tests, Specmatic provides a detailed output of the test results. Here's how to interpret this output:
-
-1. Individual Test Results: For each test, you'll see:
-   - The test name and scenario
-   - The request sent to your service
-   - The response received
-   - The test result (PASSED or FAILED)
-
-2. API Coverage Summary: This section shows:
-   - Coverage percentage for each gRPC method
-   - Number of times each response status was exercised
-   - Overall API coverage
-
-3. Summary Statistics:
-   - Total number of tests run
-   - Number of passed tests
-   - Number of failed tests
+This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating gRPC requests based on the profiles listed under `provides` section.
 
 ## Sample Projects
 
@@ -111,4 +108,3 @@ We have created sample projects to demonstrate how to use Specmatic with gRPC in
 * [gRPC sample projects](https://specmatic.io/documentation/sample_projects.html#grpc)
 
 These projects provide practical examples of how to integrate Specmatic into your gRPC workflow, including setting up stubs, writing tests, and handling different languages and frameworks.
-
