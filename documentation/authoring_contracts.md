@@ -37,6 +37,49 @@ Proxy server is running on http://localhost:9000. Ctrl + C to stop.```
 
 Make sure the contracts directory does not exist.
 
+### Check the health status of the proxy server (Optional)
+
+
+You can use the `/actuator/health` endpoint to verify if the proxy server is operational. To do this, send a GET request to this endpoint using Postman or a curl command. 
+
+The response will provide the current health status of the proxy server, indicating whether it is **ready to handle requests**. 
+This allows you to confirm that the proxy server is up before routing any traffic through it.
+
+#### Example curl Request:
+```shell
+curl -X GET http://localhost:9000/actuator/health
+# Example successful response:
+# {
+#   "status": "UP"
+# }
+```
+
+Here's the OpenAPI specification describing the `/actuator/health` endpoint.
+```yaml
+openapi: 3.0.3
+info:
+  title: Health Check API
+  description: API for checking the health status of the proxy server.
+  version: 1.0.0
+paths:
+  /actuator/health:
+    get:
+      description: Returns the health status of the proxy server.
+      responses:
+        '200':
+          description: Health status of the proxy server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - UP
+                    example: UP
+```
+
 ### Generate contracts
 
 Now use Postman to send a request to Specmatic. Create a new Postman request to make a GET request to http://localhost:9000/api/v1/employees
