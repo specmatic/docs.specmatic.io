@@ -36,6 +36,7 @@ Service Virtualization
   - [Hooks](#hooks)
   - [Priority Of Stubs](#priority-of-stubs)
   - [Generating examples](#generating-examples)
+  - [Checking health status of stub server](#checking-health-status-of-stub-server)
   - [Sample Java Project](#sample-java-project)
 
 ## Pre-requisites
@@ -900,6 +901,49 @@ java -jar specmatic.jar examples employees.yaml
 ```
 
 In the above case, sample files will be written into the directory named `employees_examples`.
+
+## Checking health status of stub server
+
+You can use the `/actuator/health` endpoint to verify if the stub server is operational. To do this, send a GET request to this endpoint using Postman or a curl command. 
+
+The response will provide the current health status of the stub server, indicating whether it is **ready to handle requests**. 
+This allows you to confirm that the stub server is up before routing any traffic through it.
+
+#### Example curl Request:
+```shell
+curl -X GET http://<stub_server_url>/actuator/health
+# Example successful response:
+# {
+#   "status": "UP"
+# }
+```
+
+Here's the OpenAPI specification describing the `/actuator/health` endpoint.
+```yaml
+openapi: 3.0.3
+info:
+  title: Health Check API
+  description: API for checking the health status of the stub server.
+  version: 1.0.0
+paths:
+  /actuator/health:
+    get:
+      description: Returns the health status of the stub server.
+      responses:
+        '200':
+          description: Health status of the stub server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - UP
+                    example: UP
+```
+
 
 ## Sample Java Project
 
