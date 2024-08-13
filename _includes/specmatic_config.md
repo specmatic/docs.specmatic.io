@@ -3,7 +3,9 @@ Configuration
 
 - [Configuration](#configuration)
     - [Getting started](#getting-started)
+      - [Contract Test Timeout](#contract-test-timeout)
       - [Configuring Stubs](#configuring-stubs)
+      - [Service Virtualization Delay](#service-virtualization-delay)
       - [Use specifications on local file system](#use-specifications-on-local-file-system)
       - [Use specifications from the web](#use-specifications-from-the-web)
       - [Source control authentication](#source-control-authentication)
@@ -100,6 +102,44 @@ Resetting /<path where you are running the specmatic command>/.specmatic/repos/s
 
 The logs show that Specmatic resets your local copy and clones the latest API Specification from the Git repository into a folder called ```.specmatic```. Please add this folder to ```.gitignore```.
 
+#### Contract Test Timeout
+
+The HTTP timeout duration for requests made during contract testing can be configured using `timeoutInMilliseconds` parameter. 
+This parameter sets the maximum time Specmatic will wait for a response to each HTTP request before marking it as a failure.
+The default timeout is `6000 milliseconds`.
+
+{% tabs stubs %}
+{% tab stubs specmatic.json %}
+```json
+{
+  "sources": [
+    {
+      "provider": "git",
+      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
+  ],
+  "test": {
+    "timeoutInMilliseconds": 3000
+  }
+}
+```
+{% endtab %}
+{% tab stubs specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    repository: https://github.com/znsio/specmatic-order-contracts.git
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+test:
+  timeoutInMilliseconds: 3000
+```
+{% endtab %}
+{% endtabs %}
+
 #### Configuring Stubs
 
 The same configuration file can be leveraged to define stubs also.
@@ -168,6 +208,46 @@ sources:
 ```
 {% endtab %}
 {% endtabs %}
+
+#### Service Virtualization Delay
+
+A delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter, 
+you can simulate response times with the specified delay in milliseconds.
+
+{% tabs stubs %}
+{% tab stubs specmatic.json %}
+```json
+{
+  "sources": [
+    {
+      "provider": "git",
+      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
+  ],
+  "stub": {
+    "delayInMilliseconds": 3000
+  }
+}
+```
+{% endtab %}
+{% tab stubs specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    repository: https://github.com/znsio/specmatic-order-contracts.git
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+stub:
+  delayInMilliseconds: 3000
+```
+{% endtab %}
+{% endtabs %}
+
+**Note:** If the delay is specified in the example file, it will be used to simulate response times for that specific example. 
+Otherwise, the global delay will be applied.
 
 #### Use specifications on local file system
 

@@ -650,7 +650,7 @@ Let us create another expectation file on the same lines as [expectation.json](/
       "sku": "slow1234"
     }
   },
-  "delay-in-seconds": 3
+  "delay-in-milliseconds": 3000
 }
 ```
 
@@ -665,6 +665,9 @@ We have set the delay to 3 seconds here. Once the Specmatic stub server has load
 ```
 
 All other requests, other than the specific request (product id 11) where a delay has been setup, will continue to behave as usual.
+
+**Note**: A global delay for all requests can be configured via the command line or [Specmatic Configuration](/documentation/configuration.html). 
+In such cases, example-specific delays will take precedence over the global delay.
 
 ## Externalised response generation
 
