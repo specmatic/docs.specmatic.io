@@ -564,9 +564,9 @@ Here is a snippet of OpenAPI yaml that demonstrates the same.
                     productId: 10
 ```
 
-Note how we reference the image file the example as `externalValue`. Specmatic will look for this file (box_image.jpg) in project dir and send the contents as part of the multipart HTTP request.
+Note how we are referencing the image file in the example as `externalValue`. Specmatic will look for this file (box_image.jpg) in project dir and send the contents as part of the multipart HTTP request.
 
-Please refer to the [complete API spec](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) and the [sample project which implements this endpoint](https://github.com/znsio/specmatic-order-api-java) and try it out for yourself.
+Please read through the [complete OpenAPI spec](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) and try out the [sample project which implements this endpoint](https://github.com/znsio/specmatic-order-api-java). The sample project even dumps the file that it receives as part of the test request to a gitignored folder called `.images` in the project root directory so that you can verify that encoding is also preserved as part of the test.
 
 ### The Java Helper For Java Projects
 
