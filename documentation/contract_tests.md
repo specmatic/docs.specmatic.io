@@ -16,6 +16,7 @@ Contract Tests
     - [JUnit Output From The Command](#junit-output-from-the-command)
     - [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
+    - [Handling multipart form-data and file uploads](#handling-multipart-form-data-and-file-uploads)
     - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
     - [Handling Application authentication](#handling-application-authentication)
     - [Contracts In A Mono-Repo](#contracts-in-a-mono-repo)
@@ -504,7 +505,68 @@ sources:
 
 The filesystem path above is a relative path, but it can also be an absolute path to a file.
 
+### Handling multipart form-data and file uploads
 
+Specmatic adheres to [OpenAPI multipart content support](https://spec.openapis.org/oas/latest.html#special-considerations-for-multipart-content).
+
+Here is a snippet of OpenAPI yaml that demonstrates the same.
+
+```yaml
+"/products/{id}/image":
+    put:
+      summary: Update or upload a product image
+      operationId: updateProductImage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the product to update the image for
+      requestBody:
+        description: Image file to be associated with the product
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: The image file to upload
+            encoding:
+              image:
+                contentType: image/png, image/jpeg
+            examples:
+              UPDATE_PRODUCT_IMAGE:
+                value:
+                  image:
+                    externalValue: ".specmatic/repos/specmatic-order-contracts/io/specmatic/examples/store/openapi/box_image.jpg"
+      responses:
+        "200":
+          description: Product image updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  productId:
+                    type: integer
+              examples:
+                UPDATE_PRODUCT_IMAGE:
+                  value:
+                    message: "Product image updated successfully"
+                    productId: 10
+```
+
+Note how we reference the image file the example as `externalValue`. Specmatic will look for this file (box_image.jpg) in project dir and send the contents as part of the multipart HTTP request.
+
+Please refer to the [complete API spec](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) and the [sample project which implements this endpoint](https://github.com/znsio/specmatic-order-api-java) and try it out for yourself.
 
 ### The Java Helper For Java Projects
 
