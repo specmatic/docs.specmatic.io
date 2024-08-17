@@ -12,6 +12,7 @@ Contract Tests
     - [Specmatic Contract Test - Command Line](#specmatic-contract-test---command-line)
     - [How the contract test works (step-by-step)](#how-the-contract-test-works-step-by-step)
     - [Externalising examples / test cases](#externalising-examples--test-cases)
+    - [Generating examples](#generating-examples)
     - [Boundary Condition Testing](#boundary-condition-testing)
     - [JUnit Output From The Command](#junit-output-from-the-command)
     - [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
@@ -33,12 +34,6 @@ Contract Tests
     - [Adanced Features](#adanced-features)
       - [Generative Tests](#generative-tests)
       - [Limiting the Count of Tests](#limiting-the-count-of-tests)
-      - [Externalized test data](#externalized-test-data)
-        - [Example with a path parameter](#example-with-a-path-parameter)
-        - [Example with a request body](#example-with-a-request-body)
-        - [Example with a query parameter](#example-with-a-query-parameter)
-        - [Example with an omitted query parameter](#example-with-an-omitted-query-parameter)
-    - [Generating examples](#generating-examples)
     - [Sample Project](#sample-project)
 
 ### Overview
@@ -179,7 +174,7 @@ components:
 
 Here is a sample application that is is implementing this specification. You can run a curl command on this URL to see the sample data.
 
-`https://my-json-server.typicode.com/znsio/specmatic/employees/`
+`https://my-json-server.typicode.com/znsio/specmatic-documentation/employees/`
 
 Let us now run the ```employees.yaml``` as a test against the above sample application.
 
@@ -218,166 +213,33 @@ However the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used
 
 You can store test data in json files side-by-side to be used in the contract test, instead of inline examples.
 
-Let's try it out. Use the following specification (it is the same specification from the above section without the inline examples):
+Let's try it out. Please clone below sample repo.
 
-*filename: employees.yaml*
+[https://github.com/znsio/externalised-example-jsons-sample](https://github.com/znsio/externalised-example-jsons-sample)
 
-```yaml
-openapi: 3.0.0
-info:
-  title: Employees
-  version: '1.0'
-servers: []
-paths:
-  '/znsio/specmatic/employees':
-    post:
-      summary: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-      responses:
-        '201':
-          description: Employee Created Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-  '/znsio/specmatic/employees/{id}':
-    parameters:
-      - schema:
-          type: number
-        name: id
-        in: path
-        required: true
-    get:
-      summary: Fetch employee details
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-    put:
-      summary: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-      responses:
-        '200':
-          description: Update employee details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-components:
-  schemas:
-    Employee:
-      title: Employee
-      type: object
-      required:
-        - id
-        - name
-        - department
-        - designation
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        department:
-          type: string
-        designation:
-          type: string
-```
-
-Create a directory named `employees_examples`, and store the following json files in it:
-
-*filename: create_employee.json*
-```json
-{
-  "http-request": {
-    "method": "POST",
-    "path": "/znsio/specmatic/employees",
-    "body": {
-      "id": 70,
-      "name": "Jill Doe",
-      "department": "Engineering",
-      "designation": "Director"
-    }
-  },
-  "http-response": {
-    "status": 201
-  }
-}
-```
-
-*filename: fetch_employee_details.json*
-```json
-{
-  "http-request": {
-    "method": "GET",
-    "path": "/znsio/specmatic/employees/10"
-  },
-  "http-response": {
-    "status": 200
-  }
-}
-```
-
-*filename: employee_not_found.json*
-```json
-{
-  "http-request": {
-    "method": "GET",
-    "path": "/znsio/specmatic/employees/100"
-  },
-  "http-response": {
-    "status": 404
-  }
-}
-```
-
-*filename: update_employee.json*
-```json
-{
-  "http-request": {
-    "method": "POST",
-    "path": "/znsio/specmatic/employees/10",
-    "body": {
-      "id": 10,
-      "name": "Jill Doe",
-      "department": "Engineering",
-      "designation": "Director"
-    }
-  },
-  "http-response": {
-    "status": 200
-  }
-}
-```
+The [`employees.yaml`](https://github.com/znsio/externalised-example-jsons-sample/blob/main/employees.yaml) file in this repo is similar to the spec we saw in the above section with the difference that it does not include inline examples. Instead all the examples are externalised to JSON files inside a folder named [`employees_examples`](https://github.com/znsio/externalised-example-jsons-sample/tree/main/employees_examples). Please have a look at each of the examples files (which have self explanatory names) to understand the syntax.
 
 Let us now run `employees.yaml` as a test against the sample application.
 
 ```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
 
-The results will be exactly the same as the previous run.
+Note: Since the folder is named `employees_examples` and colocated with the spec file `employees.yaml`, by convention it is automatically picked up. However if your folder has different name and / or located in another path, you can explicitly pass that folder as a parameter using the `--examples` CLI Argument (Please run `specmatic test --help` to learn more).
 
-```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
+The test results will look as shown below. Specmatic has run one test per external example file at this point. This is quite similar to our earlier test run.
+
+```Tests run: 5, Successes: 5, Failures: 0, Errors: 0```
 
 The complete test data format can be referred to [here](/documentation/test_data_format.html).
+
+### Generating examples
+
+Instead of creating the above example JSONs by hand, you can also generate the example JSONs using the `examples` command:
+
+```bash
+java -jar specmatic.jar examples employees.yaml
+```
+
+In the above case, example JSON files will be written into the directory named `employees_examples`. You can then update the files to suit your needs and use them.
 
 ### Boundary Condition Testing
 
@@ -407,7 +269,7 @@ The command will create JUnit test xml output in the specified directory which y
 
 ### When The API Does Not Match The API Specification
 
-As we saw earlier in this page, the [sample application](https://my-json-server.typicode.com/znsio/specmatic/employees/) is adhering to the ```employees.yaml``` OpenAPI Specification.
+As we saw earlier in this page, the [sample application](https://my-json-server.typicode.com/znsio/specmatic-documentation/employees/) is adhering to the ```employees.yaml``` OpenAPI Specification.
 
 Now let us experiment by making some changes to the dataypes in the ```employees.yaml``` and observe the error responses.
 
@@ -1209,106 +1071,6 @@ In this example, we may ensure that just the first 2 tests run with the followin
 ```java
 System.setProperty("MAX_TEST_REQUEST_COMBINATIONS", "2");
 ```
-
-#### Externalized test data
-
-Specmatic can execute contract tests using test data loaded from JSON files. This is useful when the specification cannot be modified to add examples, such as a conformance or compliance process where the specification is an industry-wide single-source-of-truth.
-
-Specmatic will validate the test data against the specification before using it. It's not much different from how it uses `examples` within the specification, except that the test data is in an external JSON file.
-
-##### Example with a path parameter
-To convert the `GET_DETAILS`  test from [api_order_with_oauth_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_with_oauth_v3.yaml) into an externalised test:
-* Create a new directory named `api_order_with_oauth_v3_examples` in the same directory as `api_order_with_oauth_v3.yaml`.
-* In it, put a file named get_details.json (the name is immaterial) with the following content:
-```json
-{
-  "http-request": {
-    "method": "GET",
-    "path": "/products/(id:number)",
-    "path-params": {
-      "id": 10
-    }
-  },
-  "http-response": {
-    "status": 200
-  }
-}
-```
-
-##### Example with a request body
-To convert `UPDATE_DETAILS`, add a new file called `update_details.json` with the following content:
-
-```json
-{
-  "http-request": {
-    "method": "GET",
-    "path": "/products/(id:number)",
-    "path-params": {
-      "id": 10
-    },
-    "body": {
-      "name": "XYZ Phone",
-      "type": "gadget",
-      "inventory": 10,
-      "id": 10
-    }
-  },
-  "http-response": {
-    "status": 200
-  }
-}
-```
-
-##### Example with a query parameter
-To convert `SEARCH_2`, add a file named `search_2.json` with the following content:
-
-```json
-{
-  "http-request": {
-    "method": "GET",
-    "path": "/products/(id:number)",
-    "query-params": {
-      "name": "XYZ",
-      "type": "gadget"
-    }
-  },
-  "http-response": {
-    "status": 200
-  }
-}
-```
-
-##### Example with an omitted query parameter
-To convert `SEARCH_1`, add a file named `search_1.json` with the following content:
-
-```json
-{
-  "http-request": {
-    "method": "GET",
-    "path": "/products/(id:number)",
-    "query-params": {
-      "type": "gadget"
-    }
-  },
-  "http-response": {
-    "status": 200
-  }
-}
-```
-
-In the above example, we have completely omitted the `name` query parameter. Since the name is optional, Specmatic does not send requests with `name`.
-
-However if the query parameter in question is mandatory, and is omitted from the example, Specmatic generates a randomized value and sends this query parameter when sending the request in the contract test.
-
-### Generating examples
-
-You can generate sample data from a specification as a starting point or scaffolding for your contract tests, using the `examples` command:
-
-```bash
-java -jar specmatic.jar examples employees.yaml
-```
-
-In the above case, sample files will be written into the directory named `employees_examples`.
 
 ### Sample Project
 
