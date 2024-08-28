@@ -122,7 +122,7 @@ Let us now take deeper look at the external example format.
 
 #### HTTP Headers
 
-Although GraphQL SDL files do not support HTTP headers, you may directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml in the previous section. The headers will be leveraged if present both by the contract tests as well as service virtualization.
+Although GraphQL SDL files do not support HTTP request headers, you may directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml in the previous section. The headers will be leveraged if present both by the contract tests as well as service virtualization.
 
 #### GraphQL Variables
 
