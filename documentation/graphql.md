@@ -32,13 +32,13 @@ With Specmatic GraphQL support you will be to leverage your GraphQL SDL files as
 2. Contract Testing: Validate requests and responses against your GraphQL SDL files
 3. Backward Compatibility Checks: Compare two versions of your GraphQL SDL files to identify breaking changes without writing any code
 4. Central Contract Repo: Store your GraphQL SDL files in central Git repo which will serve as single source of truth for both providers and consumers
-5. API resiliency : Generate negative and edge cases to verify the resiliency of your API impementation again based on your GraphQL SDL files.
+5. API resiliency : Generate negative and edge cases to verify the resiliency of your API impementation based on your GraphQL SDL files.
 
 ## Quick Start
 
-Here is a [sample project](https://github.com/znsio/specmatic-order-bff-graphql-java) which has detailed animated architecture diagram along with explanation about how we are isolating the System Under Test during Contract Tests.
+Here is a [sample project](https://github.com/znsio/specmatic-order-bff-graphql-java) which has a detailed animated architecture diagram along with explanations about how we are isolating the System Under Test when running Contract Tests.
 
-[Clone the project](https://github.com/znsio/specmatic-order-bff-graphql-java) and follow instructions in README.
+[Clone the project](https://github.com/znsio/specmatic-order-bff-graphql-java) and follow the instructions in the README.
 
 ## Detailed explanation
 
@@ -57,11 +57,11 @@ contract_repositories:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 
-Make sure to update the `repository`, `provides` and `consumes` sections to reflect your actual contract repository and .proto file locations.
+Make sure to update the `repository`, `provides` and `consumes` sections to reflect your actual contract repository and .graphqls file locations.
 
 ### Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively
 
-Say suppose you have a GraphQL SDL file as shown below.
+Suppose you have a GraphQL SDL file as shown below.
 
 ```graphql
 enum ProductType {
@@ -83,9 +83,9 @@ type Product {
 }
 ```
 
-In order substitute appropriate values you can create a example YAML files that has test/stub data pertaining to the `findAvailableProducts` query.
+In order to provide appropriate example values, you can create an example YAML file that has test/stub data pertaining to the `findAvailableProducts` query.
 
-```
+```yaml
 request: 
   httpHeaders:
     X-region: north-west 
