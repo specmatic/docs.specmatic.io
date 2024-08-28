@@ -102,7 +102,7 @@ To provide appropriate example values, you can create an example JSON file that 
 }
 ```
 
-This file should be stored in a directory called `specmatic/<file_name_without_extension>_examples`, which is colocated in the same directory as the `.proto` file. This ensures that the example data is easily accessible and logically organized alongside the corresponding `.proto` files.
+This file should be stored in a directory called `<file_name_without_extension>_examples`, which is colocated in the same directory as the `.proto` file. This ensures that the example data is easily accessible and logically organized alongside the corresponding `.proto` files.
 
 Alternatively, you can specify the location of the example directories programmatically or via CLI arguments when running tests or service virtualization. This approach allows for flexibility in how and where the examples are stored, depending on your project’s structure or deployment environment.
 
