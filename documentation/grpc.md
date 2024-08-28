@@ -65,13 +65,15 @@ Make sure to update the `repository` and `consumes` sections to reflect your act
 
 ### Using the Docker Image
 
-For easy integration and trial purposes, we provide a Docker image that includes the Specmatic gRPC service. You can use this in your projects to quickly get started with Specmatic and gRPC.
+So far in the above explanation the sample project is invoking Specmatic gRPC support programmatically. However if you wish to run the same from CLI then below Docker image wraps the same Specmatic gRPC capabilities.
 
-The Docker image is available at: `znsio/specmatic-grpc-trial`
+[`znsio/specmatic-grpc-trial`](https://hub.docker.com/r/znsio/specmatic-grpc-trial)
+
+Also the Specmatic gRPC Docker image, by nature, is completely language and tech stack agnostic.
 
 #### Starting the Stub Service
 
-To start the stub service for your domain API, use the following command:
+To start the stub/service virtualization service, use the following command:
 
 ```bash
 docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial stub
@@ -114,4 +116,4 @@ We have created sample projects to demonstrate how to use Specmatic with gRPC in
 
 * [gRPC sample projects](https://specmatic.io/documentation/sample_projects.html#grpc)
 
-These projects provide practical examples of how to integrate Specmatic into your gRPC workflow, including setting up stubs, writing tests, and handling different languages and frameworks.
+These projects provide practical examples of how to integrate Specmatic gRPC support into your workflow, including setting up stubs, writing tests, and handling different languages, frameworks and running them on CI like Github actions.
