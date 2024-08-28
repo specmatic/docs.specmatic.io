@@ -110,18 +110,18 @@ response: [
 ]
 ```
 
-This file can either be stored in directory that is colocated with the GraphQL SDL file with the naming convention `<GraphQL SDL file without extension>_examples` or alternatively you can pass it as an argument programmatically or through CLI args while running tests or service virtualisation.
+This file can either be stored in a directory that is colocated with the GraphQL SDL file with the naming convention `<GraphQL SDL file without extension>_examples`, or alternatively you can pass it as an argument programmatically or through CLI args while running tests or service virtualisation.
 
 Let us now take deeper look at the external example format.
 * At the top level we have two YAML root nodes called `request` and `response`
-* `request` can take below params
-  * Under `body` you can have either `query`s or `mututation`s with exact values where necessary
-  * Under `headers` you can add your `HTTP` headers
-* `response` accepts a JSON syntax for responses for readability, syntax highlighting and also aid copy and paste of real responses from actual application logs etc.
+* `request` can hold the following keys:
+  * `body`: this can contain either `query`s or `mututation`s with exact values where necessary
+  * `headers`: you can add your `HTTP` headers here
+* `response` holds responses with JSON syntax for readability, syntax highlighting and also as an aid to copy and paste of real responses from actual application logs etc.
 
 #### GraphQL Variables
 
-Specmatic supports usage of GraphQL variables seamlessly. You only need to make sure that externalised example is structured such that it uses the actual field values inline instead of variables in the query when using Specmatic GraphQL support for service virtualization. Here is an example.
+Specmatic supports usage of GraphQL variables seamlessly. You only need to make sure that the externalised example is structured such that it uses the actual field values inline instead of variables in the query. Here is an example.
 
 Say suppose, below request is that is being sent by your GraphQL Consumer to Specmatic GraphQL service virtualization server.
 
@@ -165,7 +165,7 @@ response: [
 
 ### Using the Docker Image
 
-So far in the above explanation the sample project is invoking Specmatic GraphqlQL support programmatically. However if you wish to run the same from CLI then below Docker image wraps the same Specmatic GraphQL capabilities.
+So far in the above explanation the sample project is invoking Specmatic GraphQL support programmatically. However if you wish to run the same using the CLI then the Docker image below wraps the same Specmatic GraphQL capabilities.
 
 [`znsio/specmatic-graphql-trial`](https://hub.docker.com/r/znsio/specmatic-graphql-trial)
 
@@ -179,7 +179,7 @@ To start the stub service, use the following command:
 docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" znsio/specmatic virtualize --port=8090
 ```
 
-This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 8090. And uses the GraphQL SDL files listed under `consumes` section for starting up a service virtualisation server.
+This command mounts your local `specmatic.yaml` file into the container, exposes the stub service on port 8090, and uses the GraphQL SDL files listed under `consumes` section for starting up a service virtualisation server.
 
 #### Running Tests
 
@@ -189,12 +189,12 @@ To run contract test:
 docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" -e SPECMATIC_GENERATIVE_TESTS=true znsio/specmatic-graphql-trial test --port=8080
 ```
 
-This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating GraphQL requests based on the GrapqhQL SDL files listed under `provides` section.
+This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating GraphQL requests based on the GrapqhQL SDL files listed under `provides` section along with examples if any provided in the colocated directory named `<GraphQL SDL file without extension>_examples`.
 
 ## Sample Projects
 
-We have created sample projects to demonstrate the above in different languages and scenarios, please follow the link for the latest sample projects 
+We have created sample projects to demonstrate the above in different languages and scenarios. Please follow the link for the latest sample projects .
 
 * [GraphQL sample projects](https://specmatic.io/documentation/sample_projects.html#graphql)
 
-These projects provide practical examples of how to integrate Specmatic GraphQL support into your workflow, including setting up stubs, writing tests, and handling different languages, frameworks and running them on CI like Github actions.
+These projects provide practical examples of how to integrate Specmatic GraphQL support into your workflow, including setting up stubs, writing tests, handling different languages, frameworks and running them on CI like Github actions.
