@@ -13,6 +13,7 @@ nav_order: 18
   - [Quick Start](#quick-start)
   - [Detailed explanation](#detailed-explanation)
     - [Using your proto files as your API Contracts](#using-your-proto-files-as-your-api-contracts)
+    - [Using externalized examples as test/stub data to be used as part of contract tests and service virtualization respectively](#using-externalized-examples-as-teststub-data-for-grpc-in-contract-tests-and-service-virtualization)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub Service](#starting-the-stub-service)
       - [Running Tests](#running-tests)
@@ -62,6 +63,75 @@ sources:
 ```
 
 Make sure to update the `repository` and `consumes` sections to reflect your actual contract repository and .proto file locations.
+
+### Using Externalized Examples as Test/Stub Data for gRPC in Contract Tests and Service Virtualization
+
+Suppose you have a gRPC service definition as shown below:
+
+```protobuf
+syntax = "proto3";
+
+package com.store.order.bff;
+
+service OrderService {
+  rpc createOrder (CreateOrderRequest) returns (CreateOrderResponse);
+}
+
+message CreateOrderRequest {
+  int32 productId = 1;
+  int32 count = 2;
+}
+
+message CreateOrderResponse {
+  int32 id = 1;
+}
+```
+
+To provide appropriate example values, you can create an example JSON file that has test/stub data pertaining to the `createOrder` method.
+
+```json
+{
+  "fullMethodName": "com.store.order.bff.OrderService/createOrder",
+  "request": {
+    "productId": 10,
+    "count": 8
+  },
+  "response": {
+    "id": 21
+  }
+}
+```
+
+This file should be stored in a directory called `specmatic/<file_name_without_extension>_examples`, which is colocated in the same directory as the `.proto` file. This ensures that the example data is easily accessible and logically organized alongside the corresponding `.proto` files.
+
+Alternatively, you can specify the location of the example directories programmatically or via CLI arguments when running tests or service virtualization. This approach allows for flexibility in how and where the examples are stored, depending on your project’s structure or deployment environment.
+
+- **Programmatic Approach:** Set the `EXAMPLES_DIR` system property with a comma-separated list of directory paths. Each path should point to a directory containing your example files. For example:
+
+  ```java
+  System.setProperty("EXAMPLES_DIR", "path/to/dir1,path/to/dir2");
+  ```
+
+  This configuration will include both `path/to/dir1` and `path/to/dir2` as sources for example files.
+
+- **CLI Approach:** Pass the directories using the `--examples` argument. If there are multiple directories, you can specify the `--examples` argument multiple times. For example:
+
+  ```bash
+  --examples=path/to/dir1 --examples=path/to/dir2
+  ```
+
+  This will use `path/to/dir1` and `path/to/dir2` as the locations for example files.
+
+Both methods provide flexibility, allowing you to configure example file locations according to your specific needs and deployment scenarios.
+
+Let us now take a deeper look at the external example format:
+* The top-level JSON object contains three keys: `fullMethodName`, `request`, and `response`.
+* `fullMethodName` specifies the complete gRPC method name, including the package, service, and method.
+* `request` holds the data that would be sent to the gRPC service, with keys corresponding to the fields in the request message.
+* `response` holds the expected response data from the service, with keys corresponding to the fields in the response message.
+
+This approach facilitates the creation of test data that can be used for both contract testing and service virtualization. The example format is designed to be easily readable and writable, allowing you to copy and paste real responses from actual application logs if necessary.
+
 
 ### Using the Docker Image
 
