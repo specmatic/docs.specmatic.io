@@ -101,6 +101,13 @@ docker run -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-
 
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating gRPC requests based on the profiles listed under `provides` section.
 
+### Proto 3 (required, optional) and Proto Validate
+
+Proto 3 dropped required fields. Please see [Github discussion](https://github.com/protocolbuffers/protobuf/issues/2497#issuecomment-267422550) for more details.
+
+Thereby it is hard to communicate constraints such as `required`, ranges (`gte`, `lte`, etc.).
+So Specmatic gRPC support is designed to use add on validation mechanisms like [protovalidate](https://github.com/bufbuild/protovalidate). Please refer to our sample projects section below for more details on how this is being used.
+
 ## Sample Projects
 
 We have created sample projects to demonstrate how to use Specmatic with gRPC in different languages and scenarios, please follow the link for the latest sample projects 
