@@ -14,6 +14,7 @@ nav_order: 18
   - [Detailed explanation](#detailed-explanation)
     - [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
     - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
+      - [HTTP Headers](#http-headers)
       - [GraphQL Variables](#graphql-variables)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub / Service Virtualization Service](#starting-the-stub--service-virtualization-service)
@@ -118,6 +119,10 @@ Let us now take deeper look at the external example format.
   * `body`: this can contain either `query`s or `mututation`s with exact values where necessary
   * `headers`: you can add your `HTTP` headers here
 * `response` holds responses with JSON syntax for readability, syntax highlighting and also as an aid to copy and paste of real responses from actual application logs etc.
+
+#### HTTP Headers
+
+GraphQL SDL files do not support HTTP headers. However, you can directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml in the previous section. The headers will be leveraged if present both by the contract tests as well as service virtualization.
 
 #### GraphQL Variables
 
