@@ -14,6 +14,7 @@ nav_order: 18
   - [Detailed explanation](#detailed-explanation)
     - [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
     - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
+      - [GraphQL Variables](#graphql-variables)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub / Service Virtualization Service](#starting-the-stub--service-virtualization-service)
       - [Running Tests](#running-tests)
@@ -117,6 +118,50 @@ Let us now take deeper look at the external example format.
   * Under `body` you can have either `query`s or `mututation`s with exact values where necessary
   * Under `headers` you can add your `HTTP` headers
 * `response` accepts a JSON syntax for responses for readability, syntax highlighting and also aid copy and paste of real responses from actual application logs etc.
+
+#### GraphQL Variables
+
+Specmatic supports usage of GraphQL variables seamlessly. You only need to make sure that externalised example is structured such that it uses the actual field values inline instead of variables in the query when using Specmatic GraphQL support for service virtualization. Here is an example.
+
+Say suppose, below request is that is being sent by your GraphQL Consumer to Specmatic GraphQL service virtualization server.
+
+```JSON
+{
+   "operationName": "FindAvailableProducts",
+   "variables": {
+       "type": "gadget",
+       "pageSize": 10
+   },
+   "query": "query FindAvailableProducts($type: ProductType!, $pageSize: Int!) { findAvailableProducts(type: $type, pageSize: $pageSize) { id name inventory type } }"
+}
+```
+
+As you can see, the above request from GraphQL consumer includes a variable called `$pageSize`. However in our example we will not be using it, instead we will be using the actual value (`pageSize: 10`) to match a request that comes with that value.
+
+```YAML
+request:
+  body: |
+    findAvailableProducts(type: "gadget", pageSize: 10) { 
+      id 
+      name 
+      inventory 
+      type 
+    }
+response: [
+    {
+        "id": "10",
+        "name": "The Almanac",
+        "inventory": 10,
+        "type": "book"
+    },
+    {
+        "id": "20",
+        "name": "iPhone",
+        "inventory": 15,
+        "type": "gadget"
+    }
+]
+```
 
 ### Using the Docker Image
 
