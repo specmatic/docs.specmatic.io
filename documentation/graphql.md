@@ -5,19 +5,19 @@ parent: Documentation
 nav_order: 18
 ---
 
-# gRPC
+# GraphQL
 
-- [gRPC](#grpc)
+- [GraphQL](#graphql)
   - [Introduction](#introduction)
-  - [What Can You Achieve with Specmatic's gRPC Support?](#what-can-you-achieve-with-specmatics-grpc-support)
+  - [What Can You Achieve with Specmatic's GraphQL Support?](#what-can-you-achieve-with-specmatics-graphql-support)
   - [Quick Start](#quick-start)
   - [Detailed explanation](#detailed-explanation)
-    - [Using your proto files as your API Contracts](#using-your-proto-files-as-your-api-contracts)
+    - [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
+    - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
     - [Using the Docker Image](#using-the-docker-image)
-      - [Starting the Stub Service](#starting-the-stub-service)
+      - [Starting the Stub / Service Virtualization Service](#starting-the-stub--service-virtualization-service)
       - [Running Tests](#running-tests)
   - [Sample Projects](#sample-projects)
-  
 
 ## Introduction
 
