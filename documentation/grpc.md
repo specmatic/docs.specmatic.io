@@ -16,8 +16,8 @@ nav_order: 18
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub Service](#starting-the-stub-service)
       - [Running Tests](#running-tests)
+    - [Proto 3 (required, optional) and Proto Validate](#proto-3-required-optional-and-proto-validate)
   - [Sample Projects](#sample-projects)
-  
 
 ## Introduction
 
