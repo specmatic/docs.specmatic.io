@@ -701,10 +701,6 @@ curl -X PATCH -H 'Content-Type: application/json' -d '{"name": "George", "employ
 
 - Try the same but vary status code. As long as the `name` is "George", you will get the above response.
 
-## Precedence across examples
-
-It's possible that a request may match more than one of the above examples. In general, the examples are matched in last-in first-out order. The first example matching the incoming request is selected, and it's response substitutions are resolved and returned.
-
 ## Default values using a dictionary
 
 If you don't care about the specific response values when formulating the example, but want them to be injected later on, depending on the environment, you can use the dictionary feature.
@@ -765,7 +761,11 @@ You'll get this response:
 
 Note that we did not provide "Sales" or "Associate" as the value of "department" or "designation" respectively. Those were lookuped up in the dictionary.
 
-## SSL / Https  stubbing
+## Last-in First-out Precedence
+
+It's possible that a request may match more than one of the above examples. In general, the examples are matched in last-in first-out order. The first example matching the incoming request is selected, and it's response substitutions are resolved and returned.
+
+Mov## SSL / Https  stubbing
 
 There are multiple ways to run the Specmatic Stub with SSL.
 
