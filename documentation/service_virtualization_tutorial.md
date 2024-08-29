@@ -518,9 +518,10 @@ Update employees.yaml specification with the following content:
                 type: string
   ```
 
+Since we have changed the spec, remove all the examples in `employees_examples`, as they will now be invalid.
+
 ### Direct substitution
 
-- Since we have changed the spec, remove all the examples in `employees_examples`, as they will now be invalid.
 
 - In the `employees_examples` directory, add a file named `direct_substitution.json` with the following content:
 
