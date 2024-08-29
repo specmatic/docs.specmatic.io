@@ -531,15 +531,15 @@ Since we have changed the spec, remove all the examples in `employees_examples`,
           "method": "PATCH",
           "path": "/employees",
           "body": {
-              "employeeCode": "(EMPLOYEE_CODE:string)",
-              "name": "(NAME:string)"
+              "name": "Jake",
+              "employeeCode": "(EMPLOYEE_CODE:string)"
           }
       },
       "http-response": {
           "status": 200,
           "body": {
               "id": 10,
-              "name": "$(NAME)",
+              "name": "Jake",
               "employeeCode": "$(EMPLOYEE_CODE)",
               "department": "Sales",
               "designation": "Associate"
@@ -551,7 +551,7 @@ Since we have changed the spec, remove all the examples in `employees_examples`,
 - Execute the following `curl` command:
 
   ```shell
-  curl -X PATCH -H 'Content-Type: application/json' -d '{"name": "Janet", "employeeCode": "abc123"}' http://localhost:9000/employees
+  curl -X PATCH -H 'Content-Type: application/json' -d '{"name": "Jake", "employeeCode": "abc123"}' http://localhost:9000/employees
   ```
 
 - You'll get this response:
@@ -559,16 +559,16 @@ Since we have changed the spec, remove all the examples in `employees_examples`,
   ```json
   {
       "id": 10,
-      "name": "Janet",
+      "name": "Jake",
       "employeeCode": "abc123",
       "department": "Sales",
       "designation": "Associate"
   }
   ```
 
-The syntax that you see in `name` in the example request tells Specmatic to save the value of name in the curl request (or any incoming request) to a variable called `NAME`, and the syntax under `name` in the example response tells Specmatic where to use the value of the variable `NAME` in the response that it must send back.
+The syntax that you see in `employeeCode` in the example request tells Specmatic to save the value of name in the curl request (or any incoming request) to a variable called `EMPLOYEE_CODE`, and the syntax under `employeeCode` in the example response tells Specmatic where to use the value of the variable `EMPLOYEE_CODE` in the response that it must send back.
 
-Try the same curl command again but modify `name` or `employeeCode`. You'll see that `name` and `employeeCode` sent in the request will be reflected in the response.
+Try the same curl command again but modify `employeeCode`. You'll see that the `employeeCode` sent in the request will be reflected in the response.
 
 ### Data lookup
 
