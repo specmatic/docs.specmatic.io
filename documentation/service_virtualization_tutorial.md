@@ -107,9 +107,9 @@ Service Virtualization
 - In the same directory, create a file named `specmatic.yaml` with the following contents:
 
   ```yaml
-  contract_repositories:
-    - type: filesystem
-      consumes:
+  sources:
+    - provider: filesystem
+      stub:
         - employees.yaml
   ```
 
@@ -469,9 +469,9 @@ paths:
 - Add `employee_sql.yaml` to the `consumes` list in `specmatic.yaml`, like so:
 
   ```yaml
-  contract_repositories:
-    - type: filesystem
-      consumes:
+  sources:
+    - provider: filesystem
+      stub:
         - employees.yaml
         - employee_sql.yaml
   ```
@@ -812,9 +812,9 @@ Let's see how this works.
 - Update your `specmatic.yaml` file to declare the dictionary:
 
   ```yaml
-  contract_repositories:
-    - type: filesystem
-      consumes:
+  sources:
+    - provider: filesystem
+      stub:
         - employees.yaml
   stub:
     dictionary: ./dictionary.json
