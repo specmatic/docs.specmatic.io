@@ -663,15 +663,15 @@ Let's try this out.
   }
   ```
 
-- Note: The request matched the example request, so Specmatic resolved the value of `designation` in the example response to "Associate" and sent the same in the response to the caller.
+- Note: The curl request matched the example request, so Specmatic loaded the corresponding response in the example, evaluated the expression `$(dataLookup.departments[DEPARTMENT].desig)` to get value of `designation` (which turned out to be "Associate"), evaluated the direct substitution expressions to get the values of `employeeCode` and `department`, and returned this response to the caller.
 
-- Specmatic resolves the value of `designation` by evaluating the expression `$(dataLookup.departments[DEPARTMENT].desig)` from the example response using the following steps:
+- Specmatic evaluates the expression `$(dataLookup.departments[DEPARTMENT].desig)` from the example response using the following steps:
   - Access the `dataLookup` object (you'll find it in the example JSON).
   - Retrieve the `departments` collection from the `dataLookup` object.
   - Select the department corresponding to the value of the variable `DEPARTMENT` from the departments collection.
     - In this case, the value of `DEPARTMENT` is set to "Sales" (see the section on Direct Substitution above if you don't understand how that came about).
   - Access the `desig` property of the selected department.
-  - Use the value of this property as the value of `designation` in the response.
+- It's the value of the `desig` property that gets used as the value of `designation` in the response.
 
 - The format of these expressions is fixed: `top-level-object.collection[LOOKUP_VARIABLE_NAME].property`
   - The names themselves, such as `dataLookup`, `departments`, `desig` are not restricted to any format. You may use names that are meaningful to you.
