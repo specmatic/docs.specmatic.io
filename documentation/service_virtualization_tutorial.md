@@ -466,7 +466,7 @@ paths:
   }
   ```
 
-- Add `employee_sql.yaml` to the `consumes` list in `specmatic.yaml`, like so:
+- Add `employee_sql.yaml` to the `stub` list in `specmatic.yaml`, like so:
 
   ```yaml
   sources:
@@ -1265,7 +1265,7 @@ Create the `specamtic.json` file with the following content:
   "sources": [
     {
       "provider": "git",
-      "consumes": [
+      "stub": [
         "products.yaml"
       ]
     }
