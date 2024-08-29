@@ -21,7 +21,7 @@ Service Virtualization
   - [Partial Examples](#partial-examples)
     - [Partial Request Examples](#partial-request-examples)
     - [Partial Response Examples](#partial-response-examples)
-  - [Default Values Using A Dictionary](#default-values-using-a-dictionary)
+  - [Inject Response Values From An External Dictionary](#inject-response-values-from-an-external-dictionary)
   - [Delay Simulation](#delay-simulation)
   - [SSL / HTTPS  Stubbing](#ssl--https--stubbing)
     - [Auto-Generated Cert Store](#auto-generated-cert-store)
@@ -778,7 +778,7 @@ The same idea extends to the response.
 - Note that the two mandatory keys in the response named `id` and `employeeCode` are omitted from the example.
 - But because it's a partial example, when you make the execute the previous curl command, Specmatic will autogenerate values for `id` and `employeeCode` from their schemas in the specification.
 
-## Default Values Using A Dictionary
+## Inject Response Values From An External Dictionary
 
 Sometimes it's helpful to just formulate the example without certain concrete values, and have them injected later on. The dictionary feature can be used to do this.
 
