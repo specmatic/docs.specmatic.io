@@ -122,7 +122,7 @@ Let us now take deeper look at the external example format.
 
 #### HTTP Headers
 
-GraphQL SDL files do not support HTTP headers. However, you can directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml in the previous section. The headers will be leveraged if present both by the contract tests as well as service virtualization.
+Although GraphQL SDL files do not support HTTP request headers, you may directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml in the previous section. The headers will be leveraged if present both by the contract tests as well as service virtualization.
 
 #### GraphQL Variables
 
@@ -130,7 +130,7 @@ Specmatic supports usage of GraphQL variables seamlessly. You only need to make 
 
 Say suppose, below request is that is being sent by your GraphQL Consumer to Specmatic GraphQL service virtualization server.
 
-```JSON
+```json
 {
    "operationName": "FindAvailableProducts",
    "variables": {
@@ -143,7 +143,7 @@ Say suppose, below request is that is being sent by your GraphQL Consumer to Spe
 
 As you can see, the above request from GraphQL consumer includes a variable called `$pageSize`. However in our example we will not be using it, instead we will be using the actual value (`pageSize: 10`) to match a request that comes with that value.
 
-```YAML
+```yaml
 request:
   body: |
     findAvailableProducts(type: "gadget", pageSize: 10) { 
