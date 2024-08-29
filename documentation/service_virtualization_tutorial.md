@@ -643,12 +643,9 @@ Let's try this out.
   }
   ```
 
-- Look closely at the syntax of the value of `designation` in the response. This value is arrived at using the following steps:
-  - Lookup the object `dataLookup.departments`
-  - Dereference this object using the value of `DEPARTMENT` as the key (which itself came from the value of `department` in the request)
-  - From the resulting object, use the value of `desig` as the value of `designation` in the response.
-- Note that the names `dataLookup`, `departments`, `desig` are not limited by format or convention. You may use names that are meaningful to you.
-- Execute this curl command:
+- Observe the value of `designation` in the response. Specmatic will resolve this expression at runtime on receiving a request that matches the request in this example.
+
+- First let's see it in action. Execute this curl command:
 
   ```shell
   curl -X PATCH -H 'Content-Type: application/json' -d '{"department": "Sales", "employeeCode": "abc123"}' http://localhost:9000/employees
@@ -666,10 +663,18 @@ Let's try this out.
   }
   ```
 
-- Here are the steps for deriving the value of `department` in the context of this specific example:
-  - Lookup the object `dataLookup.departments`
-  - Dereference this object using the value of `DEPARTMENT` as the key, which was contains the value "Sales"
-  - From the resulting object, use the value of `desig`, which is "Associate", as the value of `designation` in the response.
+- Note: The request matched the example request, so Specmatic resolved the value of `designation` in the example response to "Associate" and sent the same in the response to the caller.
+
+- Specmatic resolves the value of `designation` by evaluating the expression `$(dataLookup.departments[DEPARTMENT].desig)` from the example response using the following steps:
+  - Access the `dataLookup` object (you'll find it in the example JSON).
+  - Retrieve the `departments` collection from the `dataLookup` object.
+  - Select the department corresponding to the value of the variable `DEPARTMENT` from the departments collection.
+    - In this case, the value of `DEPARTMENT` is set to "Sales" (see the section on Direct Substitution above if you don't understand how that came about).
+  - Access the `desig` property of the selected department.
+  - Use the value of this property as the value of `designation` in the response.
+
+- The format of these expressions is fixed: `top-level-object.collection[LOOKUP_VARIABLE_NAME].property`
+  - The names themselves, such as `dataLookup`, `departments`, `desig` are not restricted to any format. You may use names that are meaningful to you.
 
 - Next execute this curl command:
 
@@ -689,7 +694,7 @@ Let's try this out.
   }
   ```
 
-- You can use as many values dictionaries and values as you like in the `dataLookup` data object, and in fact you may name the object whatever you wish.
+- You can use as many collections and properties as you like in the `dataLookup` data object.
 
 ## Partial Examples
 
