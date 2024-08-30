@@ -23,6 +23,8 @@ Service Virtualization
     - [Partial Response Examples](#partial-response-examples)
   - [Inject Response Values From An External Dictionary](#inject-response-values-from-an-external-dictionary)
   - [Delay Simulation](#delay-simulation)
+    - [Example Specific Delay](#example-specific-delay)
+    - [Global Delay](#global-delay)
   - [SSL / HTTPS  Stubbing](#ssl--https--stubbing)
     - [Auto-Generated Cert Store](#auto-generated-cert-store)
     - [Bring Your Own Key Store](#bring-your-own-key-store)
@@ -40,6 +42,7 @@ Service Virtualization
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
   - [Sample Java Project](#sample-java-project)
+
 
 ## Pre-requisites
 
@@ -901,7 +904,7 @@ We have set the delay to 3 seconds here. Once the Specmatic stub server has load
 }curl http://localhost:9000/products/11  0.01s user 0.01s system 0% cpu 3.082 total
 ```
 
-All other requests, other than the specific request (product id 11) where a delay has been setup, will continue to use global delay.
+All other requests, other than the specific request (product id 11) where a delay has been setup, will have either no delay or fallback to global delay.
 
 ### Global Delay
 
