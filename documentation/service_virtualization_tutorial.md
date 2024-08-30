@@ -23,6 +23,8 @@ Service Virtualization
     - [Partial Response Examples](#partial-response-examples)
   - [Inject Response Values From An External Dictionary](#inject-response-values-from-an-external-dictionary)
   - [Delay Simulation](#delay-simulation)
+    - [Example Specific Delay](#example-specific-delay)
+    - [Global Delay](#global-delay)
   - [SSL / HTTPS  Stubbing](#ssl--https--stubbing)
     - [Auto-Generated Cert Store](#auto-generated-cert-store)
     - [Bring Your Own Key Store](#bring-your-own-key-store)
@@ -40,6 +42,7 @@ Service Virtualization
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
   - [Sample Java Project](#sample-java-project)
+
 
 ## Pre-requisites
 
@@ -870,6 +873,8 @@ This syntax can be nested to any depth, e.g. `person.addresses[*].street: "Baker
 
 Specmatic allows granular control over simulating a slow response for certain requests.
 
+### Example Specific Delay
+
 Let us create another expectation file on the same lines as [expectation.json](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10) in the products-api_examples folder and call it expectation-with-delay.json with below content.
 
 ```yaml
@@ -885,7 +890,7 @@ Let us create another expectation file on the same lines as [expectation.json](/
       "sku": "slow1234"
     }
   },
-  "delay-in-seconds": 3
+  "delay-in-milliseconds": 3000
 }
 ```
 
@@ -899,7 +904,47 @@ We have set the delay to 3 seconds here. Once the Specmatic stub server has load
 }curl http://localhost:9000/products/11  0.01s user 0.01s system 0% cpu 3.082 total
 ```
 
-All other requests, other than the specific request (product id 11) where a delay has been setup, will continue to behave as usual.
+All other requests, other than the specific request (product id 11) where a delay has been setup, will have either no delay or fallback to global delay.
+
+### Global Delay
+
+A Global delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter in Specmatic Config, 
+you can simulate response times with the specified delay in milliseconds.
+
+{% tabs stubs %}
+{% tab stubs specmatic.json %}
+```json
+{
+  "sources": [
+    {
+      "provider": "git",
+      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
+  ],
+  "stub": {
+    "delayInMilliseconds": 3000
+  }
+}
+```
+{% endtab %}
+{% tab stubs specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    repository: https://github.com/znsio/specmatic-order-contracts.git
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+stub:
+  delayInMilliseconds: 3000
+```
+{% endtab %}
+{% endtabs %}
+
+**Note:** If the delay is specified in the example file, it will be used to simulate response times for that specific example. 
+Otherwise, the global delay will be applied.
 
 ## SSL / HTTPS  Stubbing
 
