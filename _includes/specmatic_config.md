@@ -212,42 +212,7 @@ sources:
 #### Service Virtualization Delay
 
 A delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter, 
-you can simulate response times with the specified delay in milliseconds.
-
-{% tabs stubs %}
-{% tab stubs specmatic.json %}
-```json
-{
-  "sources": [
-    {
-      "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
-      "consumes": [
-        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
-      ]
-    }
-  ],
-  "stub": {
-    "delayInMilliseconds": 3000
-  }
-}
-```
-{% endtab %}
-{% tab stubs specmatic.yaml %}
-```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
-    consumes:
-      - io/specmatic/examples/store/openapi/api_order_v3.yaml
-stub:
-  delayInMilliseconds: 3000
-```
-{% endtab %}
-{% endtabs %}
-
-**Note:** If the delay is specified in the example file, it will be used to simulate response times for that specific example. 
-Otherwise, the global delay will be applied.
+you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/documentation/service_virtualization_tutorial.md#delay-simulation)
 
 #### Use specifications on local file system
 
