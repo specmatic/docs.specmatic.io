@@ -92,10 +92,52 @@ Writing contract to ./contracts/new_feature.yaml
 Writing stub data to ./contracts/stub0.json
 ```
 
+You can alternatively hit the [/_specmatic/proxy/dump](#dumping-the-contracts-and-examples-using-the-dump-endpoint) endpoint without killing the proxy server to dump this data into the output directory (e.g. `./contracts`).
+
 Specmatic can identify parameters in URL path based on the traffic passing through it.
 For example: If you send two requests, ```/employees/10``` and ```/employees/20```, Specmatic will figure out that URL path should be ```/empoyees/{id}``` where id could be any number, and will add an appropriate path parameter in the specification.
 
 So we recommend making atleast two requests in such cases to provide Specmatic with enough data to idenitify such path parameters.
+
+## Dumping the contracts and examples using the dump endpoint
+
+To dump the contracts and examples while the proxy server is running, use the `/_specmatic/proxy/dump` endpoint. When a POST request is made to this endpoint, it triggers Specmatic to generate and save the current contracts and examples into the specified output directory.
+
+**OpenAPI Specification for `/_specmatic/proxy/dump` Endpoint:**
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Specmatic Proxy API
+  description: API for interacting with the Specmatic proxy server.
+  version: 1.0.0
+paths:
+  /_specmatic/proxy/dump:
+    post:
+      summary: Start Dump Process for Contract and Examples
+      description: Initiates the process to dump the current state of the contract and examples into the specified output directory. The process is handled in the background.
+      responses:
+        '202':
+          description: Dump process started
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Dump process of spec and examples has started in the background"
+```
+
+**Sample `curl` Command:**
+
+To trigger the dump of contracts and examples, use the following `curl` command:
+
+```bash
+curl -X POST http://localhost:9000/_specmatic/proxy/dump
+```
+
+This command sends a POST request to the `/_specmatic/proxy/dump` endpoint, which will result in Specmatic generating and saving the contracts and examples into the specified output directory.
+In case the contracts and examples are not generated in the output directory, look at the proxy server logs to debug the same.
+
+By using the `/_specmatic/proxy/dump` endpoint, you can efficiently generate and review contracts without interrupting the proxy server.
 
 ## From a sample request and response
 
