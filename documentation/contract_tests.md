@@ -178,7 +178,15 @@ Here is a sample application that is is implementing this specification. You can
 
 Let us now run the ```employees.yaml``` as a test against the above sample application.
 
-```{{ site.spec_cmd }} test employees.yaml --testBaseURL https://my-json-server.typicode.com```
+```bash
+{{ site.spec_cmd }} test employees.yaml --testBaseURL https://my-json-server.typicode.com
+```
+
+Alternatively, you can use Docker:
+
+```bash
+docker run znsio/specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
+```
 
 The results should end with below text.
 
@@ -221,7 +229,17 @@ The [`employees.yaml`](https://github.com/znsio/externalised-example-jsons-sampl
 
 Let us now run `employees.yaml` as a test against the sample application.
 
-```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
+Here’s how you can present that command with `site.spec_cmd` and the Docker alternative in Bash format:
+
+```bash
+{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml
+```
+
+Alternatively, you can use Docker:
+
+```bash
+docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
+```
 
 Note: Since the folder is named `employees_examples` and colocated with the spec file `employees.yaml`, by convention it is automatically picked up. However if your folder has different name and / or located in another path, you can explicitly pass that folder as a parameter using the `--examples` CLI Argument (Please run `specmatic test --help` to learn more).
 
@@ -239,6 +257,12 @@ Instead of creating the above example JSONs by hand, you can also generate the e
 java -jar specmatic.jar examples employees.yaml
 ```
 
+Alternatively, you can use Docker:
+
+```bash
+docker run znsio/specmatic examples employees.yaml
+```
+
 In the above case, example JSON files will be written into the directory named `employees_examples`. You can then update the files to suit your needs and use them.
 
 ### Boundary Condition Testing
@@ -249,7 +273,15 @@ Specmatic can help you verify / assess such boundary condition behavior and the 
 
 ```export SPECMATIC_GENERATIVE_TESTS=true```
 
-```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
+```bash
+{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml
+```
+
+Alternatively, you can use Docker:
+
+```bash
+docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
+```
 
 Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failires
 
@@ -263,7 +295,15 @@ Demo: [Video](https://youtu.be/U5Agz-mvYIU?t=216)
 
 You can get the JUnit output from the Specmatic command using an extra parameter.
 
-`{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output`
+```bash
+{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
+```
+
+Alternatively, you can use Docker:
+
+```bash
+docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
+```
 
 The command will create JUnit test xml output in the specified directory which you can then include as part of CI pipeline results etc.
 
@@ -324,7 +364,18 @@ Specmatic will use the git command to checkout the git repository provided in th
 
 On the command line, `cd` into the directory containing the Specmatic configuration file.
 
-Run this command: `{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com`
+Run this command: 
+
+```bash
+{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com
+```
+
+Alternatively, you can use Docker:
+
+```bash
+docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com
+```
+```
 
 Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
