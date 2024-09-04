@@ -118,9 +118,15 @@ Service Virtualization
 
 - `cd` into the `specmatic` directory and run the following command:
 
-  ```shell
-  java -jar specmatic.jar stub
-  ```
+    ```shell
+    java -jar specmatic.jar stub
+    ```
+
+    Alternatively, you can use Docker:
+
+    ```shell
+    docker run znsio/specmatic stub
+    ```
 
 - In a new tab, run the following curl command:
 
@@ -151,6 +157,12 @@ Let's see how this is done.
 
   ```shell
   java -jar specmatic.jar examples employees.yaml
+  ```
+
+  Alternatively, you can use Docker:
+
+  ```shell
+  docker run znsio/specmatic examples employees.yaml
   ```
 
 - It generates a request-response mapping JSON file in the `employees_examples` directory containing an example of the API in the spec.
@@ -318,6 +330,12 @@ Let's try this out.
 
   ```shell
   java -jar specmatic.jar --strict
+  ```
+
+  Alternatively, you can use Docker:
+
+  ```shell
+  docker run znsio/specmatic --strict
   ```
 
 - Now run the following curl command:
@@ -955,7 +973,13 @@ There are multiple ways to run the Specmatic Stub with SSL.
 This is the quickest approach.
 
 ```shell
-java -jar specmatic.jar stub --httpsKeyStoreDir=<directory to create keysore> --port=443 product-api.yaml
+java -jar specmatic.jar stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
+```
+
+Alternatively, you can use Docker:
+
+```shell
+docker run znsio/specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
 ```
 
 This will create a `specmatic.jks` file in the dir that you mentioned above and you can now access the stub over https.
