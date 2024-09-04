@@ -182,7 +182,7 @@ Let us now run the ```employees.yaml``` as a test against the above sample appli
 {{ site.spec_cmd }} test employees.yaml --testBaseURL https://my-json-server.typicode.com
 ```
 
-Alternatively, you can use Docker:
+Alternatively, we can also run the same command with the Docker image:
 
 ```bash
 docker run znsio/specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
@@ -235,7 +235,7 @@ Here’s how you can present that command with `site.spec_cmd` and the Docker al
 {{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
-Alternatively, you can use Docker:
+Alternatively, we can also run the same command with the Docker image:
 
 ```bash
 docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
@@ -257,7 +257,7 @@ Instead of creating the above example JSONs by hand, you can also generate the e
 java -jar specmatic.jar examples employees.yaml
 ```
 
-Alternatively, you can use Docker:
+Alternatively, we can also run the same command with the Docker image:
 
 ```bash
 docker run znsio/specmatic examples employees.yaml
@@ -277,7 +277,7 @@ Specmatic can help you verify / assess such boundary condition behavior and the 
 {{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
-Alternatively, you can use Docker:
+Alternatively, we can also run the same command with the Docker image:
 
 ```bash
 docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
@@ -299,7 +299,7 @@ You can get the JUnit output from the Specmatic command using an extra parameter
 {{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
 ```
 
-Alternatively, you can use Docker:
+Alternatively, we can also run the same command with the Docker image:
 
 ```bash
 docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
@@ -370,7 +370,7 @@ Run this command:
 {{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com
 ```
 
-Alternatively, you can use Docker:
+Alternatively, we can also run the same command with the Docker image:
 
 ```bash
 docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com

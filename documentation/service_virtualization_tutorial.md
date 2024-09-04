@@ -122,7 +122,7 @@ Service Virtualization
     java -jar specmatic.jar stub
     ```
 
-    Alternatively, you can use Docker:
+    Alternatively, you can also run the same command with the Docker image:
 
     ```shell
     docker run znsio/specmatic stub
@@ -159,7 +159,7 @@ Let's see how this is done.
   java -jar specmatic.jar examples employees.yaml
   ```
 
-  Alternatively, you can use Docker:
+  Alternatively, you can also run the same command with the Docker image:
 
   ```shell
   docker run znsio/specmatic examples employees.yaml
@@ -332,7 +332,7 @@ Let's try this out.
   java -jar specmatic.jar --strict
   ```
 
-  Alternatively, you can use Docker:
+  Alternatively, you can also run the same command with the Docker image:
 
   ```shell
   docker run znsio/specmatic --strict
@@ -976,7 +976,7 @@ This is the quickest approach.
 java -jar specmatic.jar stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
 ```
 
-Alternatively, you can use Docker:
+Alternatively, you can also run the same command with the Docker image:
 
 ```shell
 docker run znsio/specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
