@@ -181,7 +181,7 @@ Also the Specmatic GraphQL Docker image, by nature, is completely language and t
 To start the stub service, use the following command:
 
 ```shell
-docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" znsio/specmatic virtualize --port=8090
+docker run --network host -p 8090:8090 -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" znsio/specmatic virtualize --port=8090
 ```
 
 This command mounts your local `specmatic.yaml` file into the container, exposes the stub service on port 8090, and uses the GraphQL SDL files listed under `consumes` section for starting up a service virtualisation server.
