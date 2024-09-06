@@ -168,7 +168,7 @@ sources:
 To run tests against your BFF (Backend for Frontend), use this command:
 
 ```bash
-docker run -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic"  znsio/specmatic-grpc-trial test --port=8080
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" -e SPECMATIC_GENERATIVE_TESTS=true znsio/specmatic-grpc-trial test --port=8080 --host=host.docker.internal
 ```
 
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating gRPC requests based on the profiles listed under `provides` section.
