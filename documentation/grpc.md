@@ -146,7 +146,7 @@ Also the Specmatic gRPC Docker image, by nature, is completely language and tech
 To start the stub/service virtualization service, use the following command:
 
 ```bash
-docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial stub
+docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial virtualize
 ```
 
 This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualisation server.
@@ -168,7 +168,7 @@ sources:
 To run tests against your BFF (Backend for Frontend), use this command:
 
 ```bash
-docker run -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial test --port=8080
+docker run -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic"  znsio/specmatic-grpc-trial test --port=8080
 ```
 
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating gRPC requests based on the profiles listed under `provides` section.
