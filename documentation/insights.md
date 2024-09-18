@@ -31,7 +31,12 @@ To know more about Specmatic Insights, visit [Insights page](https://insights.sp
 
 ## Getting Started
 
-Before setting up Specmatic Insights, ensure you have completed the [Getting Started](https://specmatic.io/getting_started.html) steps for Specmatic. This typically involves setting up Specmatic in your development environment and integrating it into your testing process. We will be setting up insights on the services listed in [Getting Started](https://specmatic.io/getting_started.html) guide.
+Before setting up Specmatic Insights, ensure you have completed the [Getting Started](https://specmatic.io/getting_started.html) steps for Specmatic. This typically involves setting up Specmatic in your development environment and integrating it into your testing process. 
+
+In this tutorial we will be setting up insights based on the following services that we created in [Getting Started](https://specmatic.io/getting_started.html)
+
+1. Pet Store Backend
+2. Pet Store Client
 
 ## Setting Up Specmatic Insights
 
@@ -50,6 +55,7 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
 2. Add the Specmatic Insights GitHub Build Reporter to your workflow, after specmatic has run:
 
 ```yaml
+{% raw %}
 - name: Run Specmatic Insights Github Build Reporter
   uses: znsio/specmatic-insights-build-reporter-github-action@v2.0.2
   with:
@@ -63,6 +69,7 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
     repo-name: ${{ github.event.repository.name }}
     repo-id: ${{ github.repository_id }}
     repo-url: ${{ github.event.repository.html_url }}
+{% endraw %}
 ```
 
 For more details refer  to the [Specmatic Insights GitHub Action documentation](https://github.com/znsio/specmatic-insights-build-reporter-github-action)
