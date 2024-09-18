@@ -43,7 +43,7 @@ In this tutorial we will be setting up insights based on the following services 
 To start using Specmatic Insights:
 
 1. Visit [insights.specmatic.io](https://insights.specmatic.io)
-2. Click on "Start your 15 day free trial" to create a new account.
+2. Go to the [registration section](https://insights.specmatic.io/dashboard/register)
 3. Fill in your email and password, then click "Register".
 4. Once registered, you'll have access to your Specmatic Insights dashboard. At the moment you won't see anything here.
 
