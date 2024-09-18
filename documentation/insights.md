@@ -79,7 +79,7 @@ Once your CI/CD pipelines are set up and have run, you can view your service mes
 
 For example, if you've been following the Petstore example from [Getting Started](https://specmatic.io/getting_started.html), your service mesh might look like this:
 
-![Petstore Service Mesh](image2_url_here)
+![Petstore Service Mesh](../images/insights_dashboard_1.png)
 
 ## Understanding the Dashboard
 
@@ -91,7 +91,7 @@ The Specmatic Insights dashboard provides several key pieces of information:
 
 Here's an example of what you might see if you have followed the instructions and have been able to setup insights
 
-![BeeBotz Service Dashboard](image1_url_here)
+![Petstore Dashboard](../images/insights_dashboard_2.png)
 
 ## Troubleshooting
 
