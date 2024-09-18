@@ -101,4 +101,4 @@ If you're not seeing your services on the dashboard:
 2. Check that your `org-id` is correct in the GitHub action configuration.
 3. Verify that your Specmatic reports are being generated in the specified directory. (./build/reports/specmatic)
 
-For further assistance, please contact Specmatic support.
+For further assistance, please contact [Specmatic support](https://specmatic.io/contact-us/).
