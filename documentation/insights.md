@@ -257,7 +257,7 @@ To start using Specmatic Insights:
 
 To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for both your provider and consumer services pipelines:
 
-1. As explained in above steps, ensure Specmatic is present in your provider & consumer CI pipelines, helping 'test', in case of provider, and 'virtualize' in case of client.
+1. As explained in above steps, ensure Specmatic is present in your provider & consumer CI pipelines, helping 'test', in case of provider, and 'virtualize' in case of consumer.
 2. Then, add the 'Specmatic Insights GitHub Build Reporter' to both your consumer and provider CI workflow, after specmatic has run:
 
 ```yaml
