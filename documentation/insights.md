@@ -7,11 +7,12 @@ nav_order: 20
 # Specmatic Insights
 
   - [Introduction](#introduction)
-  - [Getting Started](#getting-started)
-  - [Setting Up Specmatic Insights](#setting-up-specmatic-insights)
-  - [Integrating with CI/CD Pipelines](#integrating-with-cicd-pipelines)
-  - [Viewing Your Service Mesh](#viewing-your-service-mesh)
-  - [Understanding the Dashboard](#understanding-the-dashboard)
+  - [What You will Achieve](#what-you-will-achieve)
+  - [Quick Start](#quick-start)
+  - [Step 1: Setting Up a Central Contract Repository](#step-1:-setting-up-a-central-contract-repository)
+  - [Step 2: Setting up Provider & Consumer services](#step-2:-setting-up-provider-&-consumer-services)
+  - [Step 3: Configuring Specmatic Insights](#step-3:-configuring-specmatic-insights)
+  - [Step 4: Visualizing Your API Ecosystem](#step-4:-visualizing-your-api-ecosystem)
   - [Troubleshooting](#troubleshooting)
 
 ## Introduction
@@ -29,16 +30,221 @@ Specmatic Insights offers several key features:
 
 To know more about Specmatic Insights, visit [Insights page](https://insights.specmatic.io/).
 
-## Getting Started
+## What You will Achieve
 
-Before setting up Specmatic Insights, ensure you have completed the [Getting Started](https://specmatic.io/getting_started.html) steps for Specmatic. This typically involves setting up Specmatic in your development environment and integrating it into your testing process. 
+By the end of this tutorial, you'll have:
 
-In this tutorial we will be setting up insights based on the following services that we created in [Getting Started](https://specmatic.io/getting_started.html)
+1. A central repository for your API contracts
+2. CI pipelines for both API providers and consumers using Specmatic
+3. A clear visualization of your API ecosystem with Specmatic Insights
 
-1. Pet Store Backend
-2. Pet Store Client
+Let's get started!
 
-## Setting Up Specmatic Insights
+## Quick Start
+
+For those eager to jump in, here's a quick overview of the steps we'll cover:
+
+1. Set up a central contract repository
+2. Setting up Provider & Consumer services
+3. Configure Specmatic Insights
+4. Visualize your API ecosystem
+
+Now, let's dive into the details.
+
+## Step 1: Setting Up a Central Contract Repository
+
+A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing. Here's how to set it up:
+
+1. Create a new Git repository named "api-contracts".
+2. In this repository, create a folder structure to organize your OpenAPI specifications. For example:
+      ```
+      api-contracts/
+      ├── petstore/
+      │   └── service.yaml
+      └── other-services/
+          
+      ```
+3. Add the following OpenAPI specification "service.yaml" to this repository.
+
+    ```
+    openapi: 3.0.1
+    info:
+      title: Contract for the petstore service
+      version: '1'
+    paths:
+      /pets/{petid}:
+        get:
+          summary: Should be able to get a pet by petId
+          parameters:
+            - name: petid
+              in: path
+              required: true
+              schema:
+                type: number
+              examples:
+                SCOOBY_200_OK:
+                  value: 1
+          responses:
+            '200':
+              description: Should be able to get a pet by petId
+              content:
+                application/json:
+                  schema:
+                    required:
+                      - id
+                      - name
+                      - status
+                      - type
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      status:
+                        type: string
+                  examples:
+                    SCOOBY_200_OK:
+                      value:
+                        id: 1
+                        name: Scooby
+                        type: Golden Retriever
+                        status: Adopted
+      ```
+4. Set up a simple CI pipeline to lint and check backward compatibility of your contracts:
+
+    ```
+    name: Lint specifications and check Backward Compatibility
+
+    on:
+      push:
+        branches: [ "main" ]
+      pull_request:
+        branches: [ "main" ]
+    jobs:
+      run-lint:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+            with:
+              fetch-depth: 0
+
+          - name: Set up Node.js
+            uses: actions/setup-node@v2
+            with:
+              node-version: '14'
+
+          - name: Install OpenAPI linter
+            run: npm install -g @stoplight/spectral-cli
+
+          - name: Lint OpenAPI specs
+            run: spectral lint **/*.yaml
+
+          - name: Run OpenAPI Backward Compatibility Check using Specmatic
+            run: |
+              docker run --rm \
+              -v "${{ github.workspace }}:/api-contracts:rw" \
+              -w /api-contracts \
+              --entrypoint /bin/sh \
+              znsio/specmatic \
+              -c "git config --global --add safe.directory /api-contracts && java -jar /usr/src/app/specmatic.jar backwardCompatibilityCheck"
+    ```
+## Step 2: Setting up Provider & Consumer services
+
+Now that we have our OpenAPI specification checked in, let's bring our Pet Store to life! We'll create two services: a backend (provider) that serves the API, and a client (consumer) that uses it. 
+
+### 2.1: Setting Up the Pet Store Backend (Provider)
+
+Let's start by creating our pet-store-backend service. Based on the `service.yaml` specification you can create a simple service in any language of your choice. Once it's up & running and pushed into a git repository, we can create the following CI pipeline to test with Specmatic docker image.
+
+      
+      name: Java CI with Gradle
+
+      on:
+        push:
+          branches: [ "main" ]
+        pull_request:
+          branches: [ "main" ]
+
+      jobs:
+        build:
+
+          runs-on: ubuntu-latest
+          permissions:
+            contents: read
+
+          steps:
+          - uses: actions/checkout@v4
+            with:
+              submodules: 'true'
+              
+          - name: Set up JDK 17
+            uses: actions/setup-java@v4
+            with:
+              java-version: '21'
+              distribution: 'temurin'
+
+          - name: Setup Gradle
+            uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+          - name: Validate Gradle wrapper
+            uses: gradle/wrapper-validation-action@v1
+
+          - name: Print versions
+            run: ./gradlew printVersions
+
+          - name: Build with Gradle Wrapper
+            run: ./gradlew bootRun
+
+          - name: Contract Test using Specmatic
+            run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=8080 --host=localhost
+
+### Step 2.2: Setting Up the Pet Store Client (Consumer)
+
+Now, based on the specification `services.yaml` create a simple client that will consume our Pet Store API. Once it's up & running and pushed into a git repository, we can create the following CI pipeline to Virtualize the API (provider) with Specmatic docker image
+
+      name: Client Contract Test
+
+      on:
+        push:
+          branches: [ main ]
+        pull_request:
+          branches: [ main ]
+
+      jobs:
+        test:
+          runs-on: ubuntu-latest
+
+          steps:
+          - uses: actions/checkout@v3
+
+          - name: Use Node.js
+            uses: actions/setup-node@v3
+            with:
+              node-version: '18'
+
+          - name: Install dependencies
+            run: npm ci
+
+          - name: Run Specmatic stub
+            run: |
+              docker run -d --name specmatic-stub \
+                -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+                -p 9000:9000 \
+                znsio/specmatic stub
+              # Wait for the stub to be ready
+              sleep 10
+
+          - name: Run contract test
+            run: npm run test:contract
+            env:
+              STUB_URL: http://localhost:9000
+
+## Step 3: Configuring Specmatic Insights
+
+### Setting Up Specmatic Insights
 
 To start using Specmatic Insights:
 
@@ -47,7 +253,7 @@ To start using Specmatic Insights:
 3. Fill in your email and password, then click "Register".
 4. Once registered, you'll have access to your Specmatic Insights dashboard. At the moment you won't see anything here.
 
-## Integrating with CI/CD Pipelines
+### Integrating with CI/CD Pipelines
 
 To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for both your provider and consumer services:
 
@@ -76,7 +282,9 @@ For more details refer  to the [Specmatic Insights GitHub Action documentation](
 
 Make sure to replace `YOUR_SPECMATIC_ORG_ID` with your actual organization ID. This you can find on your insights dashboard, under settings > general.
 
-## Viewing Your Service Mesh
+## Step 4: Visualizing Your API Ecosystem
+
+### Viewing Your Service Mesh
 
 Once your CI/CD pipelines are set up and have run, you can view your service mesh on the Specmatic Insights dashboard:
 
@@ -88,7 +296,7 @@ For example, if you've been following the Petstore example from [Getting Started
 
 ![Petstore Service Mesh](../images/insights_dashboard_1.png)
 
-## Understanding the Dashboard
+### Understanding the Dashboard
 
 The Specmatic Insights dashboard provides several key pieces of information:
 
