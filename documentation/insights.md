@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Specmatic Insights
+title: Insights setup guide
 parent: Documentation
 nav_order: 20
 ---
