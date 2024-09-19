@@ -112,7 +112,7 @@ A central contract repository is crucial for maintaining consistency across your
                         type: Golden Retriever
                         status: Adopted
       ```
-4. Set up a simple CI pipeline to lint and check backward compatibility of your contracts:
+4. Set up a simple CI pipeline to lint and check backward compatibility of your contracts using Specmatic:
 
     ```
     name: Lint specifications and check Backward Compatibility
@@ -192,11 +192,11 @@ Let's start by creating our pet-store-backend service. Based on the `service.yam
           - name: Validate Gradle wrapper
             uses: gradle/wrapper-validation-action@v1
 
-          - name: Print versions
-            run: ./gradlew printVersions
+          - name: Start Spring Boot application
+            run: ./gradlew bootRun &
 
-          - name: Build with Gradle Wrapper
-            run: ./gradlew bootRun
+          - name: Wait for application to start
+            run: sleep 30
 
           - name: Contract Test using Specmatic
             run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=8080 --host=localhost
@@ -255,10 +255,10 @@ To start using Specmatic Insights:
 
 ### Integrating with CI/CD Pipelines
 
-To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for both your provider and consumer services:
+To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for both your provider and consumer services pipelines:
 
-1. Ensure Specmatic is running in your pipeline and generating reports.
-2. Add the Specmatic Insights GitHub Build Reporter to your workflow, after specmatic has run:
+1. As explained in above steps, ensure Specmatic is present in your provider & consumer CI pipelines, helping 'test', in case of provider, and 'virtualize' in case of client.
+2. Then, add the 'Specmatic Insights GitHub Build Reporter' to both your consumer and provider CI workflow, after specmatic has run:
 
 ```yaml
 {% raw %}
