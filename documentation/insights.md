@@ -9,7 +9,7 @@ nav_order: 20
   - [Introduction](#introduction)
   - [What You will Achieve](#what-you-will-achieve)
   - [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
-  - [Step 2: Setting up Provider & Consumer services](#step-2-setting-up-provider-&-consumer-services)
+  - [Step 2: Setting up Client, Provider & Consumer services](#step-2-setting-up-client-provider-and-domain-services)
   - [Step 3: Configuring Specmatic Insights](#step-3-configuring-specmatic-insights)
   - [Step 4: Visualizing Your API Ecosystem](#step-4-visualizing-your-api-ecosystem)
   - [Next Steps](#next-steps)
@@ -17,7 +17,7 @@ nav_order: 20
 
 ## Introduction
 
-Specmatic Insights is a powerful tool that aggregates Specmatic reports from various environments such as your CI/CD pipelines and visualizes how your organization's microservices interact with each other. This guide will walk you through the setup process and help you leverage the full potential of Specmatic Insights.
+Specmatic Insights is a powerful tool that aggregates Specmatic reports from various environments such as your CI/CD pipelines and visualizes how your organization's microservices, microfrontends & clients interact with each other. This guide will walk you through the setup process and help you leverage the full potential of Specmatic Insights.
 
 ### Features
 
@@ -34,9 +34,10 @@ Here are some examples of what you can expect to see in Specmatic Insights:
 
 Additionally, the dashboard provides a comprehensive overview of your API ecosystem, offering valuable insights such as:
 
+- Identify circular dependencies in your service architecture
+- Pinpoint single points of failure or congestion points in your architecture
 - The proportion of operations used by both providers and consumers
-- Operations used exclusively for testing
-- Operations used only as stubs
+- Operations used exclusively for testing and stubbing
 - Overall API coverage
 
 ![Insights Dashboard](../images/insights_feature_2.png)
@@ -57,7 +58,7 @@ Let's get started!
 
 ### Setup overview
 
-A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing. In this tutorial, we'll be working with a typical microservices scenario involving a Backend-for-Frontend (BFF) and a Domain Service. Here's an overview of what we'll be setting up:
+A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing. In this tutorial, we'll be working with a typical scenario of microservices & microfrontends involving a Backend-for-Frontend (BFF) and a Domain Service. Here's an overview of what we'll be setting up:
 
 ![Order Micorservices architectire](../images/insights_demo_architecture.png)
 
@@ -130,9 +131,9 @@ We'll be working with two OpenAPI specifications:
               -c "git config --global --add safe.directory /api-contracts && java -jar /usr/src/app/specmatic.jar backwardCompatibilityCheck"
     ```
     
-## Step 2: Setting up Client, Provider & Consumer services
+## Step 2: Setting up Client, Provider and Domain services
 
-Now that we have our OpenAPI specification checked in, let's bring our Order microservices to life! 
+Now that we have our OpenAPI specification checked in, let's bring our Order services to life! 
 
 **Client** - You can implement client in programming language of your choice. Once ready, place the following configuration in a file name `specmatic.yaml` at the root level of your project, this will:
 * virtualize BFF service for the client application (based on the `order_bff.yaml` contract), helping isolate the client.
