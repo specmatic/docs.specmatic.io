@@ -9,7 +9,7 @@ nav_order: 20
   - [Introduction](#introduction)
   - [What You will Achieve](#what-you-will-achieve)
   - [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
-  - [Step 2: Setting up Provider & Consumer services](#step-2-setting-up-provider-&-consumer-services)
+  - [Step 2: Setting up Client, Provider & Consumer services](#step-2-setting-up-client-provider-and-domain-services)
   - [Step 3: Configuring Specmatic Insights](#step-3-configuring-specmatic-insights)
   - [Step 4: Visualizing Your API Ecosystem](#step-4-visualizing-your-api-ecosystem)
   - [Next Steps](#next-steps)
@@ -131,7 +131,7 @@ We'll be working with two OpenAPI specifications:
               -c "git config --global --add safe.directory /api-contracts && java -jar /usr/src/app/specmatic.jar backwardCompatibilityCheck"
     ```
     
-## Step 2: Setting up Client, Provider & Consumer services
+## Step 2: Setting up Client, Provider and Domain services
 
 Now that we have our OpenAPI specification checked in, let's bring our Order services to life! 
 
