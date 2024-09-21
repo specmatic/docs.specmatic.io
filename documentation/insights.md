@@ -178,9 +178,47 @@ After the client is up and running and checked in to a git repository, we can cr
 * virtualize BFF service using `order_bff.yaml` and **Specmatic** docker image.
 * test client implementation against the BFF service virtualization.
 
-Please find below the link CI pipeline of React implmentation of client
+(note: we implemented the client in react, so setting up pipeline accordingly)
 
-[React Client CI pipeline](https://github.com/znsio/specmatic-order-ui-react/blob/1fca661eadcd1109746b7667059eea3dcf312198/.github/workflows/main.yml)
+```yaml
+name: Client Contract Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run Specmatic stub to virtualize the BFF service
+      run: |
+        docker run -d --name specmatic-stub \
+          -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+          -p 8080:8080 \
+          znsio/specmatic stub
+
+        # Wait for the stub to be ready
+        sleep 10
+
+    - name: Run contract test against the Specmatic stub
+      run: npm run test:contract
+      env:
+        STUB_URL: http://localhost:8080
+```
 
 ### Step 2.2: Setting up CI pipeline for BFF Service
 
@@ -189,9 +227,59 @@ Make sure BFF service is checked in to a git repository. Then create the followi
 * virtualize Domain service using `order_api.yaml` and **Specmatic** docker image.
 * test BFF service using `order_bff.yaml` and **Specmatic** docker image. 
 
-Please find below the link to CI implementation of BFF service in Kotlin:
+(note: we implemented the BFF service in Kotlin, so setting up pipeline accordingly)
 
-[Kotlin BFF Service CI pipeline](https://github.com/znsio/specmatic-order-bff-java/blob/bbea7fd99d99f1ed61e68a5ecf2b832f1beaff79/.github/workflows/gradle.yml)
+```yaml
+name: BFF Service (Kotlin) CI with Gradle 
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'true'
+        
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+    - name: Validate Gradle wrapper
+      uses: gradle/wrapper-validation-action@v1
+
+    - name: Run Specmatic stub to virtualize the Order API service
+      run: |
+        docker run -d --name specmatic-stub \
+          -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+          -p 9000:9000 \
+          znsio/specmatic stub
+
+        # Wait for the stub to be ready
+        sleep 10
+
+    - name: Start Spring Boot application
+      run: ./gradlew bootRun &
+
+    - name: Wait for application to start
+      run: sleep 30
+
+    - name: Contract Test BFF service using Specmatic
+      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=8080 --host=localhost
+```
 
 ### Step 2.3: Setting up CI pipeline for Order API
 
@@ -199,10 +287,49 @@ Make sure Order Domain API service is checked in to a git repository. Then creat
 * build the Domain API service
 * test Domain API service using `order_api.yaml` and **Specmatic** docker image. 
 
-Please find below the link to CI pipeline in Java implementation for Order API
+(note: we implemented the Order Domain API service in Kotlin, so setting up pipeline accordingly)
 
-[Order API CI pipeline](https://github.com/znsio/specmatic-order-bff-java/blob/bbea7fd99d99f1ed61e68a5ecf2b832f1beaff79/.github/workflows/gradle.yml/)
+```yaml
+name: Domain API service CI with gradle
 
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'true'
+        
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+    - name: Validate Gradle wrapper
+      uses: gradle/wrapper-validation-action@v1
+
+    - name: Start Spring Boot application
+      run: ./gradlew bootRun &
+
+    - name: Wait for application to start
+      run: sleep 30
+
+    - name: Contract Test Domain API service using Specmatic
+      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=9000 --host=localhost
+```
 
 ## Step 3: Configuring Specmatic Insights
 
