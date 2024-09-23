@@ -91,9 +91,14 @@ We'll be working with two OpenAPI specifications:
     - [Order BFF OpenAPI Spec](insights_tutorial_spec_files/order_bff.yaml)
     - [Order Domain API OpenAPI Spec](insights_tutorial_spec_files/order_api.yaml)
 
-4. Set up a simple CI pipeline to lint and check backward compatibility of your contracts using Specmatic:
+4. Set up a simple CI pipeline to perform the following actions on OpenAPI specs in the central contract repo:
+* lint 
+* check backward compatibility of your contracts using Specmatic
+* generate insights report, using specmatic docker image
+* run specmatic insights build reporter
 
     ```yaml
+    {% raw %}
     name: Lint specifications and check Backward Compatibility
 
     on:
@@ -129,8 +134,31 @@ We'll be working with two OpenAPI specifications:
               --entrypoint /bin/sh \
               znsio/specmatic \
               -c "git config --global --add safe.directory /api-contracts && java -jar /usr/src/app/specmatic.jar backwardCompatibilityCheck"
+          
+          - name: Generate central contract repo report
+            run: |
+              docker run -v "$(pwd):/central-contract-repo:rw" \
+                --entrypoint /bin/sh znsio/specmatic \
+                -c "cd /central-contract-repo && java -jar /usr/src/app/specmatic.jar central-contract-repo-report"
+          
+          - name: Run Specmatic Insights Github Build Reporter
+            uses: znsio/specmatic-insights-build-reporter-github-action@v2.0.2
+            with:
+              github-token: ${{ secrets.GH_REPOSITORY_TOKEN }}
+              org-id:  YOUR_SPECMATIC_ORG_ID # Replace with your actual Org ID
+              branch-ref: ${{ github.ref }}
+              branch-name: ${{ github.ref_name }}
+              build-id: ${{ github.run_id }}
+              repo-name: ${{ github.event.repository.name }}
+              repo-id: ${{ github.repository_id }}
+              repo-url: ${{ github.event.repository.html_url }} 
+      {% endraw %}
     ```
     
+<!-- After successfully setting up your central contract repository and running the CI pipeline, you should see output similar to this:
+
+[Successful contract repo](../images/step1_successful) -->
+
 ## Step 2: Setting up Client, Provider and Domain services
 
 Now that we have our OpenAPI specification checked in, let's bring our Order services to life! 
@@ -177,7 +205,7 @@ sources:
 After the client is up and running and checked in to a git repository, we can create the following CI pipeline to :
 * build the client app
 * virtualize BFF service using `order_bff.yaml` and **Specmatic** docker image.
-* test client implementation against the BFF service virtualization.
+* test client implementation against the virtualized BFF service.
 
 (note: we implemented the client in react, so setting up pipeline accordingly)
 
@@ -215,11 +243,15 @@ jobs:
         # Wait for the stub to be ready
         sleep 10
 
-    - name: Run contract test against the Specmatic stub
-      run: npm run test:contract
+    - name: Run component test against the Specmatic stub
+      run: npm run test:component
       env:
         STUB_URL: http://localhost:8080
 ```
+
+<!-- Upon successful execution of the client CI pipeline, you should see output resembling this:
+
+[Successful Client CI Pipeline](../images/successful_client_ci_pipe) -->
 
 ### Step 2.2: Setting up CI pipeline for BFF Service
 
@@ -282,6 +314,10 @@ jobs:
       run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=8080 --host=localhost
 ```
 
+<!-- After running the BFF service CI pipeline, you should see results similar to:
+
+[Successful BFF CI pipeline](../images/success_bff_ci_pipe) -->
+
 ### Step 2.3: Setting up CI pipeline for Order API
 
 Make sure Order Domain API service is checked in to a git repository. Then create the following CI pipeline to :
@@ -332,6 +368,22 @@ jobs:
       run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=9000 --host=localhost
 ```
 
+<!-- Upon completion of the Order API CI pipeline, you should see output like this:
+
+[Success Order API CI pipeline](../images/success_order_api_ci_pipe) -->
+
+### Summary of Progress
+
+Congratulations! At this point, you have successfully set up and configured:
+
+✅ Central contract repository with CI/CD for linting and backward compatibility checks <br>
+✅ Client application with CI/CD for building and testing against a virtualized BFF service <br>
+✅ BFF service with CI/CD for building, testing against a virtualized Domain service, and being tested as a provider <br>
+✅ Domain service with CI/CD for building and being tested as a provider <br>
+
+All four components are now integrated with Specmatic for contract testing and service virtualization. This setup ensures that your entire API ecosystem is continuously validated and maintains consistency across all services.
+With this foundation in place, we can now move on to configuring Specmatic Insights to visualize and analyze your API ecosystem.
+
 ## Step 3: Configuring Specmatic Insights
 
 ### Setting Up Specmatic Insights
@@ -343,7 +395,10 @@ To start using Specmatic Insights please contact [Specmatic support](https://spe
 To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for your Client, BFF Service & Order Domain API service
 
 1. As explained in above steps, ensure Specmatic is present in your CI pipelines, helping 'test' and 'virtualize'. 
-2. Then, add the 'Specmatic Insights GitHub Build Reporter' to both your consumer and provider CI workflow, after specmatic has run.
+2. Then, add the 'Specmatic Insights GitHub Build Reporter' to your CI pipelines after specmatic has run on all of the following:
+2.1 client
+2.2 BFF service
+2.3 and Order API CI workflow
 
 ```yaml
 {% raw %}
@@ -399,7 +454,7 @@ Congratulations! You've set up a powerful system for managing and visualizing yo
 
 Integrate more of your services into this ecosystem.
 Use the insights gained to identify areas for improvement in your API design and usage.
-Leverage Specmatic for test-driven API development.
+Leverage Specmatic for contract-driven API development.
 
 ## Troubleshooting
 
