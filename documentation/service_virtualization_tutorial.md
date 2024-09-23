@@ -10,6 +10,7 @@ Service Virtualization
 - [Service Virtualization](#service-virtualization)
   - [Pre-requisites](#pre-requisites)
   - [Inline Examples](#inline-examples)
+  - [Inline Examples for Responses with No Body](#inline-examples-for-responses-with-no-body)
   - [Externalizing Example Data](#externalizing-example-data)
   - [Intelligent Service Virtualisation - Example cannot go out of sync](#intelligent-service-virtualisation---example-cannot-go-out-of-sync)
   - [Strict Mode](#strict-mode)
@@ -147,6 +148,74 @@ Service Virtualization
   - **Request:** Specmatic uses the request body in the request example named `CREATE_EMPLOYEE_SUCCESS` to match the incoming HTTP request.
   - **Response:** Once matched, Specmatic looks for an example with same name (`CREATE_EMPLOYEE_SUCCESS`) under responses. In this case the response code happens to be 200, so that is the response that Specmatic will return.
 
+### Inline Examples for Responses with No Body
+
+In addition to handling responses with a defined body, Specmatic also supports configuring inline examples for responses with no body. This is particularly useful in scenarios where an HTTP response is expected to return only a status code without any associated payload.
+
+To configure a request that expects a response with no body, you can define an inline example within the requestBody of your OpenAPI specification without associating it with any specific response. Specmatic automatically ties such examples to responses with no body.
+
+#### Example Usage
+
+Consider the following addition to the `employees.yaml` file, where we define an example for a request that triggers a response with no body:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/employees':
+    delete:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+            examples:
+              DELETE_EMPLOYEE_SUCCESS:
+                value:
+                  id: 10
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - name
+        - department
+        - designation
+      properties:
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string
+```
+
+In this example:
+
+- **Request Example:** We have defined an inline example named `DELETE_EMPLOYEE_SUCCESS` under the `requestBody` section for the `DELETE /employees` operation. 
+- **Response:** Since the response for this operation has no body (indicated by the `204 No Content` status code) and the inline example `DELETE_EMPLOYEE_SUCCESS` is not associated with any response, Specmatic will automatically tie this inline example to the response with no body.
+
+If there are multiple such examples defined for a particular path, all of them will be tied to the corresponding response with no body. This allows you to cover various test scenarios, even for responses that do not return any payload.
+
+#### Key Points:
+- **No Response Body Association:** If an inline example is defined without associating it with a specific response, Specmatic assumes it to be relevant for responses with no body.
+- **Automatic Binding:** Specmatic will bind all such inline examples to the response with no body for the respective request.
+- **Multiple Examples:** When multiple such examples are defined, each will be considered for the response with no body, allowing comprehensive testing.
+
+This capability enhances the flexibility and coverage of contract testing by ensuring that even scenarios involving responses with no body are thoroughly validated.
+
 ## Externalizing Example Data
 
 It may not always be possible to add examples inline in the OpenAPI specifications. And sometimes certain examples may not belong in the API specification. In such cases, we can add examples outside the spec in the form of JSON files.
@@ -248,6 +317,39 @@ Let's see how this is done.
     "id": 20
   }
   ```
+
+#### Handling No Response Body APIs
+
+Specmatic also supports externalizing examples for APIs that return no response body. To handle this:
+
+- Create an example file with the `http-request` section, but omit the `http-response` body.
+- Specmatic will automatically associate this example with the corresponding response that has no body.
+
+For example:
+
+```json
+{
+    "http-request": {
+        "path": "/employees",
+        "method": "DELETE",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": {
+            "id": 10
+        }
+    },
+    "http-response": {
+        "status": 204,
+        "status-text": "No Content",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
+```
+
+When this file is placed in the `employees_examples` directory and the stub is restarted, the Specmatic stub will respond appropriately to the DELETE request with a `204 No Content` status, confirming that the externalized example is correctly tied to a response with no body.
 
 **Note:** You may add more example files into the `employees_examples` directory. There is no limit to the number of example files that can be added.
 
