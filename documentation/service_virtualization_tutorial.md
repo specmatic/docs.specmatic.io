@@ -10,8 +10,11 @@ Service Virtualization
 - [Service Virtualization](#service-virtualization)
   - [Pre-requisites](#pre-requisites)
   - [Inline Examples](#inline-examples)
-  - [Inline Examples for Responses with No Body](#inline-examples-for-responses-with-no-body)
+    - [Inline Examples for Responses with No Body](#inline-examples-for-responses-with-no-body)
+      - [Example Usage](#example-usage)
+      - [Key Points:](#key-points)
   - [Externalizing Example Data](#externalizing-example-data)
+      - [Handling No Response Body APIs](#handling-no-response-body-apis)
   - [Intelligent Service Virtualisation - Example cannot go out of sync](#intelligent-service-virtualisation---example-cannot-go-out-of-sync)
   - [Strict Mode](#strict-mode)
   - [Data Type-Based Examples](#data-type-based-examples)
@@ -912,7 +915,7 @@ Sometimes it's helpful to just formulate the example without certain concrete va
 
 Let's see how this works.
 
-- Create a new example file in the `employees_examples` directory named `lookup_dictionary.json` with the following contents:
+- Create a new example file in the `employees_examples` directory named `patch_employee.json` with the following contents:
 
   ```json
   {
@@ -966,7 +969,7 @@ Let's see how this works.
   }
   ```
 
-- Note: we did not provide "Sales" or "Associate" as the value of "department" or "designation" respectively. Those were looked up in the dictionary.
+- Note: we did not provide "Sales" or "Associate" as the value of "department" or "designation" respectively. Those values came from the dictionary.
 
 This feature also supports the following lookup syntax:
 
