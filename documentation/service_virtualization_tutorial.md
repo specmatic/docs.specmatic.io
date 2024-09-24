@@ -911,7 +911,7 @@ The same idea extends to the response.
 
 ## Inject Response Values From An External Dictionary
 
-Sometimes it's helpful to just formulate the example without certain concrete values, and have them injected later on. The dictionary feature can be used to do this.
+It's possible to parameterize certain response values in the example, in order for them to be replaced by Specmatic at runtime with values from a dictionary.
 
 Let's see how this works.
 
