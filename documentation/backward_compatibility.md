@@ -9,6 +9,7 @@ Backward Compatibility
 
 - [Backward Compatibility](#backward-compatibility)
   - [About Backward Compatibility](#about-backward-compatibility)
+  - [Comparing local changes to git](#compare-local-changes-to-git)
   - [Comparing Two Contracts (Contract vs Contract)](#comparing-two-contracts-contract-vs-contract)
   - [Validating Changes In Git On Your Laptop](#validating-changes-in-git-on-your-laptop)
   - [Validating Changes In CI](#validating-changes-in-ci)
@@ -17,17 +18,37 @@ Backward Compatibility
 
 ## About Backward Compatibility
 
-If an API provider implementing a change to a contract would become incompatible with existing consumers due to the change, the changes to the contract are NOT backward compatible.
+Backward compatibility ensures that new versions of an API can work seamlessly with existing consumers. When an API is backward compatible, it means that any changes made to the API won't break the functionality of applications or services that are already using it.
 
 Aim to make all changes to a contract backward compatible, to ensure that an updated API provider can be deployed as soon as it is ready, without waiting for consumers to catchup.
 
-Specmatic can provide instant feedback when a change to an API provider will break consumers by looking at the old and new contract. This feedback only requires the contract. No code needs to be written, saving the provider the effort of writing code.
+Specmatic offers a powerful feature to check for backward compatibility between different versions of your API contract. Here's how it works:
+
+* **Early Detection:** Specmatic can identify compatibility issues before you write any code, saving time and effort.
+* **Contract-Based Analysis:** By comparing the old and new versions of your API contract, Specmatic provides instant feedback on potential breaking changes.
+* **No Code Required:** This analysis is performed solely on the contract, eliminating the need for implementation code.
 
 <img src="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="60%" height="60%" />
 
 [Watch this video](https://www.youtube.com/watch?v=vBwzEpnQ7To&t=1197s) to see it in action. Read on and even try it out yourself!
 
-## Comparing Two Contracts (Contract vs Contract)
+## Compare local changes to git
+
+1. Checkout an OpenAPI contract from your git repository.
+2. Make changes to the contract.
+3. Run `specmatic backward-compatibility-check` to check for backward compatibility.
+4. If there are any issues, Specmatic will report them.
+5. Make the necessary changes to the contract to resolve the issues.
+6. Run `specmatic backward-compatibility-check` again to verify that the issues are resolved.
+
+the actual command is "backward-compatibility-check"
+
+Following are options that can be use along with this command
+
+
+## Comparing Two Contracts (Deprecated)
+
+> **DEPRECATED:** This command will be removed in the next major release. Use 'backward-compatibility-check' command instead.
 
 Create a file named api_products_v1.yaml.
 
@@ -250,7 +271,9 @@ The newer contract is not backward compatible.
 
 If the change is not backward compatible, the compare command exits with exit code 1. You can use this in a script.
 
-## Validating Changes In Git On Your Laptop
+## Validating Changes In Git On Your Laptop (Deprecated)
+
+> **DEPRECATED:** This command will be removed in the next major release. Use 'backward-compatibility-check' command instead.
 
 If `api_products_v1.yaml` is part of a git repository, changes can be made directly to this file instead of creating a new one.
 
@@ -285,6 +308,27 @@ The newer contract is backward compatible
 In CI, you will need to compare the changes in a contract from one commit to the next.
 
 You can do this with the following command:
+
+{% tabs ci-compare %}
+{% tab ci-compare java %}
+```bash
+java -jar specmatic.jar backward-compatibility-check --base-branch main
+```
+{% endtab %}
+{% tab ci-compare npm %}
+```bash
+npx specmatic compatible git commits api_products_v1.yaml HEAD HEAD^1
+```
+{% endtab %}
+{% tab ci-compare docker %}
+```bash
+docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
+```
+{% endtab %}
+{% endtabs %}
+
+
+> **DEPRECATED:** This command will be removed in the next major release. Use 'backward-compatibility-check' command instead.
 
 {% tabs ci-compare %}
 {% tab ci-compare java %}
