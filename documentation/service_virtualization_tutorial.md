@@ -940,7 +940,15 @@ Let's see how this works.
   }
   ```
 
-- Update your `specmatic.yaml` file to declare the dictionary:
+- Create a file named `dictionary.json` in the same directory as your `specmatic.yaml` with below contents. The format of this dictionary JSON is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation"):
+  ```json
+  {
+    "department": "Sales",
+    "designation" : "Associate"
+  }
+  ```
+
+- Update your `specmatic.yaml` file to use the `dictionary.json` we created above:
 
   ```yaml
   sources:
@@ -971,7 +979,9 @@ Let's see how this works.
 
 - Note: we did not provide "Sales" or "Associate" as the value of "department" or "designation" respectively. Those values came from the dictionary.
 
-This feature also supports the following lookup syntax:
+### Nested structure lookup in dictionary
+
+The `dictionary.json` also supports a more sophisticated lookup when there are nested structures in the schema. Here is an example that disambiguates a name field that appears under `person` and another that appears under `past_companies` using a dot notation:
 
 ```json
 {
