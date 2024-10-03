@@ -16,6 +16,7 @@ nav_order: 18
     - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
       - [HTTP Headers](#http-headers)
       - [GraphQL Variables](#graphql-variables)
+      - [GraphQL Scalar Types](#graphql-scalar-types)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub / Service Virtualization Service](#starting-the-stub--service-virtualization-service)
       - [Running Tests](#running-tests)
@@ -167,6 +168,57 @@ response: [
     }
 ]
 ```
+
+**Note**: It is recommended to specify the type of the variable e.g. `$pageSize: Int!`. If the type is not specified explicitly you may face some issues since Specmatic will implicitly cast the variable to a certain type which may be invalid sometimes.
+
+#### GraphQL Scalar Types
+
+In GraphQL, you can define [custom scalar types](https://graphql.org/learn/schema/#scalar-types) to handle specialized data, such as dates or monetary values, that require specific serialization and deserialization logic. For example:
+
+```graphql
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+scalar Date
+
+type Offer {
+  offerCode: String!
+  validUntil: Date!
+}
+
+type Query {
+  findOffersForDate(date: Date!): [Offer]!
+}
+```
+
+In this schema, `Date` is a custom scalar. While GraphQL doesn't provide details on how this scalar is serialized or deserialized, your application code defines the logic. 
+
+When testing queries like `findOffersForDate` using Specmatic, the tool doesn't know how to correctly handle the `Date` scalar and might pass an incorrect value, such as a random string, leading to test failures.
+
+To guide Specmatic, you can provide externalized examples that specify valid inputs for custom scalars like `Date`. For instance:
+
+```yaml
+request:
+  body: |
+    query {
+      findOffersForDate(date: "2024/12/31") { offerCode, validUntil }
+    }
+
+response: [
+  {
+    "offerCode": "WKND30",
+    "validUntil": "2024/12/12"
+  },
+  {
+    "offerCode": "SUNDAY20",
+    "validUntil": "2024/12/25"
+  }
+]
+```
+
+Here, the `Date` scalar is provided with a valid value (`"2024/12/31"`). This ensures that during testing, Specmatic uses the correct format for the `Date` argument, allowing your tests to run smoothly without failures caused by incorrect data types.
 
 ### Using the Docker Image
 
