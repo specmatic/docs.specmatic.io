@@ -26,6 +26,7 @@ Service Virtualization
     - [Partial Request Examples](#partial-request-examples)
     - [Partial Response Examples](#partial-response-examples)
   - [Inject Response Values From An External Dictionary](#inject-response-values-from-an-external-dictionary)
+    - [Nested structure lookup in dictionary](#nested-structure-lookup-in-dictionary)
   - [Delay Simulation](#delay-simulation)
     - [Example Specific Delay](#example-specific-delay)
     - [Global Delay](#global-delay)
@@ -915,36 +916,148 @@ It's possible to parameterize certain response values in the example, in order f
 
 Let's see how this works.
 
-- Create a new example file in the `employees_examples` directory named `patch_employee.json` with the following contents:
+- Create the following employee_details.yaml specification file.
+
+  ```yaml
+  openapi: 3.0.0
+  info:
+    title: Employees
+    version: '1.0'
+  servers: []
+  paths:
+    '/employees':
+      patch:
+        summary: ''
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeDetails'
+        responses:
+          '200':
+            description: Employee Created Response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Employee'
+  components:
+    schemas:
+      Employee:
+        type: object
+        required:
+          - id
+          - name
+          - department
+          - designation
+        properties:
+          id:
+            type: integer
+          employeeCode:
+            type: string
+          name:
+            type: string
+          department:
+            type: string
+          designation:
+            type: string
+
+      EmployeeDetails:
+        type: object
+        required:
+          - name
+          - department
+          - designation
+        properties:
+          name:
+            type: string
+          employeeCode:
+            type: string
+  openapi: 3.0.0
+  info:
+    title: Employees
+    version: '1.0'
+  servers: []
+  paths:
+    '/employees':
+      patch:
+        summary: ''
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeDetails'
+        responses:
+          '200':
+            description: Employee Created Response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Employee'
+  components:
+    schemas:
+      Employee:
+        type: object
+        required:
+          - id
+          - name
+          - department
+          - designation
+        properties:
+          id:
+            type: integer
+          employeeCode:
+            type: string
+          name:
+            type: string
+          department:
+            type: string
+          designation:
+            type: string
+
+      EmployeeDetails:
+        type: object
+        required:
+          - name
+          - department
+          - designation
+        properties:
+          name:
+            type: string
+          employeeCode:
+            type: string
+
+  ```
+
+- Create a new example file in the `employee_details_examples` directory named `patch_employee.json` with the following contents:
 
   ```json
   {
-      "http-request": {
-          "method": "PATCH",
-          "path": "/employees",
-          "body": {
-              "employeeCode": "pqrxyz",
-              "name": "Jamie"
-          }
-      },
-      "http-response": {
-          "status": 200,
-          "body": {
-              "id": 10,
-              "employeeCode": "pqrxyz",
-              "name": "Jamie",
-              "department": "(string)",
-              "designation": "(string)"
-          }
+    "http-request": {
+      "method": "PATCH",
+      "path": "/employees",
+      "body": {
+        "employeeCode": "pqrxyz",
+        "name": "Jamie"
       }
+    },
+    "http-response": {
+      "status": 200,
+      "body": {
+        "id": 10,
+        "employeeCode": "pqrxyz",
+        "name": "Jamie",
+        "department": "(string)",
+        "designation": "(string)"
+      }
+    }
   }
   ```
 
 - Create a file named `dictionary.json` in the same directory as your `specmatic.yaml` with below contents. The format of this dictionary JSON is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation"):
   ```json
   {
-    "department": "Sales",
-    "designation" : "Associate"
+    "Employee.department": "Sales",
+    "Employee.designation" : "Associate"
   }
   ```
 
@@ -954,7 +1067,7 @@ Let's see how this works.
   sources:
     - provider: filesystem
       stub:
-        - employees.yaml
+        - employee_details.yaml
   stub:
     dictionary: ./dictionary.json
   ```
@@ -981,26 +1094,93 @@ Let's see how this works.
 
 ### Nested structure lookup in dictionary
 
-The `dictionary.json` also supports a more sophisticated lookup when there are nested structures in the schema. Here is an example that disambiguates a name field that appears under `person` and another that appears under `past_companies` using a dot notation:
+Keys in `dictionary.json` can refer to nested fields. Consider the following schema:
+
+```yaml
+components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: object
+          required:
+            - first_name
+          properties:
+            first_name:
+              type: string
+```
+
+A value for first_name can be supplied in the dictionary as follows:
 
 ```json
 {
-  "person.name": "Jackie",
-  "addresses[*].street": "Baker Street",
-  "past_companies[0].name": "Acme Inc"
+  "Employee.name.first_name": "Jackie"
 }
 ```
 
-How this works:
+Values for nested arrays can also be supplied. Consider the following schema:
 
-| -- | -- |
-| Syntax | Turns | Into |
-| -- | -- |
-| `"person.name": "Jackie"` | `{"person": {"name": "(string)" } }` | `{"person": {"name": "Jackie" } }` |
-| `"addresses[*].street": "Baker Street"` | `{ "addresses": [ {"street": "(string)" }, {"street: "(string)" }]}` | `{ "addresses": [ {"street": "Baker Street" }, {"street: "Baker Street" }]}` |
-| `"past_companies[0].name": "Acme Inc"` | `{ "past_companies": [ {"name": "(string)" }, {"name: "(string)" }]}` | same as above but only for the 0th element of `past_companies` |
+```yaml
+components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - addresses
+      properties:
+        addresses:
+          type: array
+          items:
+            type: object
+            required:
+              - street
+            properties:
+              street:
+                type: string
+```
 
-This syntax can be nested to any depth, e.g. `person.addresses[*].street: "Baker Street"`
+```json
+{
+  "Employee.addresses[*].street": "Baker Street"
+}
+```
+
+Note: nesting like in the above examples (e.g. street nested within array of addresses within employee) only works because street itself does not exist as a top-level key in an entitiy.
+
+Finally, consider another example where a schema refers to another schema:
+
+```yaml
+components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - addresses
+      properties:
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+    Address:
+      type: object
+      required:
+        - street
+      properties:
+        street:
+          type: string
+```
+
+In this case, the dictionary will have to look like this:
+
+```json
+{
+  "Address.street": "Baker Street"
+}
+```
+
 
 ## Delay Simulation
 
