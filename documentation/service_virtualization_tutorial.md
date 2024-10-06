@@ -972,59 +972,6 @@ Let's see how this works.
             type: string
           employeeCode:
             type: string
-  openapi: 3.0.0
-  info:
-    title: Employees
-    version: '1.0'
-  servers: []
-  paths:
-    '/employees':
-      patch:
-        summary: ''
-        requestBody:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmployeeDetails'
-        responses:
-          '200':
-            description: Employee Created Response
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Employee'
-  components:
-    schemas:
-      Employee:
-        type: object
-        required:
-          - id
-          - name
-          - department
-          - designation
-        properties:
-          id:
-            type: integer
-          employeeCode:
-            type: string
-          name:
-            type: string
-          department:
-            type: string
-          designation:
-            type: string
-
-      EmployeeDetails:
-        type: object
-        required:
-          - name
-          - department
-          - designation
-        properties:
-          name:
-            type: string
-          employeeCode:
-            type: string
 
   ```
 
