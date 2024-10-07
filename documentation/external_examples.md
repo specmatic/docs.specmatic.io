@@ -12,8 +12,24 @@ External Examples
   - [Validate External Examples](#validate-external-examples)
 
 ## Validate External Examples
-
-All examples in a specification can be easily validated using the command `java -jar specmatic.jar examples validate --contract-file <path to openapi file>`.
+All examples in a specification can be easily validated using the `examples validate` command.
+{% tabs examples-validate %}
+{% tab examples-validate java %}
+```shell
+java -jar specmatic.jar examples validate --contract-file <path to openapi file>
+```
+{% endtab %}
+{% tab examples-validate npm %}
+```shell
+npx specmatic examples validate --contract-file <path to openapi file>
+```
+{% endtab %}
+{% tab examples-validate docker %}
+```shell
+docker run -v "<path to openapi file>:/usr/src/app/specification.yaml" -v "<path to example directory>:/usr/src/app/specification_examples" znsio/specmatic examples validate --contract-file "specification.yaml"
+```
+{% endtab %}
+{% endtabs %}
 
 It will exit with return code `1` if any example is not in sync.
 
@@ -103,10 +119,44 @@ Let's try this out.
 
   Note: `name` is a mandatory request field but it is missing in the example.
 
-- Run the following command: `java -jar specmatic.jar examples validate --contract-file employee_details.yaml`
+- Run the following command to validate the example:
+{% tabs examples-validate %}
+{% tab examples-validate java %}
+```shell
+java -jar specmatic.jar examples validate --contract-file employee_details.yaml
+```
+{% endtab %}
+{% tab examples-validate npm %}
+```shell
+npx specmatic examples validate --contract-file employee_details.yaml
+```
+{% endtab %}
+{% tab examples-validate docker %}
+```shell
+docker run -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" znsio/specmatic examples validate --contract-file "employee_details.yaml"
+```
+{% endtab %}
+{% endtabs %}
   - The error in the example will be logged to the console.
 - Check the exit code. On MacOS or *nix, run `echo $?`. On Windows, run `echo %errorlevel%`. You'll see the exit code of `1`.
 
 Now add a name to the request in the above example, and try running the command again. This time the validation will succeed.
 
-You will find other helpful parameters for this command by running `java -jar specmatic.jar examples validate --help`.
+You will find other helpful parameters for this command by running the following.
+{% tabs examples-validate %}
+{% tab examples-validate java %}
+```shell
+java -jar specmatic.jar examples validate --help
+```
+{% endtab %}
+{% tab examples-validate-validate npm %}
+```shell
+npx specmatic examples validate --help
+```
+{% endtab %}
+{% tab examples-validate docker %}
+```shell
+docker run znsio/specmatic examples validate --help
+```
+{% endtab %}
+{% endtabs %}
