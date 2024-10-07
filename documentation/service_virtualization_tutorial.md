@@ -975,34 +975,13 @@ Let's see how this works.
 
   ```
 
-- Create a new example file in the `employee_details_examples` directory named `patch_employee.json` with the following contents:
-
-  ```json
-  {
-    "http-request": {
-      "method": "PATCH",
-      "path": "/employees",
-      "body": {
-        "employeeCode": "pqrxyz",
-        "name": "Jamie"
-      }
-    },
-    "http-response": {
-      "status": 200,
-      "body": {
-        "id": 10,
-        "employeeCode": "pqrxyz",
-        "name": "Jamie",
-        "department": "(string)",
-        "designation": "(string)"
-      }
-    }
-  }
-  ```
-
 - Create a file named `dictionary.json` in the same directory as your `specmatic.yaml` with below contents. The format of this dictionary JSON is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation"):
+
   ```json
   {
+    "Employee.id": 10,
+    "Employee.name": "Jamie",
+    "Employee.employeeCode" : "pqrxyz",
     "Employee.department": "Sales",
     "Employee.designation" : "Associate"
   }
@@ -1037,7 +1016,7 @@ Let's see how this works.
   }
   ```
 
-- Note: we did not provide "Sales" or "Associate" as the value of "department" or "designation" respectively. Those values came from the dictionary.
+- Note: we did not provide any of the above values in any example file. They have been picked up by Specmatic from the dictionary when creating a response to return.
 
 ### Nested structure lookup in dictionary
 
