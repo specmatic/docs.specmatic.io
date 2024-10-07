@@ -16,7 +16,8 @@ nav_order: 18
     - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
       - [HTTP Headers](#http-headers)
       - [GraphQL Variables](#graphql-variables)
-      - [GraphQL Scalar Types](#graphql-scalar-types)
+    - [Dynamic Field Selection From Example Responses](#dynamic-field-selection-from-example-responses)
+    - [GraphQL Scalar Types](#graphql-scalar-types)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub / Service Virtualization Service](#starting-the-stub--service-virtualization-service)
       - [Running Tests](#running-tests)
@@ -171,7 +172,149 @@ response: [
 
 **Note**: It is recommended to specify the type of the variable e.g. `$pageSize: Int!`. If the type is not specified explicitly you may face some issues since Specmatic will implicitly cast the variable to a certain type which may be invalid sometimes.
 
-#### GraphQL Scalar Types
+### Dynamic Field Selection from Example Responses
+
+When running a GraphQL stub using Specmatic, you can provide an example query that includes all possible fields and sub-selections. Specmatic uses this example to generate the stub response.
+
+If a request is made using the exact query provided in the example, Specmatic will return the full response as defined. However, if a request is made with a subset of the fields specified in the original example, **Specmatic will automatically tailor the response to include only those requested fields**.
+
+This means that a comprehensive example (an "uber example") covering all fields can be reused by Specmatic to generate responses for queries that request only a subset of those fields.
+
+Here are some simple steps to try this out:
+
+1. Create a GraphQL SDL file named `product-api.graphql` with the following content:
+   ```graphql
+   schema {
+       query: Query
+       mutation: Mutation
+   }
+
+   enum ProductType {
+     gadget
+     book
+     food
+     other
+   }
+
+   type Query {
+     findAvailableProducts(type: ProductType!, pageSize: Int): [Product]
+   }
+
+   type Product {
+     id: ID!
+     name: String!
+     inventory: Int!
+     type: ProductType!
+   }
+   ```
+
+2. Create a folder named `examples`.
+
+3. Create an example file named `find_available_gadgets.yaml` in the `examples` folder with the following content:
+   ```yaml
+   request:
+     body: |
+       query {
+         findAvailableProducts(type: gadget, pageSize: 10) { 
+           id 
+           name 
+           inventory 
+           type 
+         }
+       }
+   response: [
+       {
+           "id": "10",
+           "name": "The Almanac",
+           "inventory": 10,
+           "type": "book"
+       },
+       {
+           "id": "20",
+           "name": "iPhone",
+           "inventory": 15,
+           "type": "gadget"
+       }
+   ]
+   ```
+
+4. Create a `specmatic.yaml` file with the following content in the root folder where `product-api.graphql` file is present:
+
+   ```yaml
+   contract_repositories:
+     - type: filesystem
+       consumes:
+         - product-api.graphql
+   ```
+
+5. Run the following command to start the GraphQL stub on `localhost:9000/graphql`:
+   ```bash
+   docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
+     -v "$PWD/examples:/usr/src/app/examples" \
+     -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+     -p 9000:9000 znsio/specmatic-graphql-trial virtualize --port=9000 --examples=examples
+   ```
+
+6. Make a request to query all the sub-selected fields specified in the example. You will get the exact response specified in the example. Use the following `curl` command to make this request:
+   ```bash
+   curl -X POST http://localhost:9000/graphql \
+     -H "Content-Type: application/json" \
+     -d '{
+       "query": "query { findAvailableProducts(type: gadget, pageSize: 10) { id name inventory type } }"
+     }'
+   ```
+   **Expected Response:**
+   ```json
+   {
+     "data": {
+       "findAvailableProducts": [
+         {
+           "id": "10",
+           "name": "The Almanac",
+           "inventory": 10,
+           "type": "book"
+         },
+         {
+           "id": "20",
+           "name": "iPhone",
+           "inventory": 15,
+           "type": "gadget"
+         }
+       ]
+     }
+   }
+   ```
+
+7. Make a request to query only a subset of the sub-selected fields specified in the example. You will get a response with only those sub-selected fields with values picked up from the response. Use the following `curl` command to make this request:
+   ```bash
+   curl -X POST http://localhost:9000/graphql \
+     -H "Content-Type: application/json" \
+     -d '{
+       "query": "query { findAvailableProducts(type: gadget, pageSize: 10) { id name } }"
+     }'
+   ```
+   **Expected Response:**
+   ```json
+   {
+     "data": {
+       "findAvailableProducts": [
+         {
+           "id": "10",
+           "name": "The Almanac"
+         },
+         {
+           "id": "20",
+           "name": "iPhone"
+         }
+       ]
+     }
+   }
+   ```
+
+---
+This setup allows you to test how Specmatic reuses the example provided, adapting the response to the requested fields.
+
+### GraphQL Scalar Types
 
 In GraphQL, you can define [custom scalar types](https://graphql.org/learn/schema/#scalar-types) to handle specialized data, such as dates or monetary values, that require specific serialization and deserialization logic. For example:
 
