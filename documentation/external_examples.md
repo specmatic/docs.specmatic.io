@@ -13,18 +13,18 @@ External Examples
 
 ## Validate External Examples
 All examples in a specification can be easily validated using the `examples validate` command.
-{% tabs test %}
-{% tab test java %}
+{% tabs examples-validate %}
+{% tab examples-validate java %}
 ```shell
 java -jar specmatic.jar examples validate --contract-file <path to openapi file>
 ```
 {% endtab %}
-{% tab test npm %}
+{% tab examples-validate npm %}
 ```shell
 npx specmatic examples validate --contract-file <path to openapi file>
 ```
 {% endtab %}
-{% tab test docker %}
+{% tab examples-validate docker %}
 ```shell
 docker run -v "<path to openapi file>:/usr/src/app/specification.yaml" -v "<path to example directory>:/usr/src/app/specification_examples" znsio/specmatic examples validate --contract-file "specification.yaml"
 ```
@@ -120,18 +120,18 @@ Let's try this out.
   Note: `name` is a mandatory request field but it is missing in the example.
 
 - Run the following command to validate the example:
-{% tabs test %}
-{% tab test java %}
+{% tabs examples-validate %}
+{% tab examples-validate java %}
 ```shell
 java -jar specmatic.jar examples validate --contract-file employee_details.yaml
 ```
 {% endtab %}
-{% tab test npm %}
+{% tab examples-validate npm %}
 ```shell
 npx specmatic examples validate --contract-file employee_details.yaml
 ```
 {% endtab %}
-{% tab test docker %}
+{% tab examples-validate docker %}
 ```shell
 docker run -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" znsio/specmatic examples validate --contract-file "employee_details.yaml"
 ```
@@ -143,18 +143,18 @@ docker run -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" 
 Now add a name to the request in the above example, and try running the command again. This time the validation will succeed.
 
 You will find other helpful parameters for this command by running the following.
-{% tabs test %}
-{% tab test java %}
+{% tabs examples-validate %}
+{% tab examples-validate java %}
 ```shell
 java -jar specmatic.jar examples validate --help
 ```
 {% endtab %}
-{% tab test npm %}
+{% tab examples-validate-validate npm %}
 ```shell
 npx specmatic examples validate --help
 ```
 {% endtab %}
-{% tab test docker %}
+{% tab examples-validate docker %}
 ```shell
 docker run znsio/specmatic examples validate --help
 ```
