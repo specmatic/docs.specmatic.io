@@ -26,7 +26,7 @@ Service Virtualization
     - [Partial Request Examples](#partial-request-examples)
     - [Partial Response Examples](#partial-response-examples)
   - [Use Meaningful Response Values From An External Dictionary](#use-meaningful-response-values-from-an-external-dictionary)
-    - [Filling out the example based on the dictionary](#filling-out-the-example-based-on-the-dictionary)
+    - [Using Dictionary Values In External Examples](#using-dictionary-values-in-external-examples)
     - [Nested structure lookup in dictionary](#nested-structure-lookup-in-dictionary)
   - [Delay Simulation](#delay-simulation)
     - [Example Specific Delay](#example-specific-delay)
@@ -1019,7 +1019,7 @@ Let's see how this works.
 
 Note: we did not provide any of the above values in any example file. They have been picked up by Specmatic from the dictionary when creating a response to return.
 
-### Filling out the example based on the dictionary
+### Using Dictionary Values In External Examples
 
 You can fill out the specific values in an example, and leave Specmatic to lookup the dictionary for the rest. This will save you the effort of coming up with good example values for keys you must provide but may not particularly care about.
 
