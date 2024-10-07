@@ -25,7 +25,8 @@ Service Virtualization
   - [Partial Examples](#partial-examples)
     - [Partial Request Examples](#partial-request-examples)
     - [Partial Response Examples](#partial-response-examples)
-  - [Inject Response Values From An External Dictionary](#inject-response-values-from-an-external-dictionary)
+  - [Use Meaningful Response Values From An External Dictionary](#use-meaningful-response-values-from-an-external-dictionary)
+    - [Filling out the example based on the dictionary](#filling-out-the-example-based-on-the-dictionary)
     - [Nested structure lookup in dictionary](#nested-structure-lookup-in-dictionary)
   - [Delay Simulation](#delay-simulation)
     - [Example Specific Delay](#example-specific-delay)
@@ -910,9 +911,9 @@ The same idea extends to the response.
 - Note that the two mandatory keys in the response named `id` and `employeeCode` are omitted from the example.
 - But because it's a partial example, when you make the execute the previous curl command, Specmatic will autogenerate values for `id` and `employeeCode` from their schemas in the specification.
 
-## Inject Response Values From An External Dictionary
+## Use Meaningful Response Values From An External Dictionary
 
-It's possible to parameterize certain response values in the example, in order for them to be replaced by Specmatic at runtime with values from a dictionary.
+When Specmatic's stub receives a request and finds no matching examples for it, Specmatic returns a response generated from the response schema in the API specification. While the generated response is schema-valid, it will not have meaningful values drawn from the context of your business domain. So in order to get domain-relevant responses when there examples, you can provide a dictionary of sample values to Specmatic. Specmatic will lookup this dictionary when it needs to generate domain-relevant examples.
 
 Let's see how this works.
 
@@ -1016,7 +1017,54 @@ Let's see how this works.
   }
   ```
 
-- Note: we did not provide any of the above values in any example file. They have been picked up by Specmatic from the dictionary when creating a response to return.
+Note: we did not provide any of the above values in any example file. They have been picked up by Specmatic from the dictionary when creating a response to return.
+
+### Filling out the example based on the dictionary
+
+You can fill out the specific values in an example, and leave Specmatic to lookup the dictionary for the rest. This will save you the effort of coming up with good example values for keys you must provide but may not particularly care about.
+
+- Create a new example file in the `employee_details_examples` directory named `patch_employee.json` with the following contents:
+
+    "http-request": {
+      "method": "PATCH",
+      "path": "/employees",
+      "body": {
+        "employeeCode": "lmnop",
+        "name": "Julie"
+      }
+    },
+    "http-response": {
+      "status": 200,
+      "body": {
+        "id": 10,
+        "employeeCode": "lmnop",
+        "name": "Julie",
+        "department": "(string)",
+        "designation": "(string)"
+      }
+    }
+  }
+  ```
+
+- Start the stub and execute this curl command:
+
+  ```shell
+  curl -X PATCH -H 'Content-Type: application/json' -d '{"name": "Julie", "employeeCode": "pqrxyz"}' http://localhost:9000/employees
+  ```
+
+- You'll get this response:
+
+  ```json
+  {
+      "id": 10,
+      "name": "Julie",
+      "employeeCode": "lmnop",
+      "department": "Sales",
+      "designation": "Associate"
+  }
+  ```
+
+Note: Specific values for `id`, `name` and `employeeCode` were specified in the example, but `department` and `designation` were not. The specific values in the response for those fields came from the dictionary.
 
 ### Nested structure lookup in dictionary
 
