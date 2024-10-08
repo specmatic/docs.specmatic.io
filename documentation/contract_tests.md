@@ -906,47 +906,104 @@ A contract-invalid example would not be allowed in the example named `SUCCESS`, 
 ### Run only passing tests in CI
 
 If the contract tests are still a work in progress, you can commit what's working and prevent other contract tests that are known to be broken from running.
+The test description can be used to do this filter. Test descriptions conveniently include the name of the Endpoints used in the OpenAPI specifications.
+for example, for the above given OpenAPI spec (ref. [employees.yaml](#specmatic-contract-test---command-line)),
+it'll have a test scenario that'll be named like:
+`POST /znsio/specmatic/employees -> 200`
 
-To do this, in Java, set the `filterName` Java system property in the @BeforeAll method (if you use JUnit 5) like this:
+Now the filterName can be set to `/znsio/specmatic/employees` to only run the test scenarios with this endpoint.
 
+This can be implemented in two ways-
+##### **Programmatically:**
+To do this programmatically set the `filterName` system property before running the test like this:
+{% tabs filter %}
+{% tab filter Java %}
 ```java
-System.setProperty("filterName", "TEST1");
+System.setProperty("filterName", "/znsio/specmatic/employees");
 ```
+{% endtab %}
+{% tab filter Node %}
+```javascript
+process.env.filterName = "/znsio/specmatic/employees";
+```
+{% endtab %}
+{% tab filter Python %}
+```shell
+os.environ['filterName'] = '/znsio/specmatic/employees'
+```
+{% endtab %}
+{% endtabs %}
 
-Now only the contract tests with `TEST1` in their test description will run. Test descriptions conveniently include the name of the tests used in the OpenAPI examples, and so can be used as the filtering value.
+Now only the contract tests with `/znsio/specmatic/employees` in their test description will run. Test descriptions conveniently include the name of the tests used in the OpenAPI examples, and so can be used as the filtering value.
 
 `filterName` can also be provided a comma separate value:
 
+{% tabs filter %}
+{% tab filter Java %}
 ```java
-System.setProperty("filterName", "TEST1, TEST2");
+System.setProperty("filterName", "/znsio/specmatic/employees, /znsio/specmatic/employees/{id}");
 ```
+{% endtab %}
+{% tab filter Node %}
+```javascript
+process.env.filterName = "/znsio/specmatic/employees, /znsio/specmatic/employees/{id}";
+```
+{% endtab %}
+{% tab filter Python %}
+```shell
+os.environ['filterName'] = '/znsio/specmatic/employees, /znsio/specmatic/employees/{id}'
+```
+{% endtab %}
+{% endtabs %}
 
-Now only the contract tests with either `TEST1` or `TEST2` in their test descriptions will run.
+Now only the contract tests with the given scenarios in their test descriptions will run.
 
-You can also use the command-line parameter `--filter-name`.
+##### **Using Command-line:**
+You can also use the command-line parameter `--filter-name` with the test description as:
+
+```shell
+--filter-name /znsio/specmatic/employees
+```
 
 ### Omitting some tests
 
-Set the `filterNotName` Java system property in the @BeforeAll method (if you use JUnit 5) like this:
+Set the `filterNotName` system property Before running tests like this:
 
+{% tabs filter %}
+{% tab filter Java %}
 ```java
-System.setProperty("filterNotName", "TEST1");
+System.setProperty("filterNotName", "/znsio/specmatic/employees");
 ```
+{% endtab %}
+{% tab filter Node %}
+```javascript
+process.env.filterNotName = "/znsio/specmatic/employees";
+```
+{% endtab %}
+{% tab filter Python %}
+```shell
+os.environ['filterNotName'] = '/znsio/specmatic/employees'
+```
+{% endtab %}
+{% endtabs %}
 
-Now only the contract tests which do not have `TEST1` in their test description will run. 
+Now only the contract tests which do not have `/znsio/specmatic/employees` in their test description will run. 
 
-You can also use the command-line parameter `--filter-not-name`.
+You can also use the command-line parameter as
+```shell
+--filter-not-name /znsio/specmatic/employees
+```
 
 ### Filtering tests by HTTP method name
 
 Both of the above options `filter-name` and `filter-not-name` can also be used in conjunction with HTTP methods to only run those operations or exclude the particular options respectively.
 
 ```java
-System.setProperty("filterName", "GET /items");
+System.setProperty("filterName", "POST /znsio/specmatic/employees");
 ```
 
-```
---filter-name "GET /items"
+```shell
+--filter-name "POST /znsio/specmatic/employees"
 ```
 
 This will only run the `GET` operation under `/items` and exclude other methods if available.
