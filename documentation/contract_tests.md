@@ -28,8 +28,7 @@ Contract Tests
     - [Referring to local specificatons](#referring-to-local-specificatons)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
-    - [Run only passing tests in CI](#run-only-passing-tests-in-ci)
-    - [Omitting some tests](#omitting-some-tests)
+    - [Selectively Running Tests in CI](#selectively-running-tests-in-ci)
     - [API Coverage](#api-coverage)
     - [Adanced Features](#adanced-features)
       - [Generative Tests](#generative-tests)
@@ -903,19 +902,19 @@ Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accept
 
 A contract-invalid example would not be allowed in the example named `SUCCESS`, as it is an example that should trigger a 200 response (and hence must be a contract-valid example).
 
-### Run only passing tests in CI
+### Selectively Running Tests in CI
 
-If the contract tests are still a work in progress, you can commit what's working and prevent other contract tests that are known to be broken from running.
-The test description can be used to do this filter. Test descriptions conveniently include the name of the Endpoints used in the OpenAPI specifications.
-for example, for the above given OpenAPI spec (ref. [employees.yaml](#specmatic-contract-test---command-line)),
-it'll have a test scenario that'll be named like:
-`POST /znsio/specmatic/employees -> 200 | EX:CREATE_EMPLOYEE_SUCCESS`
+When contract tests are still in development, you can run only the passing tests and exclude known failures. This can be achieved using test description filters, which include the endpoint names from your OpenAPI specifications.
 
-Now the filterName can be set to `CREATE_EMPLOYEE_SUCCESS` to only run the test scenarios with this example.
+For example, for the above given OpenAPI spec (ref. [employees.yaml](#specmatic-contract-test---command-line)),
+with a test scenario named `POST /znsio/specmatic/employees -> 200 | EX:CREATE_EMPLOYEE_SUCCESS`  you can filter tests as follows:
 
-This can be implemented in two ways-
-##### **Programmatically:**
-To do this programmatically set the `filterName` system property before running the test like this:
+**1. Include Test Name**
+
+To run only specific tests
+
+##### **Programmatically**
+Set the `filterName` system property before running the test like this:
 {% tabs filter %}
 {% tab filter Java %}
 ```java
@@ -934,9 +933,7 @@ os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS'
 {% endtab %}
 {% endtabs %}
 
-Now only the contract tests with `CREATE_EMPLOYEE_SUCCESS` in their test description will run. Test descriptions conveniently include the name of the tests used in the OpenAPI examples, and so can be used as the filtering value.
-
-`filterName` can also be provided a comma separate value:
+Multiple`filters` can be comma-separated:
 
 {% tabs filter %}
 {% tab filter Java %}
@@ -965,9 +962,11 @@ You can also use the command-line parameter `--filter-name` with the test descri
 --filter-name CREATE_EMPLOYEE_SUCCESS
 ```
 
-### Omitting some tests
+**2. Omitting some tests**
 
-Set the `filterNotName` system property Before running tests like this:
+Set the `filterNotName` system property before running tests like this:
+
+##### **Programmatic Approach:**
 
 {% tabs filter %}
 {% tab filter Java %}
@@ -989,7 +988,8 @@ os.environ['filterNotName'] = 'CREATE_EMPLOYEE_SUCCESS'
 
 Now only the contract tests which do not have `CREATE_EMPLOYEE_SUCCESS` in their test description will run. 
 
-You can also use the command-line parameter as
+##### **Using Command-line:**
+
 ```shell
 --filter-not-name CREATE_EMPLOYEE_SUCCESS
 ```
