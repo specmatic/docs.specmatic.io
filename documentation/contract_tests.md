@@ -909,9 +909,9 @@ If the contract tests are still a work in progress, you can commit what's workin
 The test description can be used to do this filter. Test descriptions conveniently include the name of the Endpoints used in the OpenAPI specifications.
 for example, for the above given OpenAPI spec (ref. [employees.yaml](#specmatic-contract-test---command-line)),
 it'll have a test scenario that'll be named like:
-`POST /znsio/specmatic/employees -> 200`
+`POST /znsio/specmatic/employees -> 200 | EX:CREATE_EMPLOYEE_SUCCESS`
 
-Now the filterName can be set to `/znsio/specmatic/employees` to only run the test scenarios with this endpoint.
+Now the filterName can be set to `CREATE_EMPLOYEE_SUCCESS` to only run the test scenarios with this example.
 
 This can be implemented in two ways-
 ##### **Programmatically:**
@@ -919,39 +919,39 @@ To do this programmatically set the `filterName` system property before running 
 {% tabs filter %}
 {% tab filter Java %}
 ```java
-System.setProperty("filterName", "/znsio/specmatic/employees");
+System.setProperty("filterName", "CREATE_EMPLOYEE_SUCCESS");
 ```
 {% endtab %}
 {% tab filter Node %}
 ```javascript
-process.env.filterName = "/znsio/specmatic/employees";
+process.env.filterName = "CREATE_EMPLOYEE_SUCCESS";
 ```
 {% endtab %}
 {% tab filter Python %}
 ```shell
-os.environ['filterName'] = '/znsio/specmatic/employees'
+os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS'
 ```
 {% endtab %}
 {% endtabs %}
 
-Now only the contract tests with `/znsio/specmatic/employees` in their test description will run. Test descriptions conveniently include the name of the tests used in the OpenAPI examples, and so can be used as the filtering value.
+Now only the contract tests with `CREATE_EMPLOYEE_SUCCESS` in their test description will run. Test descriptions conveniently include the name of the tests used in the OpenAPI examples, and so can be used as the filtering value.
 
 `filterName` can also be provided a comma separate value:
 
 {% tabs filter %}
 {% tab filter Java %}
 ```java
-System.setProperty("filterName", "/znsio/specmatic/employees, /znsio/specmatic/employees/{id}");
+System.setProperty("filterName", "CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS");
 ```
 {% endtab %}
 {% tab filter Node %}
 ```javascript
-process.env.filterName = "/znsio/specmatic/employees, /znsio/specmatic/employees/{id}";
+process.env.filterName = "CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS";
 ```
 {% endtab %}
 {% tab filter Python %}
 ```shell
-os.environ['filterName'] = '/znsio/specmatic/employees, /znsio/specmatic/employees/{id}'
+os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS'
 ```
 {% endtab %}
 {% endtabs %}
@@ -962,7 +962,7 @@ Now only the contract tests with the given scenarios in their test descriptions 
 You can also use the command-line parameter `--filter-name` with the test description as:
 
 ```shell
---filter-name /znsio/specmatic/employees
+--filter-name CREATE_EMPLOYEE_SUCCESS
 ```
 
 ### Omitting some tests
@@ -972,26 +972,26 @@ Set the `filterNotName` system property Before running tests like this:
 {% tabs filter %}
 {% tab filter Java %}
 ```java
-System.setProperty("filterNotName", "/znsio/specmatic/employees");
+System.setProperty("filterNotName", "CREATE_EMPLOYEE_SUCCESS");
 ```
 {% endtab %}
 {% tab filter Node %}
 ```javascript
-process.env.filterNotName = "/znsio/specmatic/employees";
+process.env.filterNotName = "CREATE_EMPLOYEE_SUCCESS";
 ```
 {% endtab %}
 {% tab filter Python %}
 ```shell
-os.environ['filterNotName'] = '/znsio/specmatic/employees'
+os.environ['filterNotName'] = 'CREATE_EMPLOYEE_SUCCESS'
 ```
 {% endtab %}
 {% endtabs %}
 
-Now only the contract tests which do not have `/znsio/specmatic/employees` in their test description will run. 
+Now only the contract tests which do not have `CREATE_EMPLOYEE_SUCCESS` in their test description will run. 
 
 You can also use the command-line parameter as
 ```shell
---filter-not-name /znsio/specmatic/employees
+--filter-not-name CREATE_EMPLOYEE_SUCCESS
 ```
 
 ### Filtering tests by HTTP method name
@@ -1006,7 +1006,7 @@ System.setProperty("filterName", "POST /znsio/specmatic/employees");
 --filter-name "POST /znsio/specmatic/employees"
 ```
 
-This will only run the `GET` operation under `/items` and exclude other methods if available.
+This will only run the `POST` operation under `/znsio/specmatic/employees` and exclude other methods if available.
 
 ### API Coverage
 
@@ -1022,7 +1022,7 @@ Look at the sample project below to see this in action. Observe the system prope
 
 The data in the coverage report is written to a file at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed.
 
-### Adanced Features
+### Advanced Features
 
 #### Generative Tests
 
