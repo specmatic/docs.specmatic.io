@@ -933,7 +933,7 @@ os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS'
 {% endtab %}
 {% endtabs %}
 
-Multiple`filters` can be comma-separated:
+Multiple `filters` can be comma-separated:
 
 {% tabs filter %}
 {% tab filter Java %}
@@ -953,13 +953,13 @@ os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS'
 {% endtab %}
 {% endtabs %}
 
-Now only the contract tests with the given scenarios in their test descriptions will run.
+Now only the contract tests where the test descriptions include certain example names will run.
 
 ##### **Using Command-line:**
 You can also use the command-line parameter `--filter-name` with the test description as:
 
 ```shell
---filter-name CREATE_EMPLOYEE_SUCCESS
+specmatic test --filter-name CREATE_EMPLOYEE_SUCCESS
 ```
 
 **2. Omitting some tests**
@@ -991,7 +991,7 @@ Now only the contract tests which do not have `CREATE_EMPLOYEE_SUCCESS` in their
 ##### **Using Command-line:**
 
 ```shell
---filter-not-name CREATE_EMPLOYEE_SUCCESS
+specmatic test --filter-not-name CREATE_EMPLOYEE_SUCCESS
 ```
 
 ### Filtering tests by HTTP method name
@@ -1003,7 +1003,7 @@ System.setProperty("filterName", "POST /znsio/specmatic/employees");
 ```
 
 ```shell
---filter-name "POST /znsio/specmatic/employees"
+specmatic test --filter-name "POST /znsio/specmatic/employees"
 ```
 
 This will only run the `POST` operation under `/znsio/specmatic/employees` and exclude other methods if available.
