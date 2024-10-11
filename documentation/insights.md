@@ -155,9 +155,9 @@ We'll be working with two OpenAPI specifications:
       {% endraw %}
     ```
     
-<!-- After successfully setting up your central contract repository and running the CI pipeline, you should see output similar to this:
+After successfully setting up your central contract repository and running the CI pipeline, you should see output similar to this:
 
-[Successful contract repo](../images/step1_successful) -->
+![Successful contract repo](../images/insights_step1_successful.png)
 
 ## Step 2: Setting up Client, Provider and Domain services
 
@@ -249,9 +249,9 @@ jobs:
         STUB_URL: http://localhost:8080
 ```
 
-<!-- Upon successful execution of the client CI pipeline, you should see output resembling this:
+Upon successful execution of the client CI pipeline, you should see output resembling this:
 
-[Successful Client CI Pipeline](../images/successful_client_ci_pipe) -->
+![Successful Client CI Pipeline](../images/insights_step2_1_successful.png)
 
 ### Step 2.2: Setting up CI pipeline for BFF Service
 
@@ -314,9 +314,9 @@ jobs:
       run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=8080 --host=localhost
 ```
 
-<!-- After running the BFF service CI pipeline, you should see results similar to:
+After running the BFF service CI pipeline, you should see results similar to:
 
-[Successful BFF CI pipeline](../images/success_bff_ci_pipe) -->
+![Successful BFF CI pipeline](../images/insights_step2_2_successful.png)
 
 ### Step 2.3: Setting up CI pipeline for Order API
 
@@ -368,9 +368,9 @@ jobs:
       run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=9000 --host=localhost
 ```
 
-<!-- Upon completion of the Order API CI pipeline, you should see output like this:
+Upon completion of the Order API CI pipeline, you should see output like this:
 
-[Success Order API CI pipeline](../images/success_order_api_ci_pipe) -->
+![Success Order API CI pipeline](../images/insights_step2_3_successful.png)
 
 ### Summary of Progress
 
