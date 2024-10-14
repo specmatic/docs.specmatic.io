@@ -240,7 +240,7 @@ Once you restore the OpenAPI file to its [original state](/getting_started.html#
 * Specmatic is able to tie the **named example** `SCOOBY_200_OK` listed under the request parameters and the response sections of the OpenAPI spec to create a test. 
 * This is also reflected in the name of the test where Specmatic displays the `SCOOBY_200_OK` in the test logs
 * Here's a detailed breakdown of the contract test:
-  - **Request:** Specmatic uses the value defined for the **petId** request paramter from the `SCOOBY_200_OK` request example to make a HTTP request.
+  - **Request:** Specmatic uses the value defined for the **petId** request parameter from the `SCOOBY_200_OK` request example to make a HTTP request.
   - **Response:** In order to tie the above request with a HTTP response code in the spec, Specmatic looks for an example with same name: `SCOOBY_200_OK` under responses. In this case the response code happens to be 200. This request/response pair now forms a test case.
   - **Response Validation:** Note that we are running the specification as a contract test here, in which we are interested in validating only the API signature and not the API logic. Hence, Specmatic does not validate the actual response values defined in the `SCOOBY_200_OK` example against the values returned by the application. It only validates the response code. However, if you do wish to validate response values, you can find more details in our discussion [here](https://github.com/znsio/specmatic/discussions/1029).
   
