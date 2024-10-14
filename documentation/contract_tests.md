@@ -28,8 +28,7 @@ Contract Tests
     - [Referring to local specificatons](#referring-to-local-specificatons)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
-    - [Run only passing tests in CI](#run-only-passing-tests-in-ci)
-    - [Omitting some tests](#omitting-some-tests)
+    - [Selectively Running Tests in CI](#selectively-running-tests-in-ci)
     - [API Coverage](#api-coverage)
     - [Adanced Features](#adanced-features)
       - [Generative Tests](#generative-tests)
@@ -178,7 +177,15 @@ Here is a sample application that is is implementing this specification. You can
 
 Let us now run the ```employees.yaml``` as a test against the above sample application.
 
-```{{ site.spec_cmd }} test employees.yaml --testBaseURL https://my-json-server.typicode.com```
+```bash
+{{ site.spec_cmd }} test employees.yaml --testBaseURL https://my-json-server.typicode.com
+```
+
+Alternatively, we can also run the same command with the Docker image:
+
+```bash
+docker run znsio/specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
+```
 
 The results should end with below text.
 
@@ -221,7 +228,17 @@ The [`employees.yaml`](https://github.com/znsio/externalised-example-jsons-sampl
 
 Let us now run `employees.yaml` as a test against the sample application.
 
-```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
+Here’s how you can present that command with `site.spec_cmd` and the Docker alternative in Bash format:
+
+```bash
+{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml
+```
+
+Alternatively, we can also run the same command with the Docker image:
+
+```bash
+docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
+```
 
 Note: Since the folder is named `employees_examples` and colocated with the spec file `employees.yaml`, by convention it is automatically picked up. However if your folder has different name and / or located in another path, you can explicitly pass that folder as a parameter using the `--examples` CLI Argument (Please run `specmatic test --help` to learn more).
 
@@ -239,6 +256,12 @@ Instead of creating the above example JSONs by hand, you can also generate the e
 java -jar specmatic.jar examples employees.yaml
 ```
 
+Alternatively, we can also run the same command with the Docker image:
+
+```bash
+docker run znsio/specmatic examples employees.yaml
+```
+
 In the above case, example JSON files will be written into the directory named `employees_examples`. You can then update the files to suit your needs and use them.
 
 ### Boundary Condition Testing
@@ -249,7 +272,15 @@ Specmatic can help you verify / assess such boundary condition behavior and the 
 
 ```export SPECMATIC_GENERATIVE_TESTS=true```
 
-```{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml```
+```bash
+{{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml
+```
+
+Alternatively, we can also run the same command with the Docker image:
+
+```bash
+docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
+```
 
 Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failires
 
@@ -263,7 +294,15 @@ Demo: [Video](https://youtu.be/U5Agz-mvYIU?t=216)
 
 You can get the JUnit output from the Specmatic command using an extra parameter.
 
-`{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output`
+```bash
+{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
+```
+
+Alternatively, we can also run the same command with the Docker image:
+
+```bash
+docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
+```
 
 The command will create JUnit test xml output in the specified directory which you can then include as part of CI pipeline results etc.
 
@@ -324,7 +363,18 @@ Specmatic will use the git command to checkout the git repository provided in th
 
 On the command line, `cd` into the directory containing the Specmatic configuration file.
 
-Run this command: `{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com`
+Run this command: 
+
+```bash
+{{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com
+```
+
+Alternatively, we can also run the same command with the Docker image:
+
+```bash
+docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com
+```
+```
 
 Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
@@ -852,53 +902,111 @@ Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accept
 
 A contract-invalid example would not be allowed in the example named `SUCCESS`, as it is an example that should trigger a 200 response (and hence must be a contract-valid example).
 
-### Run only passing tests in CI
+### Selectively Running Tests in CI
 
-If the contract tests are still a work in progress, you can commit what's working and prevent other contract tests that are known to be broken from running.
+When contract tests are still in development, you can run only the passing tests and exclude known failures. This can be achieved using test description filters, which include the endpoint names from your OpenAPI specifications.
 
-To do this, in Java, set the `filterName` Java system property in the @BeforeAll method (if you use JUnit 5) like this:
+For example, for the above given OpenAPI spec (ref. [employees.yaml](#specmatic-contract-test---command-line)),
+with a test scenario named `POST /znsio/specmatic/employees -> 200 | EX:CREATE_EMPLOYEE_SUCCESS`  you can filter tests as follows:
 
+**1. Include Test Name**
+
+To run only specific tests
+
+##### **Programmatically**
+Set the `filterName` system property before running the test like this:
+{% tabs filter %}
+{% tab filter Java %}
 ```java
-System.setProperty("filterName", "TEST1");
+System.setProperty("filterName", "CREATE_EMPLOYEE_SUCCESS");
+```
+{% endtab %}
+{% tab filter Node %}
+```javascript
+process.env.filterName = "CREATE_EMPLOYEE_SUCCESS";
+```
+{% endtab %}
+{% tab filter Python %}
+```shell
+os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS'
+```
+{% endtab %}
+{% endtabs %}
+
+Multiple `filters` can be comma-separated:
+
+{% tabs filter %}
+{% tab filter Java %}
+```java
+System.setProperty("filterName", "CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS");
+```
+{% endtab %}
+{% tab filter Node %}
+```javascript
+process.env.filterName = "CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS";
+```
+{% endtab %}
+{% tab filter Python %}
+```shell
+os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS'
+```
+{% endtab %}
+{% endtabs %}
+
+Now only the contract tests where the test descriptions include certain example names will run.
+
+##### **Using Command-line:**
+You can also use the command-line parameter `--filter-name` with the test description as:
+
+```shell
+specmatic test --filter-name CREATE_EMPLOYEE_SUCCESS
 ```
 
-Now only the contract tests with `TEST1` in their test description will run. Test descriptions conveniently include the name of the tests used in the OpenAPI examples, and so can be used as the filtering value.
+**2. Omitting some tests**
 
-`filterName` can also be provided a comma separate value:
+Set the `filterNotName` system property before running tests like this:
 
+##### **Programmatic Approach:**
+
+{% tabs filter %}
+{% tab filter Java %}
 ```java
-System.setProperty("filterName", "TEST1, TEST2");
+System.setProperty("filterNotName", "CREATE_EMPLOYEE_SUCCESS");
 ```
-
-Now only the contract tests with either `TEST1` or `TEST2` in their test descriptions will run.
-
-You can also use the command-line parameter `--filter-name`.
-
-### Omitting some tests
-
-Set the `filterNotName` Java system property in the @BeforeAll method (if you use JUnit 5) like this:
-
-```java
-System.setProperty("filterNotName", "TEST1");
+{% endtab %}
+{% tab filter Node %}
+```javascript
+process.env.filterNotName = "CREATE_EMPLOYEE_SUCCESS";
 ```
+{% endtab %}
+{% tab filter Python %}
+```shell
+os.environ['filterNotName'] = 'CREATE_EMPLOYEE_SUCCESS'
+```
+{% endtab %}
+{% endtabs %}
 
-Now only the contract tests which do not have `TEST1` in their test description will run. 
+Now only the contract tests which do not have `CREATE_EMPLOYEE_SUCCESS` in their test description will run. 
 
-You can also use the command-line parameter `--filter-not-name`.
+##### **Using Command-line:**
+
+```shell
+specmatic test --filter-not-name CREATE_EMPLOYEE_SUCCESS
+```
 
 ### Filtering tests by HTTP method name
 
 Both of the above options `filter-name` and `filter-not-name` can also be used in conjunction with HTTP methods to only run those operations or exclude the particular options respectively.
 
 ```java
-System.setProperty("filterName", "GET /items");
+System.setProperty("filterName", "POST /znsio/specmatic/employees");
 ```
 
-```
---filter-name "GET /items"
+```shell
+specmatic test --filter-name "POST /znsio/specmatic/employees"
 ```
 
-This will only run the `GET` operation under `/items` and exclude other methods if available.
+This will only run the `POST` operation under `/znsio/specmatic/employees` and exclude other methods if available.
 
 ### API Coverage
 
@@ -914,7 +1022,7 @@ Look at the sample project below to see this in action. Observe the system prope
 
 The data in the coverage report is written to a file at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed.
 
-### Adanced Features
+### Advanced Features
 
 #### Generative Tests
 

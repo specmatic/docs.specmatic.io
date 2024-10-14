@@ -13,11 +13,12 @@ nav_order: 18
   - [Quick Start](#quick-start)
   - [Detailed explanation](#detailed-explanation)
     - [Using your proto files as your API Contracts](#using-your-proto-files-as-your-api-contracts)
+    - [Using externalized examples as test/stub data to be used as part of contract tests and service virtualization respectively](#using-externalized-examples-as-teststub-data-for-grpc-in-contract-tests-and-service-virtualization)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub Service](#starting-the-stub-service)
       - [Running Tests](#running-tests)
+    - [Proto 3 (required, optional) and Proto Validate](#proto-3-required-optional-and-proto-validate)
   - [Sample Projects](#sample-projects)
-  
 
 ## Introduction
 
@@ -63,18 +64,89 @@ sources:
 
 Make sure to update the `repository` and `consumes` sections to reflect your actual contract repository and .proto file locations.
 
+### Using Externalized Examples as Test/Stub Data for gRPC in Contract Tests and Service Virtualization
+
+Suppose you have a gRPC service definition as shown below:
+
+```protobuf
+syntax = "proto3";
+
+package com.store.order.bff;
+
+service OrderService {
+  rpc createOrder (CreateOrderRequest) returns (CreateOrderResponse);
+}
+
+message CreateOrderRequest {
+  int32 productId = 1;
+  int32 count = 2;
+}
+
+message CreateOrderResponse {
+  int32 id = 1;
+}
+```
+
+To provide appropriate example values, you can create an example JSON file that has test/stub data pertaining to the `createOrder` method.
+
+```json
+{
+  "fullMethodName": "com.store.order.bff.OrderService/createOrder",
+  "request": {
+    "productId": 10,
+    "count": 8
+  },
+  "response": {
+    "id": 21
+  }
+}
+```
+
+This file should be stored in a directory called `<file_name_without_extension>_examples`, which is colocated in the same directory as the `.proto` file. This ensures that the example data is easily accessible and logically organized alongside the corresponding `.proto` files.
+
+Alternatively, you can specify the location of the example directories programmatically or via CLI arguments when running tests or service virtualization. This approach allows for flexibility in how and where the examples are stored, depending on your project’s structure or deployment environment.
+
+- **Programmatic Approach:** Set the `EXAMPLES_DIR` system property with a comma-separated list of directory paths. Each path should point to a directory containing your example files. For example:
+
+  ```java
+  System.setProperty("EXAMPLES_DIR", "path/to/dir1,path/to/dir2");
+  ```
+
+  This configuration will include both `path/to/dir1` and `path/to/dir2` as sources for example files.
+
+- **CLI Approach:** Pass the directories using the `--examples` argument. If there are multiple directories, you can specify the `--examples` argument multiple times. For example:
+
+  ```bash
+  --examples=path/to/dir1 --examples=path/to/dir2
+  ```
+
+  This will use `path/to/dir1` and `path/to/dir2` as the locations for example files.
+
+Both methods provide flexibility, allowing you to configure example file locations according to your specific needs and deployment scenarios.
+
+Let us now take a deeper look at the external example format:
+* The top-level JSON object contains three keys: `fullMethodName`, `request`, and `response`.
+* `fullMethodName` specifies the complete gRPC method name, including the package, service, and method.
+* `request` holds the data that would be sent to the gRPC service, with keys corresponding to the fields in the request message.
+* `response` holds the expected response data from the service, with keys corresponding to the fields in the response message.
+
+This approach facilitates the creation of test data that can be used for both contract testing and service virtualization. The example format is designed to be easily readable and writable, allowing you to copy and paste real responses from actual application logs if necessary.
+
+
 ### Using the Docker Image
 
-For easy integration and trial purposes, we provide a Docker image that includes the Specmatic gRPC service. You can use this in your projects to quickly get started with Specmatic and gRPC.
+So far in the above explanation the sample project is invoking Specmatic gRPC support programmatically. However if you wish to run the same from CLI then below Docker image wraps the same Specmatic gRPC capabilities.
 
-The Docker image is available at: `znsio/specmatic-grpc-trial`
+[`znsio/specmatic-grpc-trial`](https://hub.docker.com/r/znsio/specmatic-grpc-trial)
+
+Also the Specmatic gRPC Docker image, by nature, is completely language and tech stack agnostic.
 
 #### Starting the Stub Service
 
-To start the stub service for your domain API, use the following command:
+To start the stub/service virtualization service, use the following command:
 
 ```bash
-docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial stub
+docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial virtualize
 ```
 
 This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualisation server.
@@ -96,10 +168,17 @@ sources:
 To run tests against your BFF (Backend for Frontend), use this command:
 
 ```bash
-docker run -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc-trial test --port=8080
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" -e SPECMATIC_GENERATIVE_TESTS=true znsio/specmatic-grpc-trial test --port=8080 --host=host.docker.internal
 ```
 
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating gRPC requests based on the profiles listed under `provides` section.
+
+### Proto 3 (required, optional) and Proto Validate
+
+Proto 3 dropped required fields. Please see [Github discussion](https://github.com/protocolbuffers/protobuf/issues/2497#issuecomment-267422550) for more details.
+
+Thereby it is hard to communicate constraints such as `required`, ranges (`gte`, `lte`, etc.).
+So Specmatic gRPC support is designed to use add on validation mechanisms like [protovalidate](https://github.com/bufbuild/protovalidate). Please refer to our sample projects section below for more details on how this is being used.
 
 ## Sample Projects
 
@@ -107,4 +186,4 @@ We have created sample projects to demonstrate how to use Specmatic with gRPC in
 
 * [gRPC sample projects](https://specmatic.io/documentation/sample_projects.html#grpc)
 
-These projects provide practical examples of how to integrate Specmatic into your gRPC workflow, including setting up stubs, writing tests, and handling different languages and frameworks.
+These projects provide practical examples of how to integrate Specmatic gRPC support into your workflow, including setting up stubs, writing tests, and handling different languages, frameworks and running them on CI like Github actions.
