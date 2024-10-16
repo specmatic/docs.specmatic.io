@@ -875,7 +875,7 @@ When the test for this example runs, it'll log the info/failures without breakin
 it'll show up as WIP.
 
 However, the use of WIP doesn't bypass the contract validation, the contract itself should be in valid state.
-Also, please note that this use of `[WIP]` differs from the WIP tags given [here](./backward_compatibility.md/#handling-contracts-in-progress). As a tag, WIP can be applied to the path/endpoint level,
+Also, please note that this use of `[WIP]` differs from the WIP tags given [here](./backward_compatibility.html/#handling-contracts-in-progress). As a tag, WIP can be applied to the path/endpoint level,
 while this works only on example names
 
 
