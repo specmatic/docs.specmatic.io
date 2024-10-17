@@ -7,48 +7,376 @@ nav_order: 10
 Backward Compatibility
 ==========
 
-- [Backward Compatibility](#backward-compatibility)
-  - [About Backward Compatibility](#about-backward-compatibility)
-  - [Comparing local changes to git](#compare-local-changes-to-git)
-  - [Comparing Two Contracts (Contract vs Contract)](#comparing-two-contracts-contract-vs-contract)
-  - [Validating Changes In Git On Your Laptop](#validating-changes-in-git-on-your-laptop)
-  - [Validating Changes In CI](#validating-changes-in-ci)
-  - [Handling Contracts In Progress](#handling-contracts-in-progress)
-  - [Backward Compatibility Rules](#backward-compatibility-rules)
 
-## About Backward Compatibility
+- [Why Backward Compatibility Matters](#why-backward-compatibility-matters)
+- [What's New](#whats-new)
+- [How it works](#how-it-works)
+- [Command Essentials](#command-essentials)
+- [Common Use Cases](#common-use-cases)
+  - [Validating Work in Progress (local development)](#1-validating-work-in-progress-local-development)
+  - [As a pre-commit hook](#2-as-a-pre-commit-hook)
+  - [Pre-Merge Validation (in your CI pipeline)](#3-pre-merge-validation-in-your-ci-pipeline)
+  - [Analyzing specific files](#4-analyzing-specific-files)
+  - [Comparing with a different branch](#5-comparing-with-a-different-branch)
+- [Pratical Examples (Try it Yourself)](#practical-examples-try-it-yourself)
+- [Handling Contracts In Progress](#handling-contracts-in-progress)
+- [Backward Compatibility Rules](#backward-compatibility-rules)
+- [Comparing Two Contracts (Deprecated)](#comparing-two-contracts-deprecated)
+- [Validating Changes In Git On Your Laptop (Deprecated)](#validating-changes-in-git-on-your-laptop-deprecated)
+- [Validating Changes In CI (Deprecated)](#validating-changes-in-ci-deprecated)
+- [Troubleshooting](#troubleshooting)
 
-Backward compatibility ensures that new versions of an API can work seamlessly with existing consumers. When an API is backward compatible, it means that any changes made to the API won't break the functionality of applications or services that are already using it.
 
-Aim to make all changes to a contract backward compatible, to ensure that an updated API provider can be deployed as soon as it is ready, without waiting for consumers to catchup.
 
-Specmatic offers a powerful feature to check for backward compatibility between different versions of your API contract. Here's how it works:
+# Why Backward Compatibility Matters
+Backward compatibility ensures that updates to your API contracts don't break the  existing consumers. This feature allows both providers and consumers to update at their own pace, without causing unexpected disruptions. 
 
-* **Early Detection:** Specmatic can identify compatibility issues before you write any code, saving time and effort.
-* **Contract-Based Analysis:** By comparing the old and new versions of your API contract, Specmatic provides instant feedback on potential breaking changes.
-* **No Code Required:** This analysis is performed solely on the contract, eliminating the need for implementation code.
+Specmatic offers this powerful feature to check for backward compatibility between different versions of your API contract.
+
+- **Catch issues early:** Detect compatibility problems before any code is written
+- **Contract-Based Analysis:** By comparing the old and new versions of your API contract, Specmatic provides instant feedback on potential breaking changes.
+- **No Code Required:** This analysis is based entirely on the contract, eliminating the need for implementation code.
 
 <img src="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="60%" height="60%" />
 
-[Watch this video](https://www.youtube.com/watch?v=vBwzEpnQ7To&t=1197s) to see it in action. Read on and even try it out yourself!
+In the following sections, we'll show you how to use Specmatic to maintain backward compatibility in your microservices & microfrontend development process.
 
-## Compare local changes to git
+# What's New
+The new command has been overhauled to be more intuitive and supports a wider range of specifications. It now includes:
+- Comprehensive support for OpenAPI, gRPC, and GraphQL.
+- Simplified usage with smarter messages to help.
 
-1. Checkout an OpenAPI contract from your git repository.
-2. Make changes to the contract.
-3. Run `specmatic backward-compatibility-check` to check for backward compatibility.
-4. If there are any issues, Specmatic will report them.
-5. Make the necessary changes to the contract to resolve the issues.
-6. Run `specmatic backward-compatibility-check` again to verify that the issues are resolved.
+> **Note:** [Older commands](#backward-compatibility-commands-deprecated) for backward compatibility will be deprecated soon. We recommend switching to the new command to make the most of its improved capabilities.
 
-the actual command is "backward-compatibility-check"
+# How it works
 
-Following are options that can be use along with this command
+Specmatic integrates backward compatibility checks into both:
+- **Local development**, to catch issues as you code.
+- **CI pipelines**, ensuring every change is validated before it reaches production.
 
+Here’s a high-level overview of the workflow:
+
+
+```mermaid
+graph TD;
+    A[API Changes] -->|Analyzed by| B{Backward Compatibility Check}
+    B -->|Compatible| C[Green Light for Deployment]
+    B -->|Incompatible| D[Refinement Needed]
+    C -->|Seamless Integration| E[Enhanced User Trust]
+    D -->|Iterative Improvement| A
+```
+
+
+# Using Backward Compatibility
+
+## Command Essentials
+
+To check for backward compatibility of your API specifications, use:
+
+```shell
+specmatic backward-compatibility-check [options]
+```
+
+### Key Options
+
+- `--target-path`: Focus your analysis on specific file or folder. Default is all files and folder.
+- `--base-branch`: Select your comparison base. This defaults to head of the current branch.
+
+## Common Use Cases
+
+### 1. Validating Work in Progress (local development)
+
+For immediate feedback on your ongoing changes:
+
+```shell
+specmatic backward-compatibility-check
+```
+
+```mermaid
+sequenceDiagram
+    participant Developer
+    participant Specmatic
+    participant LocalBranch
+    Developer->>Specmatic: Execute backward-compatibility-check
+    Specmatic->>LocalBranch: Analyze uncommitted changes
+    LocalBranch->>Specmatic: Provide current state
+    Specmatic->>Developer: Deliver compatibility assessment
+```
+
+### 2. As a pre-commit hook
+
+Add to .git/hooks/pre-commit
+
+```shell
+#!/bin/sh
+specmatic backward-compatibility-check
+```
+
+
+### 3. Pre-Merge Validation (in your CI pipeline)
+
+Ensure your changes align with the main project direction:
+
+```shell
+specmatic backward-compatibility-check --base-branch origin/main
+```
+
+```mermaid
+sequenceDiagram
+    participant CI
+    participant Specmatic
+    participant FeatureBranch
+    participant MainBranch
+    CI->>Specmatic: Run check with --base-branch origin/main
+    Specmatic->>FeatureBranch: Retrieve current state
+    Specmatic->>MainBranch: Fetch main branch state
+    Specmatic->>Specmatic: Perform compatibility analysis
+    Specmatic->>CI: Present comprehensive results
+```
+
+### 4. Analyzing specific files
+
+```shell
+specmatic backward-compatibility-check --target-path ./api/products.yaml
+```
+
+### 5. Comparing with a different branch
+
+```shell
+specmatic backward-compatibility-check --base-branch origin/feature_v2
+```
+
+
+## Practical Examples (Try it yourself) 
+
+### Orders API Evolution
+
+Consider this initial Orders API specification:
+
+```yaml
+# filename: api_products_v1.yaml
+openapi: 3.0.0
+info:
+  title: Sample Product API
+  version: 0.1.9
+servers:
+  - url: http://localhost:8080
+    description: Local
+  - url: http://localhost:9000
+    description: Specmatic Stub Server
+paths:
+  /products/{id}:
+    get:
+      summary: Get Products
+      description: Fetch product details
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Product ID
+      responses:
+        '200':
+          description: Returns product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  sku:
+                    type: string
+
+```
+
+Now, let's evolve this API by adding a new `category` field:
+
+```yaml
+# Updated version of api_products_v1.yaml
+openapi: 3.0.0
+info:
+  title: Sample Product API
+  version: 0.2.0
+paths:
+  /products/{id}:
+    get:
+      summary: Get Products
+      description: Fetch product details
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+      responses:
+        '200':
+          description: Returns product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  sku:
+                    type: string
+                  category:
+                    type: string
+
+```
+
+Run the backward compatibility check:
+
+```bash
+specmatic backward-compatibility-check --target-path ./api_products_v1.yaml
+```
+
+Specmatic will approve this change, as adding an optional field maintains backward compatibility. Here is the sample output of the command
+
+![specmatic backward compatibility - compatible](../images/bcc_compatible.png)
+
+### Breaking Change
+
+However, let's change the data type of name from 'string' to 'nunmber':
+
+```yaml
+# Breaking change in api_products_v1.yaml
+openapi: 3.0.0
+info:
+  title: Sample Product API
+  version: 0.2.0
+paths:
+  /products/{id}:
+    get:
+      summary: Get Products
+      description: Fetch product details
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+      responses:
+        '200':
+          description: Returns product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: number
+                  sku:
+                    type: string
+                  category:
+                    type: string
+
+```
+
+Running the check now:
+
+```bash
+specmatic backward-compatibility-check --target-path ./api_products_v1.yaml
+```
+
+Specmatic will flag this as incompatible, protecting your API consumers from unexpected changes. Following is the output of the command.
+
+![Specmatic, backward compatibility breaking changes](../images/bcc_incompatible.png)
+
+## Handling Contracts In Progress
+
+APIs whose design is still in progress can be tagged WIP in the OpenAPI contract. Specmatic will not break builds or return failure on when it see backward incompatible changes to WIP APIs. It will still print the error feedback.
+
+```yaml
+# filename api_products_v1.yaml
+openapi: 3.0.0
+info:
+  title: Sample Product API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+servers:
+  - url: http://localhost:8080
+    description: Local
+  - url: http://localhost:9000
+    description: Specmatic Stub Server
+paths:
+  /products/{id}:
+    get:
+      summary: Get Products
+      description: Get Products
+      tags:
+        - "WIP"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+          required: true
+          description: Numerical Product Id
+      responses:
+        '200':
+          description: Returns Product With Id
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                properties:
+                  name:
+                    type: string
+                  sku:
+                    type: string
+  /products:
+    post:
+      summary: Add Product
+      description: Add Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                sku:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Returns Product With Id
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: integer
+```
+
+Once the contract is complete you can remove the WIP tag.
+
+## Backward Compatibility Rules
+
+Maintaining backward compatibility is about changing the API provider WITHOUT breaking any existing consumer. Consumers should just continue working as-is, without needing to "keep up".
+
+[Read this for more](https://specmatic.in/documentation/backward_compatibility_rules.html).
+
+
+> [!IMPORTANT]
+> All the existing commands for backward compatibility (listed in the following sections) will be phased out in our next major release. We highly recommend transitioning to the more robust [`backward-compatibility-check`](#using-backward-compatibility) command to future-proof your development process.
+
+# Backward Compatibility Commands (Deprecated)
 
 ## Comparing Two Contracts (Deprecated)
 
-> **DEPRECATED:** This command will be removed in the next major release. Use 'backward-compatibility-check' command instead.
+> **Note:** The following command will be deprecated soon. We recommend switching to the [new command](#using-backward-compatibility) to make the most of its improved capabilities.
 
 Create a file named api_products_v1.yaml.
 
@@ -273,7 +601,7 @@ If the change is not backward compatible, the compare command exits with exit co
 
 ## Validating Changes In Git On Your Laptop (Deprecated)
 
-> **DEPRECATED:** This command will be removed in the next major release. Use 'backward-compatibility-check' command instead.
+> **Note:** The following command will be deprecated soon. We recommend switching to the [new command](#using-backward-compatibility) to make the most of its improved capabilities.
 
 If `api_products_v1.yaml` is part of a git repository, changes can be made directly to this file instead of creating a new one.
 
@@ -303,32 +631,13 @@ This command exits with exit code 1 if the change is backward incompatible. It c
 The newer contract is backward compatible
 ```
 
-## Validating Changes In CI
+## Validating Changes In CI (Deprecated)
+
+> **Note:** The following command will be deprecated soon. We recommend switching to the [new command](#using-backward-compatibility) to make the most of its improved capabilities.
 
 In CI, you will need to compare the changes in a contract from one commit to the next.
 
 You can do this with the following command:
-
-{% tabs ci-compare %}
-{% tab ci-compare java %}
-```bash
-java -jar specmatic.jar backward-compatibility-check --base-branch main
-```
-{% endtab %}
-{% tab ci-compare npm %}
-```bash
-npx specmatic compatible git commits api_products_v1.yaml HEAD HEAD^1
-```
-{% endtab %}
-{% tab ci-compare docker %}
-```bash
-docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
-```
-{% endtab %}
-{% endtabs %}
-
-
-> **DEPRECATED:** This command will be removed in the next major release. Use 'backward-compatibility-check' command instead.
 
 {% tabs ci-compare %}
 {% tab ci-compare java %}
@@ -356,85 +665,20 @@ The newer contract is backward compatible
 
 This command exits with exit code 1 if the change is backward incompatible.
 
-## Handling Contracts In Progress
 
-APIs whose design is still in progress can be tagged WIP in the OpenAPI contract. Specmatic will not break builds or return failure on when it see backward incompatible changes to WIP APIs. It will still print the error feedback.
+## Troubleshooting
 
-```yaml
-# filename api_products_v1.yaml
-openapi: 3.0.0
-info:
-  title: Sample Product API
-  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
-  version: 0.1.9
-servers:
-  - url: http://localhost:8080
-    description: Local
-  - url: http://localhost:9000
-    description: Specmatic Stub Server
-paths:
-  /products/{id}:
-    get:
-      summary: Get Products
-      description: Get Products
-      tags:
-        - "WIP"
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: number
-          required: true
-          description: Numerical Product Id
-      responses:
-        '200':
-          description: Returns Product With Id
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - name
-                properties:
-                  name:
-                    type: string
-                  sku:
-                    type: string
-  /products:
-    post:
-      summary: Add Product
-      description: Add Product
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - name
-              properties:
-                name:
-                  type: string
-                sku:
-                  type: string
-                  nullable: true
-      responses:
-        '200':
-          description: Returns Product With Id
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - id
-                properties:
-                  id:
-                    type: integer
-```
+1. **Command Not Recognized**: 
+   - Verify Specimatic is properly configured your current directory (either Docker or Node package or Python module or Jar file)
+   - Ensure you are using the latest version of Specmatic.
 
-Once the contract is complete you can remove the WIP tag.
+2. **Unexpected Outcomes**: 
+   - Confirm the accuracy of file paths and branch names.
+   - Review your recent changes for unintended modifications.
 
-## Backward Compatibility Rules
+3. **Too many changes**: 
+   - For large-scale projects, utilize the `--target-path` to focus on specific components.
 
-Maintaining backward compatibility is about changing the API provider WITHOUT breaking any existing consumer. Consumers should just continue working as-is, without needing to "keep up".
-
-[Read this for more](https://specmatic.in/documentation/backward_compatibility_rules.html).
+4. **CI Pipeline Issues**:
+  - Ensure your CI environment has the necessary permissions to access all required branches
+  - Verify that your CI configuration correctly sets up Specmatic before running the compatibility check
