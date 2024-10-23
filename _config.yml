@@ -16,8 +16,12 @@ aux_links:
 plugins:
   - jekyll-remote-theme
   - jekyll-tabs
+  - jekyll-mermaid
 
 logo: "/images/specmatic-logo.png"
 
 exclude:
   - archive
+
+mermaid:
+  src: './js/mermaid.min.js'

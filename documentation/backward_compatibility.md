@@ -56,16 +56,14 @@ Specmatic integrates backward compatibility checks into both:
 
 Here’s a high-level overview of the workflow:
 
-
-```mermaid
+{% mermaid %}
 graph TD;
     A[API Changes] -->|Analyzed by| B{Backward Compatibility Check}
     B -->|Compatible| C[Green Light for Deployment]
     B -->|Incompatible| D[Refinement Needed]
     C -->|Seamless Integration| E[Enhanced User Trust]
     D -->|Iterative Improvement| A
-```
-
+{% endmermaid %}
 
 # Using Backward Compatibility
 
@@ -92,16 +90,17 @@ For immediate feedback on your ongoing changes:
 specmatic backward-compatibility-check
 ```
 
-```mermaid
+{% mermaid %}
 sequenceDiagram
     participant Developer
     participant Specmatic
     participant LocalBranch
     Developer->>Specmatic: Execute backward-compatibility-check
-    Specmatic->>LocalBranch: Analyze uncommitted changes
-    LocalBranch->>Specmatic: Provide current state
+    Specmatic->>LocalBranch: Retrieve current state
+    Specmatic->>Specmatic: Analyze changed files
+    Specmatic->>Specmatic: Perform compatibility analysis
     Specmatic->>Developer: Deliver compatibility assessment
-```
+{% endmermaid %}
 
 ### 2. As a pre-commit hook
 
@@ -112,6 +111,16 @@ Add to .git/hooks/pre-commit
 specmatic backward-compatibility-check
 ```
 
+{% mermaid %}
+graph TD
+    A[Developer initiates commit] -->|Triggers| B[Pre-commit hook]
+    B -->|Runs| C[Specmatic backward-compatibility-check]
+    C -->|Compatible| D[Commit proceeds]
+    C -->|Incompatible| E[Commit halted]
+    E -->|Developer notified| F[Changes reviewed]
+    F --> A
+{% endmermaid %}
+
 
 ### 3. Pre-Merge Validation (in your CI pipeline)
 
@@ -121,7 +130,7 @@ Ensure your changes align with the main project direction:
 specmatic backward-compatibility-check --base-branch origin/main
 ```
 
-```mermaid
+{% mermaid %}
 sequenceDiagram
     participant CI
     participant Specmatic
@@ -132,7 +141,7 @@ sequenceDiagram
     Specmatic->>MainBranch: Fetch main branch state
     Specmatic->>Specmatic: Perform compatibility analysis
     Specmatic->>CI: Present comprehensive results
-```
+{% endmermaid %}
 
 ### 4. Analyzing specific files
 
@@ -239,7 +248,7 @@ Specmatic will approve this change, as adding an optional field maintains backwa
 
 ### Breaking Change
 
-However, let's change the data type of name from 'string' to 'nunmber':
+However, let's change the data type of name from 'string' to 'number':
 
 ```yaml
 # Breaking change in api_products_v1.yaml
@@ -669,7 +678,7 @@ This command exits with exit code 1 if the change is backward incompatible.
 ## Troubleshooting
 
 1. **Command Not Recognized**: 
-   - Verify Specimatic is properly configured your current directory (either Docker or Node package or Python module or Jar file)
+   - Verify Specimatic is properly configured for your current directory (either Docker or Node package or Python module or Jar file)
    - Ensure you are using the latest version of Specmatic.
 
 2. **Unexpected Outcomes**: 
