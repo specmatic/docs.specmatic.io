@@ -902,6 +902,8 @@ Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accept
 
 A contract-invalid example would not be allowed in the example named `SUCCESS`, as it is an example that should trigger a 200 response (and hence must be a contract-valid example).
 
+---
+
 ## Selectively Running Tests in CI
 
 Specmatic provides powerful filtering capabilities to help you run specific tests during development and CI/CD pipelines. You can include or exclude tests based on various criteria such as HTTP methods, paths, status codes, and more.
