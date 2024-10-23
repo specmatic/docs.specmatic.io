@@ -902,111 +902,132 @@ Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accept
 
 A contract-invalid example would not be allowed in the example named `SUCCESS`, as it is an example that should trigger a 200 response (and hence must be a contract-valid example).
 
-### Selectively Running Tests in CI
+## Selectively Running Tests in CI
 
-When contract tests are still in development, you can run only the passing tests and exclude known failures. This can be achieved using test description filters, which include the endpoint names from your OpenAPI specifications.
+Specmatic provides powerful filtering capabilities to help you run specific tests during development and CI/CD pipelines. You can include or exclude tests based on various criteria such as HTTP methods, paths, status codes, and more.
 
-For example, for the above given OpenAPI spec (ref. [employees.yaml](#specmatic-contract-test---command-line)),
-with a test scenario named `POST /znsio/specmatic/employees -> 200 | EX:CREATE_EMPLOYEE_SUCCESS`  you can filter tests as follows:
+### Test Filtering Options
 
-**1. Include Test Name**
+### Using the New Filter System (Recommended)
 
-To run only specific tests
+The `--filter` and `--filter-not` options provide granular control over which tests to run:
 
-##### **Programmatically**
-Set the `filterName` system property before running the test like this:
-{% tabs filter %}
-{% tab filter Java %}
-```java
-System.setProperty("filterName", "CREATE_EMPLOYEE_SUCCESS");
-```
-{% endtab %}
-{% tab filter Node %}
-```javascript
-process.env.filterName = "CREATE_EMPLOYEE_SUCCESS";
-```
-{% endtab %}
-{% tab filter Python %}
-```shell
-os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS'
-```
-{% endtab %}
-{% endtabs %}
-
-Multiple `filters` can be comma-separated:
-
-{% tabs filter %}
-{% tab filter Java %}
-```java
-System.setProperty("filterName", "CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS");
-```
-{% endtab %}
-{% tab filter Node %}
-```javascript
-process.env.filterName = "CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS";
-```
-{% endtab %}
-{% tab filter Python %}
-```shell
-os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS'
-```
-{% endtab %}
-{% endtabs %}
-
-Now only the contract tests where the test descriptions include certain example names will run.
-
-##### **Using Command-line:**
-You can also use the command-line parameter `--filter-name` with the test description as:
-
-```shell
-specmatic test --filter-name CREATE_EMPLOYEE_SUCCESS
+```bash
+specmatic test --filter="METHOD=POST" --filter="PATH=/users"
 ```
 
-**2. Omitting some tests**
+#### Available Filter Keys
 
-Set the `filterNotName` system property before running tests like this:
+- `METHOD`: Filter by HTTP methods (GET, POST, etc.)
+- `PATH`: Filter by request paths (/users, /products, etc.)
+- `STATUS`: Filter by response status codes (200, 400, etc.)
+- `HEADERS`: Filter by request headers
+- `QUERY-PARAM`: Filter by query parameters
+- `EXAMPLE-NAME`: Filter by example names
 
-##### **Programmatic Approach:**
+#### Filter Syntax
 
-{% tabs filter %}
-{% tab filter Java %}
-```java
-System.setProperty("filterNotName", "CREATE_EMPLOYEE_SUCCESS");
-```
-{% endtab %}
-{% tab filter Node %}
-```javascript
-process.env.filterNotName = "CREATE_EMPLOYEE_SUCCESS";
-```
-{% endtab %}
-{% tab filter Python %}
-```shell
-os.environ['filterNotName'] = 'CREATE_EMPLOYEE_SUCCESS'
-```
-{% endtab %}
-{% endtabs %}
-
-Now only the contract tests which do not have `CREATE_EMPLOYEE_SUCCESS` in their test description will run. 
-
-##### **Using Command-line:**
-
-```shell
-specmatic test --filter-not-name CREATE_EMPLOYEE_SUCCESS
+1. Single value:
+```bash
+--filter="METHOD=GET"
 ```
 
-### Filtering tests by HTTP method name
+2. Multiple values for same filter (comma-separated):
+```bash
+--filter="METHOD=GET,POST"
+```
 
-Both of the above options `filter-name` and `filter-not-name` can also be used in conjunction with HTTP methods to only run those operations or exclude the particular options respectively.
+3. Multiple filters:
+```bash
+--filter="METHOD=GET,POST" --filter="PATH=/users"
+```
+
+#### Excluding Tests
+
+Use `--filter-not` to exclude tests matching specific criteria:
+
+```bash
+--filter-not="STATUS=400,401" --filter-not="METHOD=DELETE"
+```
+
+### Programmatic Usage
+
+Set environment properties in your test setup:
 
 ```java
-System.setProperty("filterName", "POST /znsio/specmatic/employees");
+// Include specific tests
+System.setProperty("filter", "METHOD=POST,PATH=/users");
+
+// Exclude tests
+System.setProperty("filterNot", "STATUS=400,401");
 ```
 
-```shell
-specmatic test --filter-name "POST /znsio/specmatic/employees"
+## Examples
+
+### Common Use Cases
+
+1. Run only successful response tests:
+```bash
+specmatic test --filter="STATUS=200,201"
 ```
 
-This will only run the `POST` operation under `/znsio/specmatic/employees` and exclude other methods if available.
+2. Skip authentication error tests:
+```bash
+specmatic test --filter-not="STATUS=401,403"
+```
+
+3. Test specific API endpoints:
+```bash
+specmatic test --filter="PATH=/users,/products"
+```
+
+4. Combine multiple filters:
+```bash
+specmatic test --filter="METHOD=POST" --filter="PATH=/users" --filter-not="STATUS=400"
+```
+
+### Real-world Scenario
+
+For an OpenAPI spec with an endpoint `/api/employees`, you might run:
+
+```bash
+# Run only employee creation tests
+specmatic test --filter="PATH=/api/employees" --filter="METHOD=POST"
+
+# Skip all error scenarios
+specmatic test --filter-not="STATUS=400,401,403,404,500"
+```
+
+## Legacy Filter Options (Deprecated)
+
+> **Note:** The following options are deprecated and will be removed in a future version. We recommend using the new filter system described above.
+
+- `--filter-name`: Run tests matching a specific name
+- `--filter-not-name`: Exclude tests matching a specific name
+
+Basic usage of deprecated options:
+```bash
+specmatic test --filter-name "CREATE_EMPLOYEE_SUCCESS"
+specmatic test --filter-not-name "ERROR_SCENARIOS"
+```
+
+To migrate from legacy filters to the new system, use these equivalents:
+
+```bash
+# Old way
+--filter-name "POST /api/employees"
+
+# New way
+--filter="METHOD=POST" --filter="PATH=/api/employees"
+```
+
+### Additional Tips
+
+- Filters are case-sensitive
+- When multiple filters are specified, tests must match ALL criteria (AND operation)
+- Within a single filter with multiple values, tests matching ANY value will be included (OR operation)
+
+---
 
 ### API Coverage
 
