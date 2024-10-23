@@ -374,8 +374,6 @@ Alternatively, we can also run the same command with the Docker image:
 ```bash
 docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com
 ```
-```
-
 Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
 Since Specmatic uses the Specmatic configuration file in the current working directory, it's important to use `cd` into the directory containing the Specmatic configuration. For Java projects, the Specmatic configuration file should be in the same directory as the pom.xml or build.gradle file.
