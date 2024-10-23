@@ -920,7 +920,7 @@ specmatic test --filter="METHOD=POST" --filter="PATH=/users"
 
 - `METHOD`: Filter by HTTP methods (GET, POST, etc.)
 - `PATH`: Filter by request paths (/users, /products, etc.)
-- `STATUS`: Filter by response status codes (200, 400, etc.)
+- `STATUS`: Filter by response status codes (200, 400, etc.) - supports pattern matching with 'xx' (e.g., 4xx, 2xx)
 - `HEADERS`: Filter by request headers
 - `QUERY-PARAM`: Filter by query parameters
 - `EXAMPLE-NAME`: Filter by example names
@@ -956,7 +956,7 @@ Set environment properties in your test setup:
 
 ```java
 // Include specific tests
-System.setProperty("filter", "METHOD=POST,PATH=/users");
+System.setProperty("filter", "METHOD=POST;PATH=/users");
 
 // Exclude tests
 System.setProperty("filterNot", "STATUS=400,401");
@@ -968,11 +968,13 @@ System.setProperty("filterNot", "STATUS=400,401");
 
 1. Run only successful response tests:
 ```bash
-specmatic test --filter="STATUS=200,201"
+specmatic test --filter="STATUS=2xx"
 ```
 
 2. Skip authentication error tests:
 ```bash
+specmatic test --filter-not="STATUS=4xx"  # Skips all 400-level status codes
+# Or more specifically:
 specmatic test --filter-not="STATUS=401,403"
 ```
 
@@ -995,7 +997,7 @@ For an OpenAPI spec with an endpoint `/api/employees`, you might run:
 specmatic test --filter="PATH=/api/employees" --filter="METHOD=POST"
 
 # Skip all error scenarios
-specmatic test --filter-not="STATUS=400,401,403,404,500"
+specmatic test --filter-not="STATUS=4xx,500"  # Skip all client and server errors
 ```
 
 ## Legacy Filter Options (Deprecated)
