@@ -1025,6 +1025,8 @@ You can fill out the specific values in an example, and leave Specmatic to looku
 
 - Create a new example file in the `employee_details_examples` directory named `patch_employee.json` with the following contents:
 
+```json
+ {
     "http-request": {
       "method": "PATCH",
       "path": "/employees",
@@ -1044,7 +1046,7 @@ You can fill out the specific values in an example, and leave Specmatic to looku
       }
     }
   }
-  ```
+```
 
 - Start the stub and execute this curl command:
 
