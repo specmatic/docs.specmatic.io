@@ -5,6 +5,12 @@
       "name": "Scooby",
       "type": "Golden Retriever",
       "status": "Adopted"
+    },
+    {
+      "id": 100,
+      "name": "Dodo",
+      "type": "Extinct bird",
+      "status": "Extinct"
     }
   ],
   "employees": [
