@@ -30,12 +30,12 @@ Specmatic acts as a transparent proxy between the client (Postman, your applicat
 Let's begin by setting up Specmatic as a proxy between your client and the API:
 
 ```shell
-specmatic proxy --target https://my-json-server.typicode.com/znsio/specmatic-documentation ./contracts
+specmatic proxy --target https://my-json-server.typicode.com/znsio/specmatic-documentation ./specification
 ```
 You will get following confirmation message: <br>
 `Proxy server is running on http://localhost:9000. Ctrl + C to stop.`
 
-💡 **Note**: Make sure the `contracts` directory doesn't exist before starting, as this is where Specmatic will generate the specifications.
+💡 **Note**: Make sure the `specification` directory doesn't exist before starting, as this is where Specmatic will generate the specifications.
 
 ### Step 2: Verify Proxy Health (Optional)
 You can confirm the proxy server is running properly by checking its health status:
@@ -64,26 +64,26 @@ curl -X GET http://localhost:9000/pets/100
 ```
 
 ### Step 4: Generate the Contract and Examples
-You have two options to generate the contract:
+You have two options to generate the specification:
 
 1. **Option A**: Kill the proxy server using `Ctrl + C`
 2. **Option B**: Hit the dump endpoint:
    ```bash
    curl -X POST http://localhost:9000/_specmatic/proxy/dump
    ```
-In case the contracts and examples are not generated in the output directory, look at the proxy server logs to debug the same.
+In case the specification and examples are not generated in the output directory, look at the proxy server logs to debug the same.
 
-By using the `/_specmatic/proxy/dump` endpoint, you can efficiently generate and review contracts without interrupting the proxy server.
+By using the `/_specmatic/proxy/dump` endpoint, you can efficiently generate and review specification without interrupting the proxy server.
 
 🎉 **Success!** You should see output like this:
 ```bash
-Writing contract to ./contracts/proxy_generated.yaml
-Writing stub data to ./contracts/stub0.json
-Writing stub data to ./contracts/stub1.json
+Writing contract to ./specification/proxy_generated.yaml
+Writing stub data to ./specification/stub0.json
+Writing stub data to ./specification/stub1.json
 ```
 
 ### Generated Contract Example
-Here's what your generated contract might look like:
+Here's what your generated specification might look like:
 
 ```yaml
 openapi: 3.0.3
@@ -121,8 +121,8 @@ paths:
 
 ### Final Directory Structure
 ```
-contracts/
-├── proxy_generated.yaml    # Main contract file
+specification/
+├── proxy_generated.yaml    # Main specification file
 ├── stub0.json              # Example response for /pets/1
 └── stub1.json              # Example response for /pets/100
 ```
@@ -159,7 +159,9 @@ Example stub content (stub0.json):
 ## Next Steps
 - Try adding more complex requests with different HTTP methods (POST, PUT, etc.)
 - Customize the generated specifications
-- Use the generated contract for API testing or documentation
+- Use the generated specification for API testing or documentation
+
+💡 **Note**: The more traffic routed through the proxy, the better it becomes at accurately defining data types for the specification.
 
 Need help troubleshooting or have questions? Reach out to us [Specmatic support](https://specmatic.io/contact-us/).
 
