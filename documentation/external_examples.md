@@ -5,158 +5,202 @@ parent: Documentation
 nav_order: 7
 ---
 
-External Examples
-=================
+# External Examples
 
-- [External Examples](#external-examples)
-  - [Validate External Examples](#validate-external-examples)
+- [Validating Examples](#validating-examples)
+  - [Quick Start](#quick-start)
+  - [Advanced Usage](#advanced-usage)
+    - [Working with Multiple Specifications](#working-with-multiple-specifications)
+    - [Custom Example Directory](#custom-example-directory)
+- [Practical Example](#practical-example)
+- [Pro Tips](#pro-tips)
 
-## Validate External Examples
-All examples in a specification can be easily validated using the `examples validate` command.
+Learn how to validate your API examples against your specifications using Specmatic's powerful validation tools. Whether you have a single specification or multiple specs across different directories, Specmatic makes it easy to ensure your examples stay in sync with your API definitions.
+
+## Validating Examples
+
+### Quick Start
+The fastest way to validate examples for a single specification:
+
 {% tabs examples-validate %}
+{% tab examples-validate docker %}
+```shell
+docker run -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" znsio/specmatic examples validate --spec-file "employee_details.yaml"
+```
+{% endtab %}
 {% tab examples-validate java %}
 ```shell
-java -jar specmatic.jar examples validate --contract-file <path to openapi file>
+java -jar specmatic.jar examples validate --spec-file employee_details.yaml
 ```
 {% endtab %}
 {% tab examples-validate npm %}
 ```shell
-npx specmatic examples validate --contract-file <path to openapi file>
-```
-{% endtab %}
-{% tab examples-validate docker %}
-```shell
-docker run -v "<path to openapi file>:/usr/src/app/specification.yaml" -v "<path to example directory>:/usr/src/app/specification_examples" znsio/specmatic examples validate --contract-file "specification.yaml"
+npx specmatic examples validate --spec-file employee_details.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-It will exit with return code `1` if any example is not in sync.
+By default, Specmatic looks for examples in a directory named `{specification-name}_examples` in the same location as your specification file. For instance, if your spec file is named `employee_details.yaml`, Specmatic will look for examples in the `employee_details_examples` directory.
 
-Let's try this out.
+### Advanced Usage
 
-- Create an api specification file named `employee_details.yaml` with the following content:
+#### Working with Multiple Specifications
+If you're managing multiple API specifications, Specmatic provides flexible options to validate all their examples:
 
-  ```yaml
-    openapi: 3.0.0
-    info:
-      title: Employees
-      version: '1.0'
-    servers: []
-    paths:
-      '/employees':
-        patch:
-          summary: ''
-          requestBody:
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/EmployeeDetails'
-          responses:
-            '200':
-              description: Employee Created Response
-              content:
-                application/json:
-                  schema:
-                    $ref: '#/components/schemas/Employee'
-    components:
-      schemas:
-        Employee:
-          type: object
-          required:
-            - id
-            - name
-            - department
-            - designation
-          properties:
-            id:
-              type: integer
-            employeeCode:
-              type: string
-            name:
-              type: string
-            department:
-              type: string
-            designation:
-              type: string
+1. **Validate Multiple Specs with Default Example Locations**:
+```shell
+specmatic examples validate --specs-dir ./api-specs
+```
+This will look for example directories alongside each specification file.
 
-        EmployeeDetails:
-          type: object
-          required:
-            - name
-            - department
-            - designation
-          properties:
-            name:
-              type: string
-            employeeCode:
-              type: string
-  ```
+2. **Organize Examples in a Separate Directory Structure**:
+```shell
+specmatic examples validate --specs-dir ./api-specs --examples-base-dir ./all-examples
+```
+This helps when you want to keep your examples organized separately from your specifications.
 
-- Create an example in a file named `employee_details_examples/example.json` with the following content:
+#### Custom Example Directory
+For a single specification, you can specify a custom examples directory:
+```shell
+specmatic examples validate --spec-file employee_details.yaml --examples-dir ./custom-examples
+```
 
-  ```json
-  {
-      "http-request": {
-          "method": "PATCH",
-          "path": "/employees",
-          "body": {
-              "employeeCode": "pqrxyz"
-          }
-      },
-      "http-response": {
-          "status": 200,
-          "body": {
-              "id": 10,
-              "employeeCode": "pqrxyz",
-              "name": "Jamie",
-              "department": "(string)",
-              "designation": "(string)"
-          }
-      }
-  }
-  ```
+## Practical Example
 
-  Note: `name` is a mandatory request field but it is missing in the example.
+Let's walk through a complete example to see how example validation works in practice.
 
-- Run the following command to validate the example:
+1. Create an API specification file named `employee_details.yaml`:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/employees':
+    patch:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeDetails'
+      responses:
+        '200':
+          description: Employee Created Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - id
+        - name
+        - department
+        - designation
+      properties:
+        id:
+          type: integer
+        employeeCode:
+          type: string
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string
+
+    EmployeeDetails:
+      type: object
+      required:
+        - name
+        - department
+        - designation
+      properties:
+        name:
+          type: string
+        employeeCode:
+          type: string
+```
+
+2. Create an example in `employee_details_examples/example.json`:
+
+```json
+{
+    "http-request": {
+        "method": "PATCH",
+        "path": "/employees",
+        "body": {
+            "employeeCode": "pqrxyz"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "id": 10,
+            "employeeCode": "pqrxyz",
+            "name": "Jamie",
+            "department": "(string)",
+            "designation": "(string)"
+        }
+    }
+}
+```
+
+3. Validate your example:
+
 {% tabs examples-validate %}
+{% tab examples-validate docker %}
+```shell
+docker run -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" znsio/specmatic examples validate --spec-file "employee_details.yaml"
+```
+{% endtab %}
 {% tab examples-validate java %}
 ```shell
-java -jar specmatic.jar examples validate --contract-file employee_details.yaml
+java -jar specmatic.jar examples validate --spec-file employee_details.yaml
 ```
 {% endtab %}
 {% tab examples-validate npm %}
 ```shell
-npx specmatic examples validate --contract-file employee_details.yaml
-```
-{% endtab %}
-{% tab examples-validate docker %}
-```shell
-docker run -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" znsio/specmatic examples validate --contract-file "employee_details.yaml"
+npx specmatic examples validate --spec-file employee_details.yaml
 ```
 {% endtab %}
 {% endtabs %}
-  - The error in the example will be logged to the console.
-- Check the exit code. On MacOS or *nix, run `echo $?`. On Windows, run `echo %errorlevel%`. You'll see the exit code of `1`.
 
-Now add a name to the request in the above example, and try running the command again. This time the validation will succeed.
+You'll notice the validation fails because the request is missing required fields (`name`, `department`, and `designation`). The error message will guide you to fix these issues.
 
-You will find other helpful parameters for this command by running the following.
+4. Check the exit code:
+- On MacOS/Linux: `echo $?`
+- On Windows: `echo %errorlevel%`
+
+A return code of `1` indicates validation failure, while `0` indicates success.
+
+5. Fix the example by adding the required fields and run the validation again - you'll see it succeed!
+
+## Pro Tips
+- Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
+- Specmatic automatically finds example directories using the `{spec-name}_examples` convention (e.g., `employee_details_examples` for `employee_details.yaml`)
+- The validation command will exit with code `1` if any examples are out of sync, making it perfect for CI/CD pipelines
+
+Need more details? Run the help command:
 {% tabs examples-validate %}
+{% tab examples-validate docker %}
+```shell
+docker run znsio/specmatic examples validate --help
+```
+{% endtab %}
 {% tab examples-validate java %}
 ```shell
 java -jar specmatic.jar examples validate --help
 ```
 {% endtab %}
-{% tab examples-validate-validate npm %}
+{% tab examples-validate npm %}
 ```shell
 npx specmatic examples validate --help
-```
-{% endtab %}
-{% tab examples-validate docker %}
-```shell
-docker run znsio/specmatic examples validate --help
 ```
 {% endtab %}
 {% endtabs %}
