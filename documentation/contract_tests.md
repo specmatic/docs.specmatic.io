@@ -30,6 +30,7 @@ Contract Tests
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
     - [Selectively Running Tests in CI](#selectively-running-tests-in-ci)
     - [API Coverage](#api-coverage)
+    - [Hooks](#hooks)
     - [Adanced Features](#adanced-features)
       - [Generative Tests](#generative-tests)
       - [Limiting the Count of Tests](#limiting-the-count-of-tests)
@@ -1044,6 +1045,189 @@ To get this working:
 Look at the sample project below to see this in action. Observe the system property, set in the [ContractTest](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) class, and the actuator-related dependency added in `pom.xml`.
 
 The data in the coverage report is written to a file at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed.
+
+---
+
+## Hooks
+
+### Overview
+
+Specmatic's test hooks provide a powerful mechanism to modify API specifications just before they're used in testing, without altering the original specification files. This feature is particularly valuable when your test scenarios require different or additional specification elements (such as headers, parameters, or request bodies) compared to what's defined in your base specification.
+
+### Real-World Scenarios
+
+Test hooks can solve various real-world challenges. Here is a common scenarios where test hooks prove invaluable:
+
+### API Gateway Transformations
+
+Consider this common architectural setup:
+
+```
+Client Application → API Gateway → Backend Service
+```
+
+In this scenario:
+1. Your client application sends requests with basic headers (e.g., `X-auth-token`)
+2. The API Gateway:
+   - Adds rate limiting headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`)
+   - Transforms authentication headers (`X-auth-token` → `X-internal-id`)
+3. The backend service expects ALL these headers to be present
+
+Without test hooks, Specmatic tests would fail because:
+- The client specification only contains `X-auth-token`
+- The backend service expects additional headers that the Gateway would normally add
+- The backend service looks for `X-internal-id` instead of `X-auth-token`
+
+### Implementation Example
+
+#### Initial Client API Specification
+
+Here's a typical client-side API specification:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Sample Product API
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Local
+paths:
+  /products:
+    get:
+      summary: Get Products
+      description: Get Products
+      parameters:
+        - in: header
+          name: X-auth-token
+          schema:
+            type: string
+          required: true
+          description: Authentication token
+      responses:
+        '200':
+          description: Returns Product With Id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - name
+                    - sku
+                  properties:
+                    name:
+                      type: string
+                    sku:
+                      type: string
+```
+
+#### Setting Up Test Hooks
+
+1. **Create specmatic.json configuration file:**
+
+```json
+{
+  "sources": [
+    {
+      "provider": "git",
+      "test": [
+        "products_client.yaml"
+      ]
+    }
+  ],
+  "hooks": {
+    "test_load_contract": "python3 modify_test_headers.py"
+  }
+}
+```
+
+2. **Create the hook script (modify_test_headers.py):**
+
+```python
+import os
+import sys
+import yaml
+
+def main():
+    # Read the specification file path from environment
+    file_name = os.getenv('CONTRACT_FILE')
+
+    if not file_name:
+        print("CONTRACT_FILE environment variable not set.")
+        sys.exit(1)
+
+    try:
+        with open(file_name, 'r') as file:
+            data = yaml.safe_load(file)
+
+            # Get the parameters section
+            paths = data.get('paths', {})
+            products_path = paths.get('/products', {})
+            get_operation = products_path.get('get', {})
+            parameters = get_operation.get('parameters', [])
+
+            # Simulate API Gateway transformation:
+            # Transform X-auth-token to X-internal-id
+            for param in parameters:
+                if param.get('in') == 'header' and param.get('name') == 'X-auth-token':
+                    param['name'] = 'X-internal-id'
+                    break
+
+            # Add Gateway-specific headers
+            gateway_headers = [
+                {
+                    'name': 'X-RateLimit-Limit',
+                    'in': 'header',
+                    'required': True,
+                    'schema': {'type': 'integer', 'example': 100},
+                    'description': 'Maximum number of requests allowed'
+                },
+                {
+                    'name': 'X-RateLimit-Remaining',
+                    'in': 'header',
+                    'required': True,
+                    'schema': {'type': 'integer', 'example': 40},
+                    'description': 'Number of remaining requests allowed'
+                }
+            ]
+            
+            parameters.extend(gateway_headers)
+            print(yaml.dump(data))
+
+    except FileNotFoundError:
+        print(f"File not found: {file_name}")
+        sys.exit(2)
+    except Exception as e:
+        print(f"Error processing file: {e}")
+        sys.exit(3)
+
+if __name__ == "__main__":
+    main()
+```
+
+### How It Works
+
+When Specmatic runs tests:
+1. The test hook intercepts the client specification before test execution
+2. It modifies the specification to:
+   - Transform `X-auth-token` to `X-internal-id` (simulating Gateway authentication header transformation)
+   - Add rate limiting headers (simulating Gateway-added headers)
+3. Specmatic uses this modified specification for testing, while your client specification remains unchanged
+
+This approach:
+- Maintains clean client specifications
+- Accurately tests backend service requirements
+- Simulates API Gateway behavior in your test environment
+
+> **Note:** If you're looking to modify headers during service virtualization using Specmatic's `stub` command, then please refer to stub-specific header modifications documentation : [Using Hooks during Stub Creation](service_virtualization_tutorial.html#hooks)
+
+### Conclusion
+
+Test hooks provide a powerful way to bridge the gap between client specifications and Gateway-modified requests. By simulating Gateway behavior in your tests, you can ensure your backend service testing is accurate and comprehensive while maintaining clean client specifications.
+
+---
 
 ### Advanced Features
 
