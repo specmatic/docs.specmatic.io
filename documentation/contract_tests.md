@@ -283,7 +283,7 @@ Alternatively, we can also run the same command with the Docker image:
 docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
-Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failires
+Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failures.
 
 ```Tests run: 26, Successes: 5, Failures: 21, Errors: 0```
 
