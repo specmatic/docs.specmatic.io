@@ -1080,8 +1080,8 @@ Without test hooks, Specmatic tests would fail because:
 
 ### Implementation Example
 
-#### Initial Client API Specification
-
+#### **Initial Client API Specification**
+<br>
 Here's a typical client-side API specification:
 
 ```yaml
@@ -1122,11 +1122,23 @@ paths:
                     sku:
                       type: string
 ```
+<br>
+#### **Setting Up Test Hooks**
+<br>
+Step 1: **Create specmatic.yaml configuration file:**
 
-#### Setting Up Test Hooks
-
-1. **Create specmatic.json configuration file:**
-
+{% tabs config %}
+{% tab config specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    test:
+      - products_client.yaml
+hooks:
+  test_load_contract: python3 modify_test_headers.py
+```
+{% endtab %}
+{% tab config specmatic.json %}
 ```json
 {
   "sources": [
@@ -1142,8 +1154,18 @@ paths:
   }
 }
 ```
+{% endtab %}
+{% endtabs %}
 
-2. **Create the hook script (modify_test_headers.py):**
+Both configurations are equivalent and can be used interchangeably in your Specmatic setup.
+
+Step 2: **Create the hook script:**
+
+Please note:
+* In the hook script we access an environment variable CONTRACT_FILE which is automatically set by Specmatic
+* It contains the absolute path to the API specification file.
+{% tabs hook_script %}
+{% tab hook_script Python %}
 
 ```python
 import os
@@ -1153,6 +1175,7 @@ import yaml
 def main():
     # Read the specification file path from environment
     file_name = os.getenv('CONTRACT_FILE')
+   
 
     if not file_name:
         print("CONTRACT_FILE environment variable not set.")
@@ -1196,6 +1219,10 @@ def main():
             parameters.extend(gateway_headers)
             print(yaml.dump(data))
 
+            # The script MUST output valid YAML to stdout
+            # This YAML will be used by Specmatic for testing
+            # Any other prints/logs should go to stderr to avoid corrupting the YAML output
+
     except FileNotFoundError:
         print(f"File not found: {file_name}")
         sys.exit(2)
@@ -1206,15 +1233,48 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+{% endtab %}
+{% tab hook_script Java %}
+
+Specmatic supports hook script in any executable format (Python, Shell, Java, etc.). Following is an example using Java that can be compiled into a standalone JAR file. 
+
+### Sample Project Access
+* Reference Java based hook script implementation available at: [specmatic-hooks-java-sample](https://github.com/znsio/specmatic-hooks-java-sample)
+* Clone the repository to get started
+
+#### Creating the JAR File
+* Follow instructions in the project's README.md
+* Build will generate a standalone executable JAR, named "specmatic-hooks-sample.jar"
+* JAR will contain all necessary dependencies
+* Add the JAR file to your Specmatic configurtion as shown below.
+
+The test hook definition in Specmatic configuration will have to be modified, and will look as follows : 
+
+```yaml
+sources:
+  - provider: git
+    test:
+      - products_client.yaml
+hooks:
+  test_load_contract: java -jar specmatic-hooks-sample.jar
+```
+
+Following is the link to Java hook file from the sample project : [Java hook script](https://github.com/znsio/specmatic-hooks-java-sample/blob/main/src/main/java/Main.java)
+
+
+{% endtab %}
+{% endtabs %}
 
 ### How It Works
 
 When Specmatic runs tests:
-1. The test hook intercepts the client specification before test execution
-2. It modifies the specification to:
+1. Specmatic sets the CONTRACT_FILE environment variable with the absolute path to the specification file that needs to be modified (e.g., /path/to/your/project/products_client.yaml)
+2. The test hook intercepts the client specification before test execution
+3. It modifies the specification to:
    - Transform `X-auth-token` to `X-internal-id` (simulating Gateway authentication header transformation)
    - Add rate limiting headers (simulating Gateway-added headers)
-3. Specmatic uses this modified specification for testing, while your client specification remains unchanged
+4. The test hook script is executed and MUST output a valid YAML to stdout
+5. Specmatic uses this modified specification for testing, while your client specification remains unchanged
 
 This approach:
 - Maintains clean client specifications
