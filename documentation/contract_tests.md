@@ -1080,8 +1080,8 @@ Without test hooks, Specmatic tests would fail because:
 
 ### Implementation Example
 
-#### Initial Client API Specification
-
+#### **Initial Client API Specification**
+<br>
 Here's a typical client-side API specification:
 
 ```yaml
@@ -1122,11 +1122,23 @@ paths:
                     sku:
                       type: string
 ```
+<br>
+#### **Setting Up Test Hooks**
+<br>
+Step 1: **Create specmatic.yaml configuration file:**
 
-#### Setting Up Test Hooks
-
-1. **Create specmatic.json configuration file:**
-
+{% tabs config %}
+{% tab config specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    test:
+      - products_client.yaml
+hooks:
+  test_load_contract: python3 modify_test_headers.py
+```
+{% endtab %}
+{% tab config specmatic.json %}
 ```json
 {
   "sources": [
@@ -1142,8 +1154,19 @@ paths:
   }
 }
 ```
+{% endtab %}
+{% endtabs %}
 
-2. **Create the hook script (modify_test_headers.py):**
+Both configurations are equivalent and can be used interchangeably in your Specmatic setup. The YAML format offers a more concise syntax, while the JSON format provides explicit structure.
+
+Step 2: **Create the hook script:**
+
+Please note:
+* In the hook script we access an environment variable CONTRACT_FILE which is automatically set by Specmatic
+* It contains the absolute path to the API specification file that needs to be modified
+
+{% tabs hook_script %}
+{% tab hook_script Python %}
 
 ```python
 import os
@@ -1153,6 +1176,7 @@ import yaml
 def main():
     # Read the specification file path from environment
     file_name = os.getenv('CONTRACT_FILE')
+   
 
     if not file_name:
         print("CONTRACT_FILE environment variable not set.")
@@ -1196,6 +1220,10 @@ def main():
             parameters.extend(gateway_headers)
             print(yaml.dump(data))
 
+            # The script MUST output valid YAML to stdout
+            # This YAML will be used by Specmatic for testing
+            # Any other prints/logs should go to stderr to avoid corrupting the YAML output
+
     except FileNotFoundError:
         print(f"File not found: {file_name}")
         sys.exit(2)
@@ -1206,15 +1234,122 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+{% endtab %}
+{% tab hook_script Java %}
+
+Specmatic supports Java-based hook scripts that can be compiled into standalone JAR files. This provides a robust way to modify API specifications during testing.
+
+### Sample Project Access
+* Reference implementation available at: [specmatic-hooks-java-sample](https://github.com/znsio/specmatic-hooks-java-sample)
+* Clone the repository to get started
+
+#### Creating the JAR File
+* Follow instructions in the project's README.md
+* Build will generate a standalone executable JAR
+* JAR will contain all necessary dependencies
+
+The test hook definition in Specmatic configuration will have to be modified, and will look as follows : 
+
+```yaml
+sources:
+  - provider: git
+    test:
+      - products_client.yaml
+hooks:
+  test_load_contract: java -jar you_jar_file_name.jar
+```
+
+Following is the Java file from the sample project.
+
+```java
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.DumperOptions;
+
+public class Main {
+
+    @SuppressWarnings("unchecked")
+    public static void main(String[] args) {
+        String fileName = System.getenv("CONTRACT_FILE") != null ? System.getenv("CONTRACT_FILE") : System.getProperty("CONTRACT_FILE");
+
+        if (fileName == null || fileName.isEmpty()) {
+            System.out.println("CONTRACT_FILE environment variable not set.");
+            System.exit(1);
+        }
+
+        Yaml yaml = new Yaml();
+
+        try (FileInputStream inputStream = new FileInputStream(fileName)) {
+            Map<String, Object> data = yaml.load(inputStream);
+
+            Map<String, Object> paths = (Map<String, Object>) data.get("paths");
+            Map<String, Object> productsPath = paths != null ? (Map<String, Object>) paths.get("/products") : null;
+            Map<String, Object> getOperation = productsPath != null ? (Map<String, Object>) productsPath.get("get") : null;
+            List<Map<String, Object>> parameters = getOperation != null ? (List<Map<String, Object>>) getOperation.get("parameters") : null;
+
+            if (parameters != null) {
+                for (Map<String, Object> param : parameters) {
+                    if ("header".equals(param.get("in")) && "X-auth-token".equals(param.get("name"))) {
+                        param.put("name", "X-internal-id");
+                        break;
+                    }
+                }
+
+                Map<String, Object> rateLimitLimit = Map.of(
+                        "name", "X-RateLimit-Limit",
+                        "in", "header",
+                        "required", true,
+                        "schema", Map.of("type", "integer", "example", 100),
+                        "description", "Maximum number of requests allowed"
+                );
+
+                Map<String, Object> rateLimitRemaining = Map.of(
+                        "name", "X-RateLimit-Remaining",
+                        "in", "header",
+                        "required", true,
+                        "schema", Map.of("type", "integer", "example", 40),
+                        "description", "Number of remaining requests allowed"
+                );
+
+                parameters.add(rateLimitLimit);
+                parameters.add(rateLimitRemaining);
+            }
+
+            DumperOptions options = new DumperOptions();
+            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            Yaml outputYaml = new Yaml(options);
+            System.out.println(outputYaml.dump(data));
+
+        } catch (FileNotFoundException e) {
+            System.out.printf("File not found: %s%n", fileName);
+            System.exit(2);
+        } catch (IOException e) {
+            System.out.printf("Error processing file: %s%n", e.getMessage());
+            System.exit(3);
+        }
+    }
+}
+
+```
+
+{% endtab %}
+{% endtabs %}
 
 ### How It Works
 
 When Specmatic runs tests:
-1. The test hook intercepts the client specification before test execution
-2. It modifies the specification to:
+1. Specmatic sets the CONTRACT_FILE environment variable with the absolute path to the specification file that needs to be modified (e.g., /path/to/your/project/products_client.yaml)
+2. The test hook intercepts the client specification before test execution
+3. It modifies the specification to:
    - Transform `X-auth-token` to `X-internal-id` (simulating Gateway authentication header transformation)
    - Add rate limiting headers (simulating Gateway-added headers)
-3. Specmatic uses this modified specification for testing, while your client specification remains unchanged
+4. The test hook script is executed and MUST output a valid YAML to stdout
+5. Specmatic uses this modified specification for testing, while your client specification remains unchanged
 
 This approach:
 - Maintains clean client specifications
