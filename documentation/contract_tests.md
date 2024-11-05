@@ -1161,6 +1161,8 @@ Both configurations are equivalent and can be used interchangeably in your Specm
 
 Step 2: **Create the hook script:**
 
+Specmatic supports hook script in any executable format (Python, Shell, Java, Javascript etc.). Below are examples in Python and Java.
+
 Please note:
 * In the hook script we access an environment variable CONTRACT_FILE which is automatically set by Specmatic
 * It contains the absolute path to the API specification file.
@@ -1236,7 +1238,7 @@ if __name__ == "__main__":
 {% endtab %}
 {% tab hook_script Java %}
 
-Specmatic supports hook script in any executable format (Python, Shell, Java, etc.). Following is an example using Java that can be compiled into a standalone JAR file. 
+Following is an example using Java that can be compiled into a standalone JAR file. 
 
 ### Sample Project Access
 * Reference Java based hook script implementation available at: [specmatic-hooks-java-sample](https://github.com/znsio/specmatic-hooks-java-sample)
@@ -1248,7 +1250,7 @@ Specmatic supports hook script in any executable format (Python, Shell, Java, et
 * JAR will contain all necessary dependencies
 * Add the JAR file to your Specmatic configurtion as shown below.
 
-The test hook definition in Specmatic configuration will have to be modified, and will look as follows : 
+The test hook configuration in Specmatic will look as follows: : 
 
 ```yaml
 sources:
