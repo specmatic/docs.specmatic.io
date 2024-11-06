@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Database Stubbing (Private Beta)
+title: Database Stubbing
 parent: Documentation
 nav_exclude: true
 ---
 
-# Database Stubbing (Private Beta)
+# Database Stubbing
 
-> The `database-mock` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
+> The `database-mock` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
 
 ## Introduction to Database Stubbing
 

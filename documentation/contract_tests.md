@@ -30,6 +30,7 @@ Contract Tests
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
     - [Selectively Running Tests in CI](#selectively-running-tests-in-ci)
     - [API Coverage](#api-coverage)
+    - [Hooks](#hooks)
     - [Adanced Features](#adanced-features)
       - [Generative Tests](#generative-tests)
       - [Limiting the Count of Tests](#limiting-the-count-of-tests)
@@ -282,7 +283,7 @@ Alternatively, we can also run the same command with the Docker image:
 docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
-Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failires
+Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failures.
 
 ```Tests run: 26, Successes: 5, Failures: 21, Errors: 0```
 
@@ -374,8 +375,6 @@ Alternatively, we can also run the same command with the Docker image:
 ```bash
 docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com
 ```
-```
-
 Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
 Since Specmatic uses the Specmatic configuration file in the current working directory, it's important to use `cd` into the directory containing the Specmatic configuration. For Java projects, the Specmatic configuration file should be in the same directory as the pom.xml or build.gradle file.
@@ -902,111 +901,136 @@ Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accept
 
 A contract-invalid example would not be allowed in the example named `SUCCESS`, as it is an example that should trigger a 200 response (and hence must be a contract-valid example).
 
-### Selectively Running Tests in CI
+---
 
-When contract tests are still in development, you can run only the passing tests and exclude known failures. This can be achieved using test description filters, which include the endpoint names from your OpenAPI specifications.
+## Selectively Running Tests in CI
 
-For example, for the above given OpenAPI spec (ref. [employees.yaml](#specmatic-contract-test---command-line)),
-with a test scenario named `POST /znsio/specmatic/employees -> 200 | EX:CREATE_EMPLOYEE_SUCCESS`  you can filter tests as follows:
+Specmatic provides powerful filtering capabilities to help you run specific tests during development and CI/CD pipelines. You can include or exclude tests based on various criteria such as HTTP methods, paths, status codes, and more.
 
-**1. Include Test Name**
+### Test Filtering Options
 
-To run only specific tests
+### Using the New Filter System (Recommended)
 
-##### **Programmatically**
-Set the `filterName` system property before running the test like this:
-{% tabs filter %}
-{% tab filter Java %}
-```java
-System.setProperty("filterName", "CREATE_EMPLOYEE_SUCCESS");
-```
-{% endtab %}
-{% tab filter Node %}
-```javascript
-process.env.filterName = "CREATE_EMPLOYEE_SUCCESS";
-```
-{% endtab %}
-{% tab filter Python %}
-```shell
-os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS'
-```
-{% endtab %}
-{% endtabs %}
+The `--filter` and `--filter-not` options provide granular control over which tests to run:
 
-Multiple `filters` can be comma-separated:
-
-{% tabs filter %}
-{% tab filter Java %}
-```java
-System.setProperty("filterName", "CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS");
-```
-{% endtab %}
-{% tab filter Node %}
-```javascript
-process.env.filterName = "CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS";
-```
-{% endtab %}
-{% tab filter Python %}
-```shell
-os.environ['filterName'] = 'CREATE_EMPLOYEE_SUCCESS, FETCH_EMPLOYEE_SUCCESS'
-```
-{% endtab %}
-{% endtabs %}
-
-Now only the contract tests where the test descriptions include certain example names will run.
-
-##### **Using Command-line:**
-You can also use the command-line parameter `--filter-name` with the test description as:
-
-```shell
-specmatic test --filter-name CREATE_EMPLOYEE_SUCCESS
+```bash
+specmatic test --filter="METHOD=POST" --filter="PATH=/users"
 ```
 
-**2. Omitting some tests**
+#### Available Filter Keys
 
-Set the `filterNotName` system property before running tests like this:
+- `METHOD`: Filter by HTTP methods (GET, POST, etc.)
+- `PATH`: Filter by request paths (/users, /products, etc.)
+- `STATUS`: Filter by response status codes (200, 400, etc.) - supports pattern matching with 'xx' (e.g., 4xx, 2xx)
+- `HEADERS`: Filter by request headers
+- `QUERY-PARAM`: Filter by query parameters
+- `EXAMPLE-NAME`: Filter by example names
 
-##### **Programmatic Approach:**
+#### Filter Syntax
 
-{% tabs filter %}
-{% tab filter Java %}
-```java
-System.setProperty("filterNotName", "CREATE_EMPLOYEE_SUCCESS");
-```
-{% endtab %}
-{% tab filter Node %}
-```javascript
-process.env.filterNotName = "CREATE_EMPLOYEE_SUCCESS";
-```
-{% endtab %}
-{% tab filter Python %}
-```shell
-os.environ['filterNotName'] = 'CREATE_EMPLOYEE_SUCCESS'
-```
-{% endtab %}
-{% endtabs %}
-
-Now only the contract tests which do not have `CREATE_EMPLOYEE_SUCCESS` in their test description will run. 
-
-##### **Using Command-line:**
-
-```shell
-specmatic test --filter-not-name CREATE_EMPLOYEE_SUCCESS
+1. Single value:
+```bash
+--filter="METHOD=GET"
 ```
 
-### Filtering tests by HTTP method name
+2. Multiple values for same filter (comma-separated):
+```bash
+--filter="METHOD=GET,POST"
+```
 
-Both of the above options `filter-name` and `filter-not-name` can also be used in conjunction with HTTP methods to only run those operations or exclude the particular options respectively.
+3. Multiple filters:
+```bash
+--filter="METHOD=GET,POST" --filter="PATH=/users"
+```
+
+#### Excluding Tests
+
+Use `--filter-not` to exclude tests matching specific criteria:
+
+```bash
+--filter-not="STATUS=400,401" --filter-not="METHOD=DELETE"
+```
+
+### Programmatic Usage
+
+Set environment properties in your test setup:
 
 ```java
-System.setProperty("filterName", "POST /znsio/specmatic/employees");
+// Include specific tests
+System.setProperty("filter", "METHOD=POST;PATH=/users");
+
+// Exclude tests
+System.setProperty("filterNot", "STATUS=400,401");
 ```
 
-```shell
-specmatic test --filter-name "POST /znsio/specmatic/employees"
+## Examples
+
+### Common Use Cases
+
+1. Run only successful response tests:
+```bash
+specmatic test --filter="STATUS=2xx"
 ```
 
-This will only run the `POST` operation under `/znsio/specmatic/employees` and exclude other methods if available.
+2. Skip authentication error tests:
+```bash
+specmatic test --filter-not="STATUS=4xx"  # Skips all 400-level status codes
+# Or more specifically:
+specmatic test --filter-not="STATUS=401,403"
+```
+
+3. Test specific API endpoints:
+```bash
+specmatic test --filter="PATH=/users,/products"
+```
+
+4. Combine multiple filters:
+```bash
+specmatic test --filter="METHOD=POST" --filter="PATH=/users" --filter-not="STATUS=400"
+```
+
+### Real-world Scenario
+
+For an OpenAPI spec with an endpoint `/api/employees`, you might run:
+
+```bash
+# Run only employee creation tests
+specmatic test --filter="PATH=/api/employees" --filter="METHOD=POST"
+
+# Skip all error scenarios
+specmatic test --filter-not="STATUS=4xx,500"  # Skip all client and server errors
+```
+
+## Legacy Filter Options (Deprecated)
+
+> **Note:** The following options are deprecated and will be removed in a future version. We recommend using the new filter system described above.
+
+- `--filter-name`: Run tests matching a specific name
+- `--filter-not-name`: Exclude tests matching a specific name
+
+Basic usage of deprecated options:
+```bash
+specmatic test --filter-name "CREATE_EMPLOYEE_SUCCESS"
+specmatic test --filter-not-name "ERROR_SCENARIOS"
+```
+
+To migrate from legacy filters to the new system, use these equivalents:
+
+```bash
+# Old way
+--filter-name "POST /api/employees"
+
+# New way
+--filter="METHOD=POST" --filter="PATH=/api/employees"
+```
+
+### Additional Tips
+
+- Filters are case-sensitive
+- When multiple filters are specified, tests must match ALL criteria (AND operation)
+- Within a single filter with multiple values, tests matching ANY value will be included (OR operation)
+
+---
 
 ### API Coverage
 
@@ -1021,6 +1045,251 @@ To get this working:
 Look at the sample project below to see this in action. Observe the system property, set in the [ContractTest](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) class, and the actuator-related dependency added in `pom.xml`.
 
 The data in the coverage report is written to a file at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed.
+
+---
+
+## Hooks
+
+### Overview
+
+Specmatic's test hooks provide a powerful mechanism to modify API specifications just before they're used in testing, without altering the original specification files. This feature is particularly valuable when your test scenarios require different or additional specification elements (such as headers, parameters, or request bodies) compared to what's defined in your base specification.
+
+### Real-World Scenarios
+
+Test hooks can solve various real-world challenges. Here is a common scenarios where test hooks prove invaluable:
+
+### API Gateway Transformations
+
+Consider this common architectural setup:
+
+```
+Client Application → API Gateway → Backend Service
+```
+
+In this scenario:
+1. Your client application sends requests with basic headers (e.g., `X-auth-token`)
+2. The API Gateway:
+   - Adds rate limiting headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`)
+   - Transforms authentication headers (`X-auth-token` → `X-internal-id`)
+3. The backend service expects ALL these headers to be present
+
+Without test hooks, Specmatic tests would fail because:
+- The client specification only contains `X-auth-token`
+- The backend service expects additional headers that the Gateway would normally add
+- The backend service looks for `X-internal-id` instead of `X-auth-token`
+
+### Implementation Example
+
+#### **Initial Client API Specification**
+<br>
+Here's a typical client-side API specification:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Sample Product API
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Local
+paths:
+  /products:
+    get:
+      summary: Get Products
+      description: Get Products
+      parameters:
+        - in: header
+          name: X-auth-token
+          schema:
+            type: string
+          required: true
+          description: Authentication token
+      responses:
+        '200':
+          description: Returns Product With Id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - name
+                    - sku
+                  properties:
+                    name:
+                      type: string
+                    sku:
+                      type: string
+```
+<br>
+#### **Setting Up Test Hooks**
+<br>
+Step 1: **Create specmatic.yaml configuration file:**
+
+{% tabs config %}
+{% tab config specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    test:
+      - products_client.yaml
+hooks:
+  test_load_contract: python3 modify_test_headers.py
+```
+{% endtab %}
+{% tab config specmatic.json %}
+```json
+{
+  "sources": [
+    {
+      "provider": "git",
+      "test": [
+        "products_client.yaml"
+      ]
+    }
+  ],
+  "hooks": {
+    "test_load_contract": "python3 modify_test_headers.py"
+  }
+}
+```
+{% endtab %}
+{% endtabs %}
+
+Both configurations are equivalent and can be used interchangeably in your Specmatic setup.
+
+Step 2: **Create the hook script:**
+
+Specmatic supports hook script in any executable format (Python, Shell, Java, Javascript etc.). Below are examples in Python and Java.
+
+Please note:
+* In the hook script we access an environment variable CONTRACT_FILE which is automatically set by Specmatic
+* It contains the absolute path to the API specification file.
+{% tabs hook_script %}
+{% tab hook_script Python %}
+
+```python
+import os
+import sys
+import yaml
+
+def main():
+    # Read the specification file path from environment
+    file_name = os.getenv('CONTRACT_FILE')
+   
+
+    if not file_name:
+        print("CONTRACT_FILE environment variable not set.")
+        sys.exit(1)
+
+    try:
+        with open(file_name, 'r') as file:
+            data = yaml.safe_load(file)
+
+            # Get the parameters section
+            paths = data.get('paths', {})
+            products_path = paths.get('/products', {})
+            get_operation = products_path.get('get', {})
+            parameters = get_operation.get('parameters', [])
+
+            # Simulate API Gateway transformation:
+            # Transform X-auth-token to X-internal-id
+            for param in parameters:
+                if param.get('in') == 'header' and param.get('name') == 'X-auth-token':
+                    param['name'] = 'X-internal-id'
+                    break
+
+            # Add Gateway-specific headers
+            gateway_headers = [
+                {
+                    'name': 'X-RateLimit-Limit',
+                    'in': 'header',
+                    'required': True,
+                    'schema': {'type': 'integer', 'example': 100},
+                    'description': 'Maximum number of requests allowed'
+                },
+                {
+                    'name': 'X-RateLimit-Remaining',
+                    'in': 'header',
+                    'required': True,
+                    'schema': {'type': 'integer', 'example': 40},
+                    'description': 'Number of remaining requests allowed'
+                }
+            ]
+            
+            parameters.extend(gateway_headers)
+            print(yaml.dump(data))
+
+            # The script MUST output valid YAML to stdout
+            # This YAML will be used by Specmatic for testing
+            # Any other prints/logs should go to stderr to avoid corrupting the YAML output
+
+    except FileNotFoundError:
+        print(f"File not found: {file_name}")
+        sys.exit(2)
+    except Exception as e:
+        print(f"Error processing file: {e}")
+        sys.exit(3)
+
+if __name__ == "__main__":
+    main()
+```
+{% endtab %}
+{% tab hook_script Java %}
+
+Following is an example using Java that can be compiled into a standalone JAR file. 
+
+### Sample Project Access
+* Reference Java based hook script implementation available at: [specmatic-hooks-java-sample](https://github.com/znsio/specmatic-hooks-java-sample)
+* Clone the repository to get started
+
+#### Creating the JAR File
+* Follow instructions in the project's README.md
+* Build will generate a standalone executable JAR, named "specmatic-hooks-sample.jar"
+* JAR will contain all necessary dependencies
+* Add the JAR file to your Specmatic configurtion as shown below.
+
+The test hook configuration in Specmatic will look as follows: : 
+
+```yaml
+sources:
+  - provider: git
+    test:
+      - products_client.yaml
+hooks:
+  test_load_contract: java -jar specmatic-hooks-sample.jar
+```
+
+Following is the link to Java hook file from the sample project : [Java hook script](https://github.com/znsio/specmatic-hooks-java-sample/blob/main/src/main/java/Main.java)
+
+
+{% endtab %}
+{% endtabs %}
+
+### How It Works
+
+When Specmatic runs tests:
+1. Specmatic sets the CONTRACT_FILE environment variable with the absolute path to the specification file that needs to be modified (e.g., /path/to/your/project/products_client.yaml)
+2. The test hook intercepts the client specification before test execution
+3. It modifies the specification to:
+   - Transform `X-auth-token` to `X-internal-id` (simulating Gateway authentication header transformation)
+   - Add rate limiting headers (simulating Gateway-added headers)
+4. The test hook script is executed and MUST output a valid YAML to stdout
+5. Specmatic uses this modified specification for testing, while your client specification remains unchanged
+
+This approach:
+- Maintains clean client specifications
+- Accurately tests backend service requirements
+- Simulates API Gateway behavior in your test environment
+
+> **Note:** If you're looking to modify headers during service virtualization using Specmatic's `stub` command, then please refer to stub-specific header modifications documentation : [Using Hooks during Stub Creation](service_virtualization_tutorial.html#hooks)
+
+### Conclusion
+
+Test hooks provide a powerful way to bridge the gap between client specifications and Gateway-modified requests. By simulating Gateway behavior in your tests, you can ensure your backend service testing is accurate and comprehensive while maintaining clean client specifications.
+
+---
 
 ### Advanced Features
 

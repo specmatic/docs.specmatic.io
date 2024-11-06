@@ -1025,6 +1025,8 @@ You can fill out the specific values in an example, and leave Specmatic to looku
 
 - Create a new example file in the `employee_details_examples` directory named `patch_employee.json` with the following contents:
 
+```json
+ {
     "http-request": {
       "method": "PATCH",
       "path": "/employees",
@@ -1044,7 +1046,7 @@ You can fill out the specific values in an example, and leave Specmatic to looku
       }
     }
   }
-  ```
+```
 
 - Start the stub and execute this curl command:
 
@@ -1522,11 +1524,15 @@ The above shell script is just an example, the external command can be any execu
 
 ## Hooks
 
-Specmatic can modify the specification before loading it.
+### Overview
 
-Let's see a quick example of a frontend that connects to the backend API through an API gateway.
+Specmatic can modify specifications before loading them using hooks. This feature is particularly useful when there's a need to transform or adapt specifications to match different environments or requirements.
 
-Here is an API specification for a products API.
+### Use Case: API Gateway Header Transformation
+
+Let's see a practical example of a frontend that connects to a backend API through an API gateway.
+
+Here is an API specification for a products API (backend):
 
 ```yaml
 openapi: 3.0.0
@@ -1542,12 +1548,6 @@ paths:
       summary: Get Products
       description: Get Products
       parameters:
-        - in: path
-          name: id
-          schema:
-            type: number
-          required: true
-          description: Numerical Product Id
         - in: header
           name: X-internal-id
           schema:
@@ -1573,8 +1573,7 @@ paths:
                       type: string
 ```
 
-
-The expectation used by the consumer when stubbing out the Products API Backend looks something like this:
+Now let's look at the consumer's (client's) expectation when interacting with the Products API looks like this:
 
 ```json
 {
@@ -1597,11 +1596,16 @@ The expectation used by the consumer when stubbing out the Products API Backend 
 }
 ```
 
-Note how the consumer sends the header `X-auth-token` in the request. The API gateway replaces it at runtime with `X-internal-id`, and forwards the request to the backend (note that the specification declares the header `X-internal-id`, not `X-auth-token`).
+Note that:
+1. The consumer sends the header `X-auth-token` in the request
+2. The API gateway will replace it at runtime with `X-internal-id`
+3. The backend specification declares `X-internal-id`, not `X-auth-token`
 
-The specification as-is will not accept the above frontend expectation, without a small modification, which can be achieved using Specmatic's `stub_load_contract` hook.
+The Product API specification as-is will not accept the frontend expectation without modification. We can achieve this using Specmatic's `stub_load_contract` hook.
 
-Create the `specamtic.json` file with the following content:
+### Implementation Steps
+
+1. **Create specmatic.json configuration file:**
 
 ```json
 {
@@ -1614,12 +1618,12 @@ Create the `specamtic.json` file with the following content:
     }
   ],
   "hooks": {
-    "stub_load_contract": "python3 header.py"
+    "stub_load_contract": "python3 modify_stub_header.py"
   }
 }
 ```
 
-Create a file named header.py in the root of your project, with the following code:
+2. **Create the hook script (modify_stub_header.py):**
 
 ```python
 import os
@@ -1641,10 +1645,11 @@ def main():
             
             # Modify the specified header
             paths = data.get('paths', {})
-            products_path = paths.get('/products/{id}', {})
+            products_path = paths.get('/products', {})
             get_operation = products_path.get('get', {})
             parameters = get_operation.get('parameters', [])
             
+            # Replace X-internal-id with X-auth-token
             for param in parameters:
                 if param.get('in') == 'header' and param.get('name') == 'X-internal-id':
                     param['name'] = 'X-auth-token'
@@ -1663,9 +1668,26 @@ if __name__ == "__main__":
     main()
 ```
 
-This sample hook code replaces the header name `X-internal-id` with `X-auth-token`.
+### How It Works
 
-Now when Specmatic is run in stub mode, it will invoke the hook, pass the specification path to it using through the environment variable `CONTRACT_FILE`, and then load whatever specification is printed by the hook to standard output.
+When Specmatic runs in stub mode:
+1. It invokes the hook specified in specmatic.json
+2. Passes the specification path through the `CONTRACT_FILE` environment variable
+3. The hook script reads and modifies the specification
+4. The modified specification is printed to standard output
+5. Specmatic loads the modified specification for use
+
+The hook script in this example performs a simple transformation:
+- Reads the OpenAPI specification
+- Locates the header parameter named `X-internal-id`
+- Replaces it with `X-auth-token`
+- Outputs the modified specification
+
+This allows the stub to accept requests with the `X-auth-token` header that the frontend uses, while maintaining the original specification for the backend API.
+
+> **Note:** If you're looking to modify headers during test using Specmatic's `test` command, then please refer to test-specific header modifications documentation : [Using Hooks during Tests](contract_tests.html#hooks)
+
+---
 
 ## Precedence Across Types Of Examples
 
