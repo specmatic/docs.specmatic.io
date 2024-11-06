@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Redis Stubbing (Private Beta)
+title: Redis Stubbing
 parent: Documentation
 nav_exclude: true
 ---
 
-# Redis Stubbing (Private Beta)
+# Redis Stubbing
 
-> The `specmatic-redis` module described in this document is currently in private beta. Please get in touch with us through the `Contact Us` form at https://specmatic.in if you'd like to try it out.
+> The `specmatic-redis` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
 
 ## Introduction to Redis Stubbing
 
