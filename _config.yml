@@ -25,3 +25,10 @@ exclude:
 
 mermaid:
   src: './js/mermaid.min.js'
+  config:
+    theme: 'default'
+    startOnLoad: true
+    flowchart:
+      useMaxWidth: false
+    sequence:
+      useMaxWidth: true

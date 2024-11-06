@@ -29,13 +29,14 @@ Backward Compatibility
 
 
 # Why Backward Compatibility Matters
-Backward compatibility ensures that updates to your API contracts don't break the  existing consumers. This feature allows both providers and consumers to update at their own pace, without causing unexpected disruptions. 
+Backward compatibility ensures that updates to your API specifications don't accidently break compatibility. and prevents rework. Perform automated backward compatibility checks to ensure we are not accidentally breaking compatibility.
 
-Specmatic offers this powerful feature to check for backward compatibility between different versions of your API contract.
+Specmatic offers this powerful feature to check for backward compatibility between different versions of your API specifications.
 
 - **Catch issues early:** Detect compatibility problems before any code is written
-- **Contract-Based Analysis:** By comparing the old and new versions of your API contract, Specmatic provides instant feedback on potential breaking changes.
-- **No Code Required:** This analysis is based entirely on the contract, eliminating the need for implementation code.
+- **Specification-Based Analysis:** By comparing the old and new versions of your API specification, Specmatic provides instant feedback on potential breaking changes.
+- **Shift-Left Testing:** Detect breaking changes during API design phase, reduce costly downstream fixes and client disruptions.
+
 
 <img src="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="60%" height="60%" />
 
@@ -51,19 +52,19 @@ The new command has been overhauled to be more intuitive and supports a wider ra
 # How it works
 
 Specmatic integrates backward compatibility checks into both:
-- **Local development**, to catch issues as you code.
+- **Local changes**, to catch issues as you update the specifications.
 - **CI pipelines**, ensuring every change is validated before it reaches production.
 
 Here’s a high-level overview of the workflow:
 
-{% mermaid %}
+```mermaid
 graph TD;
-    A[API Changes] -->|Analyzed by| B{Backward Compatibility Check}
+    A[Specification Changes] -->|Analyzed by| B{Backward Compatibility Check}
     B -->|Compatible| C[Green Light for Deployment]
     B -->|Incompatible| D[Refinement Needed]
     C -->|Seamless Integration| E[Enhanced User Trust]
     D -->|Iterative Improvement| A
-{% endmermaid %}
+```
 
 # Using Backward Compatibility
 
@@ -84,13 +85,13 @@ specmatic backward-compatibility-check [options]
 
 ### 1. Validating Work in Progress (local development)
 
-For immediate feedback on your ongoing changes:
+For immediate feedback on your uncommitted changes:
 
 ```shell
 specmatic backward-compatibility-check
 ```
 
-{% mermaid %}
+```mermaid
 sequenceDiagram
     participant Developer
     participant Specmatic
@@ -100,18 +101,17 @@ sequenceDiagram
     Specmatic->>Specmatic: Analyze changed files
     Specmatic->>Specmatic: Perform compatibility analysis
     Specmatic->>Developer: Deliver compatibility assessment
-{% endmermaid %}
+```
 
 ### 2. As a pre-commit hook
 
-Add to .git/hooks/pre-commit
+Add to .git/hooks/pre-commit. This makes sure backward compatibility is always checked before commit, even if you don't do it manually.
 
 ```shell
 #!/bin/sh
 specmatic backward-compatibility-check
 ```
-
-{% mermaid %}
+```mermaid
 graph TD
     A[Developer initiates commit] -->|Triggers| B[Pre-commit hook]
     B -->|Runs| C[Specmatic backward-compatibility-check]
@@ -119,7 +119,7 @@ graph TD
     C -->|Incompatible| E[Commit halted]
     E -->|Developer notified| F[Changes reviewed]
     F --> A
-{% endmermaid %}
+```
 
 
 ### 3. Pre-Merge Validation (in your CI pipeline)
@@ -130,7 +130,7 @@ Ensure your changes align with the main project direction:
 specmatic backward-compatibility-check --base-branch origin/main
 ```
 
-{% mermaid %}
+```mermaid
 sequenceDiagram
     participant CI
     participant Specmatic
@@ -141,7 +141,7 @@ sequenceDiagram
     Specmatic->>MainBranch: Fetch main branch state
     Specmatic->>Specmatic: Perform compatibility analysis
     Specmatic->>CI: Present comprehensive results
-{% endmermaid %}
+```
 
 ### 4. Analyzing specific files
 
@@ -294,9 +294,9 @@ Specmatic will flag this as incompatible, protecting your API consumers from une
 
 ![Specmatic, backward compatibility breaking changes](../images/bcc_incompatible.png)
 
-## Handling Contracts In Progress
+## Handling Changes In Progress
 
-APIs whose design is still in progress can be tagged WIP in the OpenAPI contract. Specmatic will not break builds or return failure on when it see backward incompatible changes to WIP APIs. It will still print the error feedback.
+APIs whose design is still in progress can be tagged WIP in the OpenAPI Specifications. Specmatic will not break builds or return failure on when it see backward incompatible changes to WIP APIs. It will still print the error feedback.
 
 ```yaml
 # filename api_products_v1.yaml
@@ -369,7 +369,7 @@ paths:
                     type: integer
 ```
 
-Once the contract is complete you can remove the WIP tag.
+Once the specification is complete you can remove the WIP tag.
 
 ## Backward Compatibility Rules
 
