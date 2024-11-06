@@ -42,3 +42,6 @@ gem "just-the-docs", "0.5.1", group: :jekyll_plugins
 gem "jekyll-include-cache"
 gem "kramdown-parser-gfm"
 gem "webrick"
+
+gem "jekyll-mermaid"
+

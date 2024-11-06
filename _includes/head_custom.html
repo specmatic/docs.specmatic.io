@@ -1,2 +1,53 @@
 <link rel="stylesheet" href="/css/plugin-jekyll-tabs.css">
 <script src="/js/plugin-jekyll-tabs.js"></script>
+
+<!-- Mermaid configuration -->
+<script src="{{ '/js/mermaid.min.js' | relative_url }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        themeVariables: {
+            fontSize: '16px'
+        }
+    });
+});
+</script>
+
+<style>
+.language-mermaid {
+    background-color: transparent;
+    border: none;
+}
+
+/* Control diagram sizes */
+.mermaid {
+  max-width: 100%;
+  max-height: 600px; /* Adjust this value as needed */
+  display: block;
+  margin: auto;
+}
+
+/* Specific control for flowcharts */
+.mermaid[data-diagram="flowchart"] {
+  max-height: 400px; /* Adjust this value for flowcharts specifically */
+}
+
+/* Add classes for different sizes */
+.mermaid.diagram-small {
+  max-width: 500px;
+  max-height: 300px;
+}
+
+.mermaid.diagram-medium {
+  max-width: 700px;
+  max-height: 400px;
+}
+
+.mermaid.diagram-large {
+  max-width: 900px;
+  max-height: 600px;
+}
+</style>

@@ -63,6 +63,7 @@ GEM
       jekyll (>= 3.7, < 5.0)
     jekyll-include-cache (0.2.1)
       jekyll (>= 3.7, < 5.0)
+    jekyll-mermaid (1.0.0)
     jekyll-remote-theme (0.4.3)
       addressable (~> 2.0)
       jekyll (>= 3.5, < 5.0)
@@ -188,6 +189,7 @@ DEPENDENCIES
   jekyll
   jekyll-feed (~> 0.12)
   jekyll-include-cache
+  jekyll-mermaid
   jekyll-remote-theme
   jekyll-tabs
   just-the-docs (= 0.5.1)
