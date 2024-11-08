@@ -16,6 +16,7 @@ nav_order: 18
     - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
       - [HTTP Headers](#http-headers)
       - [GraphQL Variables](#graphql-variables)
+      - [Multi-Query Requests](#multi-query-requests)
     - [Dynamic Field Selection From Example Responses](#dynamic-field-selection-from-example-responses)
     - [GraphQL Scalar Types](#graphql-scalar-types)
     - [Using the Docker Image](#using-the-docker-image)
@@ -314,7 +315,7 @@ Here are some simple steps to try this out:
 ---
 This setup allows you to test how Specmatic reuses the example provided, adapting the response to the requested fields.
 
-### Multi-Query Requests with Specmatic GraphQL Stub
+### Multi-Query Requests 
 
 The Specmatic GraphQL stub server supports multi-query requests, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-query requests with variables** are supported, making it flexible for dynamic requests.
 
@@ -398,6 +399,7 @@ To showcase this, let's reuse the folder structure established in the previous s
      ```
 
 3. **Create `specmatic.yaml` File**: Add the following `specmatic.yaml` file to the root folder:
+
    ```yaml
    contract_repositories:
      - type: filesystem
@@ -501,7 +503,6 @@ In this example:
 
 This request showcases how Specmatic's GraphQL stub server can process multi-query requests with variables, offering flexibility and efficiency in response generation.
 
----
 This example demonstrates how Specmatic processes multiple queries in a single request and returns the expected responses for each query. You can adapt this setup for various use cases, leveraging the existing folder structure for organizing examples.
 
 ### GraphQL Scalar Types
