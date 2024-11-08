@@ -16,6 +16,7 @@ nav_order: 18
     - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
       - [HTTP Headers](#http-headers)
       - [GraphQL Variables](#graphql-variables)
+      - [Multi-Query Requests](#multi-query-requests)
     - [Dynamic Field Selection From Example Responses](#dynamic-field-selection-from-example-responses)
     - [GraphQL Scalar Types](#graphql-scalar-types)
     - [Using the Docker Image](#using-the-docker-image)
@@ -313,6 +314,196 @@ Here are some simple steps to try this out:
 
 ---
 This setup allows you to test how Specmatic reuses the example provided, adapting the response to the requested fields.
+
+### Multi-Query Requests 
+
+The Specmatic GraphQL stub server supports multi-query requests, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-query requests with variables** are supported, making it flexible for dynamic requests.
+
+To showcase this, let's reuse the folder structure established in the previous section on dynamic field selection.
+
+#### Steps to Try Out Multi-Query Requests
+
+1. **Create the GraphQL SDL File**: Create a file named `product-api.graphql` with the following schema:
+   ```graphql
+   schema {
+       query: Query
+       mutation: Mutation
+   }
+
+   enum ProductType {
+     gadget
+     book
+     food
+     other
+   }
+
+   type Query {
+     findAvailableProducts(type: ProductType!, pageSize: Int): [Product]
+     productById(id: ID!): Product
+   }
+
+   type Product {
+     id: ID!
+     name: String!
+     inventory: Int!
+     type: ProductType!
+   }
+   ```
+
+2. **Set Up Example Files**: In the `examples` folder, create two example files:
+
+   - **`find_available_gadgets.yaml`**:
+     ```yaml
+     request:
+       body: |
+         query {
+           findAvailableProducts(type: gadget, pageSize: 10) { 
+             id 
+             name 
+             inventory 
+             type 
+           }
+         }
+     response: [
+         {
+             "id": "10",
+             "name": "The Almanac",
+             "inventory": 10,
+             "type": "book"
+         },
+         {
+             "id": "20",
+             "name": "iPhone",
+             "inventory": 15,
+             "type": "gadget"
+         }
+     ]
+     ```
+
+   - **`product_by_id.yaml`**:
+     ```yaml
+     request:
+       body: |
+         query {
+           productById(id: "10") { 
+             id 
+             name 
+             type 
+           }
+         }
+     response: {
+         "id": "10",
+         "name": "The Almanac",
+         "type": "book"
+     }
+     ```
+
+3. **Create `specmatic.yaml` File**: Add the following `specmatic.yaml` file to the root folder:
+
+   ```yaml
+   contract_repositories:
+     - type: filesystem
+       consumes:
+         - product-api.graphql
+   ```
+
+4. **Run the GraphQL Stub**:
+   ```bash
+   docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
+     -v "$PWD/examples:/usr/src/app/examples" \
+     -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+     -p 9000:9000 znsio/specmatic-graphql-trial virtualize --port=9000 --examples=examples
+   ```
+
+5. **Send a Multi-Query Request**:
+   Use the following `curl` command to make a multi-query request:
+   ```bash
+   curl -X POST http://localhost:9000/graphql \
+     -H "Content-Type: application/json" \
+     -d '{
+       "query": "query { findAvailableProducts(type: gadget, pageSize: 10) { id name inventory type } productById(id: \"10\") { id name type } }"
+     }'
+   ```
+
+   **Expected Response:**
+   ```json
+   {
+     "data": {
+       "findAvailableProducts": [
+         {
+           "id": "10",
+           "name": "The Almanac",
+           "inventory": 10,
+           "type": "book"
+         },
+         {
+           "id": "20",
+           "name": "iPhone",
+           "inventory": 15,
+           "type": "gadget"
+         }
+       ],
+       "productById": {
+         "id": "10",
+         "name": "The Almanac",
+         "type": "book"
+       }
+     }
+   }
+   ```
+Here's an example of a multi-query request using variables. This demonstrates how Specmatic can handle a single request with multiple queries, where each query may use variables.
+
+7. **Send a Multi-Query Request with Variables**:
+   Use the following `curl` command:
+
+   ```bash
+   curl -X POST http://localhost:9000/graphql \
+     -H "Content-Type: application/json" \
+     -d '{
+       "query": "query($type: ProductType!, $pageSize: Int, $id: ID!) { findAvailableProducts(type: $type, pageSize: $pageSize) { id name inventory type } productById(id: $id) { id name type } }",
+       "variables": {
+         "type": "gadget",
+         "pageSize": 10,
+         "id": "10"
+       }
+     }'
+   ```
+
+   **Expected Response:**
+   ```json
+   {
+     "data": {
+       "findAvailableProducts": [
+         {
+           "id": "10",
+           "name": "The Almanac",
+           "inventory": 10,
+           "type": "book"
+         },
+         {
+           "id": "20",
+           "name": "iPhone",
+           "inventory": 15,
+           "type": "gadget"
+         }
+       ],
+       "productById": {
+         "id": "10",
+         "name": "The Almanac",
+         "type": "book"
+       }
+     }
+   }
+   ```
+
+In this example:
+- The variable `$type` is used to specify the `ProductType` for `findAvailableProducts`.
+- `$pageSize` controls the number of products returned.
+- `$id` is used to fetch a specific product by ID in the `productById` query.
+
+This request showcases how Specmatic's GraphQL stub server can process multi-query requests with variables, offering flexibility and efficiency in response generation.
+
+This example demonstrates how Specmatic processes multiple queries in a single request and returns the expected responses for each query. You can adapt this setup for various use cases, leveraging the existing folder structure for organizing examples.
 
 ### GraphQL Scalar Types
 
