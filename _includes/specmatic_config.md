@@ -618,7 +618,6 @@ Each environment configuration can contain
 - `baseurls` - needed when running contracts as test as part of [authentication](documentation/../authentication.html)
 - `variables` - these values are plugged into the Examples rows of an auth contract for [authentication](documentation/../authentication.html), or even when running regular contract tests
 
-First, we check the CONFIG_FILE_PATH environment variable for the configuration file. If it is not present, we check the path provided through the --config parameter. If not found, we finally look in the current root directory.
 
 
 ### Hooks
