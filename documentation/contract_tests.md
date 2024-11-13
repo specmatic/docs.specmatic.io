@@ -1131,27 +1131,28 @@ To simulate API gateway behavior, we'll use an overlay to modify headers:
 ```yaml
 overlay: 1.0.0
 actions:
-  - target: $.paths['/employees'].post.parameters
+  - target: $.paths['/employees'].post
     update:
-      - in: header
-        name: X-Correlation-ID  # Modified from correlation-id
-        schema:
-          type: string
-        required: true
-        description: Correlation ID for request tracking
-      - in: header
-        name: X-Gateway-Token  # First new header
-        schema:
-          type: string
-        required: true
-        description: API Gateway authentication token
-      - in: header
-        name: X-Request-ID  # Second new header
-        schema:
-          type: string
-          format: uuid
-        required: true
-        description: Unique request identifier for tracing
+      parameters:
+        - in: header
+          name: X-Correlation-ID
+          schema:
+            type: string
+          required: true
+          description: Correlation ID for request tracking
+        - in: header
+          name: X-Gateway-Token
+          schema:
+            type: string
+          required: true
+          description: API Gateway authentication token
+        - in: header
+          name: X-Request-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: Unique request identifier for tracing
 ```
 
 ### Using Overlays in Specmatic
