@@ -24,6 +24,61 @@ We often have to pass more than one API Specification file to Specmatic to stub 
 
 Also if your contracts are stored in a source control system like Git, we need to provide details about the repository so that Specmatic can pull your specifications directly from your version control.
 
+#### **Configuration File Location**
+
+The configuration can be specified in JSON or YAML format. There are several ways to specify the location of your configuration file:
+
+1. **Default Location**: Place the configuration file in the root folder of your project. By default, Specmatic looks for `specmatic.json` or `specmatic.yaml` in the project root.
+
+2. **Command Line Option**: Specify a custom configuration file location using the `--config` option:
+  ```bash
+  specmatic test --config=path/to/my-config.json
+  ```
+
+3. **Environment Variable**: When working programmatically, set the configuration file path using the CONFIG_FILE_PATH environment variable:
+
+{% tabs config_location %}
+{% tab config_location macOS/Linux %}
+
+```bash
+# Set configuration file path in terminal
+export CONFIG_FILE_PATH=/path/to/specmatic.yaml
+```
+
+{% endtab %}
+{% tab config_location Windows %}
+
+```shell
+# Set configuration file path in command prompt
+set CONFIG_FILE_PATH=C:\path\to\specmatic.yaml
+
+# Or in PowerShell
+$env:CONFIG_FILE_PATH="C:\path\to\specmatic.yaml"
+```
+
+{% endtab %}
+{% tab config_location Java Tests %}
+
+```java
+@BeforeAll
+public static void setUp() {
+    // Set configuration file path programmatically
+    System.setProperty("CONFIG_FILE_PATH", "/path/to/specmatic.yaml");
+    
+    // Rest of your test setup
+    System.setProperty("host", "localhost");
+    System.setProperty("port", "8080");
+}
+```
+
+{% endtab %}
+{% endtabs %}
+
+Note on Precedence: When multiple configuration methods are used, they are evaluated in the following order:
+1. Command line option (--config)
+2. Environment variable (CONFIG_FILE_PATH)
+3. Default location (project root)
+
 Here is a sample configuration to get you started.
 
 {% tabs config %}
