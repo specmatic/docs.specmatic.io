@@ -1049,7 +1049,7 @@ The data in the coverage report is written to a file at `build/reports/specmatic
 
 ---
 
-## Overlays in Specmatic
+## Overlays
 
 ### Introduction
 Overlays provide a powerful mechanism to modify OpenAPI specifications without altering the base specification. They're particularly useful when you need to simulate middleware behavior, such as API gateways modifying requests, or when you need to extend an existing API specification.
