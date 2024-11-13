@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+    <!-- Base Specification -->
+    <g transform="translate(50, 50)">
+        <rect x="0" y="0" width="200" height="250" rx="10" fill="#e1f3fe" stroke="#333" stroke-width="2"/>
+        <text x="100" y="30" text-anchor="middle" font-family="Arial" font-weight="bold">Base OpenAPI Spec</text>
+        <rect x="20" y="50" width="160" height="180" rx="5" fill="white" stroke="#666"/>
+        <text x="100" y="80" text-anchor="middle" font-family="monospace" font-size="12">POST /employees</text>
+        <text x="100" y="120" text-anchor="middle" font-family="monospace" font-size="12">Headers: {}</text>
+        <text x="100" y="160" text-anchor="middle" font-family="monospace" font-size="12">Response: {</text>
+        <text x="100" y="180" text-anchor="middle" font-family="monospace" font-size="12">  Employee Object</text>
+        <text x="100" y="200" text-anchor="middle" font-family="monospace" font-size="12">}</text>
+    </g>
+
+    <!-- Overlay -->
+    <g transform="translate(300, 100)">
+        <rect x="0" y="0" width="200" height="150" rx="10" fill="#fde1fe" stroke="#333" stroke-width="2"/>
+        <text x="100" y="30" text-anchor="middle" font-family="Arial" font-weight="bold">Overlay Layer</text>
+        <rect x="20" y="50" width="160" height="80" rx="5" fill="white" stroke="#666"/>
+        <text x="100" y="80" text-anchor="middle" font-family="monospace" font-size="12">Add Headers:</text>
+        <text x="100" y="100" text-anchor="middle" font-family="monospace" font-size="11">X-Correlation-ID</text>
+        <text x="100" y="115" text-anchor="middle" font-family="monospace" font-size="11">X-Gateway-Token</text>
+    </g>
+
+    <!-- Result -->
+    <g transform="translate(550, 50)">
+        <rect x="0" y="0" width="200" height="250" rx="10" fill="#e1feef" stroke="#333" stroke-width="2"/>
+        <text x="100" y="30" text-anchor="middle" font-family="Arial" font-weight="bold">Result</text>
+        <rect x="20" y="50" width="160" height="180" rx="5" fill="white" stroke="#666"/>
+        <text x="100" y="80" text-anchor="middle" font-family="monospace" font-size="12">POST /employees</text>
+        <text x="100" y="110" text-anchor="middle" font-family="monospace" font-size="12">Headers: {</text>
+        <text x="100" y="130" text-anchor="middle" font-family="monospace" font-size="11">  X-Correlation-ID,</text>
+        <text x="100" y="145" text-anchor="middle" font-family="monospace" font-size="11">  X-Gateway-Token</text>
+        <text x="100" y="160" text-anchor="middle" font-family="monospace" font-size="12">}</text>
+        <text x="100" y="190" text-anchor="middle" font-family="monospace" font-size="12">Response: {</text>
+        <text x="100" y="210" text-anchor="middle" font-family="monospace" font-size="12">  Employee Object</text>
+    </g>
+
+    <!-- Arrows -->
+    <g>
+        <path d="M 250,175 L 300,175" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <path d="M 500,175 L 550,175" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    </g>
+
+    <!-- Arrow Marker -->
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+        </marker>
+    </defs>
+</svg>
