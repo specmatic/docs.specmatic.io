@@ -30,6 +30,7 @@ Contract Tests
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
     - [Selectively Running Tests in CI](#selectively-running-tests-in-ci)
     - [API Coverage](#api-coverage)
+    - [Overlays](#overlays)
     - [Hooks](#hooks)
     - [Adanced Features](#adanced-features)
       - [Generative Tests](#generative-tests)
@@ -1045,6 +1046,189 @@ To get this working:
 Look at the sample project below to see this in action. Observe the system property, set in the [ContractTest](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) class, and the actuator-related dependency added in `pom.xml`.
 
 The data in the coverage report is written to a file at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed.
+
+---
+
+## Overlays in Specmatic
+
+### Introduction
+Overlays provide a powerful mechanism to modify OpenAPI specifications without altering the base specification. They're particularly useful when you need to simulate middleware behavior, such as API gateways modifying requests, or when you need to extend an existing API specification.
+
+![Overlays diagram](../images/overlays-concept.svg)
+
+### Understanding with a Real-World Example
+
+Consider this common scenario in microservices architecture:
+
+```mermaid
+graph LR
+    Client[Client] -->|Original Headers| Gateway[API Gateway]
+    Gateway -->|Modified Headers| Backend[Backend Service]
+    style Gateway fill:#f9f,stroke:#333,stroke-width:4px
+```
+
+In this scenario:
+1. A client sends requests to your service through an API gateway
+2. The gateway modifies headers (adds new ones, transforms existing ones)
+3. Your backend service receives the modified request
+
+### Base Specification
+Here's our base employee service specification:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/employees':
+    post:
+      summary: Fetch employee details
+      tags: []
+      parameters:
+        - in: header
+          name: correlation-id
+          schema:
+            type: string
+          required: true
+          description: Request correlation ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '200':
+          description: Details for employee id in request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+components:
+  schemas:
+    Employee:
+      title: Employee
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string
+```
+
+### Overlay Specification
+To simulate API gateway behavior, we'll use an overlay to modify headers:
+
+```yaml
+overlay: 1.0.0
+actions:
+  - target: $.paths['/employees'].post.parameters
+    update:
+      - in: header
+        name: X-Correlation-ID  # Modified from correlation-id
+        schema:
+          type: string
+        required: true
+        description: Correlation ID for request tracking
+      - in: header
+        name: X-Gateway-Token  # First new header
+        schema:
+          type: string
+        required: true
+        description: API Gateway authentication token
+      - in: header
+        name: X-Request-ID  # Second new header
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: Unique request identifier for tracing
+```
+
+### Using Overlays in Specmatic
+
+#### Step 1: Setting Up Files
+1. Save your base specification as `employees.yaml`
+2. Save your overlay specification as `gateway_overlay.yaml`
+
+#### Step 2: Specifying Overlay Files
+
+You can specify overlay files in two ways:
+
+1. **Command Line Approach**
+   ```bash
+   specmatic test --port 9000 --overlay-file gateway_overlay.yaml
+   ```
+
+2. **Environment Variable Approach**
+   ```bash
+   export OVERLAY_FILE_PATH=gateway_overlay.yaml
+   # Then run your tests programmatically or via command line
+   ```
+
+The environment variable approach is particularly useful when:
+- Running tests programmatically
+- Setting up CI/CD pipelines
+- Working with test frameworks
+- Need to specify overlays globally for multiple test runs
+
+Example using environment variable in a Java test:
+```java
+@BeforeAll
+public static void setUp() {
+    System.setProperty("OVERLAY_FILE_PATH", "path/to/gateway_overlay.yaml");
+    // Your other test setup code
+}
+```
+
+#### Step 3: Understanding the Results
+When Specmatic runs the tests, it will send requests with the modified headers:
+
+```shell
+POST /employees
+X-Correlation-ID: correlation-123
+X-Gateway-Token: gateway-token-456
+X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "John Doe",
+  "department": "Engineering",
+  "designation": "Senior Engineer"
+}
+```
+
+### Pro Tips 🚀
+1. **Version Control**: Consider checking in your overlay files alongside your base specifications in your central contract repository.
+
+2. **Environment Variables**: When working with CI/CD pipelines, using `OVERLAY_FILE_PATH` can make your configuration more flexible and easier to manage across different environments.
+
+3. **Naming Convention**: Use clear naming for overlay files that indicate their purpose:
+   ```
+   employees.yaml              # Base specification
+   employees.gateway.yaml      # Gateway overlay
+   employees.monitoring.yaml   # Monitoring overlay
+   ```
+
+### Further Reading
+For a complete list of modifications possible with overlays, refer to the [OpenAPI Overlay Specification](https://spec.openapis.org/overlay/v1.0.0.html).
+
+### Conclusion
+Overlays provide a clean way to simulate middleware behavior in your contract tests. By keeping base specifications clean and using overlays to simulate gateway behavior, you can:
+- Maintain clean base contracts
+- Accurately test gateway transformations
+- Ensure your services handle modified requests correctly
+- Easily manage different overlay configurations across environments using either command-line arguments or environment variables
 
 ---
 
