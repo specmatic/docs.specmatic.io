@@ -1052,7 +1052,7 @@ The data in the coverage report is written to a file at `build/reports/specmatic
 ## Overlays
 
 ### Introduction
-Overlays provide a powerful mechanism to modify OpenAPI specifications without altering the base specification. They're particularly useful when you need to simulate middleware behavior, such as API gateways modifying requests, or when you need to extend an existing API specification.
+[Overlays](https://www.openapis.org/blog/2024/10/22/announcing-overlay-specification) provide a powerful mechanism to modify OpenAPI specifications without altering the base specification. They're particularly useful when you need to simulate middleware behavior, such as API gateways modifying requests, or when you need to extend an existing API specification.
 
 ![Overlays diagram](../images/overlays-concept.svg)
 
@@ -1163,33 +1163,47 @@ actions:
 
 #### Step 2: Specifying Overlay Files
 
-You can specify overlay files in two ways:
+You can specify overlay files in three ways:
 
-1. **Command Line Approach**
-   ```bash
-   specmatic test --port 9000 --overlay-file gateway_overlay.yaml
-   ```
+1. **Automatic Detection in Test Mode** (Recommended)
+   - Name your overlay file following the pattern: `<specname>_overlay.yaml`
+   - Place it in the same directory as your spec file
+   - Specmatic will automatically detect and apply it when running in test mode
+   
+  Example:
+```bash
+  # If your spec file is named:
+  employees.yaml
+  
+  # Name your overlay file as:
+  employees_overlay.yaml
+```
+  Note: The automatic detection is:
 
-2. **Environment Variable Approach**
-   ```bash
-   export OVERLAY_FILE_PATH=gateway_overlay.yaml
-   # Then run your tests programmatically or via command line
-   ```
+  Only available in test mode
+  Case insensitive
+  Only works with .yaml extension
+  Requires exact naming pattern with underscore: _overlay.yaml
+
+
+2. **Command Line Approach**
+
+```shell
+  specmatic test --port 9000 --overlay-file gateway_overlay.yaml
+```
+3. **Environment Variable Approach**
+
+```shell
+  export OVERLAY_FILE_PATH=gateway_overlay.yaml
+  # Then run your tests programmatically or via command line
+````
 
 The environment variable approach is particularly useful when:
-- Running tests programmatically
-- Setting up CI/CD pipelines
-- Working with test frameworks
-- Need to specify overlays globally for multiple test runs
 
-Example using environment variable in a Java test:
-```java
-@BeforeAll
-public static void setUp() {
-    System.setProperty("OVERLAY_FILE_PATH", "path/to/gateway_overlay.yaml");
-    // Your other test setup code
-}
-```
+Running tests programmatically
+Setting up CI/CD pipelines
+Working with test frameworks
+Need to specify overlays globally for multiple test runs
 
 #### Step 3: Understanding the Results
 When Specmatic runs the tests, it will send requests with the modified headers:
@@ -1210,16 +1224,19 @@ Content-Type: application/json
 ```
 
 ### Pro Tips 🚀
-1. **Version Control**: Consider checking in your overlay files alongside your base specifications in your central contract repository.
+11. **Version Control**: It's highly recommended to check in your overlay files alongside your base specifications in your central contract repository.
 
 2. **Environment Variables**: When working with CI/CD pipelines, using `OVERLAY_FILE_PATH` can make your configuration more flexible and easier to manage across different environments.
 
-3. **Naming Convention**: Use clear naming for overlay files that indicate their purpose:
-   ```
-   employees.yaml              # Base specification
-   employees.gateway.yaml      # Gateway overlay
-   employees.monitoring.yaml   # Monitoring overlay
-   ```
+3. **Naming Convention**: 
+   - For automatic detection in test mode, use the `<specname>_overlay.yaml` pattern
+   - For manual configuration, use clear naming that indicates purpose:
+     ```
+     employees.yaml              # Base specification
+     employees_overlay.yaml      # For automatic detection
+     employees.gateway.yaml      # Gateway overlay (manual configuration)
+     employees.monitoring.yaml   # Monitoring overlay (manual configuration)
+     ```
 
 ### Further Reading
 For a complete list of modifications possible with overlays, refer to the [OpenAPI Overlay Specification](https://spec.openapis.org/overlay/v1.0.0.html).
