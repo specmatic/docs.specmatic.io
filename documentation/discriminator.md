@@ -15,7 +15,7 @@ OpenAPI's discriminator feature allows APIs to handle polymorphic schemas effect
 For a detailed understanding of OpenAPI discriminator, refer to the [official OpenAPI documentation](https://spec.openapis.org/oas/v3.0.3#discriminator-object).
 
 ## Example Implementation
-Here's a visual representation of specification example that we will follow throught this documentation. We can observe how discriminator works here:
+Here's a visual representation of specification example that we will follow through this documentation. We can observe how discriminator works here:
 
 ```mermaid
 classDiagram
@@ -58,7 +58,7 @@ paths:
               $ref: '#/components/schemas/Pet'
       responses:
         '200':
-          description: This is a 200 response.
+          description: The response for Pets post operation.
           content:
             application/json:
               schema:
@@ -67,54 +67,50 @@ paths:
 components:
   schemas:
     Pet:
-      type: object
-      discriminator:
-        propertyName: petType
-        mapping:
-          dog: '#/components/schemas/Dog'
-          cat: '#/components/schemas/Cat'
-      oneOf:
-        - $ref: '#/components/schemas/Dog'
-        - $ref: '#/components/schemas/Cat'
-      
-    Pet_base:
-      type: object
-      properties:
-        name:
-          type: string
-        age:
-          type: integer
       required:
+        - petType
         - name
         - age
-
-    Dog:
-      allOf:
-        - $ref: '#/components/schemas/Pet_base'
-        - type: object
-          properties:
-            petType:
-              type: string
-              enum: [dog]
-            barkVolume:
-              type: integer
-          required:
-            - barkVolume
-            - petType
+      properties:
+        petType:
+          type: string
+        name:
+          type: string
+          description: The name of the pet
+        age:
+          type: integer
+          minimum: 0
+          description: Age of the pet in years
+      discriminator:
+        propertyName: petType
+      oneOf:
+        - $ref: '#/components/schemas/Cat'
+        - $ref: '#/components/schemas/Dog'
 
     Cat:
       allOf:
-        - $ref: '#/components/schemas/Pet_base'
+        - $ref: '#/components/schemas/Pet'
         - type: object
-          properties:
-            petType:
-              type: string
-              enum: [cat]
-            whiskerLength:
-              type: integer
           required:
             - whiskerLength
-            - petType
+          properties:
+            whiskerLength:
+              type: integer
+              minimum: 0
+              description: Length of whiskers in centimeters
+
+    Dog:
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          required:
+            - barkVolume
+          properties:
+            barkVolume:
+              type: integer
+              minimum: 0
+              maximum: 100
+              description: Volume of bark in decibels
 ```
 
 Save this specification in a file named `petstore.yaml`. Now let's walk through how to use Specmatic's features with this specification. 
@@ -251,7 +247,7 @@ Specmatic's contract testing with discriminators works in two directions:
 Here are few example requests : 
 
 a. Testing **Valid** Dog Request:
-   ```json
+   ```shell
    POST /pets
    Content-Type: application/json
    {
@@ -263,7 +259,7 @@ a. Testing **Valid** Dog Request:
    ```
 
    b. Testing **Valid** Cat Request:
-   ```json
+   ```shell
    POST /pets
    Content-Type: application/json
    {
@@ -275,7 +271,7 @@ a. Testing **Valid** Dog Request:
    ```
 
    c. Testing **Invalid** Discriminator Value:
-   ```json
+   ```shell
    POST /pets
    Content-Type: application/json
    {
@@ -285,11 +281,6 @@ a. Testing **Valid** Dog Request:
      "wingspan": 20
    }
    ```
-
-By running the above `test` command against a stub or live server, we will get following test output:
-```shell
-Tests run: 2, Successes: 2, Failures: 0, Errors: 0
-```
 
 ### 3. Example Generation
 
