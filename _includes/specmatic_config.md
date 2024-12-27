@@ -3,6 +3,7 @@ Configuration
 
 - [Configuration](#configuration)
     - [Getting started](#getting-started)
+      - [Externalized Examples Directories](#externalized-examples-directories)
       - [Contract Test Timeout](#contract-test-timeout)
       - [Configuring Stubs](#configuring-stubs)
       - [Service Virtualization Delay](#service-virtualization-delay)
@@ -156,6 +157,51 @@ Resetting /<path where you are running the specmatic command>/.specmatic/repos/s
 ```
 
 The logs show that Specmatic resets your local copy and clones the latest API Specification from the Git repository into a folder called ```.specmatic```. Please add this folder to ```.gitignore```.
+
+#### Externalized Examples Directories
+
+By default, Specmatic searches for the directory ending with `_examples` to pickup externalized examples. However, if needed, you can specify a list of directories containing externalized examples under `examples` key in specmatic configuration. Specmatic will retrieve the examples from these directories for use in both contract testing and service virtualization.
+
+{% tabs stubs %}
+{% tab stubs specmatic.json %}
+```json
+{
+  "sources": [
+    {
+      "provider": "git",
+      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "provides": [
+        "io/specmatic/examples/store/openapi/product_search_bff_v4.yaml"
+      ],
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
+  ],
+  "examples": [
+    "order_service/examples",
+    "product_service/examples"
+    ]
+}
+```
+{% endtab %}
+{% tab stubs specmatic.yaml %}
+```yaml
+sources:
+  - provider: git
+    repository: https://github.com/znsio/specmatic-order-contracts.git
+    provides:
+      - io/specmatic/examples/store/openapi/product_search_bff_v4.yaml
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+examples:
+  - order_service/examples
+  - product_service/examples
+```
+{% endtab %}
+{% endtabs %}
+
+**Note**: if the `_examples` directory is present, it will still be included alongside any additional directories specified under the `examples` key.
 
 #### Contract Test Timeout
 
