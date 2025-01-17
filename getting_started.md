@@ -396,7 +396,7 @@ This is because the example `SCOOBY_200_OK` in the `service.yaml` spec file, whi
 With this we have effectively achived three goals in one go.
 * Examples serve as sample data for people referring to the API specification as documentation
 * The same examples are used in contract tests to create the HTTP request
-* And these examples also serve as stub data when we run Spemcatic stub command
+* And these examples also serve as stub data when we run Specmatic stub command
 
 #### **Intelligent Service Virtualisation**
 
