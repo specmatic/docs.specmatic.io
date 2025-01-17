@@ -18,7 +18,7 @@ However an API gateway changes this picture. API gateways subtly modify incoming
 
 There are also direct consumers of the API lying behind the API gateway.
 
-In this scenario, there are four parties: the external consumer, the API gateway, the interal consumer, and the API provider.
+In this scenario, there are four parties: the external consumer, the API gateway, the internal consumer, and the API provider.
 
 ![four party model](/images/four-party-model.svg)
 
@@ -50,7 +50,7 @@ Specmatic reads the contract from standard output and proceeds from there onward
 
 Here's a sample of what the load.py file could look like.
 
-Supposting that
+Supposing that
 * the API provider has an API /List, which the API gateway exposes as /customer/list
 * the API provider expects a header x-security, which is added by API gateway, and is not sent by the external consumer
 

@@ -25,7 +25,7 @@ Contract Tests
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
     - [Programmatically executing Specmatic Contract as Tests](#programmatically-executing-specmatic-contract-as-tests)
-    - [Referring to local specificatons](#referring-to-local-specificatons)
+    - [Referring to local specifications](#referring-to-local-specifications)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
   - [Selectively Running Tests in CI](#selectively-running-tests-in-ci)
@@ -246,7 +246,7 @@ Next, when the application sends back a response, Specmatic must validate it aga
 
 Thus, the request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken together comprise a contract test named `FETCH_EMPLOYEE_SUCCESS`.
 
-Note that the response example named `FETCH_EMPLOYEE_SUCCESS` is not compared with values returned by the application. This is what sets a Contract Test apart from an API Test. A Contract Test is concerned with checking the APIs signature, while API tests are concerned wtih checking the APIs logic.
+Note that the response example named `FETCH_EMPLOYEE_SUCCESS` is not compared with values returned by the application. This is what sets a Contract Test apart from an API Test. A Contract Test is concerned with checking the APIs signature, while API tests are concerned with checking the APIs logic.
 
 However the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualization](/documentation/service_virtualization_tutorial.html#examples-as-expectations).
 
@@ -346,7 +346,7 @@ The command will create JUnit test xml output in the specified directory which y
 
 As we saw earlier in this page, the [sample application](https://my-json-server.typicode.com/znsio/specmatic-documentation/employees/) is adhering to the ```employees.yaml``` OpenAPI Specification.
 
-Now let us experiment by making some changes to the dataypes in the ```employees.yaml``` and observe the error responses.
+Now let us experiment by making some changes to the datatypes in the ```employees.yaml``` and observe the error responses.
 
 Examples:
 * Change the datatype of ```designation``` to integer in scheme component Employee - You will notice that Specmatic will complain that your examples are not as per the Specification
@@ -581,7 +581,7 @@ sources:
 {% endtab %}
 {% endtabs %}
 
-Note that "repository" is missing. Specamtic will look for the contract in the git repository containing the Specmatic configuration file. It's presumed that the Specmatic configuration file would be in a git repository, as the project would have to be pushed into some git repository.
+Note that "repository" is missing. Specmatic will look for the contract in the git repository containing the Specmatic configuration file. It's presumed that the Specmatic configuration file would be in a git repository, as the project would have to be pushed into some git repository.
 
 ### Authentication In CI For HTTPS Git Source
 
@@ -827,7 +827,7 @@ Here is a complete [Specmatic Contract Test example](https://github.com/znsio/sp
 
 Note: Declare your specifications in the Specmatic configuration file as described above in the section on [declaring contracts in configuration](#declaring-contracts-in-configuration). The Specmatic configuration file should be created at the root of your project.
 
-### Referring to local specificatons
+### Referring to local specifications
 
 If you want to temporarily refer to API specifications on your local machine please use system property ```contractPaths```.
 
@@ -1499,7 +1499,7 @@ Following is an example using Java that can be compiled into a standalone JAR fi
 * Follow instructions in the project's README.md
 * Build will generate a standalone executable JAR, named "specmatic-hooks-sample.jar"
 * JAR will contain all necessary dependencies
-* Add the JAR file to your Specmatic configurtion as shown below.
+* Add the JAR file to your Specmatic configuration as shown below.
 
 The test hook configuration in Specmatic will look as follows: : 
 

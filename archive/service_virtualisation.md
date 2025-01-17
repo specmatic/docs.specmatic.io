@@ -15,7 +15,7 @@ Service Virtualisation
     - [Basic stub using just the contract](#basic-stub-using-just-the-contract)
     - [Stubbing out specific responses to specific requests](#stubbing-out-specific-responses-to-specific-requests)
     - [Stubbing requests and responses with complex data](#stubbing-requests-and-responses-with-complex-data)
-    - [Errors when stubbing requests or reponses that do not match the contract](#errors-when-stubbing-requests-or-reponses-that-do-not-match-the-contract)
+    - [Errors when stubbing requests or responses that do not match the contract](#errors-when-stubbing-requests-or-responses-that-do-not-match-the-contract)
     - [Match not found: wrong URL or method in the request](#match-not-found-wrong-url-or-method-in-the-request)
     - [Stubbing out multiple contracts in one Specmatic instance](#stubbing-out-multiple-contracts-in-one-specmatic-instance)
     - [Lenient stubbing](#lenient-stubbing)
@@ -242,7 +242,7 @@ Invoke it in another tab:
 success
 ```
 
-### Errors when stubbing requests or reponses that do not match the contract
+### Errors when stubbing requests or responses that do not match the contract
 
 The contract:
 

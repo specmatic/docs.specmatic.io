@@ -60,7 +60,7 @@ Let's get started!
 
 A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing. In this tutorial, we'll be working with a typical scenario of microservices & microfrontends involving a Backend-for-Frontend (BFF) and a Domain Service. Here's an overview of what we'll be setting up:
 
-![Order Micorservices architectire](../images/insights_demo_architecture.png)
+![Order Microservices architecture](../images/insights_demo_architecture.png)
 
 In this architecture:
 

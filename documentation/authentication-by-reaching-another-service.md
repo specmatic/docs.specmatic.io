@@ -69,9 +69,9 @@ In the `auth.spec` file, we have exported the entire response body.
 And export token = response-body
 ```
 
-This exports a variable named `token`, the contents of which are the entire reponse body.
+This exports a variable named `token`, the contents of which are the entire response body.
 
-If the reponse is JSON, such as `{"token": "abc123"}`, you can export a specific value:
+If the response is JSON, such as `{"token": "abc123"}`, you can export a specific value:
 
 ```gherkin
 And export token = response-body.token

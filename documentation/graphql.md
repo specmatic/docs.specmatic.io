@@ -36,7 +36,7 @@ With Specmatic GraphQL support you will be to leverage your GraphQL SDL files as
 2. Contract Testing: Validate requests and responses against your GraphQL SDL files
 3. Backward Compatibility Checks: Compare two versions of your GraphQL SDL files to identify breaking changes without writing any code
 4. Central Contract Repo: Store your GraphQL SDL files in central Git repo which will serve as single source of truth for both providers and consumers
-5. API resiliency : Generate negative and edge cases to verify the resiliency of your API impementation based on your GraphQL SDL files.
+5. API resiliency : Generate negative and edge cases to verify the resiliency of your API implementation based on your GraphQL SDL files.
 
 ## Quick Start
 

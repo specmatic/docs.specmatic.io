@@ -37,5 +37,5 @@ Do not remove mandatory keys and / or make values nullable for existing gkeys.
 | Add an optional key | compatible | Older consumers were not expecting this key and will ignore it. The server may or may not send it, and consumers should be prepared for either. |
 | Remove a mandatory key | **incompatible** | Older consumers were expecting this key, but henceforth the response will not contain it. |
 | Remove an optional key | **incompatible** | In some cases, the server used to send this in the response. Henceforth it never will. |
-| Optional key becomes mandatory | compatbile | Sometimes the server didn't send this key. But henceforth, the server will always send this key. Consumers who ignored it before can continue doing so. Consumers who checked for it before have code to handle it. |
+| Optional key becomes mandatory | compatible | Sometimes the server didn't send this key. But henceforth, the server will always send this key. Consumers who ignored it before can continue doing so. Consumers who checked for it before have code to handle it. |
 | Mandatory key becomes optional | **incompatible** | It's possible that the server will not send this key. Some consumers may be expecting it, but will not be receiving it henceforth. |
