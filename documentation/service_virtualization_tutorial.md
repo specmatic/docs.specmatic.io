@@ -523,103 +523,120 @@ For specifications where the request body is a string, you may find it helpful t
 
 Let's try this out.
 
-Create a new specification file named employee_sql.yaml:
+Create a new specification file named phonebook.yaml:
 
 ```yaml
 openapi: 3.0.0
 info:
-  title: SQL Query API
+  title: PhoneBook API
   version: '1.0'
 paths:
-  /employee-query:
+  /search:
     post:
-      summary: Run an SQL query
+      summary: Search By Name
       requestBody:
         required: true
         content:
           text/plain:
             schema:
               type: string
-              description: The SQL query to be executed
+              description: The name to be searched for
       responses:
-        '200':
-          description: Successful execution of the SQL query
+        200:
+          description: OK
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - id
-                  - name
-                properties:
-                  id:
-                    type: integer
-                    description: The employee ID
-                  name:
-                    type: string
-                    description: The employee name
-
+                type: array
+                items:
+                  type: object
+                  required:
+                    - name
+                    - number
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the person
+                    number:
+                      type: string
+                      description: The phone number of the person
 ```
 
-- Note: the request body is a string holding an SQL query.
-- Create a directory named `employee_sql_examples`. Create a file in this directory named `select_employee_by_id.json` with the following contents:
+- Note: the request body is a string holding a name. The response body is an array of objects, each containing the name and the phone number.
+- Create a directory named `phonebook_examples`. Create a file in this directory named `search_john.json` with the following contents:
 
-  ```json
-  {
-    "http-request": {
-      "path": "/employee-query",
-      "method": "POST",
-
-      "headers": {
-        "Content-Type": "application/json"
-      },
-      
-      "body": "(string)",
-      "bodyRegex": "^SELECT .*id = 1$"
+```json
+{
+  "http-request": {
+    "path": "/search",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "text/plain"
     },
-    "http-response": {
-      "status": 200,
-        
-      "body": {
-        "id": 1,
-        "name": "John Doe"
+    "body": "(string)",
+    "bodyRegex": "^[Jj][Oo][Hh][Nn].*$"
+  },
+  "http-response": {
+    "status": 200,
+    "body": [
+      {
+        "name": "John Doe",
+        "number": "123-456-7890"
       },
-      
-      "headers": {
-        "Content-Type": "application/json"
+      {
+        "name": "John Smith",
+        "number": "987-654-3210"
       },
-
-      "status-text": "OK"
-    }
+      {
+        "name": "John Johnson",
+        "number": "555-555-5555"
+      }
+    ],
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "status-text": "OK"
   }
-  ```
+}
+```
 
-- Add `employee_sql.yaml` to the `stub` list in `specmatic.yaml`, like so:
+- Add `phonebook.yaml` to the `stub` list in `specmatic.yaml`, like so:
 
   ```yaml
   sources:
     - provider: filesystem
       stub:
         - employees.yaml
-        - employee_sql.yaml
+        - phonebook.yaml
   ```
 
 - Run the following curl command:
 
   ```shell
-  curl -X POST -H 'Content-Type: text/plain' -d 'SELECT * from employee where id = 1' http://localhost:9000/employee-query
+  curl -X POST -H "Content-Type: text/plain" -d "John" http://localhost:9000/search
   ```
 
 - You'll get this response:
 
-  ```json
+```json
+[
   {
-      "id": 1,
-      "name": "John Doe"
+    "name": "John Doe",
+    "number": "123-456-7890"
+  },
+  {
+    "name": "John Smith",
+    "number": "987-654-3210"
+  },
+  {
+    "name": "John Johnson",
+    "number": "555-555-5555"
   }
-  ```
+]
+```
 
-- Try changing the table name, or any other part of the query. Just make sure that the query starts with `SELECT` and ends with `id = 1`, as per the regex in `bodyRegex` in the example, and you'll get the same response.
+- If the `bodyRegex` matches the incoming request body, that example is utilized. Otherwise, a random response is generated.
+- Try modifying the last name in the curl request. As long as the request begins with `John` case insensitive, you will receive the same response as defined by the regex in the `bodyRegex` in the example.
 
 ## Correlated Request And Response Values
 
