@@ -123,16 +123,23 @@ Service Virtualization
   ```
 
 - `cd` into the `specmatic` directory and run the following command:
-
-    ```shell
-    java -jar specmatic.jar stub
-    ```
-
-    Alternatively, you can also run the same command with the Docker image:
-
-    ```shell
-    docker run znsio/specmatic stub
-    ```
+{% tabs test %}
+{% tab test java %}
+```shell
+java -jar specmatic.jar stub
+```
+{% endtab %}
+{% tab test npm %}
+```shell
+npx specmatic stub
+```
+{% endtab %}
+{% tab test docker %}
+```shell
+docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic stub
+```
+{% endtab %}
+{% endtabs %}
 
 - In a new tab, run the following curl command:
 
@@ -228,16 +235,23 @@ It may not always be possible to add examples inline in the OpenAPI specificatio
 Let's see how this is done.
 
 - Run the `examples` command:
-
-  ```shell
-  java -jar specmatic.jar examples employees.yaml
-  ```
-
-  Alternatively, you can also run the same command with the Docker image:
-
-  ```shell
-  docker run znsio/specmatic examples employees.yaml
-  ```
+{% tabs test %}
+{% tab test java %}
+```shell
+java -jar specmatic.jar examples employees.yaml
+```
+{% endtab %}
+{% tab test npm %}
+```shell
+npx specmatic examples employees.yaml
+```
+{% endtab %}
+{% tab test docker %}
+```shell
+docker run -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/employees_examples:/usr/src/app/employees_examples" znsio/specmatic examples employees.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 - It generates a request-response mapping JSON file in the `employees_examples` directory containing an example of the API in the spec.
   - The directory name follows the format `<spec file name without extension>_examples`.
@@ -434,16 +448,23 @@ Suppose you do not wish Specmatic to return an auto-generated response when ther
 Let's try this out.
 
 - Start Specamtic stub with the `--strict` flag, using the following command:
-
-  ```shell
-  java -jar specmatic.jar --strict
-  ```
-
-  Alternatively, you can also run the same command with the Docker image:
-
-  ```shell
-  docker run znsio/specmatic --strict
-  ```
+{% tabs test %}
+{% tab test java %}
+```shell
+java -jar specmatic.jar stub --strict
+```
+{% endtab %}
+{% tab test npm %}
+```shell
+npx specmatic stub --strict
+```
+{% endtab %}
+{% tab test docker %}
+```shell
+docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic stub --strict
+```
+{% endtab %}
+{% endtabs %}
 
 - Now run the following curl command:
 
@@ -1242,16 +1263,23 @@ There are multiple ways to run the Specmatic Stub with SSL.
 ### Auto-Generated Cert Store
 
 This is the quickest approach.
-
+{% tabs test %}
+{% tab test java %}
 ```shell
 java -jar specmatic.jar stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
 ```
-
-Alternatively, you can also run the same command with the Docker image:
-
+{% endtab %}
+{% tab test npm %}
 ```shell
-docker run znsio/specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
+npx specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
 ```
+{% endtab %}
+{% tab test docker %}
+```shell
+docker run -p 443:443 -v "${PWD}/product-api.yaml:/usr/src/app/product-api.yaml" -v "${PWD}/<directory to create keystore>:/usr/src/app/<directory to create keystore>" znsio/specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 This will create a `specmatic.jks` file in the dir that you mentioned above and you can now access the stub over https.
 
