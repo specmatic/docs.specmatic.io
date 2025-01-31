@@ -986,7 +986,9 @@ specmatic test --filter="STATUS='2xx'"
 
 2. Skip authentication error tests:
 ```bash
-specmatic test --filter!="STATUS='4xx'"  # Skips all 400-level status codes
+# Skips all 400-level status codes
+specmatic test --filter!="STATUS='4xx'"  
+
 # Or more specifically:
 specmatic test --filter!="STATUS='401,403'"
 ```
@@ -995,12 +997,19 @@ specmatic test --filter!="STATUS='401,403'"
 ```bash
 specmatic test --filter="PATH='/users,/products'"
 ```
+4. Test API endpoints with wildcard(`*`) for `PATH`:
+```bash
+# Matches all paths that begin with /users/ followed by any pattern.
+specmatic test --filter="PATH='/users/*'"
 
-4. Combine multiple filters:
+# Matches all paths that begin with /products/, followed by any pattern, and end with /v1.
+specmatic test --filter="PATH='/products/*/v1'"
+```
+5. Combine multiple filters:
 ```bash
 specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' && METHOD='POST')"
 ```
-5. Exclude specified filters:
+6. Exclude specified filters:
 ```bash
 specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
 ```
