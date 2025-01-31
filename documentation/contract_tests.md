@@ -912,10 +912,10 @@ Specmatic provides powerful filtering capabilities to help you run specific test
 
 ### Using the New Filter System (Recommended)
 
-The `--filter` and `--filter-not` options provide granular control over which tests to run:
+The `--filter` option provides granular control over which tests to run:
 
 ```bash
-specmatic test --filter="METHOD=POST" --filter="PATH=/users"
+specmatic test --filter="METHOD='POST' && PATH='/users'"
 ```
 
 #### Available Filter Keys
@@ -927,29 +927,40 @@ specmatic test --filter="METHOD=POST" --filter="PATH=/users"
 - `QUERY-PARAM`: Filter by query parameters
 - `EXAMPLE-NAME`: Filter by example names
 
+#### Available Filter Operations 
+- `&&` : Represents a logical AND operator.
+- `||` : Represents a logical OR operator.
+- `!` : Negates the applied condition.
+- `=`, `!=` : Comparison operators for comparing a key with its value.
+- `(`, `)` : Parentheses are used to group multiple filter expressions.
+
 #### Filter Syntax
 
 1. Single value:
 ```bash
---filter="METHOD=GET"
+--filter="METHOD='GET'"
 ```
 
 2. Multiple values for same filter (comma-separated):
 ```bash
---filter="METHOD=GET,POST"
+--filter="METHOD='GET,POST'"
 ```
 
-3. Multiple filters:
+3. Multiple filters can be joined with AND operation (`&&`):
 ```bash
---filter="METHOD=GET,POST" --filter="PATH=/users"
+--filter="METHOD='GET,POST' && PATH='/users'"
+```
+4. Multiple filters Joined with OR Operation (`||`):
+```bash
+--filter="PATH='/users,/products' || STATUS='200'"
 ```
 
 #### Excluding Tests
 
-Use `--filter-not` to exclude tests matching specific criteria:
+Use `--filter` negate comparison (`!=`) to exclude tests matching specific criteria:
 
 ```bash
---filter-not="STATUS=400,401" --filter-not="METHOD=DELETE"
+--filter="STATUS!='400,401' && METHOD!='DELETE'"
 ```
 
 ### Programmatic Usage
@@ -958,10 +969,10 @@ Set environment properties in your test setup:
 
 ```java
 // Include specific tests
-System.setProperty("filter", "METHOD=POST;PATH=/users");
+System.setProperty("filter", "METHOD='POST' && PATH='/users'");
 
 // Exclude tests
-System.setProperty("filterNot", "STATUS=400,401");
+System.setProperty("filter", "STATUS!='400,401'");
 ```
 
 ## Examples
@@ -970,24 +981,28 @@ System.setProperty("filterNot", "STATUS=400,401");
 
 1. Run only successful response tests:
 ```bash
-specmatic test --filter="STATUS=2xx"
+specmatic test --filter="STATUS='2xx'"
 ```
 
 2. Skip authentication error tests:
 ```bash
-specmatic test --filter-not="STATUS=4xx"  # Skips all 400-level status codes
+specmatic test --filter!="STATUS='4xx'"  # Skips all 400-level status codes
 # Or more specifically:
-specmatic test --filter-not="STATUS=401,403"
+specmatic test --filter!="STATUS='401,403'"
 ```
 
 3. Test specific API endpoints:
 ```bash
-specmatic test --filter="PATH=/users,/products"
+specmatic test --filter="PATH='/users,/products'"
 ```
 
 4. Combine multiple filters:
 ```bash
-specmatic test --filter="METHOD=POST" --filter="PATH=/users" --filter-not="STATUS=400"
+specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' && METHOD='POST')"
+```
+5. Exclude specified filters:
+```bash
+specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
 ```
 
 ### Real-world Scenario
@@ -996,10 +1011,10 @@ For an OpenAPI spec with an endpoint `/api/employees`, you might run:
 
 ```bash
 # Run only employee creation tests
-specmatic test --filter="PATH=/api/employees" --filter="METHOD=POST"
+specmatic test --filter="PATH='/api/employees' && METHOD='POST'"
 
 # Skip all error scenarios
-specmatic test --filter-not="STATUS=4xx,500"  # Skip all client and server errors
+specmatic test --filter="STATUS!='4xx,500'"  # Skip all client and server errors
 ```
 
 ## Legacy Filter Options (Deprecated)
