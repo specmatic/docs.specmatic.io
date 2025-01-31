@@ -1026,35 +1026,15 @@ specmatic test --filter="PATH='/api/employees' && METHOD='POST'"
 specmatic test --filter="STATUS!='4xx,500'"  # Skip all client and server errors
 ```
 
-## Legacy Filter Options (Deprecated)
-
-> **Note:** The following options are deprecated and will be removed in a future version. We recommend using the new filter system described above.
-
-- `--filter-name`: Run tests matching a specific name
-- `--filter-not-name`: Exclude tests matching a specific name
-
-Basic usage of deprecated options:
-```bash
-specmatic test --filter-name "CREATE_EMPLOYEE_SUCCESS"
-specmatic test --filter-not-name "ERROR_SCENARIOS"
-```
-
-To migrate from legacy filters to the new system, use these equivalents:
-
-```bash
-# Old way
---filter-name "POST /api/employees"
-
-# New way
---filter="METHOD=POST" --filter="PATH=/api/employees"
-```
-
 ### Additional Tips
 
-- Filters are case-sensitive
-- When multiple filters are specified, tests must match ALL criteria (AND operation)
-- Within a single filter with multiple values, tests matching ANY value will be included (OR operation)
-
+- Filters are case-sensitive.
+- Use **single parentheses** to separate values from keys within a filter.
+- When multiple filters are specified, tests must match **ALL** criteria (**AND** operation).
+- Within a single filter with multiple values, tests matching **ANY** value will be included (**OR** operation).
+- **Negation(!)** causes a block to be excluded from being considered.
+- **Wildcard(*)** can only be used with **PATH**.
+- **Range (2xx, 50x)** can only be used with **STATUS**.
 ---
 
 ### API Coverage
