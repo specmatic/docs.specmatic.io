@@ -957,7 +957,7 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 
 #### Excluding Tests
 
-Use `--filter` negate comparison (`!=`) to exclude tests matching specific criteria:
+Here's how you can provide filter criteria to exclude tests:
 
 ```bash
 --filter="STATUS!='400,401' && METHOD!='DELETE'"
@@ -986,44 +986,45 @@ specmatic test --filter="STATUS='2xx'"
 
 2. Skip authentication error tests:
 ```bash
-# Skips all 400-level status codes
 specmatic test --filter!="STATUS='4xx'"  
+```
 
-# Or more specifically:
+3. Skip specific status codes:
+```bash
 specmatic test --filter!="STATUS='401,403'"
 ```
 
-3. Test specific API endpoints:
+4. Test specific API endpoints:
 ```bash
 specmatic test --filter="PATH='/users,/products'"
 ```
-4. Test API endpoints with wildcard(`*`) for `PATH`:
-```bash
-# Matches all paths that begin with /users/ followed by any pattern.
-specmatic test --filter="PATH='/users/*'"
 
-# Matches all paths that begin with /products/, followed by any pattern, and end with /v1.
+5. Test API endpoints with wildcard(`*`) for `PATH`:
+```bash
+specmatic test --filter="PATH='/users/*'"
+```
+
+6. Test all paths that begin with /products/, followed by any pattern, and end with /v1.
+```bash
 specmatic test --filter="PATH='/products/*/v1'"
 ```
-5. Combine multiple filters:
+
+7. Combine multiple filters:
 ```bash
 specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' && METHOD='POST')"
 ```
-6. Exclude specified filters:
+
+8. Exclude specified filters:
 ```bash
 specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
 ```
 
-### Real-world Scenario
+### Putting it all together
 
-For an OpenAPI spec with an endpoint `/api/employees`, you might run:
+Let's say you want to run tests for the employee creation API (`POST /employees`), the API to fetch department details (`GET /department`), while skipping any 4xx and 500 status tests:
 
 ```bash
-# Run only employee creation tests
-specmatic test --filter="PATH='/api/employees' && METHOD='POST'"
-
-# Skip all error scenarios
-specmatic test --filter="STATUS!='4xx,500'"  # Skip all client and server errors
+specmatic test --filter="((PATH='/employees' && METHOD='POST') || (PATH='/department' && METHOD='GET')) && STATUS!='4xx,500'"
 ```
 
 ### Additional Tips
