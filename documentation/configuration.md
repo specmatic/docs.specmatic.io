@@ -2,7 +2,8 @@
 layout: default
 title: Configuration
 parent: Documentation
-nav_order: 14.1
+nav_order: 14
+has_children: true
 ---
 
 Configuration
