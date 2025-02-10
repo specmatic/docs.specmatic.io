@@ -8,23 +8,29 @@ Backward Compatibility
 ==========
 
 
+- [Backward Compatibility](#backward-compatibility)
 - [Why Backward Compatibility Matters](#why-backward-compatibility-matters)
 - [What's New](#whats-new)
 - [How it works](#how-it-works)
-- [Command Essentials](#command-essentials)
-- [Common Use Cases](#common-use-cases)
-  - [Validating Work in Progress (local development)](#1-validating-work-in-progress-local-development)
-  - [As a pre-commit hook](#2-as-a-pre-commit-hook)
-  - [Pre-Merge Validation (in your CI pipeline)](#3-pre-merge-validation-in-your-ci-pipeline)
-  - [Analyzing specific files](#4-analyzing-specific-files)
-  - [Comparing with a different branch](#5-comparing-with-a-different-branch)
-- [Pratical Examples (Try it Yourself)](#practical-examples-try-it-yourself)
-- [Handling Contracts In Progress](#handling-contracts-in-progress)
-- [Backward Compatibility Rules](#backward-compatibility-rules)
-- [Comparing Two Contracts (Deprecated)](#comparing-two-contracts-deprecated)
-- [Validating Changes In Git On Your Laptop (Deprecated)](#validating-changes-in-git-on-your-laptop-deprecated)
-- [Validating Changes In CI (Deprecated)](#validating-changes-in-ci-deprecated)
-- [Troubleshooting](#troubleshooting)
+- [Using Backward Compatibility](#using-backward-compatibility)
+  - [Command Essentials](#command-essentials)
+    - [Key Options](#key-options)
+  - [Common Use Cases](#common-use-cases)
+    - [1. Validating Work in Progress (local development)](#1-validating-work-in-progress-local-development)
+    - [2. As a pre-commit hook](#2-as-a-pre-commit-hook)
+    - [3. Pre-Merge Validation (in your CI pipeline)](#3-pre-merge-validation-in-your-ci-pipeline)
+    - [4. Analyzing specific files](#4-analyzing-specific-files)
+    - [5. Comparing with a different branch](#5-comparing-with-a-different-branch)
+  - [Practical Examples (Try it yourself)](#practical-examples-try-it-yourself)
+    - [Orders API Evolution](#orders-api-evolution)
+    - [Breaking Change](#breaking-change)
+  - [Handling Changes In Progress](#handling-changes-in-progress)
+  - [Backward Compatibility Rules](#backward-compatibility-rules)
+- [Backward Compatibility Commands (Deprecated)](#backward-compatibility-commands-deprecated)
+  - [Comparing Two Contracts (Deprecated)](#comparing-two-contracts-deprecated)
+  - [Validating Changes In Git On Your Laptop (Deprecated)](#validating-changes-in-git-on-your-laptop-deprecated)
+  - [Validating Changes In CI (Deprecated)](#validating-changes-in-ci-deprecated)
+  - [Troubleshooting](#troubleshooting)
 
 
 
@@ -516,7 +522,7 @@ java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
 {% endtab %}
 {% tab compare npm %}
 ```bash
-npx specmaitc compare api_products_v1.yaml api_products_v2.yaml
+npx specmatic compare api_products_v1.yaml api_products_v2.yaml
 ```
 {% endtab %}
 {% tab compare docker %}
