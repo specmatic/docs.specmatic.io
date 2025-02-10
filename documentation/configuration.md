@@ -94,10 +94,11 @@ Here is a sample configuration to get you started.
 {% tab config specmatic.json %}
 ```json
 {
-  "sources": [
+  "contracts": [
     {
-      "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "git": {
+        "url": "https://github.com/znsio/specmatic-order-contracts.git"
+      },
       "provides": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
@@ -108,9 +109,9 @@ Here is a sample configuration to get you started.
 {% endtab %}
 {% tab config specmatic.yaml %}
 ```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+contracts:
+  - git:
+      url: https://github.com/znsio/specmatic-order-contracts.git
     provides:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
@@ -118,21 +119,22 @@ sources:
 {% endtabs %}
 
 Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api-java)). Let us now go through each of the lines in this file.
-* **provider** - At the moment we support all git based source control systems. Example: GitHub, Gitlab, Azure, etc.
-* **repository** - The git repository URL
+* **git** - At the moment we support all git based source control systems. Example: GitHub, Gitlab, Azure, etc.
+* **url** - The git repository URL
 * **provides** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
 
-You can also specify the branch.
+You can also specify the branch within git field after url.
 
 {% tabs branch %}
 {% tab branch specmatic.json %}
 ```json
 {
-  "sources": [
+  "contracts": [
     {
-      "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
-      "branch": "feature-1",
+      "git": {
+        "url": "https://github.com/znsio/specmatic-order-contracts.git",
+        "branch": "feature-1"
+      },
       "provides": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
@@ -143,10 +145,10 @@ You can also specify the branch.
 {% endtab %}
 {% tab branch specmatic.yaml %}
 ```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
-    branch: feature-1
+contracts:
+  - git:
+      url: https://github.com/znsio/specmatic-order-contracts.git
+      branch: feature-1
     provides:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
@@ -174,10 +176,11 @@ By default, Specmatic searches for the directory ending with `_examples` to pick
 {% tab stubs specmatic.json %}
 ```json
 {
-  "sources": [
+  "contracts": [
     {
-      "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "git": {
+        "url": "https://github.com/znsio/specmatic-order-contracts.git"
+      },
       "provides": [
         "io/specmatic/examples/store/openapi/product_search_bff_v4.yaml"
       ],
@@ -195,9 +198,9 @@ By default, Specmatic searches for the directory ending with `_examples` to pick
 {% endtab %}
 {% tab stubs specmatic.yaml %}
 ```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+contracts:
+  - git:
+      url: https://github.com/znsio/specmatic-order-contracts.git
     provides:
       - io/specmatic/examples/store/openapi/product_search_bff_v4.yaml
     consumes:
@@ -221,10 +224,11 @@ The default timeout is `6000 milliseconds`.
 {% tab stubs specmatic.json %}
 ```json
 {
-  "sources": [
+  "contracts": [
     {
-      "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "git": {
+        "url": "https://github.com/znsio/specmatic-order-contracts.git"
+      },
       "consumes": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
@@ -238,9 +242,9 @@ The default timeout is `6000 milliseconds`.
 {% endtab %}
 {% tab stubs specmatic.yaml %}
 ```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+contracts:
+  - git:
+      url: https://github.com/znsio/specmatic-order-contracts.git
     consumes:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 test:
@@ -257,10 +261,11 @@ The same configuration file can be leveraged to define stubs also.
 {% tab stubs specmatic.json %}
 ```json
 {
-  "sources": [
+  "contracts": [
     {
-      "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "git": {
+        "url": "https://github.com/znsio/specmatic-order-contracts.git"
+      },
       "consumes": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
@@ -271,9 +276,9 @@ The same configuration file can be leveraged to define stubs also.
 {% endtab %}
 {% tab stubs specmatic.yaml %}
 ```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+contracts:
+  - git:
+      url: https://github.com/znsio/specmatic-order-contracts.git
     consumes:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
@@ -288,10 +293,11 @@ A single application may need to list the API Specifications it is implementing 
 {% tab dependencies specmatic.json %}
 ```json
 {
-  "sources": [
+  "contracts": [
     {
-      "provider": "git",
-      "repository": "<Git URL>",
+      "git": {
+        "url": "<Git URL>"
+      },
       "consumes": [
         "com/example/api_order_v1.yaml",
         "com/example/api_user_v1.yaml"
@@ -306,9 +312,9 @@ A single application may need to list the API Specifications it is implementing 
 {% endtab %}
 {% tab dependencies specmatic.yaml %}
 ```yaml
-sources:
-  - provider: git
-    repository: <Git URL>
+contracts:
+  - git:
+      url: <Git URL>
     consumes:
       - com/example/api_order_v1.yaml
       - com/example/api_user_v1.yaml
@@ -325,15 +331,17 @@ you can simulate response times with the specified delay in milliseconds, as men
 
 #### Use specifications on local file system
 
-If you just need to use specifications from your local file system, specify `provider` as `filesystem`, as shown below.
+If you just need to use specifications from your local file system, specify `filesystem` field within contracts (if not specified, `directory` will default to current directory), as shown below.
 
 {% tabs local %}
 {% tab local specmatic.json %}
 ```json
 {
-  "sources": [
+  "contracts": [
     {
-      "provider": "filesystem",
+      "filesystem": {
+        "directory": "<Path to specification>"
+      },
       "consumes": [
         "api_order_v1.yaml",
         "api_user_v1.yaml"
@@ -348,8 +356,9 @@ If you just need to use specifications from your local file system, specify `pro
 {% endtab %}
 {% tab local specmatic.yaml %}
 ```yaml
-sources:
-  - provider: filesystem
+contracts:
+  - filesystem:
+      directory: <Path to specification>
     consumes:
       - api_order_v1.yaml
       - api_user_v1.yaml
@@ -362,40 +371,6 @@ sources:
 Note that the `consumes` and `provides` specifications are relative paths. This means that they must be in the same directory as the current directory.
 
 You can also provide absolute paths in case they are somewhere else on the filesystem.
-
-#### Use specifications from the web
-
-{% tabs web %}
-{% tab web specmatic.json %}
-```json
-{
-  "sources": [
-    {
-      "provider": "web",
-      "consumes": [
-        "http://third.party.com/products.yaml"
-      ],
-      "provides": [
-        "http://third.party.com/api_auth_v1.yaml",
-      ]
-    }
-  ]
-}
-```
-{% endtab %}
-{% tab web specmatic.yaml %}
-```yaml
-sources:
-  - provider: web
-    consumes:
-      - http://third.party.com/products.yaml
-    provides:
-      - http://third.party.com/api_auth_v1.yaml
-```
-{% endtab %}
-{% endtabs %}
-
-Note that the `consumes` and `provides` can both contain URLs. `http` and `https` are both supported.
 
 #### Source control authentication
 
@@ -466,11 +441,12 @@ This gives you a comprehensive analysis of any mismatch between your api specifi
 {% tab complete specmatic.json %}
 ```json
 {
-  "sources": [
+  "contracts": [
     {
-      "provider": "git",
-      "repository": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts",
-      "branch": "main",
+      "git": {
+        "url": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts",
+        "branch": "main"
+      },
       "provides": [
         "com/petstore/store.yaml"
       ],
@@ -534,10 +510,10 @@ This gives you a comprehensive analysis of any mismatch between your api specifi
 {% endtab %}
 {% tab complete specmatic.yaml %}
 ```yaml
-sources:
-  - provider: git
-    repository: https://azure.com/XNSio/XNSIO/_git/petstore-contracts
-    branch: main
+contracts:
+  - git:
+      url: https://azure.com/XNSio/XNSIO/_git/petstore-contracts
+      branch: main
     provides:
       - com/petstore/store.yaml
     consumes:
