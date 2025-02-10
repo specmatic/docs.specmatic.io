@@ -2,7 +2,7 @@
 layout: default
 title: Configuration
 parent: Documentation
-nav_order: 14
+nav_order: 14.1
 ---
 
 Configuration
@@ -167,6 +167,29 @@ Resetting /<path where you are running the specmatic command>/.specmatic/repos/s
 ```
 
 The logs show that Specmatic resets your local copy and clones the latest API Specification from the Git repository into a folder called ```.specmatic```. Please add this folder to ```.gitignore```.
+
+#### Upgrade older configs to the latest version of the config
+If you have an old version of the config, it can be upgraded to the latest version using the `config upgrade` command.
+
+{% tabs compare %}
+{% tab compare java %}
+```bash
+java -jar specmatic.jar config upgrade --input specmatic_old.yaml --output specmatic.yaml
+```
+{% endtab %}
+{% tab compare npm %}
+```bash
+npx specmatic config upgrade --input specmatic_old.yaml --output specmatic.yaml
+```
+{% endtab %}
+{% tab compare docker %}
+```bash
+docker run -v "/local-directory:/specs" znsio/specmatic config upgrade --input "specmatic_old.yaml" --output "specmatic.yaml" 
+```
+{% endtab %}
+{% endtabs %}
+
+When you run the `config upgrade` command without specifying `input` or `output` parameters, it will search for the config file in default locations (the directory from which the command is run, the application classpath, `CONFIG_FILE_PATH` environment variable, or `CONFIG_FILE_PATH` system property) and display the result in the same terminal from which the command was executed.
 
 #### Externalized Examples Directories
 
