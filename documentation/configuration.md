@@ -10,13 +10,12 @@ Configuration
 
 - [Configuration](#configuration)
     - [Getting started](#getting-started)
-      - [**Configuration File Location**](#configuration-file-location)
+      - [Upgrade older configuration to the latest version](#upgrade-older-configuration-to-the-latest-version)
       - [Externalized Examples Directories](#externalized-examples-directories)
       - [Contract Test Timeout](#contract-test-timeout)
       - [Configuring Stubs](#configuring-stubs)
       - [Service Virtualization Delay](#service-virtualization-delay)
       - [Use specifications on local file system](#use-specifications-on-local-file-system)
-      - [Use specifications from the web](#use-specifications-from-the-web)
       - [Source control authentication](#source-control-authentication)
       - [Report Configuration](#report-configuration)
       - [Formatters](#formatters)
@@ -33,143 +32,9 @@ We often have to pass more than one API Specification file to Specmatic to stub 
 
 Also if your contracts are stored in a source control system like Git, we need to provide details about the repository so that Specmatic can pull your specifications directly from your version control.
 
-#### **Configuration File Location**
+#### Upgrade older configuration to the latest version
 
-The configuration can be specified in JSON or YAML format. There are several ways to specify the location of your configuration file:
-
-1. **Default Location**: Place the configuration file in the root folder of your project. By default, Specmatic looks for `specmatic.json` or `specmatic.yaml` in the project root.
-
-2. **Command Line Option**: Specify a custom configuration file location using the `--config` option:
-  ```bash
-  specmatic test --config=path/to/my-config.json
-  ```
-
-3. **Environment Variable**: When working programmatically, set the configuration file path using the CONFIG_FILE_PATH environment variable:
-
-{% tabs config_location %}
-{% tab config_location macOS/Linux %}
-
-```bash
-# Set configuration file path in terminal
-export CONFIG_FILE_PATH=/path/to/specmatic.yaml
-```
-
-{% endtab %}
-{% tab config_location Windows %}
-
-```shell
-# Set configuration file path in command prompt
-set CONFIG_FILE_PATH=C:\path\to\specmatic.yaml
-
-# Or in PowerShell
-$env:CONFIG_FILE_PATH="C:\path\to\specmatic.yaml"
-```
-
-{% endtab %}
-{% tab config_location Java Tests %}
-
-```java
-@BeforeAll
-public static void setUp() {
-    // Set configuration file path programmatically
-    System.setProperty("CONFIG_FILE_PATH", "/path/to/specmatic.yaml");
-    
-    // Rest of your test setup
-    System.setProperty("host", "localhost");
-    System.setProperty("port", "8080");
-}
-```
-
-{% endtab %}
-{% endtabs %}
-
-Note on Precedence: When multiple configuration methods are used, they are evaluated in the following order:
-1. Command line option (--config)
-2. Environment variable (CONFIG_FILE_PATH)
-3. Default location (project root)
-
-Here is a sample configuration to get you started.
-
-{% tabs config %}
-{% tab config specmatic.json %}
-```json
-{
-  "contracts": [
-    {
-      "git": {
-        "url": "https://github.com/znsio/specmatic-order-contracts.git"
-      },
-      "provides": [
-        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
-      ]
-    }
-  ]
-}
-```
-{% endtab %}
-{% tab config specmatic.yaml %}
-```yaml
-contracts:
-  - git:
-      url: https://github.com/znsio/specmatic-order-contracts.git
-    provides:
-      - io/specmatic/examples/store/openapi/api_order_v3.yaml
-```
-{% endtab %}
-{% endtabs %}
-
-Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api-java)). Let us now go through each of the lines in this file.
-* **git** - At the moment we support all git based source control systems. Example: GitHub, Gitlab, Azure, etc.
-* **url** - The git repository URL
-* **provides** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
-
-You can also specify the branch within git field after url.
-
-{% tabs branch %}
-{% tab branch specmatic.json %}
-```json
-{
-  "contracts": [
-    {
-      "git": {
-        "url": "https://github.com/znsio/specmatic-order-contracts.git",
-        "branch": "feature-1"
-      },
-      "provides": [
-        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
-      ]
-    }
-  ]
-}
-```
-{% endtab %}
-{% tab branch specmatic.yaml %}
-```yaml
-contracts:
-  - git:
-      url: https://github.com/znsio/specmatic-order-contracts.git
-      branch: feature-1
-    provides:
-      - io/specmatic/examples/store/openapi/api_order_v3.yaml
-```
-{% endtab %}
-{% endtabs %}
-
-When branch is not specified, default branch will be picked up.
-
-Now if you run the ```specmatic test``` command line executable from the directory that contains the ```specmatic.json``` file Specmatic will pull the API Specifications listed under provides and run them as tests.
-
-```shell
-% {{ site.spec_cmd }} test
-Loading config file ./specmatic.json
-Couldn't find local contracts, cloning https://github.com/znsio/specmatic-order-contracts.git into .specmatic/repos
-Resetting /<path where you are running the specmatic command>/.specmatic/repos/specmatic-order-contracts
-```
-
-The logs show that Specmatic resets your local copy and clones the latest API Specification from the Git repository into a folder called ```.specmatic```. Please add this folder to ```.gitignore```.
-
-#### Upgrade older configs to the latest version of the config
-If you have an old version of the config, it can be upgraded to the latest version using the `config upgrade` command.
+If you have an old version of the config, Specmatic can upgrade it to the latest version.
 
 {% tabs compare %}
 {% tab compare java %}
@@ -184,7 +49,7 @@ npx specmatic config upgrade --input specmatic_old.yaml --output specmatic.yaml
 {% endtab %}
 {% tab compare docker %}
 ```bash
-docker run -v "/local-directory:/specs" znsio/specmatic config upgrade --input "specmatic_old.yaml" --output "specmatic.yaml" 
+docker run -v "/your-local-specs-directory:/specs" znsio/specmatic config upgrade --input "/specs/specmatic.yaml" --output "specmatic_new.yaml"
 ```
 {% endtab %}
 {% endtabs %}
