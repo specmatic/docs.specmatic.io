@@ -80,6 +80,7 @@ specmatic backward-compatibility-check [options]
 
 - `--target-path`: Focus your analysis on specific file or folder. Default is all files and folder.
 - `--base-branch`: Select your comparison base. This defaults to head of the current branch.
+- `--repo-dir`: Specify the directory where the repository is located. Default is the current directory.
 
 ## Common Use Cases
 
@@ -155,6 +156,11 @@ specmatic backward-compatibility-check --target-path ./api/products.yaml
 specmatic backward-compatibility-check --base-branch origin/feature_v2
 ```
 
+### 6. Analyzing a specific directory
+
+```shell
+specmatic backward-compatibility-check --repo-dir /path/to/repo
+```
 
 ## Practical Examples (Try it yourself) 
 
