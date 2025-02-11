@@ -569,6 +569,9 @@ report:
         excludedEndpoints:
           - /health
 ```
+
+> ⚠️ **Note:** The `excludedEndpoints` configuration has been **removed** in Specmatic Config Version 2. Use the **filter** key (`PATH`) instead to achieve similar functionality.
+
 {% endtab %}
 {% endtabs %}
 
