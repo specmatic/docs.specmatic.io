@@ -17,6 +17,7 @@ Configuration
       - [Configuring Stubs](#configuring-stubs)
       - [Service Virtualization Delay](#service-virtualization-delay)
       - [Use specifications on local file system](#use-specifications-on-local-file-system)
+      - [Run stub on different ports for different specifications](#run-stub-on-different-ports-for-different-specifications)
       - [Source control authentication](#source-control-authentication)
       - [Report Configuration](#report-configuration)
       - [Formatters](#formatters)
@@ -229,7 +230,7 @@ If you just need to use specifications from your local file system, specify `fil
   "contracts": [
     {
       "filesystem": {
-        "directory": "<Path to specification>"
+        "directory": "<Path to directory where all the specmatic should look for specifications>"
       },
       "consumes": [
         "api_order_v1.yaml",
@@ -247,7 +248,7 @@ If you just need to use specifications from your local file system, specify `fil
 ```yaml
 contracts:
   - filesystem:
-      directory: <Path to specification>
+      directory: <Path to directory where all the specmatic should look for specifications>
     consumes:
       - api_order_v1.yaml
       - api_user_v1.yaml
@@ -260,6 +261,59 @@ contracts:
 Note that the `consumes` and `provides` specifications are relative paths. This means that they must be in the same directory as the current directory.
 
 You can also provide absolute paths in case they are somewhere else on the filesystem.
+
+#### Run stub on different ports for different specifications
+
+If you want to run stubs on different ports for different specifications, you can specify the port number in the `port` field under `consumes` key and assign the list of `specs` to it.
+
+
+{% tabs local %}
+{% tab local specmatic.json %}
+```json
+{
+  "contracts": [
+    {
+      "filesystem": {
+        "directory": "<Path to directory where all the specmatic should look for specifications>"
+      },
+      "consumes": [
+        {
+          "specs": [
+            "api_order_v1.yaml",
+            "api_user_v1.yaml"
+          ],
+          "port": 9000
+        },
+        {
+          "specs": [
+            "api_auth_v1.yaml"
+          ],
+          "port": 9001
+        }
+      ]
+    }
+  ]
+}
+```
+{% endtab %}
+{% tab local specmatic.yaml %}
+```yaml
+contracts:
+  - filesystem:
+      directory: <Path to directory where all the specmatic should look for specifications>
+    consumes:
+      - specs:
+          - api_order_v1.yaml
+          - api_user_v1.yaml
+        port: 9000
+      - specs:
+          - api_auth_v1.yaml
+        port: 9001
+```
+{% endtab %}
+{% endtabs %}
+
+As per the above configuration, the specs `api_order_v1.yaml` and `api_user_v1.yaml` will run on port 9000 and the spec `api_auth_v1.yaml` will run on port 9001.
 
 #### Source control authentication
 
