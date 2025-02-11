@@ -415,10 +415,7 @@ Specmatic can generate reports based on the below configuration:
             "minThresholdPercentage": 100,
             "maxMissedEndpointsInSpec": 0,
             "enforce": true
-          },
-          "excludedEndpoints": [
-            "/health"
-          ]
+          }
         }
       }
     }
@@ -438,8 +435,6 @@ report:
           minThresholdPercentage: 100
           maxMissedEndpointsInSpec: 0
           enforce: true
-        excludedEndpoints:
-          - /health
 ```
 {% endtab %}
 {% endtabs %}
@@ -513,10 +508,7 @@ This gives you a comprehensive analysis of any mismatch between your api specifi
             "minThresholdPercentage": 100,
             "maxMissedEndpointsInSpec": 0,
             "enforce": true
-          },
-          "excludedEndpoints": [
-            "/health"
-          ]
+          }
         }
       }
     }
@@ -566,11 +558,9 @@ report:
           minThresholdPercentage: 100
           maxMissedEndpointsInSpec: 0
           enforce: true
-        excludedEndpoints:
-          - /health
 ```
 
-> ⚠️ **Note:** The `excludedEndpoints` configuration has been **removed** in Specmatic Config Version 2. Use the **filter** key (`PATH`) instead to achieve similar functionality.
+> ⚠️ **Note:** The `excludedEndpoints` configuration has been **removed** in Specmatic Config Version 2. Use the **filter** feature to `excludeEndpoints` from the coverage. API that are filtered out will not be included in the coverage calculation and won't show up in coverage report.
 
 {% endtab %}
 {% endtabs %}
