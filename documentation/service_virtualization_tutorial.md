@@ -47,6 +47,7 @@ Service Virtualization
   - [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
+  - [Running Specmatic Stubs on Different Ports](#running-specmatic-stubs-on-different-ports)
   - [Sample Java Project](#sample-java-project)
 
 
@@ -1789,6 +1790,205 @@ paths:
                     example: UP
 ```
 
+### Running Specmatic Stubs on Different Ports
+
+#### Overview
+This setup demonstrates how to run Specmatic stubs on different ports for different specifications. This allows serving different APIs on their respective ports while keeping their examples specific to each specification.
+
+#### Directory Structure
+```
+project-root/
+│── specmatic.yaml
+│── imported_product/
+│   ├── imported_product.yaml
+│   ├── imported_product_examples/
+│       ├── post_imported_product.json
+│── exported_product/
+│   ├── exported_product.yaml
+│   ├── exported_product_examples/
+│       ├── post_exported_product.json
+```
+
+#### Specmatic Configuration
+##### specmatic.yaml
+```yaml
+version: 2
+contracts:
+  - filesystem:
+      directory: "."
+    consumes:
+      - imported_product/imported_product.yaml
+      - port: 9001
+        specs:
+          - exported_product/exported_product.yaml
+```
+Note: The `imported_product` spec does not have a port assigned, so it defaults to `9000`, whereas `exported_product` runs on `9001`.
+
+#### API Specifications
+##### imported_product.yaml
+```yaml
+openapi: 3.0.3
+info:
+  title: Imported Product API
+  version: 1.0.0
+paths:
+  /products:
+    post:
+      summary: Add a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  category:
+                    type: string
+```
+
+##### exported_product.yaml
+```yaml
+openapi: 3.0.3
+info:
+  title: Exported Product API
+  version: 1.0.0
+paths:
+  /products:
+    post:
+      summary: Add a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  category:
+                    type: string
+```
+
+#### Examples
+##### post_imported_product.json
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/products",
+    "body": {
+      "name": "Xiaomi",
+      "category": "Mobile"
+    }
+  },
+  "http-response": {
+    "status": 201,
+    "body": {
+      "id": "100",
+      "name": "Xiaomi",
+      "category": "Mobile"
+    }
+  }
+}
+```
+
+##### post_exported_product.json
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/products",
+    "body": {
+      "name": "Xiaomi",
+      "category": "Mobile"
+    }
+  },
+  "http-response": {
+    "status": 201,
+    "body": {
+      "id": "200",
+      "name": "Xiaomi",
+      "category": "Mobile"
+    }
+  }
+}
+```
+
+##### Run the stub server
+Once we have this setup, we can run the Specmatic stub server by running the following command in the `project-root` directory:
+```shell
+specmatic stub
+```
+
+This will start the Specmatic stub server on ports `9000` and `9001` for the `imported_product` and `exported_product` APIs, respectively.
+
+#### Example Requests
+##### Hitting the imported_product API on default port 9000
+```sh
+curl -X POST http://localhost:9000/products \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Xiaomi", "category": "Mobile"}'
+```
+**Response:**
+```json
+{
+  "id": "100",
+  "name": "Xiaomi",
+  "category": "Mobile"
+}
+```
+
+##### Hitting the exported_product API on port 9001
+```sh
+curl -X POST http://localhost:9001/products \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Xiaomi", "category": "Mobile"}'
+```
+**Response:**
+```json
+{
+  "id": "200",
+  "name": "Xiaomi",
+  "category": "Mobile"
+}
+```
+
+#### Benefits
+- **Port-based segregation:** Each spec runs on a dedicated port, ensuring clear separation.
+- **Spec-specific examples:** Requests return expected responses per specification.
+- **Flexibility:** Allows hosting multiple versions or separate APIs without conflict.
+
+This setup enables serving and testing multiple specifications efficiently using Specmatic. 
 
 ## Sample Java Project
 
