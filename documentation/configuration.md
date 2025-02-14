@@ -2,9 +2,10 @@
 layout: default
 title: Configuration
 parent: Documentation
-nav_order: 14
-has_children: true
+nav_order: 14.1
 ---
+
+<span style="color:gray;">Update Date:  14/02/2025</span>
 
 Configuration
 =============

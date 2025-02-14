@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Older Configuration Versions
-parent: Configuration
-nav_order: 1
+parent: Documentation
+nav_order: 14.2
 has_children: true
 ---
 
