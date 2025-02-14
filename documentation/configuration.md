@@ -29,6 +29,9 @@ Configuration
     - [Declare environment configuration](#declare-environment-configuration)
     - [Hooks](#hooks)
 
+
+Version 2 is the latest as of 14/02/2025. If you are looking for an older version of the configs, refer to [older configuration versions](/documentation/older_configuration_versions.html) page.
+
 ### Getting started
 
 We often have to pass more than one API Specification file to Specmatic to stub or test. While it is possible to send all the files as command line options, there is a better way.
