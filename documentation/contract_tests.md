@@ -58,15 +58,15 @@ Contract Tests
     - [Real-World Scenarios](#real-world-scenarios)
     - [API Gateway Transformations](#api-gateway-transformations)
     - [Implementation Example](#implementation-example)
-      - [**Initial Client API Specification**](#initial-client-api-specification)
-      - [**Setting Up Test Hooks**](#setting-up-test-hooks)
+      - [Initial Client API Specification](#initial-client-api-specification)
+    - [Setting Up Test Hooks](#setting-up-test-hooks)
     - [Sample Project Access](#sample-project-access)
       - [Creating the JAR File](#creating-the-jar-file)
     - [How It Works](#how-it-works)
     - [Conclusion](#conclusion-1)
-    - [Advanced Features](#advanced-features)
-      - [Generative Tests](#generative-tests)
-      - [Limiting the Count of Tests](#limiting-the-count-of-tests)
+  - [Advanced Features](#advanced-features)
+    - [Generative Tests](#generative-tests)
+    - [Limiting the Count of Tests](#limiting-the-count-of-tests)
     - [Sample Project](#sample-project)
 
 ### Overview
@@ -1331,7 +1331,7 @@ Without test hooks, Specmatic tests would fail because:
 
 ### Implementation Example
 
-#### **Initial Client API Specification**
+#### Initial Client API Specification
 <br>
 Here's a typical client-side API specification:
 
@@ -1373,9 +1373,9 @@ paths:
                     sku:
                       type: string
 ```
-<br>
-#### **Setting Up Test Hooks**
-<br>
+
+### Setting Up Test Hooks
+
 Step 1: **Create specmatic.yaml configuration file:**
 
 {% tabs config %}
@@ -1542,9 +1542,9 @@ Test hooks provide a powerful way to bridge the gap between client specification
 
 ---
 
-### Advanced Features
+## Advanced Features
 
-#### Generative Tests
+### Generative Tests
 
 Contract testing within the bounds of the contract is not enough. HTTP prescribes what should happen when contract-invalid requests are sent. To ensure that the application operates as required by HTTP, we need to test it with contract-invalid requests.
 
@@ -1630,7 +1630,7 @@ System.setProperty("SPECMATIC_GENERATIVE_TESTS", "true")
 
 The best way to see it in action is to try it out with one of your micro-services and it's API specifications.
 
-#### Limiting the Count of Tests
+### Limiting the Count of Tests
 
 Where there are no examples, Specmatic generates tests from the contract. And if there are too many optional headers, query parameters, JSON keys, nullables, and so on, Specmatic may generate too many tests.
 
