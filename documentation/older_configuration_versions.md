@@ -1,12 +1,9 @@
 ---
 layout: default
 title: Older Configuration Versions
-parent: Documentation
-nav_order: 14.2
-has_children: true
 ---
 
-Configuration
+Older Configuration Versions
 =============
 
 These versions are supported, but we recommended that you update to the latest to benefit from the newest features.
