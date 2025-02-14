@@ -339,6 +339,7 @@ Specmatic can generate reports based on the below configuration:
 {% tabs report_configuration %}
 {% tab report_configuration specmatic.yaml %}
 ```yaml
+version: 2
 report:
   formatters:
     - type: text
@@ -356,6 +357,7 @@ report:
 {% endtab %}
 {% tab report_configuration specmatic.json %}
 ```json
+"version": 2,
 "report": {
     "formatters": [
       {
@@ -520,6 +522,7 @@ Contains details of the project pipeline.
 {% tabs pipeline_configuration %}
 {% tab pipeline_configuration specmatic.yaml %}
 ```yaml
+version: 2
 auth:
   bearer-file: ./central_repo_auth_token.txt
 
@@ -533,6 +536,7 @@ pipeline:
 {% tab pipeline_configuration specmatic.json %}
 ```json
 {
+  "version": 2,
   "auth": {
     "bearer-file": "./central_repo_auth_token.txt"
   },
@@ -573,6 +577,7 @@ You can read more about `System.AccessToken` [here](https://docs.microsoft.com/e
 {% tabs environment_configuration %}
 {% tab environment_configuration specmatic.yaml %}
 ```yaml
+version: 2
 environments:
   staging:
     baseurls:
@@ -584,6 +589,7 @@ environments:
 {% endtab %}
 {% tab environment_configuration specmatic.json %}
 ```json
+  "version": 2,
   "environments": {
     "staging": {
       "baseurls": {
@@ -614,6 +620,7 @@ A hook is simply a command that can run on the Terminal or Command Prompt.
 {% tabs hooks_configuration %}
 {% tab hooks_configuration specmatic.yaml %}
 ```yaml
+version: 2
 hooks:
   stub_load_contract: python load.py
 ```
@@ -621,6 +628,7 @@ hooks:
 {% tab hooks_configuration specmatic.json %}
 ```json
 {
+  "version": 2,
   "hooks": {
     "stub_load_contract": "python load.py"
   }
