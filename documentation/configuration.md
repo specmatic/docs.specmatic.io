@@ -3,8 +3,9 @@ layout: default
 title: Configuration
 parent: Documentation
 nav_order: 14
-has_children: true
 ---
+
+<span style="color:gray;">Update Date:  14/02/2025</span>
 
 Configuration
 =============
@@ -27,6 +28,9 @@ Configuration
     - [Declare pipeline details](#declare-pipeline-details)
     - [Declare environment configuration](#declare-environment-configuration)
     - [Hooks](#hooks)
+
+
+Note: Version 2 is the latest as of 14/02/2025. If you are looking for an older version of the configs, refer to [older configuration versions](/documentation/older_configuration_versions.html) page.
 
 ### Getting started
 
