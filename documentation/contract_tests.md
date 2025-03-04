@@ -1722,7 +1722,7 @@ info:
   version: '1.0'
 servers: []
 paths:
-  '/employees':
+  /employees:
     post:
       requestBody:
         content:
@@ -1730,14 +1730,14 @@ paths:
             schema:
               $ref: '#/components/schemas/EmployeeDetails'
       responses:
-        '200':
+        200:
           description: Employee Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Employee'
 
-        '400':
+        400:
           description: Bad Request
 components:
   schemas:
@@ -1785,7 +1785,7 @@ Now create a dictionary file named `employees_dictionary.json` in the same direc
 <br/>To understand the syntax of dictionary refer to [service-virtualization](/documentation/service_virtualization_tutorial.html#use-meaningful-response-values-from-an-external-dictionary)
 
 #### Running Tests
-Now to execute contract tests using the specified configuration and the aforementioned dictionary file a service is required to run the tests; we will utilize [service-virtualization](/documentation/service_virtualization_tutorial.html) for this purpose.
+Now to execute contract tests on the specification using the dictionary a service is required, we will utilize [service-virtualization](/documentation/service_virtualization_tutorial.html) for this purpose.
 
 {% tabs test %}
 {% tab test java %}
@@ -1805,7 +1805,7 @@ docker run -v "$(pwd)/employees.yaml:/employees.yaml" znsio/specmatic stub "empl
 {% endtab %}
 {% endtabs %}
 
-Next, execute the contract tests by running the following commands:
+Next, execute the contract tests by running the following command:
 
 {% tabs test %}
 {% tab test java %}
@@ -1841,10 +1841,10 @@ Notice that the values from the dictionary are utilized in the requests.
 
 #### Generative Tests
 
-As tt is evident that only valid values can be included in the dictionary. hence, generative tests will ignore the values in the dictionary for the key being tested.
-The other keys will still be selected from the dictionary file if available; otherwise, random values will be generated.
+As it's evident that only valid values can be included in the dictionary. hence, generative tests will ignore the values in the dictionary for the key being mutated.
+The other keys will still retrieve values from the dictionary if available; otherwise, random values will be generated.
 
-For instance, if you execute the aforementioned specification with generative tests enabled, the request will appear as follows:
+For instance, if you execute the specification with generative tests enabled, one of the request will appear as follows:
 ```shell
 POST /employees
 Accept-Charset: UTF-8
@@ -1857,7 +1857,7 @@ Content-Type: application/json
 }
 ```
 
-In this case, the key `name` is being modified, which results in the value from the dictionary being disregarded.
+In this case, the key `name` is being mutated, which results in the value from the dictionary being disregarded.
 While the values for `department` and `employeeCode` are still being retrieved from the dictionary.
 
 ### Sample Project
