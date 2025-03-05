@@ -546,7 +546,7 @@ Given type Data
 
 ...would match both {"numbers": [1, 2, 3]} and {"numbers": [1, null, 3, 4, null, null]}
 
-* ```["(string)", "(number?...)"]``` matches ["+", 1, 2, null, 3, 4]. The first is a string. The rest are all nullable numbres. For example:
+* ```["(string)", "(number?...)"]``` matches ["+", 1, 2, null, 3, 4]. The first is a string. The rest are all nullable numbers. For example:
 ```gherkin
 Given type Operation
   | numbers | (numbers?*) |

@@ -44,10 +44,29 @@ Service Virtualization
     - [Clearing Transient Expectations](#clearing-transient-expectations)
   - [Externalised Response Generation](#externalised-response-generation)
   - [Hooks](#hooks)
+    - [Overview](#overview)
+    - [Use Case: API Gateway Header Transformation](#use-case-api-gateway-header-transformation)
+    - [Implementation Steps](#implementation-steps)
+    - [How It Works](#how-it-works)
   - [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
-  - [Running Specmatic Stubs on Different Ports](#running-specmatic-stubs-on-different-ports)
+    - [Running Specmatic Stubs on Different Ports](#running-specmatic-stubs-on-different-ports)
+      - [Overview](#overview-1)
+      - [Directory Structure](#directory-structure)
+      - [Specmatic Configuration](#specmatic-configuration)
+        - [specmatic.yaml](#specmaticyaml)
+      - [API Specifications](#api-specifications)
+        - [imported\_product.yaml](#imported_productyaml)
+        - [exported\_product.yaml](#exported_productyaml)
+      - [Examples](#examples)
+        - [post\_imported\_product.json](#post_imported_productjson)
+        - [post\_exported\_product.json](#post_exported_productjson)
+        - [Run the stub server](#run-the-stub-server)
+      - [Example Requests](#example-requests)
+        - [Hitting the imported\_product API on default port 9000](#hitting-the-imported_product-api-on-default-port-9000)
+        - [Hitting the exported\_product API on port 9001](#hitting-the-exported_product-api-on-port-9001)
+      - [Benefits](#benefits)
   - [Sample Java Project](#sample-java-project)
 
 
@@ -448,7 +467,7 @@ Suppose you do not wish Specmatic to return an auto-generated response when ther
 
 Let's try this out.
 
-- Start Specamtic stub with the `--strict` flag, using the following command:
+- Start Specmatic stub with the `--strict` flag, using the following command:
 {% tabs test %}
 {% tab test java %}
 ```shell
@@ -1015,7 +1034,7 @@ Let's see how this works.
 
   ```
 
-- Create a file named `dictionary.json` in the same directory as your `specmatic.yaml` with below contents. The format of this dictionary JSON is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation"):
+- Create a file named `employee_details_dictionary.json` in the same directory as your `specmatic.yaml` with below contents. The format of this dictionary JSON is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation"):
 
   ```json
   {
@@ -1025,17 +1044,6 @@ Let's see how this works.
     "Employee.department": "Sales",
     "Employee.designation" : "Associate"
   }
-  ```
-
-- Update your `specmatic.yaml` file to use the `dictionary.json` we created above:
-
-  ```yaml
-  sources:
-    - provider: filesystem
-      stub:
-        - employee_details.yaml
-  stub:
-    dictionary: ./dictionary.json
   ```
 
 - Start the stub and execute this curl command:
@@ -1109,7 +1117,7 @@ Note: Specific values for `id`, `name` and `employeeCode` were specified in the 
 
 ### Nested structure lookup in dictionary
 
-Keys in `dictionary.json` can refer to nested fields. Consider the following schema:
+Keys in `employee_details_dictionary.json` can refer to nested fields. Consider the following schema:
 
 ```yaml
 components:
@@ -1163,7 +1171,7 @@ components:
 }
 ```
 
-Note: nesting like in the above examples (e.g. street nested within array of addresses within employee) only works because street itself does not exist as a top-level key in an entitiy.
+Note: nesting like in the above examples (e.g. street nested within array of addresses within employee) only works because street itself does not exist as a top-level key in an entity.
 
 Finally, consider another example where a schema refers to another schema:
 
@@ -1336,7 +1344,7 @@ http://localhost:9000/_specmatic/expectations
 
 Please see <a href="/documentation/SpecmaticExpectations-postman_collection.json" download>postman collection</a> for reference.
 
-Specmatic will verify these expecations against the OpenAPI Specifications and will only return a 2xx response if they are as per API Specifications. Specmatic returns 4xx reponse if the expectation json is not as per the OpenAPI Specifications.
+Specmatic will verify these expecations against the OpenAPI Specifications and will only return a 2xx response if they are as per API Specifications. Specmatic returns 4xx response if the expectation json is not as per the OpenAPI Specifications.
 
 ### Anatomy of a Component / API Test
 
@@ -1372,7 +1380,7 @@ Add `specmatic-core` jar dependency with scope set to test since this need not b
 </dependency>
 ```
 
-Now you can import the utilty to create the stub server. Below code snippets are in Kotlin. However the overall concept is the same across all JVM languages such as Clojure, Scala or plain Java.
+Now you can import the utility to create the stub server. Below code snippets are in Kotlin. However the overall concept is the same across all JVM languages such as Clojure, Scala or plain Java.
 
 ```kotlin
 import io.specmatic.stub.createStub
@@ -1388,7 +1396,7 @@ fun setUp() {
 }
 ```
 
-We can now programmatically set [dynamic expectations](/documentation/service_virtualization_tutorial.html#dynamic-mocking---setting-expecations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expecations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
+We can now programmatically set [dynamic expectations](/documentation/service_virtualization_tutorial.html#dynamic-mocking---setting-expecations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expectations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
 
 ```java
 stub.setExpectation(expectationJson);
@@ -1427,7 +1435,7 @@ Here is a complete example of Specmatic Contract Tests that leverages the above 
 
 [Kotlin Example](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/contract/ContractTests.kt)
 
-Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
+Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
 
 {% endtab %}
 {% tab virtualization python %}
@@ -1530,7 +1538,7 @@ paths:
                 type: number
 ```
 
-This OpenAPI specification expects given input to be multiplied by three. It may not be possible to create expectation for each individual number. In this can we can create an expecation that can call an external command to which it can pass the incoming request and then return the value generated by that external command.
+This OpenAPI specification expects given input to be multiplied by three. It may not be possible to create expectation for each individual number. In this can we can create an expectation that can call an external command to which it can pass the incoming request and then return the value generated by that external command.
 
 ```json
 {
@@ -1546,7 +1554,7 @@ This OpenAPI specification expects given input to be multiplied by three. It may
 }
 ```
 
-In the above expecation file since we are providing the ```externalisedResponseCommand```, Specmatic will ignore the data inside ```http-reponse body```. Instead it call the command (```response.sh```) that is mentioned in ```externalisedResponseCommand``` and pass the incoming request as a environment variable ```SPECMATIC_REQUEST```.
+In the above expectation file since we are providing the ```externalisedResponseCommand```, Specmatic will ignore the data inside ```http-response body```. Instead it call the command (```response.sh```) that is mentioned in ```externalisedResponseCommand``` and pass the incoming request as a environment variable ```SPECMATIC_REQUEST```.
 
 ```shell
 #!/bin/bash
