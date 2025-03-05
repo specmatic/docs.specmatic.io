@@ -44,10 +44,29 @@ Service Virtualization
     - [Clearing Transient Expectations](#clearing-transient-expectations)
   - [Externalised Response Generation](#externalised-response-generation)
   - [Hooks](#hooks)
+    - [Overview](#overview)
+    - [Use Case: API Gateway Header Transformation](#use-case-api-gateway-header-transformation)
+    - [Implementation Steps](#implementation-steps)
+    - [How It Works](#how-it-works)
   - [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
-  - [Running Specmatic Stubs on Different Ports](#running-specmatic-stubs-on-different-ports)
+    - [Running Specmatic Stubs on Different Ports](#running-specmatic-stubs-on-different-ports)
+      - [Overview](#overview-1)
+      - [Directory Structure](#directory-structure)
+      - [Specmatic Configuration](#specmatic-configuration)
+        - [specmatic.yaml](#specmaticyaml)
+      - [API Specifications](#api-specifications)
+        - [imported\_product.yaml](#imported_productyaml)
+        - [exported\_product.yaml](#exported_productyaml)
+      - [Examples](#examples)
+        - [post\_imported\_product.json](#post_imported_productjson)
+        - [post\_exported\_product.json](#post_exported_productjson)
+        - [Run the stub server](#run-the-stub-server)
+      - [Example Requests](#example-requests)
+        - [Hitting the imported\_product API on default port 9000](#hitting-the-imported_product-api-on-default-port-9000)
+        - [Hitting the exported\_product API on port 9001](#hitting-the-exported_product-api-on-port-9001)
+      - [Benefits](#benefits)
   - [Sample Java Project](#sample-java-project)
 
 
@@ -1015,7 +1034,7 @@ Let's see how this works.
 
   ```
 
-- Create a file named `dictionary.json` in the same directory as your `specmatic.yaml` with below contents. The format of this dictionary JSON is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation"):
+- Create a file named `employee_details_dictionary.json` in the same directory as your `specmatic.yaml` with below contents. The format of this dictionary JSON is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation"):
 
   ```json
   {
@@ -1025,17 +1044,6 @@ Let's see how this works.
     "Employee.department": "Sales",
     "Employee.designation" : "Associate"
   }
-  ```
-
-- Update your `specmatic.yaml` file to use the `dictionary.json` we created above:
-
-  ```yaml
-  sources:
-    - provider: filesystem
-      stub:
-        - employee_details.yaml
-  stub:
-    dictionary: ./dictionary.json
   ```
 
 - Start the stub and execute this curl command:
@@ -1109,7 +1117,7 @@ Note: Specific values for `id`, `name` and `employeeCode` were specified in the 
 
 ### Nested structure lookup in dictionary
 
-Keys in `dictionary.json` can refer to nested fields. Consider the following schema:
+Keys in `employee_details_dictionary.json` can refer to nested fields. Consider the following schema:
 
 ```yaml
 components:
