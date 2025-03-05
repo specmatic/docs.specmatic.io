@@ -43,7 +43,7 @@ Here is a [sample project](https://github.com/znsio/specmatic-order-bff-grpc-kot
 1. [Clone the project](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#project-setup)
 2. [Use Docker to run the contract tests](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-docker)
 
-Alternatively if you have Java (JDK 17 and above) on your machine, you can [run the contract tests using gradl](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-gradle) also.
+Alternatively if you have Java (JDK 17 and above) on your machine, you can [run the contract tests using gradle](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-gradle) also.
 
 ## Detailed explanation
 

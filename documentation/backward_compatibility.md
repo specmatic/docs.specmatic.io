@@ -35,7 +35,7 @@ Backward Compatibility
 
 
 # Why Backward Compatibility Matters
-Backward compatibility ensures that updates to your API specifications don't accidently break compatibility. and prevents rework. Perform automated backward compatibility checks to ensure we are not accidentally breaking compatibility.
+Backward compatibility ensures that updates to your API specifications don't accidentally break compatibility. and prevents rework. Perform automated backward compatibility checks to ensure we are not accidentally breaking compatibility.
 
 Specmatic offers this powerful feature to check for backward compatibility between different versions of your API specifications.
 
@@ -690,7 +690,7 @@ This command exits with exit code 1 if the change is backward incompatible.
 ## Troubleshooting
 
 1. **Command Not Recognized**: 
-   - Verify Specimatic is properly configured for your current directory (either Docker or Node package or Python module or Jar file)
+   - Verify Specmatic is properly configured for your current directory (either Docker or Node package or Python module or Jar file)
    - Ensure you are using the latest version of Specmatic.
 
 2. **Unexpected Outcomes**: 

@@ -15,7 +15,7 @@ Service Virtualisation
     - [Basic stub using just the contract](#basic-stub-using-just-the-contract)
     - [Stubbing out specific responses to specific requests](#stubbing-out-specific-responses-to-specific-requests)
     - [Stubbing requests and responses with complex data](#stubbing-requests-and-responses-with-complex-data)
-    - [Errors when stubbing requests or reponses that do not match the contract](#errors-when-stubbing-requests-or-reponses-that-do-not-match-the-contract)
+    - [Errors when stubbing requests or responses that do not match the contract](#errors-when-stubbing-requests-or-responses-that-do-not-match-the-contract)
     - [Match not found: wrong URL or method in the request](#match-not-found-wrong-url-or-method-in-the-request)
     - [Stubbing out multiple contracts in one Specmatic instance](#stubbing-out-multiple-contracts-in-one-specmatic-instance)
     - [Lenient stubbing](#lenient-stubbing)
@@ -242,7 +242,7 @@ Invoke it in another tab:
 success
 ```
 
-### Errors when stubbing requests or reponses that do not match the contract
+### Errors when stubbing requests or responses that do not match the contract
 
 The contract:
 
@@ -761,7 +761,7 @@ Now, suppose our next test expects `name not found` for Jane Doe at 12B Baker St
 
 For the second test to work, the stub can't return `success` anymore. We need to alter it, so that given the old request body `{"name": "Jane Doe", "address": "12B Baker Street"}`, it provides the new response needed by the second test.
 
-To do this, just call the dynamic expectaion API again.
+To do this, just call the dynamic expectation API again.
 
 ```bash
 > curl -X POST -H 'Content-Type: application/json' -d '{"http-request": {"method": "POST", "path": "/customers", "body": {"name": "Jane Doe", "address": "12B Baker Street"}}, "http-response": {"status": 404, "body": "name not found"}}' http://localhost:9000/_specmatic/expectations
