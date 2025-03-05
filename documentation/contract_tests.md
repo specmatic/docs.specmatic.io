@@ -36,11 +36,13 @@ Contract Tests
       - [Filter Syntax](#filter-syntax)
       - [Excluding Tests](#excluding-tests)
     - [Programmatic Usage](#programmatic-usage)
-  - [Examples](#examples)
-    - [Common Use Cases](#common-use-cases)
+    - [Examples](#examples)
+      - [Common Use Cases](#common-use-cases)
     - [Putting it all together](#putting-it-all-together)
     - [Additional Tips](#additional-tips)
     - [API Coverage](#api-coverage)
+      - [Enable the Actuator Mapping Endpoint](#enable-the-actuator-mapping-endpoint)
+      - [Use Swagger UI](#use-swagger-ui)
   - [Overlays](#overlays)
     - [Introduction](#introduction)
     - [Understanding with a Real-World Example](#understanding-with-a-real-world-example)
@@ -67,6 +69,11 @@ Contract Tests
   - [Advanced Features](#advanced-features)
     - [Generative Tests](#generative-tests)
     - [Limiting the Count of Tests](#limiting-the-count-of-tests)
+    - [Dictionary](#dictionary)
+      - [Creating Specification](#creating-specification)
+      - [Creating Dictionary](#creating-dictionary)
+      - [Running Tests](#running-tests)
+      - [Generative Tests](#generative-tests-1)
     - [Sample Project](#sample-project)
 
 ### Overview
@@ -1009,9 +1016,9 @@ System.setProperty("filter", "METHOD='POST' && PATH='/users'");
 System.setProperty("filter", "STATUS!='400,401'");
 ```
 
-## Examples
+### Examples
 
-### Common Use Cases
+#### Common Use Cases
 
 1. Run only successful response tests:
 ```bash
@@ -1082,13 +1089,13 @@ After executing the tests, Specmatic generates a tabular report that displays wh
 
 There are two methods to enable this feature:
 
-#### 1. Enable the Actuator Mapping Endpoint
+#### Enable the Actuator Mapping Endpoint
 
 Activate the actuator mapping endpoint in your backend framework. Specify the URL of this endpoint as a system property using `endpointsAPI`. Specmatic will use this endpoint to retrieve and analyze the available paths and methods exposed by your backend server.
 
 Refer to the sample project below to observe this in action. Pay attention to the system property set in the [ContractTest](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) class, as well as the actuator-related dependency included in `pom.xml`.
 
-#### 2. Use Swagger UI
+#### Use Swagger UI
 
 Various programming languages and frameworks offer support for Swagger UI. For example, in .NET, Swashbuckle automatically generates an OpenAPI specification from controllers and models, making it easier to document, visualize, and interact with APIs directly from a web interface.
 
@@ -1699,6 +1706,160 @@ In this example, we may ensure that just the first 2 tests run with the followin
 ```java
 System.setProperty("MAX_TEST_REQUEST_COMBINATIONS", "2");
 ```
+
+### Dictionary
+
+When Specmatic generates requests for tests and does not find any examples, it will create the requests using the structure and keys defined by the request schema in the specifications, and it will fill in the structure with random values, based again on the same schema.
+
+In order to obtain domain-specific requests without examples, you can supply a dictionary of values to Specmatic. Specmatic will then reference this dictionary when it needs to generate a request.
+
+#### Create the Specification
+To understand how this works, create the `employees.yaml` specification file as follows:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  /employees:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeDetails'
+      responses:
+        200:
+          description: Employee Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+
+        400:
+          description: Bad Request
+components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - id
+        - name
+        - department
+      properties:
+        id:
+          type: integer
+        employeeCode:
+          type: string
+        name:
+          type: string
+        department:
+          type: string
+
+    EmployeeDetails:
+      type: object
+      required:
+        - name
+        - department
+      properties:
+        name:
+          type: string
+        department:
+          type: string
+        employeeCode:
+          type: string
+```
+
+
+#### Create a Dictionary
+Now create a dictionary file named `employees_dictionary.json` in the same directory:
+```json
+{
+  "EmployeeDetails.name": "John Doe",
+  "EmployeeDetails.department": "IT",
+  "EmployeeDetails.employeeCode": "12345"
+}
+```
+**Note**: The naming convention for the dictionary file should be `<spec-name>_dictionary.json` where `<spec-name>` is the name of the specification file.
+<br/>To understand the syntax of dictionary refer to [service-virtualization](/documentation/service_virtualization_tutorial.html#use-meaningful-response-values-from-an-external-dictionary)
+
+#### Run the tests Tests
+Now to execute contract tests on the specification using the dictionary a service is required, we will utilize [service-virtualization](/documentation/service_virtualization_tutorial.html) for this purpose.
+
+{% tabs test %}
+{% tab test java %}
+```shell
+java -jar specmatic.jar stub employees.yaml
+```
+{% endtab %}
+{% tab test npm %}
+```shell
+npx specmatic stub employees.yaml
+```
+{% endtab %}
+{% tab test docker %}
+```shell
+docker run -v "$(pwd)/employees.yaml:/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/employees_dictionary.yaml" znsio/specmatic stub "employees.yaml"
+```
+{% endtab %}
+{% endtabs %}
+
+Next, execute the contract tests by running the following command:
+
+{% tabs test %}
+{% tab test java %}
+```shell
+java -jar specmatic.jar test employees.yaml
+```
+{% endtab %}
+{% tab test npm %}
+```shell
+npx specmatic test employees.yaml
+```
+{% endtab %}
+{% tab test docker %}
+```shell
+docker run -v "$(pwd)/employees.yaml:/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/employees_dictionary.yaml" znsio/specmatic test "employees.yaml"
+```
+{% endtab %}
+{% endtabs %}
+
+We can now examine the request sent to the service by reviewing the logs.
+```shell
+POST /employees
+Accept-Charset: UTF-8
+Accept: */*
+Content-Type: application/json
+{
+  "name": "John Doe",
+  "department": "IT",
+  "employeeCode": "12345"
+}
+```
+Notice that the values from the dictionary are utilized in the requests.
+
+#### Generative Tests
+
+As it's evident that only valid values can be included in the dictionary. hence, generative tests will ignore the values in the dictionary for the key being mutated.
+The other keys will still retrieve values from the dictionary if available; otherwise, random values will be generated.
+
+For instance, if you execute the specification with generative tests enabled, one of the request will appear as follows:
+```shell
+POST /employees
+Accept-Charset: UTF-8
+Accept: */*
+Content-Type: application/json
+{
+  "name": null,
+  "department": "IT",
+  "employeeCode": "12345"
+}
+```
+
+In this case, the key `name` is being mutated, which results in the value from the dictionary being disregarded.
+While the values for `department` and `employeeCode` are still being retrieved from the dictionary.
 
 ### Sample Project
 
