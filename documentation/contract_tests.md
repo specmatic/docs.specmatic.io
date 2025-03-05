@@ -1709,12 +1709,13 @@ System.setProperty("MAX_TEST_REQUEST_COMBINATIONS", "2");
 
 ### Dictionary
 
-When Specmatic generates requests for tests and does not find any examples, it will create a request using the request schema defined in the API specifications, with the values generated in this case being randomized. 
+When Specmatic generates requests for tests and does not find any examples, it will create the requests using the structure and keys defined by the request schema in the specifications, and it will fill in the structure with random values, based again on the same schema.
 
-In order to obtain domain-specific requests without examples or to enforce a specific value for a particular key in a specific schema, you can supply a dictionary of values to Specmatic. Specmatic will then reference this dictionary when it needs to generate a request.
+In order to obtain domain-specific requests without examples, you can supply a dictionary of values to Specmatic. Specmatic will then reference this dictionary when it needs to generate a request.
 
-#### Creating Specification
-To understand the functionality, create the `employees.yaml` specification file as follows:
+#### Create the Specification
+To understand how this works, create the `employees.yaml` specification file as follows:
+
 ```yaml
 openapi: 3.0.0
 info:
@@ -1772,7 +1773,7 @@ components:
 ```
 
 
-#### Creating Dictionary
+#### Create a Dictionary
 Now create a dictionary file named `employees_dictionary.json` in the same directory:
 ```json
 {
@@ -1784,7 +1785,7 @@ Now create a dictionary file named `employees_dictionary.json` in the same direc
 **Note**: The naming convention for the dictionary file should be `<spec-name>_dictionary.json` where `<spec-name>` is the name of the specification file.
 <br/>To understand the syntax of dictionary refer to [service-virtualization](/documentation/service_virtualization_tutorial.html#use-meaningful-response-values-from-an-external-dictionary)
 
-#### Running Tests
+#### Run the tests Tests
 Now to execute contract tests on the specification using the dictionary a service is required, we will utilize [service-virtualization](/documentation/service_virtualization_tutorial.html) for this purpose.
 
 {% tabs test %}
@@ -1800,7 +1801,7 @@ npx specmatic stub employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -v "$(pwd)/employees.yaml:/employees.yaml" znsio/specmatic stub "employees.yaml"
+docker run -v "$(pwd)/employees.yaml:/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/employees_dictionary.yaml" znsio/specmatic stub "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -1820,7 +1821,7 @@ npx specmatic test employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -v "$(pwd)/employees.yaml:/employees.yaml" znsio/specmatic test "employees.yaml"
+docker run -v "$(pwd)/employees.yaml:/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/employees_dictionary.yaml" znsio/specmatic test "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}
