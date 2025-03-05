@@ -25,6 +25,10 @@ Contract Tests
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
     - [Programmatically executing Specmatic Contract as Tests](#programmatically-executing-specmatic-contract-as-tests)
+    - [HTML Report](#html-report)
+      - [Summary](#summary)
+      - [Coverage Table](#coverage-table)
+      - [Remarks](#remarks)
     - [Referring to local specifications](#referring-to-local-specifications)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
@@ -41,6 +45,8 @@ Contract Tests
     - [Putting it all together](#putting-it-all-together)
     - [Additional Tips](#additional-tips)
     - [API Coverage](#api-coverage)
+      - [1. Enable the Actuator Mapping Endpoint](#1-enable-the-actuator-mapping-endpoint)
+      - [2. Use Swagger UI](#2-use-swagger-ui)
       - [Enable the Actuator Mapping Endpoint](#enable-the-actuator-mapping-endpoint)
       - [Use Swagger UI](#use-swagger-ui)
   - [Overlays](#overlays)
@@ -833,6 +839,40 @@ Here is a complete [Specmatic Contract Test example](https://github.com/znsio/sp
 {% endtabs %}
 
 Note: Declare your specifications in the Specmatic configuration file as described above in the section on [declaring contracts in configuration](#declaring-contracts-in-configuration). The Specmatic configuration file should be created at the root of your project.
+
+### HTML Report
+
+Upon completion of the contract tests, Specmatic will produce an HTML report for viewing and analyzing the results. You can locate this report in the `build/reports/specmatic/html` directory of your project; simply open the `index.html` file in the browser of your choice to view the report. The results are presented in a tabular format, similar to the API coverage report displayed on the console.
+
+#### Summary
+
+The key metrics are presented in the top header, which includes overall coverage percentage, total number of tests passed, failed, errors, and skipped. You can filter the table by clicking on one of the count buttons.
+
+#### Coverage Table
+
+The table is organized by path, method, request content type, and response status code, with each row representing the number of tests executed for that specific group and the final remark. Additionally, coverage is calculated for each path and is included as one of the columns in the table.
+
+To view the actual tests along with the associated request and response for each test and other relevant information, click on one of the table rows. This action will slide in the details section, which contains all the tests executed for that specific group, if applicable. You can then click on an individual test to see the request, response, and additional details such as the URL, request and response time, and any error message in case of a failure.
+
+![Html Report](/images/html_report.gif)
+
+Similar to table filtering, clicking the header buttons filters the tests, which dynamically update counts and coverage as you switch between details and the main screen.
+<br/>**Note**: The `content-type` is of the request and is displayed below the response status code when the endpoint includes a request body.
+
+#### Remarks
+
+Remarks are displayed for each row in table and act as a summary of the tests executed for that specific group. The remarks are as follows:
+
+| Remark              | Definition                                                                                                                     |
+|---------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| **Covered**         | Tests were run for this group. Red indicates a failure in one or more tests, while green means all tests passed                |
+| **Missing In Spec** | The endpoint is implemented on the service but isn't documented in the OpenAPI Specification                                     |
+| **Not Implemented** | The endpoint is documented in the OpenAPI Specification but isn't implemented by the service                                   |
+| **Not Covered**     | Tests for this group were not executed or were skipped                                                                         |
+| **WIP**             | This endpoint is marked WIP in the OpenAPI Specification, Any failures in this grouped are indicated by yellow and disregarded |
+| **Invalid**         | The endpoint doesn't conform to REST standards                                                                                 |
+
+**Note**: The remarks `Missing In Spec` and `Not Implemented` are contingent upon the actuator being enabled. Please refer to [API Coverage](#api-coverage) for further details.
 
 ### Referring to local specifications
 
