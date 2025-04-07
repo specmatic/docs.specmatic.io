@@ -43,6 +43,26 @@ The API server can be started on a port other than 29092 by passing the desired 
 docker run -p 9092:9092 -p 2181:2181 -p 3000:3000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka --mock-server-api-port=3000
 ```
 
+**Note:**  
+By default, the above command starts the Kafka Mock Server with an **embedded in-memory Kafka broker**, which is ideal for quick local testing and does not require any external setup. 
+
+However, if you need to test against an **existing Kafka broker** (e.g., one running in a shared test environment or on your local machine), you can configure the Kafka Mock Server to connect to that broker using the `--external-broker-url` option.
+
+For example, to connect to a Kafka broker running on `localhost:9092`, use the following command:
+
+```bash
+docker run -p 9999:9999 \
+  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+  --network host \
+  znsio/specmatic-kafka \
+  --external-broker-url localhost:9092
+```
+
+The `--network host` flag is important when using `localhost` for the broker address, as it allows the container to access the host network directly. This avoids common issues with Docker container networking when referring to services on the host machine.
+
+---
+
+
 ## Interacting with the API server
 
 The API server provides endpoints to interact with the kafka mock server, allowing you to perform the following actions:
