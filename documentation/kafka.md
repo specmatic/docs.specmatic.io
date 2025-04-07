@@ -62,14 +62,12 @@ paths:
     post:
       summary: This endpoint allows you to set expectations for the Kafka mock server.
       requestBody:
-        description: A list of expectations
+        description: Expectations payload
         required: true
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Expectation'
+              $ref: '#/components/schemas/ExpectationRequest'
       responses:
         '200':
           description: Expectations saved successfully
@@ -89,6 +87,19 @@ paths:
                 $ref: '#/components/schemas/VerificationResult'
 components:
   schemas:
+    ExpectationRequest:
+      type: object
+      properties:
+        expectations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Expectation'
+        ignoreTopics:
+          type: array
+          items:
+            type: string
+      required:
+        - expectations
     Expectation:
       type: object
       properties:
@@ -119,6 +130,255 @@ components:
         - success
         - errors
 ```
+
+### 📘 Specmatic Kafka Mock Server API Guide
+
+The **Specmatic Kafka Mock Server** enables you to simulate Kafka-based interactions using an AsyncAPI specification. This is particularly useful for integration testing or when dependent services are not readily available.
+
+---
+
+#### ✅ API Capabilities
+
+The mock server provides endpoints to interact with and validate Kafka message flows:
+
+1. **Set Expectations**: Configure the server to expect specific messages on defined topics.
+2. **Verify Expectations**: Validate whether the expected messages were received.
+
+---
+
+#### 🚀 Step 1: Start a Kafka Broker
+
+Before using the mock server, ensure that an external Kafka broker is running. The following `docker-compose` file sets up both **Kafka** and **Zookeeper**:
+
+```yaml
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - /var/lib/zookeeper
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    volumes:
+      - /var/lib/kafka/data
+```
+
+To start the broker:
+
+```bash
+docker compose up -d
+```
+
+Ensure the containers start successfully before proceeding.
+
+---
+
+#### ⚙️ Step 2: Launch the Kafka Mock Server
+
+##### 📄 Create a specification file: `spec.yaml`
+
+The mock server uses an AsyncAPI 3.0 spec to simulate message exchanges. Below is a sample `spec.yaml` that defines two Kafka channels:
+
+- **place-order**: Receives an order request.
+- **process-order**: Sends a reply once the order is processed.
+
+```yaml
+asyncapi: 3.0.0
+info:
+  title: Order API
+  version: '1.0.0'
+
+channels:
+  place-order:
+    messages:
+      placeOrderMessage:
+        $ref: "#/components/messages/OrderRequest"
+
+  process-order:
+    messages:
+      processOrderMessage:
+        $ref: "#/components/messages/Order"
+
+operations:
+  onPlaceOrder:
+    action: receive
+    channel:
+      $ref: '#/channels/place-order'
+    messages:
+      - $ref: "#/channels/place-order/messages/placeOrderMessage"
+    reply:
+      channel:
+        $ref: '#/channels/process-order'
+      messages:
+        - $ref: '#/channels/process-order/messages/processOrderMessage'
+
+components:
+  messages:
+    OrderRequest:
+      name: OrderRequest
+      title: An order request
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/OrderRequest'
+
+    Order:
+      name: OrderToProcess
+      title: An order that needs to be processed
+      contentType: application/json
+      payload:
+        type: object
+        required:
+          - totalAmount
+          - status
+        properties:
+          orderRequestId:
+            type: integer
+          totalAmount:
+            type: number
+          status:
+            type: string
+            enum:
+              - NEW
+              - IN_PROGRESS
+              - PROCESSED
+              - FAILED
+
+  schemas:
+    OrderRequest:
+      type: object
+      required:
+        - id
+        - orderItems
+      properties:
+        id:
+          type: number
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+
+    OrderItem:
+      type: object
+      required:
+        - id
+        - name
+        - quantity
+        - price
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: number
+```
+
+---
+
+Start the Specmatic Kafka mock server using the following command:
+
+```bash
+docker run --network host \
+  -v "$PWD/spec.yaml:/usr/src/app/spec.yaml" \
+  znsio/specmatic-kafka \
+  virtualize spec.yaml \
+  --external-broker-url localhost:9092
+```
+
+- The `--network host` flag ensures proper communication with the locally running Kafka broker.
+- Replace `spec.yaml` with the path to your AsyncAPI specification file or use the following spec file.
+
+---
+
+#### 📝 Step 3: Set Expectations
+
+Once the mock server is running, configure the expectations using a `POST` request to the API server (running at `localhost:9999`):
+
+##### Request
+
+```bash
+curl -X POST http://localhost:9999/_expectations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "expectations": [
+      {
+        "topic": "place-order",
+        "count": 1
+      }
+    ],
+    "ignoreTopics": ["__consumer_offsets"]
+  }'
+```
+
+This tells the mock server to expect **1 message** on the `place-order` topic and ignore the `__consumer_offsets` topic.
+
+---
+
+#### 📨 Step 4: Publish a Message
+
+Send a valid message to the `place-order` topic using Kafka CLI:
+
+```bash
+echo '{"id":12345,"orderItems":[{"id":1,"name":"Macbook","quantity":1,"price":2000.0},{"id":2,"name":"Iphone","quantity":1,"price":1000.0}]}' | docker compose exec -T kafka kafka-console-producer \
+  --broker-list localhost:9092 \
+  --topic place-order \
+  --property "parse.key=false" \
+  --producer-property "acks=all" \
+  --property "value.serializer=org.apache.kafka.common.serialization.StringSerializer"
+```
+
+---
+
+#### ✅ Step 5: Verify Expectations
+
+Check whether the expected messages were received and they were **schema valid** as per the specification using the `GET` verification endpoint:
+
+##### Request
+
+```bash
+curl http://localhost:9999/_expectations/verification_status
+```
+
+##### Successful Response
+
+```json
+{
+  "success": true,
+  "errors": []
+}
+```
+
+If the verification fails, the response will include details of the mismatches.
+
+---
+
+#### ℹ️ Additional Notes
+
+- You can mount a different `spec.yaml` anytime to simulate different message contracts.
+- Use the `ignoreTopics` field to exclude system/internal topics.
+- Ensure all published messages adhere to the schema defined in the spec.
+
 
 # Running Contract Tests Against a Kafka-Based Request-Reply Service
 
