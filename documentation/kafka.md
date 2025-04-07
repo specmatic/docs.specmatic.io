@@ -24,7 +24,7 @@ Please refer to [Specmatic documentation](https://specmatic.in/documentation/) f
 Now we can run below command to spin a Kafka mock server. Please note the volume mapping to pass the specmatic.yaml to the Kafka Docker image and also the port mappings.
 
 ```shell
-docker run -p 9092:9092 -p 2181:2181 -p 29092:29092 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka-trial
+docker run -p 9092:9092 -p 2181:2181 -p 29092:29092 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka
 ```
 This should produce logs that shows that Specmatic Kafka server has started and listening on topics.
 
@@ -40,7 +40,7 @@ Starting api server on port:29092
 
 The API server can be started on a port other than 29092 by passing the desired port via `--mock-server-api-port` CLI argument as follows.
 ```shell
-docker run -p 9092:9092 -p 2181:2181 -p 3000:3000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka-trial --mock-server-api-port=3000
+docker run -p 9092:9092 -p 2181:2181 -p 3000:3000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka --mock-server-api-port=3000
 ```
 
 ## Interacting with the API server
@@ -147,12 +147,12 @@ To test this service from the command line, follow the below steps.
 2. **Run the Service**: Start your service locally.
 3. **Run Contract Tests**: Use the following command to run the contract tests against the service by replacing `kafka_broker_host` and `kafka_broker_port` with appropriate values:
 ```shell
-docker run --network="host" -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka-trial test --host=<kafka_broker_host> --port=<kafka_broker_port>
+docker run --network="host" -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-kafka test --host=<kafka_broker_host> --port=<kafka_broker_port>
 ```
 
 To get information around all the CLI args of the `test` command, run the following command.
 ```shell
-docker run znsio/specmatic-kafka-trial test --help
+docker run znsio/specmatic-kafka test --help
 ```
 
 To get a hands-on experience, refer to [these](https://specmatic.io/documentation/sample_projects.html#kafka) sample projects.

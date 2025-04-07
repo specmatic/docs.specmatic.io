@@ -23,3 +23,4 @@ Reference - How to DevContainers for the first time for Jekyll Projects
   * Cmd + Shift + P and run ```Remote-Containers: Add Development Container Configuration Files...```
   * Search for Jekyll and Choose bullseye
   * This will add the .devcontainers folder with necessary configs, re-open project in container
+

@@ -5,6 +5,16 @@ For getting started quickly, let us use Specmatic standalone executable within o
 The Specmatic standalone executable is accessible through various prominent distribution channels.
 
 {% tabs install %}
+{% tab install docker %}
+
+You can run Specmatic using the following command:
+
+``` bash
+docker run znsio/specmatic
+```
+
+{% endtab %}
+
 {% tab install java %}
 Download the standalone jar from our [Github releases](<https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable/{{ site.latest_release }}/specmatic-executable-{{ site.latest_release }}-all.jar).
 
@@ -18,6 +28,38 @@ Run specmatic as below to list all the options available
 ```bash
 java -jar specmatic.jar
 ```
+
+Follow the quick tips below to setup commands for easily running `java -jar specmatic.jar`.
+
+#### Command-line alias on MacOS / Linux
+
+Add this to the startup script of your shell like `~/.bashrc` or `~/.zshrc`
+
+``` bash
+alias specmatic='java -jar <path-to-jar>/specmatic.jar'
+```
+
+You can now run specmatic using:
+
+``` bash
+$ specmatic <options>
+```
+
+#### Batch script on Windows
+
+Create a batch file (`specmatic.bat`) with below content and add it your system path.
+
+```  bash
+java -jar <path-to-jar>/specmatic.jar %*
+```
+The %* portion at the end tells the batch script to pass all of the parameters it receives to the new command.
+
+You can now run specmatic using:
+
+``` bash
+C:\> specmatic.bat <options>
+```
+
 {% endtab %}
 {% tab install npm %}
 
@@ -31,68 +73,6 @@ Or you can run specmatic without installing it as below
 
 ``` bash
 npx specmatic
-```
-{% endtab %}
-
-{% tab install docker %}
-
-Docker Pull Command for specmatic docker image
-
-``` bash
-docker pull znsio/specmatic
-```
-
-Run specmatic by
-
-``` bash
-docker run znsio/specmatic
-```
-
-**Important**: If you're using a machine with an Apple Silicon chip, you'll need to enable Rosetta for accelerated x86/amd64 binary emulation.
-
-Please follow these steps to do so:
-
-1. Update your Docker Desktop application to the latest version.
-2. Navigate to 'Settings', then 'General Settings'.
-3. Ensure the `Use Rosetta for x86/amd64 emulation on Apple Silicon` option is checked.
-4. Save your settings and restart Docker Desktop for the changes to take effect.
-
-
-{% endtab %}
-{% endtabs %}
-
----
-### Tip to run java jar easily
-
-By following below tip running `java -jar specmatic.jar` every time can be avoided
-
-{% tabs hint-java %}
-{% tab hint-java mac/linux %}
-
-Add this to the startup script of your shell like `~/.bashrc` or `~/.zshrc`
-
-``` bash
-alias specmatic='java -jar <path-to-jar>/specmatic.jar'
-```
-
-Run specmatic by
-
-``` bash
-$ specmatic <options>
-```
-{% endtab %}
-{% tab hint-java windows %}
-Create a batch file (`specmatic.bat`) with below content and add it your system path.
-
-```  bash
-java -jar <path-to-jar>/specmatic.jar %*
-```
-The %* portion at the end tells the batch script to pass all of the parameters it receives to the new command.
-
-Run specmatic by
-
-``` bash
-C:\> specmatic.bat <options>
 ```
 {% endtab %}
 {% endtabs %}

@@ -136,9 +136,9 @@ Service Virtualization
 - In the same directory, create a file named `specmatic.yaml` with the following contents:
 
   ```yaml
-  sources:
-    - provider: filesystem
-      stub:
+  version: 2
+  contracts:
+    - consumes:
         - employees.yaml
   ```
 
@@ -254,24 +254,10 @@ It may not always be possible to add examples inline in the OpenAPI specificatio
 
 Let's see how this is done.
 
-- Run the `examples` command:
-{% tabs test %}
-{% tab test java %}
+- Run the `examples` command:<br/><br/>
 ```shell
-java -jar specmatic.jar examples employees.yaml
+docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" znsio/specmatic-openapi examples generate employees.yaml
 ```
-{% endtab %}
-{% tab test npm %}
-```shell
-npx specmatic examples employees.yaml
-```
-{% endtab %}
-{% tab test docker %}
-```shell
-docker run -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/employees_examples:/usr/src/app/employees_examples" znsio/specmatic examples employees.yaml
-```
-{% endtab %}
-{% endtabs %}
 
 - It generates a request-response mapping JSON file in the `employees_examples` directory containing an example of the API in the spec.
   - The directory name follows the format `<spec file name without extension>_examples`.
@@ -641,12 +627,12 @@ paths:
 }
 ```
 
-- Add `phonebook.yaml` to the `stub` list in `specmatic.yaml`, like so:
+- Add `phonebook.yaml` to the `consumes` list in `specmatic.yaml`, like so:
 
   ```yaml
-  sources:
-    - provider: filesystem
-      stub:
+  version: 2
+  contracts:
+    - consumes:
         - employees.yaml
         - phonebook.yaml
   ```
@@ -1117,7 +1103,7 @@ Note: Specific values for `id`, `name` and `employeeCode` were specified in the 
 
 ### Nested structure lookup in dictionary
 
-Keys in `employee_details_dictionary.json` can refer to nested fields. Consider the following schema:
+Keys in `dictionary.json` can refer to nested fields. Consider the following schema:
 
 ```yaml
 components:
@@ -1171,7 +1157,7 @@ components:
 }
 ```
 
-Note: nesting like in the above examples (e.g. street nested within array of addresses within employee) only works because street itself does not exist as a top-level key in an entity.
+Note: nesting like in the above examples (e.g. street nested within array of addresses within employee) only works because street itself does not exist as a top-level key in an entitiy.
 
 Finally, consider another example where a schema refers to another schema:
 
@@ -1247,14 +1233,28 @@ All other requests, other than the specific request (product id 11) where a dela
 A Global delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter in Specmatic Config, 
 you can simulate response times with the specified delay in milliseconds.
 
-{% tabs stubs %}
-{% tab stubs specmatic.json %}
+{% tabs stubs_serviceVirtualisation %}
+{% tab stubs_serviceVirtualisation specmatic.yaml %}
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://github.com/znsio/specmatic-order-contracts.git
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+stub:
+  delayInMilliseconds: 3000
+```
+{% endtab %}
+{% tab stubs_serviceVirtualisation specmatic.json %}
 ```json
 {
-  "sources": [
+  "version": 2,
+  "contracts": [
     {
-      "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "git": {
+        "url": "https://github.com/znsio/specmatic-order-contracts.git"
+      },
       "consumes": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
@@ -1264,17 +1264,6 @@ you can simulate response times with the specified delay in milliseconds.
     "delayInMilliseconds": 3000
   }
 }
-```
-{% endtab %}
-{% tab stubs specmatic.yaml %}
-```yaml
-sources:
-  - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
-    consumes:
-      - io/specmatic/examples/store/openapi/api_order_v3.yaml
-stub:
-  delayInMilliseconds: 3000
 ```
 {% endtab %}
 {% endtabs %}
@@ -1344,7 +1333,7 @@ http://localhost:9000/_specmatic/expectations
 
 Please see <a href="/documentation/SpecmaticExpectations-postman_collection.json" download>postman collection</a> for reference.
 
-Specmatic will verify these expecations against the OpenAPI Specifications and will only return a 2xx response if they are as per API Specifications. Specmatic returns 4xx response if the expectation json is not as per the OpenAPI Specifications.
+Specmatic will verify these expecations against the OpenAPI Specifications and will only return a 2xx response if they are as per API Specifications. Specmatic returns 4xx reponse if the expectation json is not as per the OpenAPI Specifications.
 
 ### Anatomy of a Component / API Test
 
@@ -1380,7 +1369,7 @@ Add `specmatic-core` jar dependency with scope set to test since this need not b
 </dependency>
 ```
 
-Now you can import the utility to create the stub server. Below code snippets are in Kotlin. However the overall concept is the same across all JVM languages such as Clojure, Scala or plain Java.
+Now you can import the utilty to create the stub server. Below code snippets are in Kotlin. However the overall concept is the same across all JVM languages such as Clojure, Scala or plain Java.
 
 ```kotlin
 import io.specmatic.stub.createStub
@@ -1396,7 +1385,7 @@ fun setUp() {
 }
 ```
 
-We can now programmatically set [dynamic expectations](/documentation/service_virtualization_tutorial.html#dynamic-mocking---setting-expecations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expectations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
+We can now programmatically set [dynamic expectations](/documentation/service_virtualization_tutorial.html#dynamic-mocking---setting-expecations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expecations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
 
 ```java
 stub.setExpectation(expectationJson);
@@ -1435,7 +1424,7 @@ Here is a complete example of Specmatic Contract Tests that leverages the above 
 
 [Kotlin Example](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/contract/ContractTests.kt)
 
-Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
+Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
 
 {% endtab %}
 {% tab virtualization python %}
@@ -1538,7 +1527,7 @@ paths:
                 type: number
 ```
 
-This OpenAPI specification expects given input to be multiplied by three. It may not be possible to create expectation for each individual number. In this can we can create an expectation that can call an external command to which it can pass the incoming request and then return the value generated by that external command.
+This OpenAPI specification expects given input to be multiplied by three. It may not be possible to create expectation for each individual number. In this can we can create an expecation that can call an external command to which it can pass the incoming request and then return the value generated by that external command.
 
 ```json
 {
@@ -1554,7 +1543,7 @@ This OpenAPI specification expects given input to be multiplied by three. It may
 }
 ```
 
-In the above expectation file since we are providing the ```externalisedResponseCommand```, Specmatic will ignore the data inside ```http-response body```. Instead it call the command (```response.sh```) that is mentioned in ```externalisedResponseCommand``` and pass the incoming request as a environment variable ```SPECMATIC_REQUEST```.
+In the above expecation file since we are providing the ```externalisedResponseCommand```, Specmatic will ignore the data inside ```http-reponse body```. Instead it call the command (```response.sh```) that is mentioned in ```externalisedResponseCommand``` and pass the incoming request as a environment variable ```SPECMATIC_REQUEST```.
 
 ```shell
 #!/bin/bash
@@ -1659,25 +1648,19 @@ The Product API specification as-is will not accept the frontend expectation wit
 
 ### Implementation Steps
 
-1. **Create specmatic.json configuration file:**
+- **Create specmatic.yaml configuration file:**
 
-```json
-{
-  "sources": [
-    {
-      "provider": "git",
-      "stub": [
-        "products.yaml"
-      ]
-    }
-  ],
-  "hooks": {
-    "stub_load_contract": "python3 modify_stub_header.py"
-  }
-}
+```yaml
+version: 2
+contracts:
+  - git:
+    consumes:
+      - products.yaml
+hooks:
+  stub_load_contract: python3 modify_stub_header.py
 ```
 
-2. **Create the hook script (modify_stub_header.py):**
+- **Create the hook script (modify_stub_header.py):**
 
 ```python
 import os
@@ -1822,9 +1805,7 @@ project-root/
 ```yaml
 version: 2
 contracts:
-  - filesystem:
-      directory: "."
-    consumes:
+  - consumes:
       - imported_product/imported_product.yaml
       - port: 9001
         specs:

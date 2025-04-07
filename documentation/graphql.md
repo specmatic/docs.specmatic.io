@@ -253,7 +253,7 @@ Here are some simple steps to try this out:
    docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
      -v "$PWD/examples:/usr/src/app/examples" \
      -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-     -p 9000:9000 znsio/specmatic-graphql-trial virtualize --port=9000 --examples=examples
+     -p 9000:9000 znsio/specmatic-graphql virtualize --port=9000 --examples=examples
    ```
 
 6. Make a request to query all the sub-selected fields specified in the example. You will get the exact response specified in the example. Use the following `curl` command to make this request:
@@ -412,7 +412,7 @@ To showcase this, let's reuse the folder structure established in the previous s
    docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
      -v "$PWD/examples:/usr/src/app/examples" \
      -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-     -p 9000:9000 znsio/specmatic-graphql-trial virtualize --port=9000 --examples=examples
+     -p 9000:9000 znsio/specmatic-graphql virtualize --port=9000 --examples=examples
    ```
 
 5. **Send a Multi-Query Request**:
@@ -558,7 +558,7 @@ Here, the `Date` scalar is provided with a valid value (`"2024/12/31"`). This en
 
 So far in the above explanation the sample project is invoking Specmatic GraphQL support programmatically. However if you wish to run the same using the CLI then the Docker image below wraps the same Specmatic GraphQL capabilities.
 
-[`znsio/specmatic-graphql-trial`](https://hub.docker.com/r/znsio/specmatic-graphql-trial)
+[`znsio/specmatic-graphql`](https://hub.docker.com/r/znsio/specmatic-graphql)
 
 Also the Specmatic GraphQL Docker image, by nature, is completely language and tech stack agnostic.
 
@@ -577,7 +577,7 @@ This command mounts your local `specmatic.yaml` file into the container, exposes
 To run contract test:
 
 ```shell
-docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic"  -e SPECMATIC_GENERATIVE_TESTS=true znsio/specmatic-graphql-trial test --port=8080
+docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic"  -e SPECMATIC_GENERATIVE_TESTS=true znsio/specmatic-graphql test --port=8080
 ```
 
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating GraphQL requests based on the GrapqhQL SDL files listed under `provides` section along with examples if any provided in the colocated directory named `<GraphQL SDL file without extension>_examples`.
