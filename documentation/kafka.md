@@ -94,7 +94,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Expectation'
-        ignoreTopics:
+        topicsToIgnore:
           type: array
           items:
             type: string
@@ -327,11 +327,21 @@ curl -X POST http://localhost:9999/_expectations \
         "count": 1
       }
     ],
-    "ignoreTopics": ["__consumer_offsets"]
+    "topicsToIgnore": ["__consumer_offsets"]
   }'
 ```
 
 This tells the mock server to expect **1 message** on the `place-order` topic and ignore the `__consumer_offsets` topic.
+
+###### When to use topicsToIgnore?
+
+When connecting the Specmatic Kafka Mock Server to an external Kafka broker, it’s common for other active topics to exist—many of which may be unrelated to the scope of your current testing.
+
+By default, Specmatic validates all Kafka activity against the topics defined in your AsyncAPI specification. Any message published to a topic not listed in the spec is treated as unexpected behavior, signaling a drift from the contract and resulting in a failure.
+
+This is where the topicsToIgnore configuration becomes essential. It allows you to exclude specific topics (e.g., __consumer_offsets, _schemas, or any infrastructure-related ones) from validation, ensuring that external system noise doesn’t interfere with your testing.
+
+Use topicsToIgnore to maintain a clean and accurate environment, especially when dealing with shared or production-like Kafka brokers.
 
 ---
 
@@ -376,7 +386,7 @@ If the verification fails, the response will include details of the mismatches.
 #### ℹ️ Additional Notes
 
 - You can mount a different `spec.yaml` anytime to simulate different message contracts.
-- Use the `ignoreTopics` field to exclude system/internal topics.
+- Use the `topicsToIgnore` field to exclude system/internal topics.
 - Ensure all published messages adhere to the schema defined in the spec.
 
 
