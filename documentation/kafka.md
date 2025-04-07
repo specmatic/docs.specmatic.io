@@ -319,7 +319,7 @@ components:
 Start the Specmatic Kafka mock server using the following command:
 
 ```bash
-docker run -p 9999:9999 \
+docker run --rm --name specmatic-kafka-mock --network host \
   -v "$PWD/spec.yaml:/usr/src/app/spec.yaml" \
   znsio/specmatic-kafka \
   virtualize spec.yaml \
@@ -338,17 +338,17 @@ Once the mock server is running, configure the expectations using a `POST` reque
 ##### Request
 
 ```bash
-curl -X POST http://localhost:9999/_expectations \
-  -H "Content-Type: application/json" \
+docker exec -it specmatic-kafka-mock sh -c "curl -X POST http://localhost:9999/_expectations \
+  -H 'Content-Type: application/json' \
   -d '{
-    "expectations": [
+    \"expectations\": [
       {
-        "topic": "place-order",
-        "count": 1
+        \"topic\": \"place-order\",
+        \"count\": 1
       }
     ],
-    "topicsToIgnore": ["__consumer_offsets"]
-  }'
+    \"topicsToIgnore\": [\"__consumer_offsets\"]
+  }'"
 ```
 
 This tells the mock server to expect **1 message** on the `place-order` topic and ignore the `__consumer_offsets` topic.
@@ -387,7 +387,7 @@ Check whether the expected messages were received and they were **schema valid**
 ##### Request
 
 ```bash
-curl http://localhost:9999/_expectations/verification_status
+docker exec -it specmatic-kafka-mock sh -c "curl http://localhost:9999/_expectations/verification_status"
 ```
 
 ##### Successful Response
