@@ -319,7 +319,7 @@ components:
 Start the Specmatic Kafka mock server using the following command:
 
 ```bash
-docker run --network host \
+docker run -p 9999:9999 \
   -v "$PWD/spec.yaml:/usr/src/app/spec.yaml" \
   znsio/specmatic-kafka \
   virtualize spec.yaml \
