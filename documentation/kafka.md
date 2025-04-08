@@ -193,7 +193,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://host.docker.internal:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
@@ -319,14 +319,14 @@ components:
 Start the Specmatic Kafka mock server using the following command:
 
 ```bash
-docker run --rm --name specmatic-kafka-mock --network host \
+docker run --rm --name specmatic-kafka-mock \
+  -p 9999:9999 \
   -v "$PWD/spec.yaml:/usr/src/app/spec.yaml" \
   znsio/specmatic-kafka \
   virtualize spec.yaml \
-  --external-broker-url localhost:9092
+  --external-broker-url host.docker.internal:9092
 ```
 
-- The `--network host` flag ensures proper communication with the locally running Kafka broker.
 - Replace `spec.yaml` with the path to your AsyncAPI specification file or use the following spec file.
 
 ---
@@ -338,17 +338,17 @@ Once the mock server is running, configure the expectations using a `POST` reque
 ##### Request
 
 ```bash
-docker exec -it specmatic-kafka-mock sh -c "curl -X POST http://localhost:9999/_expectations \
+curl -X POST http://localhost:9999/_expectations \
   -H 'Content-Type: application/json' \
   -d '{
-    \"expectations\": [
+    "expectations": [
       {
-        \"topic\": \"place-order\",
-        \"count\": 1
+        "topic": "place-order",
+        "count": 1
       }
     ],
-    \"topicsToIgnore\": [\"__consumer_offsets\"]
-  }'"
+    "topicsToIgnore": ["__consumer_offsets"]
+  }'
 ```
 
 This tells the mock server to expect **1 message** on the `place-order` topic and ignore the `__consumer_offsets` topic.
@@ -387,7 +387,7 @@ Check whether the expected messages were received and they were **schema valid**
 ##### Request
 
 ```bash
-docker exec -it specmatic-kafka-mock sh -c "curl http://localhost:9999/_expectations/verification_status"
+curl http://localhost:9999/_expectations/verification_status
 ```
 
 ##### Successful Response
