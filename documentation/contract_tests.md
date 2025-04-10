@@ -871,13 +871,9 @@ For example, an example of a failing contract tests for a 200 response could loo
 ```
 Note the quotes around the name, which are necessary because of the space required between `[WIP]` and `SUCCESS`.
 
-When the test for this example runs, it'll log the info/failures without breaking the build. In the test report,
-it'll show up as WIP.
+When the test for this example runs, it will log the run details and failures without breaking the build. In the test report, it show up as `WIP`. However, the use of `WIP` does not bypass the contract validation, the contract itself should be in valid state.
 
-However, the use of WIP doesn't bypass the contract validation, the contract itself should be in valid state.
-Also, please note that this use of `[WIP]` differs from the WIP tags given [here](./backward_compatibility.html/#handling-contracts-in-progress). As a tag, WIP can be applied to the path/endpoint level,
-while this works only on example names
-
+Also, please note that this use of `[WIP]` differs from the WIP tags given [here](./backward_compatibility.html#handling-changes-in-progress). WIP tags can be applied to the path/endpoint, while this works only on example names.
 
 ### Examples that trigger 400 responses
 
