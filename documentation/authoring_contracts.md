@@ -12,8 +12,8 @@ Generating API Specifications
     - [Step 1: Start the Proxy Server](#step-1-start-the-proxy-server)
     - [Step 2: Verify Proxy Health (Optional)](#step-2-verify-proxy-health-optional)
     - [Step 3: Send Test Requests](#step-3-send-test-requests)
-        - [Request 1: Get pet with ID 1](#request-1-get-pet-with-id-1)
-        - [Request 2: Get pet with ID 100](#request-2-get-pet-with-id-100)
+        - [Request 1: Get todo with ID 1](#request-1-get-todo-with-id-1)
+        - [Request 2: Get todo with ID 100](#request-2-get-todo-with-id-100)
     - [Step 4: Generate the Contract and Examples](#step-4-generate-the-contract-and-examples)
     - [Generated Contract Example](#generated-contract-example)
     - [Final Directory Structure](#final-directory-structure)
@@ -71,12 +71,12 @@ curl -X GET http://localhost:9000/actuator/health
 ### Step 3: Send Test Requests
 Let's send a couple of requests through the proxy to help Specmatic identify path parameters. Here are two example requests:
 
-##### Request 1: Get pet with ID 1
+##### Request 1: Get todo with ID 1
 ```bash
 curl -X GET http://localhost:9000/todos/1
 ```
 
-##### Request 2: Get pet with ID 100
+##### Request 2: Get todo with ID 100
 ```bash
 curl -X GET http://localhost:9000/todos/100
 ```
