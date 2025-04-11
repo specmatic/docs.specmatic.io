@@ -185,9 +185,9 @@ A return code of `1` indicates validation failure, while `0` indicates success.
 
 ## Identifying Duplicate Examples
 
-When working with multiple examples, it's important to ensure that an example request is unique. If more than one example has the same request, there may be consequences. For example, Specmatic stub will load the examples up just fine. But when an incoming request coming to the stub matches multiple examples, it will pick one and show the response, ignoring the others. This may not be what you want.
+When working with multiple examples, it's important to ensure that an example request is unique. If more than one example has the same request, there may be consequences. For example, when an incoming request matches multiple examples, Specmatic stub server will pick one example and show it's response, ignoring the others.
 
-You can detect this by running setting up a [central contract repository](/documentation/central_contract_repository.html), and using Specamtic to validate your examples in the pull request validation build on the repo.
+You can detect this issue early by using Specamtic to validate your examples.
 
 Let's try the validation out. We shall continue to use the `employee_details.yaml` spec from above.
 
@@ -229,7 +229,7 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
     }
   },
   "http-response": {
-    "status": 200,
+    "status": 400,
     "body": {
       "id": 20,
       "employeeCode": "pqrxyz",
@@ -263,7 +263,7 @@ WARNING: Multiple examples detected having the same request.
     - example in file '/usr/src/app/employee_details_examples/example-duplicate.json'
 ```
 
-*NOTE*: While validation is *free* in the open source project, detection of duplicate examples as part of validation is a paid feature. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+*NOTE*: While validation of examples for schema correctness is available *for free* in open source [Specmatic](https://github.com/znsio/specmatic), detection of duplicate examples as part of validation is a paid feature. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Pro Tips
 - Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
