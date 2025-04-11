@@ -44,4 +44,4 @@ gem "kramdown-parser-gfm"
 gem "webrick"
 
 gem "jekyll-mermaid"
-
+gem 'html-proofer'
