@@ -97,8 +97,19 @@ paths:
                 $ref: '#/components/schemas/Employee'
         '400':
           description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
     Employee:
       type: object
       required:
@@ -231,7 +242,10 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
     }
   },
   "http-response": {
-    "status": 400
+    "status": 400,
+    "body": {
+      "message": "Invalid value"
+    }
   }
 }
 ```
