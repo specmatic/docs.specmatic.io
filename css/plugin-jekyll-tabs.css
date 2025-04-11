@@ -47,6 +47,7 @@
 .tab-content > li {
     display: none;
 }
+
 .tab-content > li.active {
-    display: initial;
+    display: block;
 }

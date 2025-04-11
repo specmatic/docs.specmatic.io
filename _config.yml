@@ -1,4 +1,4 @@
-remote_theme: pmarsceill/just-the-docs
+theme: just-the-docs
 markdown: kramdown
 title: "Specmatic"
 latest_release: 2.7.9
@@ -6,22 +6,22 @@ jms_release: 0.1.0
 kafka_release: 0.4.0
 db_release: 0.61.8-db
 redis_release: 0.9.0
+contact_us_url: "https://specmatic.io/contact-us"
 
 spec_cmd: "java -jar /path/to/specmatic.jar"
 
 aux_links:
   "Specmatic on GitHub":
-    - "//github.com/znsio/specmatic"
+    - "https://github.com/znsio/specmatic"
 
 plugins:
-  - jekyll-remote-theme
-  - jekyll-tabs
   - jekyll-mermaid
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-tabs
+  - jekyll-redirect-from
 
 logo: "/images/specmatic-logo.png"
-
-exclude:
-  - archive
 
 mermaid:
   src: './js/mermaid.min.js'
@@ -32,3 +32,17 @@ mermaid:
       useMaxWidth: false
     sequence:
       useMaxWidth: true
+
+gh_edit_link: true # show or hide edit this page link
+gh_edit_link_text: "Edit this page on GitHub"
+gh_edit_repository: "https://github.com/znsio/specmatic-documentation" # the github URL for your repo
+gh_edit_branch: "master" # the branch that your docs is served from
+gh_edit_view_mode: "edit" # "tree" or "edit" if you want the user to jump into the editor immediately
+
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  startings: []
+  blanklines: false
+  profile: false
