@@ -33,12 +33,14 @@ The below-mentioned dependency needs to be in pom.xml:
 
 The code below shows how to start the JMS server.
 
-```
+{% raw %}
+```java
 jmsMock = new JmsMock(new ArrayList<String>() {{
     add("src/test/resources/async-api.yaml");
 }}, "localhost", 61616);
 jmsMock.start();
 ```
+{% endraw %}
 
 This will start the JMS server running on port: 61616 on localhost.
 
@@ -46,7 +48,7 @@ This will start the JMS server running on port: 61616 on localhost.
 
 The code below shows how to shut down JMS server.
 
-```
+```java
 jmsMock.stop();
 ```
 
@@ -55,25 +57,25 @@ jmsMock.stop();
 Create a file called `async-api.yaml` in `src/test/resources`(use the same path in step 2) with
 the following content.
 
-```
-asyncapi: 2.0.0
-    info:
-        title: JMS Queue Example
-        version: '1.0.0'
-    servers:
-        activemq:
-            url: tcp://localhost:61616
-            protocol: jms
-    channels:
-        taskQueueText:
-            publish:
-                operationId: publishStringMessage
-                message:
-                    payload:
-                        type: string
-            bindings:
-                amqp:
-                    is: queue
+```yaml
+asyncapi: "2.0.0"
+info:
+  title: JMS Queue Example
+  version: "1.0.0"
+servers:
+  activemq:
+    url: tcp://localhost:61616
+    protocol: jms
+channels:
+  taskQueueText:
+    publish:
+      operationId: publishStringMessage
+      message:
+        payload:
+          type: string
+    bindings:
+      amqp:
+        is: queue
 ```
 
 This file serves as the specification that declares what a JMS message being sent to the queue will look like.
