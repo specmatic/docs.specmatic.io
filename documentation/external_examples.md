@@ -71,7 +71,7 @@ specmatic examples validate --spec-file employee_details.yaml --examples-dir ./c
 
 Let's walk through a complete example to see how example validation works in practice.
 
-1. Create an API specification file named `employee_details.yaml`:
+**1.** Create an API specification file named `employee_details.yaml`:
 
 ```yaml
 openapi: 3.0.0
@@ -95,6 +95,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Employee'
+        '400':
+          description: Error response
 components:
   schemas:
     Employee:
@@ -129,7 +131,7 @@ components:
           type: string
 ```
 
-2. Create an example in `employee_details_examples/example.json`:
+**2.** Create an example in `employee_details_examples/example.json`:
 
 ```json
 {
@@ -153,7 +155,7 @@ components:
 }
 ```
 
-3. Validate your example:
+**3.** Validate your example:
 
 {% tabs examples-validate %}
 {% tab examples-validate docker %}
@@ -175,13 +177,13 @@ npx specmatic examples validate --spec-file employee_details.yaml
 
 You'll notice the validation fails because the request is missing required fields (`name`, `department`, and `designation`). The error message will guide you to fix these issues.
 
-4. Check the exit code:
+**4.** Check the exit code:
 - On MacOS/Linux: `echo $?`
 - On Windows: `echo %errorlevel%`
 
 A return code of `1` indicates validation failure, while `0` indicates success.
 
-5. Fix the example by adding the required fields and run the validation again - you'll see it succeed!
+**5.** Fix the example by adding the required fields and run the validation again - you'll see it succeed!
 
 ## Identifying Duplicate Examples
 
@@ -191,7 +193,7 @@ You can detect this issue early by using Specamtic to validate your examples.
 
 Let's try the validation out. We shall continue to use the `employee_details.yaml` spec from above.
 
-**1.** Create an example in `employee_details_examples/example.json`:
+**1.** Create an example in `employee_details_examples/employees_PATCH_200.json`:
 
 ```json
 {
@@ -216,7 +218,7 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
 }
 ```
 
-**2.** Create a duplicate example in `employee_details_examples/duplicate_example.json`:
+**2.** Create a duplicate example in `employee_details_examples/employees_PATCH_400.json`:
 
 ```json
 {
@@ -229,19 +231,12 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
     }
   },
   "http-response": {
-    "status": 400,
-    "body": {
-      "id": 20,
-      "employeeCode": "pqrxyz",
-      "name": "Jamie",
-      "department": "Marketting",
-      "designation": "Analyst"
-    }
+    "status": 400
   }
 }
 ```
 
-Note that, for the same request payload, it has a different response body.
+Note that, for the same request payload, it has a different response.
 
 **3.** Validate your examples:
 
@@ -259,8 +254,8 @@ WARNING: Multiple examples detected having the same request.
   This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
 
   - Found following duplicate examples for request PATCH /employees
-    - example in file '/usr/src/app/employee_details_examples/example.json'
-    - example in file '/usr/src/app/employee_details_examples/example-duplicate.json'
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_200.json'
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
 ```
 
 *NOTE*: While validation of examples for schema correctness is available *for free* in open source [Specmatic](https://github.com/znsio/specmatic), detection of duplicate examples as part of validation is a paid feature. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
