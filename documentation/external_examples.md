@@ -13,6 +13,7 @@ nav_order: 7
     - [Working with Multiple Specifications](#working-with-multiple-specifications)
     - [Custom Example Directory](#custom-example-directory)
 - [Practical Example](#practical-example)
+- [Identifying Duplicate Examples](#identifying-duplicate-examples)
 - [Pro Tips](#pro-tips)
 
 Learn how to validate your API examples against your specifications using Specmatic's powerful validation tools. Whether you have a single specification or multiple specs across different directories, Specmatic makes it easy to ensure your examples stay in sync with your API definitions.
@@ -180,6 +181,88 @@ You'll notice the validation fails because the request is missing required field
 A return code of `1` indicates validation failure, while `0` indicates success.
 
 5. Fix the example by adding the required fields and run the validation again - you'll see it succeed!
+
+## Identifying Duplicate Examples
+
+When working with multiple examples, it's important to ensure each example serves a unique purpose. Continuing with the example above, now let's try and add a duplicate example and see how Specmatic handles this:
+
+**1.** Create an example in `employee_details_examples/example.json`:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/employees",
+    "body": {
+      "name": "Jamie",
+      "employeeCode": "pqrxyz"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 10,
+      "employeeCode": "pqrxyz",
+      "name": "Jamie",
+      "department": "Backend",
+      "designation": "Engineer"
+    }
+  }
+}
+```
+
+**2.** Create a duplicate example in `employee_details_examples/duplicate_example.json`:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/employees",
+    "body": {
+      "name": "Jamie",
+      "employeeCode": "pqrxyz"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 20,
+      "employeeCode": "pqrxyz",
+      "name": "Jamie",
+      "department": "Marketting",
+      "designation": "Analyst"
+    }
+  }
+}
+```
+
+Note that, for the same request payload, it has a different response body.
+
+**3.** Validate your examples:
+
+```shell
+docker run \
+  -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" \
+  -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" \
+  znsio/specmatic-openapi examples validate --spec-file "employee_details.yaml"
+```
+
+You'll notice a warning similar to below in the output
+
+```
+WARNING: Multiple examples detected having the same request.
+  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+
+  - Found following duplicate examples for request PATCH /employees
+    - example in file '/usr/src/app/employee_details_examples/example.json'
+    - example in file '/usr/src/app/employee_details_examples/example-duplicate.json'
+```
+
+### Duplicate Examples Detection Feature
+
+Specmatic paid edition includes a powerful duplicate example detection feature that warns you when multiple examples contain the same request pattern:
+
+This early warning system helps you maintain clean, unambiguous example sets and prevents subtle bugs in your testing or stubbing workflows. For more information about this and other advanced features available in the paid edition, please visit our [pricing page](https://specmatic.io/pricing/).
 
 ## Pro Tips
 - Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
