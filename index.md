@@ -2,6 +2,8 @@
 layout: default
 title: Home
 nav_order: 1
+redirect_from:
+  - documentation.html
 ---
 # A Contract Driven Development Tool
 
@@ -19,8 +21,8 @@ With this ability, we can now deploy, at will, any service at any time without h
 Specmatic is a [contract driven development tool](/faqs.html#what-is-contract-first) that allows us to turn our contracts into executable specification.
 
 According to us there are 2 key advantages, which were never possible before:
-* **Death of Integration Testing** - As long as the service provider and consumer adhere to the contract, you can be 100% confident that each of them can develop and deploy their parts independently. **No need for integration testing**. 
-    - On the provider side, run **Specmatic in test mode** 
+* **Death of Integration Testing** - As long as the service provider and consumer adhere to the contract, you can be 100% confident that each of them can develop and deploy their parts independently. **No need for integration testing**.
+    - On the provider side, run **Specmatic in test mode**
     - On the consumer side run **Specmatic in stub mode** - Specmatic ensures that the expectations you are setting on your stubs are in-fact valid as per the contract.
 * **Backward Compatibility Verification** - Typically for the provider to ensure they've not broken backward compatibility, they need to test their new version of the service with the current versions of all the consumers. This is a complex and time consuming process. With Specmatic, you just need to run the new version of the contract with the previous version to check for backward compatibility (no consumer tests required.)
 
@@ -30,7 +32,7 @@ Systems interact with each other through several means. Specmatic hopes to addre
 * Events via Messaging (**Kafka**, Redis, ActiveMQ, RabbitMQ, Kinesis, etc.)
 * DB, Other Data Stores
 * File system
-* Libraries, SDK 
+* Libraries, SDK
 * OS Level Pipes
 
 ---
