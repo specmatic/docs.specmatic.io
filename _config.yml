@@ -21,16 +21,18 @@ plugins:
   - jekyll-redirect-from
 
 logo: "/images/specmatic-logo.png"
+favicon_ico: images/favicon/favicon.ico
 
 mermaid:
   path: '/js/mermaid-11.6.0.min.js'
   config:
 
-gh_edit_link: true # show or hide edit this page link
+enable_copy_code_button: true
+gh_edit_link: true
 gh_edit_link_text: "Edit this page on GitHub"
-gh_edit_repository: "https://github.com/znsio/specmatic-documentation" # the github URL for your repo
-gh_edit_branch: "master" # the branch that your docs is served from
-gh_edit_view_mode: "edit" # "tree" or "edit" if you want the user to jump into the editor immediately
+gh_edit_repository: "https://github.com/znsio/docs.specmatic.io"
+gh_edit_branch: "main"
+gh_edit_view_mode: "edit"
 
 compress_html:
   clippings: all
