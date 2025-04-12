@@ -15,7 +15,6 @@ aux_links:
     - "https://github.com/znsio/specmatic"
 
 plugins:
-  - jekyll-mermaid
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-tabs
@@ -24,14 +23,8 @@ plugins:
 logo: "/images/specmatic-logo.png"
 
 mermaid:
-  src: './js/mermaid.min.js'
+  path: '/js/mermaid-11.6.0.min.js'
   config:
-    theme: 'default'
-    startOnLoad: true
-    flowchart:
-      useMaxWidth: false
-    sequence:
-      useMaxWidth: true
 
 gh_edit_link: true # show or hide edit this page link
 gh_edit_link_text: "Edit this page on GitHub"
