@@ -9,6 +9,7 @@ redis_release: 0.9.0
 contact_us_url: "https://specmatic.io/contact-us"
 
 spec_cmd: "java -jar /path/to/specmatic.jar"
+url: "https://docs.specmatic.io"
 
 aux_links:
   "Specmatic on GitHub":
