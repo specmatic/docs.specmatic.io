@@ -11,7 +11,7 @@ Frequently Asked Questions
 
 Contract Driven Development leverages API Specifications (such as [OpenAPI](https://www.openapis.org/)) as Executable Contracts to shift-left the contract compatibility issue identification. Here is a quick [explainer video](https://www.youtube.com/watch?v=3HPgpvd8MGg&list=PL9Z-JgiTsOYRERcsy9o3y6nsi5yK3IB_w).
 
-More on this [here](/contract_driven_development).
+More on this [here](/contract_driven_development.html).
 
 ### Does Specmatic work with all programming languages?
 
