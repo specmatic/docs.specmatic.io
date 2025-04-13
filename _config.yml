@@ -23,6 +23,9 @@ plugins:
 logo: "/images/specmatic-logo.png"
 favicon_ico: /images/favicon/favicon.ico
 
+redirect_from:
+  json: false
+
 mermaid:
   path: '/js/mermaid-11.6.0.min.js'
   config:
