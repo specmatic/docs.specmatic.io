@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Activate the clicked tab and its corresponding content
         event.target.parentElement.classList.add('active');
-        document.querySelector(`[data-id="${targetSelector}"]`).classList.add('active');
+        document.querySelector(`[data-tab-content-id="${targetSelector}"]`).classList.add('active');
       });
     });
   });
