@@ -1,10 +1,10 @@
 .sass-cache
-_site
+_site/
 .idea/
 *.iml
 .DS_Store
 .jekyll-cache
 .jekyll-metadata
 vendor
-
 .codegpt
+_crawl_site/
