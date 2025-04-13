@@ -97,8 +97,6 @@ GEM
       jekyll (>= 3.8, < 5.0)
     jekyll-sitemap (1.4.0)
       jekyll (>= 3.7, < 5.0)
-    jekyll-tabs (1.2.1)
-      jekyll (>= 3.0, < 5.0)
     jekyll-watch (2.2.1)
       listen (~> 3.0)
     json (2.10.2)
@@ -200,7 +198,6 @@ DEPENDENCIES
   jekyll-redirect-from
   jekyll-seo-tag
   jekyll-sitemap
-  jekyll-tabs
   just-the-docs
   sass-embedded
   webrick
