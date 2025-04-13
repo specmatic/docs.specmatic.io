@@ -5,7 +5,6 @@ gem "jekyll"
 # the plugins
 gem "jekyll-seo-tag"
 gem "jekyll-sitemap"
-gem "jekyll-tabs"
 gem "jekyll-redirect-from"
 
 # other stuff needed by jekyll

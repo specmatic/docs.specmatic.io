@@ -1,32 +1,41 @@
+.tab-wrapper {
+    border: 1px solid #ddd;
+    padding: 0 10px;
+}
+
+.tab-wrapper ul {
+    padding: 0;
+}
+
 .tab {
     display: flex;
     flex-wrap: wrap;
-    margin-left: -20px;
-    padding: 0;
     list-style: none;
     position: relative;
 }
 
 .tab > * {
     flex: none;
-    padding-left: 20px;
+    padding-right: 20px;
     position: relative;
 }
 
-.tab > * > a {
+.tab > * > .tab-click {
     display: block;
     text-align: center;
     padding: 9px 20px;
     color: #999;
+    border: transparent;
     border-bottom: 2px solid transparent;
     border-bottom-color: transparent;
     font-size: 12px;
     text-transform: uppercase;
     transition: color .1s ease-in-out;
     line-height: 20px;
+    background-color: transparent;
 }
 
-.tab > .active > a {
+.tab > .active > .tab-click {
     color:#222;
     border-color: #1e87f0;
 }
@@ -35,13 +44,9 @@
     content: ""!important;
 }
 
-.tab > li > a {
+.tab > li > .tab-click {
     text-decoration: none;
     cursor: pointer;
-}
-
-.tab-content {
-    padding: 0;
 }
 
 .tab-content > li {

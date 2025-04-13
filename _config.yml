@@ -17,7 +17,6 @@ aux_links:
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
-  - jekyll-tabs
   - jekyll-redirect-from
 
 logo: "/images/specmatic-logo.png"
@@ -35,6 +34,8 @@ gh_edit_branch: "main"
 gh_edit_view_mode: "edit"
 
 compress_html:
+  ignore:
+    envs: all
   clippings: all
   comments: all
   endings: all
