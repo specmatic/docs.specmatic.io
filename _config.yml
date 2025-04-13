@@ -20,7 +20,7 @@ plugins:
   - jekyll-redirect-from
 
 logo: "/images/specmatic-logo.png"
-favicon_ico: images/favicon/favicon.ico
+favicon_ico: /images/favicon/favicon.ico
 
 mermaid:
   path: '/js/mermaid-11.6.0.min.js'
