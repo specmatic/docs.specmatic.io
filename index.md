@@ -18,7 +18,7 @@ In a complex, interdependent eco-system, where each service is evolving rapidly,
 With this ability, we can now deploy, at will, any service at any time without having to depend on expensive and fragile integration tests.
 
 ### What is Specmatic
-Specmatic is a [contract driven development tool](/faqs.html#what-is-contract-first) that allows us to turn our contracts into executable specification.
+Specmatic is a [contract driven development tool](/contract_driven_development.html) that allows us to turn our contracts into executable specification.
 
 According to us there are 2 key advantages, which were never possible before:
 * **Death of Integration Testing** - As long as the service provider and consumer adhere to the contract, you can be 100% confident that each of them can develop and deploy their parts independently. **No need for integration testing**.

@@ -388,7 +388,7 @@ With this foundation in place, we can now move on to configuring Specmatic Insig
 
 ### Setting Up Specmatic Insights
 
-To start using Specmatic Insights please contact [Specmatic support](https://specmatic.io/contact-us/). We will create an account and setup your dashboard.
+To start using Specmatic Insights please contact [Specmatic support]({{ site.contact_us_url }}). We will create an account and setup your dashboard.
 
 ### Integrating with CI/CD Pipelines
 
@@ -464,4 +464,4 @@ If you're not seeing your services on the dashboard:
 2. Check that your `org-id` is correct in the GitHub action configuration.
 3. Verify that your Specmatic reports are being generated in the specified directory. (./build/reports/specmatic)
 
-For further assistance, please contact [Specmatic support](https://specmatic.io/contact-us/).
+For further assistance, please contact [Specmatic support]({{ site.contact_us_url }}).

@@ -7,7 +7,7 @@ nav_order: 35
 
 # Using and Deploying Specmatic License Keys
 
-Specmatic commercial modules come with a default license key, which limits the number of specs you can run. To request a license key, please [contact us](/contact-us).
+Specmatic commercial modules come with a default license key, which limits the number of specs you can run. To request a license key, please [contact us]({{ site.contact_us_url }}).
 
 ### Setting Up the License Key
 

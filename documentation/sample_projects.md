@@ -189,7 +189,7 @@ By exploring these projects, you'll gain hands-on experience in integrating Spec
 ### Need Help?
 - Join our [community discussions](https://github.com/znsio/specmatic/discussions) for discussions and support
 - Report bugs or suggest improvements in our [GitHub repository](https://github.com/znsio/specmatic/issues)
-- Reach out directly—we're here to [help!](https://specmatic.io/contact-us/)
+- Reach out directly—we're here to [help!]({{ site.contact_us_url }})
 
 ### Contributing
 We welcome contributions! If you've built something interesting with Specmatic:

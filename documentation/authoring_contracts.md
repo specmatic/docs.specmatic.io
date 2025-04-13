@@ -151,9 +151,9 @@ components:
 ```
 specification/
 ├── proxy_generated.yaml               # Main specification file
-└── proxy_generated_examples/          # Folder containing examples 
-    ├── todos_1_GET_200_1.json                     
-    └── todos_100_GET_200_2.json                     
+└── proxy_generated_examples/          # Folder containing examples
+    ├── todos_1_GET_200_1.json
+    └── todos_100_GET_200_2.json
 ```
 
 Example stub content might look like the following (todos_1_GET_200_1.json):
@@ -179,18 +179,18 @@ Example stub content might look like the following (todos_1_GET_200_1.json):
 💡 **Note**: The more traffic routed through the proxy, the better it becomes at accurately defining data types for the specification.
 
 ## What You've Accomplished
-✔️ Set up a Specmatic proxy server  
-✔️ Verified the proxy's health status  
-✔️ Generated test traffic with multiple request examples  
-✔️ Created OpenAPI specifications automatically  
-✔️ Generated stub response files for testing  
+✔️ Set up a Specmatic proxy server
+✔️ Verified the proxy's health status
+✔️ Generated test traffic with multiple request examples
+✔️ Created OpenAPI specifications automatically
+✔️ Generated stub response files for testing
 
 ## Next Steps
 - Try adding more complex requests with different HTTP methods (POST, PUT, etc.)
 - Customize the generated specifications
 - Use the generated specification for API testing or documentation
 
-Need help troubleshooting or have questions? Reach out to us [Specmatic support](https://specmatic.io/contact-us/).
+Need help troubleshooting or have questions? Reach out to us [Specmatic support]({{ site.contact_us_url }}).
 
 ---
 

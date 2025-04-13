@@ -34,4 +34,4 @@ Here are [detailed comparison](https://specmatic.in/category/comparisons/) with 
 Please do reach us through any of below mechanisms
 * Raise [issues / feature request](https://github.com/znsio/specmatic/issues/new/choose) on [Github](https://github.com/znsio/specmatic)
 * Already know how to fix the issue / add a feature, please create a [Pull Request](https://github.com/znsio/specmatic/pulls)
-* [Contact Us](https://specmatic.in/contact-us/) with a brief description of how we can help to schedule a call with us
+* [Contact Us]({{ site.contact_us_url }}) with a brief description of how we can help to schedule a call with us
