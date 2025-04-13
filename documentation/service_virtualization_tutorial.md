@@ -1385,7 +1385,7 @@ fun setUp() {
 }
 ```
 
-We can now programmatically set [dynamic expectations](/documentation/service_virtualization_tutorial.html#dynamic-mocking---setting-expecations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expecations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
+We can now programmatically set [dynamic expectations](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expecations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expecations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
 
 ```java
 stub.setExpectation(expectationJson);
