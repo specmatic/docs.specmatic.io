@@ -175,7 +175,7 @@ docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -
   }
   ```
 
-- Specmatic ties the **named example** `CREATE_EMPLOYEE_SUCCESS` listed under the request parameters and the response sections of the OpenAPI spec to create a test. 
+- Specmatic ties the **named example** `CREATE_EMPLOYEE_SUCCESS` listed under the request parameters and the response sections of the OpenAPI spec to create a test.
 - Here's a detailed breakdown of the contract test:
   - **Request:** Specmatic uses the request body in the request example named `CREATE_EMPLOYEE_SUCCESS` to match the incoming HTTP request.
   - **Response:** Once matched, Specmatic looks for an example with same name (`CREATE_EMPLOYEE_SUCCESS`) under responses. In this case the response code happens to be 200, so that is the response that Specmatic will return.
@@ -236,7 +236,7 @@ components:
 
 In this example:
 
-- **Request Example:** We have defined an inline example named `DELETE_EMPLOYEE_SUCCESS` under the `requestBody` section for the `DELETE /employees` operation. 
+- **Request Example:** We have defined an inline example named `DELETE_EMPLOYEE_SUCCESS` under the `requestBody` section for the `DELETE /employees` operation.
 - **Response:** Since the response for this operation has no body (indicated by the `204 No Content` status code) and the inline example `DELETE_EMPLOYEE_SUCCESS` is not associated with any response, Specmatic will automatically tie this inline example to the response with no body.
 
 If there are multiple such examples defined for a particular path, all of them will be tied to the corresponding response with no body. This allows you to cover various test scenarios, even for responses that do not return any payload.
@@ -304,7 +304,7 @@ docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/emp
           "headers": {
               "Content-Type": "application/json"
           },
-          
+
           "body": {
               "name": "Jack Sprat",
               "department": "Sales",
@@ -313,11 +313,11 @@ docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/emp
       },
       "http-response": {
           "status": 201,
-          
+
           "body": {
               "id": 20
           },
-          
+
           "headers": {
               "Content-Type": "application/json"
           }
@@ -395,7 +395,7 @@ Create a file named `out-of-sync.json` with the following contents:
       "headers": {
         "Content-Type": "application/json"
       },
-      
+
       "body": {
         "name": "Janet",
         "department": "Sales",
@@ -404,11 +404,11 @@ Create a file named `out-of-sync.json` with the following contents:
     },
     "http-response": {
       "status": 201,
-        
+
       "body": {
         "id": "abc123"
       },
-      
+
       "headers": {
         "Content-Type": "application/json"
       }
@@ -501,7 +501,7 @@ Let's see how we can formulate an example that meets these requirements.
       "headers": {
         "Content-Type": "application/json"
       },
-      
+
       "body": {
         "name": "(string)",
         "department": "Sales",
@@ -510,11 +510,11 @@ Let's see how we can formulate an example that meets these requirements.
     },
     "http-response": {
       "status": 201,
-        
+
       "body": {
         "id": 30
       },
-      
+
       "headers": {
         "Content-Type": "application/json"
       }
@@ -850,7 +850,7 @@ Let's try this out.
 
 - Next execute this curl command:
 
-  ```shell 
+  ```shell
   curl -X PATCH -H 'Content-Type: application/json' -d '{"department": "Engineering"}' http://localhost:9000/employees
   ```
 
@@ -895,7 +895,7 @@ For example, suppose I want to setup a response for all requests with `name` set
                   "employeeCode": "abc123",
                   "name": "George",
                   "department": "Sales",
-                  "designation": "Manager"    
+                  "designation": "Manager"
               }
           }
       }
@@ -945,7 +945,7 @@ The same idea extends to the response.
               "body": {
                   "name": "George",
                   "department": "Sales",
-                  "designation": "Manager"    
+                  "designation": "Manager"
               }
           }
       }
@@ -1230,7 +1230,7 @@ All other requests, other than the specific request (product id 11) where a dela
 
 ### Global Delay
 
-A Global delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter in Specmatic Config, 
+A Global delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter in Specmatic Config,
 you can simulate response times with the specified delay in milliseconds.
 
 {% tabs stubs_serviceVirtualisation %}
@@ -1268,7 +1268,7 @@ stub:
 {% endtab %}
 {% endtabs %}
 
-**Note:** If the delay is specified in the example file, it will be used to simulate response times for that specific example. 
+**Note:** If the delay is specified in the example file, it will be used to simulate response times for that specific example.
 Otherwise, the global delay will be applied.
 
 ## SSL / HTTPS  Stubbing
@@ -1397,7 +1397,7 @@ If you have several such JSON expectation files that you would like to setup at 
 httpStub = createStub(listOf("./src/test/resources"))
 ```
 
-The above `createStub()` function creates your Specmatic HTTP stub with default host, port, etc. Below is an example with all values being passedin 
+The above `createStub()` function creates your Specmatic HTTP stub with default host, port, etc. Below is an example with all values being passedin
 
 ```kotlin
 @BeforeAll
@@ -1670,7 +1670,7 @@ import yaml
 def main():
     # Read the name of the file from the environment variable
     file_name = os.getenv('CONTRACT_FILE')
-    
+
     if not file_name:
         print("CONTRACT_FILE environment variable not set.")
         sys.exit(1)
@@ -1679,13 +1679,13 @@ def main():
         with open(file_name, 'r') as file:
             # Load the YAML file
             data = yaml.safe_load(file)
-            
+
             # Modify the specified header
             paths = data.get('paths', {})
             products_path = paths.get('/products', {})
             get_operation = products_path.get('get', {})
             parameters = get_operation.get('parameters', [])
-            
+
             # Replace X-internal-id with X-auth-token
             for param in parameters:
                 if param.get('in') == 'header' and param.get('name') == 'X-internal-id':
@@ -1741,9 +1741,9 @@ This means, if a request matches an example in the specification, but also match
 
 ## Checking Health Status Of Stub Server
 
-You can use the `/actuator/health` endpoint to verify if the stub server is operational. To do this, send a GET request to this endpoint using Postman or a curl command. 
+You can use the `/actuator/health` endpoint to verify if the stub server is operational. To do this, send a GET request to this endpoint using Postman or a curl command.
 
-The response will provide the current health status of the stub server, indicating whether it is **ready to handle requests**. 
+The response will provide the current health status of the stub server, indicating whether it is **ready to handle requests**.
 This allows you to confirm that the stub server is up before routing any traffic through it.
 
 #### Example `curl` Request:
@@ -1977,9 +1977,8 @@ curl -X POST http://localhost:9001/products \
 - **Spec-specific examples:** Requests return expected responses per specification.
 - **Flexibility:** Allows hosting multiple versions or separate APIs without conflict.
 
-This setup enables serving and testing multiple specifications efficiently using Specmatic. 
+This setup enables serving and testing multiple specifications efficiently using Specmatic.
 
 ## Sample Java Project
 
 [https://github.com/znsio/specmatic-order-bff-java](https://github.com/znsio/specmatic-order-bff-java)
-

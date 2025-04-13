@@ -4,6 +4,7 @@ title: Authentication
 parent: Documentation
 nav_exclude: true
 ---
+
 - [Authentication](#authentication)
   - [1. Write the auth contract](#1-write-the-auth-contract)
     - [Setup the auth credentials](#setup-the-auth-credentials)

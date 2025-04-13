@@ -113,7 +113,7 @@ examples:
 
 #### Contract Test Timeout
 
-The HTTP timeout duration for requests made during contract testing can be configured using `timeoutInMilliseconds` parameter. 
+The HTTP timeout duration for requests made during contract testing can be configured using `timeoutInMilliseconds` parameter.
 This parameter sets the maximum time Specmatic will wait for a response to each HTTP request before marking it as a failure.
 The default timeout is `6000 milliseconds`.
 
@@ -257,7 +257,7 @@ contracts:
         "com/example/api_user_v1.yaml"
       ],
       "provides": [
-        "com/example/api_auth_v1.yaml",  
+        "com/example/api_auth_v1.yaml",
       ]
     }
   ]
@@ -268,7 +268,7 @@ contracts:
 
 #### Service Virtualization Delay
 
-A delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter, 
+A delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter,
 you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/documentation/service_virtualization_tutorial.html#delay-simulation)
 
 #### Use specifications on local file system
@@ -303,7 +303,7 @@ contracts:
         "api_user_v1.yaml"
       ],
       "provides": [
-        "api_auth_v1.yaml",  
+        "api_auth_v1.yaml",
       ]
     }
   ]
@@ -427,9 +427,9 @@ report:
 ```
 {% endtab %}
 {% endtabs %}
- 
+
 #### Formatters
-Defaults to 'Text' if none specified.  
+Defaults to 'Text' if none specified.
 The Text formatter will print the report on to the console/terminal.
 
 #### Report Types
@@ -586,7 +586,7 @@ pipeline:
   },
 
   "pipeline": {
-    "provider": "azure", 
+    "provider": "azure",
     "organization": "XNSio",
     "project": "XNSIO",
     "definitionId": 4
@@ -681,6 +681,6 @@ hooks:
 {% endtab %}
 {% endtabs %}
 
-In the above snippet, `stub_load_contract` is the hook name. `python load.py` is executed, while the path of the original contract file is present in `CONTRACT_FILE` environment variable. 
+In the above snippet, `stub_load_contract` is the hook name. `python load.py` is executed, while the path of the original contract file is present in `CONTRACT_FILE` environment variable.
 
 The command can parse the contract file and write it to standard out. Specmatic will read it as the new contract. `stub_load_contract` and `test_load_contract` are the supported hook names.

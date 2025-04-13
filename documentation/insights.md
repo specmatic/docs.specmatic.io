@@ -6,12 +6,24 @@ nav_order: 20
 ---
 # Specmatic Insights
 
+- [Specmatic Insights](#specmatic-insights)
   - [Introduction](#introduction)
+    - [Features](#features)
   - [What You will Achieve](#what-you-will-achieve)
   - [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
-  - [Step 2: Setting up Client, Provider & Consumer services](#step-2-setting-up-client-provider-and-domain-services)
+    - [Setup overview](#setup-overview)
+    - [Setting up the central contract repository](#setting-up-the-central-contract-repository)
+  - [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
+    - [2.1: Setting Up CI pipeline for client](#21-setting-up-ci-pipeline-for-client)
+    - [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
+    - [Step 2.3: Setting up CI pipeline for Order API](#step-23-setting-up-ci-pipeline-for-order-api)
+    - [Summary of Progress](#summary-of-progress)
   - [Step 3: Configuring Specmatic Insights](#step-3-configuring-specmatic-insights)
+    - [Setting Up Specmatic Insights](#setting-up-specmatic-insights)
+    - [Integrating with CI/CD Pipelines](#integrating-with-cicd-pipelines)
   - [Step 4: Visualizing Your API Ecosystem](#step-4-visualizing-your-api-ecosystem)
+    - [Viewing Your Service Mesh](#viewing-your-service-mesh)
+    - [Understanding the Dashboard](#understanding-the-dashboard)
   - [Next Steps](#next-steps)
   - [Troubleshooting](#troubleshooting)
 
@@ -84,7 +96,7 @@ We'll be working with two OpenAPI specifications:
       │   ├── order_bff.yaml
       │   └── order_api.yaml
       └── other-services/
-          
+
       ```
 3. Download and add the following OpenAPI specifications to the repository as depicted above
 
@@ -92,7 +104,7 @@ We'll be working with two OpenAPI specifications:
     - [Order Domain API OpenAPI Spec](insights_tutorial_spec_files/order_api.yaml)
 
 4. Set up a simple CI pipeline to perform the following actions on OpenAPI specs in the central contract repo:
-* lint 
+* lint
 * check backward compatibility of your contracts using Specmatic
 * generate insights report, using specmatic docker image
 * run specmatic insights build reporter
@@ -134,13 +146,13 @@ We'll be working with two OpenAPI specifications:
               --entrypoint /bin/sh \
               znsio/specmatic \
               -c "git config --global --add safe.directory /api-contracts && java -jar /usr/src/app/specmatic.jar backwardCompatibilityCheck"
-          
+
           - name: Generate central contract repo report
             run: |
               docker run -v "$(pwd):/central-contract-repo:rw" \
                 --entrypoint /bin/sh znsio/specmatic \
                 -c "cd /central-contract-repo && java -jar /usr/src/app/specmatic.jar central-contract-repo-report"
-          
+
           - name: Run Specmatic Insights Github Build Reporter
             uses: znsio/specmatic-insights-build-reporter-github-action@v2.0.2
             with:
@@ -151,17 +163,17 @@ We'll be working with two OpenAPI specifications:
               build-id: ${{ github.run_id }}
               repo-name: ${{ github.event.repository.name }}
               repo-id: ${{ github.repository_id }}
-              repo-url: ${{ github.event.repository.html_url }} 
+              repo-url: ${{ github.event.repository.html_url }}
       {% endraw %}
     ```
-    
+
 After successfully setting up your central contract repository and running the CI pipeline, you should see output similar to this:
 
 ![Successful contract repo](../images/insights_step1_successful.png)
 
 ## Step 2: Setting up Client, Provider and Domain services
 
-Now that we have our OpenAPI specification checked in, let's bring our Order services to life! 
+Now that we have our OpenAPI specification checked in, let's bring our Order services to life!
 
 **Client** - You can implement client in programming language of your choice. Once ready, place the following configuration in a file name `specmatic.yaml` at the root level of your project, this will:
 * virtualize BFF service for the client application (based on the `order_bff.yaml` contract), helping isolate the client.
@@ -258,12 +270,12 @@ Upon successful execution of the client CI pipeline, you should see output resem
 Make sure BFF service is checked in to a git repository. Then create the following CI pipeline to :
 * build the BFF service
 * virtualize Domain service using `order_api.yaml` and **Specmatic** docker image.
-* test BFF service using `order_bff.yaml` and **Specmatic** docker image. 
+* test BFF service using `order_bff.yaml` and **Specmatic** docker image.
 
 (note: we implemented the BFF service in Kotlin, so setting up pipeline accordingly)
 
 ```yaml
-name: BFF Service (Kotlin) CI with Gradle 
+name: BFF Service (Kotlin) CI with Gradle
 
 on:
   push:
@@ -281,7 +293,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: 'true'
-        
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -322,7 +334,7 @@ After running the BFF service CI pipeline, you should see results similar to:
 
 Make sure Order Domain API service is checked in to a git repository. Then create the following CI pipeline to :
 * build the Domain API service
-* test Domain API service using `order_api.yaml` and **Specmatic** docker image. 
+* test Domain API service using `order_api.yaml` and **Specmatic** docker image.
 
 (note: we implemented the Order Domain API service in Kotlin, so setting up pipeline accordingly)
 
@@ -345,7 +357,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: 'true'
-        
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -394,7 +406,7 @@ To start using Specmatic Insights please contact [Specmatic support]({{ site.con
 
 To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for your Client, BFF Service & Order Domain API service
 
-1. As explained in above steps, ensure Specmatic is present in your CI pipelines, helping 'test' and 'virtualize'. 
+1. As explained in above steps, ensure Specmatic is present in your CI pipelines, helping 'test' and 'virtualize'.
 2. Then, add the 'Specmatic Insights GitHub Build Reporter' to your CI pipelines after specmatic has run on all of the following:
 2.1 client
 2.2 BFF service

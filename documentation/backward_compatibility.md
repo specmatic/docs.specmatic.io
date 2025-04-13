@@ -21,6 +21,7 @@ Backward Compatibility
     - [3. Pre-Merge Validation (in your CI pipeline)](#3-pre-merge-validation-in-your-ci-pipeline)
     - [4. Analyzing specific files](#4-analyzing-specific-files)
     - [5. Comparing with a different branch](#5-comparing-with-a-different-branch)
+    - [6. Analyzing a specific directory](#6-analyzing-a-specific-directory)
   - [Practical Examples (Try it yourself)](#practical-examples-try-it-yourself)
     - [Orders API Evolution](#orders-api-evolution)
     - [Breaking Change](#breaking-change)
@@ -168,7 +169,7 @@ specmatic backward-compatibility-check --base-branch origin/feature_v2
 specmatic backward-compatibility-check --repo-dir /path/to/repo
 ```
 
-## Practical Examples (Try it yourself) 
+## Practical Examples (Try it yourself)
 
 ### Orders API Evolution
 
@@ -533,7 +534,7 @@ npx specmatic compare api_products_v1.yaml api_products_v2.yaml
 {% endtab %}
 {% tab compare docker %}
 ```bash
-docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml" 
+docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -600,7 +601,7 @@ npx specmaitc compare api_products_v1.yaml api_products_v2.yaml
 {% endtab %}
 {% tab compare2 docker %}
 ```bash
-docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml" 
+docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -689,15 +690,15 @@ This command exits with exit code 1 if the change is backward incompatible.
 
 ## Troubleshooting
 
-1. **Command Not Recognized**: 
+1. **Command Not Recognized**:
    - Verify Specmatic is properly configured for your current directory (either Docker or Node package or Python module or Jar file)
    - Ensure you are using the latest version of Specmatic.
 
-2. **Unexpected Outcomes**: 
+2. **Unexpected Outcomes**:
    - Confirm the accuracy of file paths and branch names.
    - Review your recent changes for unintended modifications.
 
-3. **Too many changes**: 
+3. **Too many changes**:
    - For large-scale projects, utilize the `--target-path` to focus on specific components.
 
 4. **CI Pipeline Issues**:

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: GraphQL 
+title: GraphQL
 parent: Documentation
 nav_order: 18
 ---
@@ -16,8 +16,9 @@ nav_order: 18
     - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
       - [HTTP Headers](#http-headers)
       - [GraphQL Variables](#graphql-variables)
-      - [Multi-Query Requests](#multi-query-requests)
-    - [Dynamic Field Selection From Example Responses](#dynamic-field-selection-from-example-responses)
+    - [Dynamic Field Selection from Example Responses](#dynamic-field-selection-from-example-responses)
+    - [Multi-Query Requests](#multi-query-requests)
+      - [Steps to Try Out Multi-Query Requests](#steps-to-try-out-multi-query-requests)
     - [GraphQL Scalar Types](#graphql-scalar-types)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub / Service Virtualization Service](#starting-the-stub--service-virtualization-service)
@@ -90,9 +91,9 @@ type Product {
 In order to provide appropriate example values, you can create an example YAML file that has test/stub data pertaining to the `findAvailableProducts` query.
 
 ```yaml
-request: 
+request:
   httpHeaders:
-    X-region: north-west 
+    X-region: north-west
   body: |
     query {
         findAvailableProducts(type: gadget, pageSize: 10) { id name inventory type }
@@ -149,11 +150,11 @@ As you can see, the above request from GraphQL consumer includes a variable call
 ```yaml
 request:
   body: |
-    findAvailableProducts(type: "gadget", pageSize: 10) { 
-      id 
-      name 
-      inventory 
-      type 
+    findAvailableProducts(type: "gadget", pageSize: 10) {
+      id
+      name
+      inventory
+      type
     }
 response: [
     {
@@ -216,11 +217,11 @@ Here are some simple steps to try this out:
    request:
      body: |
        query {
-         findAvailableProducts(type: gadget, pageSize: 10) { 
-           id 
-           name 
-           inventory 
-           type 
+         findAvailableProducts(type: gadget, pageSize: 10) {
+           id
+           name
+           inventory
+           type
          }
        }
    response: [
@@ -315,7 +316,7 @@ Here are some simple steps to try this out:
 ---
 This setup allows you to test how Specmatic reuses the example provided, adapting the response to the requested fields.
 
-### Multi-Query Requests 
+### Multi-Query Requests
 
 The Specmatic GraphQL stub server supports multi-query requests, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-query requests with variables** are supported, making it flexible for dynamic requests.
 
@@ -357,11 +358,11 @@ To showcase this, let's reuse the folder structure established in the previous s
      request:
        body: |
          query {
-           findAvailableProducts(type: gadget, pageSize: 10) { 
-             id 
-             name 
-             inventory 
-             type 
+           findAvailableProducts(type: gadget, pageSize: 10) {
+             id
+             name
+             inventory
+             type
            }
          }
      response: [
@@ -385,10 +386,10 @@ To showcase this, let's reuse the folder structure established in the previous s
      request:
        body: |
          query {
-           productById(id: "10") { 
-             id 
-             name 
-             type 
+           productById(id: "10") {
+             id
+             name
+             type
            }
          }
      response: {
@@ -527,7 +528,7 @@ type Query {
 }
 ```
 
-In this schema, `Date` is a custom scalar. While GraphQL doesn't provide details on how this scalar is serialized or deserialized, your application code defines the logic. 
+In this schema, `Date` is a custom scalar. While GraphQL doesn't provide details on how this scalar is serialized or deserialized, your application code defines the logic.
 
 When testing queries like `findOffersForDate` using Specmatic, the tool doesn't know how to correctly handle the `Date` scalar and might pass an incorrect value, such as a random string, leading to test failures.
 

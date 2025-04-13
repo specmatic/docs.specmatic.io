@@ -19,16 +19,16 @@ Authentication
     - [API Key Authentication](#api-key-authentication)
       - [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication-1)
 
-Most APIs have some form of security (authentication and authorization). Specmatic reads [OpenAPI Security Schemes](https://spec.openapis.org/oas/v3.0.1#security-scheme-object) in your API Specifications to come up with appropriate request parameters.  
+Most APIs have some form of security (authentication and authorization). Specmatic reads [OpenAPI Security Schemes](https://spec.openapis.org/oas/v3.0.1#security-scheme-object) in your API Specifications to come up with appropriate request parameters.
 Specmatic supports the following security schemes:
 - **OAuth2**
 - **API Key**
 - **Bearer**
 
 ## Testing with real auth
-To run contract tests in environments which require a valid security token present in the request, we can define environment variables which hold these valid tokens/api keys.  
+To run contract tests in environments which require a valid security token present in the request, we can define environment variables which hold these valid tokens/api keys.
 
-The environment variable should match the name of the security scheme defined in the open api specification.  
+The environment variable should match the name of the security scheme defined in the open api specification.
 
 When contract tests are executed, Specmatic will look for an environment variable with the same name as that of the security scheme. If such an environment variable exists, Specmatic will use it appropriately (based on the security scheme) while making an HTTP request.
 
@@ -110,7 +110,7 @@ For example, in the above case, we would define an environment variable named `B
 
 ## Testing with mock auth
 
-While Specmatic supports testing with real authentication as seen above, in a component / contract test like setup, it is recommended to isolate the SUT (System Under Test) which is your service from other dependencies such as auth providers. So at a contract / component test level it is sufficient to validate if an API implementation / service accepts the security parameters it is advertising in its API Specification. However it is not necessary to validate if the security itself is working. That is for later stages of tests where you can hook up a security service dependency such as DB, OAuth provider, etc.  
+While Specmatic supports testing with real authentication as seen above, in a component / contract test like setup, it is recommended to isolate the SUT (System Under Test) which is your service from other dependencies such as auth providers. So at a contract / component test level it is sufficient to validate if an API implementation / service accepts the security parameters it is advertising in its API Specification. However it is not necessary to validate if the security itself is working. That is for later stages of tests where you can hook up a security service dependency such as DB, OAuth provider, etc.
 
 So for Contract as Test we recommend having a “Test Security Configuration” where you are still exercise your security plumbing, however not actually fetching real user information. This is similar to running an in-memory DB in test setup instead of running a real DB in CI. Below are some examples of the same.
 

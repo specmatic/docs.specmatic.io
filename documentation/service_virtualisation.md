@@ -548,7 +548,7 @@ So even below curl request will return "Golden Retriever" as long as path and qu
 > curl -vs http://0.0.0.0:9000/pets/2\?name\=Archie 2>&1 | less
 
 Golden Retriever
-``` 
+```
 
 If the path and query parameters do not match the stub, then a generated response will be returned.
 ```bash

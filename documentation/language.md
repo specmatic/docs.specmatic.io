@@ -5,6 +5,7 @@ parent: Documentation
 nav_exclude: true
 search_exclude: true
 ---
+
 - [The Contract File](#the-contract-file)
 - [Basic structure](#basic-structure)
   - [Slightly More Complex Example](#slightly-more-complex-example)
@@ -141,7 +142,7 @@ As a whole, the contract should read a little like English.
 
 So for example:
 
-```gherkin    
+```gherkin
 Feature: String API
 
 Scenario: Upper case of a string
@@ -167,7 +168,7 @@ Once declared they can be referred in any part of the specification.
 
 Example:
 
-```gherkin    
+```gherkin
 Feature: Contract for /employees API
   Scenario: api call
     Given type EmployeeName (string) minLength 6 maxLength 12
@@ -398,7 +399,7 @@ Scenario: Perform 2 nested operations
   | val2      | (number) |
   | val1      | (number) |
   | operation | (string) |
-  
+
   And json ContainerOperation
   | op1       | (Operation) |
   | op2       | (Operation) |

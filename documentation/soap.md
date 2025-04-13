@@ -19,7 +19,7 @@ However the API format for SOAP services is WSDL (not YAML). So you will need th
 
 Commit the WSDL for the SOAP API into your central contract repository.
 
-Once done, create the Specmatic configuration file in the root of your project. It should contain the following json configuration: 
+Once done, create the Specmatic configuration file in the root of your project. It should contain the following json configuration:
 
 {% tabs config %}
 {% tab config specmatic.json %}

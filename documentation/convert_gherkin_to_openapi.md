@@ -63,5 +63,3 @@ The following features are not yet supported:
 3. XML contracts
 
 For SOAP, simply replace the .spec or .qontract file with the original WSDL file. Read more about it [here](/documentation/authoring_contracts.html#importing-a-wsdl-file).
-
-

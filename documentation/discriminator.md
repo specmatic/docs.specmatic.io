@@ -113,7 +113,7 @@ components:
               description: Volume of bark in decibels
 ```
 
-Save this specification in a file named `petstore.yaml`. Now let's walk through how to use Specmatic's features with this specification. 
+Save this specification in a file named `petstore.yaml`. Now let's walk through how to use Specmatic's features with this specification.
 
 ### 1. Service Virtualization with Discriminator Support
 Let's start the Specmatic stub server. To spin up a stub server with the `petstore.yaml` we authored earlier, run below command.
@@ -154,7 +154,7 @@ The stub server provides two key functionalities with discriminator support:
    - Extracts the `petType` discriminator value
    - Maps it to the correct schema (Dog/Cat)
    - Validates the request body against that specific schema
-   
+
 Example - Valid Dog Request:
 ```bash
 curl -X POST http://localhost:9000/pets -H "Content-Type: application/json" \
@@ -181,7 +181,7 @@ In scenario "POST /pets. Response: This is a 200 response."
 API: POST /pets -> 200
 
   >> REQUEST.BODY.barkVolume
-  
+
      Key named barkVolume in the contract was not found in the request
 ```
 
@@ -232,7 +232,7 @@ docker run -v "./petstore.yaml:/usr/src/app/petstore.yaml" znsio/specmatic test 
 
 Specmatic's contract testing with discriminators works in two directions:
 
-1. **Request Generation**: 
+1. **Request Generation**:
    - Creates test requests for each subtype (Dog/Cat)
    - Includes required discriminator property (`petType`)
    - Adds subtype-specific properties (`barkVolume` for Dog, `whiskerLength` for Cat)
@@ -244,7 +244,7 @@ Specmatic's contract testing with discriminators works in two directions:
    - Validates subtype-specific properties
    - Checks consistency between request and response types
 
-Here are few example requests : 
+Here are few example requests :
 
 a. Testing **Valid** Dog Request:
    ```shell
@@ -372,7 +372,7 @@ Cat Example:
 ### 4. Backward Compatibility
 Specmatic also check backward compatibility of discriminator based OpenAPI Specifications. To check backward compatibility you can run the following command:
 ```bash
-specmatic backward-compatibility-check 
+specmatic backward-compatibility-check
 ```
 
 > **Note**: For complete understanding of backward compatibility please refer [Backward Compatibility User Guide](/documentation/backward_compatibility.html)

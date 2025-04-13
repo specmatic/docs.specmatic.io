@@ -404,7 +404,7 @@ Specmatic will use the git command to checkout the git repository provided in th
 
 On the command line, `cd` into the directory containing the Specmatic configuration file.
 
-Run this command: 
+Run this command:
 
 ```bash
 {{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com
@@ -778,7 +778,7 @@ public class ContractTests extends SpecmaticJUnitSupport {
    ```python
    import os
    from specmatic.core.specmatic import Specmatic
-   from your_project import app, 
+   from your_project import app,
    PROJECT_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
    app_host = "127.0.0.1"
    app_port = 5000
@@ -975,7 +975,7 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 - `QUERY-PARAM`: Filter by query parameters
 - `EXAMPLE-NAME`: Filter by example names
 
-#### Available Filter Operations 
+#### Available Filter Operations
 - `&&` : Represents a logical AND operator.
 - `||` : Represents a logical OR operator.
 - `!` : Negates the applied condition.
@@ -1034,7 +1034,7 @@ specmatic test --filter="STATUS='2xx'"
 
 2. Skip authentication error tests:
 ```bash
-specmatic test --filter!="STATUS='4xx'"  
+specmatic test --filter!="STATUS='4xx'"
 ```
 
 3. Skip specific status codes:
@@ -1232,12 +1232,12 @@ You can specify overlay files in three ways:
    - Name your overlay file following the pattern: `<specname>_overlay.yaml`
    - Place it in the same directory as your spec file
    - Specmatic will automatically detect and apply it when running in test mode
-   
+
   Example:
 ```bash
   # If your spec file is named:
   employees.yaml
-  
+
   # Name your overlay file as:
   employees_overlay.yaml
 ```
@@ -1421,7 +1421,7 @@ import yaml
 def main():
     # Read the specification file path from environment
     file_name = os.getenv('CONTRACT_FILE')
-   
+
 
     if not file_name:
         print("CONTRACT_FILE environment variable not set.")
@@ -1461,7 +1461,7 @@ def main():
                     'description': 'Number of remaining requests allowed'
                 }
             ]
-            
+
             parameters.extend(gateway_headers)
             print(yaml.dump(data))
 
@@ -1482,7 +1482,7 @@ if __name__ == "__main__":
 {% endtab %}
 {% tab hook_script Java %}
 
-Following is an example using Java that can be compiled into a standalone JAR file. 
+Following is an example using Java that can be compiled into a standalone JAR file.
 
 ### Sample Project Access
 * Reference Java based hook script implementation available at: [specmatic-hooks-java-sample](https://github.com/znsio/specmatic-hooks-java-sample)
@@ -1494,7 +1494,7 @@ Following is an example using Java that can be compiled into a standalone JAR fi
 * JAR will contain all necessary dependencies
 * Add the JAR file to your Specmatic configuration as shown below.
 
-The test hook configuration in Specmatic will look as follows: : 
+The test hook configuration in Specmatic will look as follows: :
 
 ```yaml
 version: 2

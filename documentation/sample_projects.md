@@ -1,30 +1,31 @@
 ---
-layout: default  
-title: Sample Projects  
-parent: Documentation  
-nav_order: 17  
+layout: default
+title: Sample Projects
+parent: Documentation
+nav_order: 17
 ---
 
 Specmatic in Action: Sample Projects
 ---
 
-- [Sample Projects](#specmatic-in-action-sample-projects)
-    - [Overview](#overview)
-        - [Sample Application Architecture](#sample-application-architecture)
-        - [Getting Started](#getting-started)
-        - [Learning path](#learning-path)
-    - [In-Depth Implementations](#in-depth-implementations)
-        - [OpenAPI](#openapi)
-        - [Authentication and Authorization](#authentication-and-authorization)
-        - [gRPC](#grpc)
-        - [GraphQL](#graphql)
-        - [Kafka](#kafka)
-        - [Google PubSub](#google-pubsub)
-        - [JMS](#jms)
-        - [JDBC](#jdbc)
-        - [Redis](#redis)
-    - [Need Help?](#need-help)
-    - [Contributing](#contributing)
+- [Specmatic in Action: Sample Projects](#specmatic-in-action-sample-projects)
+- [Overview](#overview)
+  - [Sample Application Architecture](#sample-application-architecture)
+  - [Getting Started](#getting-started)
+  - [Learning Path](#learning-path)
+- [In-Depth Implementations](#in-depth-implementations)
+- [OpenAPI](#openapi)
+- [Authentication and Authorization](#authentication-and-authorization)
+- [gRPC](#grpc)
+- [GraphQL](#graphql)
+- [Kafka](#kafka)
+- [Google PubSub](#google-pubsub)
+- [JMS](#jms)
+- [JDBC](#jdbc)
+- [Redis](#redis)
+- [Bringing It All Together](#bringing-it-all-together)
+  - [Need Help?](#need-help)
+  - [Contributing](#contributing)
 
 ## Overview
 
@@ -66,7 +67,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
     - [React and NodeJS](https://github.com/znsio/specmatic-order-ui-react)
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/) 
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
     - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
     - [Python (Flask)](https://github.com/znsio/specmatic-order-bff-python/) and [Sanic](https://github.com/znsio/specmatic-order-bff-python-sanic/)
     - [Go (Gin)](https://github.com/znsio/specmatic-order-bff-go)
@@ -112,7 +113,7 @@ Supercharge your microservices with gRPC. Get started with these samples and see
 GraphQL opens a world of flexible queries—explore how Specmatic bridges contracts and GraphQL endpoints.
 
 - **Frontend:**
-    - [React and NodeJS](https://github.com/znsio/specmatic-order-graphql-ui-react) 
+    - [React and NodeJS](https://github.com/znsio/specmatic-order-graphql-ui-react)
 
 - **BFF:**
     - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-graphql-java)
@@ -126,11 +127,11 @@ GraphQL opens a world of flexible queries—explore how Specmatic bridges contra
 Kafka brings event-driven architecture to life. Discover Specmatic’s power in managing Kafka interactions.
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/) 
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
     - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
 
 - **Request-Reply Pattern:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-kafka-sample) 
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-kafka-sample)
 
 ---
 
@@ -141,7 +142,7 @@ Kafka brings event-driven architecture to life. Discover Specmatic’s power in 
 Jump into event-driven architectures with Google PubSub, powered by Specmatic.
 
 - **Backend:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-google-pubsub-sample) 
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-google-pubsub-sample)
 
 ---
 
@@ -152,7 +153,7 @@ Jump into event-driven architectures with Google PubSub, powered by Specmatic.
 Embrace the power of Java Messaging Service (JMS) with this Specmatic-integrated sample.
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-jms/) 
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-jms/)
 
 ---
 
@@ -174,7 +175,7 @@ Unlock data from databases using JDBC, and see how Specmatic supports seamless c
 Boost your app’s performance with Redis caching, fully integrated with Specmatic.
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-redis-sample) 
+    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-redis-sample)
 
 
 By exploring these projects, you'll gain hands-on experience in integrating Specmatic with a variety of technologies, giving you the power to build smarter and more resilient systems. **Ready to level up? Jump in and start experimenting!**
@@ -198,4 +199,3 @@ We welcome contributions! If you've built something interesting with Specmatic:
 - Help us improve documentation and examples
 
 Ready to transform how you build and test microservices? Pick a sample project and start your Specmatic journey today!
-
