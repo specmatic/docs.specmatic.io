@@ -18,7 +18,7 @@ task :check do
   require 'html-proofer'
   options = {
       :disable_external     => should_not_run_external_url_checks?,
-      :ignore_urls          => [/(https?:\/\/localhost|([a-z0-9:\/-]*:8153)|([a-zA-z@:\/_]*.git)|docs\.gocd\.org|stackexchange\.com|pkgs\.org)/],
+      :ignore_urls          => [],
       :allow_hash_href      => false,
       :allow_missing_href   => true,
       :check_external_hash  => false,
