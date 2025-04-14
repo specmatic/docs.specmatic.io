@@ -215,7 +215,7 @@ components:
 
 Here is a sample application that is is implementing this specification. You can run a curl command on this URL to see the sample data.
 
-`https://my-json-server.typicode.com/znsio/specmatic-documentation/employees/`
+`https://my-json-server.typicode.com/znsio/specmatic-documentation-examples/employees/`
 
 Let us now run the ```employees.yaml``` as a test against the above sample application.
 
@@ -346,7 +346,7 @@ The command will create JUnit test xml output in the specified directory which y
 
 ### When The API Does Not Match The API Specification
 
-As we saw earlier in this page, the [sample application](https://my-json-server.typicode.com/znsio/specmatic-documentation/employees/) is adhering to the ```employees.yaml``` OpenAPI Specification.
+As we saw earlier in this page, the [sample application](https://my-json-server.typicode.com/znsio/specmatic-documentation-examples/employees/) is adhering to the ```employees.yaml``` OpenAPI Specification.
 
 Now let us experiment by making some changes to the datatypes in the ```employees.yaml``` and observe the error responses.
 

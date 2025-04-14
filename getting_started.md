@@ -41,7 +41,7 @@ Before we get started, here is a quick refresher on the terminology used in the 
 ---
 
 ### PetStore API Specification
-    
+
 Below is the OpenAPI specification that represents the communication between UI and Backend in the above example application. Please save this to a file called `service.yaml`.
 
 ```yaml
@@ -97,7 +97,7 @@ paths:
 
 We have a sample implementation of the PetStore API running which you can access through curl or any other tool of your choice.
 ```shell
-curl https://my-json-server.typicode.com/znsio/specmatic-documentation/pets/1
+curl https://my-json-server.typicode.com/znsio/specmatic-documentation-examples/pets/1
 ```
 
 Now lets use Specmatic to run the above **API specification as a contract test** against the Provider / API to see if it is adhering the OpenAPI Specification.
@@ -105,22 +105,22 @@ Now lets use Specmatic to run the above **API specification as a contract test**
 {% tab run-test docker %}
 **MacOS / Linux / Powershell**
 ```shell
-docker run -v "$(pwd)/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+docker run -v "$(pwd)/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 
 **Windows Command Prompt**
 ```shell
-docker run -v "%cd%/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+docker run -v "%cd%/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% tab run-test java %}
 ```shell
-specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% tab run-test npm %}
 ```shell
-npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% endtabs %}
@@ -132,14 +132,14 @@ API Specification Summary: service.yaml
   API Paths: 1, API Operations: 1
 
 --------------------
-  Request to https://my-json-server.typicode.com/znsio/specmatic-documentation at 2025-3-14 5:16:35.598
-    GET /znsio/specmatic-documentation/pets/1
-    
+  Request to https://my-json-server.typicode.com/znsio/specmatic-documentation-examples at 2025-3-14 5:16:35.598
+    GET /znsio/specmatic-documentation-examples/pets/1
+
 
   Response at 2025-3-14 5:16:35.599
     200 OK
     Content-Type: application/json; charset=utf-8
-    
+
     {
         "id": 1,
         "name": "Scooby",
@@ -179,7 +179,7 @@ Executed at 2025-03-14T17:16:35.943405
 
 #### Where did Specmatic get the test data to generate the HTTP request
 
-How did Specmatic know to make the exact request to ```GET /znsio/specmatic-documentation/pets/1``` with petId as "1"? And not just any other number?
+How did Specmatic know to make the exact request to ```GET /znsio/specmatic-documentation-examples/pets/1``` with petId as "1"? And not just any other number?
 
 In the OpenAPI spec you may have noticed that there is an examples section for `petid` with a named example called `SCOOBY_200_OK`.
 
@@ -210,22 +210,22 @@ And try running the specmatic test command again.
 {% tab test3 docker %}
 **MacOS / Linux / Powershell**
 ```shell
-docker run -v "$(pwd)/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+docker run -v "$(pwd)/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 
 **Windows Command Prompt**
 ```shell
-docker run -v "%cd%/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+docker run -v "%cd%/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% tab test3 java %}
 ```shell
-specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% tab test3 npm %}
 ```shell
-npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% endtabs %}
@@ -237,9 +237,9 @@ Unsuccessful Scenarios:
   " Scenario: GET /pets/(petid:number) -> 200 FAILED"
         Reason: Testing scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
         API: GET /pets/(petid:number) -> 200
-  
+
           >> RESPONSE.STATUS
-          
+
              Expected status 200, actual was status 404
 
 Tests run: 1, Successes: 0, Failures: 1, Errors: 0
@@ -248,21 +248,21 @@ Tests run: 1, Successes: 0, Failures: 1, Errors: 0
 This is because we removed the named example `SCOOBY_200_OK`, Specmatic generated a random petId based on the datatype of the petId path parameter. And since test data does not exist for this petId in the sample application, we get a 404.
 ```text
 --------------------
-  Request to https://my-json-server.typicode.com/znsio/specmatic-documentation at 2024-2-11 5:44:5.791
-    GET /znsio/specmatic-documentation/pets/318
+  Request to https://my-json-server.typicode.com/znsio/specmatic-documentation-examples at 2024-2-11 5:44:5.791
+    GET /znsio/specmatic-documentation-examples/pets/318
 ```
 
 Once you restore the OpenAPI file to its [original state](/getting_started.html#petstore-api-specification) (add back the example petId value) the tests should start passing again.
 
 #### How does this all work?
 
-* Specmatic is able to tie the **named example** `SCOOBY_200_OK` listed under the request parameters and the response sections of the OpenAPI spec to create a test. 
+* Specmatic is able to tie the **named example** `SCOOBY_200_OK` listed under the request parameters and the response sections of the OpenAPI spec to create a test.
 * This is also reflected in the name of the test where Specmatic displays the `SCOOBY_200_OK` in the test logs
 * Here's a detailed breakdown of the contract test:
   - **Request:** Specmatic uses the value defined for the **petId** request parameter from the `SCOOBY_200_OK` request example to make a HTTP request.
   - **Response:** In order to tie the above request with a HTTP response code in the spec, Specmatic looks for an example with same name: `SCOOBY_200_OK` under responses. In this case the response code happens to be 200. This request/response pair now forms a test case.
   - **Response Validation:** Note that we are running the specification as a contract test here, in which we are interested in validating only the API signature and not the API logic. Hence, Specmatic does not validate the actual response values defined in the `SCOOBY_200_OK` example against the values returned by the application. It only validates the response code. However, if you do wish to validate response values, you can find more details in our discussion [here](https://github.com/znsio/specmatic/discussions/1029).
-  
+
 
 `Scenario: GET /pets/(petid:number) -> 200 | EX:SCOOBY_200_OK has SUCCEEDED`
 
@@ -293,22 +293,22 @@ Let us run the specmatic test command again.
 {% tab test2 docker %}
 **MacOS / Linux / Powershell**
 ```shell
-docker run -v "$(pwd)/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+docker run -v "$(pwd)/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 
 **Windows Command Prompt**
 ```shell
- docker run -v "%cd%/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+ docker run -v "%cd%/service.yaml:/service.yaml" znsio/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% tab test2 java %}
 ```shell
-specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% tab test2 npm %}
 ```shell
-npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation
+npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/znsio/specmatic-documentation-examples
 ```
 {% endtab %}
 {% endtabs %}
@@ -318,9 +318,9 @@ Unsuccessful Scenarios:
   " Scenario: GET /pets/(petid:number) -> 200 | EX:SCOOBY_200_OK FAILED"
         Reason: Testing scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
         API: GET /pets/(petid:number) -> 200
-  
+
           >> RESPONSE.BODY.status
-          
+
              Contract expected boolean but response contained "Adopted"
 
 Tests run: 1, Successes: 0, Failures: 1, Errors: 0
@@ -481,9 +481,9 @@ API Specification Summary: service.yaml
 
   In scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
   API: GET /pets/(petid:number) -> 200
-  
+
     >> RESPONSE.BODY.status
-  
+
        key named status in the spec was not found in the "SCOOBY_200_OK" example
 ```
 
@@ -572,7 +572,7 @@ You should now be able to see the data pertaining to the `togo.json` file that y
 }
 ```
 
-Specmatic validates this externalised stub JSON file `togo.json` against the `service.yaml`. Let us try this by removing the `status` field within http-response body in `togo.json` and run the stub command again. 
+Specmatic validates this externalised stub JSON file `togo.json` against the `service.yaml`. Let us try this by removing the `status` field within http-response body in `togo.json` and run the stub command again.
 
 {% tabs stub3 %}
 {% tab stub3 docker %}
@@ -613,12 +613,12 @@ API Specification Summary: /specs/service.yaml
   >> Error loading stub expectation file '/specs/service_examples/example.json':
    /specs/service_examples/example.json didn't match /specs/service.yaml
     Error from contract /specs/service.yaml
-  
+
       In scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
       API: GET /pets/(petid:number) -> 200
-  
+
         >> RESPONSE.BODY.status
-  
+
            Key named status in the contract was not found in the stub
 
 
