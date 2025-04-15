@@ -8,66 +8,17 @@ nav_order: 7
 # External Examples
 
 - [External Examples](#external-examples)
-  - [Validating Examples](#validating-examples)
-    - [Quick Start](#quick-start)
-    - [Advanced Usage](#advanced-usage)
-      - [Working with Multiple Specifications](#working-with-multiple-specifications)
-      - [Custom Example Directory](#custom-example-directory)
-  - [Practical Example](#practical-example)
-  - [Identifying Duplicate Examples](#identifying-duplicate-examples)
+  - [Creating and Validating Examples](#creating-and-validating-examples)
+  - [Example Format](#example-format)
+  - [Advanced Usage](#advanced-usage)
+    - [Working with Multiple Specifications](#working-with-multiple-specifications)
+    - [Custom Example Directory](#custom-example-directory)
+    - [Identifying Duplicate Examples](#identifying-duplicate-examples)
   - [Pro Tips](#pro-tips)
 
-Learn how to validate your API examples against your specifications using Specmatic's powerful validation tools. Whether you have a single specification or multiple specs across different directories, Specmatic makes it easy to ensure your examples stay in sync with your API definitions.
+Learn how to validate your API examples against your specifications using Specmatic's powerful validation tools. Whether you have a single specification or multiple specifications across different directories, Specmatic makes it easy to ensure your examples stay in sync with your API definitions.
 
-## Validating Examples
-
-### Quick Start
-The fastest way to validate examples for a single specification:
-
-{% tabs examples-validate %}
-{% tab examples-validate docker %}
-```shell
-docker run -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" znsio/specmatic examples validate --spec-file "employee_details.yaml"
-```
-{% endtab %}
-{% tab examples-validate java %}
-```shell
-java -jar specmatic.jar examples validate --spec-file employee_details.yaml
-```
-{% endtab %}
-{% tab examples-validate npm %}
-```shell
-npx specmatic examples validate --spec-file employee_details.yaml
-```
-{% endtab %}
-{% endtabs %}
-
-By default, Specmatic looks for examples in a directory named `{specification-name}_examples` in the same location as your specification file. For instance, if your spec file is named `employee_details.yaml`, Specmatic will look for examples in the `employee_details_examples` directory.
-
-### Advanced Usage
-
-#### Working with Multiple Specifications
-If you're managing multiple API specifications, Specmatic provides flexible options to validate all their examples:
-
-1. **Validate Multiple Specs with Default Example Locations**:
-```shell
-specmatic examples validate --specs-dir ./api-specs
-```
-This will look for example directories alongside each specification file.
-
-2. **Organize Examples in a Separate Directory Structure**:
-```shell
-specmatic examples validate --specs-dir ./api-specs --examples-base-dir ./all-examples
-```
-This helps when you want to keep your examples organized separately from your specifications.
-
-#### Custom Example Directory
-For a single specification, you can specify a custom examples directory:
-```shell
-specmatic examples validate --spec-file employee_details.yaml --examples-dir ./custom-examples
-```
-
-## Practical Example
+## Creating and Validating Examples
 
 Let's walk through a complete example to see how example validation works in practice.
 
@@ -166,12 +117,14 @@ components:
 }
 ```
 
+By default, Specmatic looks for examples in a directory named `{specification-name}_examples` in the same location as your specification file. For instance, if your spec file is named `employee_details.yaml`, Specmatic will look for examples in the `employee_details_examples` directory.
+
 **3.** Validate your example:
 
 {% tabs examples-validate %}
 {% tab examples-validate docker %}
 ```shell
-docker run -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" znsio/specmatic examples validate --spec-file "employee_details.yaml"
+docker run -v "$(pwd)/:/specs" znsio/specmatic examples validate --spec-file "/specs/employee_details.yaml"
 ```
 {% endtab %}
 {% tab examples-validate java %}
@@ -196,7 +149,93 @@ A return code of `1` indicates validation failure, while `0` indicates success.
 
 **5.** Fix the example by adding the required fields and run the validation again - you'll see it succeed!
 
-## Identifying Duplicate Examples
+## Example Format
+
+Examples can be externalized to `json` files as seen in the above section, Let's see an example of how you can format these files,
+
+```json
+{
+    "http-request": {
+        "method": "POST",
+        "path": "/path/(number)/some/more/path",
+        "headers": {
+            "X-Header-Name": "(string)",
+            "X-Header-ID": "(string)"
+        },
+        "query": {
+            "id": "(number)",
+            "type": "(string)"
+        },
+        "form-fields": {
+            "Data": "(PredefinedJsonType)",
+            "MoreData": "some hardcoded value"
+        },
+        "multipart-formdata": [
+            {
+                "name": "customers",
+                "content": "(string)",
+                "filename": "@data.csv",
+                "contentType": "text/plain",
+                "contentEncoding": "gzip"
+            }
+        ],
+        "body": {
+            "name": "Jane Doe",
+            "address": "22 Baker Street"
+        }
+    },
+
+    "http-response": {
+        "status": 200,
+        "headers": {
+            "X-Header-Name": "(string)",
+            "X-Header-ID": "(string)"
+        },
+        "body": "some value"
+    }
+}
+```
+
+**Notes on the `request` format:**
+
+1. Multipart Form-data:
+  - You can either provide `content` or `filename`, but not both
+  - `filename` must start with @
+  - `contentType` is optional, and is matched against the `Content-Type` header
+  - `contentEncoding` is matched against the `Content-Encoding` header
+
+2. Body can also just be a `string`, such "Hello world", or an `array`, such as [1, 2, 3]
+
+**Notes on the `response` format:**
+
+1. In contract tests, only the `status` field is required. Other fields will be ignored if provided such as headers, body etc.
+
+## Advanced Usage
+
+#### Working with Multiple Specifications
+
+If you're managing multiple API specifications, Specmatic provides flexible options to validate all their examples:
+
+1. **Validate Multiple Specs with Default Example Locations**:
+```shell
+specmatic examples validate --specs-dir ./api-specs
+```
+This will look for example directories alongside each specification file.
+
+2. **Organize Examples in a Separate Directory Structure**:
+```shell
+specmatic examples validate --specs-dir ./api-specs --examples-base-dir ./all-examples
+```
+This helps when you want to keep your examples organized separately from your specifications.
+
+#### Custom Example Directory
+
+For a single specification, you can specify a custom examples directory:
+```shell
+specmatic examples validate --spec-file employee_details.yaml --examples-dir ./custom-examples
+```
+
+#### Identifying Duplicate Examples
 
 When working with multiple examples, it's important to ensure that an example request is unique. If more than one example has the same request, there may be consequences. For example, when an incoming request matches multiple examples, Specmatic stub server will pick one example and show it's response, ignoring the others.
 
@@ -256,9 +295,8 @@ Note that, for the same request payload, it has a different response.
 
 ```shell
 docker run \
-  -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" \
-  -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" \
-  znsio/specmatic-openapi examples validate --spec-file "employee_details.yaml"
+  -v "$(pwd)/:/specs" \
+  znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
 ```
 
 Specmatic detects this, and prints the following warning:
