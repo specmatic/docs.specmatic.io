@@ -51,7 +51,7 @@ Service Virtualization
   - [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
-    - [Running Specmatic Stubs on Different Ports](#running-specmatic-stubs-on-different-ports)
+    - [Running Specmatic Stubs on Different BaseURLs](#running-specmatic-stubs-on-different-baseurls)
       - [Overview](#overview-1)
       - [Directory Structure](#directory-structure)
       - [Specmatic Configuration](#specmatic-configuration)
@@ -64,8 +64,6 @@ Service Virtualization
         - [post\_exported\_product.json](#post_exported_productjson)
         - [Run the stub server](#run-the-stub-server)
       - [Example Requests](#example-requests)
-        - [Hitting the imported\_product API on default port 9000](#hitting-the-imported_product-api-on-default-port-9000)
-        - [Hitting the exported\_product API on port 9001](#hitting-the-exported_product-api-on-port-9001)
       - [Benefits](#benefits)
   - [Sample Java Project](#sample-java-project)
 
@@ -1781,10 +1779,10 @@ paths:
                     example: UP
 ```
 
-### Running Specmatic Stubs on Different Ports
+### Running Specmatic Stubs on Different BaseURLs
 
 #### Overview
-This setup demonstrates how to run Specmatic stubs on different ports for different specifications. This allows serving different APIs on their respective ports while keeping their examples specific to each specification.
+This setup demonstrates how to run Specmatic stubs on different baseURLs for different specifications. This allows serving different APIs on their respective baseURLs while keeping their examples specific to each specification.
 
 #### Directory Structure
 ```
@@ -1807,11 +1805,11 @@ version: 2
 contracts:
   - consumes:
       - imported_product/imported_product.yaml
-      - port: 9001
+      - baseUrl: http://0.0.0.0:9001/exported
         specs:
           - exported_product/exported_product.yaml
 ```
-Note: The `imported_product` spec does not have a port assigned, so it defaults to `9000`, whereas `exported_product` runs on `9001`.
+Note: The `imported_product` spec does not have a baseURL assigned, so it defaults to `http://0.0.0.0:9000`, whereas `exported_product` runs on `http://0.0.0.0:9001/exported`.
 
 #### API Specifications
 ##### imported_product.yaml
@@ -1935,18 +1933,31 @@ paths:
 
 ##### Run the stub server
 Once we have this setup, we can run the Specmatic stub server by running the following command in the `project-root` directory:
+{% tabs test %}
+{% tab test java %}
 ```shell
-specmatic stub
+java -jar specmatic.jar stub
 ```
+{% endtab %}
+{% tab test npm %}
+```shell
+npx specmatic stub
+```
+{% endtab %}
+{% tab test docker %}
+```shell
+docker run -p 9000:9000 -p 9001:9001 -v "$(pwd)/imported_product:/usr/src/app/imported_product" -v "$(pwd)/exported_product:/usr/src/app/exported_product" -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic stub
+```
+{% endtab %}
+{% endtabs %}
 
-This will start the Specmatic stub server on ports `9000` and `9001` for the `imported_product` and `exported_product` APIs, respectively.
+This will start the Specmatic stub server on baseURLs `http://0.0.0.0:9000` and `http://0.0.0.0:9001/exported` for the `imported_product` and `exported_product` APIs, respectively.
 
 #### Example Requests
-##### Hitting the imported_product API on default port 9000
+
+Hitting the imported_product API on default baseURL http://localhost:9000
 ```sh
-curl -X POST http://localhost:9000/products \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Xiaomi", "category": "Mobile"}'
+curl -X POST http://localhost:9000/products -H "Content-Type: application/json" -d "{\"name\":\"Xiaomi\",\"category\":\"Mobile\"}"
 ```
 **Response:**
 ```json
@@ -1957,11 +1968,9 @@ curl -X POST http://localhost:9000/products \
 }
 ```
 
-##### Hitting the exported_product API on port 9001
+Hitting the exported_product API on baseURL http://locahost:9001/exported
 ```sh
-curl -X POST http://localhost:9001/products \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Xiaomi", "category": "Mobile"}'
+curl -X POST http://localhost:9001/exported/products -H "Content-Type: application/json" -d "{\"name\":\"Xiaomi\",\"category\":\"Mobile\"}"
 ```
 **Response:**
 ```json
@@ -1973,7 +1982,7 @@ curl -X POST http://localhost:9001/products \
 ```
 
 #### Benefits
-- **Port-based segregation:** Each spec runs on a dedicated port, ensuring clear separation.
+- **BaseURL-based segregation:** Each spec runs on a dedicated baseURL, ensuring clear separation.
 - **Spec-specific examples:** Requests return expected responses per specification.
 - **Flexibility:** Allows hosting multiple versions or separate APIs without conflict.
 
