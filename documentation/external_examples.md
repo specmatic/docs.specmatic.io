@@ -9,7 +9,7 @@ nav_order: 7
 
 - [External Examples](#external-examples)
   - [Introduction](#introduction)
-  - [Creating and Validating Examples](#creating-and-validating-examples)
+  - [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
     - [Pre-requisites](#pre-requisites)
     - [Using GUI - Paid Feature](#using-gui---paid-feature)
       -  [Fix the Example](#fix-the-example)
@@ -26,20 +26,13 @@ nav_order: 7
 
 ## Introduction
 
-It may not always be possible to add examples inline in the OpenAPI specifications. And sometimes certain examples may not belong in the API specification. In such cases, we add examples outside the spec in the form of JSON files. But how do we ensure that these examples are valid and as per the specification? The answer is Specmatic's example validation capability.
+It may not always be possible to add examples inline in the OpenAPI specifications. And sometimes certain examples may not belong in the API specification. In such cases, we add examples outside the spec in the form of JSON files.
 
-With Specmatic's powerful validation capability you can validate these examples easily either locally or in CI pipelines. Whether you have a single specification or multiple specifications across different directories, Specmatic makes it easy to ensure your examples stay in sync with your API definitions.
+## Creating, Validating and Fixing Examples
 
-## Creating and Validating Examples
+Create an API specification file named `employee_details.yaml` using the content below,
 
-Let's walk through a complete example to see how example validation works in practice.
-
-### Pre-requisites
-
-- Create a directory named `specmatic` in your home directory.
-- Make sure you have installed Specmatic. Check the [Download](../download.html) page for all available options for installing Specmatic.
-- Create the API specification file named `employee_details.yaml` (Optional)
-
+We will use this file as a reference for creating, validating and fixing examples.
 ```yaml
 openapi: 3.0.0
 info:
@@ -112,7 +105,48 @@ components:
         designation:
           type: string
 ```
-- Create the example in `employee_details_examples/example.json` (Optional)
+
+## Interactive Examples GUI
+
+To start the GUI execute below command,
+{% tabs examples-gui %}
+{% tab examples-gui docker %}
+```shell
+docker run --rm -v "$(pwd):/repo" -p "9001:9001" znsio/specmatic-openapi examples interactive --contract-file /repo/employee_details.yaml
+```
+{% endtab %}
+{% tab examples-gui java %}
+```shell
+java -jar specmatic-openapi.jar examples interactive --contract-file /repo/employee_details.yaml
+```
+{% endtab %}
+{% endtabs %}
+
+You can then click on the link in the console, or by visiting http://localhost:9001/_specmatic/examples
+
+### Generating and Updating Examples
+
+> ![Generate](../images/gui-generate.png)
+
+The generated files will be saved along side your specification in a directory with `_examples` suffix. In this case it will be `employee_details_examples` directory.
+
+> ![More Details](../images/gui-more-details.png)
+
+> ![Update](../images/gui-update.png)
+
+### Validating Example
+
+> ![Validate](../images/gui-validate.png)
+
+### Fixing Example
+
+> ![Fix](../images/gui-fix.png)
+
+> ![After Fix](../images/gui-after-fix.png)
+
+## Creating Examples Manually
+
+Create the example in `employee_details_examples/example.json`
 
 ```json
 {
@@ -120,7 +154,10 @@ components:
         "method": "PATCH",
         "path": "/employees",
         "body": {
-            "employeeCode": "pqrxyz"
+            "employeeCode": "pqrxyz",
+            "name": "Jamie",
+            "department": "IT",
+            "designation": "Manager"
         }
     },
     "http-response": {
@@ -138,45 +175,11 @@ components:
 
 By default, Specmatic looks for examples in a directory named `{specification-name}_examples` in the same location as your specification file. For instance, if your spec file is named `employee_details.yaml`, Specmatic will look for examples in the `employee_details_examples` directory.
 
-## Using GUI - Paid Feature
+For complete example format, please refer to [Example Format](#example-format).
 
-You can easily generate, validate and fix examples using Specmatic GUI. To start the GUI execute below command,
-{% tabs examples-gui %}
-{% tab examples-gui docker %}
-```shell
-docker run --rm -v "$(pwd):/repo" -p "9001:9001" znsio/specmatic-openapi examples interactive --contract-file /repo/employee_details.yaml
-```
-{% endtab %}
-{% tab examples-gui java %}
-```shell
-java -jar specmatic-openapi.jar examples interactive --contract-file /repo/employee_details.yaml
-```
-{% endtab %}
-{% endtabs %}
+## Using CLI to Validate Examples
 
-You can then click on the link provided by the command in the console, by default it will be http://localhost:9001/_specmatic/examples
-
-### Validate the Example
-
-In this section, we will see how you can validate the example,
-
-> ![Validate](../images/gui-validate.jpeg)
-
-### Fix the Example
-
-In this section, we will see how you can fix the example,
-
-> ![Fix](../images/gui-fix.png)
-
-### Generate the Example
-
-In this section, we will see how you can generate the example,
-
-> ![Generate](../images/gui-generate.png)
-
-## Using CLI
-
-### Validate the Example
+While you have done the validation in GUI, You can run it in a non-interactive manner for e.g. CI Pipelines, [PR Pre-Merge Checks]() etc. Specmatic will exit with a non-zero exit-code in case of validation failure, and `0` indicating successful validation.
 
 {% tabs examples-validate %}
 {% tab examples-validate docker %}
@@ -189,16 +192,7 @@ docker run -v "$(pwd)/:/specs" znsio/specmatic examples validate --spec-file "/s
 java -jar specmatic.jar examples validate --spec-file employee_details.yaml
 ```
 {% endtab %}
-{% tab examples-validate npm %}
-```shell
-npx specmatic examples validate --spec-file employee_details.yaml
-```
-{% endtab %}
 {% endtabs %}
-
-If you're using the [given example](#pre-requisites), You'll notice the validation fails because the request is missing required fields (`name`, `department`, and `designation`). The error message will guide you to fix these issues. Fix the example by adding the required fields and run the validation again and you’ll see it succeed!
-
-**Note:** You can also integrate it with your CI and it will exit with a exit-code. An exit-code of `1` indicates validation failure, while `0` indicates success.
 
 ## Example Format
 
@@ -380,11 +374,6 @@ docker run znsio/specmatic examples validate --help
 {% tab examples-validate java %}
 ```shell
 java -jar specmatic.jar examples validate --help
-```
-{% endtab %}
-{% tab examples-validate npm %}
-```shell
-npx specmatic examples validate --help
 ```
 {% endtab %}
 {% endtabs %}
