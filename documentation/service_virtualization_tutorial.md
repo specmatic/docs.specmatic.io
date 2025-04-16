@@ -1811,7 +1811,7 @@ contracts:
         specs:
           - exported_product/exported_product.yaml
 ```
-Note: The `imported_product` spec does not have a baseURL assigned, so it defaults to `http://localhost:9000`, whereas `exported_product` runs on `http://localhost:9001/exported`.
+Note: The `imported_product` spec does not have a baseURL assigned, so it defaults to `http://0.0.0.0:9000`, whereas `exported_product` runs on `http://0.0.0.0:9001/exported`.
 
 #### API Specifications
 ##### imported_product.yaml
@@ -1953,7 +1953,7 @@ docker run -p 9000:9000 -p 9001:9001 -v "$(pwd)/imported_product:/usr/src/app/im
 {% endtab %}
 {% endtabs %}
 
-This will start the Specmatic stub server on baseURLs `http://localhost:9000` and `http://localhost:9001/exported` for the `imported_product` and `exported_product` APIs, respectively.
+This will start the Specmatic stub server on baseURLs `http://0.0.0.0:9000` and `http://0.0.0.0:9001/exported` for the `imported_product` and `exported_product` APIs, respectively.
 
 #### Example Requests
 ##### Hitting the imported_product API on default baseURL http://localhost:9000
