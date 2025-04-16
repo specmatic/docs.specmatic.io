@@ -1807,7 +1807,7 @@ version: 2
 contracts:
   - consumes:
       - imported_product/imported_product.yaml
-      - baseUrl: http://localhost:9001/exported
+      - baseUrl: http://0.0.0.0:9001/exported
         specs:
           - exported_product/exported_product.yaml
 ```
@@ -1935,18 +1935,30 @@ paths:
 
 ##### Run the stub server
 Once we have this setup, we can run the Specmatic stub server by running the following command in the `project-root` directory:
+{% tabs test %}
+{% tab test java %}
 ```shell
-specmatic stub
+java -jar specmatic.jar stub
 ```
+{% endtab %}
+{% tab test npm %}
+```shell
+npx specmatic stub
+```
+{% endtab %}
+{% tab test docker %}
+```shell
+docker run -p 9000:9000 -p 9001:9001 -v "$(pwd)/imported_product:/usr/src/app/imported_product" -v "$(pwd)/exported_product:/usr/src/app/exported_product" -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic stub
+```
+{% endtab %}
+{% endtabs %}
 
 This will start the Specmatic stub server on baseURLs `http://localhost:9000` and `http://localhost:9001/exported` for the `imported_product` and `exported_product` APIs, respectively.
 
 #### Example Requests
 ##### Hitting the imported_product API on default baseURL http://localhost:9000
 ```sh
-curl -X POST http://localhost:9000/products \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Xiaomi", "category": "Mobile"}'
+curl -X POST http://localhost:9000/products -H "Content-Type: application/json" -d "{\"name\":\"Xiaomi\",\"category\":\"Mobile\"}"
 ```
 **Response:**
 ```json
@@ -1959,9 +1971,7 @@ curl -X POST http://localhost:9000/products \
 
 ##### Hitting the exported_product API on baseURL http://locahost:9001/exported
 ```sh
-curl -X POST http://localhost:9001/exported/products \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Xiaomi", "category": "Mobile"}'
+curl -X POST http://localhost:9001/exported/products -H "Content-Type: application/json" -d "{\"name\":\"Xiaomi\",\"category\":\"Mobile\"}"
 ```
 **Response:**
 ```json
