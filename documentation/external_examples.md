@@ -13,8 +13,8 @@ nav_order: 7
     - [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
     - [Interactive Examples GUI](#interactive-examples-gui)
         - [Generating and Updating Examples](#generating-and-updating-examples)
-        - [Validating Example](#validating-example)
-        - [Fixing Example](#fixing-example)
+        - [Validating Examples](#validating-examples)
+        - [Fixing Examples](#fixing-examples)
     - [Creating Examples Manually](#creating-examples-manually)
     - [Using CLI to Validate Examples](#using-cli-to-validate-examples)
     - [Example Format](#example-format)
@@ -113,12 +113,12 @@ To start the GUI execute below command,
 {% tabs examples-gui %}
 {% tab examples-gui docker %}
 ```shell
-docker run --rm -v "$(pwd):/repo" -p "9001:9001" znsio/specmatic-openapi examples interactive --contract-file /repo/employee_details.yaml
+docker run --rm -v "$(pwd):/specs" -p "9001:9001" znsio/specmatic-openapi examples interactive --contract-file /specs/employee_details.yaml
 ```
 {% endtab %}
 {% tab examples-gui java %}
 ```shell
-java -jar specmatic-openapi.jar examples interactive --contract-file /repo/employee_details.yaml
+java -jar specmatic-openapi.jar examples interactive --contract-file employee_details.yaml
 ```
 {% endtab %}
 {% endtabs %}
@@ -351,11 +351,18 @@ Note that, for the same request payload, it has a different response.
 
 **3.** Validate your examples:
 
+{% tabs duplicate-examples %}
+{% tab duplicate-examples docker %}
 ```shell
-docker run \
-  -v "$(pwd)/:/specs" \
-  znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
 ```
+{% endtab %}
+{% tab duplicate-examples java %}
+```shell
+java -jar specmatic-openapi.jar examples interactive --contract-file employee_details.yaml
+```
+{% endtab %}
+{% endtabs %}
 
 Specmatic detects this, and prints the following warning:
 
