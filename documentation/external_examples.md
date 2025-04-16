@@ -6,23 +6,25 @@ nav_order: 7
 ---
 
 # External Examples
+<!-- TOC -->
 
 - [External Examples](#external-examples)
-  - [Introduction](#introduction)
-  - [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
-    - [Pre-requisites](#pre-requisites)
-    - [Using GUI - Paid Feature](#using-gui---paid-feature)
-      -  [Fix the Example](#fix-the-example)
-      -  [Validate the Example](#validate-the-example)
-      -  [Generate the Example](#generate-the-example)
-    - [Using CLI](#using-cli)
-      - [Validate the Example](#validate-the-example-1)
-  - [Example Format](#example-format)
-  - [Advanced Usage](#advanced-usage)
-    - [Working with Multiple Specifications](#working-with-multiple-specifications)
-    - [Custom Example Directory](#custom-example-directory)
-    - [Identifying Duplicate Examples](#identifying-duplicate-examples)
-  - [Pro Tips](#pro-tips)
+    - [Introduction](#introduction)
+    - [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
+    - [Interactive Examples GUI](#interactive-examples-gui)
+        - [Generating and Updating Examples](#generating-and-updating-examples)
+        - [Validating Example](#validating-example)
+        - [Fixing Example](#fixing-example)
+    - [Creating Examples Manually](#creating-examples-manually)
+    - [Using CLI to Validate Examples](#using-cli-to-validate-examples)
+    - [Example Format](#example-format)
+    - [Advanced Usage](#advanced-usage)
+        - [Working with Multiple Specifications](#working-with-multiple-specifications)
+        - [Custom Example Directory](#custom-example-directory)
+        - [Identifying Duplicate Examples](#identifying-duplicate-examples)
+    - [Pro Tips](#pro-tips)
+
+<!-- /TOC -->
 
 ## Introduction
 
@@ -128,11 +130,15 @@ You can then click on the link in the console, or by visiting http://localhost:9
 
 > ![Generate](../images/gui-generate.png)
 
-The generated files will be saved along side your specification in a directory with `_examples` suffix. In this case it will be `employee_details_examples` directory.
+The generated files will be saved alongside your specification in a `{specification-name}_examples` directory. In this case it will be `employee_details_examples` directory.
 
 > ![More Details](../images/gui-more-details.png)
 
+More details section will give you details and a live code editor to make changes in the generated example.
+
 > ![Update](../images/gui-update.png)
+
+This page will help you to edit, update, validate, fix and save your examples. 
 
 ### Validating Example
 
@@ -179,7 +185,7 @@ For complete example format, please refer to [Example Format](#example-format).
 
 ## Using CLI to Validate Examples
 
-While you have done the validation in GUI, You can run it in a non-interactive manner for e.g. CI Pipelines, [PR Pre-Merge Checks]() etc. Specmatic will exit with a non-zero exit-code in case of validation failure, and `0` indicating successful validation.
+While you have done the validation in Interactive Examples GUI, You can also run it in a non-interactive manner which is useful for e.g. CI Pipelines, [PR Pre-Merge Checks](https://github.com/znsio/specmatic-order-contracts/blob/abb92cc3e9acabeb420abc7ca233492e2581cc18/.github/workflows/pull_request_merge_checks.yaml#L66C1-L70C100) etc. In a non-interactive manner Specmatic will exit with a `non-zero` exit-code in case of validation failure, and `0` in case of successful validation.
 
 {% tabs examples-validate %}
 {% tab examples-validate docker %}
