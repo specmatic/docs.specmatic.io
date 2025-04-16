@@ -32,9 +32,8 @@ It may not always be possible to add examples inline in the OpenAPI specificatio
 
 ## Creating, Validating and Fixing Examples
 
-Create an API specification file named `employee_details.yaml` using the content below,
+Create an API specification file named `employee_details.yaml` using the content below. We will use this file as a reference for creating, validating and fixing examples.
 
-We will use this file as a reference for creating, validating and fixing examples.
 ```yaml
 openapi: 3.0.0
 info:
@@ -132,27 +131,35 @@ You can then click on the link in the console, or by visiting http://localhost:9
 
 The generated files will be saved alongside your specification in a `{specification-name}_examples` directory. In this case it will be `employee_details_examples` directory.
 
-> ![More Details](../images/gui-more-details.png)
+> ![View details](../images/gui-more-details.png)
 
-More details section will give you details and a live code editor to make changes in the generated example.
+View details section will give additional info and a live code editor to make changes in the generated example.
 
 > ![Update](../images/gui-update.png)
 
 This page will help you to edit, update, validate, fix and save your examples. 
 
-### Validating Example
+### Validating Examples
+
+You can validate one example at a time (as we saw above), or you validate them in bulk.
 
 > ![Validate](../images/gui-validate.png)
 
-### Fixing Example
+### Fixing Examples
 
 > ![Fix](../images/gui-fix.png)
 
 > ![After Fix](../images/gui-after-fix.png)
 
+Fix can also be done in bulk (similar to validate).
+
+**NOTE**: The Interactive Examples GUI is only available in Specmatic commercial version. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+
 ## Creating Examples Manually
 
-Create the example in `employee_details_examples/example.json`
+If you do not have access to the commercial version of Specmatic, you can create examples manually. 
+
+Create an example file `employee_details_examples/example.json` with below content.
 
 ```json
 {
@@ -268,18 +275,16 @@ Examples can be externalized to `json` files as seen in the above section, You w
 If you're managing multiple API specifications, Specmatic provides flexible options to validate all their examples:
 
 1. **Validate Multiple Specs with Default Example Locations**:
-
-```shell
-specmatic examples validate --specs-dir ./api-specs
-```
-This will look for example directories alongside each specification file.
+  ```shell
+  specmatic examples validate --specs-dir ./api-specs
+  ```
+  This will look for example directories alongside each specification file.
 
 2. **Organize Examples in a Separate Directory Structure**:
-
-```shell
-specmatic examples validate --specs-dir ./api-specs --examples-base-dir ./all-examples
-```
-This helps when you want to keep your examples organized separately from your specifications.
+  ```shell
+  specmatic examples validate --specs-dir ./api-specs --examples-base-dir ./all-examples
+  ```
+  This helps when you want to keep your examples organized separately from your specifications.
 
 ### Custom Example Directory
 
@@ -363,7 +368,7 @@ WARNING: Multiple examples detected having the same request.
     - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
 ```
 
-**NOTE**: While validation of examples for schema correctness is available *for free* in open source [Specmatic](https://github.com/znsio/specmatic), detection of duplicate examples as part of validation is a paid feature. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+**NOTE**: While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of duplicate examples as part of validation is only available in Specmatic commercial version. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Pro Tips
 - Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
