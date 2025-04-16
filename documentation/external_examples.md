@@ -9,6 +9,11 @@ nav_order: 7
 
 - [External Examples](#external-examples)
   - [Creating and Validating Examples](#creating-and-validating-examples)
+    - [Step 1. Create the API specification](#step-1-create-the-api-specification)
+    - [Step 2. Create the Example](#step-2-create-the-example)
+    - [Step 3. Validate the Example](#step-3-validate-the-example)
+    - [Step 4. Check the Exit Code](#step-4-check-the-exit-code)
+    - [Step 5. Fix the Example](#step-5-fix-the-example)
   - [Example Format](#example-format)
   - [Advanced Usage](#advanced-usage)
     - [Working with Multiple Specifications](#working-with-multiple-specifications)
@@ -22,7 +27,9 @@ Learn how to validate your API examples against your specifications using Specma
 
 Let's walk through a complete example to see how example validation works in practice.
 
-**1.** Create an API specification file named `employee_details.yaml`:
+### Step 1. Create the API specification
+
+Create an API specification file named `employee_details.yaml`
 
 ```yaml
 openapi: 3.0.0
@@ -93,7 +100,9 @@ components:
           type: string
 ```
 
-**2.** Create an example in `employee_details_examples/example.json`:
+### Step 2. Create the Example
+
+Create an example in `employee_details_examples/example.json`:
 
 ```json
 {
@@ -119,7 +128,7 @@ components:
 
 By default, Specmatic looks for examples in a directory named `{specification-name}_examples` in the same location as your specification file. For instance, if your spec file is named `employee_details.yaml`, Specmatic will look for examples in the `employee_details_examples` directory.
 
-**3.** Validate your example:
+### Step 3. Validate the Example
 
 {% tabs examples-validate %}
 {% tab examples-validate docker %}
@@ -141,17 +150,20 @@ npx specmatic examples validate --spec-file employee_details.yaml
 
 You'll notice the validation fails because the request is missing required fields (`name`, `department`, and `designation`). The error message will guide you to fix these issues.
 
-**4.** Check the exit code:
+### Step 4. Check the Exit Code
+
 - On MacOS/Linux: `echo $?`
 - On Windows: `echo %errorlevel%`
 
 A return code of `1` indicates validation failure, while `0` indicates success.
 
-**5.** Fix the example by adding the required fields and run the validation again - you'll see it succeed!
+### Step 5. Fix the Example
+
+Fix the example by adding the required fields and run the validation again - you'll see it succeed!
 
 ## Example Format
 
-Examples can be externalized to `json` files as seen in the above section, Let's see an example of how you can format these files,
+Examples can be externalized to `json` files as seen in the above section, You will find the example format reference below,
 
 ```json
 {
