@@ -1,0 +1,9 @@
+services:
+  jekyll:
+    build: .
+    ports:
+      - "4000:4000"
+      - "35729:35729"
+    volumes:
+      - .:/workspace
+    command: jekyll serve --livereload --host 0.0.0.0 --force_polling
