@@ -64,8 +64,6 @@ Service Virtualization
         - [post\_exported\_product.json](#post_exported_productjson)
         - [Run the stub server](#run-the-stub-server)
       - [Example Requests](#example-requests)
-        - [Hitting the imported\_product API on default baseURL http://localhost:9000](#hitting-the-imported_product-api-on-default-baseurl-httplocalhost9000)
-        - [Hitting the exported\_product API on baseURL http://locahost:9001/exported](#hitting-the-exported_product-api-on-baseurl-httplocahost9001exported)
       - [Benefits](#benefits)
   - [Sample Java Project](#sample-java-project)
 
@@ -1956,7 +1954,8 @@ docker run -p 9000:9000 -p 9001:9001 -v "$(pwd)/imported_product:/usr/src/app/im
 This will start the Specmatic stub server on baseURLs `http://0.0.0.0:9000` and `http://0.0.0.0:9001/exported` for the `imported_product` and `exported_product` APIs, respectively.
 
 #### Example Requests
-##### Hitting the imported_product API on default baseURL http://localhost:9000
+
+Hitting the imported_product API on default baseURL http://localhost:9000
 ```sh
 curl -X POST http://localhost:9000/products -H "Content-Type: application/json" -d "{\"name\":\"Xiaomi\",\"category\":\"Mobile\"}"
 ```
@@ -1969,7 +1968,7 @@ curl -X POST http://localhost:9000/products -H "Content-Type: application/json" 
 }
 ```
 
-##### Hitting the exported_product API on baseURL http://locahost:9001/exported
+Hitting the exported_product API on baseURL http://locahost:9001/exported
 ```sh
 curl -X POST http://localhost:9001/exported/products -H "Content-Type: application/json" -d "{\"name\":\"Xiaomi\",\"category\":\"Mobile\"}"
 ```
