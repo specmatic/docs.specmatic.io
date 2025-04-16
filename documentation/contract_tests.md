@@ -288,7 +288,7 @@ The test results will look as shown below. Specmatic has run one test per extern
 
 ```Tests run: 5, Successes: 5, Failures: 0, Errors: 0```
 
-The complete test data format can be referred to [here](/documentation/test_data_format.html).
+The complete test data format can be referred to [here](/documentation/external_examples.html#example-format).
 
 ### Generating examples
 
