@@ -49,6 +49,7 @@ Service Virtualization
     - [Implementation Steps](#implementation-steps)
     - [How It Works](#how-it-works)
   - [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
+  - [Competing Examples](#competing-examples)
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
     - [Running Specmatic Stubs on Different BaseURLs](#running-specmatic-stubs-on-different-baseurls)
@@ -1736,6 +1737,100 @@ There are now several ways in which to provide expectations.
 They are resolved in the order in which they appear above.
 
 This means, if a request matches an example in the specification, but also matches a dynamic expectation, the response will be served from the dynamic expectations. Put differently, dynamic expectations override expectations from examples.
+
+## Competing Examples
+
+In case multiple competing examples specified, Specmatic ensures the most specific example to response with.
+
+Let's consider following spec
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Employees API
+  version: '1.0'
+paths:
+  /employees:
+    post:
+      summary: Create a new employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - department
+                - age
+              properties:
+                name:
+                  type: string
+                  description: Name of the employee
+                department:
+                  type: string
+                  description: Department of the employee
+                age:
+                  type: integer
+                  description: Age of the employee
+      responses:
+        '201':
+          description: Employee created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: integer
+                    description: Unique identifier of an employee
+                    info:
+                      title: Employees API
+                      version: '1.0'
+                    paths:
+                      /employees:
+                        post:
+                          summary: Create a new employee
+                          requestBody:
+                            required: true
+                            content:
+                              application/json:
+                                schema:
+                                  type: object
+                                  required:
+                                    - name
+                                    - department
+                                    - age
+                                  properties:
+                                    name:
+                                      type: string
+                                      description: Name of the employee
+                                    department:
+                                      type: string
+                                      description: Department of the employee
+                                    age:
+                                      type: integer
+                                      description: Age of the employee
+                          responses:
+                            '201':
+                              description: Employee created successfully
+                              content:
+                                application/json:
+                                  schema:
+                                    type: object
+                                    required:
+                                      - id
+                                    properties:
+                                      id:
+                                        type: integer
+                                        description: Unique identifier for the employee
+```
+
+And following two examples basis this spec.
+
+
 
 ## Checking Health Status Of Stub Server
 
