@@ -1812,7 +1812,8 @@ The keys can be specified either individually or in combination. For more inform
 | port     | Port only                      | Scheme, Host, Path |
 | basePath | Path only                      | Scheme, Host, Port |
 
-The default `baseUrl` can be customized through command-line arguments using `--host` and `--port`, or by configuring the `SPECMATIC_BASE_URL` system property.
+The default `baseUrl` can be customized through command-line arguments using `--host` and `--port`,
+or by configuring the `SPECMATIC_BASE_URL` system property when using the programmatic approach.
 This provides the flexibility to easily adapt your stub servers to different local and remote environments as needed.
 
 ### Example Specmatic Config
