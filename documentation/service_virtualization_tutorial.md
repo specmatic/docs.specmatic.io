@@ -1797,21 +1797,22 @@ Specmatic allow you to configure this behavior flexibly, based on your needs, wi
 You can customize specific aspects of the server configuration by utilizing the following keys in the `consumes` section of the Specmatic Config:
 
 - `baseUrl`: Define the full URL, which includes the scheme, host and optionally port and path
-- `port`: Specify only the port. The host and scheme will utilize default values
-- `host`: Specify only the host. The scheme and port will utilize default values
-- `basePath`: Indicate a base path under which the stubs will be served. The scheme, host, and port will utilize default values
+- `port`: Specifies only the port, the rest will utilize default values
+- `host`: Specify only the host, the rest will utilize default values
+- `basePath`: Specifies only the basePath, the rest will utilize default values
 
-**Note:** If `baseUrl` is specified, the `host`, `port`, and `basePath` keys if present will be disregarded.
-Please refer to the order of precedence and the default values outlined below.
+The keys can be specified either individually or in combination. For more information on the override functionality, please consult the table below.  
+**Note**: `baseUrl` is mutually exclusive with the other fields — you must provide either `baseUrl` or one of or a combination of host, port and basePath.
 
-| Key In Order Of Precedence | What it Overrides              | Defaults Used      |
-|----------------------------|--------------------------------|--------------------|
-| baseUrl                    | Scheme, Host, Port, Path (All) | None               |
-| host                       | Host only                      | Scheme, Port       |
-| port                       | Port only                      | Scheme, Host       |
-| basePath                   | Path only                      | Scheme, Host, Port |
+| Key      | What it Overrides              | Defaults Used      |
+|----------|--------------------------------|--------------------|
+| baseUrl  | Scheme, Host, Port, Path (All) | None               |
+| host     | Host only                      | Scheme, Port, Path |
+| port     | Port only                      | Scheme, Host, Path |
+| basePath | Path only                      | Scheme, Host, Port |
 
-The default `baseUrl` can be customized through command-line arguments using `--host` and `--port`, which will construct the default `baseUrl`, or by configuring the `SPECMATIC_BASE_URL` system property. This provides the flexibility to easily adapt your stub servers to different local and remote environments as needed.
+The default `baseUrl` can be customized through command-line arguments using `--host` and `--port`, or by configuring the `SPECMATIC_BASE_URL` system property.
+This provides the flexibility to easily adapt your stub servers to different local and remote environments as needed.
 
 #### Example Specmatic Config
 
@@ -1821,19 +1822,36 @@ contracts:
   - filesystem:
       directory: "contracts"
     consumes:
-      - "com/order.yaml" # Utilizes the default baseUrl: http://0.0.0.0:9000
-      - baseUrl: "http://localhost:8080/api/v2" # Overrides the default baseUrl
+      - "com/order.yaml" # Default baseUrl: http://0.0.0.0:9000
+      - baseUrl: "http://127.0.0.1:8080/api/v2" 
         specs:
-          - "com/order.yaml"
-      - host: "127.0.0.1" # Host is overridden; other settings remain as default
+          - "com/order.yaml" # Overridden baseUrl: http://127.0.0.1:8080/api/v2
+      - host: "127.0.0.1"
         specs:
-          - "com/order.yaml"
-      - port: 8080 # Port is overridden; other settings remain as default
+          - "com/order.yaml" # Overridden host: http://127.0.0.1:9000
+      - port: 8080
         specs:
-          - "com/order.yaml"
-      - basePath: "/api/v2" # Path is overridden; scheme, host, and port remain as default
+          - "com/order.yaml" # Overridden port: http://0.0.0.0:8080
+      - basePath: "/api/v2"
         specs:
-          - "com/order.yaml"
+          - "com/order.yaml" # Overridden basePath: http://0.0.0.0:9000/api/v2
+      - host: "127.0.0.1"
+        port: 8080
+        specs:
+          - "com/order.yaml" # Overridden host and port: http://127.0.0.1:8080
+      - host: "127.0.0.1"
+        basePath: "/api/v2"
+        specs:
+          - "com/order.yaml" # Overridden host and basePath: http://127.0.0.1:9000/api/v2
+      - port: 8080
+        basePath: "/api/v2"
+        specs:
+          - "com/order.yaml" # Overridden port and basePath: http://0.0.0.0:8080/api/v2
+      - host: "127.0.0.1"
+        port: 8080
+        basePath: "/api/v2"
+        specs:
+          - "com/order.yaml" # Overridden host, port, and basePath: http://127.0.0.1:8080/api/v2
 ```
 
 ### Running Specmatic Stubs on Different BaseURLs
