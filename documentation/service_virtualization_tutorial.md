@@ -51,6 +51,9 @@ Service Virtualization
   - [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
+    - [Specmatic Stubs with Base URL, Host, Port, and Path Configuration](#specmatic-stubs-with-base-url-host-port-and-path-configuration)
+      - [Customizing the Stub Server](#customizing-the-stub-server)
+      - [Example Specmatic Config](#example-specmatic-config)
     - [Running Specmatic Stubs on Different BaseURLs](#running-specmatic-stubs-on-different-baseurls)
       - [Overview](#overview-1)
       - [Directory Structure](#directory-structure)
@@ -1777,6 +1780,60 @@ paths:
                     enum:
                       - UP
                     example: UP
+```
+### Specmatic Stubs with Base URL, Host, Port, and Path Configuration
+
+When simulating APIs, it is crucial to have control over the execution environment of your stub servers. You might need to:
+
+- Quickly launch a stub on a default URL for local development purposes.
+- Execute stubs on designated ports when multiple services are operational.
+- Define a specific base path to align with your API routes.
+- Tailor the complete baseUrl to precisely fit the requirements of your test environments.
+
+Specmatic allow you to configure this behavior flexibly, based on your needs, without any complicated setup.
+
+#### Customizing the Stub Server
+
+You can customize specific aspects of the server configuration by utilizing the following keys in the `consumes` section of the Specmatic Config:
+
+- `baseUrl`: Define the full URL, which includes the scheme, host and optionally port and path
+- `port`: Specify only the port. The host and scheme will utilize default values
+- `host`: Specify only the host. The scheme and port will utilize default values
+- `basePath`: Indicate a base path under which the stubs will be served. The scheme, host, and port will utilize default values
+
+**Note:** If `baseUrl` is specified, the `host`, `port`, and `basePath` keys if present will be disregarded.
+Please refer to the order of precedence and the default values outlined below.
+
+| Key In Order Of Precedence | What it Overrides              | Defaults Used      |
+|----------------------------|--------------------------------|--------------------|
+| baseUrl                    | Scheme, Host, Port, Path (All) | None               |
+| host                       | Host only                      | Scheme, Port       |
+| port                       | Port only                      | Scheme, Host       |
+| basePath                   | Path only                      | Scheme, Host, Port |
+
+The default `baseUrl` can be customized through command-line arguments using `--host` and `--port`, which will construct the default `baseUrl`, or by configuring the `SPECMATIC_BASE_URL` system property. This provides the flexibility to easily adapt your stub servers to different local and remote environments as needed.
+
+#### Example Specmatic Config
+
+```yaml
+version: "2"
+contracts:
+  - filesystem:
+      directory: "contracts"
+    consumes:
+      - "com/order.yaml" # Utilizes the default baseUrl: http://0.0.0.0:9000
+      - baseUrl: "http://localhost:8080/api/v2" # Overrides the default baseUrl
+        specs:
+          - "com/order.yaml"
+      - host: "127.0.0.1" # Host is overridden; other settings remain as default
+        specs:
+          - "com/order.yaml"
+      - port: 8080 # Port is overridden; other settings remain as default
+        specs:
+          - "com/order.yaml"
+      - basePath: "/api/v2" # Path is overridden; scheme, host, and port remain as default
+        specs:
+          - "com/order.yaml"
 ```
 
 ### Running Specmatic Stubs on Different BaseURLs
