@@ -16,12 +16,12 @@ docker run znsio/specmatic
 {% endtab %}
 
 {% tab install java %}
-Download the standalone jar from our [Github releases](<https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable/{{ site.latest_release }}/specmatic-executable-{{ site.latest_release }}-all.jar).
+Download the standalone jar from our [Github releases](<https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.latest_release }}/specmatic-executable-all-{{ site.latest_release }}.jar).
 
 If you have downloaded the standalone jar from Maven Central, you may want to rename it as shown below for convenience.
 
 ```bash
-mv specmatic-executable-{{ site.latest_release }}-all.jar specmatic.jar
+mv specmatic-executable-all-{{ site.latest_release }}.jar specmatic.jar
 ```
 
 Run specmatic as below to list all the options available
