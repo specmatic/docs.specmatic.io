@@ -1763,7 +1763,7 @@ components:
 
 
 #### Create a Dictionary
-Now create a dictionary file named `employees_dictionary.yaml` in the same directory, the dictionary can also be in `JSON` format, 
+Now create a dictionary file named `employees_dictionary.yaml` in the same directory, the dictionary can also be in `JSON` format,
 following the naming convention `<spec-name>_dictionary.<format>` as follows:
 
 {% tabs dictionary %}
@@ -1785,6 +1785,7 @@ EmployeeDetails.employeeCode: "12345"
 {% endtab %}
 {% endtabs %}
 
+> **Note:** The order of priority for dictionary formats is as follows: `.yml`, `.yaml`, and then `.json`.
 <br/>To understand the syntax of dictionary refer to [service-virtualization](/documentation/service_virtualization_tutorial.html#use-meaningful-response-values-from-an-external-dictionary)
 
 #### Run the tests Tests

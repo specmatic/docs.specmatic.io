@@ -1045,6 +1045,7 @@ Employee.designation: Associate
 ```
 {% endtab %}
 {% endtabs %}
+> **Note:** The order of priority for dictionary formats is as follows: `.yml`, `.yaml`, and then `.json`.
 
 - Start the stub and execute this curl command:
 
