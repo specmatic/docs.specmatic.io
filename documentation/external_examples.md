@@ -137,7 +137,7 @@ View details section will give additional info and a live code editor to make ch
 
 > ![Update](../images/gui-update.png)
 
-This page will help you to edit, update, validate, fix and save your examples. 
+This page will help you to edit, update, validate, fix and save your examples.
 
 ### Validating Examples
 
@@ -153,11 +153,11 @@ You can validate one example at a time (as we saw above), or you validate them i
 
 Fix can also be done in bulk (similar to validate).
 
-**NOTE**: The Interactive Examples GUI is only available in Specmatic commercial version. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+**NOTE**: The Interactive Examples GUI is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Creating Examples Manually
 
-If you do not have access to the commercial version of Specmatic, you can create examples manually. 
+If you do not have access to the commercial version of Specmatic, you can create examples manually.
 
 Create an example file `employee_details_examples/example.json` with below content.
 
@@ -359,12 +359,23 @@ docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-
 {% endtab %}
 {% tab competing-examples java %}
 ```shell
-java -jar specmatic-openapi.jar examples interactive --contract-file employee_details.yaml
+java -jar specmatic-openapi.jar examples validate --spec-file employee_details.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-Specmatic detects this, and prints the following warning:
+Specmatic detects this, exits with a non-zero exit code after printing the following error:
+
+```log
+ERROR: Multiple examples detected having the same request.
+  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+
+  - Found following duplicate examples for request PATCH /employees
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_200.json'
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
+```
+
+If you would like the above to be a warning instead of an error, pass the `--competing-example-detection=LENIENT` flag. In this case, Specmatic will print the following warning.
 
 ```log
 WARNING: Multiple examples detected having the same request.
@@ -375,7 +386,9 @@ WARNING: Multiple examples detected having the same request.
     - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
 ```
 
-**NOTE**: While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in Specmatic commercial version. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+In `LENIENT` mode, the exit code will not be influenced by the warnings at all. 
+
+**NOTE**: While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Pro Tips
 - Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
