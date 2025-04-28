@@ -52,10 +52,13 @@ Service Virtualization
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
   - [Specmatic Stubs with Base URL, Host, Port, and Path Configuration](#specmatic-stubs-with-base-url-host-port-and-path-configuration)
-    - [Customizing the Stub Server](#customizing-the-stub-server)
-    - [Example Specmatic Config](#example-specmatic-config)
-  - [Running Specmatic Stub with a Prefixed Base Path](#running-specmatic-stub-with-a-prefixed-base-path)
-  - [Running Specmatic Stubs on Different BaseURLs](#running-specmatic-stubs-on-different-baseurls)
+      - [Specifying Host](#specifying-host)
+      - [Specifying Port](#specifying-port)
+      - [Specifying Base Path](#specifying-base-path)
+      - [Specifying Combination of Host, Port, and Base Path](#specifying-combination-of-host-port-and-base-path)
+      - [Specifying Base URL](#specifying-base-url)
+      - [Customizing the Default Base URL](#customizing-the-default-base-url)
+  - [Running Specmatic Stubs on Multiple BaseURLs](#running-specmatic-stubs-on-multiple-baseurls)
       - [Overview](#overview-1)
       - [Directory Structure](#directory-structure)
       - [Specmatic Configuration](#specmatic-configuration)
@@ -1784,101 +1787,95 @@ paths:
 ```
 ## Specmatic Stubs with Base URL, Host, Port, and Path Configuration
 
-When simulating APIs, it is crucial to have control over the execution environment of your stub servers. You might need to:
+By default, Specmatic stub servers run on `http://0.0.0.0:9000`<br/>
+However, you can customize the endpoint by specifying the `host`, `port`, `basePath`, or the complete `baseUrl` according to your requirements in the Specmatic Config.
+- Specifying only `host`, `port`, or `basePath` will auto-fill missing parts from the default base URL.
+- If `baseUrl` is specified, it will be used directly.
 
-- Quickly launch a stub on a default URL for local development purposes.
-- Execute stubs on designated ports when multiple services are operational.
-- Define a specific base path to align with your API routes.
-- Tailor the complete baseUrl to precisely fit the requirements of your test environments.
-
-Specmatic allow you to configure this behavior flexibly, based on your needs, without any complicated setup.
-
-### Customizing the Stub Server
-
-You can customize specific aspects of the server configuration by utilizing the following keys in the `consumes` section of the Specmatic Config:
-
-- `baseUrl`: Define the full URL, which includes the scheme, host and optionally port and path
-- `port`: Specifies only the port, the rest will utilize default values
-- `host`: Specify only the host, the rest will utilize default values
-- `basePath`: Specifies only the basePath, the rest will utilize default values
-
-The keys can be specified either individually or in combination. For more information on the override functionality, please consult the table below.  
-**Note**: `baseUrl` is mutually exclusive with the other fields — you must provide either `baseUrl` or one of or a combination of host, port and basePath.
-
-| Key      | What it Overrides              | Defaults Used      |
-|----------|--------------------------------|--------------------|
-| baseUrl  | Scheme, Host, Port, Path (All) | None               |
-| host     | Host only                      | Scheme, Port, Path |
-| port     | Port only                      | Scheme, Host, Path |
-| basePath | Path only                      | Scheme, Host, Port |
-
-The default `baseUrl` can be customized through command-line arguments using `--host` and `--port`,
-or by configuring the `SPECMATIC_BASE_URL` system property when using the programmatic approach.
-This provides the flexibility to easily adapt your stub servers to different local and remote environments as needed.
-
-### Example Specmatic Config
+#### Specifying Host
+With the following configuration, the stub server will run on `127.0.0.1` rather than the default host `0.0.0.0`
 
 ```yaml
 version: "2"
 contracts:
-  - filesystem:
-      directory: "contracts"
-    consumes:
-      - "com/order.yaml" # Default baseUrl: http://0.0.0.0:9000
-      - baseUrl: "http://127.0.0.1:8080/api/v2" 
-        specs:
-          - "com/order.yaml" # Overridden baseUrl: http://127.0.0.1:8080/api/v2
-      - host: "127.0.0.1"
-        specs:
-          - "com/order.yaml" # Overridden host: http://127.0.0.1:9000
-      - port: 8080
-        specs:
-          - "com/order.yaml" # Overridden port: http://0.0.0.0:8080
-      - basePath: "/api/v2"
-        specs:
-          - "com/order.yaml" # Overridden basePath: http://0.0.0.0:9000/api/v2
-      - host: "127.0.0.1"
-        port: 8080
-        specs:
-          - "com/order.yaml" # Overridden host and port: http://127.0.0.1:8080
-      - host: "127.0.0.1"
-        basePath: "/api/v2"
-        specs:
-          - "com/order.yaml" # Overridden host and basePath: http://127.0.0.1:9000/api/v2
-      - port: 8080
-        basePath: "/api/v2"
-        specs:
-          - "com/order.yaml" # Overridden port and basePath: http://0.0.0.0:8080/api/v2
-      - host: "127.0.0.1"
-        port: 8080
-        basePath: "/api/v2"
-        specs:
-          - "com/order.yaml" # Overridden host, port, and basePath: http://127.0.0.1:8080/api/v2
+- filesystem:
+  consumes:
+  - host: "127.0.0.1"
+    specs:
+    - "com/order.yaml" # Final endpoint: http://127.0.0.1:9000
 ```
 
-## Running Specmatic Stub with a Prefixed Base Path
-
-When building APIs, it is common practice to organize endpoints under a base path, such as `/api/v2` for versioned APIs. To support this, Specmatic allows you to configure a base URL without necessitating changes to the underlying contract paths, this can easily be achieved by setting the `baseUrl` field in the Specmatic Config.
+#### Specifying Port
+With the following configuration, the stub server will run on port `5000` rather than the default port `9000`
 
 ```yaml
-version: 2
+version: "2"
 contracts:
-  - consumes:
-    - baseUrl: http://localhost:9000/api/v2
-      specs:
-        - path/to/specification.yml
+- filesystem:
+  consumes:
+  - port: 5000
+    specs:
+    - "com/order.yaml" # Final endpoint: http://0.0.0.0:5000
 ```
 
-In this setup:
-- The stub server will be accessible at `http://localhost:9000/api/v2/`
-- All endpoints defined in your contract will automatically be available under the `/api/v2` prefix.
+#### Specifying Base Path
+With the following configuration, the stub server will run on `/api/v2` rather than the default base-path `/`
 
-For example, if your contract defines an endpoint at `/users`, it will be available at `http://localhost:9000/api/v2/users` when stubbed, without requiring any modifications to the contract itself, Further information regarding `baseUrl` can be found in the section below, including details on how to run multiple stub servers with different base URLs.
+```yaml
+version: "2"
+contracts:
+- filesystem:
+  consumes:
+  - basePath: "/api/v2"
+    specs:
+    - "com/order.yaml" # Final endpoint: http://0.0.0.0:9000/api/v2
+```
 
-## Running Specmatic Stubs on Different BaseURLs
+#### Specifying Combination of Host, Port, and Base Path
+The `host`, `port`, and `basePath` can be specified individually or in combination. 
+With the following configuration, the stub server will run at `http://127.0.0.1:5000/api/v2`.
+
+```yaml
+version: "2"
+contracts:
+- filesystem:
+  consumes:
+  - host: "127.0.0.1"
+    port: 5000
+    basePath: "/api/v2"
+    specs:
+    - "com/order.yaml" # Final endpoint: http://127.0.0.1:5000/api/v2
+```
+
+#### Specifying Base URL
+To directly configure the endpoint, you can define the `baseUrl`. 
+With the following configuration, the stub server will run at `http://127.0.0.1:5000/api/v2` rather than the default base URL.
+
+```yaml
+version: "2"
+contracts:
+- filesystem:
+  consumes:
+  - baseUrl: "http://127.0.0.1:5000/api/v2"
+    specs:
+    - "com/order.yaml" # Final endpoint: http://127.0.0.1:5000/api/v2
+```
+
+**Note**: You can either provide a `baseUrl` or specify one of or a combination of `host`, `port`, and `basePath`.
+They are mutually exclusive and cannot be used together for the same stub configuration.
+
+#### Customizing the Default Base URL
+
+The default base URL can also be customized:
+- Through command-line arguments using `--host` and `--port` arguments
+- Or by configuring the `SPECMATIC_BASE_URL` system property when using the programmatic approach
+
+## Running Specmatic Stubs on Multiple BaseURLs
 
 #### Overview
-This setup demonstrates how to run Specmatic stubs on different baseURLs for different specifications. This allows serving different APIs on their respective baseURLs while keeping their examples specific to each specification.
+This setup demonstrates how to run Specmatic stubs on multiple baseURLs for multiple specifications.<br/>
+This allows serving different APIs on their respective baseURLs while keeping their examples specific to each specification.<br/>
+**Note:** This is not limited to `baseUrl` but can be extended to `host`, `port`, and `basePath` as well.
 
 #### Directory Structure
 ```
