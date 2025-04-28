@@ -25,7 +25,7 @@ If you believe you have found a security vulnerability, please follow the steps 
 1. **Do not disclose the issue publicly** until we have had a chance to investigate and issue a fix.
 2. Send a detailed report to us at:
 
-   📧 **security@specmatic.io**
+   📧 **security[at]specmatic.io**
 
    Include:
     - A clear description of the issue
