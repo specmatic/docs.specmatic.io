@@ -153,7 +153,7 @@ You can validate one example at a time (as we saw above), or you validate them i
 
 Fix can also be done in bulk (similar to validate).
 
-**NOTE**: The Interactive Examples GUI is only available in Specmatic commercial version. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+**NOTE**: The Interactive Examples GUI is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Creating Examples Manually
 
@@ -359,12 +359,12 @@ docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-
 {% endtab %}
 {% tab competing-examples java %}
 ```shell
-java -jar specmatic-openapi.jar examples interactive --contract-file employee_details.yaml
+java -jar specmatic-openapi.jar examples validate --spec-file employee_details.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-Specmatic detects this, and exits after printing following error:
+Specmatic detects this, exits with a non-zero exit code after printing the following error:
 
 ```log
 ERROR: Multiple examples detected having the same request.
@@ -375,7 +375,7 @@ ERROR: Multiple examples detected having the same request.
     - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
 ```
 
-This behavior of exiting with error is the default behavior of Specmatic. However, it can be overridden by passing the `--competing-example-detection=LENIENT` flag to the above command. In this case, Specmatic will not exit with an error, but will continue with the validation process and show competing examples as a warning, as shown below.
+If you would like the above to be a warning instead of an error, pass the `--competing-example-detection=LENIENT` flag. In this case, Specmatic will print the following warning.
 
 ```log
 WARNING: Multiple examples detected having the same request.
@@ -386,7 +386,9 @@ WARNING: Multiple examples detected having the same request.
     - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
 ```
 
-**NOTE**: While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in Specmatic commercial version. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+In `LENIENT` mode, the exit code will not be influenced by the warnings at all. 
+
+**NOTE**: While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Pro Tips
 - Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
