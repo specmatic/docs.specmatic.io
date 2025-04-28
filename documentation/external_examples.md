@@ -137,7 +137,7 @@ View details section will give additional info and a live code editor to make ch
 
 > ![Update](../images/gui-update.png)
 
-This page will help you to edit, update, validate, fix and save your examples. 
+This page will help you to edit, update, validate, fix and save your examples.
 
 ### Validating Examples
 
@@ -157,7 +157,7 @@ Fix can also be done in bulk (similar to validate).
 
 ## Creating Examples Manually
 
-If you do not have access to the commercial version of Specmatic, you can create examples manually. 
+If you do not have access to the commercial version of Specmatic, you can create examples manually.
 
 Create an example file `employee_details_examples/example.json` with below content.
 
@@ -364,7 +364,18 @@ java -jar specmatic-openapi.jar examples interactive --contract-file employee_de
 {% endtab %}
 {% endtabs %}
 
-Specmatic detects this, and prints the following warning:
+Specmatic detects this, and exits after printing following error:
+
+```log
+ERROR: Multiple examples detected having the same request.
+  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+
+  - Found following duplicate examples for request PATCH /employees
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_200.json'
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
+```
+
+This behavior of exiting with error is the default behavior of Specmatic. However, it can be overridden by passing the `--competing-example-detection=LENIENT` flag to the above command. In this case, Specmatic will not exit with an error, but will continue with the validation process and show competing examples as a warning, as shown below.
 
 ```log
 WARNING: Multiple examples detected having the same request.
