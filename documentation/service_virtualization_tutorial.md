@@ -1024,17 +1024,33 @@ Let's see how this works.
 
   ```
 
-- Create a file named `employee_details_dictionary.json` in the same directory as your `specmatic.yaml` with below contents. The format of this dictionary JSON is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation"):
+- The dictionary can be provided in `YAML` or `JSON` format,, in the format of `<spec_file_name>_dictionary.<format>`
+- The format of the dictionary is on the lines of a map (key value pair) where the keys as per your OpenAPI schema object keys (in this case "department" and "designation").
+- Create a file named `employee_details_dictionary.yaml` in the same directory as your `specmatic.yaml` with below contents:
 
-  ```json
-  {
-    "Employee.id": 10,
-    "Employee.name": "Jamie",
-    "Employee.employeeCode" : "pqrxyz",
-    "Employee.department": "Sales",
-    "Employee.designation" : "Associate"
-  }
-  ```
+{% tabs dictionary %}
+{% tab dictionary yaml %}
+```yaml
+Employee.id: 10
+Employee.name: Jamie
+Employee.employeeCode: pqrxyz
+Employee.department: Sales
+Employee.designation: Associate
+```
+{% endtab %}
+{% tab dictionary json %}
+```json
+{
+  "Employee.id": 10,
+  "Employee.name": "Jamie",
+  "Employee.employeeCode" : "pqrxyz",
+  "Employee.department": "Sales",
+  "Employee.designation" : "Associate"
+}
+```
+{% endtab %}
+{% endtabs %}
+> **Note:** The order of priority for dictionary formats is as follows: `.yml`, `.yaml`, and then `.json`.
 
 - Start the stub and execute this curl command:
 
@@ -1107,7 +1123,7 @@ Note: Specific values for `id`, `name` and `employeeCode` were specified in the 
 
 ### Nested structure lookup in dictionary
 
-Keys in `dictionary.json` can refer to nested fields. Consider the following schema:
+Keys in dictionary can refer to nested fields. Consider the following schema:
 
 ```yaml
 components:

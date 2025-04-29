@@ -1763,7 +1763,18 @@ components:
 
 
 #### Create a Dictionary
-Now create a dictionary file named `employees_dictionary.json` in the same directory:
+Now create a dictionary file named `employees_dictionary.yaml` in the same directory, the dictionary can also be in `JSON` format,
+following the naming convention `<spec-name>_dictionary.<format>` as follows:
+
+{% tabs dictionary %}
+{% tab dictionary yaml %}
+```yaml
+EmployeeDetails.name: John Doe
+EmployeeDetails.department: IT
+EmployeeDetails.employeeCode: "12345"
+```
+{% endtab %}
+{% tab dictionary json %}
 ```json
 {
   "EmployeeDetails.name": "John Doe",
@@ -1771,7 +1782,10 @@ Now create a dictionary file named `employees_dictionary.json` in the same direc
   "EmployeeDetails.employeeCode": "12345"
 }
 ```
-**Note**: The naming convention for the dictionary file should be `<spec-name>_dictionary.json` where `<spec-name>` is the name of the specification file.
+{% endtab %}
+{% endtabs %}
+
+> **Note:** The order of priority for dictionary formats is as follows: `.yml`, `.yaml`, and then `.json`.
 <br/>To understand the syntax of dictionary refer to [service-virtualization](/documentation/service_virtualization_tutorial.html#use-meaningful-response-values-from-an-external-dictionary)
 
 #### Run the tests Tests
@@ -1790,7 +1804,7 @@ npx specmatic stub employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -v "$(pwd)/employees.yaml:/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/employees_dictionary.yaml" znsio/specmatic stub "employees.yaml"
+docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic stub "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -1810,7 +1824,7 @@ npx specmatic test employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -v "$(pwd)/employees.yaml:/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/employees_dictionary.yaml" znsio/specmatic test "employees.yaml"
+docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic test "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}
