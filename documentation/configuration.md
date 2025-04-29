@@ -370,7 +370,7 @@ contracts:
 {% endtabs %}
 
 As per the above configuration, the specs `api_order_v1.yaml` and `api_user_v1.yaml` will run on port 9000 and the spec `api_auth_v1.yaml` will run on port 9001.
-You can also specify `host`, `basePath`, and even the complete `baseUrl` in the `consumes` field. For more details, refer to the [Service Virtualization](/documentation/service_virtualization_tutorial#specmatic-stubs-with-base-url-host-port-and-path-configuration)
+You can also specify `host`, `basePath`, and even the complete `baseUrl` in the `consumes` field. For more details, refer to the [Service Virtualization](/documentation/service_virtualization_tutorial#specmatic-configuration-with-base-url-host-port-and-path)
 
 #### Source control authentication
 
