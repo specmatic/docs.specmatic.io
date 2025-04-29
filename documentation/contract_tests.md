@@ -975,8 +975,8 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 - `PATH`: Filter by request paths (/users, /products, etc.)
 - `STATUS`: Filter by response status codes (200, 400, etc.) - supports pattern matching with 'xx' (e.g., 4xx, 2xx)
 - `HEADERS`: Filter by request headers
-- `QUERY-PARAM`: Filter by query parameters
-- `EXAMPLE-NAME`: Filter by example names
+- `QUERY`: Filter by query parameters
+- `EXAMPLE`: Filter by example names
 
 #### Available Filter Operations
 - `&&` : Represents a logical AND operator.
@@ -1037,12 +1037,12 @@ specmatic test --filter="STATUS='2xx'"
 
 2. Skip authentication error tests:
 ```bash
-specmatic test --filter!="STATUS='4xx'"
+specmatic test --filter="STATUS!='4xx'"
 ```
 
 3. Skip specific status codes:
 ```bash
-specmatic test --filter!="STATUS='401,403'"
+specmatic test --filter="STATUS!='401,403'"
 ```
 
 4. Test specific API endpoints:
