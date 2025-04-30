@@ -199,31 +199,42 @@ docker run -p 9000:9000 -v "${PWD}/:/usr/src/app" znsio/specmatic virtual-servic
   curl http://localhost:9000/employees
   ```
 
-  Here you will see an empty response which means there is no data at this moment.
+  Here you will see an empty response `[]` which means there is no employees data at this moment.
 
-- Now run the following curl command:
+- Now let's try to create an employee using POST request, run the following curl command:
 
   ```shell
   curl -X POST -H 'Content-Type: application/json' -d '{"name": "Jill Doe", "department": "Engineering", "designation": "Director"}' http://localhost:9000/employees
   ```
 
-- You should get the following response back:
+  The employee will get created and you will see the following response:
 
   ```json
   {
-    "name": "Jill Doe",
-    "department": "Engineering",
-    "designation": "Director",
-    "id": <ID>
+      "name": "Jill Doe",
+      "department": "Engineering",
+      "designation": "Director",
+      "id": <ID>
   }
   ```
 
-- Now run the previous curl command again,
+- Now run the previous curl command again to query all the employees using GET request,
   ```shell
   curl http://localhost:9000/employees
   ```
 
-  Here you will see the data which was posted using previous command.
+  and you will see an employee which was created previously using POST request in the response,
+
+  ```json
+  [
+      {
+          "name": "Jill Doe",
+          "department": "Engineering",
+          "designation": "Director",
+          "id": <ID>
+      }
+  ]
+  ```
 
 - Now try to query the `<ID>` received in the previous command using curl:
 
@@ -235,14 +246,14 @@ docker run -p 9000:9000 -v "${PWD}/:/usr/src/app" znsio/specmatic virtual-servic
 
   ```json
   {
-    "name": "Jill Doe",
-    "department": "Engineering",
-    "designation": "Director",
-    "id": <ID>
+      "name": "Jill Doe",
+      "department": "Engineering",
+      "designation": "Director",
+      "id": <ID>
   }
   ```
 
-You can now use other CRUD methods such as PUT, PATCH, DELETE etc.
+This shows how Specmatic's virtual service maintains state across requests. Now you can do other CRUD operations using methods such as GET, POST, PUT, PATCH and DELETE etc.
 
 ### Command Line Options
 
@@ -272,14 +283,58 @@ The virtual service maintains state automatically based on your API specificatio
 
 You can initialize the service with pre-defined data:
 
-- By default, Specmatic looks for examples in a directory named `{specification-name}_examples` in the same location as your specification file. For instance, if your spec file is named `employee_details.yaml`, Specmatic will look for examples in the `employee_details_examples` directory.
+- By default, Specmatic looks for examples in a directory named `{specification-name}_examples` in the same location as your specification file. For instance, if your spec file is named `employee_details.yaml`, Specmatic will look for examples in the `employees_examples` directory.
+
+  - Create the example in `employees_examples/example.json`,
+
+    ```json
+    {
+        "http-request": {
+            "method": "GET",
+            "path": "/employees/10"
+        },
+        "http-response": {
+            "status": 200,
+            "body": {
+                "id": 10,
+                "name": "Jamie Rivera",
+                "department": "Engineering",
+                "designation": "Senior Software Engineer"
+            }
+        }
+    }
+    ``` 
+
+  - Start the virtual service
+    ```bash
+    specmatic virtual-service
+    ```
+
+  - Make curl request to find all the employees using below command,
+    ```bash
+    curl http://localhost:9000/employees
+    ```
+
+    you will see the below response,
+    ```json
+    [
+        {
+            "id": 10,
+            "name": "Jamie Rivera",
+            "department": "Engineering",
+            "designation": "Senior Software Engineer"
+        }
+    ]
+    ```
+
+    And that's how you can pre-load / seed the data before starting the virtual service.
 
 - Custom directory name can be passed using `--examples` flag,
 ```bash
-specmatic virtual-service --examples="spec_file_name_examples"
+specmatic virtual-service --examples="<customExampleDirectory>"
 ```
 
-Specmatic also provides GUI for generating example, checkout [Interactive Examples GUI](external_examples.html#interactive-examples-gui)
+Specmatic also provides GUI for generating examples, checkout [Interactive Examples GUI](external_examples.html#interactive-examples-gui)
 
 
 ## Common Use Cases
