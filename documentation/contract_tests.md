@@ -31,21 +31,14 @@ Contract Tests
     - [Referring to local specifications](#referring-to-local-specifications)
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
-  - [Selectively Running Tests in CI](#selectively-running-tests-in-ci)
-    - [Test Filtering Options](#test-filtering-options)
-    - [Using the New Filter System (Recommended)](#using-the-new-filter-system-recommended)
-      - [Available Filter Keys](#available-filter-keys)
-      - [Available Filter Operations](#available-filter-operations)
-      - [Filter Syntax](#filter-syntax)
-      - [Excluding Tests](#excluding-tests)
+  - [Running Specific Tests](#running-specific-tests)
+    - [Supported Filters & Operators](#supported-filters--operators)
+    - [Usage Examples](#usage-examples)
     - [Programmatic Usage](#programmatic-usage)
-    - [Examples](#examples)
-      - [Common Use Cases](#common-use-cases)
-    - [Putting it all together](#putting-it-all-together)
     - [Additional Tips](#additional-tips)
-    - [API Coverage](#api-coverage)
-      - [Enable the Actuator Mapping Endpoint](#enable-the-actuator-mapping-endpoint)
-      - [Use Swagger UI](#use-swagger-ui)
+  - [API Coverage](#api-coverage)
+    - [Enable the Actuator Mapping Endpoint](#enable-the-actuator-mapping-endpoint)
+    - [Use Swagger UI](#use-swagger-ui)
   - [Overlays](#overlays)
     - [Introduction](#introduction)
     - [Understanding with a Real-World Example](#understanding-with-a-real-world-example)
@@ -955,87 +948,43 @@ A contract-invalid example would not be allowed in the example named `SUCCESS`, 
 
 ---
 
-## Selectively Running Tests in CI
+## Running Specific Tests
 
-Specmatic provides powerful filtering capabilities to help you run specific tests during development and CI/CD pipelines. You can include or exclude tests based on various criteria such as HTTP methods, paths, status codes, and more.
+Specmatic provides powerful filtering capabilities to run specific tests. You can include or exclude tests based on various criteria such as HTTP methods, paths, status codes, and more.
 
-### Test Filtering Options
-
-### Using the New Filter System (Recommended)
-
-The `--filter` option provides granular control over which tests to run:
+Specmatic has `--filter` option which provides granular control over which tests to run:
 
 ```bash
 specmatic test --filter="METHOD='POST' && PATH='/users'"
 ```
 
-#### Available Filter Keys
+### Supported Filters & Operators
 
-- `METHOD`: Filter by HTTP methods (GET, POST, etc.)
-- `PATH`: Filter by request paths (/users, /products, etc.)
-- `STATUS`: Filter by response status codes (200, 400, etc.) - supports pattern matching with 'xx' (e.g., 4xx, 2xx)
-- `HEADERS`: Filter by request headers
-- `QUERY`: Filter by query parameters
-- `EXAMPLE`: Filter by example names
+| Filter   | Description                                                                 |
+|----------|-----------------------------------------------------------------------------|
+| `METHOD` | Filter by HTTP methods (GET, POST, etc.)                                    |
+| `PATH`   | Filter by request paths (`/users`, `/products`, etc.)                       |
+| `STATUS` | Filter by response status codes (200, 400, etc.) — supports pattern matching with `xx` (e.g., 4xx, 2xx) |
+| `HEADERS`| Filter by request headers name                                              |
+| `QUERY`  | Filter by query parameters name                                             |
+| `EXAMPLE`| Filter by example names                                                     |
 
-#### Available Filter Operations
-- `&&` : Represents a logical AND operator.
-- `||` : Represents a logical OR operator.
-- `!` : Negates the applied condition.
-- `=`, `!=` : Comparison operators for comparing a key with its value.
-- `(`, `)` : Parentheses are used to group multiple filter expressions.
+| Operator        | Description                                           |
+|----------------|-------------------------------------------------------|
+| `&&`           | Represents a logical AND operator.                    |
+| `||`           | Represents a logical OR operator.                     |
+| `!`            | Negates the applied condition.                        |
+| `=`, `!=`      | Comparison operators for comparing a key with its value. |
+| `(`, `)`       | Parentheses are used to group multiple filter expressions. |
 
-#### Filter Syntax
-
-1. Single value:
-```bash
---filter="METHOD='GET'"
-```
-
-2. Multiple values for same filter (comma-separated):
-```bash
---filter="METHOD='GET,POST'"
-```
-
-3. Multiple filters can be joined with AND operation (`&&`):
-```bash
---filter="METHOD='GET,POST' && PATH='/users'"
-```
-4. Multiple filters Joined with OR Operation (`||`):
-```bash
---filter="PATH='/users,/products' || STATUS='200'"
-```
-
-#### Excluding Tests
-
-Here's how you can provide filter criteria to exclude tests:
-
-```bash
---filter="STATUS!='400,401' && METHOD!='DELETE'"
-```
-
-### Programmatic Usage
-
-Set environment properties in your test setup:
-
-```java
-// Include specific tests
-System.setProperty("filter", "METHOD='POST' && PATH='/users'");
-
-// Exclude tests
-System.setProperty("filter", "STATUS!='400,401'");
-```
-
-### Examples
-
-#### Common Use Cases
+### Usage Examples
 
 1. Run only successful response tests:
 ```bash
 specmatic test --filter="STATUS='2xx'"
 ```
 
-2. Skip authentication error tests:
+2. Skip 4xx error tests:
 ```bash
 specmatic test --filter="STATUS!='4xx'"
 ```
@@ -1070,12 +1019,16 @@ specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' &
 specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
 ```
 
-### Putting it all together
+### Programmatic Usage
 
-Let's say you want to run tests for the employee creation API (`POST /employees`), the API to fetch department details (`GET /department`), while skipping any 4xx and 500 status tests:
+Set environment properties in your test setup:
 
-```bash
-specmatic test --filter="((PATH='/employees' && METHOD='POST') || (PATH='/department' && METHOD='GET')) && STATUS!='4xx,500'"
+```java
+// Include specific tests
+System.setProperty("filter", "METHOD='POST' && PATH='/users'");
+
+// Exclude tests
+System.setProperty("filter", "STATUS!='400,401'");
 ```
 
 ### Additional Tips
@@ -1093,7 +1046,7 @@ specmatic test --filter="((PATH='/employees' && METHOD='POST') || (PATH='/depart
 
 
 ---
-### API Coverage
+## API Coverage
 
 After executing the tests, Specmatic generates a tabular report that displays which APIs were covered by the tests. It can also retrieve the APIs exposed by the application through the actuator module to identify which APIs were *not* covered by contract tests or those that are not *implemented* in the service.
 
