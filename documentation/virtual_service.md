@@ -1,16 +1,16 @@
 ---
 layout: default
-title: Stateful Service
+title: Virtual Service
 parent: Documentation
 nav_order: 36
 ---
 
-# Stateful Service
+# Virtual Service
 
 
 <!-- TOC -->
 
-- [Stateful Service](#stateful-service)
+- [Virtual Service](#virtual-service)
     - [Pre-requisites](#pre-requisites)
     - [Example Usage](#example-usage)
         - [Command Line Options](#command-line-options)
@@ -18,8 +18,8 @@ nav_order: 36
         - [Default Behavior](#default-behavior)
         - [Pre-loading State](#pre-loading-state)
     - [Common Use Cases](#common-use-cases)
-        - [Local Development](#local-development)
-        - [Integration Testing](#integration-testing)
+        - [Local Development / API Sandbox / API Playground](#local-development--api-sandbox--api-playground)
+        - [Integration Testing / Ephemeral Environment Testing](#integration-testing--ephemeral-environment-testing)
         - [API Design Validation](#api-design-validation)
     - [Troubleshooting](#troubleshooting)
         - [Common Issues](#common-issues)
@@ -27,7 +27,7 @@ nav_order: 36
 
 <!-- /TOC -->
 
-While Specmatic's service virtualization provides stateless API mocking capabilities, modern applications often require more sophisticated testing scenarios. The virtual service feature was introduced to address this need, providing stateful behavior that mirrors real-world API interactions.
+While Specmatic's service virtualization provides stateless API mocking capabilities, modern applications often requires data persistance for testing complex workflows. The virtual service feature was introduced to address this need, providing stateful behavior that mirrors real-world API interactions.
 
 **Key differences from service virtualization:**
 - Maintains state across requests
@@ -41,12 +41,10 @@ While Specmatic's service virtualization provides stateless API mocking capabili
 - Simulating real-world API behaviors
 - Development without external service dependencies
 
-**Note:** RESTful api specification is mandatory for using Specmatic's stateful service feature.
-
 ## Pre-requisites
 
 - Create a directory named `specmatic` in your home directory.
-- Make sure you have installed Specmatic. Explore the [Getting Started](/documentation/service_virtualization_tutorial.html) page for all options for installing Specmatic.
+- Make sure you have installed Specmatic. Explore the [Getting Started](../download.html) page for all options for installing Specmatic.
 
 ## Example Usage
 
@@ -198,6 +196,14 @@ docker run -p 9000:9000 -v "${PWD}/:/usr/src/app" znsio/specmatic virtual-servic
 - In a new tab, run the following curl command:
 
   ```shell
+  curl http://localhost:9000/employees
+  ```
+
+  Here you will see an empty response which means there is no data at this moment.
+
+- Now run the following curl command:
+
+  ```shell
   curl -X POST -H 'Content-Type: application/json' -d '{"name": "Jill Doe", "department": "Engineering", "designation": "Director"}' http://localhost:9000/employees
   ```
 
@@ -212,7 +218,14 @@ docker run -p 9000:9000 -v "${PWD}/:/usr/src/app" znsio/specmatic virtual-servic
   }
   ```
 
-- Now in a new tab, try to query the `<ID>` received in the previous command using curl:
+- Now run the previous curl command again,
+  ```shell
+  curl http://localhost:9000/employees
+  ```
+
+  Here you will see the data which was posted using previous command.
+
+- Now try to query the `<ID>` received in the previous command using curl:
 
   ```shell
   curl http://localhost:9000/employees/<ID>
@@ -229,7 +242,7 @@ docker run -p 9000:9000 -v "${PWD}/:/usr/src/app" znsio/specmatic virtual-servic
   }
   ```
 
-You can now use other restful methods such as PUT, PATCH, DELETE etc to do the CRUD operations.
+You can now use other CRUD methods such as PUT, PATCH, DELETE etc.
 
 ### Command Line Options
 
@@ -259,17 +272,19 @@ The virtual service maintains state automatically based on your API specificatio
 
 You can initialize the service with pre-defined data:
 
-Start the service with pre-loaded examples:
+- By default, Specmatic looks for examples in a directory named `{specification-name}_examples` in the same location as your specification file. For instance, if your spec file is named `employee_details.yaml`, Specmatic will look for examples in the `employee_details_examples` directory.
+
+- Custom directory name can be passed using `--examples` flag,
 ```bash
 specmatic virtual-service --examples="spec_file_name_examples"
 ```
 
-Specmatic also provides GUI for generating example, checkout [Interactive Examples GUI](documentation/external_examples.html#interactive-examples-gui)
+Specmatic also provides GUI for generating example, checkout [Interactive Examples GUI](external_examples.html#interactive-examples-gui)
 
 
 ## Common Use Cases
 
-### Local Development
+### Local Development / API Sandbox / API Playground
 
 ```bash
 # Start service on a specific port
@@ -278,7 +293,7 @@ specmatic virtual-service --port=8080
 
 This allows developers to work against a realistic API implementation without depending on external services.
 
-### Integration Testing
+### Integration Testing / Ephemeral Environment Testing
 
 ```bash
 # Start with pre-loaded test data
@@ -308,7 +323,7 @@ The virtual service helps validate API design decisions early by providing a wor
 
 3. **Resource Not Found**
   - Make sure your API specification follows REST architecture
-  - RESTful architecture is mandatory for running stateful service
+  - RESTful architecture is mandatory for running Virtual Service
 
 ## See Also
 
