@@ -113,12 +113,12 @@ To start the GUI execute below command,
 {% tabs examples-gui %}
 {% tab examples-gui docker %}
 ```shell
-docker run --rm -v "$(pwd):/specs" -p "9001:9001" znsio/specmatic-openapi examples interactive --contract-file /specs/employee_details.yaml
+docker run --rm -v "$(pwd):/specs" -p "9001:9001" znsio/specmatic-openapi examples interactive --spec-file /specs/employee_details.yaml
 ```
 {% endtab %}
 {% tab examples-gui java %}
 ```shell
-java -jar specmatic-openapi.jar examples interactive --contract-file employee_details.yaml
+java -jar specmatic-openapi.jar examples interactive --spec-file employee_details.yaml
 ```
 {% endtab %}
 {% endtabs %}
