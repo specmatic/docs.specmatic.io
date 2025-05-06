@@ -399,7 +399,7 @@ Let's analyse the request body of the incoming request and check if it is compet
         {% endhighlight %}
       </td>
       <td style="text-align: center; vertical-align: top;">
-        Yes <br/>
+        <strong>Yes</strong> <br/>
         both <code>employees_PATCH_200.json</code> and <code>employees_PATCH_400.json</code> are competing examples for this request
       </td>
     </tr>
