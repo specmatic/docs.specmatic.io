@@ -16,3 +16,5 @@ gem "just-the-docs"
 
 # to validate links
 gem "html-proofer"
+
+gem "jekyll-serve", "~> 1.0.0.rc1"
