@@ -7,25 +7,25 @@ nav_order: 7
 
 # External Examples
 <!-- TOC -->
-
-- [External Examples](#external-examples)
-  - [Introduction](#introduction)
-  - [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
-  - [Interactive Examples GUI](#interactive-examples-gui)
-    - [Generating and Updating Examples](#generating-and-updating-examples)
-    - [Validating Examples](#validating-examples)
-    - [Fixing Examples](#fixing-examples)
-  - [Creating Examples Manually](#creating-examples-manually)
-  - [Using CLI to Validate Examples](#using-cli-to-validate-examples)
-  - [Example Format](#example-format)
-  - [Advanced Usage](#advanced-usage)
-    - [Working with Multiple Specifications](#working-with-multiple-specifications)
-    - [Custom Example Directory](#custom-example-directory)
-    - [Identifying Competing Examples](#identifying-competing-examples)
-  - [Pro Tips](#pro-tips)
-
-<!-- /TOC -->
-
+* [External Examples](#external-examples)
+  * [Introduction](#introduction)
+  * [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
+  * [Interactive Examples GUI](#interactive-examples-gui)
+    * [Generating and Updating Examples](#generating-and-updating-examples)
+    * [Validating Examples](#validating-examples)
+    * [Fixing Examples](#fixing-examples)
+  * [Creating Examples Manually](#creating-examples-manually)
+  * [Using CLI to Validate Examples](#using-cli-to-validate-examples)
+  * [Example Format](#example-format)
+  * [Working with Multiple Specifications](#working-with-multiple-specifications)
+  * [Custom Example Directory](#custom-example-directory)
+  * [Identifying Competing Examples](#identifying-competing-examples)
+    * [Competing examples with identical requests](#competing-examples-with-identical-requests)
+      * [Competing data-type based examples having identical requests](#competing-data-type-based-examples-having-identical-requests)
+    * [Competing data-type based examples](#competing-data-type-based-examples)
+    * [Lenient mode](#lenient-mode)
+  * [Pro Tips](#pro-tips)
+<!-- TOC -->
 ## Introduction
 
 It may not always be possible to add examples inline in the OpenAPI specifications. And sometimes certain examples may not belong in the API specification. In such cases, we add examples outside the spec in the form of JSON files.
@@ -257,10 +257,10 @@ Examples can be externalized to `json` files as seen in the above section, You w
 **Notes on the `request` format:**
 
 1. Multipart Form-data:
-  - You can either provide `content` or `filename`, but not both
-  - `filename` must start with @
-  - `contentType` is optional, and is matched against the `Content-Type` header
-  - `contentEncoding` is matched against the `Content-Encoding` header
+- You can either provide `content` or `filename`, but not both
+- `filename` must start with @
+- `contentType` is optional, and is matched against the `Content-Type` header
+- `contentEncoding` is matched against the `Content-Encoding` header
 
 2. Body can also just be a `string`, such "Hello world", or an `array`, such as [1, 2, 3]
 
@@ -268,9 +268,7 @@ Examples can be externalized to `json` files as seen in the above section, You w
 
 1. In contract tests, only the `status` field is required. Other fields will be ignored if provided such as headers, body etc.
 
-## Advanced Usage
-
-### Working with Multiple Specifications
+## Working with Multiple Specifications
 
 If you're managing multiple API specifications, Specmatic provides flexible options to validate all their examples:
 
@@ -278,28 +276,32 @@ If you're managing multiple API specifications, Specmatic provides flexible opti
   ```shell
   specmatic examples validate --specs-dir ./api-specs
   ```
-  This will look for example directories alongside each specification file.
+This will look for example directories alongside each specification file.
 
 2. **Organize Examples in a Separate Directory Structure**:
   ```shell
   specmatic examples validate --specs-dir ./api-specs --examples-base-dir ./all-examples
   ```
-  This helps when you want to keep your examples organized separately from your specifications.
+This helps when you want to keep your examples organized separately from your specifications.
 
-### Custom Example Directory
+## Custom Example Directory
 
 For a single specification, you can specify a custom examples directory:
 ```shell
 specmatic examples validate --spec-file employee_details.yaml --examples-dir ./custom-examples
 ```
 
-### Identifying Competing Examples
+## Identifying Competing Examples
 
 When using multiple examples, it's important to ensure each request is unique. If two examples share the same request but have different responses (e.g., one returns HTTP 200 and another HTTP 400), the Specmatic stub server will pick one response, ignoring the others.
 
 You can detect such competing example issues early by using Specamtic to validate your examples.
 
 Let's try the validation out. We shall continue to use the `employee_details.yaml` [spec from above](https://docs.specmatic.io/documentation/external_examples.html#creating-validating-and-fixing-examples).
+
+### Competing examples with identical requests
+
+To start with, lets try creating competing examples having duplicate requests but different response.
 
 **1.** Create an example in `employee_details_examples/employees_PATCH_200.json`:
 
@@ -310,7 +312,8 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
     "path": "/employees",
     "body": {
       "name": "Jamie",
-      "employeeCode": "pqrxyz"
+      "department": "Backend",
+      "designation": "Engineer"
     }
   },
   "http-response": {
@@ -335,7 +338,8 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
     "path": "/employees",
     "body": {
       "name": "Jamie",
-      "employeeCode": "pqrxyz"
+      "department": "Backend",
+      "designation": "Engineer"
     }
   },
   "http-response": {
@@ -362,7 +366,7 @@ java -jar specmatic-openapi.jar examples validate --spec-file employee_details.y
 {% endtab %}
 {% endtabs %}
 
-Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
+A request having body `{"name": "Jamie", "department": "Backend", "designation": "Engineer"}` will match both the above examples. Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
 
 ```log
 ERROR: Multiple examples detected having the same request.
@@ -373,9 +377,172 @@ ERROR: Multiple examples detected having the same request.
     - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
 ```
 
+#### Competing data-type based examples having identical requests
+
+Now, lets try creating competing examples having duplicate data-type based requests but different response.
+
+**1.** Create an example in `employee_details_examples/employees_PATCH_200_any_name.json`:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/employees",
+    "body": {
+      "name": "(string)",
+      "department": "Backend",
+      "designation": "Engineer"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 10,
+      "employeeCode": "pqrxyz",
+      "name": "Jamie",
+      "department": "Backend",
+      "designation": "Engineer"
+    }
+  }
+}
+```
+
+**2.** Create another example with the same request but a different response in `employee_details_examples/employees_PATCH_400_any_name_copy.json`:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/employees",
+    "body": {
+      "name": "(string)",
+      "department": "Backend",
+      "designation": "Engineer"
+    }
+  },
+  "http-response": {
+    "status": 400,
+    "body": {
+      "message": "Invalid value"
+    }
+  }
+}
+```
+
+**3.** Validate your examples:
+
+{% tabs competing-examples %}
+{% tab competing-examples docker %}
+```shell
+docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+```
+{% endtab %}
+{% tab competing-examples java %}
+```shell
+java -jar specmatic-openapi.jar examples validate --spec-file employee_details.yaml
+```
+{% endtab %}
+{% endtabs %}
+
+A request having body `{"name": "Jack", "department": "Backend", "designation": "Engineer"}` will match both the above examples. Like earlier case, Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
+
+```log
+ERROR: Multiple examples detected having the same request.
+  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+
+  - Found following overlapping examples for request PATCH /employees
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_200_any_name.json'
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400_any_name_copy.json'
+```
+
+### Competing data-type based examples
+
+Now, lets try creating competing examples having different (not duplicate) data-type based requests and with different responses but still potentially matching the same request.
+
+**1.** Create an example in `employee_details_examples/employees_PATCH_200_any_name.json`:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/employees",
+    "body": {
+      "name": "(string)",
+      "department": "Backend",
+      "designation": "Engineer"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "id": 10,
+      "employeeCode": "pqrxyz",
+      "name": "Ralph",
+      "department": "Backend",
+      "designation": "Engineer"
+    }
+  }
+}
+```
+
+**2.** Create another example with similar request but a different response in `employee_details_examples/employees_PATCH_400_any_designation.json`:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/employees",
+    "body": {
+      "name": "Tom",
+      "department": "Backend",
+      "designation": "(string)"
+    }
+  },
+  "http-response": {
+    "status": 400,
+    "body": {
+      "message": "Invalid value"
+    }
+  }
+}
+```
+
+**3.** Validate your examples:
+
+{% tabs competing-examples %}
+{% tab competing-examples docker %}
+```shell
+docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+```
+{% endtab %}
+{% tab competing-examples java %}
+```shell
+java -jar specmatic-openapi.jar examples validate --spec-file employee_details.yaml
+```
+{% endtab %}
+{% endtabs %}
+
+A request having body `{"name": "Tom", "department": "Backend", "designation": "Engineer"}` will match both the above examples. Like earlier cases, Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
+
+```log
+ERROR: Multiple examples detected having the same request.
+  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+
+  - Found following overlapping examples for request PATCH /employees
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_200_any_name.json'
+    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400_any_designation.json'
+```
+
+Note that,
+* a request having body `{"name": "Ralph", "department": "Backend", "designation": "Engineer"}` is not competing and will match example `employees_PATCH_200_any_name.json`
+* and so is the case with request having body `{"name": "Tom", "department": "Backend", "designation": "Administrator"}` which will match example named `employees_PATCH_400_any_designation.json`
+
+### Lenient mode
+
 To treat such competing example issues as a warning instead of an error, use the `--competing-example-detection=LENIENT` flag. This will display above message as `WARNING` and exit with code zero.
 
-**NOTE**: While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+{: .note}
+**Note:** While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Pro Tips
 - Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
