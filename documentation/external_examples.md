@@ -408,6 +408,7 @@ Let's analyse the request body of the incoming request and check if it is compet
 
 Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
 
+{: .warning}
 ```log
 ERROR: Multiple examples detected having the same request.
   This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
@@ -544,6 +545,7 @@ Let's analyse the request body of the incoming request and check if it is compet
 
 Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
 
+{: .warning}
 ```log
 ERROR: Multiple examples detected having the same request.
   This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
@@ -710,6 +712,7 @@ Let's analyse the request body of the incoming request and check if it is compet
 
 Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
 
+{: .warning}
 ```log
 ERROR: Multiple examples detected having the same request.
   This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
