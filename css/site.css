@@ -39,7 +39,8 @@
 }
 
 .warning {
-  background-color: #ffdddd;
+/*  background-color: #ffdddd;*/
+  background-color: #f1f1f1;
   border-left: 6px solid #f44336;
   padding: 10px;
 }
