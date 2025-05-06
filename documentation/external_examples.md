@@ -305,19 +305,15 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
 **1.** Create following examples with the same request but a different response in `employee_details_examples`:
 
 <table>
-  <colgroup>
-    <col width="50%"/>
-    <col width="50%"/>
-  </colgroup>
   <thead>
-    <tr class="header">
+    <tr>
       <th>employees_PATCH_200.json</th>
       <th>employees_PATCH_400.json</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "http-request": {
@@ -342,7 +338,7 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
         }
         {% endhighlight %}
       </td>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "http-request": {
@@ -385,19 +381,15 @@ java -jar specmatic-openapi.jar examples validate --spec-file employee_details.y
 Let's analyse the request body of the incoming request and check if it is competing for both examples.
 
 <table>
-  <colgroup>
-    <col width="50%"/>
-    <col width="50%"/>
-  </colgroup>
   <thead>
-    <tr class="header">
+    <tr>
       <th>Incoming request with body</th>
       <th>Are the examples competing for this request?</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "name": "Jamie",
@@ -406,7 +398,7 @@ Let's analyse the request body of the incoming request and check if it is compet
         }
         {% endhighlight %}
       </td>
-      <td align="center" valign="top">
+      <td style="text-align: center; vertical-align: top;">
         Yes <br/>
         both <code>employees_PATCH_200.json</code> and <code>employees_PATCH_400.json</code> are competing examples for this request
       </td>
@@ -432,19 +424,15 @@ Similar to [Competing examples by identical requests](https://docs.specmatic.io/
 **1.** Create following examples with the data type assigned to same key in the request but a different response in `employee_details_examples`:
 
 <table>
-  <colgroup>
-    <col width="50%"/>
-    <col width="50%"/>
-  </colgroup>
   <thead>
-    <tr class="header">
+    <tr>
       <th>employees_PATCH_200_any_name.json</th>
       <th>employees_PATCH_400_any_name_copy.json</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "http-request": {
@@ -469,7 +457,7 @@ Similar to [Competing examples by identical requests](https://docs.specmatic.io/
         }
         {% endhighlight %}
       </td>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "http-request": {
@@ -514,19 +502,15 @@ Let's analyse the request body of the incoming request and check if it is compet
 * and `employees_PATCH_200.json` from [Competing examples by identical requests](https://docs.specmatic.io/documentation/external_examples.html#competing-examples-by-identical-requests)
 
 <table>
-  <colgroup>
-    <col width="50%"/>
-    <col width="50%"/>
-  </colgroup>
   <thead>
-    <tr class="header">
+    <tr>
       <th>Incoming request with body</th>
       <th>Are the examples competing for this request?</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "name": "Jamie",
@@ -535,13 +519,13 @@ Let's analyse the request body of the incoming request and check if it is compet
         }
         {% endhighlight %}
       </td>
-      <td align="center" valign="top">
+      <td style="text-align: center; vertical-align: top;">
         <strong>No</strong> <br/>
         Specmatic identifies <code>employees_PATCH_200.json</code> to be more precise example for this request over <code>employees_PATCH_200_any_name.json</code> or <code>employees_PATCH_400_any_name_copy.json</code>
       </td>
     </tr>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "name": "Jack",
@@ -550,7 +534,7 @@ Let's analyse the request body of the incoming request and check if it is compet
         }
         {% endhighlight %}
       </td>
-      <td align="center" valign="top">
+      <td style="text-align: center; vertical-align: top;">
         <strong>Yes</strong> <br/>
         As the request does not match <code>employees_PATCH_200.json</code>, both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name_copy.json</code> are competing examples for this request
       </td>
@@ -576,19 +560,15 @@ Now, lets try creating competing examples having [data type](https://docs.specma
 **1.** Create following examples with the data type assigned to different parts of request and having a different response in `employee_details_examples`:
 
 <table>
-  <colgroup>
-    <col width="50%"/>
-    <col width="50%"/>
-  </colgroup>
   <thead>
-    <tr class="header">
+    <tr>
       <th>employees_PATCH_200_any_name.json</th>
       <th>employees_PATCH_400_any_designation.json</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "http-request": {
@@ -613,7 +593,7 @@ Now, lets try creating competing examples having [data type](https://docs.specma
         }
         {% endhighlight %}
       </td>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "http-request": {
@@ -658,19 +638,15 @@ Let's analyse the request body of the incoming request and check if it is compet
 * and `employees_PATCH_200.json` from [Competing examples by identical requests](https://docs.specmatic.io/documentation/external_examples.html#competing-examples-by-identical-requests)
 
 <table>
-  <colgroup>
-    <col width="50%"/>
-    <col width="50%"/>
-  </colgroup>
   <thead>
-    <tr class="header">
+    <tr>
       <th>Incoming request with body</th>
       <th>Are the examples competing for this request?</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "name": "Jamie",
@@ -679,13 +655,13 @@ Let's analyse the request body of the incoming request and check if it is compet
         }
         {% endhighlight %}
       </td>
-      <td align="center" valign="top">
+      <td style="text-align: center; vertical-align: top;">
         <strong>No</strong> <br/>
         Specmatic identifies <code>employees_PATCH_200.json</code> to be more precise example for this request over <code>employees_PATCH_200_any_name.json</code> or <code>employees_PATCH_400_any_designation.json</code>
       </td>
     </tr>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "name": "Ralph",
@@ -694,13 +670,13 @@ Let's analyse the request body of the incoming request and check if it is compet
         }
         {% endhighlight %}
       </td>
-      <td align="center" valign="top">
+      <td style="text-align: center; vertical-align: top;">
         <strong>No</strong> <br/>
         Specmatic identifies <code>employees_PATCH_200_any_name.json</code> to be the most precise example for this request
       </td>
     </tr>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "name": "Tom",
@@ -709,13 +685,13 @@ Let's analyse the request body of the incoming request and check if it is compet
         }
         {% endhighlight %}
       </td>
-      <td align="center" valign="top">
+      <td style="text-align: center; vertical-align: top;">
         <strong>No</strong> <br/>
         Specmatic identifies <code>employees_PATCH_200_any_designation.json</code> to be the most precise example for this request
       </td>
     </tr>
     <tr>
-      <td valign="top">
+      <td style="vertical-align: top;">
         {% highlight json %}
         {
           "name": "Tom",
@@ -724,7 +700,7 @@ Let's analyse the request body of the incoming request and check if it is compet
         }
         {% endhighlight %}
       </td>
-      <td align="center" valign="top">
+      <td style="text-align: center; vertical-align: top;">
         <strong>Yes</strong> <br/>
         As the request does not match <code>employees_PATCH_200.json</code>, both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code> are competing examples for this request
       </td>
