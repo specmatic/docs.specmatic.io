@@ -11,19 +11,19 @@ nav_order: 36
 <!-- TOC -->
 
 - [Virtual Service](#virtual-service)
-    - [Pre-requisites](#pre-requisites)
-    - [Example Usage](#example-usage)
-        - [Command Line Options](#command-line-options)
-    - [Working with State](#working-with-state)
-        - [Default Behavior](#default-behavior)
-        - [Pre-loading State](#pre-loading-state)
-    - [Common Use Cases](#common-use-cases)
-        - [Local Development / API Sandbox / API Playground](#local-development--api-sandbox--api-playground)
-        - [Integration Testing / Ephemeral Environment Testing](#integration-testing--ephemeral-environment-testing)
-        - [API Design Validation](#api-design-validation)
-    - [Troubleshooting](#troubleshooting)
-        - [Common Issues](#common-issues)
-    - [See Also](#see-also)
+  - [Pre-requisites](#pre-requisites)
+  - [Example Usage](#example-usage)
+    - [Command Line Options](#command-line-options)
+  - [Working with State](#working-with-state)
+    - [Default Behavior](#default-behavior)
+    - [Pre-loading State](#pre-loading-state)
+  - [Common Use Cases](#common-use-cases)
+    - [Local Development / API Sandbox / API Playground](#local-development--api-sandbox--api-playground)
+    - [Integration Testing / Ephemeral Environment Testing](#integration-testing--ephemeral-environment-testing)
+    - [API Design Validation](#api-design-validation)
+  - [Troubleshooting](#troubleshooting)
+    - [Common Issues](#common-issues)
+  - [See Also](#see-also)
 
 <!-- /TOC -->
 
@@ -377,10 +377,10 @@ The virtual service helps validate API design decisions early by providing a wor
    - Ensure path to examples directory is correct
 
 3. **Resource Not Found**
-  - Make sure your API specification follows REST architecture
-  - RESTful architecture is mandatory for running Virtual Service
+  - Make sure your API specification follows format similar to /resource and /resource/{id}.
+  - Sub-paths like /resource/add, /resource/delete/{id} are not allowed and will be ignored.
 
 ## See Also
 
-- [Generating Examples Documentation](documentation/service_virtualization_tutorial.html#externalizing-example-data)
-- [Contract Testing with Specmatic](documentation/contract_tests.html)
+- [Generating Examples Documentation](service_virtualization_tutorial.html#externalizing-example-data)
+- [Contract Testing with Specmatic](contract_tests.html)
