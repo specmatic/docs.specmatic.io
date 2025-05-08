@@ -261,13 +261,13 @@ This shows how Specmatic's virtual service maintains state across requests. Now 
 specmatic virtual-service [-hV] [--host=<host>] [--port=<port>] [--examples=<exampleDirectoryName>]
 ```
 
-| Option | Description |
-|--------|-------------|
-| `-h, --help` | Show help message and exit |
-| `--host=<host>` | Host for the virtual service (default: localhost) |
-| `--port=<port>` | Port for the virtual service (default: 9000) |
+| Option                              | Description                                            |
+| ----------------------------------- | ------------------------------------------------------ |
+| `-h, --help`                        | Show help message and exit                             |
+| `--host=<host>`                     | Host for the virtual service (default: localhost)      |
+| `--port=<port>`                     | Port for the virtual service (default: 9000)           |
 | `--examples=<exampleDirectoryName>` | Directories containing JSON examples for initial state |
-| `-v, --version` | Print version information and exit |
+| `-v, --version`                     | Print version information and exit                     |
 
 ## Working with State
 
