@@ -4,8 +4,8 @@ title: Dictionary
 parent: Documentation
 nav_order: 8
 ---
-Dictionary
-==============
+# Dictionary
+
 
 - [Dictionary](#dictionary)
   - [Structure](#structure)
