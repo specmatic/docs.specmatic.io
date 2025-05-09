@@ -118,12 +118,12 @@ To start the GUI execute below command,
 {% tabs examples-gui %}
 {% tab examples-gui docker %}
 ```shell
-docker run --rm -v "$(pwd):/specs" -p "9001:9001" znsio/specmatic-openapi examples interactive --contract-file /specs/employee_details.yaml
+docker run --rm -v "$(pwd):/specs" -p "9001:9001" znsio/specmatic-openapi examples interactive --spec-file /specs/employee_details.yaml
 ```
 {% endtab %}
 {% tab examples-gui java %}
 ```shell
-java -jar specmatic-openapi.jar examples interactive --contract-file employee_details.yaml
+java -jar specmatic-openapi.jar examples interactive --spec-file employee_details.yaml
 ```
 {% endtab %}
 {% endtabs %}
@@ -388,11 +388,11 @@ specmatic examples validate --spec-file employee_details.yaml --examples-dir ./c
 
 ### Identifying Competing Examples
 
-When working with multiple examples, it's important to ensure that an example request is unique. If more than one example has the same request, there may be consequences. For example, when an incoming request matches multiple examples, Specmatic stub server will pick one example and show it's response, ignoring the others.
+When using multiple examples, it's important to ensure each request is unique. If two examples share the same request but have different responses (e.g., one returns HTTP 200 and another HTTP 400), the Specmatic stub server will pick one response, ignoring the others.
 
-You can detect this issue early by using Specamtic to validate your examples.
+You can detect such competing example issues early by using Specamtic to validate your examples.
 
-Let's try the validation out. We shall continue to use the `employee_details.yaml` spec from above.
+Let's try the validation out. We shall continue to use the `employee_details.yaml` [spec from above](https://docs.specmatic.io/documentation/external_examples.html#creating-validating-and-fixing-examples).
 
 **1.** Create an example in `employee_details_examples/employees_PATCH_200.json`:
 
@@ -419,7 +419,7 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
 }
 ```
 
-**2.** Create another example with the same request in `employee_details_examples/employees_PATCH_400.json`:
+**2.** Create another example with the same request but a different response in `employee_details_examples/employees_PATCH_400.json`:
 
 ```json
 {
@@ -440,8 +440,6 @@ Let's try the validation out. We shall continue to use the `employee_details.yam
 }
 ```
 
-Note that, for the same request payload, it has a different response.
-
 **3.** Validate your examples:
 
 {% tabs competing-examples %}
@@ -457,7 +455,7 @@ java -jar specmatic-openapi.jar examples validate --spec-file employee_details.y
 {% endtab %}
 {% endtabs %}
 
-Specmatic detects this, exits with a non-zero exit code after printing the following error:
+Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
 
 ```log
 ERROR: Multiple examples detected having the same request.
@@ -468,18 +466,7 @@ ERROR: Multiple examples detected having the same request.
     - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
 ```
 
-If you would like the above to be a warning instead of an error, pass the `--competing-example-detection=LENIENT` flag. In this case, Specmatic will print the following warning.
-
-```log
-WARNING: Multiple examples detected having the same request.
-  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
-
-  - Found following duplicate examples for request PATCH /employees
-    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_200.json'
-    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
-```
-
-In `LENIENT` mode, the exit code will not be influenced by the warnings at all. 
+To treat such competing example issues as a warning instead of an error, use the `--competing-example-detection=LENIENT` flag. This will display above message as `WARNING` and exit with code zero.
 
 **NOTE**: While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 

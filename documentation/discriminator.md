@@ -287,7 +287,7 @@ a. Testing **Valid** Dog Request:
 Specmatic provides an interactive example generation interface. Let's start it with:
 
 ```bash
-specmatic examples interactive --contract-file=petstore.yaml
+specmatic examples interactive --spec-file=petstore.yaml
 ```
 
 This launches an interactive server and provides a URL [http://localhost:9001/_specmatic/examples](http://localhost:9001/_specmatic/examples). Opening this in your browser shows:

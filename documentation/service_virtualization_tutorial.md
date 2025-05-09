@@ -49,21 +49,26 @@ Service Virtualization
   - [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
   - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
       - [Example `curl` Request:](#example-curl-request)
-  - [Running Specmatic Stub with a Prefixed Base Path](#running-specmatic-stub-with-a-prefixed-base-path)
-  - [Running Specmatic Stubs on Different BaseURLs](#running-specmatic-stubs-on-different-baseurls)
-      - [Overview](#overview-1)
-      - [Directory Structure](#directory-structure)
-      - [Specmatic Configuration](#specmatic-configuration)
-        - [specmatic.yaml](#specmaticyaml)
-      - [API Specifications](#api-specifications)
-        - [imported\_product.yaml](#imported_productyaml)
-        - [exported\_product.yaml](#exported_productyaml)
-      - [Examples](#examples)
-        - [post\_imported\_product.json](#post_imported_productjson)
-        - [post\_exported\_product.json](#post_exported_productjson)
-        - [Run the stub server](#run-the-stub-server)
-      - [Example Requests](#example-requests)
-      - [Benefits](#benefits)
+  - [Specmatic Configuration with Base URL, Host, Port, and Path](#specmatic-configuration-with-base-url-host-port-and-path)
+    - [Specifying Host](#specifying-host)
+    - [Specifying Port](#specifying-port)
+    - [Specifying Base Path](#specifying-base-path)
+    - [Specifying Combination of Host, Port, and Base Path](#specifying-combination-of-host-port-and-base-path)
+    - [Specifying Base URL](#specifying-base-url)
+    - [Customizing the Default Base URL](#customizing-the-default-base-url)
+  - [Running Specmatic Stubs on Multiple BaseURLs](#running-specmatic-stubs-on-multiple-baseurls)
+    - [Overview](#overview-1)
+    - [Directory Structure](#directory-structure)
+    - [Specmatic Configuration](#specmatic-configuration)
+    - [API Specifications](#api-specifications)
+      - [imported\_product.yaml](#imported_productyaml)
+      - [exported\_product.yaml](#exported_productyaml)
+    - [Examples](#examples)
+      - [post\_imported\_product.json](#post_imported_productjson)
+      - [post\_exported\_product.json](#post_exported_productjson)
+    - [Run the stub server](#run-the-stub-server)
+    - [Example Requests](#example-requests)
+    - [Benefits](#benefits)
   - [Sample Java Project](#sample-java-project)
 
 
@@ -1547,32 +1552,99 @@ paths:
                       - UP
                     example: UP
 ```
+## Specmatic Configuration with Base URL, Host, Port, and Path
 
-## Running Specmatic Stub with a Prefixed Base Path
+By default, Specmatic stub servers run on `http://0.0.0.0:9000` *(Default BaseURL)*<br/>
+However, you can customize the endpoint by specifying the `host`, `port`, `basePath`, or the complete `baseUrl` according to your requirements in the Specmatic Config.
+- Specifying only `host`, `port`, or `basePath` will auto-fill missing parts from the default base URL.
+- If `baseUrl` is specified, it will be used directly.
 
-When building APIs, it is common practice to organize endpoints under a base path, such as `/api/v2` for versioned APIs. To support this, Specmatic allows you to configure a base URL without necessitating changes to the underlying contract paths, this can easily be achieved by setting the `baseUrl` field in the Specmatic Config.
+### Specifying Host
+With the following configuration, the stub server will run on `127.0.0.1` rather than the default host `0.0.0.0`
 
 ```yaml
-version: 2
+version: "2"
 contracts:
-  - consumes:
-    - baseUrl: http://localhost:9000/api/v2
-      specs:
-        - path/to/specification.yml
+- filesystem:
+  consumes:
+  - host: "127.0.0.1"
+    specs:
+    - "com/order.yaml" # Final endpoint: http://127.0.0.1:9000
 ```
 
-In this setup:
-- The stub server will be accessible at `http://localhost:9000/api/v2/`
-- All endpoints defined in your contract will automatically be available under the `/api/v2` prefix.
+### Specifying Port
+With the following configuration, the stub server will run on port `5000` rather than the default port `9000`
 
-For example, if your contract defines an endpoint at `/users`, it will be available at `http://localhost:9000/api/v2/users` when stubbed, without requiring any modifications to the contract itself, Further information regarding `baseUrl` can be found in the section below, including details on how to run multiple stub servers with different base URLs.
+```yaml
+version: "2"
+contracts:
+- filesystem:
+  consumes:
+  - port: 5000
+    specs:
+    - "com/order.yaml" # Final endpoint: http://0.0.0.0:5000
+```
 
-## Running Specmatic Stubs on Different BaseURLs
+### Specifying Base Path
+With the following configuration, the stub server will run on `/api/v2` rather than the default base-path `/`
 
-#### Overview
-This setup demonstrates how to run Specmatic stubs on different baseURLs for different specifications. This allows serving different APIs on their respective baseURLs while keeping their examples specific to each specification.
+```yaml
+version: "2"
+contracts:
+- filesystem:
+  consumes:
+  - basePath: "/api/v2"
+    specs:
+    - "com/order.yaml" # Final endpoint: http://0.0.0.0:9000/api/v2
+```
 
-#### Directory Structure
+### Specifying Combination of Host, Port, and Base Path
+The `host`, `port`, and `basePath` can be specified individually or in combination. 
+With the following configuration, the stub server will run at `http://127.0.0.1:5000/api/v2`.
+
+```yaml
+version: "2"
+contracts:
+- filesystem:
+  consumes:
+  - host: "127.0.0.1"
+    port: 5000
+    basePath: "/api/v2"
+    specs:
+    - "com/order.yaml" # Final endpoint: http://127.0.0.1:5000/api/v2
+```
+
+### Specifying Base URL
+To directly configure the endpoint, you can define the `baseUrl`. 
+With the following configuration, the stub server will run at `http://127.0.0.1:5000/api/v2` rather than the default base URL.
+
+```yaml
+version: "2"
+contracts:
+- filesystem:
+  consumes:
+  - baseUrl: "http://127.0.0.1:5000/api/v2"
+    specs:
+    - "com/order.yaml" # Final endpoint: http://127.0.0.1:5000/api/v2
+```
+
+> **Note**: You can either provide a `baseUrl` or specify one of or a combination of `host`, `port`, and `basePath`.
+They are mutually exclusive and cannot be used together for the same stub configuration.
+
+### Customizing the Default Base URL
+
+The default base URL can also be customized:
+- Through command-line arguments using `--host` and `--port` arguments
+- Or by configuring the `SPECMATIC_BASE_URL` system property when using the programmatic approach
+
+## Running Specmatic Stubs on Multiple BaseURLs
+
+### Overview
+This setup demonstrates how to run Specmatic stubs on multiple baseURLs for multiple specifications.<br/>
+This allows serving different APIs on their respective baseURLs while keeping their examples specific to each specification.<br/>
+**Note:** This is not limited to `baseUrl` but can be extended to `host`, `port`, and `basePath` as well.
+
+### Directory Structure
 ```
 project-root/
 │── specmatic.yaml
@@ -1586,8 +1658,7 @@ project-root/
 │       ├── post_exported_product.json
 ```
 
-#### Specmatic Configuration
-##### specmatic.yaml
+### Specmatic Configuration
 ```yaml
 version: 2
 contracts:
@@ -1599,8 +1670,8 @@ contracts:
 ```
 Note: The `imported_product` spec does not have a baseURL assigned, so it defaults to `http://0.0.0.0:9000`, whereas `exported_product` runs on `http://0.0.0.0:9001/exported`.
 
-#### API Specifications
-##### imported_product.yaml
+### API Specifications
+#### imported_product.yaml
 ```yaml
 openapi: 3.0.3
 info:
@@ -1637,7 +1708,7 @@ paths:
                     type: string
 ```
 
-##### exported_product.yaml
+#### exported_product.yaml
 ```yaml
 openapi: 3.0.3
 info:
@@ -1674,8 +1745,8 @@ paths:
                     type: string
 ```
 
-#### Examples
-##### post_imported_product.json
+### Examples
+#### post_imported_product.json
 ```json
 {
   "http-request": {
@@ -1697,7 +1768,7 @@ paths:
 }
 ```
 
-##### post_exported_product.json
+#### post_exported_product.json
 ```json
 {
   "http-request": {
@@ -1719,7 +1790,7 @@ paths:
 }
 ```
 
-##### Run the stub server
+### Run the stub server
 Once we have this setup, we can run the Specmatic stub server by running the following command in the `project-root` directory:
 {% tabs test %}
 {% tab test java %}
@@ -1741,7 +1812,7 @@ docker run -p 9000:9000 -p 9001:9001 -v "$(pwd)/imported_product:/usr/src/app/im
 
 This will start the Specmatic stub server on baseURLs `http://0.0.0.0:9000` and `http://0.0.0.0:9001/exported` for the `imported_product` and `exported_product` APIs, respectively.
 
-#### Example Requests
+### Example Requests
 
 Hitting the imported_product API on default baseURL http://localhost:9000
 ```sh
@@ -1769,7 +1840,7 @@ curl -X POST http://localhost:9001/exported/products -H "Content-Type: applicati
 }
 ```
 
-#### Benefits
+### Benefits
 - **BaseURL-based segregation:** Each spec runs on a dedicated baseURL, ensuring clear separation.
 - **Spec-specific examples:** Requests return expected responses per specification.
 - **Flexibility:** Allows hosting multiple versions or separate APIs without conflict.
