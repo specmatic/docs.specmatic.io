@@ -588,6 +588,6 @@ Also, it mounts the build artifacts from the docker container onto your local ma
 
 We have created sample projects to demonstrate the above in different languages and scenarios. Please follow the link for the latest sample projects .
 
-* [GraphQL sample projects](https://specmatic.io/documentation/sample_projects.html#graphql)
+* [GraphQL sample projects](https://docs.specmatic.io/documentation/sample_projects.html#graphql)
 
 These projects provide practical examples of how to integrate Specmatic GraphQL support into your workflow, including setting up stubs, writing tests, handling different languages, frameworks and running them on CI like Github actions.
