@@ -53,9 +53,10 @@ Here is a [sample project](https://github.com/znsio/specmatic-order-bff-graphql-
 2. Create a `specmatic.yaml` file in the root of your project to reference these contracts. Here's an example:
 
 ```yaml
-contract_repositories:
-  - type: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+version: 2
+contracts:
+  - git:
+      url: https://github.com/znsio/specmatic-order-contracts.git
     provides:
       - io/specmatic/examples/store/graphql/products_bff.graphqls
     consumes:
