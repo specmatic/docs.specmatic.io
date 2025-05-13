@@ -967,7 +967,6 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 | `STATUS` | Filter by response status codes (200, 400, etc.) — supports pattern matching with `xx` (e.g., 4xx, 2xx) |
 | `HEADERS`| Filter by request headers name                                              |
 | `QUERY`  | Filter by query parameters name                                             |
-| `EXAMPLE`| Filter by example names                                                     |
 
 | Operator        | Description                                           |
 |----------------|-------------------------------------------------------|
