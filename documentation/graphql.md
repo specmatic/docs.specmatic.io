@@ -8,24 +8,23 @@ nav_order: 18
 # GraphQL
 
 <!-- TOC -->
-* [GraphQL](#graphql)
-  * [Introduction](#introduction)
-  * [What Can You Achieve with Specmatic's GraphQL Support?](#what-can-you-achieve-with-specmatics-graphql-support)
-  * [Quick start with sample projects](#quick-start-with-sample-projects)
-  * [Starting a stub/mock server](#starting-a-stubmock-server)
-  * [Customizing stub/mock server](#customizing-stubmock-server)
-    * [Returning custom responses](#returning-custom-responses)
-      * [Providing custom examples dir](#providing-custom-examples-dir)
-    * [Deep dive into examples](#deep-dive-into-examples)
-      * [HTTP Headers](#http-headers)
-      * [GraphQL Variables](#graphql-variables)
-    * [Delayed responses](#delayed-responses)
-    * [Dynamic Field Selection from Example Responses](#dynamic-field-selection-from-example-responses)
-    * [Multi-Query Requests](#multi-query-requests)
-      * [Steps to Try Out Multi-Query Requests](#steps-to-try-out-multi-query-requests)
-    * [GraphQL Scalar Types](#graphql-scalar-types)
-  * [Running contract tests](#running-contract-tests)
-  * [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
+- [GraphQL](#graphql)
+  - [Introduction](#introduction)
+  - [What Can You Achieve with Specmatic's GraphQL Support?](#what-can-you-achieve-with-specmatics-graphql-support)
+  - [Quick start with sample projects](#quick-start-with-sample-projects)
+  - [Starting a stub server](#starting-a-stub-server)
+  - [Stubbing out specific values using example data](#stubbing-out-specific-values-using-example-data)
+      - [Providing a custom examples directory](#providing-a-custom-examples-directory)
+      - [Example file file format](#example-file-file-format)
+  - [HTTP Headers](#http-headers)
+  - [GraphQL Variables](#graphql-variables)
+  - [Delayed responses](#delayed-responses)
+  - [Dynamic Field Selection from Example Responses](#dynamic-field-selection-from-example-responses)
+  - [Multi-Query Requests](#multi-query-requests)
+      - [Steps to Try Out Multi-Query Requests](#steps-to-try-out-multi-query-requests)
+  - [GraphQL Scalar Types](#graphql-scalar-types)
+  - [Running contract tests](#running-contract-tests)
+  - [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
 <!-- TOC -->
 
 ## Introduction
@@ -50,13 +49,13 @@ Here are sample projects in different languages and frameworks that demonstrate 
 
 README of each of these projects include
 * detailed animated architecture diagram
-* instructions on how to start stub/mock server using graphql spec with custom examples, simulating delays, errors etc.
+* instructions on how to start stub server using graphql spec with custom examples, simulating delays, errors etc.
 * instructions on how to isolate the System Under Test when running contract tests
 * example CI workflow setups using GitHub Actions
 
-## Starting a stub/mock server
+## Starting a stub server
 
-To start a stub/mock server using Specmatic, you can use the following steps:
+To start a stub server using Specmatic, you can use the following steps:
 
 **Step 1: Create a graphql SDL file**
 
@@ -82,7 +81,7 @@ type Product {
 }
 ```
 
-**Step 2: Start the stub/mock server**
+**Step 2: Start the stub server**
 
 Run the following command to start the GraphQL stub:
 
@@ -122,9 +121,7 @@ You will receive a response with a random product ID, name, inventory, and type 
 }
 ```
 
-## Customizing stub/mock server
-
-### Returning custom responses
+## Stubbing out specific values using example data
 
 Above, we saw Specmatic generating random output based on the provided `product-api.graphql` spec. Instead, in order to receive specific example values, you can create an example YAML files containing specific data for `findAvailableProducts` query.
 
@@ -156,10 +153,11 @@ response: [
   }
 ]
 ```
+
 {: .note}
 **Note:** Keep the file `product-api.graphql` and directory `product-api_examples` at same level.
 
-**Step 2: Start the stub/mock server**
+**Step 2: Start the stub server**
 
 Run the following command to start the GraphQL stub:
 
@@ -201,11 +199,11 @@ This time though, you will receive a response with the specified example defined
 }
 ```
 
-#### Providing custom examples dir
+#### Providing a custom examples directory
 
 By convention, Specmatic automatically loads all examples defined for the GraphQL SDL file, say `<graphql_sdl_filename>.graphql`, from a colocated directory called `<graphql_sdl_filename>_examples`. However, in case your examples are in a different directory, you can pass it as an argument programmatically or through CLI args while running tests or service virtualization.
 
-### Deep dive into examples
+#### Example file file format
 
 Let us now take deeper look at the external example format.
 * At the top level we have two YAML root nodes called `request` and `response`
@@ -214,7 +212,7 @@ Let us now take deeper look at the external example format.
     * `headers`: you can add your `HTTP` headers here
 * `response` holds responses with JSON syntax for readability, syntax highlighting and also as an aid to copy and paste of real responses from actual application logs etc.
 
-#### HTTP Headers
+## HTTP Headers
 
 Although GraphQL SDL files do not support HTTP request headers, you may directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml below. The headers will be leveraged if present both by the contract tests as well as service virtualization.
 
@@ -243,7 +241,7 @@ response: [
 ]
 ```
 
-#### GraphQL Variables
+## GraphQL Variables
 
 Specmatic supports usage of GraphQL variables seamlessly. You only need to make sure that the externalised example is structured such that it uses the actual field values inline instead of variables in the query. Here is an example.
 
@@ -290,7 +288,7 @@ response: [
 {: .note}
 **Note**: It is recommended to specify the type of the variable e.g. `$pageSize: Int!`. If the type is not specified explicitly you may face some issues since Specmatic will implicitly cast the variable to a certain type which may be invalid sometimes.
 
-### Delayed responses
+## Delayed responses
 
 To simulate delay in the response, you can use the `delay-in-milliseconds` key in your example YAML file. For example:
 
@@ -319,10 +317,11 @@ response: [
 ]
 
 delay-in-milliseconds: 5000
-````
+```
+
 This will introduce a 5-second delay before the response is sent back to the client.
 
-### Dynamic Field Selection from Example Responses
+## Dynamic Field Selection from Example Responses
 
 When running a GraphQL stub using Specmatic, you can provide an example query that includes all possible fields and sub-selections. Specmatic uses this example to generate the stub response.
 
@@ -464,7 +463,7 @@ Here are some simple steps to try this out:
 ---
 This setup allows you to test how Specmatic reuses the example provided, adapting the response to the requested fields.
 
-### Multi-Query Requests
+## Multi-Query Requests
 
 The Specmatic GraphQL stub server supports multi-query requests, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-query requests with variables** are supported, making it flexible for dynamic requests.
 
@@ -654,7 +653,7 @@ This request showcases how Specmatic's GraphQL stub server can process multi-que
 
 This example demonstrates how Specmatic processes multiple queries in a single request and returns the expected responses for each query. You can adapt this setup for various use cases, leveraging the existing folder structure for organizing examples.
 
-### GraphQL Scalar Types
+## GraphQL Scalar Types
 
 In GraphQL, you can define [custom scalar types](https://graphql.org/learn/schema/#scalar-types) to handle specialized data, such as dates or monetary values, that require specific serialization and deserialization logic. For example:
 
