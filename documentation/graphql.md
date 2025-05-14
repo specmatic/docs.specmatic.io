@@ -7,23 +7,35 @@ nav_order: 18
 
 # GraphQL
 
-- [GraphQL](#graphql)
-  - [Introduction](#introduction)
-  - [What Can You Achieve with Specmatic's GraphQL Support?](#what-can-you-achieve-with-specmatics-graphql-support)
-  - [Quick Start](#quick-start)
-  - [Detailed explanation](#detailed-explanation)
-    - [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
-    - [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
-      - [HTTP Headers](#http-headers)
-      - [GraphQL Variables](#graphql-variables)
-    - [Dynamic Field Selection from Example Responses](#dynamic-field-selection-from-example-responses)
-    - [Multi-Query Requests](#multi-query-requests)
-      - [Steps to Try Out Multi-Query Requests](#steps-to-try-out-multi-query-requests)
-    - [GraphQL Scalar Types](#graphql-scalar-types)
-    - [Using the Docker Image](#using-the-docker-image)
-      - [Starting the Stub / Service Virtualization Service](#starting-the-stub--service-virtualization-service)
-      - [Running Tests](#running-tests)
-  - [Sample Projects](#sample-projects)
+<!-- TOC -->
+* [GraphQL](#graphql)
+  * [Introduction](#introduction)
+  * [What Can You Achieve with Specmatic's GraphQL Support?](#what-can-you-achieve-with-specmatics-graphql-support)
+  * [Quick Start with sample projects](#quick-start-with-sample-projects)
+  * [Starting a stub/mock server](#starting-a-stubmock-server)
+    * [Step 1: Create a graphql SDL file](#step-1-create-a-graphql-sdl-file)
+    * [Step 2: Start the stub/mock server](#step-2-start-the-stubmock-server)
+    * [Step 3: Make a request to the stub server](#step-3-make-a-request-to-the-stub-server)
+  * [Customizing stub/mock server](#customizing-stubmock-server)
+    * [Returning custom responses](#returning-custom-responses)
+    * [Delayed responses](#delayed-responses)
+    * [Simulating errors](#simulating-errors)
+    * [Adding custom headers](#adding-custom-headers)
+    * [So on](#so-on)
+  * [Running contract tests](#running-contract-tests)
+  * [Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively](#using-externalised-examples-as-test--stub-data-to-be-used-as-part-of-contract-tests-and-service-virtualization-respectively)
+    * [Step 2: Start the stub/mock server](#step-2-start-the-stubmock-server-1)
+    * [HTTP Headers](#http-headers)
+    * [GraphQL Variables](#graphql-variables)
+  * [Dynamic Field Selection from Example Responses](#dynamic-field-selection-from-example-responses)
+  * [Multi-Query Requests](#multi-query-requests)
+    * [Steps to Try Out Multi-Query Requests](#steps-to-try-out-multi-query-requests)
+  * [GraphQL Scalar Types](#graphql-scalar-types)
+  * [Using the Docker Image](#using-the-docker-image)
+      * [Starting the Stub / Service Virtualization Service](#starting-the-stub--service-virtualization-service)
+      * [Running Tests](#running-tests)
+  * [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
+<!-- TOC -->
 
 ## Introduction
 
@@ -39,33 +51,108 @@ With Specmatic GraphQL support you will be to leverage your GraphQL SDL files as
 4. Central Contract Repo: Store your GraphQL SDL files in central Git repo which will serve as single source of truth for both providers and consumers
 5. API resiliency : Generate negative and edge cases to verify the resiliency of your API implementation based on your GraphQL SDL files.
 
-## Quick Start
+## Quick Start with sample projects
 
-Here is a [sample project](https://github.com/znsio/specmatic-order-bff-graphql-java) which has a detailed animated architecture diagram along with explanations about how we are isolating the System Under Test when running Contract Tests.
+Here are sample projects in different languages and frameworks that demonstrate below features in various languages and scenarios. Refer to the latest projects here:
 
-[Clone the project](https://github.com/znsio/specmatic-order-bff-graphql-java) and follow the instructions in the README.
+* [GraphQL sample projects](https://docs.specmatic.io/documentation/sample_projects.html#graphql)
 
-## Detailed explanation
+README of each of these projects include 
+* detailed animated architecture diagram 
+* instructions on how to start stub/mock server using graphql spec with custom examples, simulating delays, errors etc.
+* instructions on how to isolate the System Under Test when running contract tests
+* example CI workflow setups using GitHub Actions
 
-### Using your GraphQL files as your API Contracts from Central Contract Repository
+## Starting a stub/mock server
 
-1. Store your GraphQL SDL files in a central repository for easy access and version control.
-2. Create a `specmatic.yaml` file in the root of your project to reference these contracts. Here's an example:
+To start a stub/mock server using Specmatic, you can use the following steps:
 
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://github.com/znsio/specmatic-order-contracts.git
-    provides:
-      - io/specmatic/examples/store/graphql/products_bff.graphqls
-    consumes:
-      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+### Step 1: Create a graphql SDL file
+
+Create a GraphQL SDL file named `proudct-api.graphql` as shown below.
+
+```graphql
+enum ProductType {
+  gadget
+  book
+  food
+  other
+}
+
+type Query {
+  findAvailableProducts(type: ProductType!, pageSize: Int): [Product]
+}
+
+type Product {
+  id: ID!
+  name: String!
+  inventory: Int!
+  type: ProductType!
+}
 ```
 
-Make sure to update the `repository`, `provides` and `consumes` sections to reflect your actual contract repository and .graphqls file locations.
+### Step 2: Start the stub/mock server
 
-### Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively
+Run the following command to start the GraphQL stub:
+
+```bash
+docker run -v "$PWD:/usr/input" \
+     -p 9000:9000 znsio/specmatic-graphql virtualize --spec-file /usr/input/product-api.graphql
+```
+
+That's it! You now have a GraphQL stub server running on `localhost:9000/graphql`.
+
+### Step 3: Make a request to the stub server
+ 
+Use the following `curl` command to make a request:
+
+```bash
+curl -X POST http://localhost:9000/graphql \
+ -H "Content-Type: application/json" \
+ -d '{
+   "query": "query { findAvailableProducts(type: gadget, pageSize: 10) { id name inventory type } }"
+ }'
+```
+
+**Expected Response:**
+```json
+{
+ "data": {
+   "findAvailableProducts": [
+     {
+       "id": "YOTHQ",
+       "name": "HAXVO",
+       "inventory": 536,
+       "type": "gadget"
+     }
+   ]
+ }
+}
+```
+You will receive a response with a random product ID, name, inventory, and type. The values are generated based on the GraphQL SDL file you provided in the Step 1.
+
+## Customizing stub/mock server
+
+### Returning custom responses
+
+### Delayed responses
+
+### Simulating errors
+
+### Adding custom headers
+
+### So on
+
+## Running contract tests
+
+
+
+
+
+
+This command starts a GraphQL stub server that listens on port 9000 and serves the GraphQL schema defined in `product-api.graphql`. You can then send GraphQL queries to this server.
+
+## Using externalised examples as test / stub data to be used as part of contract tests and service virtualization respectively
 
 Suppose you have a GraphQL SDL file as shown below.
 
@@ -88,6 +175,9 @@ type Product {
   type: ProductType!
 }
 ```
+
+### Step 2: Start the stub/mock server
+
 
 In order to provide appropriate example values, you can create an example YAML file that has test/stub data pertaining to the `findAvailableProducts` query.
 
@@ -125,11 +215,11 @@ Let us now take deeper look at the external example format.
   * `headers`: you can add your `HTTP` headers here
 * `response` holds responses with JSON syntax for readability, syntax highlighting and also as an aid to copy and paste of real responses from actual application logs etc.
 
-#### HTTP Headers
+### HTTP Headers
 
 Although GraphQL SDL files do not support HTTP request headers, you may directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml in the previous section. The headers will be leveraged if present both by the contract tests as well as service virtualization.
 
-#### GraphQL Variables
+### GraphQL Variables
 
 Specmatic supports usage of GraphQL variables seamlessly. You only need to make sure that the externalised example is structured such that it uses the actual field values inline instead of variables in the query. Here is an example.
 
@@ -175,7 +265,7 @@ response: [
 
 **Note**: It is recommended to specify the type of the variable e.g. `$pageSize: Int!`. If the type is not specified explicitly you may face some issues since Specmatic will implicitly cast the variable to a certain type which may be invalid sometimes.
 
-### Dynamic Field Selection from Example Responses
+## Dynamic Field Selection from Example Responses
 
 When running a GraphQL stub using Specmatic, you can provide an example query that includes all possible fields and sub-selections. Specmatic uses this example to generate the stub response.
 
@@ -317,13 +407,13 @@ Here are some simple steps to try this out:
 ---
 This setup allows you to test how Specmatic reuses the example provided, adapting the response to the requested fields.
 
-### Multi-Query Requests
+## Multi-Query Requests
 
 The Specmatic GraphQL stub server supports multi-query requests, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-query requests with variables** are supported, making it flexible for dynamic requests.
 
 To showcase this, let's reuse the folder structure established in the previous section on dynamic field selection.
 
-#### Steps to Try Out Multi-Query Requests
+### Steps to Try Out Multi-Query Requests
 
 1. **Create the GraphQL SDL File**: Create a file named `product-api.graphql` with the following schema:
    ```graphql
@@ -507,7 +597,7 @@ This request showcases how Specmatic's GraphQL stub server can process multi-que
 
 This example demonstrates how Specmatic processes multiple queries in a single request and returns the expected responses for each query. You can adapt this setup for various use cases, leveraging the existing folder structure for organizing examples.
 
-### GraphQL Scalar Types
+## GraphQL Scalar Types
 
 In GraphQL, you can define [custom scalar types](https://graphql.org/learn/schema/#scalar-types) to handle specialized data, such as dates or monetary values, that require specific serialization and deserialization logic. For example:
 
@@ -556,7 +646,7 @@ response: [
 
 Here, the `Date` scalar is provided with a valid value (`"2024/12/31"`). This ensures that during testing, Specmatic uses the correct format for the `Date` argument, allowing your tests to run smoothly without failures caused by incorrect data types.
 
-### Using the Docker Image
+## Using the Docker Image
 
 So far in the above explanation the sample project is invoking Specmatic GraphQL support programmatically. However if you wish to run the same using the CLI then the Docker image below wraps the same Specmatic GraphQL capabilities.
 
@@ -585,10 +675,21 @@ docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" -
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating GraphQL requests based on the GrapqhQL SDL files listed under `provides` section along with examples if any provided in the colocated directory named `<GraphQL SDL file without extension>_examples`.
 Also, it mounts the build artifacts from the docker container onto your local machine once the test run is completed.
 
-## Sample Projects
+## Using your GraphQL files as your API Contracts from Central Contract Repository
 
-We have created sample projects to demonstrate the above in different languages and scenarios. Please follow the link for the latest sample projects .
+1. Store your GraphQL SDL files in a central repository for easy access and version control.
+2. Create a `specmatic.yaml` file in the root of your project to reference these contracts. Here's an example:
 
-* [GraphQL sample projects](https://docs.specmatic.io/documentation/sample_projects.html#graphql)
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://github.com/znsio/specmatic-order-contracts.git
+    provides:
+      - io/specmatic/examples/store/graphql/products_bff.graphqls
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+```
 
-These projects provide practical examples of how to integrate Specmatic GraphQL support into your workflow, including setting up stubs, writing tests, handling different languages, frameworks and running them on CI like Github actions.
+Make sure to update the `repository`, `provides` and `consumes` sections to reflect your actual contract repository and .graphqls file locations.
+
