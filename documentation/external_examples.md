@@ -388,7 +388,9 @@ specmatic examples validate --spec-file employee_details.yaml --examples-dir ./c
 
 ## Identifying Examples with Competing Requests
 
-When using multiple examples, it's important to ensure each request is unique. If the same incoming request appears in multiple examples having different responses (e.g., one returns HTTP 200 and another HTTP 400), then Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve its response, ignoring the others. The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion.
+When using multiple examples, it's important to ensure each request is unique. 
+
+If the same incoming request appears in multiple examples having different responses (e.g., one returns HTTP 200 and another HTTP 400), then Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve its response, ignoring the others. The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion.
 
 You can detect such issues with competing example requests early by using Specamtic to validate your examples.
 
