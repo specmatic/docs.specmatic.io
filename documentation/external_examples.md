@@ -7,29 +7,29 @@ nav_order: 7
 
 # External Examples
 <!-- TOC -->
-
-- [External Examples](#external-examples)
-  - [Introduction](#introduction)
-  - [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
-  - [Interactive Examples GUI](#interactive-examples-gui)
-    - [Generating and Updating Examples](#generating-and-updating-examples)
-    - [Validating Examples](#validating-examples)
-    - [Fixing Examples](#fixing-examples)
-  - [Creating Examples Manually](#creating-examples-manually)
-  - [Using CLI to Validate Examples](#using-cli-to-validate-examples)
-  - [Example Format](#example-format)
-  - [Using Dictionary Values In Examples](#using-dictionary-values-in-examples)
-      - [Example](#example)
-      - [Dictionary](#dictionary)
-      - [Starting the Stub Server](#starting-the-stub-server)
-      - [Making a PATCH Request](#making-a-patch-request)
- - [Identifying Examples with Competing Requests](#identifying-examples-with-competing-requests)
-    - [Competing Requests by Identical Values](#competing-requests-by-identical-values)
-    - [Competing Requests by Identical Data Type Values](#competing-requests-by-identical-data-type-values)
-    - [Competing Requests by OVerlapping Data Type Values](#competing-requests-by-overlapping-data-type-values)
-    - [Lenient mode](#lenient-mode)
-  - [Pro Tips](#pro-tips)
-
+* [External Examples](#external-examples)
+  * [Introduction](#introduction)
+  * [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
+  * [Interactive Examples GUI](#interactive-examples-gui)
+    * [Generating and Updating Examples](#generating-and-updating-examples)
+    * [Validating Examples](#validating-examples)
+    * [Fixing Examples](#fixing-examples)
+  * [Creating Examples Manually](#creating-examples-manually)
+  * [Using CLI to Validate Examples](#using-cli-to-validate-examples)
+  * [Example Format](#example-format)
+  * [Using Dictionary Values In Examples](#using-dictionary-values-in-examples)
+      * [Example](#example)
+      * [Dictionary](#dictionary)
+      * [Starting the Stub Server](#starting-the-stub-server)
+      * [Making a PATCH Request](#making-a-patch-request)
+  * [Working with Multiple Specifications](#working-with-multiple-specifications)
+  * [Custom Example Directory](#custom-example-directory)
+  * [Identifying Examples with Competing Requests](#identifying-examples-with-competing-requests)
+    * [Competing Requests by Identical Values](#competing-requests-by-identical-values)
+    * [Competing Requests by Identical Data Type Values](#competing-requests-by-identical-data-type-values)
+    * [Competing Requests by OVerlapping Data Type Values](#competing-requests-by-overlapping-data-type-values)
+    * [Lenient mode](#lenient-mode)
+  * [Pro Tips](#pro-tips)
 <!-- /TOC -->
 
 ## Introduction
@@ -359,7 +359,8 @@ Observe the following response:
 }
 ```
 
-**Note:** While the example provided specific values for `name`, `department`, and `designation`, the fields for `id` and `employeeCode` were not explicitly defined.
+{: .note}
+While the example provided specific values for `name`, `department`, and `designation`, the fields for `id` and `employeeCode` were not explicitly defined.
 As such, the values returned for those fields were derived from the dictionary.
 
 ## Working with Multiple Specifications
