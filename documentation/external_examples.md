@@ -789,7 +789,7 @@ Let’s first analyse if the requests defined in examples above competes for any
   <thead>
     <tr>
       <th>Incoming request with body</th>
-      <th>Are the examples competing for this request?</th>
+      <th>Are the requests defined in examples above competing for this request?</th>
     </tr>
   </thead>
   <tbody>
