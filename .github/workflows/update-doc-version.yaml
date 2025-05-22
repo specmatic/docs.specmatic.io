@@ -23,14 +23,12 @@ jobs:
     - name: Checkout documentation repository
       uses: actions/checkout@v4
       with:
-        repository: znsio/specmatic-documentation
         fetch-depth: 0
-        ref: master
+        ref: main
         token: "${{ secrets.SPECMATIC_GITHUB_TOKEN }}"
-        path: documentation
     - name: Update version in _config.yml
       run: |
-        sed -i "s/latest_release: .*/latest_release: $SPECMATIC_LATEST_RELEASE_VERSION/" documentation/_config.yml
+        sed -i "s/latest_release: .*/latest_release: $SPECMATIC_LATEST_RELEASE_VERSION/" _config.yml
     - name: Commit and push
       run: |
         git config --global user.email "github-service-account@specmatic.io"
