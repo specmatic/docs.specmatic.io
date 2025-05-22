@@ -647,7 +647,7 @@ Let's first analyse if the requests defined in examples above competes for any i
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>Yes</strong> <br/>
-        Specmatic identifies this request not matching the one in <code>employees_PATCH_200_concrete_name.json</code>, but matching those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name.json</code>
+        Specmatic identifies this request to be not matching the one in <code>employees_PATCH_200_concrete_name.json</code>, but matching those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name.json</code>
       </td>
     </tr>
   </tbody>
@@ -850,7 +850,7 @@ Let’s first analyse if the requests defined in examples above competes for any
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>Yes</strong> <br/>
-        Specmatic identifies this request not matching the one in <code>employees_PATCH_200_concrete_values.json</code>, but matching those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code>
+        Specmatic identifies this request to be not matching the one in <code>employees_PATCH_200_concrete_values.json</code>, but matching those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code>
       </td>
     </tr>
   </tbody>
