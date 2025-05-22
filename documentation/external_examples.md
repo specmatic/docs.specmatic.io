@@ -7,7 +7,6 @@ nav_order: 7
 
 # External Examples
 <!-- TOC -->
-
 - [External Examples](#external-examples)
   - [Introduction](#introduction)
   - [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
@@ -23,12 +22,14 @@ nav_order: 7
       - [Dictionary](#dictionary)
       - [Starting the Stub Server](#starting-the-stub-server)
       - [Making a PATCH Request](#making-a-patch-request)
-  - [Advanced Usage](#advanced-usage)
-    - [Working with Multiple Specifications](#working-with-multiple-specifications)
-    - [Custom Example Directory](#custom-example-directory)
-    - [Identifying Competing Examples](#identifying-competing-examples)
+  - [Working with Multiple Specifications](#working-with-multiple-specifications)
+  - [Custom Example Directory](#custom-example-directory)
+  - [Identifying Examples with Competing Requests](#identifying-examples-with-competing-requests)
+    - [Competing Requests by Identical Values](#competing-requests-by-identical-values)
+    - [Competing Requests by Identical Data Type Values](#competing-requests-by-identical-data-type-values)
+    - [Competing Requests by Overlapping Data Type Values](#competing-requests-by-overlapping-data-type-values)
+    - [Lenient mode](#lenient-mode)
   - [Pro Tips](#pro-tips)
-
 <!-- /TOC -->
 
 ## Introduction
@@ -358,12 +359,11 @@ Observe the following response:
 }
 ```
 
-**Note:** While the example provided specific values for `name`, `department`, and `designation`, the fields for `id` and `employeeCode` were not explicitly defined.
+{: .note}
+While the example provided specific values for `name`, `department`, and `designation`, the fields for `id` and `employeeCode` were not explicitly defined.
 As such, the values returned for those fields were derived from the dictionary.
 
-## Advanced Usage
-
-### Working with Multiple Specifications
+## Working with Multiple Specifications
 
 If you're managing multiple API specifications, Specmatic provides flexible options to validate all their examples:
 
@@ -371,76 +371,127 @@ If you're managing multiple API specifications, Specmatic provides flexible opti
   ```shell
   specmatic examples validate --specs-dir ./api-specs
   ```
-  This will look for example directories alongside each specification file.
+This will look for example directories alongside each specification file.
 
 2. **Organize Examples in a Separate Directory Structure**:
   ```shell
   specmatic examples validate --specs-dir ./api-specs --examples-base-dir ./all-examples
   ```
-  This helps when you want to keep your examples organized separately from your specifications.
+This helps when you want to keep your examples organized separately from your specifications.
 
-### Custom Example Directory
+## Custom Example Directory
 
 For a single specification, you can specify a custom examples directory:
 ```shell
 specmatic examples validate --spec-file employee_details.yaml --examples-dir ./custom-examples
 ```
 
-### Identifying Competing Examples
+## Identifying Examples with Competing Requests
 
-When using multiple examples, it's important to ensure each request is unique. If two examples share the same request but have different responses (e.g., one returns HTTP 200 and another HTTP 400), the Specmatic stub server will pick one response, ignoring the others.
+When using multiple examples, it's important to ensure each request is unique. 
 
-You can detect such competing example issues early by using Specamtic to validate your examples.
+If the same incoming request appears in multiple examples having different responses (e.g., one returns HTTP 200 and another HTTP 400), then Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve its response, ignoring the others. The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion.
 
-Let's try the validation out. We shall continue to use the `employee_details.yaml` [spec from above](https://docs.specmatic.io/documentation/external_examples.html#creating-validating-and-fixing-examples).
+You can detect such issues with competing example requests early by using Specamtic to validate your examples.
 
-**1.** Create an example in `employee_details_examples/employees_PATCH_200.json`:
+Let's try the validation out. 
 
-```json
-{
-  "http-request": {
-    "method": "PATCH",
-    "path": "/employees",
-    "body": {
-      "name": "Jamie",
-      "employeeCode": "pqrxyz"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "id": 10,
-      "employeeCode": "pqrxyz",
-      "name": "Jamie",
-      "department": "Backend",
-      "designation": "Engineer"
-    }
-  }
-}
-```
+### Competing Requests by Identical Values
 
-**2.** Create another example with the same request but a different response in `employee_details_examples/employees_PATCH_400.json`:
+We will continue to use the `employee_details.yaml` [spec from above](https://docs.specmatic.io/documentation/external_examples.html#creating-validating-and-fixing-examples).
 
-```json
-{
-  "http-request": {
-    "method": "PATCH",
-    "path": "/employees",
-    "body": {
-      "name": "Jamie",
-      "employeeCode": "pqrxyz"
-    }
-  },
-  "http-response": {
-    "status": 400,
-    "body": {
-      "message": "Invalid value"
-    }
-  }
-}
-```
+**1.** Create following examples with the same request but a different response in the directory `employee_details_examples`:
 
-**3.** Validate your examples:
+<table>
+  <thead>
+    <tr>
+      <th>employees_PATCH_200.json</th>
+      <th>employees_PATCH_400.json</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "http-request": {
+            "method": "PATCH",
+            "path": "/employees",
+            "body": {
+              "name": "Jamie",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          },
+          "http-response": {
+            "status": 200,
+            "body": {
+              "id": 10,
+              "employeeCode": "pqrxyz",
+              "name": "Jamie",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          }
+        }
+        {% endhighlight %}
+      </td>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "http-request": {
+            "method": "PATCH",
+            "path": "/employees",
+            "body": {
+              "name": "Jamie",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          },
+          "http-response": {
+            "status": 400,
+            "body": {
+              "message": "Invalid value"
+            }
+          }
+        }
+        {% endhighlight %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Let's first analyse if the requests defined in examples above competes for any incoming requests.
+
+<table>
+  <thead>
+    <tr>
+      <th style="vertical-align: top;">Incoming request with body</th>
+      <th style="vertical-align: top;">Do the requests defined in above examples compete for this request?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "name": "Jamie",
+          "department": "Backend",
+          "designation": "Engineer"
+        }
+        {% endhighlight %}
+      </td>
+      <td style="text-align: center; vertical-align: top;">
+        <strong>Yes</strong> <br/>
+        Specmatic finds that the incoming request matches exactly the requests defined in <code>employees_PATCH_200.json</code>and <code>employees_PATCH_400.json</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Use following command to detect such competing requests in examples.
+
+**2.** Validate your examples:
 
 {% tabs competing-examples %}
 {% tab competing-examples docker %}
@@ -455,20 +506,454 @@ java -jar specmatic-openapi.jar examples validate --spec-file employee_details.y
 {% endtab %}
 {% endtabs %}
 
-Specmatic detects such competing examples, exits with a non-zero exit code after printing the following error:
+On detecting competing requests while validating examples, Specmatic exits with a non-zero exit code after printing the following error:
 
+{: .error}
 ```log
-ERROR: Multiple examples detected having the same request.
-  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+ERROR: Competing requests detected in the given examples
+  This may have consequences
+    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
 
-  - Found following duplicate examples for request PATCH /employees
-    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_200.json'
-    - example in file '/usr/src/app/employee_details_examples/employees_PATCH_400.json'
+  1. PATCH /employees
+
+      Group 1:
+          Assuming an incoming request matching any of the following identical examples:
+            - example in file 'relative/path/to/employees_PATCH_200.json'
+            - example in file 'relative/path/to/employees_PATCH_400.json'
+
+          Which example should Specmatic pick to send the response?
 ```
+
+### Competing Requests by Identical Data Type Values
+
+Similar to [Competing Requests by Identical Values](https://docs.specmatic.io/documentation/external_examples.html#competing-requests-by-identical-values), lets see how [data type-based examples](https://docs.specmatic.io/documentation/service_virtualization_tutorial.html#data-type-based-examples) could end up competing for some incoming requests.
+
+**1.** Create following examples with the same request but a different response in the directory `employee_details_examples`:
+
+<table>
+  <thead>
+    <tr>
+      <th>employees_PATCH_200_concrete_name.json</th>
+      <th>employees_PATCH_200_any_name.json</th>
+      <th>employees_PATCH_400_any_name.json</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "http-request": {
+            "method": "PATCH",
+            "path": "/employees",
+            "body": {
+              "name": "Jamie",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          },
+          "http-response": {
+            "status": 200,
+            "body": {
+              "id": 10,
+              "employeeCode": "pqrxyz",
+              "name": "Jamie",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          }
+        }
+        {% endhighlight %}
+      </td>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "http-request": {
+            "method": "PATCH",
+            "path": "/employees",
+            "body": {
+              "name": "(string)",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          },
+          "http-response": {
+            "status": 200,
+            "body": {
+              "id": 20,
+              "employeeCode": "abcpqr",
+              "name": "Jack",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          }
+        }
+        {% endhighlight %}
+      </td>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "http-request": {
+            "method": "PATCH",
+            "path": "/employees",
+            "body": {
+              "name": "(string)",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          },
+          "http-response": {
+            "status": 400,
+            "body": {
+              "message": "Invalid value"
+            }
+          }
+        }
+        {% endhighlight %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Let's first analyse if the requests defined in examples above competes for any incoming requests.
+
+<table>
+  <thead>
+    <tr>
+      <th style="vertical-align: top;">Incoming request with body</th>
+      <th style="vertical-align: top;">Do the requests defined in above examples compete for this request?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "name": "Jamie",
+          "department": "Backend",
+          "designation": "Engineer"
+        }
+        {% endhighlight %}
+      </td>
+      <td style="text-align: center; vertical-align: top;">
+        <strong>NO</strong><br/>
+        Specmatic considers the request in <code>employees_PATCH_200_concrete_name.json</code> to be a more precise match for the incoming request than the requests defined in the other two: <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name.json</code>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "name": "Jack",
+          "department": "Backend",
+          "designation": "Engineer"
+        }
+        {% endhighlight %}
+      </td>
+      <td style="text-align: center; vertical-align: top;">
+        <strong>Yes</strong> <br/>
+        Specmatic finds that the incoming request does not match the one in <code>employees_PATCH_200_concrete_name.json</code>, but matches those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name.json</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Use following command to detect such competing requests in examples.
+
+**2.** Validate your examples:
+
+{% tabs competing-examples %}
+{% tab competing-examples docker %}
+```shell
+docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+```
+{% endtab %}
+{% tab competing-examples java %}
+```shell
+java -jar specmatic-openapi.jar examples validate --spec-file employee_details.yaml
+```
+{% endtab %}
+{% endtabs %}
+
+On detecting competing requests while validating examples, Specmatic exits with a non-zero exit code after printing the following error:
+
+{: .error}
+```log
+ERROR: Competing requests detected in the given examples
+  This may have consequences
+    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
+
+  1. PATCH /employees
+
+      Group 1:
+
+          Assuming an incoming request with:
+                - REQUEST.BODY.name: "QWLCL"
+
+          It will match the request defined in the following identical examples:
+
+            - example in file 'relative/path/to/employees_PATCH_200_any_name.json'
+                - REQUEST.BODY.name: (string)
+
+            - example in file 'relative/path/to/employees_PATCH_400_any_name.json'
+                - REQUEST.BODY.name: (string)
+
+          Which example should Specmatic pick to send the response?
+```
+
+### Competing Requests by Overlapping Data Type Values
+
+Now, unlike [Competing Requests by Identical Data Type Values](http://docs.specmatic.io/documentation/external_examples.html#competing-requests-by-identical-data-type-values)
+lets see how [data type based examples](https://docs.specmatic.io/documentation/service_virtualization_tutorial.html#data-type-based-examples) could end up competing for incoming request in spite of assigning data type to different keys in the request.
+
+**1.** Create following examples with the same request but a different response in the directory  `employee_details_examples`:
+
+<table>
+  <thead>
+    <tr>
+      <th>employees_PATCH_200_concrete_values.json</th>
+      <th>employees_PATCH_200_any_name.json</th>
+      <th>employees_PATCH_400_any_designation.json</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "http-request": {
+            "method": "PATCH",
+            "path": "/employees",
+            "body": {
+              "name": "Jamie",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          },
+          "http-response": {
+            "status": 200,
+            "body": {
+              "id": 10,
+              "employeeCode": "pqrxyz",
+              "name": "Jamie",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          }
+        }
+        {% endhighlight %}
+      </td>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "http-request": {
+            "method": "PATCH",
+            "path": "/employees",
+            "body": {
+              "name": "(string)",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          },
+          "http-response": {
+            "status": 200,
+            "body": {
+              "id": 30,
+              "employeeCode": "abcpqr",
+              "name": "Ralph",
+              "department": "Backend",
+              "designation": "Engineer"
+            }
+          }
+        }
+        {% endhighlight %}
+      </td>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "http-request": {
+            "method": "PATCH",
+            "path": "/employees",
+            "body": {
+              "name": "Tom",
+              "department": "Backend",
+              "designation": "(string)"
+            }
+          },
+          "http-response": {
+            "status": 400,
+            "body": {
+              "message": "Invalid value"
+            }
+          }
+        }
+        {% endhighlight %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Let’s first analyse if the requests defined in examples above competes for any incoming requests.
+
+<table>
+  <thead>
+    <tr>
+      <th style="vertical-align: top;">Incoming request with body</th>
+      <th style="vertical-align: top;">Do the requests defined in above examples compete for this request?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "name": "Jamie",
+          "department": "Backend",
+          "designation": "Engineer"
+        }
+        {% endhighlight %}
+      </td>
+      <td style="text-align: center; vertical-align: top;">
+        <strong>No</strong> <br/>
+        Specmatic considers the request in <code>employees_PATCH_200_concrete_values.json</code> to be more precise than the requests defined in the other two: <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "name": "Ralph",
+          "department": "Backend",
+          "designation": "Engineer"
+        }
+        {% endhighlight %}
+      </td>
+      <td style="text-align: center; vertical-align: top;">
+        <strong>No</strong> <br/>
+        Specmatic considers the request defined in <code>employees_PATCH_200_any_name.json</code> to be the single most precise match for the incoming request
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "name": "Tom",
+          "department": "Backend",
+          "designation": "Administrator"
+        }
+        {% endhighlight %}
+      </td>
+      <td style="text-align: center; vertical-align: top;">
+        <strong>No</strong> <br/>
+        Specmatic considers the request defined in <code>employees_PATCH_200_any_designation.json</code> to be the single most precise example for this incoming request
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+        {% highlight json %}
+        {
+          "name": "Tom",
+          "department": "Backend",
+          "designation": "Engineer"
+        }
+        {% endhighlight %}
+      </td>
+      <td style="text-align: center; vertical-align: top;">
+        <strong>Yes</strong> <br/>
+        Specmatic finds that the incoming request does not match the one in <code>employees_PATCH_200_concrete_values.json</code>, but does match those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Use following command to detect such competing requests in examples.
+
+**2.** Validate your examples:
+
+{% tabs competing-examples %}
+{% tab competing-examples docker %}
+```shell
+docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+```
+{% endtab %}
+{% tab competing-examples java %}
+```shell
+java -jar specmatic-openapi.jar examples validate --spec-file employee_details.yaml
+```
+{% endtab %}
+{% endtabs %}
+
+On detecting competing requests while validating examples, Specmatic exits with a non-zero exit code after printing the following error:
+
+{: .error}
+```log
+ERROR: Competing requests detected in the given examples
+  This may have consequences
+    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
+
+  1. PATCH /employees
+
+      Group 1:
+
+          Assuming an incoming request with:
+                - REQUEST.BODY.name: Tom
+                - REQUEST.BODY.designation: Engineer
+
+          It will match the request defined in the following overlapping examples:
+
+            - example in file 'relative/path/to/employees_PATCH_200_any_name.json'
+                - REQUEST.BODY.name: (string)
+                - REQUEST.BODY.designation: Engineer
+
+            - example in file 'relative/path/to/employees_PATCH_400_any_designation.json'
+                - REQUEST.BODY.name: Tom
+                - REQUEST.BODY.designation: (string)
+
+          Which example should Specmatic pick to send the response?
+```
+
+{: .tip}
+Specmatic will detect competing requests not just for the request body, but also for query parameters, request path, and headers. <br/><br/> Try out different combinations in your examples to see how Specmatic handles them across all parts of the request.
+
+### Lenient mode
 
 To treat such competing example issues as a warning instead of an error, use the `--competing-example-detection=LENIENT` flag. This will display above message as `WARNING` and exit with code zero.
 
-**NOTE**: While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+For example, the error above in lenient mode will produce the following output:
+
+{: .success}
+```log
+WARNING: Competing requests detected in the given examples
+  This may have consequences
+    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
+
+  1. PATCH /employees
+
+      Group 1:
+
+          Assuming an incoming request with:
+                - REQUEST.BODY.name: Tom
+                - REQUEST.BODY.designation: Engineer
+
+          It will match the request defined in the following overlapping examples:
+
+            - example in file 'relative/path/to/employees_PATCH_200_any_name.json'
+                - REQUEST.BODY.name: (string)
+                - REQUEST.BODY.designation: Engineer
+
+            - example in file 'relative/path/to/employees_PATCH_400_any_designation.json'
+                - REQUEST.BODY.name: Tom
+                - REQUEST.BODY.designation: (string)
+
+          Which example should Specmatic pick to send the response?
+```
+
+{: .note}
+While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Pro Tips
 - Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
