@@ -509,14 +509,18 @@ On detecting competing requests while validating examples, Specmatic exits with 
 {: .error}
 ```log
 ERROR: Competing requests detected in the given examples
-  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+  This may have consequences
+    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
 
   1. PATCH /employees
+
       Group 1:
-          Issue: Competing requests found containing identical values in multiple examples
-          Examples that define the competing requests:
+          Assuming an incoming request matching any of the following identical examples:
             - example in file 'relative/path/to/employees_PATCH_200.json'
             - example in file 'relative/path/to/employees_PATCH_400.json'
+
+          Which example should Specmatic pick to send the response?
 ```
 
 ### Competing Requests by Identical Data Type Values
@@ -675,23 +679,29 @@ On detecting competing requests while validating examples, Specmatic exits with 
 {: .error}
 ```log
 ERROR: Competing requests detected in the given examples
-  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+  This may have consequences
+    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
 
   1. PATCH /employees
-      Group 1:
-          Issue: Competing requests found containing identical data type values in multiple examples
 
-          Examples that define the competing requests:
+      Group 1:
+
+          Assuming an incoming request with:
+                - REQUEST.BODY.name: "QWLCL"
+
+          It will match the request defined in the following identical examples:
+
             - example in file 'relative/path/to/employees_PATCH_200_any_name.json'
                 - REQUEST.BODY.name: (string)
+
             - example in file 'relative/path/to/employees_PATCH_400_any_name.json'
                 - REQUEST.BODY.name: (string)
 
-          Typical request values that match the above examples:
-                - REQUEST.BODY.name: <any string>
+          Which example should Specmatic pick to send the response?
 ```
 
-### Competing Requests by OVerlapping Data Type Values
+### Competing Requests by Overlapping Data Type Values
 
 Now, unlike [Competing Requests by Identical Data Type Values](http://docs.specmatic.io/documentation/external_examples.html#competing-requests-by-identical-data-type-values)
 lets see how [data type based examples](https://docs.specmatic.io/documentation/service_virtualization_tutorial.html#data-type-based-examples) could end up competing for incoming request in spite of assigning data type to different keys in the request.
@@ -878,24 +888,29 @@ On detecting competing requests while validating examples, Specmatic exits with 
 {: .error}
 ```log
 ERROR: Competing requests detected in the given examples
-  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+  This may have consequences
+    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
 
   1. PATCH /employees
+
       Group 1:
 
-          Issue: Competing requests found containing overlapping data type values in multiple examples
+          Assuming an incoming request with:
+                - REQUEST.BODY.name: Tom
+                - REQUEST.BODY.designation: Engineer
 
-          Examples that define the competing requests:
+          It will match the request defined in the following overlapping examples:
+
             - example in file 'relative/path/to/employees_PATCH_200_any_name.json'
                 - REQUEST.BODY.name: (string)
                 - REQUEST.BODY.designation: Engineer
+
             - example in file 'relative/path/to/employees_PATCH_400_any_designation.json'
                 - REQUEST.BODY.name: Tom
                 - REQUEST.BODY.designation: (string)
 
-          Typical request values that match the above examples:
-                - REQUEST.BODY.name: Tom
-                - REQUEST.BODY.designation: Engineer
+          Which example should Specmatic pick to send the response?
 ```
 
 {: .tip}
@@ -910,24 +925,29 @@ For example, the error above in lenient mode will produce the following output:
 {: .success}
 ```log
 WARNING: Competing requests detected in the given examples
-  This may have consequences. For example when Specmatic stub runs, only one of the examples would be taken into consideration, and the others would be skipped.
+  This may have consequences
+    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
 
   1. PATCH /employees
+
       Group 1:
 
-          Issue: Competing requests found containing overlapping data type values in multiple examples
+          Assuming an incoming request with:
+                - REQUEST.BODY.name: Tom
+                - REQUEST.BODY.designation: Engineer
 
-          Examples that define the competing requests:
+          It will match the request defined in the following overlapping examples:
+
             - example in file 'relative/path/to/employees_PATCH_200_any_name.json'
                 - REQUEST.BODY.name: (string)
                 - REQUEST.BODY.designation: Engineer
+
             - example in file 'relative/path/to/employees_PATCH_400_any_designation.json'
                 - REQUEST.BODY.name: Tom
                 - REQUEST.BODY.designation: (string)
 
-          Typical request values that match the above examples:
-                - REQUEST.BODY.name: Tom
-                - REQUEST.BODY.designation: Engineer
+          Which example should Specmatic pick to send the response?
 ```
 
 {: .note}
