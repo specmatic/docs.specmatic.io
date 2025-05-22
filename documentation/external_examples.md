@@ -464,8 +464,8 @@ Let's first analyse if the requests defined in examples above competes for any i
 <table>
   <thead>
     <tr>
-      <th>Incoming request with body</th>
-      <th>Are the requests defined in examples above competing for this request?</th>
+      <th style="vertical-align: top;">Incoming request with body</th>
+      <th style="vertical-align: top;">Do the requests defined in above examples compete for this request?</th>
     </tr>
   </thead>
   <tbody>
@@ -615,8 +615,8 @@ Let's first analyse if the requests defined in examples above competes for any i
 <table>
   <thead>
     <tr>
-      <th>Incoming request with body</th>
-      <th>Are the requests defined in examples above competing for this request?</th>
+      <th style="vertical-align: top;">Incoming request with body</th>
+      <th style="vertical-align: top;">Do the requests defined in above examples compete for this request?</th>
     </tr>
   </thead>
   <tbody>
@@ -788,8 +788,8 @@ Let’s first analyse if the requests defined in examples above competes for any
 <table>
   <thead>
     <tr>
-      <th>Incoming request with body</th>
-      <th>Are the requests defined in examples above competing for this request?</th>
+      <th style="vertical-align: top;">Incoming request with body</th>
+      <th style="vertical-align: top;">Do the requests defined in above examples compete for this request?</th>
     </tr>
   </thead>
   <tbody>
