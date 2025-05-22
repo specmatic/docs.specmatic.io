@@ -7,29 +7,29 @@ nav_order: 7
 
 # External Examples
 <!-- TOC -->
-* [External Examples](#external-examples)
-  * [Introduction](#introduction)
-  * [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
-  * [Interactive Examples GUI](#interactive-examples-gui)
-    * [Generating and Updating Examples](#generating-and-updating-examples)
-    * [Validating Examples](#validating-examples)
-    * [Fixing Examples](#fixing-examples)
-  * [Creating Examples Manually](#creating-examples-manually)
-  * [Using CLI to Validate Examples](#using-cli-to-validate-examples)
-  * [Example Format](#example-format)
-  * [Using Dictionary Values In Examples](#using-dictionary-values-in-examples)
-      * [Example](#example)
-      * [Dictionary](#dictionary)
-      * [Starting the Stub Server](#starting-the-stub-server)
-      * [Making a PATCH Request](#making-a-patch-request)
-  * [Working with Multiple Specifications](#working-with-multiple-specifications)
-  * [Custom Example Directory](#custom-example-directory)
-  * [Identifying Examples with Competing Requests](#identifying-examples-with-competing-requests)
-    * [Competing Requests by Identical Values](#competing-requests-by-identical-values)
-    * [Competing Requests by Identical Data Type Values](#competing-requests-by-identical-data-type-values)
-    * [Competing Requests by OVerlapping Data Type Values](#competing-requests-by-overlapping-data-type-values)
-    * [Lenient mode](#lenient-mode)
-  * [Pro Tips](#pro-tips)
+- [External Examples](#external-examples)
+  - [Introduction](#introduction)
+  - [Creating, Validating and Fixing Examples](#creating-validating-and-fixing-examples)
+  - [Interactive Examples GUI](#interactive-examples-gui)
+    - [Generating and Updating Examples](#generating-and-updating-examples)
+    - [Validating Examples](#validating-examples)
+    - [Fixing Examples](#fixing-examples)
+  - [Creating Examples Manually](#creating-examples-manually)
+  - [Using CLI to Validate Examples](#using-cli-to-validate-examples)
+  - [Example Format](#example-format)
+  - [Using Dictionary Values In Examples](#using-dictionary-values-in-examples)
+      - [Example](#example)
+      - [Dictionary](#dictionary)
+      - [Starting the Stub Server](#starting-the-stub-server)
+      - [Making a PATCH Request](#making-a-patch-request)
+  - [Working with Multiple Specifications](#working-with-multiple-specifications)
+  - [Custom Example Directory](#custom-example-directory)
+  - [Identifying Examples with Competing Requests](#identifying-examples-with-competing-requests)
+    - [Competing Requests by Identical Values](#competing-requests-by-identical-values)
+    - [Competing Requests by Identical Data Type Values](#competing-requests-by-identical-data-type-values)
+    - [Competing Requests by Overlapping Data Type Values](#competing-requests-by-overlapping-data-type-values)
+    - [Lenient mode](#lenient-mode)
+  - [Pro Tips](#pro-tips)
 <!-- /TOC -->
 
 ## Introduction
@@ -483,7 +483,7 @@ Let's first analyse if the requests defined in examples above competes for any i
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>Yes</strong> <br/>
-        Specmatic identifies this request to exactly match with the requests defined in <code>employees_PATCH_200.json</code>and <code>employees_PATCH_400.json</code>
+        Specmatic finds that the incoming request matches exactly the requests defined in <code>employees_PATCH_200.json</code>and <code>employees_PATCH_400.json</code>
       </td>
     </tr>
   </tbody>
@@ -638,7 +638,7 @@ Let's first analyse if the requests defined in examples above competes for any i
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>NO</strong><br/>
-        Specmatic identifies the request in <code>employees_PATCH_200_concrete_name.json</code> to be more precise over the requests defined in the other two: <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name.json</code>
+        Specmatic considers the request in <code>employees_PATCH_200_concrete_name.json</code> to be a more precise match for the incoming request than the requests defined in the other two: <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name.json</code>
       </td>
     </tr>
     <tr>
@@ -653,7 +653,7 @@ Let's first analyse if the requests defined in examples above competes for any i
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>Yes</strong> <br/>
-        Specmatic identifies this request to be not matching the one in <code>employees_PATCH_200_concrete_name.json</code>, but matching those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name.json</code>
+        Specmatic finds that the incoming request does not match the one in <code>employees_PATCH_200_concrete_name.json</code>, but matches those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_name.json</code>
       </td>
     </tr>
   </tbody>
@@ -817,7 +817,7 @@ Let’s first analyse if the requests defined in examples above competes for any
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>No</strong> <br/>
-        Specmatic identifies the request in <code>employees_PATCH_200_concrete_values.json</code> to be more precise over the requests defined in the other two: <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code>
+        Specmatic considers the request in <code>employees_PATCH_200_concrete_values.json</code> to be more precise than the requests defined in the other two: <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code>
       </td>
     </tr>
     <tr>
@@ -832,7 +832,7 @@ Let’s first analyse if the requests defined in examples above competes for any
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>No</strong> <br/>
-        Specmatic identifies the request defined in <code>employees_PATCH_200_any_name.json</code> to be the single most precise for this request
+        Specmatic considers the request defined in <code>employees_PATCH_200_any_name.json</code> to be the single most precise match for the incoming request
       </td>
     </tr>
     <tr>
@@ -847,7 +847,7 @@ Let’s first analyse if the requests defined in examples above competes for any
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>No</strong> <br/>
-        Specmatic identifies the request defined in <code>employees_PATCH_200_any_designation.json</code> to be the single most precise example for this request
+        Specmatic considers the request defined in <code>employees_PATCH_200_any_designation.json</code> to be the single most precise example for this incoming request
       </td>
     </tr>
     <tr>
@@ -862,7 +862,7 @@ Let’s first analyse if the requests defined in examples above competes for any
       </td>
       <td style="text-align: center; vertical-align: top;">
         <strong>Yes</strong> <br/>
-        Specmatic identifies this request to be not matching the one in <code>employees_PATCH_200_concrete_values.json</code>, but matching those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code>
+        Specmatic finds that the incoming request does not match the one in <code>employees_PATCH_200_concrete_values.json</code>, but does match those defined in both <code>employees_PATCH_200_any_name.json</code> and <code>employees_PATCH_400_any_designation.json</code>
       </td>
     </tr>
   </tbody>
