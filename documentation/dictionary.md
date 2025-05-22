@@ -12,8 +12,6 @@ nav_order: 8
     - [Basic Field Mapping](#basic-field-mapping)
     - [Nested Properties](#nested-properties)
     - [Handling Arrays](#handling-arrays)
-      - [Referencing Elements Within the Array](#referencing-elements-within-the-array)
-      - [Referencing the Entire Array](#referencing-the-entire-array)
       - [Nested properties in Arrays](#nested-properties-in-arrays)
     - [Referencing Other Schemas](#referencing-other-schemas)
   - [Dictionary with Contract Testing](#dictionary-with-contract-testing)
@@ -38,9 +36,7 @@ The dictionary can be supplied in either `YAML` or `JSON` format and should adhe
 
 ## Structure
 
-The dictionary defines a mapping where keys represent schema fields using a syntax similar to `JSONPath`.
-This structured approach enables precise field references within complex objects.
-
+The dictionary utilizes a standard JSON format, where fields are represented as nested properties that reflect the hierarchical structure of the schema.
 - Each entry in the dictionary maps a schema field to either a `single value` or a `list of values`.
 - If a single value is specified, it will be used directly.
 - If a list is specified, one value will be `pseudo-randomly` selected.
@@ -66,18 +62,21 @@ Corresponding dictionary entries for the `name` and `age` properties would be:
 {% tabs dictionary %}
 {% tab dictionary yaml %}
 ```yaml
-Employee.name: John # Single-value
-Employee.age: # Multi-value
-- 20
-- 30
-- 40
+Employee:
+ name: John # Single-value
+ age: # Multi-value
+ - 20
+ - 30
+ - 40
 ```
 {% endtab %}
 {% tab dictionary json %}
 ```json
 {
-  "Employee.name": "John",
-  "Employee.age": [20, 30, 40]
+  "Employee": {
+    "name": "John",
+    "age": [20, 30, 40]
+  }
 }
 ```
 {% endtab %}
@@ -88,7 +87,7 @@ Employee.age: # Multi-value
 
 ### Nested Properties
 
-When working with nested structures, the key is extended using the `.` character as a separator to represent the hierarchy of properties.<br/>
+For nested structures, properties are represented as nested keys, where each level corresponds to a that level in the schema hierarchy.
 For example, given the `Employee` schema as follows:
 
 ```yaml
@@ -115,68 +114,29 @@ Corresponding dictionary entries for the `first_name` and `last_name` property w
 {% tabs nestedProperty %}
 {% tab nestedProperty Single-Value %}
 ```yaml
-Employee.name.first_name: John
-Employee.name.last_name: Smith
+Employee:
+ name:
+  first_name: John
+  last_name: Smith
 ```
 {% endtab %}
 {% tab nestedProperty Multi-Value %}
 ```yaml
-Employee.name.first_name:
- - John
- - Jane
-Employee.name.last_name:
- - Smith
- - Doe
+Employee:
+ name:
+  first_name: 
+  - John
+  - Jane
+  last_name:
+  - Smith
+  - Doe
 ```
 {% endtab %}
 {% endtabs %}
 
 ### Handling Arrays
 
-For properties that are arrays, two referencing styles are supported, referencing the entire array or referencing elements within the array.<br/>
-**Note:**: If both are specified, the key referencing the entire array will be used.
-
-#### Referencing Elements Within the Array
-
-To reference elements within an array, the key should be appended with `[*]`.<br/>
-For instance, consider the following `Employee` schema:
-
-```yaml
-components:
-  schemas:
-    Employee:
-      type: object
-      required:
-        - aliases
-      properties:
-        aliases:
-          type: array
-          items:
-            type: string
-```
-
-Corresponding dictionary entries for elements within the `aliases` array would be:
-
-{% tabs ElemWithinArray %}
-{% tab ElemWithinArray Single-Value %}
-```yaml
-Employee.aliases[*]: John
-```
-The same value is repeated for each elements in the array. 
-{% endtab %}
-{% tab ElemWithinArray Multi-Value %}
-```yaml
-Employee.aliases[*]:
-- John
-- Jane
-```
-For each element in the array, a value is `pseudo-randomly` selected from the list.
-{% endtab %}
-{% endtabs %}
-
-#### Referencing the Entire Array
-
-To reference the entire array, simply omit `[*]` from the key.<br/>
+For properties that are arrays, the values must also be an array in the dictionary
 For example, given the `Employee` schema as follows:
 
 ```yaml
@@ -198,19 +158,22 @@ Corresponding dictionary entries for the `aliases` array would be:
 {% tabs entireArray %}
 {% tab entireArray Single-Value %}
 ```yaml
-Employee.aliases:
-- "John"
-- "Jane"
+Employee:
+  aliases:
+  - "John"
+  - "Jane"
 ```
-The entire array will be used directly
+The entire array will be used
 {% endtab %}
 {% tab entireArray Multi-Value %}
 ```yaml
-Employee.aliases:
-- ["John", "Jane"]
-- ["May", "Jones"]
+Employee:
+  aliases:
+  - ["John", "Jane"] # JSON style array
+  - - "May" # YAML style array
+    - "Jones"
 ```
-One of the nested arrays will be `pseudo-randomly` selected and used directly
+One of the nested arrays will be `pseudo-randomly` selected and used
 {% endtab %}
 {% endtabs %}
 
@@ -240,14 +203,17 @@ Corresponding dictionary entries for the `first_name` property within the `alias
 {% tabs nestedPropertyInArray %}
 {% tab nestedPropertyInArray Single-Value %}
 ```yaml
-Employee.aliases[*].first_name: "John"
+Employee:
+  aliases:
+  - first_name: "John"
 ```
 {% endtab %}
 {% tab nestedPropertyInArray Multi-Value %}
 ```yaml
-Employee.aliases[*].first_name:
-- "John"
-- "Jane"
+Employee:
+  aliases:
+  - first_name: "John"
+  - first_name: "Jane"
 ```
 {% endtab %}
 {% endtabs %}
@@ -286,18 +252,20 @@ Corresponding dictionary entries for any property defined in the `Address` schem
 {% tabs nestedProperty %}
 {% tab nestedProperty Single-Value %}
 ```yaml
-Address.city: "New York"
-Address.street: "Broadway"
+Address:
+  city: "New York"
+  street: "Broadway"
 ```
 {% endtab %}
 {% tab nestedProperty Multi-Value %}
 ```yaml
-Address.city:
-- "New York"
-- "London"
-Address.street:
-- "Broadway"
-- "High Street"
+Address:
+  city:
+  - "New York"
+  - "London"
+  street:
+  - "Broadway"
+  - "High Street"
 ```
 {% endtab %}
 {% endtabs %}
@@ -371,9 +339,10 @@ components:
 Now create a dictionary file named `employees_dictionary.yaml` in the same directory:
 
 ```yaml
-EmployeeDetails.name: John Doe
-EmployeeDetails.department: IT
-EmployeeDetails.employeeCode: "12345"
+EmployeeDetails:
+  name: John Doe
+  department: IT
+  employeeCode: "12345"
 ```
 
 ### Run the tests
@@ -520,11 +489,12 @@ schemas:
 Now create a dictionary file named `employees_dictionary.yaml` in the same directory:
 
 ```yaml
-Employee.id: 10
-Employee.name: Jamie
-Employee.employeeCode: pqrxyz
-Employee.department: Sales
-Employee.designation: Associate
+Employee:
+  id: 10
+  name: Jamie
+  employeeCode: pqrxyz
+  department: Sales
+  designation: Associate
 ```
 
 ### Run Service Virtualization

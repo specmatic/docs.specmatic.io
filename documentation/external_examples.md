@@ -313,8 +313,9 @@ Create a new example file in the `employee_details_examples` directory named `pa
 Create a new dictionary file in the root directory named `employee_details_dictionary.yaml` with the following contents:
 
 ```yaml
-Employee.id: 10
-Employee.employeeCode: EMP1234
+Employee:
+  id: 10
+  employeeCode: EMP1234
 ```
 
 #### Starting the Stub Server
