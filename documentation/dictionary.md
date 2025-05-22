@@ -217,7 +217,8 @@ Employee:
 ```
 {% endtab %}
 {% endtabs %}
-> **Note:** This nesting behaves correctly because `first_name` is not defined as a top-level property in the schema
+> **Note:** This nesting behaves correctly because `first_name` is not defined as a top-level property in the schema.
+> It is also not necessary to specify all properties of the object within the array, any missing properties will be populated by Specmatic.
 
 ### Referencing Other Schemas
 
