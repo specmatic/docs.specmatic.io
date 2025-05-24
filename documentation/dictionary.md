@@ -280,7 +280,11 @@ Notice that the keys begin with `Address` instead than `Employee`, because the d
 Commercial
 {: .label }
 
-Manually creating a dictionary can be a laborious process; therefore, [specmatic-openapi](https://hub.docker.com/r/znsio/specmatic-openapi) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples. For further details, please check the [pricing page](https://specmatic.io/pricing).
+Manually creating a dictionary can be a laborious process; therefore, [specmatic-openapi](https://hub.docker.com/r/znsio/specmatic-openapi) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
+
+{: .note}
+Automated dictionary generation is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
+
 Let's take a look at how we can generate a dictionary from an OpenAPI specification along with existing examples
 
 ### Specification
