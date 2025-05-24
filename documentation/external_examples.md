@@ -114,6 +114,10 @@ components:
 ```
 
 ## Interactive Examples GUI
+{: .d-inline-block }
+
+Commercial
+{: .label }
 
 To start the GUI execute below command,
 {% tabs examples-gui %}
@@ -159,7 +163,8 @@ You can validate one example at a time (as we saw above), or you validate them i
 
 Fix can also be done in bulk (similar to validate).
 
-**NOTE**: The Interactive Examples GUI is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+{: .note}
+The Interactive Examples GUI is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Creating Examples Manually
 
@@ -388,6 +393,10 @@ specmatic examples validate --spec-file employee_details.yaml --examples-dir ./c
 ```
 
 ## Identifying Examples with Competing Requests
+{: .d-inline-block }
+
+Commercial
+{: .label }
 
 When using multiple examples, it's important to ensure each request is unique. 
 
