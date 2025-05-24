@@ -14,14 +14,15 @@ nav_order: 8
     - [Handling Arrays](#handling-arrays)
       - [Nested properties in Arrays](#nested-properties-in-arrays)
     - [Referencing Other Schemas](#referencing-other-schemas)
-  - [Dictionary with Contract Testing](#dictionary-with-contract-testing)
+  - [Dictionary Generation](#dictionary-generation)
     - [Specification](#specification)
-    - [Dictionary](#dictionary-1)
+    - [Examples](#examples)
+    - [Generating the Dictionary](#generating-the-dictionary)
+    - [Understanding the Dictionary](#understanding-the-dictionary)
+  - [Dictionary with Contract Testing](#dictionary-with-contract-testing)
     - [Run the tests](#run-the-tests)
     - [Generative Tests](#generative-tests)
   - [Dictionary with Service Virtualization](#dictionary-with-service-virtualization)
-    - [Specification](#specification-1)
-    - [Dictionary](#dictionary-2)
     - [Run Service Virtualization](#run-service-virtualization)
     - [Making Requests](#making-requests)
   - [Dictionary with Examples](#dictionary-with-examples)
@@ -217,7 +218,8 @@ Employee:
 ```
 {% endtab %}
 {% endtabs %}
-> **Note:** This nesting behaves correctly because `first_name` is not defined as a top-level property in the schema.
+{: .note}
+> This nesting behaves correctly because `first_name` is not defined as a top-level property in the schema.
 > It is also not necessary to specify all properties of the object within the array, any missing properties will be populated by Specmatic.
 
 ### Referencing Other Schemas
@@ -270,15 +272,25 @@ Address:
 ```
 {% endtab %}
 {% endtabs %}
-> **Note:** Notice that the keys begin with `Address` instead than `Employee`, because the dictionary accesses the fields from the referenced schema.
+Notice that the keys begin with `Address` instead than `Employee`, because the dictionary accesses the fields from the referenced schema.
 
-## Dictionary with Contract Testing
+## Dictionary Generation
+{: .d-inline-block }
 
-Dictionary can be used with contract testing, in which case specmatic will use the values provided in the dictionary when generating requests for tests, To understand how this works, lets take a look at the following example:
+Commercial
+{: .label }
 
-### Specification 
+Manually creating a dictionary can be a laborious process; therefore, [specmatic-openapi](https://hub.docker.com/r/znsio/specmatic-openapi) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
+
+{: .note}
+Automated dictionary generation is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
+
+Let's take a look at how we can generate a dictionary from an OpenAPI specification along with existing examples
+
+### Specification
 
 Create an OpenApi Specification file named `employees.yaml` as follows:
+
 ```yaml
 openapi: 3.0.0
 info:
@@ -294,15 +306,18 @@ paths:
             schema:
               $ref: '#/components/schemas/EmployeeDetails'
       responses:
-        200:
+        '200':
           description: Employee Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Employee'
-
-        400:
+        '400':
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Employee:
@@ -320,7 +335,6 @@ components:
           type: string
         department:
           type: string
-
     EmployeeDetails:
       type: object
       required:
@@ -331,20 +345,163 @@ components:
           type: string
         department:
           type: string
-        employeeCode:
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
           type: string
 ```
 
-### Dictionary 
+### Examples
 
-Now create a dictionary file named `employees_dictionary.yaml` in the same directory:
+Given that we have an OpenAPI specification, we should add a few examples for the `/employees` endpoint. Create a folder named `employees_examples` in the same directory as your `employees.yaml` file
+
+1. Let's create an example for `john` named `employee_john.json`:<br/><br/>
+```json
+{
+    "http-request": {
+        "path": "/employees",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": {
+            "name": "John",
+            "department": "IT"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "id": 123,
+            "employeeCode": "EMP123",
+            "name": "John",
+            "department": "IT"
+        },
+        "status-text": "OK",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
+```
+
+2. Similarly, create an example for `jane` named `employee_jane.json`:<br/><br/>
+```json
+{
+    "http-request": {
+        "path": "/employees",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": {
+            "name": "Jane",
+            "department": "HR"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "id": 456,
+            "employeeCode": "EMP456",
+            "name": "Jane",
+            "department": "HR"
+        },
+        "status-text": "OK",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
+```
+
+3. Now let's create a bad-request example named `bad_request.json`, where we've mutated the `department` field:<br/><br/>
+```json
+{
+    "http-request": {
+        "path": "/employees",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": {
+            "name": "James",
+            "department": 123
+        }
+    },
+    "http-response": {
+        "status": 400,
+        "body": {
+            "message": "BAD REQUEST - Invalid field: department, value: 123 <number>, expected: <string>"
+        },
+        "status-text": "Bad Request",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
+```
+
+The `_examples` suffix is a naming convention that indicates to Specmatic to look for examples in that directory.
+{: .note}
+
+### Generating the Dictionary
+
+Create a file named `employees_dictionary.yaml` in the same directory as your `employees.yaml` file with an empty object i.e. `{}`, so we volume mount this file to the Docker container
+{: .important }
+
+After setting up, we can execute the `examples dictionary` command using the `specmatic-openapi` Docker image and provide the path to our `employees.yaml` file as shown below:
+
+```shell
+docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic-openapi examples dictionary --spec-file employees.yaml
+```
+
+### Understanding the Dictionary
+
+After executing the command, the `employees_dictionary.yaml` file will be updated with the following contents:
 
 ```yaml
 EmployeeDetails:
-  name: John Doe
-  department: IT
-  employeeCode: "12345"
+  name:
+  - Jane
+  - John
+  - James
+  department:
+  - HR
+  - IT
+Employee:
+  id:
+  - 456
+  - 123
+  employeeCode:
+  - EMP456
+  - EMP123
+  name:
+  - Jane
+  - John
+  department:
+  - HR
+  - IT
+Error:
+  message:
+  - 'BAD REQUEST - Invalid field: department, value: 123 <number>, expected: <string>'
 ```
+
+- Note how the hierarchy of the dictionary reflects the schema outlined in the OpenAPI specification.
+- Each key in the dictionary aligns with a property in the schema, while the values represent the possible values for that property.
+
+We have not included the invalid value of `department` in the bad-request example. This filtering is not restricted to `4xx` examples,
+the command will include only valid values in the dictionary, allowing it to be executed even with invalid examples.
+{: .note }
+
+## Dictionary with Contract Testing
+
+The Dictionary can be utilized in contract testing, allowing Specmatic to use the values defined in the dictionary when generating requests for tests. To illustrate this process, we will use the previous specification and dictionary as an example. 
+
+For the moment, we will remove the `employees_examples` directory to observe how contract testing operates without examples.
 
 ### Run the tests
 Now to execute contract tests on the specification using the dictionary a service is required, we will utilize [service-virtualization](/documentation/service_virtualization_tutorial.html) for this purpose.
@@ -382,7 +539,7 @@ npx specmatic test employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic test "employees.yaml
+docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic test "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -394,12 +551,12 @@ Accept-Charset: UTF-8
 Accept: */*
 Content-Type: application/json
 {
-  "name": "John Doe",
-  "department": "IT",
-  "employeeCode": "12345"
+    "name": "James",
+    "department": "IT"
 }
 ```
-Notice that the values from the dictionary are utilized in the requests.
+The values from the dictionary are used in the requests. Keep in mind that these values are selected in a `pseudo-random` manner from the list, so you may encounter different values each time.
+{: .note }
 
 ### Generative Tests
 
@@ -414,89 +571,16 @@ Accept: */*
 Content-Type: application/json
 {
   "name": null,
-  "department": "IT",
-  "employeeCode": "12345"
+  "department": "IT"
 }
 ```
 
 In this case, the key `name` is being mutated, which results in the value from the dictionary being disregarded.
-While the values for `department` and `employeeCode` are still being retrieved from the dictionary.
-
+While the values for `department` is still being retrieved from the dictionary
 
 ## Dictionary with Service Virtualization
 
-Dictionary can be used with service virtualization, in which case specmatic will use the values provided in the dictionary when generating responses for the incoming requests, To understand how this works, lets take a look at the following example:
-
-### Specification
-Create an OpenApi Specification file named `employees.yaml` as follows:
-```yaml
-openapi: 3.0.0
-info:
-title: Employees
-version: '1.0'
-servers: []
-paths:
-/employees:
-    patch:
-    summary: ''
-    requestBody:
-        content:
-        application/json:
-            schema:
-            $ref: '#/components/schemas/EmployeeDetails'
-    responses:
-        200:
-        description: Employee Created Response
-        content:
-            application/json:
-            schema:
-                $ref: '#/components/schemas/Employee'
-components:
-schemas:
-    Employee:
-    type: object
-    required:
-        - id
-        - name
-        - department
-        - designation
-    properties:
-        id:
-        type: integer
-        employeeCode:
-        type: string
-        name:
-        type: string
-        department:
-        type: string
-        designation:
-        type: string
-
-    EmployeeDetails:
-    type: object
-    required:
-        - name
-        - department
-        - designation
-    properties:
-        name:
-        type: string
-        employeeCode:
-        type: string
-
-```
-
-### Dictionary
-Now create a dictionary file named `employees_dictionary.yaml` in the same directory:
-
-```yaml
-Employee:
-  id: 10
-  name: Jamie
-  employeeCode: pqrxyz
-  department: Sales
-  designation: Associate
-```
+The Dictionary can be utilized with service virtualization, where Specmatic will leverage the values in the dictionary to generate responses for incoming requests. To illustrate this functionality, let's consider the previous specification and dictionary as an example. We will remove the `employees_examples` directory to observe how service virtualization functions without examples.
 
 ### Run Service Virtualization
 
@@ -515,7 +599,7 @@ npx specmatic stub employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic stub "employees.yaml"
+docker run --rm -p 9000:9000 -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic stub "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -523,22 +607,31 @@ docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.
 ### Making Requests
 
 Execute the following curl command:
+{% tabs commands %}
+{% tab commands unix or CMD %}
 ```shell
-curl -X PATCH -H 'Content-Type: application/json' -d '{"name": "Jamie", "employeeCode": "pqrxyz"}' http://localhost:9000/employees
+curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"Jamie\",\"department\":\"IT\"}" http://localhost:9000/employees
 ```
+{% endtab %}
+{% tab commands powershell %}
+```shell
+Invoke-RestMethod -Uri "http://localhost:9000/employees" -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"name":"Jamie","department":"IT"}'
+```
+{% endtab %}
+{% endtabs %}
 
 You'll get the following response:
 ```json
 {
-  "id": 10,
-  "name": "Jamie",
-  "employeeCode": "pqrxyz",
-  "department": "Sales",
-  "designation": "Associate"
-  }
+  "id": 123,
+  "employeeCode": "EMP123",
+  "name": "Jane",
+  "department": "IT"
+}
 ```
 
-**Note:** None of the values mentioned above were included in any example file. They were generated by Specmatic from the dictionary while creating a response to return.
+The values from the dictionary are used in the responses. Keep in mind that these values are selected in a `pseudo-random` manner from the list, so you may encounter different values each time.
+{: .note }
 
 ## Dictionary with Examples
 
