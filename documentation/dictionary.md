@@ -31,7 +31,7 @@ When Specmatic generates requests while running tests or responses while running
 
 While the generated values will conform to the schema, they may not be meaningful from the point of view of your business domain. Also at times you want to have more control on the exact values that are used for certain fields.
 
-This is where dictionary capability helps you define domain-specific values which Specmatic can use in the absence of examples. Specmatic will lookup values for fields in the ditionary defined by you while generating requests or responses.
+This is where dictionary capability helps you define domain-specific values which Specmatic can use in the absence of examples. Specmatic will lookup values for fields in the dictionary defined by you while generating requests or responses.
 
 The dictionary can be supplied in either `YAML` or `JSON` format. When the dictionary file name follows the convention `<spec-file-name>_dictionary.<format>`, Specmatic will automatically pick it up in the context of the corresponding API specification file.
 
@@ -272,7 +272,7 @@ Address:
 ```
 {% endtab %}
 {% endtabs %}
-Notice that the keys begin with `Address` instead than `Employee`, because the dictionary accesses the fields from the referenced schema. This makes for convenient dictionary definition withouth have to nest the values deeply.
+Notice that the keys begin with `Address` instead than `Employee`, because the dictionary accesses the fields from the referenced schema. This makes for convenient dictionary definition without have to nest the values deeply.
 
 ## Dictionary Generation
 {: .d-inline-block }
