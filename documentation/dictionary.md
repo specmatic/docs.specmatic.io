@@ -27,9 +27,9 @@ nav_order: 8
     - [Making Requests](#making-requests)
   - [Dictionary with Examples](#dictionary-with-examples)
 
-When Specmatic generates requests while running tests or responses while running as a stub and no examples have been provided, Specmatic will generate them based on the schema in the OpenAPI specifications.
+When Specmatic generates requests while running tests or responses while running as a stub and no examples have been provided, Specmatic will generate values for fields based on the schema in the OpenAPI specifications.
 
-While the generated values will conform to the schema, they may not be meaningful from the point of view of your business domain.
+While the generated values will conform to the schema, they may not be meaningful from the point of view of your business domain. Also at times you want to have more control on the exact values that are used for certain fields.
 
 This is where dictionary capability helps you define domain-specific values which Specmatic can use in the absence of examples. Specmatic will lookup values for fields in the ditionary defined by you while generating requests or responses.
 
