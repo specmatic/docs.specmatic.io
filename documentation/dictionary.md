@@ -27,20 +27,20 @@ nav_order: 8
     - [Making Requests](#making-requests)
   - [Dictionary with Examples](#dictionary-with-examples)
 
-When Specmatic is required to generate requests for tests or responses for stubs and cannot locate any examples, it will create them utilizing the structure and keys outlined in the OpenAPI specifications.
+When Specmatic generates requests while running tests or responses while running as a stub and no examples have been provided, Specmatic will generate them based on the schema in the OpenAPI specifications.
 
-It will fill the structure with random values based on the defined schema. Although the generated values will conform to the schema, they will not contain meaningful values that reflect the context of your business domain.
+While the generated values will conform to the schema, they may not be meaningful from the point of view of your business domain.
 
-The dictionary offers a method to retrieve domain-specific values in the absence of examples. You can provide a dictionary of values to Specmatic, which will utilize this dictionary as a reference when generating requests or responses.
+This is where dictionary capability helps you define domain-specific values which Specmatic can use in the absence of examples. Specmatic will lookup values for fields in the ditionary defined by you while generating requests or responses.
 
-The dictionary can be supplied in either `YAML` or `JSON` format and should adhere to the naming convention of `<spec-file-name>_dictionary.<format>` for ease of use.
+The dictionary can be supplied in either `YAML` or `JSON` format. When the dictionary file name follows the convention `<spec-file-name>_dictionary.<format>`, Specmatic will automatically pick it up in the context of the corresponding API specification file.
 
 ## Structure
 
-The dictionary utilizes a standard JSON format, where fields are represented as nested properties that reflect the hierarchical structure of the schema.
+Fields are represented as nested properties that reflect the hierarchical structure of the schema.
 - Each entry in the dictionary maps a schema field to either a `single value` or a `list of values`.
 - If a single value is specified, it will be used directly.
-- If a list is specified, one value will be `pseudo-randomly` selected.
+- If a list is specified, one of those values will be selected at random.
 
 ### Basic Field Mapping
 
@@ -224,7 +224,7 @@ Employee:
 
 ### Referencing Other Schemas
 
-When a schema utilizes `$ref` to reference another schema, the dictionary directly accesses the fields of the referenced schema.<br/>
+When a schema component utilizes `$ref` to reference another schema component, the dictionary for the referenced schema component with be defined with that schema component as the root entry (in other words directly start with the fields of the referenced schema)<br/>
 For example, given the following `Employee` and `Address` schemas:
 
 ```yaml
@@ -272,7 +272,7 @@ Address:
 ```
 {% endtab %}
 {% endtabs %}
-Notice that the keys begin with `Address` instead than `Employee`, because the dictionary accesses the fields from the referenced schema.
+Notice that the keys begin with `Address` instead than `Employee`, because the dictionary accesses the fields from the referenced schema. This makes for convenient dictionary definition withouth have to nest the values deeply.
 
 ## Dictionary Generation
 {: .d-inline-block }
@@ -280,7 +280,7 @@ Notice that the keys begin with `Address` instead than `Employee`, because the d
 Commercial
 {: .label }
 
-Manually creating a dictionary can be a laborious process; therefore, [specmatic-openapi](https://hub.docker.com/r/znsio/specmatic-openapi) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
+Manually creating a dictionary can be quite an involved process, especially when the schema is complex. This is where, [specmatic-openapi](https://hub.docker.com/r/znsio/specmatic-openapi) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
 
 {: .note}
 Automated dictionary generation is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
