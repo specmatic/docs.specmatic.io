@@ -983,9 +983,9 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 
 ### Filter Examples
 
-| Filter                      | Examples                                                                                                                             |
+| Filter                      | Examples                                                                                                                                                |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `STATUS`                    | • `STATUS=200` (only 200 responses)<br>• `STATUS>=400` (all errors)<br>• `STATUS<500` (exclude 5xx errors)                                              |
+| `STATUS`                    | • `STATUS='200'` (only 200 responses)<br>• `STATUS>='400'` (all errors)<br>• `STATUS<'500'` (exclude 5xx errors)                                        |
 | `PATH`                      | • `PATH='/users'` (exact match)<br>• `PATH='/products/*'` (matches all subpaths under /products)                                                        |
 | `METHOD`                    | • `METHOD='GET'` (GET requests)<br>• `METHOD='POST'` (POST requests)                                                                                    |
 | `PARAMETERS.QUERY`          | • `PARAMETERS.QUERY.byName='John'` (query param `byName` equals `'John'`)<br>• `PARAMETERS.QUERY='byName'` (key present)                                |
