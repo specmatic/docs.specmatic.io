@@ -46,7 +46,7 @@ OR
 
 Using docker:
 ```shell
-docker run -p 9000:9000 -v "$PWD/specification:/specification" znsio/specmatic proxy --target=https://dummyjson.com /specification
+docker run -p 9000:9000 -v "$PWD/specification:/specification" specmatic/specmatic proxy --target=https://dummyjson.com /specification
 ```
 
 You will get following confirmation message: <br> `Proxy server is running on http://localhost:9000. Ctrl + C to stop.`

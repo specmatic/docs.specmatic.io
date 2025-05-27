@@ -13,7 +13,7 @@ url: "https://docs.specmatic.io"
 
 aux_links:
   "Specmatic on GitHub":
-    - "https://github.com/znsio/specmatic"
+    - "https://github.com/specmatic/specmatic"
 
 plugins:
   - jekyll-seo-tag
@@ -38,7 +38,7 @@ mermaid:
 enable_copy_code_button: true
 gh_edit_link: true
 gh_edit_link_text: "Edit this page on GitHub"
-gh_edit_repository: "https://github.com/znsio/docs.specmatic.io"
+gh_edit_repository: "https://github.com/specmatic/docs.specmatic.io"
 gh_edit_branch: "main"
 gh_edit_view_mode: "edit"
 

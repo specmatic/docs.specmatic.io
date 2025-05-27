@@ -280,7 +280,7 @@ Notice that the keys begin with `Address` instead than `Employee`, because the d
 Commercial
 {: .label }
 
-Manually creating a dictionary can be quite an involved process, especially when the schema is complex. This is where, [specmatic-openapi](https://hub.docker.com/r/znsio/specmatic-openapi) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
+Manually creating a dictionary can be quite an involved process, especially when the schema is complex. This is where, [specmatic-openapi](https://hub.docker.com/r/specmatic/specmatic-openapi) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
 
 {: .note}
 Automated dictionary generation is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
@@ -456,7 +456,7 @@ Create a file named `employees_dictionary.yaml` in the same directory as your `e
 After setting up, we can execute the `examples dictionary` command using the `specmatic-openapi` Docker image and provide the path to our `employees.yaml` file as shown below:
 
 ```shell
-docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic-openapi examples dictionary --spec-file employees.yaml
+docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic-openapi examples dictionary --spec-file employees.yaml
 ```
 
 ### Understanding the Dictionary
@@ -519,7 +519,7 @@ npx specmatic stub employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic stub "employees.yaml"
+docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic stub "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -539,7 +539,7 @@ npx specmatic test employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic test "employees.yaml"
+docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic test "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -599,7 +599,7 @@ npx specmatic stub employees.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run --rm -p 9000:9000 -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" znsio/specmatic stub "employees.yaml"
+docker run --rm -p 9000:9000 -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic stub "employees.yaml"
 ```
 {% endtab %}
 {% endtabs %}

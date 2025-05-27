@@ -32,11 +32,11 @@ API Specifications are code and they are best stored in a version control system
 
 ## File organization
 
-**[Sample Central Contract Repository](https://github.com/znsio/specmatic-order-contracts)**
+**[Sample Central Contract Repository](https://github.com/specmatic/specmatic-order-contracts)**
 
-* Package Naming Convention - In the [sample repo](https://github.com/znsio/specmatic-order-contracts) we have the OpenAPI API Specifications organized in a manner similar to [package naming convention](https://github.com/znsio/specmatic-order-contracts). This helps in easy identification of the appropriate files for organizations with large number of microservices and API Specifications.
+* Package Naming Convention - In the [sample repo](https://github.com/specmatic/specmatic-order-contracts) we have the OpenAPI API Specifications organized in a manner similar to [package naming convention](https://github.com/specmatic/specmatic-order-contracts). This helps in easy identification of the appropriate files for organizations with large number of microservices and API Specifications.
 * Specification file name - It is helpful to have the version number appended to the API Specification file name
-* Extracting common schema - We recommend extracting common schema components to avoid duplications. Example: [common.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/common.yaml) contains only schema components which are leveraged as remote references in [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml). This has other advantages too
+* Extracting common schema - We recommend extracting common schema components to avoid duplications. Example: [common.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/common.yaml) contains only schema components which are leveraged as remote references in [api_order_v3.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml). This has other advantages too
   * Consistency and standardisation - Commonly used parameter such as traceIds can be defined in one place and used across schemas
   * Avoid duplication related issues - It is common to miss updating / renaming some parts of a schema, by extracting common code we can significantly reduce it
 
@@ -48,10 +48,10 @@ It is a good idea to prevent any direct commits to your master / main branch of 
 
 ### Pre-merge checks
 
-* **Syntax checks and Linting** - We leverage [Spectral](https://stoplight.io/open-source/spectral) for this. Read more about this [here](https://github.com/znsio/specmatic-order-contracts#linting)
+* **Syntax checks and Linting** - We leverage [Spectral](https://stoplight.io/open-source/spectral) for this. Read more about this [here](https://github.com/specmatic/specmatic-order-contracts#linting)
 * **Specmatic Backward Compatibility Testing** This step is crucial in identifying **backward breaking** changes to the specifications.
   * Specmatic Backward Compatiblity Check can compare the spec files in your Central Contract Repository (Git Repo) to identify the differences. Examples:
-    * **Github Action** -  Please see this [Github Workflow file](https://github.com/znsio/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are running the `specmatic backwardCompatibilityCheck` on the central repo. This command does two levels of checks.
+    * **Github Action** -  Please see this [Github Workflow file](https://github.com/specmatic/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are running the `specmatic backwardCompatibilityCheck` on the central repo. This command does two levels of checks.
       * Any files that have changed in the Pull Request branch and compares them against their respective version in default branch (which is target of the PR)
       * Also any files which refer to the change set are also tested for breaking changes (this is necessary to cover the scenario where common schema has been extracted to a separate file and changes to this file impacts backward compatibility of other files that refer to it)
     * **Example Validation** - The `specmatic backwardCompatibilityCheck` fails when backward-incompatible changes are detected, and when named examples are out of line with their schema.
@@ -60,8 +60,8 @@ It is a good idea to prevent any direct commits to your master / main branch of 
 #### Sample Central Contract Repository with Pre-merge checks
  Here are some sample pre-merge pipelines to disallow merges when specification changes have linter errors or backward breaking changes.
 
-- [Github Action](https://github.com/znsio/specmatic-order-contracts)
-- [Gitlab CI](https://gitlab.com/znsio/contract-driven-development/central-contract-repository) - This also uses [Specmatic Docker Image](https://hub.docker.com/r/znsio/specmatic)
+- [Github Action](https://github.com/specmatic/specmatic-order-contracts)
+- [Gitlab CI](https://gitlab.com/specmatic/contract-driven-development/central-contract-repository) - This also uses [Specmatic Docker Image](https://hub.docker.com/r/specmatic/specmatic)
 
 ### Collaborating over API Design
 
@@ -72,8 +72,8 @@ The goal of Central Contract Repo is to help all stakeholders collaborate over A
 ### Specmatic Configuration
 
 Both consumers and providers can leverage the specifications in the Central Contract Repository by listing it in [Specmatic configuration](https://specmatic.in/documentation/configuration.html). Example:
-* [Sample Consumer](https://github.com/znsio/specmatic-order-bff-java) referring to [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Smart Mock](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml)
-* [Sample Provider / API](https://github.com/znsio/specmatic-order-api-java) referring [api_order_v3.yaml](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Contract as Test](https://github.com/znsio/specmatic-order-api-java/blob/main/specmatic.yaml)
+* [Sample Consumer](https://github.com/specmatic/specmatic-order-bff-java) referring to [api_order_v3.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Smart Mock](https://github.com/specmatic/specmatic-order-bff-java/blob/main/specmatic.yaml)
+* [Sample Provider / API](https://github.com/specmatic/specmatic-order-api-java) referring [api_order_v3.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Contract as Test](https://github.com/specmatic/specmatic-order-api-java/blob/main/specmatic.yaml)
 
 Specmatic will always pull the latest specification files from the version control system for both applications.
 

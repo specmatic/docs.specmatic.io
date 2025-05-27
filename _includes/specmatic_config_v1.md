@@ -89,7 +89,7 @@ Here is a sample configuration to get you started.
   "sources": [
     {
       "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "repository": "https://github.com/specmatic/specmatic-order-contracts.git",
       "provides": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
@@ -102,14 +102,14 @@ Here is a sample configuration to get you started.
 ```yaml
 sources:
   - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+    repository: https://github.com/specmatic/specmatic-order-contracts.git
     provides:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-Place this file in the root folder of your project (Here is an [example](https://github.com/znsio/specmatic-order-api-java)). Let us now go through each of the lines in this file.
+Place this file in the root folder of your project (Here is an [example](https://github.com/specmatic/specmatic-order-api-java)). Let us now go through each of the lines in this file.
 * **provider** - At the moment we support all git based source control systems. Example: GitHub, Gitlab, Azure, etc.
 * **repository** - The git repository URL
 * **provides** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
@@ -123,7 +123,7 @@ You can also specify the branch.
   "sources": [
     {
       "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "repository": "https://github.com/specmatic/specmatic-order-contracts.git",
       "branch": "feature-1",
       "provides": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
@@ -137,7 +137,7 @@ You can also specify the branch.
 ```yaml
 sources:
   - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+    repository: https://github.com/specmatic/specmatic-order-contracts.git
     branch: feature-1
     provides:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
@@ -152,7 +152,7 @@ Now if you run the ```specmatic test``` command line executable from the directo
 ```shell
 % {{ site.spec_cmd }} test
 Loading config file ./specmatic.json
-Couldn't find local contracts, cloning https://github.com/znsio/specmatic-order-contracts.git into .specmatic/repos
+Couldn't find local contracts, cloning https://github.com/specmatic/specmatic-order-contracts.git into .specmatic/repos
 Resetting /<path where you are running the specmatic command>/.specmatic/repos/specmatic-order-contracts
 ```
 
@@ -169,7 +169,7 @@ By default, Specmatic searches for the directory ending with `_examples` to pick
   "sources": [
     {
       "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "repository": "https://github.com/specmatic/specmatic-order-contracts.git",
       "provides": [
         "io/specmatic/examples/store/openapi/product_search_bff_v4.yaml"
       ],
@@ -189,7 +189,7 @@ By default, Specmatic searches for the directory ending with `_examples` to pick
 ```yaml
 sources:
   - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+    repository: https://github.com/specmatic/specmatic-order-contracts.git
     provides:
       - io/specmatic/examples/store/openapi/product_search_bff_v4.yaml
     consumes:
@@ -216,7 +216,7 @@ The default timeout is `6000 milliseconds`.
   "sources": [
     {
       "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "repository": "https://github.com/specmatic/specmatic-order-contracts.git",
       "consumes": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
@@ -232,7 +232,7 @@ The default timeout is `6000 milliseconds`.
 ```yaml
 sources:
   - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+    repository: https://github.com/specmatic/specmatic-order-contracts.git
     consumes:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 test:
@@ -252,7 +252,7 @@ The same configuration file can be leveraged to define stubs also.
   "sources": [
     {
       "provider": "git",
-      "repository": "https://github.com/znsio/specmatic-order-contracts.git",
+      "repository": "https://github.com/specmatic/specmatic-order-contracts.git",
       "consumes": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
       ]
@@ -265,14 +265,14 @@ The same configuration file can be leveraged to define stubs also.
 ```yaml
 sources:
   - provider: git
-    repository: https://github.com/znsio/specmatic-order-contracts.git
+    repository: https://github.com/specmatic/specmatic-order-contracts.git
     consumes:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% endtabs %}
 
-Please note that now we are now listing the ```api_order_v3.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml).
+Please note that now we are now listing the ```api_order_v3.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/specmatic.yaml).
 
 A single application may need to list the API Specifications it is implementing under the provides attribute and the API Specifications of its dependencies under the consumes attribute.
 
@@ -393,7 +393,7 @@ Note that the `consumes` and `provides` can both contain URLs. `http` and `https
 
 Usually source control requires authentication. Below are the ways in which you can set it up.
 * Recommended approach - Provide a Git SSH URL and make sure your environment already has necessary keys loaded. If the git clone command works on your regular command line, it will work within Specmatic too. This is most suitable in CI, because your CI server may already be setup to clone the application code (for which the CI server should already have the necessary keys). So it should already be able to clone your API Specifications also. The same also should be applicable for local development and testing environments.
-* Alternatives - With https URLs you can provide the bearer token or other means. Please reach us (raise a [github issue](https://github.com/znsio/specmatic/issues/new/choose)) if you need help with this.
+* Alternatives - With https URLs you can provide the bearer token or other means. Please reach us (raise a [github issue](https://github.com/specmatic/specmatic/issues/new/choose)) if you need help with this.
 
 #### Report Configuration
 Specmatic can generate reports based on the below configuration:

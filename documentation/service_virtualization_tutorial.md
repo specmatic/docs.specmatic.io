@@ -158,7 +158,7 @@ npx specmatic stub
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic stub
+docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic stub
 ```
 {% endtab %}
 {% endtabs %}
@@ -258,7 +258,7 @@ Let's see how this is done.
 
 - Run the `examples` command:<br/><br/>
 ```shell
-docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" znsio/specmatic-openapi examples generate employees.yaml
+docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/specmatic-openapi examples generate employees.yaml
 ```
 
 - It generates a request-response mapping JSON file in the `employees_examples` directory containing an example of the API in the spec.
@@ -469,7 +469,7 @@ npx specmatic stub --strict
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic stub --strict
+docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic stub --strict
 ```
 {% endtab %}
 {% endtabs %}
@@ -1011,7 +1011,7 @@ you can simulate response times with the specified delay in milliseconds.
 version: 2
 contracts:
   - git:
-      url: https://github.com/znsio/specmatic-order-contracts.git
+      url: https://github.com/specmatic/specmatic-order-contracts.git
     consumes:
       - io/specmatic/examples/store/openapi/api_order_v3.yaml
 stub:
@@ -1025,7 +1025,7 @@ stub:
   "contracts": [
     {
       "git": {
-        "url": "https://github.com/znsio/specmatic-order-contracts.git"
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
       },
       "consumes": [
         "io/specmatic/examples/store/openapi/api_order_v3.yaml"
@@ -1063,7 +1063,7 @@ npx specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -p 443:443 -v "${PWD}/product-api.yaml:/usr/src/app/product-api.yaml" -v "${PWD}/<directory to create keystore>:/usr/src/app/<directory to create keystore>" znsio/specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
+docker run -p 443:443 -v "${PWD}/product-api.yaml:/usr/src/app/product-api.yaml" -v "${PWD}/<directory to create keystore>:/usr/src/app/<directory to create keystore>" specmatic/specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
 ```
 {% endtab %}
 {% endtabs %}
@@ -1115,9 +1115,9 @@ Please see this [video](https://youtu.be/U5Agz-mvYIU?t=998) for reference.
 
 The above image shows how Specmatic Smart Mocking fits into your Component Test. A good component test isolates the system / component under test from its dependencies. Here Specmatic is emulating the dependencies of the mobile application thereby isolating it.
 
-**API Tests are just Component Tests where the System Under Test is a Service / API**. Here is an [example](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/ApiTests.kt) of how you can leverage Specmatic dynamic mocking in an API Test. Below are the pieces involved.
-* **System Under Test** - [Find Available Products Service](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/main/kotlin/com/component/orders/controllers/Products.kt) - Invokes products API to get all products and filters out products where inventory is zero.
-* **Dependency** - Products API mocked by Specmatic. Specmatic is setup to leverage [OpenAPI Specification of Products API](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) in the [central contract repo](https://github.com/znsio/specmatic-order-contracts) through [specmatic.yaml](https://github.com/znsio/specmatic-order-bff-java/blob/main/specmatic.yaml) configuration.
+**API Tests are just Component Tests where the System Under Test is a Service / API**. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/ApiTests.kt) of how you can leverage Specmatic dynamic mocking in an API Test. Below are the pieces involved.
+* **System Under Test** - [Find Available Products Service](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/main/kotlin/com/component/orders/controllers/Products.kt) - Invokes products API to get all products and filters out products where inventory is zero.
+* **Dependency** - Products API mocked by Specmatic. Specmatic is setup to leverage [OpenAPI Specification of Products API](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) in the [central contract repo](https://github.com/specmatic/specmatic-order-contracts) through [specmatic.yaml](https://github.com/specmatic/specmatic-order-bff-java/blob/main/specmatic.yaml) configuration.
 
 Let us analyse each phase of this API test.
 * **Arrange** - In this step, we setup Specmatic stub server with expectation json through Specmatic http endpoint to emulate the Products API to return expected response. We also verify that Specmatic has accepted this expectation data by asserting that the response code is 2xx. This confirms that are our expectation data is in line with the OpenAPI Specification of Products OpenAPI Specification.
@@ -1194,9 +1194,9 @@ fun tearDown() {
 
 Here is a complete example of Specmatic Contract Tests that leverages the above technique.
 
-[Kotlin Example](https://github.com/znsio/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/contract/ContractTests.kt)
+[Kotlin Example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/contract/ContractTests.kt)
 
-Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/znsio/specmatic/blob/main/CONTRIBUTING.md).
+Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/specmatic/specmatic/blob/main/CONTRIBUTING.md).
 
 {% endtab %}
 {% tab virtualization python %}
@@ -1231,7 +1231,7 @@ If your tests are written in Python, you can start and stop the stub server with
 
    In this example, we are passing an instance of wsgi app like flask. `stub_host`, `stub_port`, and `expectation_json_file` are the the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively. Replace `app` with your Flask application object.
 
-   Here are complete example of [Specmatic stub server](https://github.com/znsio/specmatic-order-bff-python/blob/main/test/test_contract.py) usage in Python.
+   Here are complete example of [Specmatic stub server](https://github.com/specmatic/specmatic-order-bff-python/blob/main/test/test_contract.py) usage in Python.
 {% endtab %}
 {% endtabs %}
 
@@ -1805,7 +1805,7 @@ npx specmatic stub
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -p 9000:9000 -p 9001:9001 -v "$(pwd)/imported_product:/usr/src/app/imported_product" -v "$(pwd)/exported_product:/usr/src/app/exported_product" -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic stub
+docker run -p 9000:9000 -p 9001:9001 -v "$(pwd)/imported_product:/usr/src/app/imported_product" -v "$(pwd)/exported_product:/usr/src/app/exported_product" -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic stub
 ```
 {% endtab %}
 {% endtabs %}
@@ -1849,4 +1849,4 @@ This setup enables serving and testing multiple specifications efficiently using
 
 ## Sample Java Project
 
-[https://github.com/znsio/specmatic-order-bff-java](https://github.com/znsio/specmatic-order-bff-java)
+[https://github.com/specmatic/specmatic-order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)

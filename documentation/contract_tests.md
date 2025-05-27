@@ -82,7 +82,7 @@ info:
   version: '1.0'
 servers: []
 paths:
-  '/znsio/specmatic/employees':
+  '/specmatic/specmatic/employees':
     post:
       summary: ''
       requestBody:
@@ -111,7 +111,7 @@ paths:
                     name: Jill Doe
                     department: Engineering
                     designation: Director
-  '/znsio/specmatic/employees/{id}':
+  '/specmatic/specmatic/employees/{id}':
     parameters:
       - schema:
           type: number
@@ -203,7 +203,7 @@ components:
 
 Here is a sample application that is is implementing this specification. You can run a curl command on this URL to see the sample data.
 
-`https://my-json-server.typicode.com/znsio/specmatic-documentation-examples/employees/`
+`https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples/employees/`
 
 Let us now run the ```employees.yaml``` as a test against the above sample application.
 
@@ -214,14 +214,14 @@ Let us now run the ```employees.yaml``` as a test against the above sample appli
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run znsio/specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
+docker run specmatic/specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
 ```
 
 The results should end with below text.
 
 ```Tests run: 4, Successes: 4, Failures: 0, Errors: 0```
 
-And if you further analyse the test logs for ```PUT /znsio/specmatic/employees/{id}```, you will notice that specmatic sent the value 10 and did not generate a random value. How did this happen?
+And if you further analyse the test logs for ```PUT /specmatic/specmatic/employees/{id}```, you will notice that specmatic sent the value 10 and did not generate a random value. How did this happen?
 * Specmatic is able to correlate the request and response examples based on naming convention.
 * In the ```employees.yaml``` you will notice several examples for the employeeId parameter each with a different name, these same names are again used in the response examples also. This is what is helping Specmatic tie the request and response together.
 * In OpenAPI, while it is possible to define several possible responses for an operation, it is not possible to define which input generates which response. This is the reason why Specmatic has to depend on the example names.
@@ -234,11 +234,11 @@ The purpose of the contract test is to check if the application understands a sp
 
 Let's take the example of `FETCH_EMPLOYEE_SUCCESS` in the above specification.
 
-First, Specmatic's `test` command collects all the examples named `FETCH_EMPLOYEE_SUCCESS` in the `parameters` section of `/znsio/specmatic/employees/{id}` in the above specification, and sends a GET request with these values to `/znsio/specmatic/employees/{id}`. These examples serve as test data for Specmatic. Specmatic expects that the application will understand them and return the expected response.
+First, Specmatic's `test` command collects all the examples named `FETCH_EMPLOYEE_SUCCESS` in the `parameters` section of `/specmatic/specmatic/employees/{id}` in the above specification, and sends a GET request with these values to `/specmatic/specmatic/employees/{id}`. These examples serve as test data for Specmatic. Specmatic expects that the application will understand them and return the expected response.
 
 Needless to say, the application must be setup before the contract tests run to return the required response.
 
-Next, when the application sends back a response, Specmatic must validate it against the specification. But `/znsio/specmatic/employees/{id}` has a `200` and a `404` response in the spec. How does Specmatic know which of the two to expect? Specmatic just looks for a response example named `FETCH_EMPLOYEE_SUCCESS`, and finds it under the `200`. Hence, the response code is expected to be `200`, and the payload must match that defined under the 200 response. Any response from the application with a `200` status code matching the `200` response specification will be accepted by Specmatic.
+Next, when the application sends back a response, Specmatic must validate it against the specification. But `/specmatic/specmatic/employees/{id}` has a `200` and a `404` response in the spec. How does Specmatic know which of the two to expect? Specmatic just looks for a response example named `FETCH_EMPLOYEE_SUCCESS`, and finds it under the `200`. Hence, the response code is expected to be `200`, and the payload must match that defined under the 200 response. Any response from the application with a `200` status code matching the `200` response specification will be accepted by Specmatic.
 
 Thus, the request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken together comprise a contract test named `FETCH_EMPLOYEE_SUCCESS`.
 
@@ -252,9 +252,9 @@ You can store test data in json files side-by-side to be used in the contract te
 
 Let's try it out. Please clone below sample repo.
 
-[https://github.com/znsio/externalised-example-jsons-sample](https://github.com/znsio/externalised-example-jsons-sample)
+[https://github.com/specmatic/externalised-example-jsons-sample](https://github.com/specmatic/externalised-example-jsons-sample)
 
-The [`employees.yaml`](https://github.com/znsio/externalised-example-jsons-sample/blob/main/employees.yaml) file in this repo is similar to the spec we saw in the above section with the difference that it does not include inline examples. Instead all the examples are externalised to JSON files inside a folder named [`employees_examples`](https://github.com/znsio/externalised-example-jsons-sample/tree/main/employees_examples). Please have a look at each of the examples files (which have self explanatory names) to understand the syntax.
+The [`employees.yaml`](https://github.com/specmatic/externalised-example-jsons-sample/blob/main/employees.yaml) file in this repo is similar to the spec we saw in the above section with the difference that it does not include inline examples. Instead all the examples are externalised to JSON files inside a folder named [`employees_examples`](https://github.com/specmatic/externalised-example-jsons-sample/tree/main/employees_examples). Please have a look at each of the examples files (which have self explanatory names) to understand the syntax.
 
 Let us now run `employees.yaml` as a test against the sample application.
 
@@ -267,7 +267,7 @@ Here’s how you can present that command with `site.spec_cmd` and the Docker al
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
+docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
 Note: Since the folder is named `employees_examples` and colocated with the spec file `employees.yaml`, by convention it is automatically picked up. However if your folder has different name and / or located in another path, you can explicitly pass that folder as a parameter using the `--examples` CLI Argument (Please run `specmatic test --help` to learn more).
@@ -283,7 +283,7 @@ The complete test data format can be referred to [here](/documentation/external_
 Instead of creating the above example JSONs by hand, you can also generate the example JSONs using the `examples` command:
 
 ```bash
-docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" znsio/specmatic-openapi examples generate employees.yaml
+docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/specmatic-openapi examples generate employees.yaml
 ```
 
 In the above case, example JSON files will be written into the directory named `employees_examples`. You can then update the files to suit your needs and use them.
@@ -303,7 +303,7 @@ Specmatic can help you verify / assess such boundary condition behavior and the 
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run znsio/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
+docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
 Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failures.
@@ -327,14 +327,14 @@ You can get the JUnit output from the Specmatic command using an extra parameter
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
+docker run specmatic/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
 ```
 
 The command will create JUnit test xml output in the specified directory which you can then include as part of CI pipeline results etc.
 
 ### When The API Does Not Match The API Specification
 
-As we saw earlier in this page, the [sample application](https://my-json-server.typicode.com/znsio/specmatic-documentation-examples/employees/) is adhering to the ```employees.yaml``` OpenAPI Specification.
+As we saw earlier in this page, the [sample application](https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples/employees/) is adhering to the ```employees.yaml``` OpenAPI Specification.
 
 Now let us experiment by making some changes to the datatypes in the ```employees.yaml``` and observe the error responses.
 
@@ -401,7 +401,7 @@ Run this command:
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run znsio/specmatic --testBaseURL https://my-json-server.typicode.com
+docker run specmatic/specmatic --testBaseURL https://my-json-server.typicode.com
 ```
 Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
@@ -505,7 +505,7 @@ Here is a snippet of OpenAPI yaml that demonstrates the same.
 
 Note how we are referencing the image file in the example as `externalValue`. Specmatic will look for this file (box_image.jpg) in project dir and send the contents as part of the multipart HTTP request.
 
-Please read through the [complete OpenAPI spec](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) and try out the [sample project which implements this endpoint](https://github.com/znsio/specmatic-order-api-java). The sample project even dumps the file that it receives as part of the test request to a gitignored folder called `.images` in the project root directory so that you can verify that encoding is also preserved as part of the test.
+Please read through the [complete OpenAPI spec](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) and try out the [sample project which implements this endpoint](https://github.com/specmatic/specmatic-order-api-java). The sample project even dumps the file that it receives as part of the test request to a gitignored folder called `.images` in the project root directory so that you can verify that encoding is also preserved as part of the test.
 
 ### The Java Helper For Java Projects
 
@@ -529,7 +529,7 @@ Add the following dependencies to your `pom.xml` file:
 ```
 
 Add a class that implements `SpecmaticContractTest`. See how this is done -
-[Interface based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
+[Interface based contract test example](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
 
 In it, set the "host" and "port" properties to tell Specmatic where to find the application. You can also start the application in that class.
 
@@ -741,7 +741,7 @@ public class ContractTests extends SpecmaticJUnitSupport {
 ```
 
 **4. Example for a Spring Boot Application:**
-[Interface based contract test example](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
+[Interface based contract test example](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
 
 {% endtab %}
 {% tab programmatically python %}
@@ -789,7 +789,7 @@ public class ContractTests extends SpecmaticJUnitSupport {
 
    Note: Please ensure that you set the '-v' and '-s' flags while running pytest so that pytest will run all the tests in the test directory and provide detailed output, including any output from the tests themselves.
 
-Here is a complete [Specmatic Contract Test example](https://github.com/znsio/specmatic-order-api-python/blob/main/test/test_contract_with_coverage.py) for a flask application.
+Here is a complete [Specmatic Contract Test example](https://github.com/specmatic/specmatic-order-api-python/blob/main/test/test_contract_with_coverage.py) for a flask application.
 {% endtab %}
 {% endtabs %}
 
@@ -876,7 +876,7 @@ info:
   version: '1.0'
 servers: []
 paths:
-  '/znsio/specmatic/employees':
+  '/specmatic/specmatic/employees':
     post:
       summary: ''
       requestBody:
@@ -1050,7 +1050,7 @@ There are two methods to enable this feature:
 
 Activate the actuator mapping endpoint in your backend framework. Specify the URL of this endpoint as a system property using `endpointsAPI`. Specmatic will use this endpoint to retrieve and analyze the available paths and methods exposed by your backend server.
 
-Refer to the sample project below to observe this in action. Pay attention to the system property set in the [ContractTest](https://github.com/znsio/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) class, as well as the actuator-related dependency included in `pom.xml`.
+Refer to the sample project below to observe this in action. Pay attention to the system property set in the [ContractTest](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) class, as well as the actuator-related dependency included in `pom.xml`.
 
 #### Use Swagger UI
 
@@ -1435,7 +1435,7 @@ if __name__ == "__main__":
 Following is an example using Java that can be compiled into a standalone JAR file.
 
 ### Sample Project Access
-* Reference Java based hook script implementation available at: [specmatic-hooks-java-sample](https://github.com/znsio/specmatic-hooks-java-sample)
+* Reference Java based hook script implementation available at: [specmatic-hooks-java-sample](https://github.com/specmatic/specmatic-hooks-java-sample)
 * Clone the repository to get started
 
 #### Creating the JAR File
@@ -1455,7 +1455,7 @@ hooks:
   test_load_contract: java -jar specmatic-hooks-sample.jar
 ```
 
-Following is the link to Java hook file from the sample project : [Java hook script](https://github.com/znsio/specmatic-hooks-java-sample/blob/main/src/main/java/Main.java)
+Following is the link to Java hook file from the sample project : [Java hook script](https://github.com/specmatic/specmatic-hooks-java-sample/blob/main/src/main/java/Main.java)
 
 
 {% endtab %}
@@ -1502,7 +1502,7 @@ info:
   version: '1.0'
 servers: []
 paths:
-  '/znsio/specmatic/products':
+  '/specmatic/specmatic/products':
     post:
       summary: ''
       requestBody:
@@ -1588,7 +1588,7 @@ info:
   version: '1.0'
 servers: []
 paths:
-  '/znsio/specmatic/products':
+  '/specmatic/specmatic/products':
     post:
       summary: ''
       requestBody:
@@ -1645,4 +1645,4 @@ System.setProperty("MAX_TEST_REQUEST_COMBINATIONS", "2");
 
 ### Sample Project
 
-[https://github.com/znsio/specmatic-order-api-java](https://github.com/znsio/specmatic-order-api-java)
+[https://github.com/specmatic/specmatic-order-api-java](https://github.com/specmatic/specmatic-order-api-java)

@@ -7,9 +7,9 @@ redirect_from:
 ---
 # A Contract Driven Development Tool
 
-[Get started now](/getting_started.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](//github.com/znsio/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get started now](/getting_started.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](//github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.specmatic/specmatic-core.svg)](https://mvnrepository.com/artifact/io.specmatic/specmatic-core) [![GitHub release](https://img.shields.io/github/v/release/znsio/specmatic.svg)](https://github.com/znsio/specmatic/releases) ![CI Build](https://github.com/znsio/specmatic/workflows/CI%20Build/badge.svg) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=znsio_specmatic&branch=main&metric=alert_status)](https://sonarcloud.io/dashboard?id=znsio_specmatic&branch=main) [![Twitter Follow](https://img.shields.io/twitter/follow/specmatic.svg?style=social&label=Follow)](https://twitter.com/specmatic) [![Docker Pulls](https://img.shields.io/docker/pulls/znsio/specmatic.svg)](https://hub.docker.com/r/znsio/specmatic)
+[![Maven Central](https://img.shields.io/maven-central/v/io.specmatic/specmatic-core.svg)](https://mvnrepository.com/artifact/io.specmatic/specmatic-core) [![GitHub release](https://img.shields.io/github/v/release/specmatic/specmatic.svg)](https://github.com/specmatic/specmatic/releases) ![CI Build](https://github.com/specmatic/specmatic/workflows/CI%20Build/badge.svg) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=specmatic_specmatic&branch=main&metric=alert_status)](https://sonarcloud.io/dashboard?id=specmatic_specmatic&branch=main) [![Twitter Follow](https://img.shields.io/twitter/follow/specmatic.svg?style=social&label=Follow)](https://twitter.com/specmatic) [![Docker Pulls](https://img.shields.io/docker/pulls/specmatic/specmatic.svg)](https://hub.docker.com/r/specmatic/specmatic)
 ---
 ### Context
 

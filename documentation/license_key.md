@@ -29,5 +29,5 @@ When using Specmatic with Docker, you must pass the license key as follows:
 ```shell
 docker run -it \
   -v /path/to/specmatic-license.txt:/specmatic/license.txt \
-  -e SPECMATIC_LICENSE_PATH=/specmatic/license.txt znsio/specmatic-[IMAGE_NAME]
+  -e SPECMATIC_LICENSE_PATH=/specmatic/license.txt specmatic/specmatic-[IMAGE_NAME]
 ```

@@ -87,7 +87,7 @@ Run the following command to start the GraphQL stub:
 
 ```bash
 docker run -v "$PWD:/sandbox" -p 9000:9000 \
-  znsio/specmatic-graphql virtualize /sandbox/product-api.graphql
+  specmatic/specmatic-graphql virtualize /sandbox/product-api.graphql
 ```
 
 That's it! You now have a GraphQL stub server running on `localhost:9000/graphql` serving the schema defined in `product-api.graphql`.
@@ -163,7 +163,7 @@ Run the following command to start the GraphQL stub:
 
 ```bash
 docker run -v "$PWD:/spec" -p 9000:9000 \
-  znsio/specmatic-graphql virtualize /spec/product-api.graphql
+  specmatic/specmatic-graphql virtualize /spec/product-api.graphql
 ```
 
 **Step 3: Make a request to the stub server**
@@ -401,7 +401,7 @@ Here are some simple steps to try this out:
    docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
      -v "$PWD/examples:/usr/src/app/examples" \
      -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-     -p 9000:9000 znsio/specmatic-graphql virtualize --port=9000 --examples=examples
+     -p 9000:9000 specmatic/specmatic-graphql virtualize --port=9000 --examples=examples
    ```
 
 **6.** Make a request to query all the sub-selected fields specified in the example. You will get the exact response specified in the example. Use the following `curl` command to make this request:
@@ -560,7 +560,7 @@ To showcase this, let's reuse the folder structure established in the previous s
    docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
      -v "$PWD/examples:/usr/src/app/examples" \
      -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-     -p 9000:9000 znsio/specmatic-graphql virtualize --port=9000 --examples=examples
+     -p 9000:9000 specmatic/specmatic-graphql virtualize --port=9000 --examples=examples
    ```
 
 5. **Send a Multi-Query Request**:
@@ -707,7 +707,7 @@ Here, the `Date` scalar is provided with a valid value (`"2024/12/31"`). This en
 To run contract test:
 
 ```shell
-docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic"  -e SPECMATIC_GENERATIVE_TESTS=true znsio/specmatic-graphql test --port=8080
+docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic"  -e SPECMATIC_GENERATIVE_TESTS=true specmatic/specmatic-graphql test --port=8080
 ```
 
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating GraphQL requests based on the GrapqhQL SDL files listed under `provides` section along with examples if any provided in the colocated directory named `<GraphQL SDL file without extension>_examples`.
@@ -722,7 +722,7 @@ Also, it mounts the build artifacts from the docker container onto your local ma
 version: 2
 contracts:
   - git:
-      url: https://github.com/znsio/specmatic-order-contracts.git
+      url: https://github.com/specmatic/specmatic-order-contracts.git
     provides:
       - io/specmatic/examples/store/graphql/products_bff.graphqls
     consumes:

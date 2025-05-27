@@ -10,13 +10,13 @@ The Specmatic standalone executable is accessible through various prominent dist
 You can run Specmatic using the following command:
 
 ``` bash
-docker run znsio/specmatic
+docker run specmatic/specmatic
 ```
 
 {% endtab %}
 
 {% tab install java %}
-Download the standalone jar from our [Github releases](<https://github.com/znsio/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.latest_release }}/specmatic-executable-all-{{ site.latest_release }}.jar).
+Download the standalone jar from our [Github releases](<https://github.com/specmatic/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.latest_release }}/specmatic-executable-all-{{ site.latest_release }}.jar).
 
 If you have downloaded the standalone jar from Maven Central, you may want to rename it as shown below for convenience.
 

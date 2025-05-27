@@ -38,12 +38,12 @@ These capabilities enable you to develop and test gRPC-based applications more e
 
 ## Quick Start
 
-Here is a [sample project](https://github.com/znsio/specmatic-order-bff-grpc-kotlin) which has detailed animated architecture diagram along with explanation about how we are isolating the System Under Test during Contract Tests.
+Here is a [sample project](https://github.com/specmatic/specmatic-order-bff-grpc-kotlin) which has detailed animated architecture diagram along with explanation about how we are isolating the System Under Test during Contract Tests.
 
-1. [Clone the project](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#project-setup)
-2. [Use Docker to run the contract tests](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-docker)
+1. [Clone the project](https://github.com/specmatic/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#project-setup)
+2. [Use Docker to run the contract tests](https://github.com/specmatic/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-docker)
 
-Alternatively if you have Java (JDK 17 and above) on your machine, you can [run the contract tests using gradle](https://github.com/znsio/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-gradle) also.
+Alternatively if you have Java (JDK 17 and above) on your machine, you can [run the contract tests using gradle](https://github.com/specmatic/specmatic-order-bff-grpc-kotlin?tab=readme-ov-file#using-gradle) also.
 
 ## Detailed explanation
 
@@ -137,7 +137,7 @@ This approach facilitates the creation of test data that can be used for both co
 
 So far in the above explanation the sample project is invoking Specmatic gRPC support programmatically. However if you wish to run the same from CLI then below Docker image wraps the same Specmatic gRPC capabilities.
 
-[`znsio/specmatic-grpc`](https://hub.docker.com/r/znsio/specmatic-grpc)
+[`specmatic/specmatic-grpc`](https://hub.docker.com/r/specmatic/specmatic-grpc)
 
 Also the Specmatic gRPC Docker image, by nature, is completely language and tech stack agnostic.
 
@@ -146,7 +146,7 @@ Also the Specmatic gRPC Docker image, by nature, is completely language and tech
 To start the stub/service virtualization service, use the following command:
 
 ```bash
-docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" znsio/specmatic-grpc virtualize
+docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic-grpc virtualize
 ```
 
 This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualisation server.
@@ -168,7 +168,7 @@ sources:
 To run tests against your BFF (Backend for Frontend), use this command:
 
 ```bash
-docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" -e SPECMATIC_GENERATIVE_TESTS=true znsio/specmatic-grpc test --port=8080 --host=host.docker.internal
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" -e SPECMATIC_GENERATIVE_TESTS=true specmatic/specmatic-grpc test --port=8080 --host=host.docker.internal
 ```
 
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating gRPC requests based on the profiles listed under `provides` section.

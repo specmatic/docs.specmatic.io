@@ -188,7 +188,7 @@ npx specmatic virtual-service
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run -p 9000:9000 -v "${PWD}/:/usr/src/app" znsio/specmatic virtual-service
+docker run -p 9000:9000 -v "${PWD}/:/usr/src/app" specmatic/specmatic virtual-service
 ```
 {% endtab %}
 {% endtabs %}
