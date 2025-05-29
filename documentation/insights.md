@@ -144,17 +144,17 @@ We'll be working with two OpenAPI specifications:
               -v "${{ github.workspace }}:/api-contracts:rw" \
               -w /api-contracts \
               --entrypoint /bin/sh \
-              znsio/specmatic \
+              specmatic/specmatic \
               -c "git config --global --add safe.directory /api-contracts && java -jar /usr/src/app/specmatic.jar backwardCompatibilityCheck"
 
           - name: Generate central contract repo report
             run: |
               docker run -v "$(pwd):/central-contract-repo:rw" \
-                --entrypoint /bin/sh znsio/specmatic \
+                --entrypoint /bin/sh specmatic/specmatic \
                 -c "cd /central-contract-repo && java -jar /usr/src/app/specmatic.jar central-contract-repo-report"
 
           - name: Run Specmatic Insights Github Build Reporter
-            uses: znsio/specmatic-insights-build-reporter-github-action@v2.0.2
+            uses: specmatic/specmatic-insights-build-reporter-github-action@v2.0.2
             with:
               github-token: ${{ secrets.GH_REPOSITORY_TOKEN }}
               org-id:  YOUR_SPECMATIC_ORG_ID # Replace with your actual Org ID
@@ -250,7 +250,7 @@ jobs:
         docker run -d --name specmatic-stub \
           -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
           -p 8080:8080 \
-          znsio/specmatic stub
+          specmatic/specmatic stub
 
         # Wait for the stub to be ready
         sleep 10
@@ -311,7 +311,7 @@ jobs:
         docker run -d --name specmatic-stub \
           -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
           -p 9000:9000 \
-          znsio/specmatic stub
+          specmatic/specmatic stub
 
         # Wait for the stub to be ready
         sleep 10
@@ -323,7 +323,7 @@ jobs:
       run: sleep 30
 
     - name: Contract Test BFF service using Specmatic
-      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=8080 --host=localhost
+      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "specmatic/specmatic" test --port=8080 --host=localhost
 ```
 
 After running the BFF service CI pipeline, you should see results similar to:
@@ -377,7 +377,7 @@ jobs:
       run: sleep 30
 
     - name: Contract Test Domain API service using Specmatic
-      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "znsio/specmatic" test --port=9000 --host=localhost
+      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "specmatic/specmatic" test --port=9000 --host=localhost
 ```
 
 Upon completion of the Order API CI pipeline, you should see output like this:
@@ -415,7 +415,7 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
 ```yaml
 {% raw %}
 - name: Run Specmatic Insights Github Build Reporter
-  uses: znsio/specmatic-insights-build-reporter-github-action@v2.0.2
+  uses: specmatic/specmatic-insights-build-reporter-github-action@v2.0.2
   with:
     github-token: ${{ secrets.SPECMATIC_GITHUB_TOKEN }}
     specmatic-insights-host: https://insights.specmatic.io # Or your on-prem URL
@@ -430,7 +430,7 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
 {% endraw %}
 ```
 
-For more details refer to the [Specmatic Insights GitHub Action documentation](https://github.com/znsio/specmatic-insights-build-reporter-github-action)
+For more details refer to the [Specmatic Insights GitHub Action documentation](https://github.com/specmatic/specmatic-insights-build-reporter-github-action)
 
 Make sure to replace `YOUR_SPECMATIC_ORG_ID` with your actual organization ID. This you can find on your insights dashboard, under settings > general.
 

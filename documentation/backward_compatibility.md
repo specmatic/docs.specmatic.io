@@ -534,7 +534,7 @@ npx specmatic compare api_products_v1.yaml api_products_v2.yaml
 {% endtab %}
 {% tab compare docker %}
 ```bash
-docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
+docker run -v "/local-directory:/specs" specmatic/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -601,7 +601,7 @@ npx specmaitc compare api_products_v1.yaml api_products_v2.yaml
 {% endtab %}
 {% tab compare2 docker %}
 ```bash
-docker run -v "/local-directory:/specs" znsio/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
+docker run -v "/local-directory:/specs" specmatic/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -642,7 +642,7 @@ npx specmatic compatible git file api_products_v1.yaml
 {% endtab %}
 {% tab git-compare docker %}
 ```bash
-docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git file "/git-repo/api_products_v1.yaml"
+docker run -v "/git-repo:/git-repo" specmatic/specmatic compatible git file "/git-repo/api_products_v1.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -674,7 +674,7 @@ npx specmatic compatible git commits api_products_v1.yaml HEAD HEAD^1
 {% endtab %}
 {% tab ci-compare docker %}
 ```bash
-docker run -v "/git-repo:/git-repo" znsio/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
+docker run -v "/git-repo:/git-repo" specmatic/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
 ```
 {% endtab %}
 {% endtabs %}

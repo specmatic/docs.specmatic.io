@@ -64,19 +64,19 @@ The architecture consists of three core components:
 Let's discover how Specmatic works across different layers of an app, with help of following sample projects.
 
 - **Frontend:**
-    - [React and NodeJS](https://github.com/znsio/specmatic-order-ui-react)
+    - [React and NodeJS](https://github.com/specmatic/specmatic-order-ui-react)
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
-    - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
-    - [Python (Flask)](https://github.com/znsio/specmatic-order-bff-python/) and [Sanic](https://github.com/znsio/specmatic-order-bff-python-sanic/)
-    - [Go (Gin)](https://github.com/znsio/specmatic-order-bff-go)
-    - [.NET core (C#)](https://github.com/znsio/specmatic-order-bff-csharp)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-order-bff-java/)
+    - [NodeJS (Express)](https://github.com/specmatic/specmatic-order-bff-nodejs/)
+    - [Python (Flask)](https://github.com/specmatic/specmatic-order-bff-python/) and [Sanic](https://github.com/specmatic/specmatic-order-bff-python-sanic/)
+    - [Go (Gin)](https://github.com/specmatic/specmatic-order-bff-go)
+    - [.NET core (C#)](https://github.com/specmatic/specmatic-order-bff-csharp)
 
 - **Backend:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-java)
-    - [Python (Flask)](https://github.com/znsio/specmatic-order-api-python/)
-    - [NodeJS (Express)](https://github.com/znsio/specmatic-order-api-nodejs)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-order-api-java)
+    - [Python (Flask)](https://github.com/specmatic/specmatic-order-api-python/)
+    - [NodeJS (Express)](https://github.com/specmatic/specmatic-order-api-nodejs)
 
 ---
 
@@ -87,7 +87,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 Take control of secure user access with our OAuth samples, integrating authentication into your apps.
 
 - **OAuth:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-java-with-oauth)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-order-api-java-with-oauth)
 
 ---
 
@@ -98,11 +98,11 @@ Take control of secure user access with our OAuth samples, integrating authentic
 Supercharge your microservices with gRPC. Get started with these samples and see how Specmatic fits in.
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-grpc-kotlin)
-    - [Go (Gin)](https://github.com/znsio/specmatic-order-bff-grpc-go)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-order-bff-grpc-kotlin)
+    - [Go (Gin)](https://github.com/specmatic/specmatic-order-bff-grpc-go)
 
 - **Backend:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-api-grpc-kotlin)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-order-api-grpc-kotlin)
 
 ---
 
@@ -113,10 +113,10 @@ Supercharge your microservices with gRPC. Get started with these samples and see
 GraphQL opens a world of flexible queries—explore how Specmatic bridges contracts and GraphQL endpoints.
 
 - **Frontend:**
-    - [React and NodeJS](https://github.com/znsio/specmatic-order-graphql-ui-react)
+    - [React and NodeJS](https://github.com/specmatic/specmatic-order-graphql-ui-react)
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-graphql-java)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-order-bff-graphql-java)
 
 ---
 
@@ -127,11 +127,11 @@ GraphQL opens a world of flexible queries—explore how Specmatic bridges contra
 Kafka brings event-driven architecture to life. Discover Specmatic’s power in managing Kafka interactions.
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-java/)
-    - [NodeJS (Express)](https://github.com/znsio/specmatic-order-bff-nodejs/)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-order-bff-java/)
+    - [NodeJS (Express)](https://github.com/specmatic/specmatic-order-bff-nodejs/)
 
 - **Request-Reply Pattern:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-kafka-sample)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-kafka-sample)
 
 ---
 
@@ -142,7 +142,7 @@ Kafka brings event-driven architecture to life. Discover Specmatic’s power in 
 Jump into event-driven architectures with Google PubSub, powered by Specmatic.
 
 - **Backend:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-google-pubsub-sample)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-google-pubsub-sample)
 
 ---
 
@@ -153,7 +153,7 @@ Jump into event-driven architectures with Google PubSub, powered by Specmatic.
 Embrace the power of Java Messaging Service (JMS) with this Specmatic-integrated sample.
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-order-bff-jms/)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-order-bff-jms/)
 
 ---
 
@@ -164,7 +164,7 @@ Embrace the power of Java Messaging Service (JMS) with this Specmatic-integrated
 Unlock data from databases using JDBC, and see how Specmatic supports seamless contract testing.
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-jdbc-sample)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-jdbc-sample)
 
 ---
 
@@ -175,7 +175,7 @@ Unlock data from databases using JDBC, and see how Specmatic supports seamless c
 Boost your app’s performance with Redis caching, fully integrated with Specmatic.
 
 - **BFF:**
-    - [Kotlin (SpringBoot)](https://github.com/znsio/specmatic-redis-sample)
+    - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-redis-sample)
 
 
 By exploring these projects, you'll gain hands-on experience in integrating Specmatic with a variety of technologies, giving you the power to build smarter and more resilient systems. **Ready to level up? Jump in and start experimenting!**
@@ -188,8 +188,8 @@ By exploring these projects, you'll gain hands-on experience in integrating Spec
 
 
 ### Need Help?
-- Join our [community discussions](https://github.com/znsio/specmatic/discussions) for discussions and support
-- Report bugs or suggest improvements in our [GitHub repository](https://github.com/znsio/specmatic/issues)
+- Join our [community discussions](https://github.com/specmatic/specmatic/discussions) for discussions and support
+- Report bugs or suggest improvements in our [GitHub repository](https://github.com/specmatic/specmatic/issues)
 - Reach out directly—we're here to [help!]({{ site.contact_us_url }})
 
 ### Contributing

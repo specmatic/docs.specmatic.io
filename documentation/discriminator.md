@@ -130,7 +130,7 @@ npx specmatic stub petstore.yaml
 {% endtab %}
 {% tab stub docker %}
 ```shell
-docker run -v "/local-directory/petstore.yaml:/usr/src/app/petstore.yaml" -p 9000:9000 znsio/specmatic stub "petstore.yaml"
+docker run -v "/local-directory/petstore.yaml:/usr/src/app/petstore.yaml" -p 9000:9000 specmatic/specmatic stub "petstore.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -225,7 +225,7 @@ npx specmatic test petstore.yaml --testBaseURL=http://localhost:9000
 {% endtab %}
 {% tab stub docker %}
 ```shell
-docker run -v "./petstore.yaml:/usr/src/app/petstore.yaml" znsio/specmatic test petstore.yaml --port=9000 --host=host.docker.internal
+docker run -v "./petstore.yaml:/usr/src/app/petstore.yaml" specmatic/specmatic test petstore.yaml --port=9000 --host=host.docker.internal
 ```
 {% endtab %}
 {% endtabs %}

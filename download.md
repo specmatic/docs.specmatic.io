@@ -7,9 +7,9 @@ Download
 ========
 
 Download the latest Specmatic standalone executable from the following sources:
-* [Github](https://github.com/znsio/specmatic/releases)
+* [Github](https://github.com/specmatic/specmatic/releases)
 * [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.latest_release }}/specmatic-executable-all-{{ site.latest_release }}.jar)
-* [Docker Hub](https://hub.docker.com/r/znsio/specmatic)
+* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic)
 
 Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standalone executable.
 

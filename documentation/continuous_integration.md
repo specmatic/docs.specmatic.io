@@ -22,7 +22,7 @@ This approach works across any CI setup which can include the auth params as par
 {% tab config specmatic.yaml %}
 ```yaml
 provider: git
-repository: https://${TOKEN}@github.com/znsio/central-contract-repo-private.git
+repository: https://${TOKEN}@github.com/specmatic/central-contract-repo-private.git
 provides:
   - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
@@ -31,7 +31,7 @@ provides:
 ```json
 {
   "provider": "git",
-  "repository": "https://${TOKEN}@github.com/znsio/central-contract-repo-private.git",
+  "repository": "https://${TOKEN}@github.com/specmatic/central-contract-repo-private.git",
   "provides": [
     "io/specmatic/examples/store/openapi/api_order_v3.yaml"
   ]
@@ -55,7 +55,7 @@ Examples:
 
 Examples:
 
-* Personal Access Token - `https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/znsio/central-contract-repo-private.git`
+* Personal Access Token - `https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/specmatic/central-contract-repo-private.git`
 
 Detailed steps
 * Set up a [Personal Access Token in Github](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with "Read" access for contents on your Central Contract Repository (we recommend using [fine grained tokens](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/))
@@ -66,7 +66,7 @@ Detailed steps
 {% tab config specmatic.yaml %}
 ```yaml
 provider: git
-repository: https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/znsio/central-contract-repo-private.git
+repository: https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/specmatic/central-contract-repo-private.git
 provides:
   - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
@@ -75,7 +75,7 @@ provides:
 ```json
 {
   "provider": "git",
-  "repository": "https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/znsio/central-contract-repo-private.git",
+  "repository": "https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/specmatic/central-contract-repo-private.git",
   "provides": [
     "io/specmatic/examples/store/openapi/api_order_v3.yaml"
   ]
@@ -115,5 +115,5 @@ provides:
 
 
 #### Examples
-* [Backward compatibility testing](https://github.com/znsio/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml)
-* [Contract as Test](https://github.com/znsio/specmatic-order-api-java/blob/main/.github/workflows/maven.yml)
+* [Backward compatibility testing](https://github.com/specmatic/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml)
+* [Contract as Test](https://github.com/specmatic/specmatic-order-api-java/blob/main/.github/workflows/maven.yml)

@@ -123,7 +123,7 @@ To start the GUI execute below command,
 {% tabs examples-gui %}
 {% tab examples-gui docker %}
 ```shell
-docker run --rm -v "$(pwd):/specs" -p "9001:9001" znsio/specmatic-openapi examples interactive --spec-file /specs/employee_details.yaml
+docker run --rm -v "$(pwd):/specs" -p "9001:9001" specmatic/specmatic-openapi examples interactive --spec-file /specs/employee_details.yaml
 ```
 {% endtab %}
 {% tab examples-gui java %}
@@ -203,12 +203,12 @@ For complete example format, please refer to [Example Format](#example-format).
 
 ## Using CLI to Validate Examples
 
-While you have done the validation in Interactive Examples GUI, You can also run it in a non-interactive manner which is useful for e.g. CI Pipelines, [PR Pre-Merge Checks](https://github.com/znsio/specmatic-order-contracts/blob/abb92cc3e9acabeb420abc7ca233492e2581cc18/.github/workflows/pull_request_merge_checks.yaml#L66C1-L70C100) etc. In a non-interactive manner Specmatic will exit with a `non-zero` exit-code in case of validation failure, and `0` in case of successful validation.
+While you have done the validation in Interactive Examples GUI, You can also run it in a non-interactive manner which is useful for e.g. CI Pipelines, [PR Pre-Merge Checks](https://github.com/specmatic/specmatic-order-contracts/blob/abb92cc3e9acabeb420abc7ca233492e2581cc18/.github/workflows/pull_request_merge_checks.yaml#L66C1-L70C100) etc. In a non-interactive manner Specmatic will exit with a `non-zero` exit-code in case of validation failure, and `0` in case of successful validation.
 
 {% tabs examples-validate %}
 {% tab examples-validate docker %}
 ```shell
-docker run -v "$(pwd)/:/specs" znsio/specmatic examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd)/:/specs" specmatic/specmatic examples validate --spec-file "/specs/employee_details.yaml"
 ```
 {% endtab %}
 {% tab examples-validate java %}
@@ -341,7 +341,7 @@ npx specmatic stub employee_details.yaml
 {% endtab %}
 {% tab test docker %}
 ```shell
-docker run --rm -p 9000:9000 -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" -v "$(pwd)/employee_details_dictionary.yaml:/usr/src/app/employee_details_dictionary.yaml" znsio/specmatic stub "employee_details.yaml"
+docker run --rm -p 9000:9000 -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" -v "$(pwd)/employee_details_dictionary.yaml:/usr/src/app/employee_details_dictionary.yaml" specmatic/specmatic stub "employee_details.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -506,7 +506,7 @@ Use following command to detect such competing requests in examples.
 {% tabs competing-examples %}
 {% tab competing-examples docker %}
 ```shell
-docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd)/:/specs" specmatic/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
 ```
 {% endtab %}
 {% tab competing-examples java %}
@@ -676,7 +676,7 @@ Use following command to detect such competing requests in examples.
 {% tabs competing-examples %}
 {% tab competing-examples docker %}
 ```shell
-docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd)/:/specs" specmatic/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
 ```
 {% endtab %}
 {% tab competing-examples java %}
@@ -885,7 +885,7 @@ Use following command to detect such competing requests in examples.
 {% tabs competing-examples %}
 {% tab competing-examples docker %}
 ```shell
-docker run -v "$(pwd)/:/specs" znsio/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd)/:/specs" specmatic/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
 ```
 {% endtab %}
 {% tab competing-examples java %}
@@ -963,7 +963,7 @@ WARNING: Competing requests detected in the given examples
 ```
 
 {: .note}
-While validation of examples for schema correctness is available in [Specmatic](https://github.com/znsio/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+While validation of examples for schema correctness is available in [Specmatic](https://github.com/specmatic/specmatic) open-source version, detection of competing examples as part of validation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ## Pro Tips
 - Use `--specs-dir` with `--examples-base-dir` when managing multiple APIs to keep your examples organized
@@ -974,7 +974,7 @@ Need more details? Run the help command:
 {% tabs examples-validate %}
 {% tab examples-validate docker %}
 ```shell
-docker run znsio/specmatic examples validate --help
+docker run specmatic/specmatic examples validate --help
 ```
 {% endtab %}
 {% tab examples-validate java %}

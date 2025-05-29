@@ -22,7 +22,7 @@ Authentication
 
 Most APIs will not run unless provided a valid authentication token. When running contract tests, Specmatic needs to obtain a valid auth token to call authenticated APIs.
 
-You can see how this in action in the [sample petstore project](https://github.com/znsio/petstore).
+You can see how this in action in the [sample petstore project](https://github.com/specmatic/petstore).
 
 Here's a quick walk through of how it works.
 
@@ -32,11 +32,11 @@ First off, write the contract of the auth API, and in it, declare tokens such as
 
 In step 3, Specmatic will run this as as a test against the auth service to get the auth tokens. So we must provide the base url of the actual auth service in environment configuration.
 
-Here's a [the petstore's auth contract](https://github.com/znsio/petstore-contracts/blob/master/in/specmatic/examples/petstore/auth.spec).
+Here's a [the petstore's auth contract](https://github.com/specmatic/petstore-contracts/blob/master/in/specmatic/examples/petstore/auth.spec).
 
 ### Setup the auth credentials
 
-Look at the Examples table, in which we use the variables `$username` and `$password`. We do not hardcode them, because each environment (local, staging, etc) will need different auth credentials. These values come from environment configuration, where we can specify the auth credentials needed by each environment. See how this is done in `specmatic.json` in the [sample petstore application](https://github.com/znsio/petstore/blob/master/specmatic.json).
+Look at the Examples table, in which we use the variables `$username` and `$password`. We do not hardcode them, because each environment (local, staging, etc) will need different auth credentials. These values come from environment configuration, where we can specify the auth credentials needed by each environment. See how this is done in `specmatic.json` in the [sample petstore application](https://github.com/specmatic/petstore/blob/master/specmatic.json).
 
 Note how we have declared two variables, username and password, in the staging environment:
 
@@ -88,7 +88,7 @@ And export cookie = response-header.Cookie
 
 Next we must connect auth contract with the actual contract that needs it.
 
-Have a look at the sample petstore contract [api_petstore_v1.spec](https://github.com/znsio/petstore-contracts/blob/master/in/specmatic/examples/petstore/api_petstore_v1.spec).
+Have a look at the sample petstore contract [api_petstore_v1.spec](https://github.com/specmatic/petstore-contracts/blob/master/in/specmatic/examples/petstore/api_petstore_v1.spec).
 
 You'll see in the background:
 
@@ -121,14 +121,14 @@ In `($auth.token)`, `auth` is the `value` that we declared above, and `token` is
 ## 3. Run the contract tests
 
 ### Declare the application contract in specmatic.json
-Make sure to declare the contract you're running as a test in [the Specmatic configuration](documentation/../configuration.html). Take a look at [specmatic.json in the petstore sample project](https://github.com/znsio/petstore/blob/master/specmatic.json) for an example of this. You can read more about [running contract tests using Specmatic here](documentation/../contract_tests.html).
+Make sure to declare the contract you're running as a test in [the Specmatic configuration](documentation/../configuration.html). Take a look at [specmatic.json in the petstore sample project](https://github.com/specmatic/petstore/blob/master/specmatic.json) for an example of this. You can read more about [running contract tests using Specmatic here](documentation/../contract_tests.html).
 
 ### Execute the tests
 Finally, run the tests. You must specify the environment while doing so, for Specmatic to pick up the variables and baseurls relevant to that environment.
 
 If you're running the tests from a terminal, the command is `specmatic test --env=staging specfile.spec`
 
-If you're running the tests from code, set a property named `environments`. Take a look at the [petstore sample](https://github.com/znsio/petstore/blob/master/src/test/java/com/petstore/test/PetStoreContractTest.java) to see an example of this.
+If you're running the tests from code, set a property named `environments`. Take a look at the [petstore sample](https://github.com/specmatic/petstore/blob/master/src/test/java/com/petstore/test/PetStoreContractTest.java) to see an example of this.
 
 ### How Specmatic runs the tests
 The tests are run in 2 stages.
