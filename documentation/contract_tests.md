@@ -33,7 +33,8 @@ Contract Tests
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
   - [Running Specific Tests](#running-specific-tests)
     - [Supported Filters & Operators](#supported-filters--operators)
-    - [Usage Examples](#usage-examples)
+    - [Filter Examples](#filter-examples)
+    - [CLI Usage](#cli-usage)
     - [Programmatic Usage](#programmatic-usage)
     - [Additional Tips](#additional-tips)
   - [API Coverage](#api-coverage)
@@ -955,13 +956,22 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 
 ### Supported Filters & Operators
 
-| Filter   | Description                                                                 |
-|----------|-----------------------------------------------------------------------------|
-| `METHOD` | Filter by HTTP methods (GET, POST, etc.)                                    |
-| `PATH`   | Filter by request paths (`/users`, `/products`, etc.)                       |
-| `STATUS` | Filter by response status codes (200, 400, etc.) — supports pattern matching with `xx` (e.g., 4xx, 2xx) |
-| `HEADERS`| Filter by request headers name                                              |
-| `QUERY`  | Filter by query parameters name                                             |
+| Available Filters           | Test  | Stub  | Description                                                                                               |
+|-----------------------------|:--:|:--:|-----------------------------------------------------------------------------------------------------------|
+| `STATUS`                    | ✅ | ✅ | Filter by status (`200`, `500`)                                                                           |
+| `PATH`                      | ✅ | ✅ | Filter by request paths (`/users`, `/products`), supports wildcard using `*` (`/users/*`, `/products/*`) |
+| `METHOD`                    | ✅ | ✅ | Filter by HTTP methods (`GET`, `POST`, etc.)                                                              |
+| `PARAMETERS.QUERY`          | ✅ | ✅ | Filter by query parameters, supports key-value match (`PARAMETERS.QUERY.byName='John'`)                  |
+| `PARAMETERS.HEADER`         | ✅ | ✅ | Filter by header parameters, supports key-value match (`PARAMETERS.HEADER.X-REQUEST-ID='Hello1234'`)     |
+| `PARAMETERS.PATH`           | ✅ | ✅ | Filter by path parameters, supports key-value match (`PARAMETERS.PATH.id='99'`)                           |
+| `REQUEST-BODY.CONTENT-TYPE` | ✅ | ✅ | Filter by request body media type (MIME type) (`application/json`, `text/plain`, `application/*`)        |
+| `RESPONSE.CONTENT-TYPE`     | ✅ | ✅ | Filter by response content type (`application/json`, `text/plain`, `application/*`)                       |
+| `EXAMPLE-NAME`              | ✅ | ✅ | Filter by example name (`SUCCESS_200_OK`, `PETS_200_OK`)                                                  |
+| `TAGS`                      | ✅ | ✅ | Filter by tags                                                                                            |
+| `SUMMARY`                   | ✅ | ✅ | Filter by summary                                                                                         |
+| `OPERATION-ID`              | ✅ | ✅ | Filter by operation ID                                                                                    |
+| `DESCRIPTION`               | ✅ | ✅ | Filter by description                                                                                     |
+
 
 | Operator        | Description                                           |
 |----------------|-------------------------------------------------------|
@@ -971,16 +981,35 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 | `=`, `!=`      | Comparison operators for comparing a key with its value. |
 | `(`, `)`       | Parentheses are used to group multiple filter expressions. |
 
-### Usage Examples
+### Filter Examples
+
+| Filter                      | Examples                                                                                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `STATUS`                    | • `STATUS='200'` (only 200 responses)<br>• `STATUS>='400'` (all errors)<br>• `STATUS<'500'` (exclude 5xx errors)                                        |
+| `PATH`                      | • `PATH='/users'` (exact match)<br>• `PATH='/products/*'` (matches all subpaths under /products)                                                        |
+| `METHOD`                    | • `METHOD='GET'` (GET requests)<br>• `METHOD='POST'` (POST requests)                                                                                    |
+| `PARAMETERS.QUERY`          | • `PARAMETERS.QUERY.byName='John'` (query param `byName` equals `'John'`)<br>• `PARAMETERS.QUERY='byName'` (key present)                                |
+| `PARAMETERS.HEADER`         | • `PARAMETERS.HEADER.X-REQUEST-ID='Hello1234'` (header `X-REQUEST-ID` is `'Hello1234'`)<br>• `PARAMETERS.HEADER='X-REQUEST-ID'` (header key present)    |
+| `PARAMETERS.PATH`           | • `PARAMETERS.PATH.id='99'` (path param `id` equals `'99'`)<br>• `PARAMETERS.PATH='id'` (path param key present)                                        |
+| `REQUEST-BODY.CONTENT-TYPE` | • `REQUEST-BODY.CONTENT-TYPE='application/json'` (expects JSON request body)<br>• `REQUEST-BODY.CONTENT-TYPE='application/*'` (any application/\* type) |
+| `RESPONSE.CONTENT-TYPE`     | • `RESPONSE.CONTENT-TYPE='application/json'` (response with JSON)<br>• `RESPONSE.CONTENT-TYPE='text/plain'` (response with plain text)                  |
+| `EXAMPLE-NAME`              | • `EXAMPLE-NAME='SUCCESS_200_OK'` (matches example with this name)<br>• `EXAMPLE-NAME='PETS_200_OK'` (another named example)                            |
+| `TAGS`                      | • `TAGS='users'` (tagged with "users")<br>• `TAGS='v1-endpoints'` (tagged with "v1-endpoints")                                                          |
+| `SUMMARY`                   | • `SUMMARY='Get user by ID'` (summary exactly matches this text)<br>• `SUMMARY='List all products'` (another summary)                                   |
+| `OPERATION-ID`              | • `OPERATION-ID='getUserById'` (operation ID match)<br>• `OPERATION-ID='createProduct'` (another operation)                                             |
+| `DESCRIPTION`               | • `DESCRIPTION='Returns user details by ID'` (matches full description)<br>• `DESCRIPTION='Lists all available products'` (another description)         |
+
+
+### CLI Usage
 
 1. Run only successful response tests:
 ```bash
-specmatic test --filter="STATUS='2xx'"
+specmatic test --filter="STATUS>='200' && STATUS<'300'"
 ```
 
 2. Skip 4xx error tests:
 ```bash
-specmatic test --filter="STATUS!='4xx'"
+specmatic test --filter="STATUS<'400' && STATUS>'499'"
 ```
 
 3. Skip specific status codes:
@@ -1013,6 +1042,8 @@ specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' &
 specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
 ```
 
+9. 
+
 ### Programmatic Usage
 
 Set environment properties in your test setup:
@@ -1033,7 +1064,6 @@ System.setProperty("filter", "STATUS!='400,401'");
 - Within a single filter with multiple values, tests matching **ANY** value will be included (**OR** operation).
 - **Negation(!)** causes a block to be excluded from being considered.
 - **Wildcard(*)** can only be used with **PATH**.
-- **Range (2xx, 50x)** can only be used with **STATUS**.
 
 
 > **Note:** Endpoints that are filtered out as a result of this expression are also excluded from the reports generated by Specmatic and from the coverage calculation.
