@@ -8,51 +8,24 @@ SOAP
 ====
 
 - [SOAP](#soap)
-  - [Stubbing out a WSDL in component tests](#stubbing-out-a-wsdl-in-component-tests)
-  - [Setting SOAP expectations](#setting-soap-expectations)
+  - [Mocking SOAP services using WSDL files](#mocking-soap-services-using-wsdl-files)
+  - [Examples as Mock data](#examples-as-mock-data)
 
-Service virtualization of SOAP APIs works in a similar way REST APIs.
+Just like how you can mock HTTP services using OpenAPI specification, you can mock / stub SOAP services using WSDL files.
 
-However the API format for SOAP services is WSDL (not YAML). So you will need the WSDL file for the SOAP API that you need to stub out.
+## Mocking SOAP services using WSDL files
 
-## Stubbing out a WSDL in component tests
+If you a WSDL file on your local file system (Example: `my_soap_service.wsdl` in your current folder) you can directly start the stub server using below Docker command.
 
-Commit the WSDL for the SOAP API into your central contract repository.
-
-Once done, create the Specmatic configuration file in the root of your project. It should contain the following json configuration:
-
-{% tabs config %}
-{% tab config specmatic.json %}
-```json
-{
-  "sources": [
-    {
-      "provider": "git",
-      "repository": "https://your-central-contract-repo.com",
-      "consumes": [
-        "/path/to/soap-api.wsdl"
-      ]
-    }
-  ]
-}
+```shell
+docker run -v "$(pwd):/usr/src/app" znsio/specmatic stub "my_soap_service.wsdl"
 ```
-{% endtab %}
-{% tab config specmatic.yaml %}
-```yaml
-sources:
-  - provider: git
-    repository: https://your-central-contract-repo.com
-    consumes:
-      - /path/to/soap-api.wsdl
-```
-{% endtab %}
-{% endtabs %}
 
-**NOTE:** Remember to update the repository and stub section, to reflect the git repository in which you placed the specification, and the stub path.
+The stub server will start on port 9000 by default (which you can change using CLI options)
 
-## Setting SOAP expectations
+## Examples as Mock data
 
-Once again, you can use the same stub format that is used for REST APIs. The only difference is, put the SOAP payloads where the REST payloads would go.
+The example format involves setting the HTTP request and response. The only SOAP payloads should be setup as part of the request and response bodies.
 
 It will look something like this:
 
@@ -72,4 +45,4 @@ It will look something like this:
 }
 ```
 
-You can get the actual SOAP requests and response payloads using the logs from [Specmatic Proxy](/documentation/authoring_contracts.html). While the proxy does not generate expectations for SOAP/XML yet, it does log these requests and responses to the console.
+Please refer to our [sample project](https://github.com/specmatic/specmatic-order-bff-wsdl) to try this out.
