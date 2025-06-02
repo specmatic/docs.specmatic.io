@@ -25,7 +25,7 @@ The stub server will start on port 9000 by default (which you can change using C
 
 ## Examples as Mock data
 
-The example format involves setting the HTTP request and response. The only SOAP payloads should be setup as part of the request and response bodies.
+The example format involves setting the HTTP request and response. By default Specmatic will look for examples for each WSDL file in a folder that is name `<wsdl_filename_without_file_extension>_examples` (Example: For `my_soap_service.wsdl` Specmatic will look for a folder named `my_soap_service_examples`, again this can be configured to any foler name). The SOAP payloads should be setup as part of the request and response bodies.
 
 It will look something like this:
 
