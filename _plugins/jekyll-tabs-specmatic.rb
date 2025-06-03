@@ -18,16 +18,7 @@ module Jekyll
                 if markup == ''
                     raise SyntaxError.new("Block #{block_name} requires 1 attribute")
                 end
-                
-                # Parse markup to extract name and optional default parameter
-                # Format: "name" or "name default:tab_name"
-                parts = markup.strip.split(' ', 2)
-                @name = sanitizeName(parts[0])
-                @default_tab = nil
-                
-                if parts.length > 1 && parts[1].start_with?('default:')
-                    @default_tab = parts[1].sub('default:', '').strip
-                end
+                @name = sanitizeName(markup)
 
             end
 
