@@ -355,7 +355,7 @@ So instead:
 
 * Create a file named specmatic.json OR specmatic.yaml OR specmatic.yml which contains the Specmatic configuration.
 
-{% tabs config_contractTests %}
+{% tabs config_contractTests default:specmatic.yaml %}
 {% tab config_contractTests specmatic.yaml %}
 ```yaml
 version: 2

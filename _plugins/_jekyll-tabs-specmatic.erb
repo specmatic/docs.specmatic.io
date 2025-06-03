@@ -1,16 +1,22 @@
 <div class="tab-wrapper">
   <ul class="tab">
-    <% sorted_tabs = environment["tabs-#{@name}"].sort_by { |key, value| key.include?('specmatic.yaml') ? 0 : 1 } %>
-    <% sorted_tabs.each_with_index do |(key, value), index| %>
-        <li <%= index == 0 ? ' class="active"' : ''%>>
+    <% 
+    tabs = environment["tabs-#{@name}"]
+    default_index = 0
+    if @default_tab
+      default_index = tabs.keys.find_index(@default_tab) || 0
+    end
+    %>
+    <% tabs.each_with_index do |(key, value), index| %>
+        <li <%= index == default_index ? ' class="active"' : ''%>>
             <button class="tab-click" data-tab-content-selector="<%= uuid %>-<%= @name %>-<%= key %>"><%= key %></button>
         </li>
     <% end %>
   </ul>
 
   <ul class="tab-content">
-    <% sorted_tabs.each_with_index do |(key, value), index| %>
-        <li <%= index == 0 ? ' class="active"' : ''%> data-tab-content-id="<%= uuid %>-<%= @name %>-<%= key %>"><%= value %></li>
+    <% tabs.each_with_index do |(key, value), index| %>
+        <li <%= index == default_index ? ' class="active"' : ''%> data-tab-content-id="<%= uuid %>-<%= @name %>-<%= key %>"><%= value %></li>
     <% end %>
   </ul>
 </div>
