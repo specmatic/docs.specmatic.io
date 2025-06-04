@@ -10,6 +10,10 @@ def sanitizeName(name)
         .gsub(/[^0-9a-z]/, '-') # replace all non alphabjetical or non numerical characetrs by a dash
 end
 
+def sort_tabs_with_prioritized_tab(tabs, prioritized_tab_name)
+    tabs.sort_by { |key, value| key.include?(prioritized_tab_name) ? 0 : 1 }
+end
+
 module Jekyll
     module Tabs
         class TabsBlock < Liquid::Block
