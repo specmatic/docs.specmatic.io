@@ -1,6 +1,6 @@
 <div class="tab-wrapper">
   <ul class="tab">
-    <% sorted_tabs = sort_tabs_with_yaml_first(environment["tabs-#{@name}"]) %>
+    <% sorted_tabs = sort_tabs_with_prioritized_tab(environment["tabs-#{@name}"], 'specmatic.yaml') %>
     <% sorted_tabs.each_with_index do |(key, value), index| %>
         <li <%= index == 0 ? ' class="active"' : ''%>>
             <button class="tab-click" data-tab-content-selector="<%= uuid %>-<%= @name %>-<%= key %>"><%= key %></button>
