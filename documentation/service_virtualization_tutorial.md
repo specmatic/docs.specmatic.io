@@ -69,6 +69,7 @@ Service Virtualization
     - [Run the stub server](#run-the-stub-server)
     - [Example Requests](#example-requests)
     - [Benefits](#benefits)
+  - [Disable hot-reload](#disable-hot-reload)
   - [Sample Java Project](#sample-java-project)
 
 
@@ -1846,6 +1847,24 @@ curl -X POST http://localhost:9001/exported/products -H "Content-Type: applicati
 - **Flexibility:** Allows hosting multiple versions or separate APIs without conflict.
 
 This setup enables serving and testing multiple specifications efficiently using Specmatic.
+
+## Disable hot-reload
+
+Specmatic stub server monitors your specification files and examples for changes. When a file is modified, the stub server automatically restarts to reflect the changes without requiring manual intervention.
+
+However, you may need to switch off at times. For example, in some environments the number of files being watched may exceed the value of /proc/sys/fs/inotify/max_user_watches, and you may not have access to the environment's config/setup to change this value.
+
+The ability to disable hot-reload provides a pragmatic path forward as a temporary work-around until the reason for /proc/sys/fs/inotify/max_user_watches being exceeded is found and resolved.
+
+You can use a command-line switch: `java -jar specmatic.jar stub --hot-reload=disabled <your-spec.yaml>`
+
+You can also disable it via the following configuration in specmatic.yaml:
+
+```yaml
+#specmatic.yaml
+stub:
+  hotReload: disabled
+```
 
 ## Sample Java Project
 
