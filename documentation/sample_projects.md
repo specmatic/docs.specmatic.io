@@ -19,6 +19,7 @@ Specmatic in Action: Sample Projects
 - [gRPC](#grpc)
 - [GraphQL](#graphql)
 - [Kafka](#kafka)
+    - [Avro Support](#avro-support)
 - [Google PubSub](#google-pubsub)
 - [JMS](#jms)
 - [JDBC](#jdbc)
@@ -138,7 +139,7 @@ Kafka brings event-driven architecture to life. Discover Specmatic’s power in 
 
 Specmatic Kafka supports Avro schemas, enabling schema-driven contract testing for Kafka events.
 
-* [Sample project with Avro support](https://github.com/specmatic/specmatic-kafka-avro-sample)
+* [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-kafka-avro-sample)
 
 ---
 
