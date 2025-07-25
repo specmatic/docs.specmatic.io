@@ -133,6 +133,13 @@ Kafka brings event-driven architecture to life. Discover Specmatic’s power in 
 - **Request-Reply Pattern:**
     - [Kotlin (SpringBoot)](https://github.com/specmatic/specmatic-kafka-sample)
 
+
+### Avro Support
+
+Specmatic Kafka supports Avro schemas, enabling schema-driven contract testing for Kafka events.
+
+* [Sample project with Avro support](https://github.com/specmatic/specmatic-kafka-avro-sample)
+
 ---
 
 ## Google PubSub
