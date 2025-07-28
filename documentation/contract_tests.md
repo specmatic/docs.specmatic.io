@@ -68,7 +68,7 @@ Contract Tests
 
 ### Overview
 
-<img alt="Contract Tests" src="https://specmatic.in//wp-content/uploads/2022/09/Contract-as-test.png" />
+<img alt="Contract Tests" src="https://specmatic.io//wp-content/uploads/2022/09/Contract-as-test.png" />
 
 As seen in "[getting started](/getting_started.html#provider-side---contract-as-a-test)" Specmatic is able to leverage your API Specifications as "Contract Tests" to verify if your application is adhering the specification. This step is critical in making sure that your application / provider is honouring its side of the contract in the "Contract Driven Development" process just like how consumers build against a smart mock that is based the same OpenAPI Specification.
 

@@ -44,7 +44,7 @@ API Specifications are code and they are best stored in a version control system
 
 It is a good idea to prevent any direct commits to your master / main branch of Central Contract Repo. All changes have to go through a Pull Request or a Merge Request.
 
-<img alt="Central Contract Repository" src="https://specmatic.in/wp-content/uploads/2022/09/Treat-Contract-as-Code.png" />
+<img alt="Central Contract Repository" src="https://specmatic.io/wp-content/uploads/2022/09/Treat-Contract-as-Code.png" />
 
 ### Pre-merge checks
 
@@ -71,7 +71,7 @@ The goal of Central Contract Repo is to help all stakeholders collaborate over A
 
 ### Specmatic Configuration
 
-Both consumers and providers can leverage the specifications in the Central Contract Repository by listing it in [Specmatic configuration](https://specmatic.in/documentation/configuration.html). Example:
+Both consumers and providers can leverage the specifications in the Central Contract Repository by listing it in [Specmatic configuration](https://specmatic.io/documentation/configuration.html). Example:
 * [Sample Consumer](https://github.com/specmatic/specmatic-order-bff-java) referring to [api_order_v3.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Smart Mock](https://github.com/specmatic/specmatic-order-bff-java/blob/main/specmatic.yaml)
 * [Sample Provider / API](https://github.com/specmatic/specmatic-order-api-java) referring [api_order_v3.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) as [Contract as Test](https://github.com/specmatic/specmatic-order-api-java/blob/main/specmatic.yaml)
 

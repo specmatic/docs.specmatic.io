@@ -45,7 +45,7 @@ Specmatic offers this powerful feature to check for backward compatibility betwe
 - **Shift-Left Testing:** Detect breaking changes during API design phase, reduce costly downstream fixes and client disruptions.
 
 
-<img src="https://specmatic.in/wp-content/uploads/2022/09/Compatability.png" width="60%" height="60%" />
+<img src="https://specmatic.io/wp-content/uploads/2022/09/Compatability.png" width="60%" height="60%" />
 
 In the following sections, we'll show you how to use Specmatic to maintain backward compatibility in your microservices & microfrontend development process.
 
@@ -388,7 +388,7 @@ Once the specification is complete you can remove the WIP tag.
 
 Maintaining backward compatibility is about changing the API provider WITHOUT breaking any existing consumer. Consumers should just continue working as-is, without needing to "keep up".
 
-[Read this for more](https://specmatic.in/documentation/backward_compatibility_rules.html).
+[Read this for more](https://specmatic.io/documentation/backward_compatibility_rules.html).
 
 
 > [!IMPORTANT]

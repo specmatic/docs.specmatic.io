@@ -1110,7 +1110,7 @@ Specmatic will verify these expecations against the OpenAPI Specifications and w
 
 ### Anatomy of a Component / API Test
 
-<img alt="Anatomy of a Component / API Test" src="https://specmatic.in/wp-content/uploads/2022/09/Contact-as-stub.png" />
+<img alt="Anatomy of a Component / API Test" src="https://specmatic.io/wp-content/uploads/2022/09/Contact-as-stub.png" />
 
 Please see this [video](https://youtu.be/U5Agz-mvYIU?t=998) for reference.
 

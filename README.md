@@ -1,6 +1,6 @@
 # Specmatic Documentation
 
-Documentation for [Specmatic](//specmatic.in)
+Documentation for [Specmatic](//specmatic.io)
 
 Dev Setup
 * Install Ruby > 2.7 - Preferably with rbenv
