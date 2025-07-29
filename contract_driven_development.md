@@ -1,7 +1,7 @@
 ---
 layout: default
 title: What Is Contract Driven Development
-nav_order: 6
+nav_exclude: true
 ---
 # What is Contract Driven Development
 {: .fs-9}

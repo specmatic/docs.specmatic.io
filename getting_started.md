@@ -1,10 +1,12 @@
 ---
 layout: default
 title: Getting started (in 5 min)
-nav_order: 4
+nav_exclude: true
 ---
 Getting started
 ===============
+
+> **Download Specmatic:** You can download the latest Specmatic executable, Docker image, or Maven dependency from the [Download page](/download.html).
 
 - [Getting started](#getting-started)
     - [Setup](#setup)

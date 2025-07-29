@@ -30,4 +30,4 @@ Govern and optimize your API ecosystem; API contract adoption, dependency tracki
 
 Use Specmatic as a plain executable both on your local machine, CI pipelines, and more. Specmatic is also available as a Docker image and Kubernetes operator. Follow the links below to know more.
 
-[Get started now](/getting_started.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](//github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get started in less than 5 min](/getting_started.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](//github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }

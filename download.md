@@ -1,7 +1,8 @@
 ---
 layout: default
 title: Download
-nav_order: 3
+nav_exclude: true
+
 ---
 Download
 ========

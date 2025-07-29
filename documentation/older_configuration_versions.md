@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Older Configuration Versions
+nav_exclude: true
 ---
 
 Older Configuration Versions
