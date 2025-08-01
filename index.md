@@ -18,7 +18,7 @@ Go from idea to AI-ready API, instantly. Describe your business requirements in 
 
 Powerful API workflow and contract testing at your fingertips. Visually configure tests, validate contract compliance, and seamlessly integrate with CI/CD — all with #NoCode.
 
-[Try Online](https://specmatic.io/specmatic-studio/){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Use Docker Desktop Extension](https://open.docker.com/extensions/marketplace?extensionId=specmatic/specmatic-docker-desktop-extension){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Try Online](https://specmatic.io/specmatic-studio/){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Use Docker Desktop Extension](https://open.docker.com/extensions/marketplace?extensionId=specmatic/specmatic-docker-desktop-extension){: .btn .fs-5 .mb-4 .mb-md-0 } [5 Minute Tutorial](/studio_quick_start.html){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ## 📊 Establish your API Governance with [**Insights**](https://specmatic.io/insights/)
 
