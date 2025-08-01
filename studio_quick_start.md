@@ -26,56 +26,15 @@ This tutorial will run online on [https://studio.specmatic.com](Specmatic Studio
 
 ### PetStore API Specification
 
-Below is the OpenAPI specification that represents the communication between UI and Backend in the above example application.
+Hover over the little pop-out hamburger shown below, and click on the `petstore.yaml` specification.
 
-```yaml
-openapi: 3.0.1
-info:
-  title: Contract for the petstore service
-  version: '1'
-paths:
-  /pets/{petid}:
-    get:
-      summary: Should be able to get a pet by petId
-      parameters:
-        - name: petid
-          in: path
-          required: true
-          schema:
-            type: number
-          examples:
-            SCOOBY_200_OK:
-              value: 1
-      responses:
-        '200':
-          description: Should be able to get a pet by petId
-          content:
-            application/json:
-              schema:
-                required:
-                  - id
-                  - name
-                  - status
-                  - type
-                properties:
-                  id:
-                    type: number
-                  name:
-                    type: string
-                  type:
-                    type: string
-                  status:
-                    type: string
-              examples:
-                SCOOBY_200_OK:
-                  value:
-                    id: 1
-                    name: Scooby
-                    type: Golden Retriever
-                    status: Adopted
-```
+![screenshot of the file browser pop-out](../images/studio-file-browser.png)
 
-Just hover over the little pop-out hamburger on the left to open the file browser. You'll see the above spec pre-populated in your account with the name `petstore.yaml`.
+Then click on the Spec tab at the top to view the spec, as in the following screenshot.
+
+![screenshot of the sample petstore.yaml spec](../images/studio-sample-specification.png)
+
+Here's a <a href="/original_petstore_spec.html" target="_blank">copy of the petstore specification</a> if needed for use later in the tutorial.
 
 ---
 
@@ -128,7 +87,7 @@ And try running the tests again.
 
 This results in a test failure because the sample application returns a `404`. Drill-down into the test details, and take a closer look at the URL of the test request. Where before we saw `GET /specmatic/specmatic-documentation-examples/pets/1` (the value of the petId parameter here is `1`), you'll now see a random `petId`. Since we removed the examples named `SCOOBY_200_OK`, Specmatic generated a random example of petId (which is a number in the spec). The request went out this random `petId` in the path. The application returned a `404` because it has no data for this `petId`.
 
-Click on `Spec` tab, and paste the original `petstore.yaml` content back in, save it, and run the tests. With the example back, the tests will pass once again.
+Click on `Spec` tab, restore `petstore.yaml` back to it's original state by pasting <a href="/original_petstore_spec.html" target="_blank">this content</a> back in, save it, and run the tests. With the example back, the tests will pass once again.
 
 #### How does this all work?
 
@@ -252,7 +211,7 @@ Specmatic rejects the expectation / canned response since it is not in line with
 
 #### Externalising mock responses
 
-Please restore `petstore.yaml` to its [original state](/getting_started.html#petstore-api-specification)(by adding back the `status` field in the `SCOOBY_200_OK` example) before proceeding with this section.
+Please restore `petstore.yaml` to its <a href="/original_petstore_spec.html" target="_blank">original state</a> before proceeding with this section.
 
 If you would like to add more mock responses, however you do not wish to bloat your specification with a lot of examples, we can also externalise the mock / canned responses to json files also.
 
