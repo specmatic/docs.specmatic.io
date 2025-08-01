@@ -159,7 +159,7 @@ The response contains auto-generated values that adhere to the data type defined
 Also try making a request with `petId` 1:
 
 ```shell
-curl https://studio.specmatic.io:<port number>/pets/123
+curl https://studio.specmatic.io:<port number>/pets/1
 ```
 
 It will always return below values:
