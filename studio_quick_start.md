@@ -26,7 +26,20 @@ This tutorial will run online on [https://studio.specmatic.com](Specmatic Studio
 
 ### PetStore API Specification
 
+Hover over the little pop-out hamburger shown below, and click on the `petstore.yaml` specification.
+
+![screenshot of the file browser pop-out](../images/studio-file-browser.png)
+
+Then click on the Spec tab at the top to view the spec, as in the following screenshot.
+
+![screenshot of the sample petstore.yaml spec](../images/studio-sample-specification.png)
+
+Here's a copy of the specification for use later in the tutorial.
+
 Below is an OpenAPI specification for a petstore API.
+
+<details>
+<summary>Petstore OpenAPI specification</summary>
 
 ```yaml
 openapi: 3.0.1
@@ -74,14 +87,7 @@ paths:
                     type: Golden Retriever
                     status: Adopted
 ```
-
-Hover over the little pop-out hamburger shown below, and click on the `petstore.yaml` specification.
-
-![screenshot of the file browser pop-out](../images/studio-file-browser.png)
-
-Then click on the Spec tab at the top to view the spec, as in the following screenshot.
-
-![screenshot of the sample petstore.yaml spec](../images/studio-sample-specification.png)
+</details>
 
 ---
 
