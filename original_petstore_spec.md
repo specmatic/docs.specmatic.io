@@ -14,6 +14,9 @@ openapi: 3.0.1
 info:
   title: Contract for the petstore service
   version: '1'
+servers:
+  - url: https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+    description: Application server
 paths:
   /pets/{petid}:
     get:
