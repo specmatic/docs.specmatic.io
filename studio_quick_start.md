@@ -273,4 +273,4 @@ To know more about **Intelligent Service Virtualisation** please refer to below 
 * [Video: Intelligent Service Virtualisation](https://youtu.be/U5Agz-mvYIU?t=750)
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
-[**Learn more about Mockbing / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)
+[**Learn more about Mocking / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)
