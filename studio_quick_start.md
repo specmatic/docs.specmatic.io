@@ -26,7 +26,7 @@ This tutorial will run online on [https://studio.specmatic.com](Specmatic Studio
 
 ### PetStore API Specification
 
-Below is the OpenAPI specification that represents the communication between UI and Backend in the above example application.
+Below is an OpenAPI specification for a petstore API.
 
 ```yaml
 openapi: 3.0.1
@@ -75,7 +75,13 @@ paths:
                     status: Adopted
 ```
 
-Just hover over the little pop-out hamburger on the left to open the file browser. You'll see the above spec pre-populated in your account with the name `petstore.yaml`.
+Hover over the little pop-out hamburger shown below, and click on the `petstore.yaml` specification.
+
+![screenshot of the file browser pop-out](../images/studio-file-browser.png)
+
+Then click on the Spec tab at the top to view the spec, as in the following screenshot.
+
+![screenshot of the sample petstore.yaml spec](../images/studio-sample-specification.png)
 
 ---
 
