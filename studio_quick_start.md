@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Try Studio Online
+title: 5 Minute Studio Tutorial
 nav_exclude: true
 ---
 
-Getting started
-===============
+Getting started with Studio
+===========================
 
-- [Getting started](#getting-started)
+- [Getting started with Studio](#getting-started-with-studio)
     - [Account Setup](#account-setup)
     - [PetStore API Specification](#petstore-api-specification)
     - [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
