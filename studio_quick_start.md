@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 5 Minute Studio Tutorial
+title: Getting started with Studio
 nav_exclude: true
 ---
 
@@ -41,19 +41,23 @@ Here's a <a href="/original_petstore_spec.html" target="_blank">copy of the pets
 ### Provider Side - Contract as a Test
 
 We have a sample implementation of the PetStore API running which you can access through curl or any other tool of your choice.
+
 ```shell
 curl https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples/pets/1
 ```
 
-Now lets use Specmatic to run the above **API specification as a contract test** against the Provider / API to see if it is adhering the OpenAPI Specification.
+Now lets use Specmatic to run the `petstore.yaml` **API specification as a contract test** against the Provider / API to see if it is adhering the OpenAPI Specification.
 
 1. Select your specification from the file browser and open the `Test` tab at the top of the screen.
-2. Update the base url to `https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples`, and run the tests.
+2. Just run the tests.
 
 The test will pass.
+
+Notes:
+- The base URL for the backend is pre-filled in the box next to the `Run` button. It comes from the first url in the spec.
 - You should see 100% API coverage percentage of 100%. That's because all APIs have been covered (in this case, there's just one API).
-- Click on row in the Result column in order to drill down into the tests run for that API.
-- Click on the row to see more details about the request.
+- Click on `Covered` in the test results in order to drill down into the tests run for that API.
+- Then click on `Success` to see more details about the request.
 
 #### Where did Specmatic get the test data to generate the HTTP request
 
@@ -101,7 +105,9 @@ Click on `Spec` tab, restore `petstore.yaml` back to it's original state by past
 
 #### What happens when OpenAPI goes out of sync with the application or vice versa?
 
-Now lets try something more interesting. Bring back the parameter example that we removed in the previous section. Then change the datatype of the `status` field of response in OpenAPI file to `boolean` and save it.
+Restore the original content of the spec back, using the Spec tab. You can copy the original spec from [here](/original_petstore_spec.html), paste it into the `Spec` tab, and save it.
+
+Now lets try something more interesting. Change the datatype of the `status` field of response in OpenAPI file to `boolean` and save it.
 
 ```yaml
   properties:
@@ -173,7 +179,7 @@ It will always return below values:
 }
 ```
 
-This is because the example `SCOOBY_200_OK` in the `petstore.yaml` spec file, which we earlier saw being used while running contract test, also serves a mock data when we run Specmatic mock.
+This is thanks to the example `SCOOBY_200_OK` in the `petstore.yaml` spec file, which we earlier saw being used while running contract test. Specmatic also uses it to serves a mock response.
 
 With this we have effectively achived three goals in one go.
 * Examples serve as sample data for people referring to the API specification as documentation
