@@ -131,9 +131,9 @@ Now try to run the tests. You'll see a red error message explaining how `status`
 
 This is how Specmatic is able to make sure that your API never deviates from the Specification.
 
-Please refer to below videos for extensive demos on Contract as Test.
+Please refer to below videos for extensive demos on Contract Tests.
 * [Video: Boundary Condition Testing](https://youtu.be/U5Agz-mvYIU?t=51) - Verifying edge cases
-* [Video: Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract as Test to Test Drive your Code
+* [Video: Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract Tests to Test Drive your Code
 
 [**Learn more about Contract Tests here.**](/documentation/contract_tests.html)
 

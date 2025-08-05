@@ -23,7 +23,7 @@ Read our "[Getting started (in 5 min)](/getting_started.html)" section learn mor
     <version>{{ site.latest_release }}</version>
 </dependency>
 
-<!-- Optional dependency to run the contract as test on Provider -->
+<!-- Optional dependency to run contract tests on Provider -->
 <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>

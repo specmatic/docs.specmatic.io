@@ -132,5 +132,5 @@ If you're running the tests from code, set a property named `environments`. Take
 
 ### How Specmatic runs the tests
 The tests are run in 2 stages.
-* Stage 1: The application contract depends on the auth contract. So Specmatic first runs the auth contract as test, and stores all the exported values for the application contract to use.
+* Stage 1: The application contract depends on the auth contract. So Specmatic first runs contract tests from the auth contract, and stores all the exported values for the application contract to use.
 * Stage 2: Specmatic then plugs the exported values into the application contract where required, and goes on to run the application contract in test mode.

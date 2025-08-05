@@ -23,7 +23,7 @@ Contract Tests
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
     - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
-    - [Programmatically executing Specmatic Contract as Tests](#programmatically-executing-specmatic-contract-as-tests)
+    - [Programmatically executing Specmatic Contract Tests](#programmatically-executing-specmatic-contract-tests)
     - [HTML Report](#html-report)
       - [Summary](#summary)
       - [Coverage Table](#coverage-table)
@@ -32,14 +32,14 @@ Contract Tests
     - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
     - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
   - [Running Specific Tests](#running-specific-tests)
-    - [Supported Filters & Operators](#supported-filters--operators)
+    - [Supported Filters \& Operators](#supported-filters--operators)
     - [Filter Examples](#filter-examples)
     - [CLI Usage](#cli-usage)
     - [Programmatic Usage](#programmatic-usage)
     - [Additional Tips](#additional-tips)
   - [API Coverage](#api-coverage)
-    - [Enable the Actuator Mapping Endpoint](#enable-the-actuator-mapping-endpoint)
-    - [Use Swagger UI](#use-swagger-ui)
+      - [Enable the Actuator Mapping Endpoint](#enable-the-actuator-mapping-endpoint)
+      - [Use Swagger UI](#use-swagger-ui)
   - [Overlays](#overlays)
     - [Introduction](#introduction)
     - [Understanding with a Real-World Example](#understanding-with-a-real-world-example)
@@ -683,7 +683,7 @@ Feature: WSDL Companion file
 
 (REQUEST-BODY) contains the request body in a single line, SOAPAction contains the value value of the SOAPAction header, and additional columns must be included for each header sent by the SOAP service.
 
-### Programmatically executing Specmatic Contract as Tests
+### Programmatically executing Specmatic Contract Tests
 
 {% tabs programmatically %}
 {% tab programmatically java %}

@@ -116,4 +116,4 @@ provides:
 
 #### Examples
 * [Backward compatibility testing](https://github.com/specmatic/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml)
-* [Contract as Test](https://github.com/specmatic/specmatic-order-api-java/blob/main/.github/workflows/maven.yml)
+* [Contract Tests](https://github.com/specmatic/specmatic-order-api-java/blob/main/.github/workflows/maven.yml)

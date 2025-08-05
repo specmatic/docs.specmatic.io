@@ -330,9 +330,9 @@ Tests run: 1, Successes: 0, Failures: 1, Errors: 0
 
 This is how Specmatic is able to make sure that your API never deviates from the Specification.
 
-Please refer to below videos for extensive demos on Contract as Test.
+Please refer to below videos for extensive demos on Contract Tests.
 * [Video: Boundary Condition Testing](https://youtu.be/U5Agz-mvYIU?t=51) - Verifying edge cases
-* [Video: Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract as Test to Test Drive your Code
+* [Video: Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract Tests to Test Drive your Code
 
 [**Learn more about Contract Tests here.**](/documentation/contract_tests.html)
 
