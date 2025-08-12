@@ -17,6 +17,7 @@ Getting started with Studio
     - [Consumer Side - Contract As A Mock / Intelligent Service Virtualisation](#consumer-side---contract-as-a-mock--intelligent-service-virtualisation)
       - [Intelligent Service Virtualisation](#intelligent-service-virtualisation)
       - [Externalising mock responses](#externalising-mock-responses)
+    - [A more complicated example](#a-more-complicated-example)
 
 ### Account Setup
 
@@ -280,3 +281,9 @@ To know more about **Intelligent Service Virtualisation** please refer to below 
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
 [**Learn more about Mocking / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)
+
+### A more complicated example
+
+A sample application is available in Studio at https://order-bff:8080 to try out. It's accessible only from Studio. You can run contract tests against it using the specification named `product_search_bff_v3.yaml` also shipped to your account by default.
+
+Try running Generative tests to see what happens.
