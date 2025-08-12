@@ -30,4 +30,4 @@ Here is a quick explainer video.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/CSIrlayMZcU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-**Contract Driven Development** is significantly different from other approaches such as Consumer Driven Contract Testing. Here are [detailed comparisons](https://specmatic.io/category/comparisons) with other tools and approaches.
+**Contract Driven Development** is significantly different from other approaches such as Consumer Driven Contract Testing. Here are [detailed comparisons](https://specmatic.io/comparisons/) with other tools and approaches.
