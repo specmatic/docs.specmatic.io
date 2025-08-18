@@ -51,3 +51,9 @@ Specmatic Studio can be downloaded from the following sources:
 Specmatic Kafka can be downloaded from the following sources:
 * [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-kafka) - `docker pull specmatic/specmatic-kafka`
 * As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-async-version }}/specmatic-kafka-all-{{ site.specmatic-async-version }}.jar)
+
+## Specmatic OpenAPI
+
+Specmatic OpenAPI can be downloaded from the following sources:
+* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-openapi) - `docker pull specmatic/specmatic-openapi`
+* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/openapi/specmatic-openapi-all/{{ site.specmatic-openapi-version }}/specmatic-openapi-all-{{ site.specmatic-openapi-version }}.jar)
