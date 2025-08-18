@@ -4,13 +4,14 @@ title: Download
 nav_exclude: true
 
 ---
-Download
-========
+Specmatic is available in multiple formats:
+
+## Specmatic Core
 
 Download the latest Specmatic standalone executable from the following sources:
-* [Github](https://github.com/specmatic/specmatic/releases)
+* [Github](https://github.com/specmatic/specmatic/releases/tag/{{ site.specmatic-core-version }})
 * [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.specmatic-core-version }}/specmatic-executable-all-{{ site.specmatic-core-version }}.jar)
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic)
+* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic) - `docker pull specmatic/specmatic`
 
 Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standalone executable.
 
@@ -35,3 +36,16 @@ Read our "[Getting started (in 5 min)](/getting_started.html)" section learn mor
 
 Updates will no longer be available under the deprecated Group ID `in.specmatic`,
 We kindly request that you update your dependencies to use the new Group ID `io.specmatic` instead.
+
+
+## Specmatic Studio
+
+Specmatic Studio can be downloaded from the following sources:
+* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-studio) - `docker pull specmatic/specmatic-studio`
+* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/studio/specmatic-studio/{{ site.specmatic-studio-version }}/specmatic-studio-{{ site.specmatic-studio-version }}.jar)
+
+## Specmatic Kafka
+
+Specmatic Kafka can be downloaded from the following sources:
+* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-kafka) - `docker pull specmatic/specmatic-kafka`
+* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-async-version }}/specmatic-kafka-all-{{ site.specmatic-async-version }}.jar)
