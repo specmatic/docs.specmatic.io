@@ -1,0 +1,32 @@
+name: Bump tool versions
+
+on:
+  workflow_dispatch:
+    inputs:
+      specmatic-release-test-version:
+        description: Specmatic Release Test Version
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  bump_version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout documentation repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: main
+        token: "${{ secrets.SPECMATIC_GITHUB_TOKEN }}"
+    - name: Bump version
+      run: |
+        if [ -n "${{ github.event.inputs.specmatic-release-test-version }}" ]; then
+          echo "Bumping Specmatic Release Test version to ${{ github.event.inputs.specmatic-release-test-version }}"
+          sed -i "s/^specmatic-release-test-version: .*/specmatic-release-test-version: ${{ github.event.inputs.specmatic-release-test-version }}/" specmatic-release-test-version.yaml
+        else
+          echo "No Specmatic Release Test version provided, skipping bump."
+        fi
