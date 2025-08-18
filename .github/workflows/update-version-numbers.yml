@@ -30,7 +30,7 @@ jobs:
       run: |
         if [ -n "${{ github.event.inputs.specmatic-release-test-version }}" ]; then
           echo "Bumping Specmatic Release Test version to ${{ github.event.inputs.specmatic-release-test-version }}"
-          sed -i "s/^specmatic-release-test-version: .*/specmatic-release-test-version: ${{ github.event.inputs.specmatic-release-test-version }}/" specmatic-release-test-version.yaml
+          sed -i "s/^specmatic-release-test-version: .*/specmatic-release-test-version: ${{ github.event.inputs.specmatic-release-test-version }}/" _config.yaml
           git add .
           git commit -m "Updated Specmatic Release Test Version To ${{ github.event.inputs.specmatic-release-test-version }}"
         else
