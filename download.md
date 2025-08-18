@@ -4,9 +4,9 @@ title: Download
 nav_exclude: true
 
 ---
-Specmatic is available in multiple formats:
+# Specmatic Open Source
 
-## Specmatic Core
+## Open Source CLI standalone executable
 
 Download the latest Specmatic standalone executable from the following sources:
 * [Github](https://github.com/specmatic/specmatic/releases/tag/{{ site.specmatic-core-version }})
@@ -15,7 +15,7 @@ Download the latest Specmatic standalone executable from the following sources:
 
 Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standalone executable.
 
-### Maven dependencies
+## Specmatic Open Source as a library
 
 ```
 <dependency>
@@ -37,6 +37,8 @@ Read our "[Getting started (in 5 min)](/getting_started.html)" section learn mor
 Updates will no longer be available under the deprecated Group ID `in.specmatic`,
 We kindly request that you update your dependencies to use the new Group ID `io.specmatic` instead.
 
+
+# Specmatic Commercial offerings
 
 ## Specmatic Studio
 
