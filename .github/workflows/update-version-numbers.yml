@@ -27,6 +27,12 @@ on:
         type: string
         default: ''
 
+      specmatic-openapi-version:
+        description: Specmatic OpenAPI Version
+        required: false
+        type: string
+        default: ''
+
 jobs:
   bump_version:
     runs-on: ubuntu-latest
@@ -80,6 +86,15 @@ jobs:
           git commit -m "Updated Specmatic Async Version To ${{ github.event.inputs.specmatic-async-version }}"
         else
           echo "No Specmatic Async version provided, skipping bump."
+        fi
+
+        if [ -n "${{ github.event.inputs.specmatic-openapi-version }}" ]; then
+          echo "Bumping Specmatic OpenAPI version to ${{ github.event.inputs.specmatic-openapi-version }}"
+          sed -i "s/^specmatic-openapi-version: .*/specmatic-openapi-version: ${{ github.event.inputs.specmatic-openapi-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic OpenAPI Version To ${{ github.event.inputs.specmatic-openapi-version }}"
+        else
+          echo "No Specmatic OpenAPI version provided, skipping bump."
         fi
 
     - name: Git push
