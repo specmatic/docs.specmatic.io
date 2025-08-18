@@ -22,11 +22,19 @@ jobs:
         fetch-depth: 0
         ref: main
         token: "${{ secrets.SPECMATIC_GITHUB_TOKEN }}"
+    - name: Configure git cli
+      run: |
+        git config --global user.email "github-service-account@specmatic.io"
+        git config --global user.name "Specmatic GitHub Service Account"
     - name: Bump version
       run: |
         if [ -n "${{ github.event.inputs.specmatic-release-test-version }}" ]; then
           echo "Bumping Specmatic Release Test version to ${{ github.event.inputs.specmatic-release-test-version }}"
           sed -i "s/^specmatic-release-test-version: .*/specmatic-release-test-version: ${{ github.event.inputs.specmatic-release-test-version }}/" specmatic-release-test-version.yaml
+          git add .
+          git commit -m "Updated Specmatic Release Test Version To ${{ github.event.inputs.specmatic-release-test-version }}"
         else
           echo "No Specmatic Release Test version provided, skipping bump."
         fi
+    - name: Git push
+      run: git push
