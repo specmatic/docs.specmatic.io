@@ -518,7 +518,7 @@ Add the following dependencies to your `pom.xml` file:
 <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
-    <version>{{ site.latest_release }}</version>
+    <version>{{ site.specmatic-core-version }}</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -695,7 +695,7 @@ If you're building your application in a JVM-based language, you can run Specmat
 <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
-    <version>{{ site.latest_release }}</version>
+    <version>{{ site.specmatic-core-version }}</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -1042,7 +1042,7 @@ specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' &
 specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
 ```
 
-9. 
+9.
 
 ### Programmatic Usage
 

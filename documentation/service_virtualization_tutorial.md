@@ -1137,7 +1137,7 @@ Add `specmatic-core` jar dependency with scope set to test since this need not b
 <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>specmatic-core</artifactId>
-    <version>{{ site.latest_release }}</version>
+    <version>{{ site.specmatic-core-version }}</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -1600,7 +1600,7 @@ contracts:
 ```
 
 ### Specifying Combination of Host, Port, and Base Path
-The `host`, `port`, and `basePath` can be specified individually or in combination. 
+The `host`, `port`, and `basePath` can be specified individually or in combination.
 With the following configuration, the stub server will run at `http://127.0.0.1:5000/api/v2`.
 
 ```yaml
@@ -1616,7 +1616,7 @@ contracts:
 ```
 
 ### Specifying Base URL
-To directly configure the endpoint, you can define the `baseUrl`. 
+To directly configure the endpoint, you can define the `baseUrl`.
 With the following configuration, the stub server will run at `http://127.0.0.1:5000/api/v2` rather than the default base URL.
 
 ```yaml

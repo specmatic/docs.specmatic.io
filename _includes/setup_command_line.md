@@ -16,12 +16,12 @@ docker run specmatic/specmatic
 {% endtab %}
 
 {% tab install java %}
-Download the standalone jar from our [Github releases](<https://github.com/specmatic/specmatic/releases/download/{{ site.latest_release }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.latest_release }}/specmatic-executable-all-{{ site.latest_release }}.jar).
+Download the standalone jar from our [Github releases](<https://github.com/specmatic/specmatic/releases/download/{{ site.specmatic-core-version }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.specmatic-core-version }}/specmatic-executable-all-{{ site.specmatic-core-version }}.jar).
 
 If you have downloaded the standalone jar from Maven Central, you may want to rename it as shown below for convenience.
 
 ```bash
-mv specmatic-executable-all-{{ site.latest_release }}.jar specmatic.jar
+mv specmatic-executable-all-{{ site.specmatic-core-version }}.jar specmatic.jar
 ```
 
 Run specmatic as below to list all the options available
@@ -63,13 +63,13 @@ C:\> specmatic.bat <options>
 {% endtab %}
 {% tab install npm %}
 
-Install specmatic npm package globally 
+Install specmatic npm package globally
 
 ``` bash
 npm install -g specmatic
 ```
 
-Or you can run specmatic without installing it as below 
+Or you can run specmatic without installing it as below
 
 ``` bash
 npx specmatic

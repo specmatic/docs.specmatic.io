@@ -9,6 +9,24 @@ on:
         type: string
         default: ''
 
+      specmatic-core-version:
+        description: Specmatic Core Version
+        required: false
+        type: string
+        default: ''
+
+      specmatic-studio-version:
+        description: Specmatic Studio Version
+        required: false
+        type: string
+        default: ''
+
+      specmatic-async-version:
+        description: Specmatic Async Version
+        required: false
+        type: string
+        default: ''
+
 jobs:
   bump_version:
     runs-on: ubuntu-latest
@@ -36,5 +54,33 @@ jobs:
         else
           echo "No Specmatic Release Test version provided, skipping bump."
         fi
+
+        if [ -n "${{ github.event.inputs.specmatic-core-version }}" ]; then
+          echo "Bumping Specmatic Core version to ${{ github.event.inputs.specmatic-core-version }}"
+          sed -i "s/^specmatic-core-version: .*/specmatic-core-version: ${{ github.event.inputs.specmatic-core-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic Core Version To ${{ github.event.inputs.specmatic-core-version }}"
+        else
+          echo "No Specmatic Core version provided, skipping bump."
+        fi
+
+        if [ -n "${{ github.event.inputs.specmatic-studio-version }}" ]; then
+          echo "Bumping Specmatic Studio version to ${{ github.event.inputs.specmatic-studio-version }}"
+          sed -i "s/^specmatic-studio-version: .*/specmatic-studio-version: ${{ github.event.inputs.specmatic-studio-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic Studio Version To ${{ github.event.inputs.specmatic-studio-version }}"
+        else
+          echo "No Specmatic Studio version provided, skipping bump."
+        fi
+
+        if [ -n "${{ github.event.inputs.specmatic-async-version }}" ]; then
+          echo "Bumping Specmatic Async version to ${{ github.event.inputs.specmatic-async-version }}"
+          sed -i "s/^specmatic-async-version: .*/specmatic-async-version: ${{ github.event.inputs.specmatic-async-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic Async Version To ${{ github.event.inputs.specmatic-async-version }}"
+        else
+          echo "No Specmatic Async version provided, skipping bump."
+        fi
+
     - name: Git push
       run: git push

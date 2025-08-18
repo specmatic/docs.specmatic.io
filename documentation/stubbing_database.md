@@ -47,7 +47,7 @@ The following dependencies should be added to `pom.xml`.
 <dependency>
    <groupId>io.specmatic</groupId>
    <artifactId>specmatic-core</artifactId>
-   <version>{{ site.latest_release }}</version>
+   <version>{{ site.specmatic-core-version }}</version>
    <scope>test</scope>
 </dependency>
 ```
@@ -114,7 +114,7 @@ Specmatic can leverage an external HTTP stub server. This can prove useful when 
       return jdbcMockFactory;
   }
   ```
- 
+
 - From the above code you can return the DataSource object created in the jdbcMockFactory method to your DataSource.
 - Add the below property in the respective profile application properties file.
 
@@ -124,9 +124,9 @@ Specmatic can leverage an external HTTP stub server. This can prove useful when 
 
 ### How To Set Expectations
 * We can use the following setup to post multiple expectations,
-  1. Create the `db_stub_expectations` directory under the `src/test/resources/` package. 
+  1. Create the `db_stub_expectations` directory under the `src/test/resources/` package.
   2. Keep all database query expectation files inside the `db_stub_expectations` directory.
-  3. Dynamically send those expectations to the 
+  3. Dynamically send those expectations to the
 
 * Post an expectation to `http://localhost:9090/_specmatic/expectations` with the expected data. Set the port in the above URL to port on which the Specmatic HTTP stub is running.
 
@@ -166,7 +166,7 @@ Specmatic can leverage an external HTTP stub server. This can prove useful when 
       ResponseEntity<String> response = new RestTemplate().postForEntity(dbExpectations, request, String.class);
       assert response.getStatusCode() == HttpStatus.OK;
   }
-  ```    
+  ```
 
 ## Setting Database stub expectations.
 
