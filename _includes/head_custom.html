@@ -1,3 +1,17 @@
 <link rel="stylesheet" href="{{ '/css/plugin-jekyll-tabs.css' | relative_url }}">
 <link rel="stylesheet" href="{{ '/css/site.css' | relative_url }}">
 <script src="{{ '/js/plugin-jekyll-tabs.js' | relative_url }}"></script>
+
+<!-- google analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DZJQMQZ82G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DZJQMQZ82G', {
+    linker: {
+      domains: ['specmatic.io', 'docs.specmatic.io', 'insights.specmatic.io', 'genie.specmatic.io', 'studio.specmatic.io']
+    }
+  });
+</script>
