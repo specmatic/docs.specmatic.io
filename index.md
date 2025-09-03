@@ -34,8 +34,6 @@ Use Specmatic as a plain executable both on your local machine, CI pipelines, an
 
 ## 🤖 Establish Guardrails for your Coding Agents with our MCP
 
-Specmatic MCP acts as intelligent guardrails for coding agents like Claude, Copilot, Codex CLI, and more—enforcing API contract compliance, automating contract tests, and enabling safe, autonomous API development.
+Specmatic MCP acts as intelligent guardrails for coding agents like Claude, Copilot, Codex CLI, and more.
 
-- 🐳 **Docker Image**: [specmatic/specmatic-mcp](https://hub.docker.com/repository/docker/specmatic/specmatic-mcp) - Ready-to-use Docker image
-- <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" width="20" height="20" style="vertical-align:middle;"> **Source Code**: [specmatic/specmatic-mcp-server](https://github.com/specmatic/specmatic-mcp-server) - GitHub repository
-- 🧑‍💻 **Sample Project**: [specmatic/specmatic-mcp-sample](https://github.com/specmatic/specmatic-mcp-sample) - Example usage with Coding Agents
+[Try it Out (Docker Image)](https://hub.docker.com/repository/docker/specmatic/specmatic-mcp){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/specmatic/specmatic-mcp-server){: .btn .fs-5 .mb-4 .mb-md-0 } [Sample Project](https://github.com/specmatic/specmatic-mcp-sample){: .btn .fs-5 .mb-4 .mb-md-0 }
