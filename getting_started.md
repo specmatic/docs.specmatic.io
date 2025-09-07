@@ -550,12 +550,12 @@ API Specification Summary: service.yaml
   OpenAPI Version: 3.0.1
   API Paths: 1, API Operations: 1
 
-  Loading stub expectations from /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_examples
-  Reading the following stub files:
-    /Users/harikrishnan/projects/agilefaqs/ContractTesting/ExamplesAsTestAndStub/service_examples/togo.json
+  1 examples(s) found for 'service.yaml'
 
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
+
+Note that when the stub starts, it will log the count of examples loaded for a spec and any errors found. If you want to see the actual paths of the example files that were loaded, use the `--debug` flag.
 
 Once the stub server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
 
@@ -609,8 +609,7 @@ API Specification Summary: /specs/service.yaml
 
 
 
- Example files in './../../../specs/service_examples'
-  - /specs/service_examples/example.json
+   1 examples(s) found for './petstore.yaml'
 
   >> Error loading stub expectation file '/specs/service_examples/example.json':
    /specs/service_examples/example.json didn't match /specs/service.yaml

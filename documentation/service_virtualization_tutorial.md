@@ -296,6 +296,9 @@ docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/emp
   ```
 
 - Specmatic stub recognizes the `_examples` directory naming convention, and loads files in this directory automatically on startup.
+
+Note that when the stub starts, it will log the count of examples loaded for a spec and any errors found. If you want to see the actual paths of the example files that were loaded, use the `--debug` flag.
+
 - Now let's update the request section to suit our needs, by modifying the value of `name` to "Jack Sprat", and the value of `department` to "Sales". And in the response, let us modify the value of `id` to 20, like so:
 
   ```json
