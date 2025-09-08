@@ -13,6 +13,7 @@ Configuration
 - [Configuration](#configuration)
     - [Getting started](#getting-started)
       - [Upgrade older configuration to the latest version](#upgrade-older-configuration-to-the-latest-version)
+      - [Resiliency Tests](#resiliency-tests)
       - [Externalized Examples Directories](#externalized-examples-directories)
       - [Contract Test Timeout](#contract-test-timeout)
       - [Configuring Stubs](#configuring-stubs)
@@ -62,6 +63,29 @@ docker run -v "/your-local-specs-directory:/specs" specmatic/specmatic config up
 {% endtabs %}
 
 When you run the `config upgrade` command without specifying `input` or `output` parameters, it will search for the config file in default locations (the directory from which the command is run, the application classpath, `CONFIG_FILE_PATH` environment variable, or `CONFIG_FILE_PATH` system property) and display the result in the same terminal from which the command was executed.
+
+#### Resiliency Tests
+
+To enable resiliency tests, add the `resiliencyTests` configuration to your `specmatic.yaml` file as shown below:
+
+```yaml
+version: 2
+
+# Sample contracts configuration for running contract tests
+contracts:
+  - provides:
+    - /path/to/your/spec.yaml
+
+# Switches resiliency tests on (they are off by default)
+test:
+  resiliencyTests:
+    enable: all
+```
+
+Note: The value of `enable` can hold the following values:
+- `all`
+- `positiveOnly` — will not run negative tests
+- `none` - the default
 
 #### Externalized Examples Directories
 
