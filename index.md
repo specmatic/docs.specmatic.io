@@ -36,4 +36,4 @@ Use Specmatic as a plain executable both on your local machine, CI pipelines, an
 
 Specmatic MCP acts as intelligent guardrails for coding agents like Claude, Copilot, Codex CLI, and more.
 
-[Try it Out (Docker Image)](https://hub.docker.com/repository/docker/specmatic/specmatic-mcp){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/specmatic/specmatic-mcp-server){: .btn .fs-5 .mb-4 .mb-md-0 } [Sample Project](https://github.com/specmatic/specmatic-mcp-sample){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Try it Out](https://github.com/specmatic/specmatic-mcp-server){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Sample Project](https://github.com/specmatic/specmatic-mcp-sample){: .btn .fs-5 .mb-4 .mb-md-0 }
