@@ -14,6 +14,7 @@ Contract Tests
     - [Externalising examples / test cases](#externalising-examples--test-cases)
     - [Generating examples](#generating-examples)
     - [Boundary Condition Testing](#boundary-condition-testing)
+    - [Very large strings](#very-large-strings)
     - [JUnit Output From The Command](#junit-output-from-the-command)
     - [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
@@ -316,6 +317,25 @@ Exercise: Analyse the logs to understand what input validations need to be added
 If you want to start small, set the flag `ONLY_POSITIVE` to true, either as an environment variable or as a Java system property. With this flag switched on, requests with all combinations of properties and values permitted by the spec will be generated and used as tests against your API. However negative tests (e.g. sending a number where boolean is required) will not be run.
 
 Demo: [Video](https://youtu.be/U5Agz-mvYIU?t=216)
+
+### Very large strings
+
+Sometimes a schema may have a large string, such as this:
+
+```yaml
+components:
+  schemas:
+    Employee:
+      name:
+        type: string
+        maxLength: 2147483647 # Int max.. a 2GB length string.. ?!
+```
+
+Usually this is not intentional. It may happen for inocuous reasons, e.g. a flag was set / unset in some framework/generator tool. Just imagine generating a 2GB-length string in a test (or even a stub). And usually it is due to a small mistake in the spec-gen metadata. In fact, most strings in an API aren't larger than a few bytes in length. Maybe a few KB. Very rarely do they cross an MB.
+
+So for any string with `maxLength` (or `minLength`) greater than 4MB, Specmatic uses a length of 4MB instead, a more-than-large-enough length for any string in an API call, and prints a warning during the parsing of the specification. Doing so at parse-time allows Specmatic to run smoothly, while the warning tells you clearly what to fix.
+
+Of course, it's just possible that the application does handle strings that are larger than 4MB. In the case of the above schema, Specmatic's resiliency tests will boundary test `name` using strings with lengths outside the given bounds, expecting the API to return a `400`, as well-behaved APIs should. But in this case, the tests might actually pass. Due to this, the negative boundary tests will not run when `maxLength` or `minLength` are too large and have been dropped to 4MB in length. Note that the negative datatype tests will still be run.
 
 ### JUnit Output From The Command
 
