@@ -32,6 +32,16 @@ Use Specmatic as a plain executable both on your local machine, CI pipelines, an
 
 [Get started in less than 5 min](/getting_started.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](//github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
 
+## 🧪 Automatically Test Your MCP Servers with **MCP Auto Tests**
+
+Tired of guessing whether your MCP server truly honours its published schema? Specmatic now comes with **MCP Auto Tests** that validate your MCP server against its declared input/output schemas — catching drift and mismatches before they cause production issues.
+
+- Run automatic compliance checks against any MCP server
+- Detect schema drift, broken contracts, and inconsistencies
+- Ensure agent integrations remain stable and predictable
+
+[Get started](/documentation/mcp_auto_test.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](//github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
+
 ## 🤖 Establish Guardrails for your Coding Agents with our MCP
 
 Specmatic MCP acts as intelligent guardrails for coding agents like Claude, Copilot, Codex CLI, and more.
