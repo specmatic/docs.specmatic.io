@@ -7,10 +7,10 @@ nav_order: 6
 
 # MCP Auto Test
 
-## Automated Regression Testing for MCP Tools  
+## Automated Testing for MCP Tools  
 Testing MCP tools today is often limited to manual, ad hoc validation through utilities like MCP Inspector. This approach makes it difficult to ensure consistent quality, slows down release cycles, and leaves room for regressions when new features are introduced.
 
-MCP Auto Test addresses this gap by providing a reproducible, fully automated framework for regression, edge case, and input-combination testing of MCP tools exposed by an MCP Server. With automated coverage, teams can catch issues earlier, improve reliability, and release changes with greater confidence.
+MCP Auto Test addresses this gap by providing a reproducible, fully automated framework for schema drift Detection, regression, edge case, and input-combination testing of MCP tools exposed by an MCP Server. With automated coverage, teams can shift-left and catch issues earlier, improve reliability, and release changes with greater confidence.
 
 ---
 
