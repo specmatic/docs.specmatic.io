@@ -8,7 +8,9 @@ nav_order: 6
 # MCP Auto Test
 
 ## Automated Regression Testing for MCP Tools  
-MCP Auto Test is a robust tool designed to automate the testing of Model Context Protocol (MCP) tools exposed by an MCP Server. Unlike existing utilities such as MCP Inspector—which is limited to manual, ad hoc testing—MCP Auto Test provides a reproducible, fully automated framework for regression, edge case, and input-combination testing. This ensures greater reliability and faster release cycles as new features are added to the MCP ecosystem.
+Testing MCP tools today is often limited to manual, ad hoc validation through utilities like MCP Inspector. This approach makes it difficult to ensure consistent quality, slows down release cycles, and leaves room for regressions when new features are introduced.
+
+MCP Auto Test addresses this gap by providing a reproducible, fully automated framework for regression, edge case, and input-combination testing of MCP tools exposed by an MCP Server. With automated coverage, teams can catch issues earlier, improve reliability, and release changes with greater confidence.
 
 ---
 
@@ -43,12 +45,11 @@ By integrating MCP Auto Test, teams can accelerate their delivery pipelines and 
 
 ## Key Features
 
-- **Automated Test Generation**: Dynamically builds and runs test cases for all defined MCP tools, leveraging schemas and user-provided sample data.
-- **Comprehensive Input Coverage**: Explores input permutations, including edge cases, to validate tool robustness beyond the "happy path."
-- **Edge Case & Resiliency Detection**: Simulates both valid and invalid argument combinations, surfacing issues that might only appear in production.
-- **Regression Prevention**: Allows rapid reruns of the complete test suite after any change, protecting against accidental breaking changes or feature regressions.
-- **Flexible Integration**: Can be invoked with Docker in CI/CD or local workflows, and supports optional bearer authentication.
-- **Structured Reporting**: Outputs both tool schemas and JSON test reports for auditability and debugging.
+- **Generate tests automatically**: Dynamically builds and runs test cases for all defined MCP tools, leveraging schemas and user-provided sample data.
+- **Detect edge cases**: Simulates both valid and invalid argument combinations, surfacing issues that might only appear in production.
+- **Avoid Regression**: Allows rapid reruns of the complete test suite after any change, protecting against accidental breaking changes or feature regressions.
+- **Runs on local or CI**: Can be invoked with Docker in CI/CD or local workflows, and supports optional bearer authentication.
+- **Detailed test report**: Outputs both tool schemas and JSON test reports for auditability and debugging.
 
 ---
 
@@ -64,13 +65,48 @@ The **dictionary** is a JSON-formatted file that provides sample data for the MC
 
 #### Dictionary Structure
 
+Consider a tool schema:
+```json
+{
+  "name": "createUser",
+  "description": "Creates a new user in the system",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "age": { "type": "integer" },
+      "address": {
+        "type": "object",
+        "properties": {
+          "city": { "type": "string" },
+          "zip": { "type": "string" }
+        }
+      }
+    },
+    "required": ["name", "age"]
+  }
+}
+```
+
+Based on this schema, a test dictionary can be written as:
+```json
+{
+  "createUser": {
+    "name": ["Alice", "Bob"],
+    "age": [25, 40],
+    "address": {
+      "city": "Paris"
+    }
+  }
+}
+```
+
+A more formal structure of the dictionary can be summarised as follows:
 ```json
 {
   "tool_name": {
-    "argument_1": "value1",
-    "argument_2": {
-      "subfield": "value2"
-    }
+    "input_argument_1": "value1",
+    "input_argument_2": "value2"
   }
 }
 ```
@@ -87,19 +123,34 @@ The **dictionary** is a JSON-formatted file that provides sample data for the MC
 }
 ```
 
-#### Example
+#### Sample dictionary with partial fields
 
-Suppose your MCP tool expects the following schema:
+Suppose your MCP tool expects the following input schema:
 
 ```json
 {
-  "name": "String",
-  "age": "Number",
-  "address": {
-    "city": "String",
-    "state": "String"
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "age": {
+      "type": "number"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "city": { "type": "string" },
+        "state": { "type": "string" }
+      },
+      "required": ["city", "state"]
+    },
+    "hobbies": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
   },
-  "hobbies": ["String"]
+  "required": ["name", "age"]
 }
 ```
 
@@ -117,6 +168,8 @@ A matching dictionary could be:
 }
 ```
 
+The above dictionary does not contain all the fields present in the input schema. It just specifies the values for the fields which are required to be set with a value.
+
 **Tip:** You can provide diverse or minimal datasets as required. The tool's runner will internally generate a variety of tests leveraging this dictionary.
 
 ---
@@ -127,6 +180,7 @@ Once your dictionary file is ready, launch MCP Auto Test against your target MCP
 
 ```bash
 docker run -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
+  -v "$(pwd)/<PATH_TO_DICTIONARY_FILE>:/usr/src/app/<PATH_TO_DICTIONARY_FILE>" \
   specmatic/specmatic mcp test \
   --url <MCP_SERVER_URL> \
   --dictionary-file <PATH_TO_DICTIONARY_FILE>
@@ -160,6 +214,7 @@ To enable resiliency testing:
 
 ```bash
 docker run -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
+  -v "$(pwd)/<PATH_TO_DICTIONARY_FILE>:/usr/src/app/<PATH_TO_DICTIONARY_FILE>" \
   specmatic/specmatic mcp test \
   --url <MCP_SERVER_URL> \
   --dictionary-file <PATH_TO_DICTIONARY_FILE> \
