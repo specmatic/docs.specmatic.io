@@ -33,6 +33,12 @@ on:
         type: string
         default: ''
 
+      specmatic-build-reporter-version:
+        description: Specmatic Build Reporter Version
+        required: false
+        type: string
+        default: ''
+
 jobs:
   bump_version:
     runs-on: ubuntu-latest
@@ -95,6 +101,15 @@ jobs:
           git commit -m "Updated Specmatic OpenAPI Version To ${{ github.event.inputs.specmatic-openapi-version }}"
         else
           echo "No Specmatic OpenAPI version provided, skipping bump."
+        fi
+
+        if [ -n "${{ github.event.inputs.specmatic-build-reporter-version }}" ]; then
+          echo "Bumping Specmatic Build Reporter Version to ${{ github.event.inputs.specmatic-build-reporter-version }}"
+          sed -i "s/^specmatic-build-reporter-version: .*/specmatic-build-reporter-version: ${{ github.event.inputs.specmatic-build-reporter-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic Build Reporter Version To ${{ github.event.inputs.specmatic-build-reporter-version }}"
+        else
+          echo "No Specmatic Build Reporter Version provided, skipping bump."
         fi
 
     - name: Git push
