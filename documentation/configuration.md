@@ -454,16 +454,16 @@ report:
 
 #### Formatters
 
-If no formatters are provided, 'Text' and 'HTML' formatters are used by default. The Text formatter will print the report on to the console / terminal.
+If no formatters are provided, `text` and `html` formatters are used by default. The `text` formatter will print the report on to the console / terminal.
 
-To generate a CTRF report for contract tests, add a formatter of type 'CTRF' as shown below:
+To generate a CTRF report for contract tests, add a formatter of type `ctrf` as shown below:
 
 {% tabs ctrf_report_configuration %}
 {% tab ctrf_report_configuration specmatic.yaml %}
 ```yaml
 report:
   formatters:
-    - type: CTRF
+    - type: ctrf
 ```
 {% endtab %}
 {% tab ctrf_report_configuration specmatic.json %}
@@ -471,7 +471,7 @@ report:
 "report": {
     "formatters": [
       {
-        "type": "CTRF"
+        "type": "ctrf"
       }
     ]
   }
@@ -479,6 +479,7 @@ report:
 {% endtab %}
 {% endtabs %}
 
+The CTRF report for contract tests will be generated in the `build/reports/specmatic/ctrf` directory.
 
 #### API Coverage report
 This gives you a comprehensive analysis of any mismatch between your api specification and implementation. [Here](https://specmatic.io/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) is an article with a detailed write-up about this feature.
