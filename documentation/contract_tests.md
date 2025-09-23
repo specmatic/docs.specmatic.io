@@ -443,7 +443,7 @@ paths:
                       type: string
 ```
 
-The request `GET /items/free` matches both `/items/{type}` and `/items/free`. In such cases, Specmatic will prioritize the more specific path, which is `/items/free`, and validate the response against its schema.
+The path `/items/free` in the example matches both `/items/{type}` and `/items/free` in the specification. In such cases, Specmatic will prioritize the more specific path, which is `/items/free`, and validate the response against its schema.
 
 ### Declaring Contracts In Configuration
 
