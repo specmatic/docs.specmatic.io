@@ -454,30 +454,30 @@ report:
 
 #### Formatters
 
-If no formatters are provided, 'Text' formatter is assumed by default. The Text formatter will print the report on to the console / terminal.
+If no formatters are provided, 'Text' and 'HTML' formatters are used by default. The Text formatter will print the report on to the console / terminal.
 
 To generate a CTRF report for contract tests, add a formatter of type 'CTRF' as shown below:
 
-  {% tabs ctrf_report_configuration %}
-  {% tab ctrf_report_configuration specmatic.yaml %}
-  ```yaml
-  report:
-    formatters:
-      - type: CTRF
-  ```
-  {% endtab %}
-  {% tab ctrf_report_configuration specmatic.json %}
-  ```json
-  "report": {
-      "formatters": [
-        {
-          "type": "CTRF"
-        }
-      ]
-    }
-  ```
-  {% endtab %}
-  {% endtabs %}
+{% tabs ctrf_report_configuration %}
+{% tab ctrf_report_configuration specmatic.yaml %}
+```yaml
+report:
+  formatters:
+    - type: CTRF
+```
+{% endtab %}
+{% tab ctrf_report_configuration specmatic.json %}
+```json
+"report": {
+    "formatters": [
+      {
+        "type": "CTRF"
+      }
+    ]
+  }
+```
+{% endtab %}
+{% endtabs %}
 
 
 #### API Coverage report
