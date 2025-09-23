@@ -454,15 +454,16 @@ report:
 
 #### Formatters
 
-- Defaults to 'Text' if none specified. The Text formatter will print the report on to the console/terminal.
-- To generate a CTRF report, add a formatter of type 'ctrf' as shown below:
+If no formatters are provided, 'Text' formatter is assumed by default. The Text formatter will print the report on to the console / terminal.
+
+To generate a CTRF report for contract tests, add a formatter of type 'CTRF' as shown below:
 
   {% tabs ctrf_report_configuration %}
   {% tab ctrf_report_configuration specmatic.yaml %}
   ```yaml
   report:
     formatters:
-      - type: ctrf
+      - type: CTRF
   ```
   {% endtab %}
   {% tab ctrf_report_configuration specmatic.json %}
@@ -470,7 +471,7 @@ report:
   "report": {
       "formatters": [
         {
-          "type": "ctrf"
+          "type": "CTRF"
         }
       ]
     }
