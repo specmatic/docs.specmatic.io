@@ -17,6 +17,7 @@ Contract Tests
     - [Very large strings](#very-large-strings)
     - [JUnit Output From The Command](#junit-output-from-the-command)
     - [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
+    - [When The API Matches Multiple Paths In The API Specification](#when-the-api-matches-multiple-paths-in-the-api-specification)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
     - [Handling multipart form-data and file uploads](#handling-multipart-form-data-and-file-uploads)
     - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
@@ -366,6 +367,83 @@ Examples:
 We encourage you to try more such modifications to the specification such as adding / removing parameters, updating datatypes, etc. This will give you picture of how Contract Tests work.
 
 Note: If you modify the request, it's possible that the application will respond with a 404 or 500, and you may not see anything more interesting than a mismatched status. But if you modify any response structure in the contract, leaving the request intact, e.g. change an integer to a string or vice versa, the application will send recognize the requests, send response back that do not match the contract which you have modified, and you will see interesting error feedback.
+
+### When The API Matches Multiple Paths In The API Specification
+
+Given the following example:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/items/free"
+  },
+  "http-response": {
+    "status": 200,
+    "body": [
+      {
+        "id": 1,
+        "name": "Free Item 1"
+      },
+      {
+        "id": 2,
+        "name": "Free Item 2"
+      }
+    ]
+  }
+}
+```
+
+And the following OpenAPI specification:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Items API
+  version: '1.0'
+servers: []
+paths:
+  /items/{type}:
+    get:
+      parameters:
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+  /items/free:
+    get:
+      responses:
+        '200':
+          description: A list of free items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+```
+
+The request `GET /items/free` matches both `/items/{type}` and `/items/free`. In such cases, Specmatic will prioritize the more specific path, which is `/items/free`, and validate the response against its schema.
 
 ### Declaring Contracts In Configuration
 
