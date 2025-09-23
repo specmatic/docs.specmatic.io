@@ -17,7 +17,7 @@ Contract Tests
     - [Very large strings](#very-large-strings)
     - [JUnit Output From The Command](#junit-output-from-the-command)
     - [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
-    - [When The API Matches Multiple Paths In The API Specification](#when-the-api-matches-multiple-paths-in-the-api-specification)
+    - [When The Example Path Matches Multiple Paths In The API Specification](#when-the-example-path-matches-multiple-paths-in-the-api-specification)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
     - [Handling multipart form-data and file uploads](#handling-multipart-form-data-and-file-uploads)
     - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
@@ -368,7 +368,7 @@ We encourage you to try more such modifications to the specification such as add
 
 Note: If you modify the request, it's possible that the application will respond with a 404 or 500, and you may not see anything more interesting than a mismatched status. But if you modify any response structure in the contract, leaving the request intact, e.g. change an integer to a string or vice versa, the application will send recognize the requests, send response back that do not match the contract which you have modified, and you will see interesting error feedback.
 
-### When The API Matches Multiple Paths In The API Specification
+### When The Example Path Matches Multiple Paths In The API Specification
 
 Given the following example:
 
