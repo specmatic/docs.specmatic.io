@@ -18,7 +18,7 @@ error() {
   echo -e "❌ \033[1;31m[ERROR]\033[0m $*"
 }
 
-DOWNLOAD_DIR="$HOME/.specmatic"
+DOWNLOAD_DIR="~/.specmatic"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
