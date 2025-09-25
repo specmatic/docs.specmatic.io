@@ -61,7 +61,7 @@ mkdir -p "$DOWNLOAD_DIR"
 download_success=0
 for url in "${download_urls[@]}"; do
   info "Attempting to download $tool_name from $url"
-  if "$DOWNLOADER" "${DOWNLOADER_ARGS[@]}" "$JAR_PATH" "$url"; then
+  if "$DOWNLOADER" "${DOWNLOADER_ARGS[@]}" "$(readlink -f $JAR_PATH)" "$url"; then
     info "Downloaded $tool_name to $JAR_PATH"
     download_success=1
     break
