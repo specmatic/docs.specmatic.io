@@ -18,7 +18,7 @@ error() {
   echo -e "❌ \033[1;31m[ERROR]\033[0m $*"
 }
 
-DOWNLOAD_DIR="~/.specmatic"
+DOWNLOAD_DIR="$HOME/.specmatic"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -61,7 +61,7 @@ mkdir -p "$DOWNLOAD_DIR"
 download_success=0
 for url in "${download_urls[@]}"; do
   info "Attempting to download $tool_name from $url"
-  if "$DOWNLOADER" "${DOWNLOADER_ARGS[@]}" "$(readlink -f $JAR_PATH)" "$url"; then
+  if "$DOWNLOADER" "${DOWNLOADER_ARGS[@]}" "$JAR_PATH" "$url"; then
     info "Downloaded $tool_name to $JAR_PATH"
     download_success=1
     break
