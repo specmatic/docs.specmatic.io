@@ -7,7 +7,7 @@ layout: none
 {% endcapture %}
 
 {% include install-specmatic-tool.sh
-  main_picocli_command="io.specmatic.reporter.commands.SendReportCommand"
+  main_picocli_command="io.specmatic.reporter.commands.SpecmaticReporterApplication"
   tool_name="Specmatic Build Reporter"
   tool_version=tool_version
   download_target="specmatic-reporter"
