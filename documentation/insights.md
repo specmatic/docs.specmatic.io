@@ -78,7 +78,7 @@ Let's get started!
 
 > **Note:** To publish builds to Specmatic Insights, you must have a valid license key issued by Specmatic Insights. Please ensure you have obtained your license before proceeding with the setup.
 
-For details on acquiring and managing your license, refer to the [License Key Guide](license_key.md).
+For details on acquiring and managing your license, refer to the [License Key Guide](license_key.html).
 
 ## Step 1: Setting Up a Central Contract Repository
 
@@ -488,7 +488,7 @@ Congratulations! You've set up a powerful system for managing and visualizing yo
 
 > **Tip:** If you encounter issues, check the following common problems:
 
-- **License Key Invalid or Missing:** Ensure your license key is correctly configured and not expired. Refer to the [License Key Guide](license_key.md).
+- **License Key Invalid or Missing:** Ensure your license key is correctly configured and not expired. Refer to the [License Key Guide](license_key.html).
 - **Build Report Not Visible:** Confirm that your CI pipeline is publishing reports to the correct Insights endpoint and that network access is not blocked.
 - **Specmatic Docker Image Issues:** Make sure you are using the latest Specmatic Docker image and that your environment has Docker installed and running.
 - **API Spec Errors:** Validate your OpenAPI specifications for syntax and compatibility before running the pipeline.
