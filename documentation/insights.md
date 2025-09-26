@@ -485,7 +485,6 @@ Congratulations! You've set up a powerful system for managing and visualizing yo
 
 ## Troubleshooting
 
-
 > **Tip:** If you encounter issues, check the following common problems:
 
 - **License Key Invalid or Missing:** Ensure your license key is correctly configured and not expired. Refer to the [License Key Guide](license_key.html).
@@ -494,7 +493,6 @@ Congratulations! You've set up a powerful system for managing and visualizing yo
 - **API Spec Errors:** Validate your OpenAPI specifications for syntax and compatibility before running the pipeline.
 - **Dashboard Not Showing Services:**
   1. Ensure your CI/CD pipelines are correctly set up with the Specmatic Insights Build Reporter.
-  2. Check that your `org-id` is correct in the GitHub action configuration.
-  3. Verify that your Specmatic reports are being generated in the specified directory (e.g., `./build/reports/specmatic`).
+  2. Verify that your Specmatic reports are being generated in the specified directory (e.g., `./build/reports/specmatic`).
 
 For additional help, consult the Specmatic documentation or contact [Specmatic support]({{ site.contact_us_url }}).
