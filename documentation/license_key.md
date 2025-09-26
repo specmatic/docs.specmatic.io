@@ -10,10 +10,10 @@ nav_order: 35
 <!-- TOC -->
 
 - [Types of Specmatic Licenses](#types-of-specmatic-licenses)
-- [User Licenses](#user-licenses)
-- [Downloading the license key from Insights for service accounts](#downloading-the-license-key-from-insights-for-service-accounts)
-  - [Setting Up the License Key for service accounts](#setting-up-the-license-key-for-service-accounts)
-  - [Using Specmatic with Docker](#using-specmatic-with-docker)
+  - [User Licenses](#user-licenses)
+  - [Service Account Licenses](#service-account-licenses)
+    - [Setting Up the License Key for service accounts](#setting-up-the-license-key-for-service-accounts)
+- [Using Specmatic with Docker](#using-specmatic-with-docker)
 
 <!-- /TOC -->
 
@@ -27,7 +27,7 @@ Specmatic provides two types of licenses:
 
 Both license types are managed and downloaded from the Specmatic Insights Server. The setup and usage instructions for each are provided in the sections below.
 
-## User Licenses
+### User Licenses
 
 User licenses are intended for developers and testers who use Specmatic interactively, such as running Specmatic locally, or for manual contract authoring and testing. Each user should download their own license key from the Specmatic Insights Server.
 
@@ -65,7 +65,7 @@ User licenses are intended for developers and testers who use Specmatic interact
 
 2. The license file is saved in `~/.specmatic`. If you are running docker, ensure you mount this directory to `/root/.specmatic` in your docker container. `docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic`
 
-## Downloading the license key from Insights (for service accounts)
+### Service Account Licenses
 
 ![License Key Download](../../images/insights-license.gif)
 
@@ -77,7 +77,7 @@ User licenses are intended for developers and testers who use Specmatic interact
 6. Click "Generate" to create the license key.
 7. Click the "Download" button to download the license file (`specmatic-license.txt`)
 
-### Setting Up the License Key (for service accounts)
+#### Setting Up the License Key (for service accounts)
 
 The license file can be placed in one of the following locations, in order of priority:
 
@@ -90,7 +90,7 @@ The license file can be placed in one of the following locations, in order of pr
 3. **Custom Location with Environment Variable**
    If neither of the above options work, you can save the license file in any location of your choice and set the environment variable `SPECMATIC_LICENSE_PATH` to point to the license file.
 
-### Using Specmatic with Docker
+## Using Specmatic with Docker
 
 When using Specmatic with Docker, you must pass the license key as follows:
 
