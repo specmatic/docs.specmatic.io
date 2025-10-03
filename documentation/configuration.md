@@ -481,6 +481,10 @@ report:
 
 The CTRF report for contract tests will be generated in the `build/reports/specmatic/ctrf` directory.
 
+{: .note}
+The CTRF report generation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information. 
+
+
 #### API Coverage report
 This gives you a comprehensive analysis of any mismatch between your api specification and implementation. [Here](https://specmatic.io/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) is an article with a detailed write-up about this feature.
 
