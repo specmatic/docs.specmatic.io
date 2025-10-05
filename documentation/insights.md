@@ -4,28 +4,38 @@ title: Insights setup guide
 parent: Documentation
 nav_order: 20
 ---
-# Specmatic Insights
 
-- [Specmatic Insights](#specmatic-insights)
-  - [Introduction](#introduction)
-    - [Features](#features)
-  - [What You will Achieve](#what-you-will-achieve)
-  - [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
-    - [Setup overview](#setup-overview)
-    - [Setting up the central contract repository](#setting-up-the-central-contract-repository)
-  - [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
-    - [2.1: Setting Up CI pipeline for client](#21-setting-up-ci-pipeline-for-client)
-    - [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
-    - [Step 2.3: Setting up CI pipeline for Order API](#step-23-setting-up-ci-pipeline-for-order-api)
-    - [Summary of Progress](#summary-of-progress)
-  - [Step 3: Configuring Specmatic Insights](#step-3-configuring-specmatic-insights)
-    - [Setting Up Specmatic Insights](#setting-up-specmatic-insights)
-    - [Integrating with CI/CD Pipelines](#integrating-with-cicd-pipelines)
-  - [Step 4: Visualizing Your API Ecosystem](#step-4-visualizing-your-api-ecosystem)
-    - [Viewing Your Service Mesh](#viewing-your-service-mesh)
-    - [Understanding the Dashboard](#understanding-the-dashboard)
-  - [Next Steps](#next-steps)
-  - [Troubleshooting](#troubleshooting)
+<!-- TOC depthfrom:2 orderedlist:false -->
+
+- [Overview](#overview)
+- [Introduction](#introduction)
+  - [Features](#features)
+- [What You will Achieve](#what-you-will-achieve)
+- [Prerequisites](#prerequisites)
+- [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
+  - [Setup overview](#setup-overview)
+  - [Setting up the central contract repository](#setting-up-the-central-contract-repository)
+- [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
+  - [: Setting Up CI pipeline for client](#-setting-up-ci-pipeline-for-client)
+  - [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
+  - [Step 2.3: Setting up CI pipeline for Order API](#step-23-setting-up-ci-pipeline-for-order-api)
+  - [Summary of Progress](#summary-of-progress)
+- [Step 3: Configuring Specmatic Insights](#step-3-configuring-specmatic-insights)
+  - [Setting Up Specmatic Insights](#setting-up-specmatic-insights)
+  - [Integrating with CI/CD Pipelines](#integrating-with-cicd-pipelines)
+- [Step 4: Visualizing Your API Ecosystem](#step-4-visualizing-your-api-ecosystem)
+  - [Viewing Your Service Mesh](#viewing-your-service-mesh)
+  - [Understanding the Dashboard](#understanding-the-dashboard)
+- [Next Steps](#next-steps)
+- [Troubleshooting](#troubleshooting)
+
+<!-- /TOC -->
+
+# Specmatic Insights Integration Guide
+
+## Overview
+
+This guide provides step-by-step instructions for integrating Specmatic Insights into your API ecosystem. It is intended for developers and testers adopting contract-driven development and looking to visualize and monitor their microservices architecture. This guide will help you set up, configure, and troubleshoot Specmatic Insights.
 
 ## Introduction
 
@@ -54,8 +64,6 @@ Additionally, the dashboard provides a comprehensive overview of your API ecosys
 
 ![Insights Dashboard](../images/insights_feature_2.png)
 
-To know more about Specmatic Insights, visit [Insights page](https://insights.specmatic.io/).
-
 ## What You will Achieve
 
 By the end of this tutorial, you'll have:
@@ -65,6 +73,12 @@ By the end of this tutorial, you'll have:
 3. A clear visualization of your API ecosystem with Specmatic Insights
 
 Let's get started!
+
+## Prerequisites
+
+> **Note:** To publish builds to Specmatic Insights, you must have a valid license key issued by Specmatic Insights. Please ensure you have obtained your license before proceeding with the setup.
+
+For details on acquiring and managing your license, refer to the [License Key Guide](license_key.html).
 
 ## Step 1: Setting Up a Central Contract Repository
 
@@ -77,13 +91,12 @@ A central contract repository is crucial for maintaining consistency across your
 In this architecture:
 
 The App represents the client application (e.g., a mobile app or web frontend)
-The BFF (Backend-for-Frontend) acts as an intermediary, tailoring the API for the specific client needs
-The Domain Service represents the core business logic and data management
+The *BFF (Backend-for-Frontend)* acts as an intermediary, tailoring the API for the specific client needs. The *Domain Service* represents the core business logic and data management
 
 We'll be working with two OpenAPI specifications:
 
-* `order_bff.yaml:` Implemented by the BFF services, this specification defines the API contract for clients (like the mobile app).
-* `order_api.yaml:` Implemented by the Domain Service, this specification defines the API contract for BFFs.
+* `order_bff.yaml`: Implemented by the BFF services, this specification defines the API contract for clients (like the mobile app).
+* `order_api.yaml`: Implemented by the Domain Service, this specification defines the API contract for BFFs.
 
 ### Setting up the central contract repository
 
@@ -96,8 +109,8 @@ We'll be working with two OpenAPI specifications:
       │   ├── order_bff.yaml
       │   └── order_api.yaml
       └── other-services/
-
       ```
+
 3. Download and add the following OpenAPI specifications to the repository as depicted above
 
     - [Order BFF OpenAPI Spec](insights_tutorial_spec_files/order_bff.yaml)
@@ -123,14 +136,14 @@ We'll be working with two OpenAPI specifications:
         runs-on: ubuntu-latest
         steps:
           - name: Checkout code
-            uses: actions/checkout@v4
+            uses: actions/checkout@v5
             with:
               fetch-depth: 0
 
           - name: Set up Node.js
-            uses: actions/setup-node@v2
+            uses: actions/setup-node@v5
             with:
-              node-version: '14'
+              node-version: 'lts'
 
           - name: Install OpenAPI linter
             run: npm install -g @stoplight/spectral-cli
@@ -143,27 +156,30 @@ We'll be working with two OpenAPI specifications:
               docker run --rm \
               -v "${{ github.workspace }}:/api-contracts:rw" \
               -w /api-contracts \
-              --entrypoint /bin/sh \
               specmatic/specmatic \
-              -c "git config --global --add safe.directory /api-contracts && java -jar /usr/src/app/specmatic.jar backwardCompatibilityCheck"
+              backward-compatibility-check
 
           - name: Generate central contract repo report
             run: |
-              docker run -v "$(pwd):/central-contract-repo:rw" \
-                --entrypoint /bin/sh specmatic/specmatic \
-                -c "cd /central-contract-repo && java -jar /usr/src/app/specmatic.jar central-contract-repo-report"
+              docker run --rm \
+                -v "${{ github.workspace }}:/api-contracts:rw" \
+                specmatic/specmatic \
+                central-contract-repo-report
+
+          - name: Write specmatic license key to file
+            run: echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
           - name: Run Specmatic Insights Github Build Reporter
-            uses: specmatic/specmatic-insights-build-reporter-github-action@v2.0.2
-            with:
-              github-token: ${{ secrets.GH_REPOSITORY_TOKEN }}
-              org-id:  YOUR_SPECMATIC_ORG_ID # Replace with your actual Org ID
-              branch-ref: ${{ github.ref }}
-              branch-name: ${{ github.ref_name }}
-              build-id: ${{ github.run_id }}
-              repo-name: ${{ github.event.repository.name }}
-              repo-id: ${{ github.repository_id }}
-              repo-url: ${{ github.event.repository.html_url }}
+            run: |
+              docker run --rm \
+                -v "${{ github.workspace }}:/api-contracts:rw" \
+                -v ~/.specmatic:/root/.specmatic \
+                specmatic/specmatic \
+                send-report \
+                --branch-name ${{ github.ref_name }} \
+                --repo-name ${{ github.event.repository.name }} \
+                --repo-id ${{ github.repository_id }} \
+                --repo-url ${{ github.event.repository.html_url }}
       {% endraw %}
     ```
 
@@ -175,20 +191,20 @@ After successfully setting up your central contract repository and running the C
 
 Now that we have our OpenAPI specification checked in, let's bring our Order services to life!
 
-**Client** - You can implement client in programming language of your choice. Once ready, place the following configuration in a file name `specmatic.yaml` at the root level of your project, this will:
-* virtualize BFF service for the client application (based on the `order_bff.yaml` contract), helping isolate the client.
+**Client** - You can implement the client in the programming language of your choice. Once ready, place the following configuration in a file named `specmatic.yaml` at the root level of your project. This will:
+* Virtualize the BFF service for the client application (based on the `order_bff.yaml` contract), helping to isolate the client.
 
- ```yaml
- sources:
+```yaml
+sources:
   - provider: git
     repository: (your-git-repository)
     stub:
       - path/to/your/spec/in/git/order_bff.yaml # BFF service contract
- ```
+```
 
-**BFF Service** - Implement BFF service in language of your choice. Once ready, place the following configuration in a file name `specmatic.yaml` at the root level of your project. This will :
-* virtualize Domain API service for the BFF application (based on `order_api.yaml` contract)
-* and test the BFF service as client (using the `order_bff.yaml` contract)
+**BFF Service** - Implement the BFF service in the language of your choice. Once ready, place the following configuration in a file named `specmatic.yaml` at the root level of your project. This will:
+* Virtualize the Domain API service for the BFF application (based on the `order_api.yaml` contract)
+* Test the BFF service as a client (using the `order_bff.yaml` contract)
 
 
 ```yaml
@@ -214,10 +230,10 @@ sources:
 
 ### 2.1: Setting Up CI pipeline for client
 
-After the client is up and running and checked in to a git repository, we can create the following CI pipeline to :
-* build the client app
-* virtualize BFF service using `order_bff.yaml` and **Specmatic** docker image.
-* test client implementation against the virtualized BFF service.
+After the client is up and running and checked into a Git repository, you can create the following CI pipeline to:
+* Build the client app
+* Virtualize the BFF service using `order_bff.yaml` and the **Specmatic** Docker image
+* Test the client implementation against the virtualized BFF service
 
 (note: we implemented the client in react, so setting up pipeline accordingly)
 
@@ -267,10 +283,10 @@ Upon successful execution of the client CI pipeline, you should see output resem
 
 ### Step 2.2: Setting up CI pipeline for BFF Service
 
-Make sure BFF service is checked in to a git repository. Then create the following CI pipeline to :
-* build the BFF service
-* virtualize Domain service using `order_api.yaml` and **Specmatic** docker image.
-* test BFF service using `order_bff.yaml` and **Specmatic** docker image.
+Make sure the BFF service is checked into a Git repository. Then create the following CI pipeline to:
+* Build the BFF service
+* Virtualize the Domain service using `order_api.yaml` and the **Specmatic** Docker image
+* Test the BFF service using `order_bff.yaml` and the **Specmatic** Docker image
 
 (note: we implemented the BFF service in Kotlin, so setting up pipeline accordingly)
 
@@ -297,7 +313,7 @@ jobs:
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '17'
         distribution: 'temurin'
 
     - name: Setup Gradle
@@ -394,13 +410,13 @@ Congratulations! At this point, you have successfully set up and configured:
 ✅ Domain service with CI/CD for building and being tested as a provider <br>
 
 All four components are now integrated with Specmatic for contract testing and service virtualization. This setup ensures that your entire API ecosystem is continuously validated and maintains consistency across all services.
-With this foundation in place, we can now move on to configuring Specmatic Insights to visualize and analyze your API ecosystem.
+With this foundation in place, you can now move on to configuring Specmatic Insights to visualize and analyze your API ecosystem.
 
 ## Step 3: Configuring Specmatic Insights
 
 ### Setting Up Specmatic Insights
 
-To start using Specmatic Insights please contact [Specmatic support]({{ site.contact_us_url }}). We will create an account and setup your dashboard.
+To start using Specmatic Insights, please contact [Specmatic support]({{ site.contact_us_url }}). We will create an account and set up your dashboard.
 
 ### Integrating with CI/CD Pipelines
 
@@ -414,25 +430,23 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
 
 ```yaml
 {% raw %}
-- name: Run Specmatic Insights Github Build Reporter
-  uses: specmatic/specmatic-insights-build-reporter-github-action@v2.0.2
-  with:
-    github-token: ${{ secrets.SPECMATIC_GITHUB_TOKEN }}
-    specmatic-insights-host: https://insights.specmatic.io # Or your on-prem URL
-    specmatic-reports-dir: ./build/reports/specmatic # Or your custom path
-    org-id: YOUR_SPECMATIC_ORG_ID # Replace with your actual Org ID
-    branch-ref: ${{ github.ref }}
-    branch-name: ${{ github.ref_name }}
-    build-id: ${{ github.run_id }}
-    repo-name: ${{ github.event.repository.name }}
-    repo-id: ${{ github.repository_id }}
-    repo-url: ${{ github.event.repository.html_url }}
+- name: Write specmatic license key to file
+  echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+- name: Publish specmatic reports to Specmatic Insights
+  run: |
+    docker run --rm \
+      -v ~/.specmatic:/root/.specmatic \
+      -v "${{ github.workspace }}:/api-contracts:rw" \
+      specmatic/specmatic \
+      send-report \
+      --branch-name ${{ github.ref_name }} \
+      --repo-name ${{ github.event.repository.name }} \
+      --repo-id ${{ github.repository_id }} \
+      --repo-url ${{ github.event.repository.html_url }}
 {% endraw %}
 ```
 
-For more details refer to the [Specmatic Insights GitHub Action documentation](https://github.com/specmatic/specmatic-insights-build-reporter-github-action)
-
-Make sure to replace `YOUR_SPECMATIC_ORG_ID` with your actual organization ID. This you can find on your insights dashboard, under settings > general.
+For more details, refer to the [Specmatic Insights GitHub Action documentation](https://github.com/specmatic/specmatic-insights-build-reporter-github-action).
 
 ## Step 4: Visualizing Your API Ecosystem
 
@@ -464,16 +478,21 @@ Here's an example of what you might see if you have followed the instructions an
 
 Congratulations! You've set up a powerful system for managing and visualizing your APIs. Here are some next steps to consider:
 
-Integrate more of your services into this ecosystem.
-Use the insights gained to identify areas for improvement in your API design and usage.
-Leverage Specmatic for contract-driven API development.
+
+- Integrate more of your services into this ecosystem.
+- Use the insights gained to identify areas for improvement in your API design and usage.
+- Leverage Specmatic for contract-driven API development.
 
 ## Troubleshooting
 
-If you're not seeing your services on the dashboard:
+> **Tip:** If you encounter issues, check the following common problems:
 
-1. Ensure your CI/CD pipelines are correctly set up with the Specmatic Insights Build Reporter.
-2. Check that your `org-id` is correct in the GitHub action configuration.
-3. Verify that your Specmatic reports are being generated in the specified directory. (./build/reports/specmatic)
+- **License Key Invalid or Missing:** Ensure your license key is correctly configured and not expired. Refer to the [License Key Guide](license_key.html).
+- **Build Report Not Visible:** Confirm that your CI pipeline is publishing reports to the correct Insights endpoint and that network access is not blocked.
+- **Specmatic Docker Image Issues:** Make sure you are using the latest Specmatic Docker image and that your environment has Docker installed and running.
+- **API Spec Errors:** Validate your OpenAPI specifications for syntax and compatibility before running the pipeline.
+- **Dashboard Not Showing Services:**
+  1. Ensure your CI/CD pipelines are correctly set up with the Specmatic Insights Build Reporter.
+  2. Verify that your Specmatic reports are being generated in the specified directory (e.g., `./build/reports/specmatic`).
 
-For further assistance, please contact [Specmatic support]({{ site.contact_us_url }}).
+For additional help, consult the Specmatic documentation or contact [Specmatic support]({{ site.contact_us_url }}).
