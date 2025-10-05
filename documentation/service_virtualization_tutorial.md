@@ -70,6 +70,7 @@ Service Virtualization
     - [Example Requests](#example-requests)
     - [Benefits](#benefits)
   - [Disable hot-reload](#disable-hot-reload)
+  - [Using matching branches in the central contract repo](#using-matching-branches-in-the-central-contract-repo)
   - [Sample Java Project](#sample-java-project)
 
 
@@ -1866,6 +1867,20 @@ You can also disable it via the following configuration in specmatic.yaml:
 stub:
   hotReload: disabled
 ```
+
+## Using matching branches in the central contract repo
+
+The command `specmatic test --match-branch` will use a branch of the central repo with the same name as the branch that is locally checked out.
+
+The same is true for `specmatic stub --match-branch`.
+
+For example, let's say there's a branch in the central contract repo named 'product-discount' with changes to the product API specification. Then to develop the feature, the API developer creates a branch named 'product-discount' in the API repo and makes changes to the API implementation to support the new feature.
+
+With this setup, the API dveloper can run `specmatic test --match-branch` with the 'product-discount' branch checked out in the API repository, and since there is a branch on the central repo with the same name, specifications from the 'product-discount' branch on the central repo will be used to run tests.
+
+The same is true for the consumer of the API, who can run `specmatic stub --match-branch`.
+
+Not all features though require specification changes. So if there is no matching branch in the central repository, `specmatic test --match-branch` will simply create a new local branch off the default branch and run tests from it.
 
 ## Sample Java Project
 

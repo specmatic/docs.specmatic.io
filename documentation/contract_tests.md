@@ -66,6 +66,7 @@ Contract Tests
   - [Advanced Features](#advanced-features)
     - [Generative Tests](#generative-tests)
     - [Limiting the Count of Tests](#limiting-the-count-of-tests)
+    - [Using matching branches in the central contract repo](#using-matching-branches-in-the-central-contract-repo)
     - [Sample Project](#sample-project)
 
 ### Overview
@@ -1770,6 +1771,15 @@ In this example, we may ensure that just the first 2 tests run with the followin
 ```java
 System.setProperty("MAX_TEST_REQUEST_COMBINATIONS", "2");
 ```
+
+
+### Using matching branches in the central contract repo
+
+The command `specmatic test --match-branch` will use a branch of the central repo with the same name as the branch that is locally checked out.
+
+The same is true for `specmatic stub --match-branch`.
+
+More details [here](/documentation/service_virtualization_tutorial.html#using-matching-branches-in-the-central-contract-repo).
 
 ### Sample Project
 
