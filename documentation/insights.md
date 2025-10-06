@@ -16,7 +16,7 @@ nav_order: 20
   - [Setup overview](#setup-overview)
   - [Setting up the central contract repository](#setting-up-the-central-contract-repository)
 - [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
-  - [: Setting Up CI pipeline for client](#-setting-up-ci-pipeline-for-client)
+  - [Step 2.1: Setting Up CI pipeline for client](#step-21-setting-up-ci-pipeline-for-client)
   - [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
   - [Step 2.3: Setting up CI pipeline for Order API](#step-23-setting-up-ci-pipeline-for-order-api)
   - [Summary of Progress](#summary-of-progress)
@@ -228,7 +228,7 @@ sources:
 ```
 
 
-### 2.1: Setting Up CI pipeline for client
+### Step 2.1: Setting Up CI pipeline for client
 
 After the client is up and running and checked into a Git repository, you can create the following CI pipeline to:
 * Build the client app
