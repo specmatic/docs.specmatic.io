@@ -10,6 +10,7 @@ nav_order: 8
 - [Dictionary](#dictionary)
   - [Structure](#structure)
     - [Basic Field Mapping](#basic-field-mapping)
+    - [Parameters Mapping](#parameters-mapping)
     - [Nested Properties](#nested-properties)
     - [Handling Arrays](#handling-arrays)
       - [Nested properties in Arrays](#nested-properties-in-arrays)
@@ -85,6 +86,49 @@ Employee:
 
 - The `name` field is supplied as a `single value` and will be used directly.
 - The `age` field is supplied as a `list of values`, from which either `20`, `30`, or `40` will be `pseudo-random` selected.
+
+### Parameters Mapping
+
+In the `PARAMETERS` section, parameters should organized based on their location: `PATH`, `QUERY`, or `HEADER`. Each key within these groups denotes the parameter name, which may correspond to either a singular value or an array of potential values. When multiple values are specified, one will be selected pseudo-randomly during runtime.
+
+{% tabs parameters %}
+{% tab parameters Single-Value %}
+```yaml
+PARAMETERS:
+  PATH:
+    userId: 123
+    orderId: 456
+  QUERY:
+    sort: date
+    page: 10
+  HEADER:
+    x-request-id: req-12345
+```
+{% endtab %}
+{% tab parameters Multi-Value %}
+```yaml
+PARAMETERS:
+  PATH:
+    userId: 
+    - 123
+    - 456
+    orderId: 
+    - 123
+    - 456
+  QUERY:
+    sort: 
+    - date
+    - time
+    page: 
+    - 10
+    - 20
+  HEADER:
+    x-request-id: 
+    - req-12345
+    - req-67890
+```
+{% endtab %}
+{% endtabs %}
 
 ### Nested Properties
 
