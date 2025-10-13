@@ -4,7 +4,7 @@ title: "Specmatic"
 specmatic-core-version: 2.26.1
 jms_release: 0.1.0
 specmatic-async-version: 1.4.1
-specmatic-studio-version: 1.10.0
+specmatic-studio-version: 1.10.1
 specmatic-openapi-version: 1.13.1
 specmatic-build-reporter-version: 0.0.19
 db_release: 0.61.8-db
