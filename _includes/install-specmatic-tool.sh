@@ -118,7 +118,7 @@ cat <<EOF
 
 🔗 To use $tool_name, add the following to your shell profile ($SHELL_PROFILE):
 
-  echo "alias $download_target='java -jar $JAR_PATH'" >> $SHELL_PROFILE
+  echo "alias $download_target='java \$JAVA_OPTS -jar $JAR_PATH'" >> $SHELL_PROFILE
   echo "source $DOWNLOAD_DIR/$download_target-completion.sh" >> $SHELL_PROFILE
 
 🔄 Restart your terminal or run:
