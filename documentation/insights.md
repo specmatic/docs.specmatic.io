@@ -27,6 +27,7 @@ nav_order: 20
   - [Viewing Your Service Mesh](#viewing-your-service-mesh)
   - [Understanding the Dashboard](#understanding-the-dashboard)
 - [Next Steps](#next-steps)
+- [Working with proxies](#working-with-proxies)
 - [Troubleshooting](#troubleshooting)
 
 <!-- /TOC -->
@@ -478,10 +479,34 @@ Here's an example of what you might see if you have followed the instructions an
 
 Congratulations! You've set up a powerful system for managing and visualizing your APIs. Here are some next steps to consider:
 
-
 - Integrate more of your services into this ecosystem.
 - Use the insights gained to identify areas for improvement in your API design and usage.
 - Leverage Specmatic for contract-driven API development.
+
+## Working with proxies
+
+If you're working behind a corporate firewall or proxy, you may need to configure proxy settings for Specmatic tools to access external resources. Here are the common configurations:
+
+**For Docker deployments:**
+```bash
+docker run \
+  -e JAVA_OPTS='-Dhttp.proxyHost=your-proxy-host -Dhttp.proxyPort=3128 -Dhttps.proxyHost=your-proxy-host -Dhttps.proxyPort=3128' \
+  specmatic/specmatic
+```
+
+**For JAR files:**
+```bash
+java \
+  -Dhttp.proxyHost=your-proxy-host \
+  -Dhttp.proxyPort=3128 \
+  -Dhttps.proxyHost=your-proxy-host \
+  -Dhttps.proxyPort=3128 \
+  -jar specmatic.jar
+```
+
+Replace `your-proxy-host` with your actual proxy server address and `3128` with the appropriate port number. Contact your IT administrator for the correct proxy configuration details if you're unsure.
+
+> **Note:** Specmatic does not support NTLM (NT LAN Manager) authentication for proxies. If your corporate environment uses NTLM proxies, you'll need to set up an intermediary proxy server (such as [CNTLM](http://cntlm.sourceforge.net/) or [Px](https://github.com/genotrance/px)) that can handle NTLM authentication and provide basic/digest authentication or no authentication to Specmatic.
 
 ## Troubleshooting
 
