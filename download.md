@@ -9,7 +9,7 @@ nav_exclude: true
 ## Open Source CLI standalone executable
 
 Download the latest Specmatic standalone executable from the following sources:
-* [Github](https://github.com/specmatic/specmatic/releases/tag/{{ site.specmatic-core-version }})
+* [Github](https://github.com/specmatic/specmatic/releases/download/{{ site.specmatic-core-version }}/specmatic.jar)
 * [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.specmatic-core-version }}/specmatic-executable-all-{{ site.specmatic-core-version }}.jar)
 * [Docker Hub](https://hub.docker.com/r/specmatic/specmatic) - `docker pull specmatic/specmatic`
 
