@@ -18,7 +18,11 @@ error() {
   echo -e "❌ \033[1;31m[ERROR]\033[0m $*"
 }
 
-DOWNLOAD_DIR="$HOME/.specmatic"
+DOWNLOAD_DIR="~/.specmatic"
+JAR_PATH="${DOWNLOAD_DIR}/$download_target.jar"
+
+DOWNLOAD_DIR_ACTUAL="${DOWNLOAD_DIR/#\~/$HOME}"
+JAR_PATH_ACTUAL="${DOWNLOAD_DIR_ACTUAL}/$download_target.jar"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -39,9 +43,10 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
+
 info "Download directory: $DOWNLOAD_DIR"
 
-JAR_PATH="$DOWNLOAD_DIR/$download_target.jar"
+
 
 if command -v wget >/dev/null 2>&1; then
   DOWNLOADER="wget"
@@ -56,12 +61,14 @@ fi
 
 info "Using downloader: $DOWNLOADER"
 
-mkdir -p "$DOWNLOAD_DIR"
+
+mkdir -p ${DOWNLOAD_DIR_ACTUAL}
+
 
 download_success=0
 for url in "${download_urls[@]}"; do
   info "Attempting to download $tool_name from $url"
-  if "$DOWNLOADER" "${DOWNLOADER_ARGS[@]}" "$JAR_PATH" "$url"; then
+  if "$DOWNLOADER" "${DOWNLOADER_ARGS[@]}" "$JAR_PATH_ACTUAL" "$url"; then
     info "Downloaded $tool_name to $JAR_PATH"
     download_success=1
     break
@@ -76,7 +83,7 @@ if [ "$download_success" -eq 0 ]; then
 fi
 
 info "Generating shell completion script..."
-java -cp $JAR_PATH picocli.AutoComplete -n $download_target --force -o "$DOWNLOAD_DIR/$download_target-completion.sh" $main_picocli_command
+java -cp "$JAR_PATH_ACTUAL" picocli.AutoComplete -n $download_target --force -o "$DOWNLOAD_DIR_ACTUAL/$download_target-completion.sh" "$main_picocli_command"
 
 case "$SHELL" in
   */bash)
@@ -118,7 +125,7 @@ cat <<EOF
 
 🔗 To use $tool_name, add the following to your shell profile ($SHELL_PROFILE):
 
-  echo "alias $download_target='java \$JAVA_OPTS -jar $JAR_PATH'" >> $SHELL_PROFILE
+  echo "alias $download_target='java \\\$JAVA_OPTS -jar $JAR_PATH'" >> $SHELL_PROFILE
   echo "source $DOWNLOAD_DIR/$download_target-completion.sh" >> $SHELL_PROFILE
 
 🔄 Restart your terminal or run:
