@@ -1,0 +1,20 @@
+#sample-projects-tabs {
+    margin-top: 2rem;
+
+    & h3 {
+        margin-top: 0rem;
+    }
+}
+
+#sample-projects-tabs ul.tab {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+#sample-projects-tabs ul.tab>li {
+    padding: 0px;
+}
+
+#sample-projects-tabs .tab-click {
+    padding: 0.75rem;
+}
