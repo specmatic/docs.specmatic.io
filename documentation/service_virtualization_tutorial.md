@@ -1870,11 +1870,25 @@ stub:
 
 ## Using matching branches in the central contract repo
 
-The command `specmatic test --match-branch` will use a branch of the central repo with the same name as the branch that is locally checked out.
+Specmatic can be asked to use a branch of the central repo with the same name as the branch that is locally checked out.
 
-The same is true for `specmatic stub --match-branch`.
+This feature may be switched on in the following ways:
+- On the commandline, use `--match-branch`, e.g. `specmatic test --match-branch`, or `specmatic stub --match-branch`.
+- Set an environment variable or system property named `MATCH_BRANCH` to `true`.
+- Set `matchBranch: true` in `specmatic.yaml`
 
-For example, let's say there's a branch in the central contract repo named 'product-discount' with changes to the product API specification. Then to develop the feature, the API developer creates a branch named 'product-discount' in the API repo and makes changes to the API implementation to support the new feature.
+```yaml
+# sample config with matchBranch set
+version: 2
+contracts:
+  - provides:
+    - mobile-backend.yaml
+  - consumes:
+    - product-service.yaml
+matchBranch: true
+```
+
+To understand where this may be useful, consider the following scenario an example. Let's say there's a branch in the central contract repo named 'product-discount' with changes to the product API specification. Then to develop the feature, the API developer creates a branch named 'product-discount' in the API repo and makes changes to the API implementation to support the new feature.
 
 With this setup, the API dveloper can run `specmatic test --match-branch` with the 'product-discount' branch checked out in the API repository, and since there is a branch on the central repo with the same name, specifications from the 'product-discount' branch on the central repo will be used to run tests.
 
