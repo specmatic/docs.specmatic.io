@@ -51,7 +51,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | Back-end for Front-end (BFF) | Python   | Sanic       | [specmatic-order-bff-python-sanic](https://github.com/specmatic/specmatic-order-bff-python-sanic) |
 | Back-end for Front-end (BFF) | GoLang   | Gin         | [specmatic-order-bff-go](https://github.com/znsio/specmatic-order-bff-go)                         |
 | Back-end for Front-end (BFF) | C#       | .NET        | [specmatic-order-bff-csharp](https://github.com/specmatic/specmatic-order-bff-csharp)             |
-| Frotnend                     | JS       | React       | [specmatic-order-ui-react](https://github.com/specmatic/specmatic-order-ui-react)                 |
+| Frontend                     | JS       | React       | [specmatic-order-ui-react](https://github.com/specmatic/specmatic-order-ui-react)                 |
 
 ### Security Schemes
 
