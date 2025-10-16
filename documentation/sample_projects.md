@@ -39,21 +39,23 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 ### Projects
 
-| Layer                        | Language | Framework   | Sample Project                                                                              |
-| ---------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------- |
-| Backend                      | Kotlin   | Spring Boot | [order-api-java](https://github.com/specmatic/specmatic-order-api-java)                     |
-| Backend                      | NodeJS   | Express     | [order-api-nodejs](https://github.com/specmatic/specmatic-order-api-nodejs)                 |
-| Backend                      | Python   | Flask       | [order-api-python](https://github.com/specmatic/specmatic-order-api-python)                 |
-| Back-end for Front-end (BFF) | Kotlin   | Spring Boot | [order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)                     |
-| Back-end for Front-end (BFF) | NodeJS   | Express     | [order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs)                 |
-| Back-end for Front-end (BFF) | Python   | Flask       | [order-bff-python](https://github.com/specmatic/specmatic-order-bff-python)                 |
-| Back-end for Front-end (BFF) | Python   | FastAPI     | [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample) |
-| Back-end for Front-end (BFF) | Python   | Sanic       | [order-bff-python-sanic](https://github.com/specmatic/specmatic-order-bff-python-sanic)     |
-| Back-end for Front-end (BFF) | GoLang   | Gin         | [specmatic-order-bff-go](https://github.com/znsio/specmatic-order-bff-go)                   |
-| Back-end for Front-end (BFF) | C#       | .NET        | [specmatic-order-bff-csharp](https://github.com/specmatic/specmatic-order-bff-csharp)       |
-| Frotnend                     | JS       | React       | [order-ui-react](https://github.com/specmatic/specmatic-order-ui-react)                     |
+| Layer                        | Language | Framework   | Sample Project                                                                                    |
+| ---------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------------- |
+| Backend                      | Kotlin   | Spring Boot | [specmatic-order-api-java](https://github.com/specmatic/specmatic-order-api-java)                 |
+| Backend                      | NodeJS   | Express     | [specmatic-order-api-nodejs](https://github.com/specmatic/specmatic-order-api-nodejs)             |
+| Backend                      | Python   | Flask       | [specmatic-order-api-python](https://github.com/specmatic/specmatic-order-api-python)             |
+| Back-end for Front-end (BFF) | Kotlin   | Spring Boot | [specmatic-order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)                 |
+| Back-end for Front-end (BFF) | NodeJS   | Express     | [specmatic-order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs)             |
+| Back-end for Front-end (BFF) | Python   | Flask       | [specmatic-order-bff-python](https://github.com/specmatic/specmatic-order-bff-python)             |
+| Back-end for Front-end (BFF) | Python   | FastAPI     | [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample)       |
+| Back-end for Front-end (BFF) | Python   | Sanic       | [specmatic-order-bff-python-sanic](https://github.com/specmatic/specmatic-order-bff-python-sanic) |
+| Back-end for Front-end (BFF) | GoLang   | Gin         | [specmatic-order-bff-go](https://github.com/znsio/specmatic-order-bff-go)                         |
+| Back-end for Front-end (BFF) | C#       | .NET        | [specmatic-order-bff-csharp](https://github.com/specmatic/specmatic-order-bff-csharp)             |
+| Frotnend                     | JS       | React       | [specmatic-order-ui-react](https://github.com/specmatic/specmatic-order-ui-react)                 |
 
 ### Security Schemes
+
+![OAuth Architecture](/images/specmatic-oauth-architecture.gif)
 
 | Security | Language | Framework   | Sample Project                                                                                         |
 | -------- | -------- | ----------- | ------------------------------------------------------------------------------------------------------ |
@@ -68,13 +70,15 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 | Protocol     | Interaction Pattern | Language | Framework   | Sample Project                                                                            |
 | ------------ | ------------------- | -------- | ----------- | ----------------------------------------------------------------------------------------- |
-| Kafka        | Fire-n-Forget       | Kotlin   | Spring Boot | [order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)                   |
-| Kafka        | Fire-n-Forget       | NodJS    | Express     | [order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs)               |
+| Kafka        | Fire-n-Forget       | Kotlin   | Spring Boot | [specmatic-order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)         |
+| Kafka        | Fire-n-Forget       | NodeJS   | Express     | [specmatic-order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs)     |
 | Kafka        | Request-Reply       | Kotlin   | Spring Boot | [specmatic-kafka-sample](https://github.com/specmatic/specmatic-kafka-sample)             |
 | GooglePubSub | Pub-Sub             | Kotlin   | Spring Boot | [specmatic-google-pubsub-sample](https://github.com/znsio/specmatic-google-pubsub-sample) |
 | JMS          | Request-Reply       | Kotlin   | Spring Boot | [specmatic-order-bff-jms](https://github.com/znsio/specmatic-order-bff-jms)               |
 
 ### Schema Registries
+
+![Avro Architecture](/images/avro-sample-architecture.png)
 
 | Schema Registry | Language | Framework   | Sample Project                                                                          |
 | --------------- | -------- | ----------- | --------------------------------------------------------------------------------------- |
@@ -92,7 +96,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | ---------------------------- | -------- | ----------- | ----------------------------------------------------------------------------------------------- |
 | Backend                      | Kotlin   | Spring Boot | [specmatic-order-api-grpc-kotlin](https://github.com/specmatic/specmatic-order-api-grpc-kotlin) |
 | Back-end for Front-end (BFF) | Kotlin   | Spring Boot | [specmatic-order-bff-grpc-kotlin](https://github.com/specmatic/specmatic-order-bff-grpc-kotlin) |
-| Back-end for Front-end (BFF) | Kotlin   | Spring Boot | [specmatic-order-bff-grpc-go](https://github.com/specmatic/specmatic-order-bff-grpc-go)         |
+| Back-end for Front-end (BFF) | GoLang   | Gin         | [specmatic-order-bff-grpc-go](https://github.com/specmatic/specmatic-order-bff-grpc-go)         |
 
 {% endtab %}
 
@@ -128,11 +132,54 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | Layer                        | Language | Framework   | Sample Project                                                                              |
 | ---------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------- |
 | Backend                      | Kotlin   | Spring Boot | [specmatic-redis-sample](https://github.com/specmatic/specmatic-redis-sample)               |
-| Back-end for Front-end (BFF) | Kotlin   | Spring Boot | [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample) |
+| Back-end for Front-end (BFF) | Python   | FastAPI     | [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample) |
 {% endtab %}
 
 <!-- WSDL -->
 {% tab modules WSDL %}
+```
+                                      PRODUCTION SETUP
++-------------------+         +--------------------------+         +-------------------+
+|                   |         |                          |         |                   |
+|  WSDL SOAP Client |         |  Product BFF Search      |         |  order_api        |
+|                   |         |  Service (BFF)           |         |  (WSDL Service)   |
++---------+---------+         +-----------+--------------+         +---------+---------+
+          |                               |                                  |
+          | 1. Request (SOAP)             |                                  |
+          +------------------------------>|                                  |
+          |                               |                                  |
+          |                               | 2. Request (SOAP)                |
+          |                               +--------------------------------->|
+          |                               |                                  |
+          |                               |                3. Response (SOAP)|
+          |                               |<---------------------------------+
+          | 4. Response (SOAP)            |                                  |
+          +<------------------------------+                                  |
+```
+```
+                                        CONTRACT TEST SETUP
++-------------------------+         +--------------------------+         +----------------------+
+|                         |         |                          |         |                      |
+| Specmatic Contract Test |         |  Product BFF Search      |         |  Specmatic Mock      |
+|   (WSDL of BFF)         |         |  Service (BFF)           |         |  (WSDL of order_api) |
++-----------+-------------+         +-----------+--------------+         +----------+-----------+
+            |                                   |                                   |
+            | 1. Request (SOAP)                 |                                   |
+            +---------------------------------->|                                   |
+            |                                   |                                   |
+            |                                   | 2. Request (SOAP)                 |
+            |                                   +---------------------------------->|
+            |                                   |                                   |
+            |                                   |                3. Response (SOAP) |
+            |                                   |<----------------------------------+
+            | 4. Response (SOAP)                |                                   |
+            +<----------------------------------+                                   |
+            |                          
+            |--------------------+
+            | 5. Assert response |
+            | against WSDL spec  |
+            +<-------------------+
+```
 ### Projects
 
 | Layer                        | Language | Framework   | Sample Project                                                                    |
@@ -142,20 +189,24 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- ARAZZO -->
 {% tab modules Arazzo %}
+![Arazzo Flow](/images/arazzo-flow.svg)
+
 ### Projects
 
-| Layer                          | Language | Framework | Sample Project                                                                              |
-| ------------------------------ | -------- | --------- | ------------------------------------------------------------------------------------------- |
-| Workflow Provider              | Python   | Flask     | [specmatic-arazzo-sample](https://github.com/specmatic/specmatic-arazzo-sample)             |
-| Workflow Provider (with Async) | Python   | Flask     | [specmatic-arazzo-async-sample](https://github.com/specmatic/specmatic-arazzo-async-sample) |
-| Workflow Consumer              | Python   | Flask     | [specmatic-arazzo-ui-sample](https://github.com/specmatic/specmatic-arazzo-ui-sample)       |
+| Specification         | Language | Framework | Sample Project                                                                              |
+| --------------------- | -------- | --------- | ------------------------------------------------------------------------------------------- |
+| OpenAPI               | Python   | Flask     | [specmatic-arazzo-sample](https://github.com/specmatic/specmatic-arazzo-sample)             |
+| OpenAPI + AsyncAPI    | Python   | Flask     | [specmatic-arazzo-async-sample](https://github.com/specmatic/specmatic-arazzo-async-sample) |
+| OpenAPI with Consumer | Python   | Flask     | [specmatic-arazzo-ui-sample](https://github.com/specmatic/specmatic-arazzo-ui-sample)       |
 {% endtab %}
 
 <!-- MCP -->
 {% tab modules MCP %}
+![MCP Architecture](/images/MCP-Architecture.png)
+
 ### Projects
 
-| MCP         | Sample Project                                                     |
+| MCP Server  | Sample Project                                                     |
 | ----------- | ------------------------------------------------------------------ |
 | Postman     | [mcp-auto-test](https://github.com/specmatic/mcp_auto_test_sample) |
 | HuggingFace | [mcp-auto-test](https://github.com/specmatic/mcp_auto_test_sample) |
@@ -163,6 +214,8 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- CENTRAL REPOSTORIES -->
 {% tab modules Central Repo %}
+![Central Contract Repository](/images/Central-Contract-Repo.png)
+
 ### Projects
 
 | Name                      | Repository                                                                          |
