@@ -72,17 +72,18 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | ------------ | ------------------- | -------- | ----------- | ----------------------------------------------------------------------------------------- |
 | Kafka        | Fire-n-Forget       | Kotlin   | Spring Boot | [specmatic-order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)         |
 | Kafka        | Fire-n-Forget       | NodeJS   | Express     | [specmatic-order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs)     |
-| Kafka        | Request-Reply       | Kotlin   | Spring Boot | [specmatic-kafka-sample](https://github.com/specmatic/specmatic-kafka-sample)             |
-| GooglePubSub | Pub-Sub             | Kotlin   | Spring Boot | [specmatic-google-pubsub-sample](https://github.com/znsio/specmatic-google-pubsub-sample) |
 | JMS          | Request-Reply       | Kotlin   | Spring Boot | [specmatic-order-bff-jms](https://github.com/znsio/specmatic-order-bff-jms)               |
 
-### Schema Registries
+<!-- | Kafka        | Request-Reply       | Kotlin   | Spring Boot | [specmatic-kafka-sample](https://github.com/specmatic/specmatic-kafka-sample)             | -->
+<!-- | GooglePubSub | Pub-Sub             | Kotlin   | Spring Boot | [specmatic-google-pubsub-sample](https://github.com/znsio/specmatic-google-pubsub-sample) | -->
+
+<!-- ### Schema Registries
 
 ![Avro Architecture](/images/avro-sample-architecture.png)
 
 | Schema Registry | Language | Framework   | Sample Project                                                                          |
 | --------------- | -------- | ----------- | --------------------------------------------------------------------------------------- |
-| Avro (Kafka)    | Kotlin   | Spring Boot | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) |
+| Avro (Kafka)    | Kotlin   | Spring Boot | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) | -->
 
 {% endtab %}
 
@@ -116,11 +117,11 @@ Let's discover how Specmatic works across different layers of an app, with help 
 {% tab modules JDBC %}
 ![JDBC Architecture](/images/specmatic-jdbc-architecture.gif)
 
-### Projects
+<!-- ### Projects
 
 | Layer   | Language | Framework   | Sample Project                                                          |
 | ------- | -------- | ----------- | ----------------------------------------------------------------------- |
-| Backend | Kotlin   | Spring Boot | [specmatic-jdbc-sample](https://github.com/znsio/specmatic-jdbc-sample) |
+| Backend | Kotlin   | Spring Boot | [specmatic-jdbc-sample](https://github.com/znsio/specmatic-jdbc-sample) | -->
 {% endtab %}
 
 <!-- REDIS -->
