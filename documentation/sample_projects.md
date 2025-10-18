@@ -117,11 +117,11 @@ Let's discover how Specmatic works across different layers of an app, with help 
 {% tab modules JDBC %}
 ![JDBC Architecture](/images/specmatic-jdbc-architecture.gif)
 
-<!-- ### Projects
+### Projects
 
 | Layer   | Language | Framework   | Sample Project                                                          |
 | ------- | -------- | ----------- | ----------------------------------------------------------------------- |
-| Backend | Kotlin   | Spring Boot | [specmatic-jdbc-sample](https://github.com/znsio/specmatic-jdbc-sample) | -->
+| Backend | Kotlin   | Spring Boot | [specmatic-jdbc-sample](https://github.com/znsio/specmatic-jdbc-sample) |
 {% endtab %}
 
 <!-- REDIS -->
