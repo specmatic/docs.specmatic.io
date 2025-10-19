@@ -1881,7 +1881,10 @@ This feature may be switched on in the following ways:
 # sample config with matchBranch set
 version: 2
 contracts:
-  - provides:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
+      matchBranch: true
+    provides:
     - mobile-backend.yaml
   - consumes:
     - product-service.yaml
