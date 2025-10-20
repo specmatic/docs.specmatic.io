@@ -4,7 +4,7 @@
 
 .tab-wrapper ul {
     margin: 0;
-    padding-left: 0;
+    padding: 0.75em;
     list-style: none;
 }
 
@@ -85,3 +85,8 @@
 .tab > li::before {
     content: "" !important;
 }
+
+ul.tab {
+    padding: 0
+}
+
