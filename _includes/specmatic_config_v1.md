@@ -3,6 +3,7 @@ Configuration
 
 - [Configuration](#configuration)
     - [Getting started](#getting-started)
+      - [Configuration File Location](#configuration-file-location)
       - [Externalized Examples Directories](#externalized-examples-directories)
       - [Contract Test Timeout](#contract-test-timeout)
       - [Configuring Stubs](#configuring-stubs)
@@ -25,7 +26,7 @@ We often have to pass more than one API Specification file to Specmatic to stub 
 
 Also if your contracts are stored in a source control system like Git, we need to provide details about the repository so that Specmatic can pull your specifications directly from your version control.
 
-#### **Configuration File Location**
+#### Configuration File Location
 
 The configuration can be specified in JSON or YAML format. There are several ways to specify the location of your configuration file:
 

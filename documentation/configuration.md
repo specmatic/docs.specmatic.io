@@ -419,8 +419,6 @@ report:
           minThresholdPercentage: 100
           maxMissedEndpointsInSpec: 0
           enforce: true
-        excludedEndpoints:
-          - /health
 ```
 {% endtab %}
 {% tab report_configuration specmatic.json %}
@@ -440,10 +438,7 @@ report:
             "minThresholdPercentage": 100,
             "maxMissedEndpointsInSpec": 0,
             "enforce": true
-          },
-          "excludedEndpoints": [
-            "/health"
-          ]
+          }
         }
       }
     }
@@ -534,8 +529,6 @@ report:
           minThresholdPercentage: 100
           maxMissedEndpointsInSpec: 0
           enforce: true
-        excludedEndpoints:
-          - /health
 ```
 {% endtab %}
 {% tab complete_configuration specmatic.json %}
@@ -598,10 +591,7 @@ report:
             "minThresholdPercentage": 100,
             "maxMissedEndpointsInSpec": 0,
             "enforce": true
-          },
-          "excludedEndpoints": [
-            "/health"
-          ]
+          }
         }
       }
     }
