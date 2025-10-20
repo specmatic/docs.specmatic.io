@@ -12,7 +12,7 @@
     display: flex;
     flex-wrap: nowrap;
     gap: 0;
-    border-bottom: none;
+    border-bottom: 1px solid #ced4da;
     margin-bottom: 0;
     overflow-x: auto;
     overflow-y: hidden;
@@ -30,7 +30,7 @@
     padding: 8px 12px;
     appearance: none;
     border: 1px solid transparent;
-    border-bottom: 1px solid #ced4da;
+    border-bottom: none;
     border-radius: 6px 6px 0 0;
     line-height: 1.4;
     color: #580089;
@@ -48,20 +48,24 @@
     color: #580089;
     background-color: rgba(88, 0, 137, 0.08);
     border-color: #ced4da;
+    border-bottom: none;
 }
 
 .tab > li.active > .tab-click {
     color: #580089;
     background-color: #fff;
     border: 1px solid #ced4da;
-    border-bottom-color: #fff;
+    border-bottom: none;
     box-shadow: 0 2px 4px rgba(13, 110, 253, 0.08);
     z-index: 2;
 }
 
 .tab-content {
-    border: 1px solid #ced4da;
-    border-radius: 0 6px 6px 6px;
+    border-top: none;
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    border-radius: 0 0 6px 6px;
     padding: 20px 24px;
     background-color: #fff;
     margin-top: -1px;
