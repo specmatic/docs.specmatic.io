@@ -19,6 +19,7 @@ Contract Tests
     - [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
     - [When The Example Path Matches Multiple Paths In The API Specification](#when-the-example-path-matches-multiple-paths-in-the-api-specification)
     - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
+    - [Configuring base urls](#configuring-base-urls)
     - [Handling multipart form-data and file uploads](#handling-multipart-form-data-and-file-uploads)
     - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
     - [Handling Application authentication](#handling-application-authentication)
@@ -543,6 +544,58 @@ contracts:
 {% endtabs %}
 
 The filesystem path above is a relative path, but it can also be an absolute path to a file.
+
+### Configuring base urls
+
+If you need to test multiple services with different baseUrls, you can do so by declaring multiple `provides` entries with different `baseUrl` values.
+
+{% tabs config_contractTests_customBaseUrl %}
+{% tab config_contractTests_customBaseUrl specmatic.yaml %}
+```yaml
+version: 2
+contracts:
+  - git:
+      url: <git-url>
+    provides:
+      - baseUrl: http://product-api:8080
+        specs:
+          - product-api-spec.yaml
+      - baseUrl: http://order-bff:8081
+        specs:
+          - order-api-spec.yaml
+          - cart-api-spec.yaml
+```
+{% endtab %}
+{% tab config_contractTests_customBaseUrl specmatic.json %}
+```json
+{
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "<git-url>"
+      },
+      "provides": [
+        {
+          "baseUrl": "http://product-api:8080",
+          "specs": [
+            "product-api-spec.yaml"
+          ]
+        },
+        {
+          "baseUrl": "http://order-bff:8081",
+          "specs": [
+            "order-api-spec.yaml",
+            "cart-api-spec.yaml"
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+{% endtab %}
+{% endtabs %}
 
 ### Handling multipart form-data and file uploads
 
