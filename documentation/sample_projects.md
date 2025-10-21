@@ -90,7 +90,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 | Schema Registry | Language | Framework   | Sample Project                                                                          |
 | --------------- | -------- | ----------- | --------------------------------------------------------------------------------------- |
-| Avro (Kafka)    | Kotlin   | Spring Boot | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) | --> |
+| Avro (Kafka)    | Kotlin   | Spring Boot | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) | -->
 
 {% endtab %}
 
