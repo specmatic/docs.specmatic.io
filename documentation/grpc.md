@@ -87,7 +87,7 @@ message CreateOrderResponse {
 }
 ```
 
-To provide appropriate example values, you can create an example JSON file that has test/stub data pertaining to the `createOrder` method.
+To provide example values for testing and stubbing, you can create a JSON file containing data for the `createOrder` method:
 
 ```json
 {
@@ -102,36 +102,60 @@ To provide appropriate example values, you can create an example JSON file that 
 }
 ```
 
-This file should be stored in a directory called `<file_name_without_extension>_examples`, which is colocated in the same directory as the `.proto` file. This ensures that the example data is easily accessible and logically organized alongside the corresponding `.proto` files.
+You can also define example data to simulate error scenarios for the same method. For example:
 
-Alternatively, you can specify the location of the example directories programmatically or via CLI arguments when running tests or service virtualization. This approach allows for flexibility in how and where the examples are stored, depending on your project’s structure or deployment environment.
+```json
+{
+  "fullMethodName": "com.store.order.bff.OrderService/createOrder",
+  "request": {
+    "productId": 50000,
+    "count": 8
+  },
+  "response": {
+    "errorCode": 5,
+    "errorMessage": "Product with ID 50000 was not found"
+  }
+}
+```
 
-- **Programmatic Approach:** Set the `EXAMPLES_DIR` system property with a comma-separated list of directory paths. Each path should point to a directory containing your example files. For example:
+Here, the `errorCode` field should use one of the standard [google.rpc.Code](https://github.com/googleapis/googleapis/blob/master/google/rpc/code.proto) status codes.
+
+These example files should be stored in a directory named `<file_name_without_extension>_examples`, located in the same directory as the corresponding `.proto` file. This structure keeps your example data organized and easily discoverable alongside the service definitions.
+
+Alternatively, you can configure the example directories programmatically or via command-line arguments, depending on your setup and deployment needs.
+
+* **Programmatic Approach:**
+  Set the `EXAMPLES_DIR` system property with a comma-separated list of directory paths, where each path points to a directory containing your example files. For example:
 
   ```java
   System.setProperty("EXAMPLES_DIR", "path/to/dir1,path/to/dir2");
   ```
 
-  This configuration will include both `path/to/dir1` and `path/to/dir2` as sources for example files.
+  This will include both `path/to/dir1` and `path/to/dir2` as example sources.
 
-- **CLI Approach:** Pass the directories using the `--examples` argument. If there are multiple directories, you can specify the `--examples` argument multiple times. For example:
+* **CLI Approach:**
+  Specify example directories using the `--examples` argument. You can include multiple directories by repeating the argument:
 
   ```bash
   --examples=path/to/dir1 --examples=path/to/dir2
   ```
 
-  This will use `path/to/dir1` and `path/to/dir2` as the locations for example files.
+  Both approaches allow flexible configuration of example file locations.
 
-Both methods provide flexibility, allowing you to configure example file locations according to your specific needs and deployment scenarios.
+#### Understanding the Example Format
 
-Let us now take a deeper look at the external example format:
-* The top-level JSON object contains three keys: `fullMethodName`, `request`, and `response`.
+Each example file follows a simple, structured JSON format:
+
+* The top-level object contains three keys: `fullMethodName`, `request`, and `response`.
 * `fullMethodName` specifies the complete gRPC method name, including the package, service, and method.
-* `request` holds the data that would be sent to the gRPC service, with keys corresponding to the fields in the request message.
-* `response` holds the expected response data from the service, with keys corresponding to the fields in the response message.
+* `request` represents the input message fields sent to the service.
+* `response` represents the expected output or error response from the service.
 
-This approach facilitates the creation of test data that can be used for both contract testing and service virtualization. The example format is designed to be easily readable and writable, allowing you to copy and paste real responses from actual application logs if necessary.
+This format makes it straightforward to create reusable test and stub data that works seamlessly for both contract testing and service virtualization. It’s also designed to be human-readable, making it easy to copy real request/response data directly from logs or runtime traces.
 
+> **Note:**
+> You can refer to [this example](https://github.com/specmatic/specmatic-order-api-grpc-kotlin/blob/main/src/test/resources/specmatic/order_examples/getOrder.json) for a standard scenario, and [this example](https://github.com/specmatic/specmatic-order-api-grpc-kotlin/blob/main/src/test/resources/specmatic/order_examples/getOrderNotFound.json) for an error scenario.
+> Try running [the contract test](https://github.com/specmatic/specmatic-order-api-grpc-kotlin/blob/main/src/test/kotlin/com/store/specmatic_order_api_grpc/ContractTest.kt) to see how Specmatic uses these examples in action.
 
 ### Using the Docker Image
 
