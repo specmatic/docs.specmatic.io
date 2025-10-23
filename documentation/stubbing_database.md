@@ -21,7 +21,7 @@ The following dependencies should be added to `pom.xml`.
    <artifactId>database-mock</artifactId>
    <groupId>io.specmatic</groupId>
    <scope>test</scope>
-   <version>{{ site.db_release }}</version>
+   <version>{{ site.specmatic-jdbc-version }}</version>
    <exclusions>
        <exclusion>
            <groupId>io.specmatic</groupId>

@@ -21,7 +21,7 @@ The following dependency needs to be added to pom.xml.
 <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>specmatic-redis</artifactId>
-    <version>{{ site.redis_release }}</version>
+    <version>{{ site.specmatic-redis-version }}</version>
 </dependency>
 ```
 
