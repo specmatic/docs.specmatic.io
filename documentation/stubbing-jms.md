@@ -25,7 +25,7 @@ The below-mentioned dependency needs to be in pom.xml:
 <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>specmatic-jms</artifactId>
-    <version>{{ site.jms_release }}</version>
+    <version>{{ site.specmatic-jms-version }}</version>
 </dependency>
 ```    
 
