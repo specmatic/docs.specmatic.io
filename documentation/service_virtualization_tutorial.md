@@ -1891,7 +1891,7 @@ contracts:
 matchBranch: true
 ```
 
-To understand where this may be useful, consider the following scenario an example. Let's say there's a branch in the central contract repo named 'product-discount' with changes to the product API specification. Then to develop the feature, the API developer creates a branch named 'product-discount' in the API repo and makes changes to the API implementation to support the new feature.
+To understand where this may be useful, consider the following scenario. Let's say there's a branch in the central contract repo named 'product-discount' with changes to the product API specification. Then to develop the feature, the API developer creates a branch named 'product-discount' in the API repo and makes changes to the API implementation to support the new feature.
 
 With this setup, the API dveloper can run `specmatic test --match-branch` with the 'product-discount' branch checked out in the API repository, and since there is a branch on the central repo with the same name, specifications from the 'product-discount' branch on the central repo will be used to run tests.
 
