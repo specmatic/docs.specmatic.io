@@ -38,6 +38,24 @@ on:
         required: false
         type: string
         default: ''
+      
+      specmatic-jms-version:
+        description: Specmatic JMS Version
+        required: false
+        type: string
+        default: ''
+
+      specmatic-redis-version:
+        description: Specmatic Redis Version
+        required: false
+        type: string
+        default: ''
+
+      specmatic-jdbc-version:
+        description: Specmatic JDBC Version
+        required: false
+        type: string
+        default: ''
 
 jobs:
   bump_version:
@@ -110,6 +128,33 @@ jobs:
           git commit -m "Updated Specmatic Build Reporter Version To ${{ github.event.inputs.specmatic-build-reporter-version }}"
         else
           echo "No Specmatic Build Reporter Version provided, skipping bump."
+        fi
+
+        if [ -n "${{ github.event.inputs.specmatic-jms-version }}" ]; then
+          echo "Bumping Specmatic JMS Version to ${{ github.event.inputs.specmatic-jms-version }}"
+          sed -i "s/^specmatic-jms-version: .*/specmatic-jms-version: ${{ github.event.inputs.specmatic-jms-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic JMS Version To ${{ github.event.inputs.specmatic-jms-version }}"
+        else
+          echo "No Specmatic JMS Version provided, skipping bump."
+        fi
+
+        if [ -n "${{ github.event.inputs.specmatic-redis-version }}" ]; then
+          echo "Bumping Specmatic Redis Version to ${{ github.event.inputs.specmatic-redis-version }}"
+          sed -i "s/^specmatic-redis-version: .*/specmatic-redis-version: ${{ github.event.inputs.specmatic-redis-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic Redis Version To ${{ github.event.inputs.specmatic-redis-version }}"
+        else
+          echo "No Specmatic Redis Version provided, skipping bump."
+        fi
+
+        if [ -n "${{ github.event.inputs.specmatic-jdbc-version }}" ]; then
+          echo "Bumping Specmatic JDBC Version to ${{ github.event.inputs.specmatic-jdbc-version }}"
+          sed -i "s/^specmatic-jdbc-version: .*/specmatic-jdbc-version: ${{ github.event.inputs.specmatic-jdbc-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic JDBC Version To ${{ github.event.inputs.specmatic-jdbc-version }}"
+        else
+          echo "No Specmatic JDBC Version provided, skipping bump."
         fi
 
     - name: Git push
