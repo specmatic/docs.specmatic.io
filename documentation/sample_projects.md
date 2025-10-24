@@ -75,22 +75,20 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 ### Projects
 
-| Protocol | Interaction Pattern | Language | Framework   | Sample Project                                                                        |
-| -------- | ------------------- | -------- | ----------- | ------------------------------------------------------------------------------------- |
-| Kafka    | Fire-n-Forget       | Kotlin   | Spring Boot | [specmatic-order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)     |
-| Kafka    | Fire-n-Forget       | NodeJS   | Express     | [specmatic-order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs) |
-| JMS      | Request-Reply       | Kotlin   | Spring Boot | [specmatic-order-bff-jms](https://github.com/znsio/specmatic-order-bff-jms)           |
+| Protocol     | Interaction Pattern | Language | Framework   | Sample Project                                                                            |
+| ------------ | ------------------- | -------- | ----------- | ----------------------------------------------------------------------------------------- |
+| Kafka        | Fire-n-Forget       | Kotlin   | Spring Boot | [specmatic-order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)         |
+| Kafka        | Fire-n-Forget       | NodeJS   | Express     | [specmatic-order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs)     |
+| Kafka        | Request-Reply       | Kotlin   | Spring Boot | [specmatic-kafka-sample](https://github.com/specmatic/specmatic-kafka-sample)             |
+| JMS          | Request-Reply       | Kotlin   | Spring Boot | [specmatic-order-bff-jms](https://github.com/znsio/specmatic-order-bff-jms)               |
 
-<!-- | Kafka        | Request-Reply       | Kotlin   | Spring Boot | [specmatic-kafka-sample](https://github.com/specmatic/specmatic-kafka-sample)             | -->
-<!-- | GooglePubSub | Pub-Sub             | Kotlin   | Spring Boot | [specmatic-google-pubsub-sample](https://github.com/znsio/specmatic-google-pubsub-sample) | -->
-
-<!-- ### Schema Registries
+### Schema Registries
 
 ![Avro Architecture](/images/avro-sample-architecture.png)
 
 | Schema Registry | Language | Framework   | Sample Project                                                                          |
 | --------------- | -------- | ----------- | --------------------------------------------------------------------------------------- |
-| Avro (Kafka)    | Kotlin   | Spring Boot | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) | -->
+| Avro (Kafka)    | Kotlin   | Spring Boot | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) |
 
 {% endtab %}
 
