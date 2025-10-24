@@ -18,7 +18,7 @@ Commercial
   - [Verify Expectations](#verify-expectations)
   - [Stop the JMS Server](#stop-the-jms-server)
   - [Inject an ActiveMQ JMS client using JNDI](#inject-an-activemq-jms-client-using-jndi)
-  - [Sample Application](#sample-application)
+  - [Sample Applications](#sample-applications)
 
 {: .note}
 The `specmatic-jms` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
@@ -161,7 +161,7 @@ On running the application, JMS calls are redirected to the newly created server
 
 Depending on your context, you may need to additional methods in TestInitialContextFactory.
 
-## Sample Application
+## Sample Applications
 
 Please have a look at one of the below mentioned sample applications to understand how to utilize `Specmatic-JMS` in your application
 - [specmatic-order-bff-jms](https://github.com/specmatic/specmatic-order-bff-jms/tree/main/src/test/kotlin/com/component/orders)
