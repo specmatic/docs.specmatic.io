@@ -11,34 +11,34 @@ Commercial
 {: .label }
 
 - [Database Stubbing](#database-stubbing)
-  - [Introduction to Database Stubbing](#introduction-to-database-stubbing)
-  - [Pre-requisites](#pre-requisites)
-  - [Setup The Stub Server](#setup-the-stub-server)
-  - [Setting Up Database Expectations](#setting-up-database-expectations)
-    - [Using a Directory of Expectations](#using-a-directory-of-expectations)
-    - [Posting Expectations](#posting-expectations)
-  - [Expectations Formats](#expectations-formats)
-    - [SELECT statements](#select-statements)
-    - [DML Statements (INSERT, UPDATE, DELETE)](#dml-statements-insert-update-delete)
-      - [INSERT statements](#insert-statements)
-      - [UPDATE statements](#update-statements)
-      - [DELETE statements](#delete-statements)
-    - [Mocking Aggregate or Computed Results](#mocking-aggregate-or-computed-results)
-    - [Using Placeholders and Special Value Types](#using-placeholders-and-special-value-types)
-    - [Regex Matching for Flexible Queries](#regex-matching-for-flexible-queries)
-  - [Sample Applications](#sample-applications)
+    - [Introduction to Database Stubbing](#introduction-to-database-stubbing)
+    - [Pre-requisites](#pre-requisites)
+    - [Setup The Stub Server](#setup-the-stub-server)
+    - [Setting Up Database Expectations](#setting-up-database-expectations)
+      - [Using a Directory of Expectations](#using-a-directory-of-expectations)
+      - [Posting Expectations](#posting-expectations)
+    - [Expectations Formats](#expectations-formats)
+      - [SELECT statements](#select-statements)
+      - [DML Statements (INSERT, UPDATE, DELETE)](#dml-statements-insert-update-delete)
+        - [INSERT statements](#insert-statements)
+        - [UPDATE statements](#update-statements)
+        - [DELETE statements](#delete-statements)
+      - [Mocking Aggregate or Computed Results](#mocking-aggregate-or-computed-results)
+      - [Using Placeholders and Special Value Types](#using-placeholders-and-special-value-types)
+      - [Regex Matching for Flexible Queries](#regex-matching-for-flexible-queries)
+    - [Sample Applications](#sample-applications)
 
 
 {: .note}
 The `specmatic-jdbc` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
 
-## Introduction to Database Stubbing
+### Introduction to Database Stubbing
 
 Database stubbing allows you to simulate database behavior without connecting to a real database. It’s useful for testing application logic, verifying SQL queries, and controlling predictable responses during development. 
 
 By defining stubs for different SQL operations such as `SELECT`, `INSERT`, `UPDATE`, and `DELETE` you can emulate how your application interacts with the database while keeping tests fast, isolated, and reproducible.
 
-## Pre-requisites
+### Pre-requisites
 
 The below-mentioned dependency needs to be in your application's `build.gradle` or `pom.xml`
 
@@ -80,7 +80,7 @@ testImplementation("xerces:xercesImpl:2.12.0")
 {% endtab %}
 {% endtabs %}
 
-## Setup The Stub Server
+### Setup The Stub Server
 
 Specmatic JDBC leverages the Specmatic HTTP server, as the two have a number of features in common<br/>
 
@@ -100,10 +100,10 @@ Specmatic JDBC leverages the Specmatic HTTP server, as the two have a number of 
   spring.main.allow-bean-definition-overriding=true
   ```
 
-## Setting Up Database Expectations
+### Setting Up Database Expectations
 When writing integration or contract tests involving database stubs, you need to set expectations representing the database queries and their expected results. This is typically done by posting expectation JSON files to the running Specmatic stub server before executing tests, or passing the expectations as part of the test setup.
 
-### Using a Directory of Expectations
+#### Using a Directory of Expectations
 
 If you have a directory containing multiple database expectation files, the easiest and cleanest approach is to instantiate `Specmatic-JDBC` with the stub port and the path to that directory. This allows Specmatic to automatically read and post all expectations for you, keeping your test setup simple and maintainable.
 
@@ -113,7 +113,7 @@ jdbcMockFactory.createDataSource(DATABASE_STUB_PORT, DATABASE_EXPECTATIONS_DIREC
 * `DATABASE_STUB_PORT`: The port on which the Specmatic database stub runs (e.g., `9090`).
 * `DATABASE_EXPECTATIONS_DIRECTORY`: The path to your expectations folder (e.g., `src/test/resources/db_stub_expectations`).
 
-### Posting Expectations
+#### Posting Expectations
 
 In some cases, you may want to post expectations from specific files located anywhere for example `src/test/resources/` directory, rather than processing an entire folder. For such scenarios, you can explicitly list and post only those files to the expectations endpoint `http://localhost:{PORT}}/_specmatic/expectations`
 
@@ -150,13 +150,13 @@ private static void setExpectation(String expectation, String dbExpectationsURL)
 
 This method gives you fine-grained control to load expectations only from the files relevant to that test, rather than loading the entire directories.
 
-## Expectations Formats
+### Expectations Formats
 
 The Expectations Formats define how to specify database query stubs for `Specmatic-JDBC` mock. Each expectation describes how a particular SQL statement should behave when executed, allowing you to define fixed results for `SELECT` queries or control update effects for `INSERT`, `UPDATE`, and `DELETE` statements.
 
 The following examples show consistent patterns for defining expectations across different SQL operations.
 
-### SELECT statements
+#### SELECT statements
 
 `SELECT` statements are used to retrieve data from a table. When stubbing these, you simulate the database returning rows of structured data that the application would expect.
 
@@ -174,12 +174,12 @@ Here’s an example showing how to mock a `SELECT` query for a column called nam
 }
 ```
 
-### DML Statements (INSERT, UPDATE, DELETE)
+#### DML Statements (INSERT, UPDATE, DELETE)
 
 `INSERT`, `UPDATE`, and `DELETE` statements affect table data but typically don’t return rows. 
 Instead, they return metadata such as how many rows were modified or what new keys were generated.
 
-#### INSERT statements
+##### INSERT statements
 
 This stub represents an INSERT operation into the STUDENTS table, creating a new student named Charles and returning a generated key, 
 It communicates that one row was inserted and assigns the auto-generated ID 10 to the new record.
@@ -196,7 +196,7 @@ It communicates that one row was inserted and assigns the auto-generated ID 10 t
 }
 ```
 
-#### UPDATE statements
+##### UPDATE statements
 
 This stub simulates an `UPDATE` query that modifies two rows in the database:
 
@@ -209,7 +209,7 @@ This stub simulates an `UPDATE` query that modifies two rows in the database:
 }
 ```
 
-#### DELETE statements
+##### DELETE statements
 
 This stub indicates that one row was deleted when the query was executed:
 
@@ -222,7 +222,7 @@ This stub indicates that one row was deleted when the query was executed:
 }
 ```
 
-### Mocking Aggregate or Computed Results
+#### Mocking Aggregate or Computed Results
 
 Sometimes, the query doesn’t return full records but rather computed values such as counts or averages. You can stub these the same way as regular `SELECT` results.
 
@@ -239,7 +239,7 @@ Here’s an example that mocks a query returning the result of a count operation
 }
 ```
 
-### Using Placeholders and Special Value Types
+#### Using Placeholders and Special Value Types
 
 Sometimes, mock data needs to convey not just the value but also its intended data type, for example, to show that a field should be treated as a date rather than as plain text.
 
@@ -256,7 +256,7 @@ You can do this by using typed placeholders with the format `(mocktype:<type>)`,
 }
 ```
 
-### Regex Matching for Flexible Queries
+#### Regex Matching for Flexible Queries
 
 When query parameters vary but you want to match the general pattern, you can use `queryRegex` instead of an exact query field. This allows for pattern-based matching.
 For example this stub matches any `UPDATE` statement that changes the language column for some country, regardless of the specific values:
@@ -284,7 +284,7 @@ For example this captures any vaguely similar SELECT statement and returns a moc
 }
 ```
 
-## Sample Applications
+### Sample Applications
 
 Please have a look at one of the below mentioned sample applications to understand how to utilize `Specmatic-JDBC` in your application
 - [specmatic-jdbc-sample](https://github.com/specmatic/specmatic-jdbc-sample/tree/master/src/test/java/com/component/products)
