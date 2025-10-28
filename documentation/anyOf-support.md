@@ -9,6 +9,7 @@ anyOf Support
 =============
 - [anyOf Support](#anyof-support)
   - [Test generation](#test-generation)
+  - [Object generation](#object-generation)
   - [Validation](#validation)
 
 While `anyOf`  contains a list of schemas, like `oneOf`, a value may match one or more of the schemas in the list, while with oneOf the value may match just one of the schemas in the list. This results in subtle differences in how anyOf support has been implemented, which are documented here.
@@ -47,6 +48,10 @@ The following test requests would be generated:
 3. a test with `data` containing both `name` (string) and `age` (integer) properties
 
 The last at the end is not generated when generating tests for `oneOf`.
+
+## Object generation
+
+When generating a JSON object from a schema that contains `anyOf`, one schema is selected at random and an object is generated from it based on that schema. This applies to example generation as well as response generation during testing.
 
 ## Validation
 
