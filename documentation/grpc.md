@@ -13,6 +13,7 @@ nav_order: 18
   - [Quick Start](#quick-start)
   - [Detailed explanation](#detailed-explanation)
     - [Using your proto files as your API Contracts](#using-your-proto-files-as-your-api-contracts)
+    - [Support for Local Imports in Proto Files](#support-for-local-imports-in-proto-files)
     - [Using Externalized Examples as Test/Stub Data for gRPC in Contract Tests and Service Virtualization](#using-externalized-examples-as-teststub-data-for-grpc-in-contract-tests-and-service-virtualization)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub Service](#starting-the-stub-service)
@@ -63,6 +64,75 @@ sources:
 ```
 
 Make sure to update the `repository` and `consumes` sections to reflect your actual contract repository and .proto file locations.
+
+### Support for Local Imports in Proto Files
+
+Specmatic gRPC also supports proto files that import other proto files locally. There are two scenarios:
+
+1. **Locally imported file in the same folder:**
+   - If your proto file imports another proto file that is present in the same directory, Specmatic gRPC will automatically resolve the import. No additional configuration is required.
+
+2. **Locally imported file in a different folder:**
+   - If your proto file imports another proto file from a different directory, Specmatic gRPC will not resolve the import automatically. You need to specify the import path so Specmatic can locate the imported file.
+   - **Programmatic Approach:** Set the `IMPORT_PATHS` system property with the path to the folder containing the imported proto files. For example:
+     ```java
+     System.setProperty("IMPORT_PATHS", "path/to/imported/protos");
+     ```
+   - **CLI Approach:** Use the `--import-path` argument to specify the folder path. For example:
+     ```bash
+     --import-path=path/to/imported/protos
+     ```
+
+You can specify multiple import paths by providing a comma-separated list (for the system property) or by repeating the `--import-path` argument in the CLI. This ensures that all locally imported proto files are correctly resolved during contract testing and service virtualization.
+
+> **Note:** If you encounter import errors, verify that the import paths are correctly set and that all referenced proto files are accessible in the specified directories.
+
+#### Example: Local Import Usage
+
+Suppose you have the following directory structure:
+
+```
+contracts/
+  order.proto
+  common/
+    types.proto
+```
+
+And your `order.proto` file contains:
+
+```protobuf
+syntax = "proto3";
+
+import "common/types.proto";
+
+package com.store.order;
+
+// ... service and message definitions ...
+```
+
+If you run Specmatic gRPC from the `contracts` directory, it will automatically resolve the import if `common/types.proto` is inside `contracts/common`.
+
+If `types.proto` is located outside the `contracts` directory, for example:
+
+```
+contracts/
+  order.proto
+external-protos/
+  types.proto
+```
+
+Then you need to specify the import path:
+
+- **Programmatic Approach:**
+  ```java
+  System.setProperty("IMPORT_PATHS", "../external-protos");
+  ```
+- **CLI Approach:**
+  ```bash
+  --import-path=../external-protos
+  ```
+
+This ensures Specmatic gRPC can locate and resolve the imported `types.proto` file during contract testing and service virtualization.
 
 ### Using Externalized Examples as Test/Stub Data for gRPC in Contract Tests and Service Virtualization
 
