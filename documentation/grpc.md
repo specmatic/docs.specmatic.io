@@ -14,6 +14,7 @@ nav_order: 18
   - [Detailed explanation](#detailed-explanation)
     - [Using your proto files as your API Contracts](#using-your-proto-files-as-your-api-contracts)
     - [Support for Local Imports in Proto Files](#support-for-local-imports-in-proto-files)
+    - [Support for Well-Known Remote Imports](#support-for-well-known-remote-imports)
     - [Using Externalized Examples as Test/Stub Data for gRPC in Contract Tests and Service Virtualization](#using-externalized-examples-as-teststub-data-for-grpc-in-contract-tests-and-service-virtualization)
     - [Using the Docker Image](#using-the-docker-image)
       - [Starting the Stub Service](#starting-the-stub-service)
@@ -133,6 +134,28 @@ Then you need to specify the import path:
   ```
 
 This ensures Specmatic gRPC can locate and resolve the imported `types.proto` file during contract testing and service virtualization.
+
+### Support for Well-Known Remote Imports
+
+Specmatic gRPC also supports some well-known remote imports, such as `google/protobuf/Empty.proto` and other standard Google protobuf types. These files are automatically resolved by Specmatic gRPC and do not require you to download or configure them manually.
+
+For example, you can use the following import in your proto file:
+
+```protobuf
+import "google/protobuf/Empty.proto";
+```
+
+You can then use the `Empty` message type in your service definitions:
+
+```protobuf
+service HealthCheck {
+  rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+```
+
+Specmatic gRPC will automatically resolve these well-known types during contract testing and service virtualization. No additional configuration or import path setup is required for these standard imports.
+
+> **Note:** If you use other remote or custom proto files that are not well-known, you may need to provide them locally and use the import path configuration as described in the previous section.
 
 ### Using Externalized Examples as Test/Stub Data for gRPC in Contract Tests and Service Virtualization
 
