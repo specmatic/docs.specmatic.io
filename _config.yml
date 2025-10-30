@@ -6,7 +6,7 @@ specmatic-jms-version: 0.1.0
 specmatic-async-version: 1.5.2
 specmatic-studio-version: 1.11.0
 specmatic-openapi-version: 1.15.0
-specmatic-build-reporter-version: 0.0.20
+specmatic-build-reporter-version: 0.0.21
 specmatic-jdbc-version: 0.61.8-db
 specmatic-redis-version: 0.9.0
 specmatic-release-test-version: 0.0.2
