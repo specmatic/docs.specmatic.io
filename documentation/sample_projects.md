@@ -258,9 +258,9 @@ Converting existing mocks to Specmatic.
 
 ### Projects
 
-| MCP Server | Sample Project                                                                         |
-| ---------- | -------------------------------------------------------------------------------------- |
-| Wiremock   | [wiremock-to-specmatic](https://github.com/specmatic/wiremock-to-specmatic-conversion) |
+| Convert from | Sample Project                                                                         |
+| ------------ | -------------------------------------------------------------------------------------- |
+| Wiremock     | [wiremock-to-specmatic](https://github.com/specmatic/wiremock-to-specmatic-conversion) |
 
 {% endtab %}
 
