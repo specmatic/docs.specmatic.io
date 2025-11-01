@@ -775,31 +775,29 @@ This demonstrates how Specmatic supports multi-field requests with aliases, allo
 
 You can now mock out errors in examples, like this:
 
-```json
-{
-  "data": {
-    "productById": {
-      "id": "10",
-      "name": "The Almanac",
-      "type": "book"
-    }
-  },
-  "errors": [
-    {
-      "message": "Inventory data not available",
-      "locations": [
-        {
-          "line": 3,
-          "column": 5
+```yaml
+request:
+  body: |
+    query {
+        book(id: "10") {
+            id
+            name
+            type
         }
-      ],
-      "path": [
-        "productById",
-        "inventory"
-      ]
+    }
+
+response:
+  body:
+    id: "10"
+    name: The Almanac
+    type: null
+
+errors: [
+    {
+      "message": "Address service is unavailable",
+      "path": [ "book", "type" ]
     }
   ]
-}
 ```
 
 The error schema is validated as per the GraphQL specification. The path is additionally validated to ensure it points to a valid field in the GraphQL schema.
