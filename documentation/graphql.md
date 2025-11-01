@@ -22,6 +22,7 @@ nav_order: 18
   - [Dynamic Field Selection from Example Responses](#dynamic-field-selection-from-example-responses)
   - [Multi-Query Requests](#multi-query-requests)
       - [Steps to Try Out Multi-Query Requests](#steps-to-try-out-multi-query-requests)
+  - [Errors](#errors)
   - [GraphQL Scalar Types](#graphql-scalar-types)
   - [Running contract tests](#running-contract-tests)
   - [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
@@ -549,10 +550,10 @@ To showcase this, let's reuse the folder structure established in the previous s
 3. **Create `specmatic.yaml` File**: Add the following `specmatic.yaml` file to the root folder:
 
    ```yaml
-   contract_repositories:
-     - type: filesystem
-       consumes:
-         - product-api.graphql
+   version: 2
+   contracts:
+   - consumes:
+     - product-api.graphql
    ```
 
 4. **Run the GraphQL Stub**:
@@ -599,9 +600,10 @@ To showcase this, let's reuse the folder structure established in the previous s
      }
    }
    ```
+
 Here's an example of a multi-query request using variables. This demonstrates how Specmatic can handle a single request with multiple queries, where each query may use variables.
 
-7. **Send a Multi-Query Request with Variables**:
+6. **Send a Multi-Query Request with Variables**:
    Use the following `curl` command:
 
    ```bash
@@ -653,6 +655,39 @@ This request showcases how Specmatic's GraphQL stub server can process multi-que
 
 This example demonstrates how Specmatic processes multiple queries in a single request and returns the expected responses for each query. You can adapt this setup for various use cases, leveraging the existing folder structure for organizing examples.
 
+## Errors
+
+You can now mock out errors in examples, like this:
+
+```json
+{
+  "data": {
+    "productById": {
+      "id": "10",
+      "name": "The Almanac",
+      "type": "book"
+    }
+  },
+  "errors": [
+    {
+      "message": "Inventory data not available",
+      "locations": [
+        {
+          "line": 3,
+          "column": 5
+        }
+      ],
+      "path": [
+        "productById",
+        "inventory"
+      ]
+    }
+  ]
+}
+```
+
+The error schema is validated as per the GraphQL specification. The path is additionally validated to ensure it points to a valid field in the GraphQL schema.
+
 ## GraphQL Scalar Types
 
 In GraphQL, you can define [custom scalar types](https://graphql.org/learn/schema/#scalar-types) to handle specialized data, such as dates or monetary values, that require specific serialization and deserialization logic. For example:
@@ -679,28 +714,12 @@ In this schema, `Date` is a custom scalar. While GraphQL doesn't provide details
 
 When testing queries like `findOffersForDate` using Specmatic, the tool doesn't know how to correctly handle the `Date` scalar and might pass an incorrect value, such as a random string, leading to test failures.
 
-To guide Specmatic, you can provide externalized examples that specify valid inputs for custom scalars like `Date`. For instance:
+Specmatic supports the following custom scalar types out-of-the box:
 
-```yaml
-request:
-  body: |
-    query {
-      findOffersForDate(date: "2024/12/31") { offerCode, validUntil }
-    }
+- Date, DateTime
+- Long, Double, BigDecimal
 
-response: [
-  {
-    "offerCode": "WKND30",
-    "validUntil": "2024/12/12"
-  },
-  {
-    "offerCode": "SUNDAY20",
-    "validUntil": "2024/12/25"
-  }
-]
-```
-
-Here, the `Date` scalar is provided with a valid value (`"2024/12/31"`). This ensures that during testing, Specmatic uses the correct format for the `Date` argument, allowing your tests to run smoothly without failures caused by incorrect data types.
+For other data types, you can provide externalized examples that specify valid inputs for custom scalars like.
 
 ## Running contract tests
 
