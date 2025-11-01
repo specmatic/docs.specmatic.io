@@ -20,8 +20,10 @@ nav_order: 18
   - [GraphQL Variables](#graphql-variables)
   - [Delayed responses](#delayed-responses)
   - [Dynamic Field Selection from Example Responses](#dynamic-field-selection-from-example-responses)
-  - [Multi-Query Requests](#multi-query-requests)
-      - [Steps to Try Out Multi-Query Requests](#steps-to-try-out-multi-query-requests)
+  - [Multi-Field Queries](#multi-field-queries)
+      - [Steps to Try Out Multi-Field Queries](#steps-to-try-out-multi-field-queries)
+  - [Aliases](#aliases)
+      - [Steps to Try Out Multi-Field Requests](#steps-to-try-out-multi-field-requests)
   - [Errors](#errors)
   - [GraphQL Scalar Types](#graphql-scalar-types)
   - [Running contract tests](#running-contract-tests)
@@ -464,13 +466,13 @@ Here are some simple steps to try this out:
 ---
 This setup allows you to test how Specmatic reuses the example provided, adapting the response to the requested fields.
 
-## Multi-Query Requests
+## Multi-Field Queries
 
-The Specmatic GraphQL stub server supports multi-query requests, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-query requests with variables** are supported, making it flexible for dynamic requests.
+The Specmatic GraphQL stub server supports multi-field queries, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-field queries with variables** are supported, making it flexible for dynamic requests.
 
 To showcase this, let's reuse the folder structure established in the previous section on dynamic field selection.
 
-#### Steps to Try Out Multi-Query Requests
+#### Steps to Try Out Multi-Field Queries
 
 1. **Create the GraphQL SDL File**: Create a file named `product-api.graphql` with the following schema:
    ```graphql
@@ -601,9 +603,9 @@ To showcase this, let's reuse the folder structure established in the previous s
    }
    ```
 
-Here's an example of a multi-query request using variables. This demonstrates how Specmatic can handle a single request with multiple queries, where each query may use variables.
+Here's an example of a multi-field query using variables. This demonstrates how Specmatic can handle a single request with multiple queries, where each query may use variables.
 
-6. **Send a Multi-Query Request with Variables**:
+6. **Send a Multi-Field Query Request with Variables**:
    Use the following `curl` command:
 
    ```bash
@@ -654,6 +656,120 @@ In this example:
 This request showcases how Specmatic's GraphQL stub server can process multi-query requests with variables, offering flexibility and efficiency in response generation.
 
 This example demonstrates how Specmatic processes multiple queries in a single request and returns the expected responses for each query. You can adapt this setup for various use cases, leveraging the existing folder structure for organizing examples.
+
+## Aliases
+
+GraphQL allows you to use aliases to fetch the same field multiple times with different arguments, or to organize the response structure for clarity. Specmatic supports GraphQL aliases.
+
+Aliases are useful when you want to query the same field with different parameters, or when you want to rename fields in the response for easier consumption.
+
+Let's see how it works using the same product-related GraphQL spec and example files described above.
+
+#### Steps to Try Out Multi-Field Requests
+
+1. **Create the GraphQL SDL File**: Use the same `product-api.graphql` schema as in the Multi-Query Requests section:
+   ```graphql
+   schema {
+       query: Query
+       mutation: Mutation
+   }
+
+   enum ProductType {
+     gadget
+     book
+     food
+     other
+   }
+
+   type Query {
+     findAvailableProducts(type: ProductType!, pageSize: Int): [Product]
+     productById(id: ID!): Product
+   }
+
+   type Product {
+     id: ID!
+     name: String!
+     inventory: Int!
+     type: ProductType!
+   }
+   ```
+
+2. **Set Up Example Files**: In the `examples` folder, use the same example files as in the Multi-Query Requests section:
+   - `find_available_gadgets.yaml`
+   - `product_by_id.yaml`
+
+3. **Create `specmatic.yaml` File**: Use the same configuration as before:
+
+   ```yaml
+   contract_repositories:
+     - type: filesystem
+       consumes:
+         - product-api.graphql
+   ```
+
+4. **Run the GraphQL Stub**:
+   ```bash
+   docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
+     -v "$PWD/examples:/usr/src/app/examples" \
+     -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+     -p 9000:9000 specmatic/specmatic-graphql virtualize --port=9000 --examples=examples
+   ```
+
+5. **Send a Multi-Field Request Using Aliases**:
+   You can use aliases to fetch the same field multiple times with different arguments. For example:
+   ```graphql
+   query ProductData {
+     firstProduct: productById(id: "10") {
+       id
+       name
+       type
+     }
+     availableGadgets: findAvailableProducts(type: gadget, pageSize: 10) {
+       id
+       name
+       inventory
+       type
+     }
+   }
+   ```
+
+   To try this out, send the following `curl` request:
+   ```bash
+   curl -X POST http://localhost:9000/graphql \
+     -H "Content-Type: application/json" \
+     -d '{
+       "query": "query ProductData { firstProduct: productById(id: \"10\") { id name type } availableGadgets: findAvailableProducts(type: gadget, pageSize: 10) { id name inventory type } }"
+     }'
+   ```
+
+   **Expected Response:**
+   ```json
+   {
+     "data": {
+       "firstProduct": {
+         "id": "10",
+         "name": "The Almanac",
+         "type": "book"
+       },
+       "availableGadgets": [
+         {
+           "id": "10",
+           "name": "The Almanac",
+           "inventory": 10,
+           "type": "book"
+         },
+         {
+           "id": "20",
+           "name": "iPhone",
+           "inventory": 15,
+           "type": "gadget"
+         }
+       ]
+     }
+   }
+   ```
+
+This demonstrates how Specmatic supports multi-field requests with aliases, allowing you to fetch the same field multiple times with different arguments and organize your response structure as needed.
 
 ## Errors
 
