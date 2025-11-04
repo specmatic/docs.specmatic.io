@@ -28,6 +28,8 @@ nav_order: 18
   - [GraphQL Scalar Types](#graphql-scalar-types)
   - [Running contract tests](#running-contract-tests)
   - [Using your GraphQL files as your API Contracts from Central Contract Repository](#using-your-graphql-files-as-your-api-contracts-from-central-contract-repository)
+  - [Introspection](#introspection)
+  - [GraphiQL GUI](#graphiql-gui)
 <!-- TOC -->
 
 ## Introduction
@@ -863,3 +865,11 @@ contracts:
 ```
 
 Make sure to update the `repository`, `provides` and `consumes` sections to reflect your actual contract repository and .graphqls file locations.
+
+## Introspection
+
+Specmatic supports GraphQL introspection queries, allowing clients to query the GraphQL schema. This is useful for tools such as GraphQL GUI clients that read the GraphQL schema using introspection and provide features like autocompletion and documentation.
+
+## GraphiQL GUI
+
+Specmatic ships with the GraphiQL GUI, an in-browser GraphQL IDE, that you can use to explore and test your GraphQL APIs. You can access it at `http://localhost:9000/graphiql` when your Specmatic GraphQL stub server is running.
