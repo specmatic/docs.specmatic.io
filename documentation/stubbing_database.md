@@ -15,8 +15,6 @@ Commercial
     - [Pre-requisites](#pre-requisites)
     - [Setup The Stub Server](#setup-the-stub-server)
     - [Setting Up Database Expectations](#setting-up-database-expectations)
-      - [Using a Directory of Expectations](#using-a-directory-of-expectations)
-      - [Posting Expectations](#posting-expectations)
     - [Expectations Formats](#expectations-formats)
       - [SELECT statements](#select-statements)
       - [DML Statements (INSERT, UPDATE, DELETE)](#dml-statements-insert-update-delete)
@@ -84,7 +82,7 @@ testImplementation("xerces:xercesImpl:2.12.0")
 
 Specmatic JDBC leverages the Specmatic HTTP server, as the two have a number of features in common<br/>
 
-* Setup the following bean in the test section:
+* Setup the following bean in your tests:
 
   ```java
   @Primary
@@ -101,54 +99,13 @@ Specmatic JDBC leverages the Specmatic HTTP server, as the two have a number of 
   ```
 
 ### Setting Up Database Expectations
-When writing integration or contract tests involving database stubs, you need to set expectations representing the database queries and their expected results. This is typically done by posting expectation JSON files to the running Specmatic stub server before executing tests, or passing the expectations as part of the test setup.
-
-#### Using a Directory of Expectations
-
-If you have a directory containing multiple database expectation files, the easiest and cleanest approach is to instantiate `Specmatic-JDBC` with the stub port and the path to that directory. This allows Specmatic to automatically read and post all expectations for you, keeping your test setup simple and maintainable.
+When writing integration or contract tests involving database stubs, you need to set expectations representing the database queries and their expected results. This can be done by passing the a directory of expectation files to Specmatic JDBC as part of the test setup.
 
 ```java
 jdbcMockFactory.createDataSource(DATABASE_STUB_PORT, DATABASE_EXPECTATIONS_DIRECTORY);
 ```
 * `DATABASE_STUB_PORT`: The port on which the Specmatic database stub runs (e.g., `9090`).
 * `DATABASE_EXPECTATIONS_DIRECTORY`: The path to your expectations folder (e.g., `src/test/resources/db_stub_expectations`).
-
-#### Posting Expectations
-
-In some cases, you may want to post expectations from specific files located anywhere for example `src/test/resources/` directory, rather than processing an entire folder. For such scenarios, you can explicitly list and post only those files to the expectations endpoint `http://localhost:{PORT}}/_specmatic/expectations`
-
-```java
-// Assuming the stub server is running on port 9090
-private static final String dbExpectationsURL = "http://localhost:9090/_specmatic/expectations";
-
-@BeforeEach
-public void before() throws Exception {
-    setSpecificDBExpectations();
-}
-
-private void setSpecificDBExpectations() throws IOException {
-    List<String> files = Arrays.asList(
-        "src/test/resources/db_stub_expectations/user_query.json",
-        "src/test/resources/special_expectations/order_summary.json"
-    );
-
-    for (String filePath : files) {
-        String expectation = FileUtils.readFileToString(new File(filePath), StandardCharsets.UTF_8);
-        setExpectation(expectation, dbExpectationsURL);
-    }
-}
-
-private static void setExpectation(String expectation, String dbExpectationsURL) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    HttpEntity<String> request = new HttpEntity<>(expectation, headers);
-    ResponseEntity<String> response = new RestTemplate().postForEntity(dbExpectationsURL, request, String.class);
-    assert response.getStatusCode() == HttpStatus.OK;
-}
-```
-
-This method gives you fine-grained control to load expectations only from the files relevant to that test, rather than loading the entire directories.
 
 ### Expectations Formats
 
@@ -256,9 +213,12 @@ You can do this by using typed placeholders with the format `(mocktype:<type>)`,
 }
 ```
 
+Valid types include: `date`, `timestamp`, `time`. These kinds of values are strings in JSON, and the type hints are needed to tell the JDBC mock which JDBC type to cast them to in the returned data.
+
 #### Regex Matching for Flexible Queries
 
 When query parameters vary but you want to match the general pattern, you can use `queryRegex` instead of an exact query field. This allows for pattern-based matching.
+
 For example this stub matches any `UPDATE` statement that changes the language column for some country, regardless of the specific values:
 
 ```json
@@ -271,6 +231,7 @@ For example this stub matches any `UPDATE` statement that changes the language c
 ```
 
 It acts like a flexible template that matches multiple similar update statements with different values, You can also use regex for `SELECT` statements. 
+
 For example this captures any vaguely similar SELECT statement and returns a mock record:
 
 ```json
@@ -286,5 +247,5 @@ For example this captures any vaguely similar SELECT statement and returns a moc
 
 ### Sample Applications
 
-Please have a look at one of the below mentioned sample applications to understand how to utilize `Specmatic-JDBC` in your application
+Please have a look at the following sample project to understand how to utilize `Specmatic-JDBC` in your application
 - [specmatic-jdbc-sample](https://github.com/specmatic/specmatic-jdbc-sample/tree/master/src/test/java/com/component/products)
