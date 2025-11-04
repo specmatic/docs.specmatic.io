@@ -71,13 +71,13 @@ jmsMock.start()
 {% endtab %}
 {% endtabs %}
 {: .note}
-If you have the [Specmatic Config](/documentation/configuration.html) set up, you can define the specifications in the `consumes` section and utilize `JmsMock.create(host, port)` for convenience
+If you have the [Specmatic Config](/documentation/configuration.html) set up, you can define the specifications in the `consumes` section and utilize `JmsMock.create(host, port)` in your test setup to create the JMS mock.
 
 This will start the JMS server running on port: 61616 on localhost.
 
 ### Set Expectations
 
-The code below shows how to set expectations on the JMS server, you can specify the number of messages to be received on a specific channel
+The code below shows how to set expectations on the JMS mock. You can specify the number of messages to be received on a specific channel.
 
 {% tabs setExpectations %}
 {% tab setExpectations java %}
@@ -115,7 +115,7 @@ assertThat(result.errors).isEmpty()
 {% endtab %}
 {% endtabs %}
 
-You can also verify if a specific `ObjectMessage` or `TextMessage` has been received by the JMS server on a specific channel
+You can also verify if a specific `ObjectMessage` or `TextMessage` has been received by the JMS mock on a specific channel.
 
 {% tabs checkMessage %}
 {% tab checkMessage java %}
@@ -134,7 +134,7 @@ assertThat(jmsMock.textMessageReceivedOnChannel("product-queries", "Hello JMS"))
 
 ### Stop the JMS Server
 
-The code below shows how to shut down JMS server.
+The code below shows how to shut down JMS mock.
 
 {% tabs stopServer %}
 {% tab stopServer java %}
@@ -163,5 +163,6 @@ Depending on your context, you may need to additional methods in TestInitialCont
 
 ### Sample Applications
 
-Please have a look at one of the below mentioned sample applications to understand how to utilize `Specmatic-JMS` in your application
+Please have a look at the following sample project to understand how to utilize `Specmatic-JMS` in your application:
+
 - [specmatic-order-bff-jms](https://github.com/specmatic/specmatic-order-bff-jms/tree/main/src/test/kotlin/com/component/orders)
