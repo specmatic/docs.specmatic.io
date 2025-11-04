@@ -5,8 +5,7 @@ parent: Documentation
 nav_order: 17
 ---
 
-Specmatic in Action: Sample Projects
----
+## Specmatic in Action: Sample Projects
 
 - [Specmatic in Action: Sample Projects](#specmatic-in-action-sample-projects)
 - [Overview](#overview)
@@ -21,8 +20,10 @@ Specmatic in Action: Sample Projects
 Specmatic unlocks a new way to approach microservices by aligning contracts and code, making your systems reliable and resilient. Our sample projects showcase real-world implementations across various technologies and communication protocols. This is your playground to experience Specmatic.
 
 ## Sample Application Architecture
+
 Each sample project is designed around a familiar microservices setup, giving you the clarity and confidence to integrate Specmatic seamlessly into your stack.<br/>
 The architecture consists of three core components:
+
 1. **Backend Service** – The system's engine, processing and providing data.
 2. **BFF (Backend For Frontend)** – A mediator between the frontend and backend services.
 3. **Frontend Application** – Where the user interacts.
@@ -67,9 +68,11 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | Name                        | Language | Sample Project                                                                          |
 | --------------------------- | -------- | --------------------------------------------------------------------------------------- |
 | specmatic-hooks-java-sample | Kotlin   | [specmatic-hooks-java-sample](https://github.com/specmatic/specmatic-hooks-java-sample) |
+
 {% endtab %}
 
 <!-- ASYNCAPI -->
+
 {% tab modules AsyncAPI %}
 ![Async Architecture](/images/specmatic-kafka-architecture.gif)
 
@@ -79,22 +82,21 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | -------- | ------------------- | -------- | ----------- | ------------------------------------------------------------------------------------- |
 | Kafka    | Fire-n-Forget       | Kotlin   | Spring Boot | [specmatic-order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)     |
 | Kafka    | Fire-n-Forget       | NodeJS   | Express     | [specmatic-order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs) |
+| Kafka    | Request-Reply       | Kotlin   | Spring Boot | [specmatic-kafka-sample](https://github.com/specmatic/specmatic-kafka-sample)         |
 | JMS      | Request-Reply       | Kotlin   | Spring Boot | [specmatic-order-bff-jms](https://github.com/znsio/specmatic-order-bff-jms)           |
 
-<!-- | Kafka        | Request-Reply       | Kotlin   | Spring Boot | [specmatic-kafka-sample](https://github.com/specmatic/specmatic-kafka-sample)             | -->
-<!-- | GooglePubSub | Pub-Sub             | Kotlin   | Spring Boot | [specmatic-google-pubsub-sample](https://github.com/znsio/specmatic-google-pubsub-sample) | -->
-
-<!-- ### Schema Registries
+### Schema Registries
 
 ![Avro Architecture](/images/avro-sample-architecture.png)
 
 | Schema Registry | Language | Framework   | Sample Project                                                                          |
 | --------------- | -------- | ----------- | --------------------------------------------------------------------------------------- |
-| Avro (Kafka)    | Kotlin   | Spring Boot | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) | -->
+| Avro (Kafka)    | Kotlin   | Spring Boot | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) |
 
 {% endtab %}
 
 <!-- GRPC -->
+
 {% tab modules gRPC %}
 ![gRPC architecture](/images/SpecmaticGRPCSupport.gif)
 
@@ -109,6 +111,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 {% endtab %}
 
 <!-- GraphQL -->
+
 {% tab modules GraphQL %}
 ![GraphQL Architecture](/images/specmatic-graphql-architecture.gif)
 
@@ -118,9 +121,11 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | --------- | -------- | ----------- | ------------------------------------------------------------------------------------------------- |
 | Backend   | Kotlin   | Spring Boot | [specmatic-order-bff-graphql-java](https://github.com/specmatic/specmatic-order-bff-graphql-java) |
 | Front-end | JS       | React       | [specmatic-order-graphql-ui-react](https://github.com/specmatic/specmatic-order-graphql-ui-react) |
+
 {% endtab %}
 
 <!-- JDBC -->
+
 {% tab modules JDBC %}
 ![JDBC Architecture](/images/specmatic-jdbc-architecture.gif)
 
@@ -129,9 +134,11 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | Layer   | Language | Framework   | Sample Project                                                          |
 | ------- | -------- | ----------- | ----------------------------------------------------------------------- |
 | Backend | Kotlin   | Spring Boot | [specmatic-jdbc-sample](https://github.com/znsio/specmatic-jdbc-sample) |
+
 {% endtab %}
 
 <!-- REDIS -->
+
 {% tab modules Redis %}
 ![Redis Architecture](/images/specmatic-redis-architecture.gif)
 
@@ -141,10 +148,13 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | ---------------------------- | -------- | ----------- | ------------------------------------------------------------------------------------------- |
 | Backend                      | Kotlin   | Spring Boot | [specmatic-redis-sample](https://github.com/specmatic/specmatic-redis-sample)               |
 | Back-end for Front-end (BFF) | Python   | FastAPI     | [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample) |
+
 {% endtab %}
 
 <!-- WSDL -->
+
 {% tab modules WSDL %}
+
 ```
                                       PRODUCTION SETUP
 +-------------------+         +--------------------------+         +-------------------+
@@ -164,6 +174,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
           | 4. Response (SOAP)            |                                  |
           +<------------------------------+                                  |
 ```
+
 ```
                                         CONTRACT TEST SETUP
 +-------------------------+         +--------------------------+         +----------------------+
@@ -182,20 +193,23 @@ Let's discover how Specmatic works across different layers of an app, with help 
             |                                   |<----------------------------------+
             | 4. Response (SOAP)                |                                   |
             +<----------------------------------+                                   |
-            |                          
+            |
             |--------------------+
             | 5. Assert response |
             | against WSDL spec  |
             +<-------------------+
 ```
+
 ### Projects
 
 | Layer                        | Language | Framework   | Sample Project                                                                    |
 | ---------------------------- | -------- | ----------- | --------------------------------------------------------------------------------- |
 | Back-end for Front-end (BFF) | Kotlin   | Spring Boot | [specmatic-order-bff-wsdl](https://github.com/specmatic/specmatic-order-bff-wsdl) |
+
 {% endtab %}
 
 <!-- ARAZZO -->
+
 {% tab modules Arazzo %}
 ![Arazzo Flow](/images/arazzo-flow.svg)
 
@@ -206,9 +220,11 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | OpenAPI               | Python   | Flask     | [specmatic-arazzo-sample](https://github.com/specmatic/specmatic-arazzo-sample)             |
 | OpenAPI + AsyncAPI    | Python   | Flask     | [specmatic-arazzo-async-sample](https://github.com/specmatic/specmatic-arazzo-async-sample) |
 | OpenAPI with Consumer | Python   | Flask     | [specmatic-arazzo-ui-sample](https://github.com/specmatic/specmatic-arazzo-ui-sample)       |
+
 {% endtab %}
 
 <!-- MCP -->
+
 {% tab modules MCP %}
 ![MCP Architecture](/images/MCP-Architecture.png)
 
@@ -218,9 +234,11 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | ----------- | ------------------------------------------------------------------ |
 | Postman     | [mcp-auto-test](https://github.com/specmatic/mcp_auto_test_sample) |
 | HuggingFace | [mcp-auto-test](https://github.com/specmatic/mcp_auto_test_sample) |
+
 {% endtab %}
 
 <!-- CENTRAL REPOSTORIES -->
+
 {% tab modules Central Repo %}
 ![Central Contract Repository](/images/Central-Contract-Repo.png)
 
@@ -229,8 +247,25 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | Name                      | Repository                                                                          |
 | ------------------------- | ----------------------------------------------------------------------------------- |
 | Specmatic Order Contracts | [specmatic-order-contracts](https://github.com/specmatic/specmatic-order-contracts) |
+
 {% endtab %}
+
+<!-- Conversion -->
+
+{% tab modules Conversion %}
+
+Converting existing mocks to Specmatic.
+
+### Projects
+
+| Convert from | Sample Project                                                                         |
+| ------------ | -------------------------------------------------------------------------------------- |
+| Wiremock     | [wiremock-to-specmatic](https://github.com/specmatic/wiremock-to-specmatic-conversion) |
+
+{% endtab %}
+
 {% endtabs %}
+
 </div>
 
 ## Bringing It All Together
@@ -238,12 +273,15 @@ Let's discover how Specmatic works across different layers of an app, with help 
 By exploring these projects, you'll gain hands-on experience in integrating Specmatic with a variety of technologies, giving you the power to build smarter and more resilient systems.
 
 ## Need Help?
+
 - Join our [community discussions](https://github.com/specmatic/specmatic/discussions) for discussions and support
 - Report bugs or suggest improvements in our [GitHub repository](https://github.com/specmatic/specmatic/issues)
 - Reach out directly—we're here to [help!]({{ site.contact_us_url }})
 
 ## Contributing
+
 We welcome contributions! If you've built something interesting with Specmatic:
+
 - Submit a pull request to add your example
 - Share your implementation of these samples in different frameworks
 - Help us improve documentation and examples

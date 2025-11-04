@@ -214,6 +214,17 @@ contracts:
 The `startTimeoutInMilliseconds` setting in Specmatic ensures that a stub service, whether started via the _stub command_  or programmatically using _createStub_ exits if it doesn't start within the defined time.
 
 {% tabs stubTimeout %}
+{% tab stubTimeout specmatic.yaml %}
+```yaml
+contracts:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+stub:
+  startTimeoutInMilliseconds: 10000
+```
+{% endtab %}
 {% tab stubTimeout specmatic.json %}
 ```json
 {
@@ -231,17 +242,6 @@ The `startTimeoutInMilliseconds` setting in Specmatic ensures that a stub servic
     "startTimeoutInMilliseconds": 10000
   }
 }
-```
-{% endtab %}
-{% tab stubs specmatic.yaml %}
-```yaml
-contracts:
-  - git:
-      url: https://github.com/specmatic/specmatic-order-contracts.git
-    consumes:
-      - io/specmatic/examples/store/openapi/api_order_v3.yaml
-stub:
-  startTimeoutInMilliseconds: 10000
 ```
 {% endtab %}
 {% endtabs %}
