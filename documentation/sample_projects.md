@@ -117,10 +117,11 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 ### Projects
 
-| Layer     | Language | Framework   | Sample Project                                                                                    |
-| --------- | -------- | ----------- | ------------------------------------------------------------------------------------------------- |
-| Backend   | Kotlin   | Spring Boot | [specmatic-order-bff-graphql-java](https://github.com/specmatic/specmatic-order-bff-graphql-java) |
-| Front-end | JS       | React       | [specmatic-order-graphql-ui-react](https://github.com/specmatic/specmatic-order-graphql-ui-react) |
+| Layer                        | Language | Framework   | Sample Project                                                                                              |
+| ---------------------------- | -------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
+| Front-end                    | JS       | React       | [specmatic-order-graphql-ui-react](https://github.com/specmatic/specmatic-order-graphql-ui-react)           |
+| Back-end for Front-end (BFF) | Kotlin   | Spring Boot | [specmatic-order-bff-graphql-java](https://github.com/specmatic/specmatic-order-bff-graphql-java)           |
+| Backend Consumer             | Kotlin   | Spring Boot | [specmatic-order-graphql-consumer-java](https://github.com/specmatic/specmatic-order-graphql-consumer-java) |
 
 {% endtab %}
 
