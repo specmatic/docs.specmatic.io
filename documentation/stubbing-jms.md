@@ -5,11 +5,25 @@ parent: Documentation
 nav_exclude: true
 ---
 
-# JMS Stubbing
+# JMS Stubbing 
+{: .d-inline-block }
+Commercial
+{: .label }
 
-> The `specmatic-jms` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
+- [JMS Stubbing](#jms-stubbing)
+    - [Introduction](#introduction)
+    - [Pre-requisite Setup](#pre-requisite-setup)
+    - [Start the JMS Server](#start-the-jms-server)
+    - [Set Expectations](#set-expectations)
+    - [Verify Expectations](#verify-expectations)
+    - [Stop the JMS Server](#stop-the-jms-server)
+    - [Inject an ActiveMQ JMS client using JNDI](#inject-an-activemq-jms-client-using-jndi)
+    - [Sample Applications](#sample-applications)
 
-## Introduction
+{: .note}
+The `specmatic-jms` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
+
+### Introduction
 
 Specmatic spins up an ActiveMQ server, and expects the system under test to use an ActiveMQ JMS client when running tests. This is both vendor-agnostic and easy to do, given that all JMS clients implement a Java JMS interface.
 
@@ -19,66 +33,121 @@ This document describes how to stub out JMS in applications that use JNDI with S
 
 ### Pre-requisite Setup
 
-The below-mentioned dependency needs to be in pom.xml:
+The below-mentioned dependency needs to be in your application's `build.gradle` or `pom.xml`
 
-```
+{% tabs dependencies %}
+{% tab dependencies maven %}
+```xml
 <dependency>
-    <groupId>io.specmatic</groupId>
-    <artifactId>specmatic-jms</artifactId>
+    <groupId>io.specmatic.jms</groupId>
+    <artifactId>specmatic-jms-min</artifactId>
     <version>{{ site.specmatic-jms-version }}</version>
 </dependency>
-```    
+```
+{% endtab %}
+{% tab dependencies gradle %}
+```shell
+implementation("io.specmatic.jms:specmatic-jms-min:{{ site.specmatic-jms-version }}")
+```
+{% endtab %}
+{% endtabs %}
 
 ### Start the JMS Server
 
 The code below shows how to start the JMS server.
 
-{% raw %}
+{% tabs start %}
+{% tab start java %}
 ```java
-jmsMock = new JmsMock(new ArrayList<String>() {{
-    add("src/test/resources/async-api.yaml");
-}}, "localhost", 61616);
+JmsMock jmsMock = JmsMock.fromAsyncApiFiles(List.of("src/test/resources/async-api.yaml"), "localhost", 61616);
 jmsMock.start();
 ```
-{% endraw %}
+{% endtab %}
+{% tab start kotlin %}
+```kotlin
+val jmsMock = JmsMock.fromAsyncApiFiles(listOf("src/test/resources/async-api.yaml"), "localhost", 61616)
+jmsMock.start()
+```
+{% endtab %}
+{% endtabs %}
+{: .note}
+If you have the [Specmatic Config](/documentation/configuration.html) set up, you can define the specifications in the `consumes` section and utilize `JmsMock.create(host, port)` in your test setup to create the JMS mock.
 
 This will start the JMS server running on port: 61616 on localhost.
 
+### Set Expectations
+
+The code below shows how to set expectations on the JMS mock. You can specify the number of messages to be received on a specific channel.
+
+{% tabs setExpectations %}
+{% tab setExpectations java %}
+```java
+jmsMock.setExpectations(List.of(new Expectation("product-queries", 2)));
+```
+{% endtab %}
+{% tab setExpectations kotlin %}
+```kotlin
+jmsMock.setExpectations(listOf(Expectation(channel = "product-queries", count = 2)))
+```
+{% endtab %}
+{% endtabs %}
+
+
+### Verify Expectations
+
+At then end of the test, the code below shows how to check if the expectations have been met.
+This returns `VerificationResult` which contains `success` boolean and `errors` list of string errors
+
+{% tabs verifyExpectations %}
+{% tab verifyExpectations java %}
+```java
+VerificationResult result = jmsMock.verifyExpectations();    
+assertThat(result.success).isTrue();
+assertThat(result.errors).isEmpty();
+```
+{% endtab %}
+{% tab verifyExpectations kotlin %}
+```kotlin
+val results = jmsMock.verifyExpectations()
+assertThat(result.success).isTrue
+assertThat(result.errors).isEmpty()
+```
+{% endtab %}
+{% endtabs %}
+
+You can also verify if a specific `ObjectMessage` or `TextMessage` has been received by the JMS mock on a specific channel.
+
+{% tabs checkMessage %}
+{% tab checkMessage java %}
+```java
+assertThat(jmsMock.objectMessageReceivedOnChannel("product-queries", new ProductMessage(1, "Iphone", 10))).isTrue();
+assertThat(jmsMock.textMessageReceivedOnChannel("product-queries", "Hello JMS")).isTrue();
+```
+{% endtab %}
+{% tab checkMessage kotlin %}
+```kotlin
+assertThat(jmsMock.objectMessageReceivedOnChannel("product-queries", ProductMessage(1, "Iphone", 10))).isTrue
+assertThat(jmsMock.textMessageReceivedOnChannel("product-queries", "Hello JMS")).isTrue
+```
+{% endtab %}
+{% endtabs %}
+
 ### Stop the JMS Server
 
-The code below shows how to shut down JMS server.
+The code below shows how to shut down JMS mock.
 
+{% tabs stopServer %}
+{% tab stopServer java %}
 ```java
 jmsMock.stop();
 ```
-
-### Create the specification file
-
-Create a file called `async-api.yaml` in `src/test/resources`(use the same path in step 2) with
-the following content.
-
-```yaml
-asyncapi: "2.0.0"
-info:
-  title: JMS Queue Example
-  version: "1.0.0"
-servers:
-  activemq:
-    url: tcp://localhost:61616
-    protocol: jms
-channels:
-  taskQueueText:
-    publish:
-      operationId: publishStringMessage
-      message:
-        payload:
-          type: string
-    bindings:
-      amqp:
-        is: queue
+{% endtab %}
+{% tab stopServer kotlin %}
+```kotlin
+jmsMock.stop()
 ```
-
-This file serves as the specification that declares what a JMS message being sent to the queue will look like.
+{% endtab %}
+{% endtabs %}
 
 ### Inject an ActiveMQ JMS client using JNDI
 
@@ -92,8 +161,8 @@ On running the application, JMS calls are redirected to the newly created server
 
 Depending on your context, you may need to additional methods in TestInitialContextFactory.
 
-## Stub out interactions
+### Sample Applications
 
-* Verification of stub interactions is coming soon.
-* For now, a channel will represents a queue (e.g. testQueueText represents a queue).
-* Update the async-api.yaml and add channels for all the queues that this application will write to.
+Please have a look at the following sample project to understand how to utilize `Specmatic-JMS` in your application:
+
+- [specmatic-order-bff-jms](https://github.com/specmatic/specmatic-order-bff-jms/tree/main/src/test/kotlin/com/component/orders)
