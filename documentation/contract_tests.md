@@ -1774,12 +1774,12 @@ All execution details, including request and response logs for each attempt, are
 
 #### Accepted Response Handling
 
-A **202 Accepted** HTTP status code indicates that a request has been accepted for processing, but the operation has not yet been completed. This response is standard for asynchronous or long-running tasks. Specmatic offers robust support for testing these asynchronous flows, provided the API specification adheres to a few key conventions.
+A **202 Accepted** HTTP status code indicates that a request has been accepted for processing, but the operation has not yet been completed. This response is standard for asynchronous or long-running tasks. Specmatic offers robust support for testing these asynchronous flows, provided the API specification adheres to a few RESTful conventions.
 
 ##### Core Requirements
 {: style="font-size:1rem!important" }
 
-- The sepcification must define a **202 Accepted** response for the specific path and HTTP method
+- The specification must define a **202 Accepted** response for the specific path and HTTP method
 - The response must include a [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link) with an `title` parameter set to `"monitor"`
 - The specification must also include a operation that corresponds to the URL provided in the [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link), on which Specmatic can **poll** for the completion of the operation
 - The response from the polled endpoint must conform to a standard schema
