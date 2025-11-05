@@ -61,7 +61,7 @@ It is a good idea to prevent any direct commits to your master / main branch of 
  Here are some sample pre-merge pipelines to disallow merges when specification changes have linter errors or backward breaking changes.
 
 - [Github Action](https://github.com/specmatic/specmatic-order-contracts)
-- [Gitlab CI](https://gitlab.com/specmatic/contract-driven-development/central-contract-repository) - This also uses [Specmatic Docker Image](https://hub.docker.com/r/specmatic/specmatic)
+- [Gitlab CI](https://gitlab.com/znsio/contract-driven-development/central-contract-repository) - This also uses [Specmatic Docker Image](https://hub.docker.com/r/specmatic/specmatic)
 
 ### Collaborating over API Design
 

@@ -21,7 +21,7 @@ Getting started with Studio
 
 ### Account Setup
 
-This tutorial will run online on [https://studio.specmatic.com](Specmatic Studio). Login there with your Google account and follow along!
+This tutorial will run online on [Specmatic Studio](https://studio.specmatic.com). Login there with your Google account and follow along!
 
 ---
 
