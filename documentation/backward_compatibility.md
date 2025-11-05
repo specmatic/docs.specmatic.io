@@ -388,7 +388,7 @@ Once the specification is complete you can remove the WIP tag.
 
 Maintaining backward compatibility is about changing the API provider WITHOUT breaking any existing consumer. Consumers should just continue working as-is, without needing to "keep up".
 
-[Read this for more](https://specmatic.io/documentation/backward_compatibility_rules.html).
+[Read this for more](https://docs.specmatic.io/documentation/backward_compatibility_rules.html).
 
 
 > [!IMPORTANT]

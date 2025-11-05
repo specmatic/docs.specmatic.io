@@ -273,7 +273,7 @@ sources:
 {% endtab %}
 {% endtabs %}
 
-Please note that now we are now listing the ```api_order_v3.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/specmatic.yaml).
+Please note that now we are now listing the ```api_order_v3.yaml``` is listed as a stub dependency. You can run the ```specmatic stub``` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml).
 
 A single application may need to list the API Specifications it is implementing under the provides attribute and the API Specifications of its dependencies under the consumes attribute.
 

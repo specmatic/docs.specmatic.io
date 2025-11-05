@@ -260,7 +260,7 @@ Thus, the request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken tog
 
 Note that the response example named `FETCH_EMPLOYEE_SUCCESS` is not compared with values returned by the application. This is what sets a Contract Test apart from an API Test. A Contract Test is concerned with checking the APIs signature, while API tests are concerned with checking the APIs logic.
 
-However the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualization](/documentation/service_virtualization_tutorial.html#examples-as-expectations).
+However, the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualization](/documentation/service_virtualization_tutorial.html#examples-as-expectations).
 
 ### Externalising examples / test cases
 
@@ -799,7 +799,7 @@ auth:
 
   "auth": {
     "bearer-environment-variable": "BEARER"
-  },
+  }
 }
 ```
 {% endtab %}
@@ -1805,7 +1805,7 @@ This feature ensures that your tests are not brittle and can correctly validate 
 ##### Monitor Response Schema
 {: style="font-size:1rem!important" }
 
-The response from the polled endpoint must adhere to a standard schema that is either equal to or a superset, i.e encompassess the schema outlined below:
+The response from the polled endpoint must adhere to a standard schema that is either equal to or a superset, i.e. encompassess the schema outlined below:
 
 ```yaml
 AnyValue: 
