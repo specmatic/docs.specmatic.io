@@ -66,6 +66,17 @@ Contract Tests
     - [Conclusion](#conclusion)
   - [Advanced Features](#advanced-features)
     - [Generative Tests](#generative-tests)
+    - [Smart Resiliency Orchestration](#smart-resiliency-orchestration)
+      - [Accepted Response Handling](#accepted-response-handling)
+        - [Core Requirements](#core-requirements)
+        - [Using Examples](#using-examples)
+        - [Unexpected Accepted Response](#unexpected-accepted-response)
+        - [Monitor Response Schema](#monitor-response-schema)
+      - [Too Many Requests Handling](#too-many-requests-handling)
+        - [Core Requirements](#core-requirements-1)
+        - [Using Examples](#using-examples-1)
+        - [Unexpected Too Many Requests Response](#unexpected-too-many-requests-response)
+      - [Example](#example)
     - [Limiting the Count of Tests](#limiting-the-count-of-tests)
     - [Using matching branches in the central contract repo](#using-matching-branches-in-the-central-contract-repo)
     - [Sample Project](#sample-project)
@@ -1754,6 +1765,277 @@ System.setProperty("SPECMATIC_GENERATIVE_TESTS", "true")
 ```
 
 The best way to see it in action is to try it out with one of your micro-services and it's API specifications.
+
+### Smart Resiliency Orchestration
+
+Smart Resiliency Orchestration is a powerful feature in the Specmatic contract testing suite designed to manage and automate resilient API interactions. It incorporates retry mechanisms, monitors asynchronous operations, and simulates real-world conditions to verify the robustness, reliability, and availability of your APIs.
+
+{: .note}
+All execution details, including request and response logs for each attempt, are fully captured and visible in both the console output and the HTML report to ensure complete traceability.
+
+#### Accepted Response Handling
+
+A **202 Accepted** HTTP status code indicates that a request has been accepted for processing, but the operation has not yet been completed. This response is standard for asynchronous or long-running tasks. Specmatic offers robust support for testing these asynchronous flows, provided the API specification adheres to a few RESTful conventions.
+
+##### Core Requirements
+{: style="font-size:1rem!important" }
+
+- The specification must define a **202 Accepted** response for the specific path and HTTP method
+- The response must include a [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link) with an `title` parameter set to `"monitor"`
+- The specification must also include a operation that corresponds to the URL provided in the [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link), on which Specmatic can **poll** for the completion of the operation
+- The response from the polled endpoint must conform to a standard schema
+- By default, a maximum of **3** monitoring attempts will be executed before the test fail, with delay resulting from the [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) Header if present, or exponential backoff otherwise
+
+##### Using Examples
+{: style="font-size:1rem!important" }
+
+Explicit testing allows you to intentionally validate the **202 Accepted** flow. This is useful when an operation can behave both synchronously (e.g., returning 201 Created) and asynchronously (returning 202 Accepted) based on certain conditions, such as system load or the nature of the request.
+
+To create a dedicated test for the asynchronous path, define an `inline` or `external` example for the **202 Accepted** response. This signals your intent to Specmatic to trigger and validate this specific scenario. You would typically do this when you can control the API's state or its downstream dependencies to reliably produce the asynchronous response.
+
+##### Unexpected Accepted Response
+{: style="font-size:1rem!important" }
+
+Specmatic is designed to be resilient and can automatically handle unexpected asynchronous responses during testing, For instance, consider a `POST /orders` endpoint that is defined to return **201 Created**. If the live service returns a **202 Accepted** instead, Specmatic will not immediately fail the test. Instead, it performs the following actions:
+*   It inspects the response to verify that it conforms to the [core requirements](#core-requirements)
+*   If the response is compliant, Specmatic will treat it as if it were a **202 Accepted** scenario and poll for the completion of the operation
+
+This feature ensures that your tests are not brittle and can correctly validate the API's behavior even when it deviates from the expected synchronous path.
+
+##### Monitor Response Schema
+{: style="font-size:1rem!important" }
+
+The response from the polled endpoint must adhere to a standard schema that is either equal to or a superset, i.e encompassess the schema outlined below:
+
+```yaml
+AnyValue: 
+  description: Can be any value - string, number, boolean, array or object.
+MonitorResponse:
+  type: object
+  description: Monitoring of resources
+  properties:
+    request:
+      $ref: '#/components/schemas/Request'
+    response:
+      $ref: '#/components/schemas/Response'
+Request:
+  type: object
+  description: A response to a request
+  properties:
+    method:
+      type: string
+    body:
+      $ref: '#/components/schemas/AnyValue'
+    headers:
+      type: array
+      items:
+        $ref: '#/components/schemas/HeaderItem'
+  required:
+    - method
+Response:
+  type: object
+  description: A response to a request
+  properties:
+    statusCode:
+      type: integer
+    body:
+      $ref: '#/components/schemas/AnyValue'
+    headers:
+      type: array
+      items:
+        $ref: '#/components/schemas/HeaderItem'
+  required:
+    - statusCode
+HeaderItem:
+  type: object
+  properties:
+    name:
+      type: string
+    value:
+      type: string
+```
+
+> Specmatic will extract request and response from the `MonitorResponse` to reconstruct the original request and response for validation and further processing.  
+> - **Explicit Case**: The extracted request and response must align with any non-202 2xx scenarios defined in the specification
+> - **Implicit Case**: The extracted request and response must conform to the scenario that was being tested, such as `201 Created`
+{: .note}
+
+#### Too Many Requests Handling
+
+A **429 Too Many Requests** HTTP status code indicates that the client has sent too many requests within a specified timeframe, or there may be an issue downstream causing it to be rate-limited by the server. 
+
+Smart Resiliency Orchestration in Specmatic gracefully handles this scenario with intelligent retry behavior, ensuring that requests are retried in accordance with rate-limit guidance and that the operation eventually resolves after the permitted number of retries
+
+##### Core Requirements
+{: style="font-size:1rem!important" }
+
+- The sepcification must define a **429 Too Many Requests** response for the specific path and method
+- The response can include a [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) Header
+  - If the [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) value is an integer, it indicates delay in **seconds** between retries
+  - If [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) is a valid **HTTP Date**, Specmatic will calculate the delay based on the current time.
+- In the absence of the [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) Header, Specmatic will exponentially backoff
+- By default, a maximum of **3** retry attempts will be executed before the test fail
+
+##### Using Examples
+{: style="font-size:1rem!important" }
+
+Explicit testing allows you to validate this behavior under controlled conditions. Define an inline or external example for the **429 Too Many Requests** response to signal your intent. Specmatic will respect the `Retry-After` header if present, or apply exponential backoff otherwise, retrying up to three **3** before completing the test.
+
+##### Unexpected Too Many Requests Response
+{: style="font-size:1rem!important" }
+
+Specmatic automatically manages unexpected **429 Too Many Requests** responses during testing. For example, if a request that is expected to succeed encounters a **429 Too Many Requests**, it checks for compliance with the core requirements and continues as if it were an explicit case, retrying until the operation succeeds or the retries are exhausted.
+
+This approach ensures that tests accurately represent real-world service conditions without creating fragile timing dependencies.
+
+> - **Explicit Case**: The final resolved response after retries must align with any 2xx scenarios defined in the specification
+> - **Implicit Case**: The retried operation must ultimately conform to the scenario that was being tested, such as `201 Created`
+{: .note}
+
+#### Example
+
+Below is an example specification for smart resiliency orchestration in action.
+- It outlines a `GET /products` endpoint with response scenarios for **200 OK** and **429 Too Many Requests**.  
+- It describes a `POST /order` endpoint with response scenarios for **201 Created** and **202 Accepted**.  
+- It specifies a `GET /monitor/{id}` endpoint to **poll** for the completion of asynchronous operations.
+
+
+```yaml
+openapi: 3.1.0
+info:
+  title: Example API
+  version: 1.0.0
+
+paths:
+  /products:
+    get:
+      summary: List products
+      responses:
+        '200':
+          description: Successful response with product list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              type: integer
+
+  /order:
+    post:
+      summary: Create a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '202':
+          description: Order accepted for processing
+          headers:
+            Link:
+              schema:
+                type: string
+              example: '</monitor/123>; title="monitor"'
+
+  /monitor/{id}:
+    get:
+      summary: Poll operation status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operation status response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorResponse'
+components:
+  schemas:
+    BaseProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+      required:
+        - name
+        - price
+    Id:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+    Product:
+      allOf:
+        - $ref: '#/components/schemas/BaseProduct'
+        - $ref: '#/components/schemas/Id'
+    MonitorResponse:
+      type: object
+      description: Monitoring of resources
+      properties:
+        request:
+          $ref: '#/components/schemas/Request'
+        response:
+          $ref: '#/components/schemas/Response'
+    Request:
+      type: object
+      description: A response to a request
+      properties:
+        method:
+          type: string
+        body:
+          type: object
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeaderItem'
+      required:
+        - method
+        - body
+        - headers
+    Response:
+      type: object
+      description: A response to a request
+      properties:
+        statusCode:
+          type: integer
+        body:
+          type: object
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeaderItem'
+      required:
+        - statusCode
+        - body
+        - headers
+    HeaderItem:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+```
 
 ### Limiting the Count of Tests
 
