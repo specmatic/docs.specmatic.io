@@ -69,13 +69,14 @@ Contract Tests
     - [Smart Resiliency Orchestration](#smart-resiliency-orchestration)
       - [Accepted Response Handling](#accepted-response-handling)
         - [Core Requirements](#core-requirements)
-        - [Explicit Case](#explicit-case)
-        - [Implicit Case](#implicit-case)
+        - [Using Examples](#using-examples)
+        - [Unexpected Accepted Response](#unexpected-accepted-response)
         - [Monitor Response Schema](#monitor-response-schema)
       - [Too Many Requests Handling](#too-many-requests-handling)
         - [Core Requirements](#core-requirements-1)
-        - [Explicit Case](#explicit-case-1)
-        - [Implicit Case](#implicit-case-1)
+        - [Using Examples](#using-examples-1)
+        - [Unexpected Too Many Requests Response](#unexpected-too-many-requests-response)
+      - [Example](#example)
     - [Limiting the Count of Tests](#limiting-the-count-of-tests)
     - [Using matching branches in the central contract repo](#using-matching-branches-in-the-central-contract-repo)
     - [Sample Project](#sample-project)
@@ -1785,14 +1786,14 @@ A **202 Accepted** HTTP status code indicates that a request has been accepted f
 - The response from the polled endpoint must conform to a standard schema
 - By default, a maximum of **3** monitoring attempts will be executed before the test fail, with delay resulting from the [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) Header if present, or exponential backoff otherwise
 
-##### Explicit Case
+##### Using Examples
 {: style="font-size:1rem!important" }
 
 Explicit testing allows you to intentionally validate the **202 Accepted** flow. This is useful when an operation can behave both synchronously (e.g., returning 201 Created) and asynchronously (returning 202 Accepted) based on certain conditions, such as system load or the nature of the request.
 
 To create a dedicated test for the asynchronous path, define an `inline` or `external` example for the **202 Accepted** response. This signals your intent to Specmatic to trigger and validate this specific scenario. You would typically do this when you can control the API's state or its downstream dependencies to reliably produce the asynchronous response.
 
-##### Implicit Case
+##### Unexpected Accepted Response
 {: style="font-size:1rem!important" }
 
 Specmatic is designed to be resilient and can automatically handle unexpected asynchronous responses during testing, For instance, consider a `POST /orders` endpoint that is defined to return **201 Created**. If the live service returns a **202 Accepted** instead, Specmatic will not immediately fail the test. Instead, it performs the following actions:
@@ -1875,12 +1876,12 @@ Smart Resiliency Orchestration in Specmatic gracefully handles this scenario wit
 - In the absence of the [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) Header, Specmatic will exponentially backoff
 - By default, a maximum of **3** retry attempts will be executed before the test fail
 
-##### Explicit Case
+##### Using Examples
 {: style="font-size:1rem!important" }
 
 Explicit testing allows you to validate this behavior under controlled conditions. Define an inline or external example for the **429 Too Many Requests** response to signal your intent. Specmatic will respect the `Retry-After` header if present, or apply exponential backoff otherwise, retrying up to three **3** before completing the test.
 
-##### Implicit Case
+##### Unexpected Too Many Requests Response
 {: style="font-size:1rem!important" }
 
 Specmatic automatically manages unexpected **429 Too Many Requests** responses during testing. For example, if a request that is expected to succeed encounters a **429 Too Many Requests**, it checks for compliance with the core requirements and continues as if it were an explicit case, retrying until the operation succeeds or the retries are exhausted.
@@ -1890,6 +1891,151 @@ This approach ensures that tests accurately represent real-world service conditi
 > - **Explicit Case**: The final resolved response after retries must align with any 2xx scenarios defined in the specification
 > - **Implicit Case**: The retried operation must ultimately conform to the scenario that was being tested, such as `201 Created`
 {: .note}
+
+#### Example
+
+Below is an example specification for smart resiliency orchestration in action.
+- It outlines a `GET /products` endpoint with response scenarios for **200 OK** and **429 Too Many Requests**.  
+- It describes a `POST /order` endpoint with response scenarios for **201 Created** and **202 Accepted**.  
+- It specifies a `GET /monitor/{id}` endpoint to **poll** for the completion of asynchronous operations.
+
+
+```yaml
+openapi: 3.1.0
+info:
+  title: Example API
+  version: 1.0.0
+
+paths:
+  /products:
+    get:
+      summary: List products
+      responses:
+        '200':
+          description: Successful response with product list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '429':
+          description: Too many requests
+          headers:
+            Retry-After:
+              type: integer
+
+  /order:
+    post:
+      summary: Create a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '202':
+          description: Order accepted for processing
+          headers:
+            Link:
+              schema:
+                type: string
+              example: '</monitor/123>; title="monitor"'
+
+  /monitor/{id}:
+    get:
+      summary: Poll operation status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operation status response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorResponse'
+components:
+  schemas:
+    BaseProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+      required:
+        - name
+        - price
+    Id:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+    Product:
+      allOf:
+        - $ref: '#/components/schemas/BaseProduct'
+        - $ref: '#/components/schemas/Id'
+    MonitorResponse:
+      type: object
+      description: Monitoring of resources
+      properties:
+        request:
+          $ref: '#/components/schemas/Request'
+        response:
+          $ref: '#/components/schemas/Response'
+    Request:
+      type: object
+      description: A response to a request
+      properties:
+        method:
+          type: string
+        body:
+          type: object
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeaderItem'
+      required:
+        - method
+        - body
+        - headers
+    Response:
+      type: object
+      description: A response to a request
+      properties:
+        statusCode:
+          type: integer
+        body:
+          type: object
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeaderItem'
+      required:
+        - statusCode
+        - body
+        - headers
+    HeaderItem:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+```
 
 ### Limiting the Count of Tests
 
