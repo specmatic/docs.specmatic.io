@@ -7,4 +7,4 @@ search_exclude: true
 ---
 Service Virtualisation
 ======================
-This page is deprecated. Please refer to [Service Virtualization Tutorial](/documentation/service_virtualization_tutorial.md) for service virtualisation capabilities.
+This page is deprecated. Please refer to [Service Virtualization Tutorial](/documentation/service_virtualization_tutorial.html) for service virtualisation capabilities.
