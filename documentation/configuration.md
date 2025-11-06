@@ -21,6 +21,7 @@ Configuration
       - [Service Virtualization Delay](#service-virtualization-delay)
       - [Use specifications on local file system](#use-specifications-on-local-file-system)
       - [Run stub on different ports for different specifications](#run-stub-on-different-ports-for-different-specifications)
+      - [Configure contract test baseUrls for different specs](#configure-contract-test-baseurls-for-different-specs)
       - [Source control authentication](#source-control-authentication)
       - [Report Configuration](#report-configuration)
       - [Formatters](#formatters)
@@ -394,6 +395,56 @@ contracts:
 
 As per the above configuration, the specs `api_order_v1.yaml` and `api_user_v1.yaml` will run on port 9000 and the spec `api_auth_v1.yaml` will run on port 9001.
 You can also specify `host`, `basePath`, and even the complete `baseUrl` in the `consumes` field. For more details, refer to the [Service Virtualization](/documentation/service_virtualization_tutorial#specmatic-configuration-with-base-url-host-port-and-path)
+
+#### Configure contract test baseUrls for different specs
+
+Let's say you have a service that two specifications, or even multiple versions of the same specification. You need to run contract tests using that specification against the service. You can customize the base URL in specmatic configuration as shown below.
+
+{% tabs contract_tests_base_url %}
+{% tab contract_tests_base_url specmatic.yaml %}
+```yaml
+version: 2
+contracts:
+  - filesystem:
+      directory: <Path to directory where all the specmatic should look for specifications>
+    provides:
+      - specs:
+          - api_order_v1.yaml
+        baseUrl: http://localhost:8080/v1
+      - specs:
+          - api_order_v2.yaml
+        baseUrl: http://localhost:8080/v2
+```
+{% endtab %}
+{% tab contract_tests_base_url specmatic.json %}
+```json
+{
+  "version": 2,
+  "contracts": [
+    {
+      "filesystem": {
+        "directory": "<Path to directory where all the specmatic should look for specifications>"
+      },
+      "provides": [
+        {
+          "specs": [
+            "api_order_v1.yaml"
+          ],
+          "baseUrl": "http://localhost:8080/v1"
+        },
+        {
+          "specs": [
+            "api_order_v2.yaml"
+          ],
+          "baseUrl": "http://localhost:8080/v2"
+        }
+      ]
+    }
+  ]
+}
+```
+{% endtab %}
+{% endtabs %}
 
 #### Source control authentication
 
