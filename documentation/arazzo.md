@@ -14,8 +14,8 @@ nav_order: 18
     - [Interactive through Specmatic Studio](#interactive-through-specmatic-studio)
     - [Command Line Interface](#command-line-interface)
   - [Understanding Generated Files](#understanding-generated-files)
-    - [1. The .arazzo.yaml File](#1-the-arazzoyaml-file)
-    - [2. The .arazzo\_inputs.json File](#2-the-arazzo_inputsjson-file)
+    - [Arazzo Workflow Specification `(*.arazzo.yaml)`](#arazzo-workflow-specification-arazzoyaml)
+    - [Arazzo Input Data `(*.arazzo_inputs.json)`](#arazzo-input-data-arazzo_inputsjson)
       - [Understanding the Structure](#understanding-the-structure)
       - [Scenario Behavior](#scenario-behavior)
   - [Running Workflow Tests](#running-workflow-tests)
@@ -71,18 +71,21 @@ Refer to the [Microservices Sample](https://github.com/specmatic/specmatic-arazz
 
 When you generate workflows using Specmatic-Arazzo, two files will be created. Both files share the same prefix name to maintain their linkage as a pair:
 
-- `*.arazzo.yaml` — This file contains the Arazzo workflow specification.
-- `*.arazzo_inputs.json` — This file holds the corresponding input data for the workflow.
+- `*.arazzo.yaml` — Contains the Arazzo workflow specification (e.g. `PlaceOrder.arazzo.yaml`)
+- `*.arazzo_inputs.json` - Contains the input data for the workflow (e.g. `PlaceOrder.arazzo_inputs.json`)
 
-### 1. The .arazzo.yaml File
+### Arazzo Workflow Specification `(*.arazzo.yaml)`
 
-This file serves as the standard Arazzo workflow specification, detailing the flow of operations, references to API specifications, and the connections between each step. It encapsulates the logic of the workflow, including the "what" and the "how."
+This file is the standard Arazzo workflow specification, detailing the flow of operations, references to API specifications, and the connections between each step.
+It encapsulates the logic of the workflow, including the "what" and the "how."
 
-### 2. The .arazzo_inputs.json File
+### Arazzo Input Data `(*.arazzo_inputs.json)`
 
-This file supplies the input data required for executing the workflow tests. It specifies values for parameters, request bodies, or variables needed throughout the workflow. Below is an example of a generated input file:
+This file contains the input data required for executing the workflow.
+It specifies values for parameters, request bodies, or variables needed throughout the workflow.
+The format is as follows:
 
-```json
+```jsonc
 {
     "PlaceOrder": {
         "DEFAULT": {
@@ -112,7 +115,7 @@ This file supplies the input data required for executing the workflow tests. It 
 - `DEFAULT` → Contains the default scenario with all necessary input data for the workflow.
 - `GetProducts.IsArrayEmpty` → A specific scenario indicating that the `GetProducts` step and its action `IsArrayEmpty` should evaluate to true.
 
-This input file triggers two test runs:
+This input file triggers two workflow test runs:
 - One for the **DEFAULT** scenario.
 - Another for the **GetProducts.IsArrayEmpty** scenario.
 
