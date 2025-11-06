@@ -1,33 +1,51 @@
 ---
 layout: default
-title: SOAP
+title: WSDL
 parent: Documentation
 nav_order: 17
 ---
-SOAP
-====
+# WSDL
 
-- [SOAP](#soap)
-  - [Mocking SOAP services using WSDL files](#mocking-soap-services-using-wsdl-files)
-  - [Examples as Mock data](#examples-as-mock-data)
+- [WSDL](#wsdl)
+  - [Contract Testing with WSDL](#contract-testing-with-wsdl)
+  - [Mocking SOAP Services with WSDL](#mocking-soap-services-with-wsdl)
+  - [Examples for WSDL Contracts](#examples-for-wsdl-contracts)
+  - [Example Format for Mock Data](#example-format-for-mock-data)
+  - [Sample Applications](#sample-applications)
 
-Just like how you can mock HTTP services using OpenAPI specification, you can mock / stub SOAP services using WSDL files.
 
-## Mocking SOAP services using WSDL files
+## Contract Testing with WSDL
 
-If you a WSDL file on your local file system (Example: `my_soap_service.wsdl` in your current folder) you can directly start the stub server using below Docker command.
+Similar to how you can perform contract testing for HTTP services using the OpenAPI specification, you can also conduct contract testing for SOAP services utilizing WSDL files. If you have a WSDL file on your local file system (for example, `my_soap_service.wsdl` located in your current directory), you can initiate contract tests with the following Docker command:
 
 ```shell
-docker run -v "$(pwd):/usr/src/app" znsio/specmatic stub "my_soap_service.wsdl"
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic test "my_soap_service.wsdl" --host=localhost --port=9000
 ```
 
-The stub server will start on port 9000 by default (which you can change using CLI options)
+- This command will execute contract tests for the service hosted at `http://localhost:9000` using the WSDL file `my_soap_service.wsdl`.
+- Additionally, this can be acheived programmatically if you are using a JVM-based language. For further details, please refer to [Programmatically Executing Specmatic Contract Tests](./contract_tests#programmatically-executing-specmatic-contract-tests)
 
-## Examples as Mock data
+## Mocking SOAP Services with WSDL
 
-The example format involves setting the HTTP request and response. By default Specmatic will look for examples for each WSDL file in a folder that is name `<wsdl_filename_without_file_extension>_examples` (Example: For `my_soap_service.wsdl` Specmatic will look for a folder named `my_soap_service_examples`, again this can be configured to any foler name). The SOAP payloads should be setup as part of the request and response bodies.
+Similar to mocking HTTP services using the OpenAPI specification, it's possible to mock SOAP services using WSDL files. If you have a WSDL file stored on your local file system (for example, `my_soap_service.wsdl` in your current directory), you can initiate the mock server with the following Docker command:
 
-It will look something like this:
+```shell
+docker run -p 9000:9000 -v "$(pwd):/usr/src/app" specmatic/specmatic virtualize "my_soap_service.wsdl"
+```
+
+- By default, the mock server will run on port `9000`, but this can be modified using command-line options.
+- Additionally, if you're working with a JVM-based language, this can also be executed programmatically. For more information, please consult [Programmatically Executing Specmatic Mocks](./service_virtualization_tutorial#programmatically-starting-stub-server-within-tests)
+
+## Examples for WSDL Contracts
+
+A WSDL contract cannot contain examples within its structure, as the format does not support this feature. However, you can provide external examples in `.json` format files located in a directory, and Specmatic will utilize these examples for both contract testing and service virtualization.
+
+By default, Specmatic searches for example files related to each WSDL in a directory named `<wsdl_filename_without_file_extension>_examples`. For example, for the file `my_soap_service.wsdl`, Specmatic will look for a directory named `my_soap_service_examples`, though this can be customized to any folder name
+
+## Example Format for Mock Data
+
+The example format includes defining the HTTP request and response. The SOAP payloads need to be incorporated into the request and response bodies. 
+The structure will look as follows:
 
 ```json
 {
@@ -45,4 +63,8 @@ It will look something like this:
 }
 ```
 
-Please refer to our [sample project](https://github.com/specmatic/specmatic-order-bff-wsdl) to try this out.
+## Sample Applications
+
+Please have a look at the following sample project to understand how to utilize `Specmatic` with WSDL in your applications
+
+- [specmatic-order-bff-wsdl](https://github.com/specmatic/specmatic-order-bff-wsdl)

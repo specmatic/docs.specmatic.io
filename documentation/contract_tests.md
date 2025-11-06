@@ -25,7 +25,6 @@ Contract Tests
     - [Handling Application authentication](#handling-application-authentication)
     - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
     - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
-    - [Examples For WSDL Contracts](#examples-for-wsdl-contracts)
     - [Programmatically executing Specmatic Contract Tests](#programmatically-executing-specmatic-contract-tests)
     - [HTML Report](#html-report)
       - [Summary](#summary)
@@ -823,28 +822,6 @@ We have provided samples for Azure, but the same can be done easily in any build
 ### Authentication In CI For SSH Git Source
 
 You can also use an ssh url as your git source. Take the help of your DevOps team to generate SSH keys locally and on your CI server, and place the local and CI public keys in .ssh/authorized_keys your git server. This will enable the git command to handle authentication seamlessly via SSH authentication.
-
-### Examples For WSDL Contracts
-
-A WSDL contract cannot hold examples within the contract. The format does not support it.
-
-We can instead add examples to a companion file. The companion file should be in the same directory as the wsdl file. It would look like this:
-
-```gherkin
-Feature: WSDL Companion file
-  Background:
-    Given wsdl ./soap-contract-file.wsdl
-
-  Scenario: Add user
-    When POST /soap-service-path
-    Then status 200
-
-    Examples:
-    | (REQUEST-BODY)        | SOAPAction | Any other headers... |
-    | <soapenv>...</soapenv> | "/addUser" | header values        |
-```
-
-(REQUEST-BODY) contains the request body in a single line, SOAPAction contains the value value of the SOAPAction header, and additional columns must be included for each header sent by the SOAP service.
 
 ### Programmatically executing Specmatic Contract Tests
 
