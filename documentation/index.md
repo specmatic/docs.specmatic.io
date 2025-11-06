@@ -18,7 +18,7 @@ Tutorials
 
 Quick links
 * [Generating API Specifications with Specmatic Proxy](/documentation/authoring_contracts.html)
-* [SOAP support](/documentation/soap.html)
+* [WSDL support](/documentation/wsdl.html)
 * [Understanding error reports](/documentation/reading_reports.html)
 * [Authentication](/documentation/authentication.html)
 * [Troubleshooting](/documentation/troubleshooting.html)

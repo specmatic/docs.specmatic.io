@@ -9,11 +9,12 @@ nav_order: 35
 
 <!-- TOC -->
 
-- [Types of Specmatic Licenses](#types-of-specmatic-licenses)
-  - [User Licenses](#user-licenses)
-  - [Service Account Licenses](#service-account-licenses)
-    - [Setting Up the License Key for service accounts](#setting-up-the-license-key-for-service-accounts)
-- [Using Specmatic with Docker](#using-specmatic-with-docker)
+- [Using and Deploying Specmatic License Keys](#using-and-deploying-specmatic-license-keys)
+  - [Types of Specmatic Licenses](#types-of-specmatic-licenses)
+    - [User Licenses](#user-licenses)
+    - [Service Account Licenses](#service-account-licenses)
+      - [Setting Up the License Key (for service accounts)](#setting-up-the-license-key-for-service-accounts)
+  - [Using Specmatic with Docker](#using-specmatic-with-docker)
 
 <!-- /TOC -->
 
@@ -37,8 +38,14 @@ User licenses are intended for developers and testers who use Specmatic interact
    # if you are using specmatic installed via CLI
    specmatic get-license
 
-   # if you are using specmatic via docker
+   # if you are using specmatic via docker (macOS or Linux)
    docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic get-license
+
+   # if you are using specmatic via docker (Windows Powershell)
+   docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic get-license
+
+   # if you are using specmatic via docker (Windows Command Prompt)
+   docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic get-license
    ```
 
    Example output:
