@@ -10,7 +10,6 @@ nav_order: 17
   - [Contract Testing with WSDL](#contract-testing-with-wsdl)
   - [Mocking SOAP Services with WSDL](#mocking-soap-services-with-wsdl)
   - [Examples for WSDL Contracts](#examples-for-wsdl-contracts)
-  - [Example Format for Mock Data](#example-format-for-mock-data)
   - [Sample Applications](#sample-applications)
 
 
@@ -41,8 +40,6 @@ docker run -p 9000:9000 -v "$(pwd):/usr/src/app" specmatic/specmatic virtualize 
 A WSDL contract cannot contain examples within its structure, as the format does not support this feature. However, you can provide external examples in `.json` format files located in a directory, and Specmatic will utilize these examples for both contract testing and service virtualization.
 
 By default, Specmatic searches for example files related to each WSDL in a directory named `<wsdl_filename_without_file_extension>_examples`. For example, for the file `my_soap_service.wsdl`, Specmatic will look for a directory named `my_soap_service_examples`, though this can be customized to any folder name
-
-## Example Format for Mock Data
 
 The example format includes defining the HTTP request and response. The SOAP payloads need to be incorporated into the request and response bodies. 
 The structure will look as follows:
