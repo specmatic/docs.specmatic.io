@@ -104,115 +104,356 @@ pip install specmatic==VERSION
 
 ## Specmatic OpenAPI
 
+{% tabs install-specmatic-openapi %}
+<!-- docker -->
+{% tab install-specmatic-openapi Docker %}
 
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic-openapi --help
+```
 
-Specmatic OpenAPI can be downloaded from the following sources:
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-openapi) - `docker pull specmatic/specmatic-openapi`
-* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/openapi/specmatic-openapi-all/{{ site.specmatic-openapi-version }}/specmatic-openapi-all-{{ site.specmatic-openapi-version }}.jar).
-* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/openapi/specmatic-openapi-all/).
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-openapi/tags) page
+```bash
+docker run -it --rm specmatic/specmatic-openapi:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic-openapi JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
+* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/openapi/specmatic-openapi-all/{{ site.specmatic-openapi-version }}/specmatic-openapi-all-{{ site.specmatic-openapi-version }}.jar)
+
+For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/openapi/specmatic-openapi-all/) page.
+
+{% endtab %}
+<!-- /jar -->
+<!-- linux/macos -->
+{% tab install-specmatic-openapi Linux/macOS %}
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-{% tabs install-specmatic-openapi %}
-{% tab install-specmatic-openapi Linux/macOS %}
 ```bash
 curl {{site.url}}/install-specmatic-openapi.sh | bash
 ```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://github.com/specmatic/specmatic/releases) page.
+```shell
+curl {{site.url}}/install-specmatic-openapi.sh | bash -- --version VERSION
+```
 {% endtab %}
+<!-- /linux/macos -->
+
+<!-- windows -->
 {% tab install-specmatic-openapi Windows %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
 ```bash
 irm {{site.url}}/install-specmatic-openapi.ps1 | iex
 ```
 {% endtab %}
+<!-- /windows -->
 {% endtabs %}
 
 ## Specmatic Studio
 
-Specmatic Studio can be downloaded from the following sources:
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-studio) - `docker pull specmatic/specmatic-studio`
-* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/studio/specmatic-studio/{{ site.specmatic-studio-version }}/specmatic-studio-{{ site.specmatic-studio-version }}.jar).
-* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/studio/specmatic-studio/).
+{% tabs install-specmatic-studio %}
+<!-- docker -->
+{% tab install-specmatic-studio Docker %}
+
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic-studio --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-studio/tags) page
+```bash
+docker run -it --rm specmatic/specmatic-studio:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic-studio JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
+* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/studio/specmatic-studio/{{ site.specmatic-studio-version }}/specmatic-studio-{{ site.specmatic-studio-version }}.jar)
+
+For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/studio/specmatic-studio/) page.
+
+{% endtab %}
+<!-- /jar -->
+<!-- linux/macos -->
+{% tab install-specmatic-studio Linux/macOS %}
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-{% tabs install-specmatic-studio %}
-{% tab install-specmatic-studio Linux/macOS %}
 ```bash
 curl {{site.url}}/install-specmatic-studio.sh | bash
 ```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/studio/specmatic-studio/) page.
+
+```shell
+curl {{site.url}}/install-specmatic-studio.sh | bash -- --version VERSION
+```
+
 {% endtab %}
+<!-- /linux/macos -->
+
+<!-- windows -->
 {% tab install-specmatic-studio Windows %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
 ```bash
 irm {{site.url}}/install-specmatic-studio.ps1 | iex
 ```
 {% endtab %}
+<!-- /windows -->
 {% endtabs %}
 
 ## Specmatic Kafka
 
-Specmatic Kafka can be downloaded from the following sources:
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-kafka) - `docker pull specmatic/specmatic-kafka`
-* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-async-version }}/specmatic-kafka-all-{{ site.specmatic-async-version }}.jar)
-* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all/).
+{% tabs install-specmatic-kafka %}
+<!-- docker -->
+{% tab install-specmatic-kafka Docker %}
+
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic-kafka --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-kafka/tags) page
+```bash
+docker run -it --rm specmatic/specmatic-kafka:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic-kafka JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
+* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-async-version }}/specmatic-kafka-all-{{ site.specmatic-async-version }}.jar)
+
+For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all/) page.
+
+{% endtab %}
+<!-- /jar -->
+<!-- linux/macos -->
+{% tab install-specmatic-kafka Linux/macOS %}
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-{% tabs install-specmatic-kafka %}
-{% tab install-specmatic-kafka Linux/macOS %}
 ```bash
 curl {{site.url}}/install-specmatic-kafka.sh | bash
 ```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all/) page.
+
+```shell
+curl {{site.url}}/install-specmatic-kafka.sh | bash -- --version VERSION
+```
+
+
 {% endtab %}
+<!-- /linux/macos -->
+
+<!-- windows -->
 {% tab install-specmatic-kafka Windows %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
 ```bash
 irm {{site.url}}/install-specmatic-kafka.ps1 | iex
 ```
 {% endtab %}
+<!-- /windows -->
 {% endtabs %}
 
 ## Specmatic gRPC
 
-Specmatic gRPC can be downloaded from the following sources:
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-grpc)
-* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/grpc/specmatic-grpc-all/{{ site.specmatic-grpc-version }}/specmatic-grpc-all-{{ site.specmatic-grpc-version }}.jar)
-* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/grpc/specmatic-grpc-all/).
+{% tabs install-specmatic-grpc %}
+<!-- docker -->
+{% tab install-specmatic-grpc Docker %}
+
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic-grpc --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-grpc/tags) page
+```bash
+docker run -it --rm specmatic/specmatic-grpc:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic-grpc JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
+* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/grpc/specmatic-grpc-all/{{ site.specmatic-grpc-version }}/specmatic-grpc-all-{{ site.specmatic-grpc-version }}.jar)
+
+For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/grpc/specmatic-grpc-all/) page.
+
+{% endtab %}
+<!-- /jar -->
+{% endtabs %}
 
 ## Specmatic GraphQL
 
-Specmatic GraphQL can be downloaded from the following sources:
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-graphql)
-* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/graphql/specmatic-graphql-all/{{ site.specmatic-graphql-version }}/specmatic-graphql-all-{{ site.specmatic-graphql-version }}.jar)
-* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/graphql/specmatic-graphql-all/).
+{% tabs install-specmatic-graphql %}
+<!-- docker -->
+{% tab install-specmatic-graphql Docker %}
+
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic-graphql --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-graphql/tags) page
+```bash
+docker run -it --rm specmatic/specmatic-graphql:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic-graphql JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
+* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/graphql/specmatic-graphql-all/{{ site.specmatic-graphql-version }}/specmatic-graphql-all-{{ site.specmatic-graphql-version }}.jar)
+
+For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/graphql/specmatic-graphql-all/) page.
+
+{% endtab %}
+<!-- /jar -->
+{% endtabs %}
 
 ## Specmatic Arazzo
 
-Specmatic Arazzo can be downloaded from the following sources:
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-arazzo)
-* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/arazzo/specmatic-arazzo-all/{{ site.specmatic-arazzo-version }}/specmatic-arazzo-all-{{ site.specmatic-arazzo-version }}.jar)
-* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/arazzo/specmatic-arazzo-all/).
+{% tabs install-specmatic-arazzo %}
+<!-- docker -->
+{% tab install-specmatic-arazzo Docker %}
+
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic-arazzo --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-arazzo/tags) page
+```bash
+docker run -it --rm specmatic/specmatic-arazzo:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic-arazzo JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
+* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/arazzo/specmatic-arazzo-all/{{ site.specmatic-arazzo-version }}/specmatic-arazzo-all-{{ site.specmatic-arazzo-version }}.jar)
+
+For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/arazzo/specmatic-arazzo-all/) page.
+
+{% endtab %}
+<!-- /jar -->
+{% endtabs %}
 
 ## Specmatic Redis
 
-Specmatic Redis can be downloaded from the following sources:
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-redis)
-* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/redis/specmatic-redis-all/{{ site.specmatic-redis-version }}/specmatic-redis-all-{{ site.specmatic-redis-version }}.jar)
-* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/redis/specmatic-redis-all/).
+{% tabs install-specmatic-redis %}
+<!-- docker -->
+{% tab install-specmatic-redis Docker %}
+
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic-redis --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-redis/tags) page
+```bash
+docker run -it --rm specmatic/specmatic-redis:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic-redis JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
+* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/redis/specmatic-redis-all/{{ site.specmatic-redis-version }}/specmatic-redis-all-{{ site.specmatic-redis-version }}.jar)
+
+For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/redis/specmatic-redis-all/) page.
+
+{% endtab %}
+<!-- /jar -->
+<!-- linux/macos -->
+{% tab install-specmatic-redis Linux/macOS %}
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-{% tabs install-specmatic-redis %}
-{% tab install-specmatic-redis Linux/macOS %}
 ```bash
 curl {{site.url}}/install-specmatic-redis.sh | bash
 ```
+
 {% endtab %}
+<!-- /linux/macos -->
+
+<!-- windows -->
 {% tab install-specmatic-redis Windows %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
 ```bash
 irm {{site.url}}/install-specmatic-redis.ps1 | iex
 ```
 {% endtab %}
+<!-- /windows -->
 {% endtabs %}
 
+## Specmatic Google PubSub
+
+{% tabs install-specmatic-google-pubsub %}
+<!-- docker -->
+{% tab install-specmatic-google-pubsub Docker %}
+
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic-google-pubsub --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-google-pubsub/tags) page
+```bash
+docker run -it --rm specmatic/specmatic-google-pubsub:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic-google-pubsub JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
+* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/google-pubsub/specmatic-google-pubsub-all/{{ site.specmatic-google-pubsub }}/specmatic-google-pubsub-all-{{ site.specmatic-google-pubsub }}.jar)
+
+For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/google-pubsub/specmatic-google-pubsub-all/) page.
+
+{% endtab %}
+<!-- /jar -->
+{% endtabs %}
 
 ## Specmatic JDBC
 
