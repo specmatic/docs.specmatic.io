@@ -142,3 +142,69 @@ irm {{site.url}}/install-specmatic-redis.ps1 | iex
 ```
 {% endtab %}
 {% endtabs %}
+
+
+## Specmatic JDBC
+
+Specmatic JDBC needs to be imported as a dependency in your project:
+
+{% tabs specmatic-jdbc %}
+{% tab specmatic-jdbc Maven %}
+
+Be sure to add the following repository to the `repositories` section of your `pom.xml` if you haven't already:
+
+```xml
+<repository>
+    <id>specmatic-repo</id>
+    <url>https://repo.specmatic.io/releases/</url>
+</repository>
+```
+
+Then add the following dependency to the `dependencies` section of your `pom.xml`:
+
+```xml
+  <dependency>
+    <groupId>io.specmatic</groupId>
+    <artifactId>specmatic-jdbc</artifactId>
+    <version>{{ site.specmatic-jdbc-version }}</version>
+</dependency>
+```
+{% endtab %}
+{% tab specmatic-jdbc Gradle %}
+
+Be sure to register the Specmatic repository in your `repositories` section if you haven't already:
+
+```groovy
+repositories {
+    maven {
+        url "https://repo.specmatic.io/releases/"
+    }
+}
+```
+
+Add the following dependency in the `dependencies` section:
+
+```groovy
+implementation 'io.specmatic:specmatic-jdbc:{{ site.specmatic-jdbc-version }}'
+```
+{% endtab %}
+{% tab specmatic-jdbc Kotlin DSL %}
+
+Be sure to register the Specmatic repository in your `repositories` section if you haven't already:
+
+```kotlin
+repositories {
+    maven {
+        url = uri("https://repo.specmatic.io/releases/")
+    }
+}
+```
+
+Add the following dependency in the `dependencies` section:
+
+```kotlin
+implementation("io.specmatic:specmatic-jdbc:{{ site.specmatic-jdbc-version }}")
+```
+{% endtab %}
+
+{% endtabs %}
