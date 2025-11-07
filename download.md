@@ -8,33 +8,103 @@ nav_exclude: true
 
 ## Open Source CLI standalone executable
 
-Download the latest Specmatic standalone executable from the following sources:
+Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standalone executable.
+
+
+{% tabs install-specmatic %}
+<!-- docker -->
+{% tab install-specmatic Docker %}
+
+To run the latest version:
+```bash
+docker run -it --rm specmatic/specmatic --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic/tags) page
+```bash
+docker run -it --rm specmatic/specmatic:VERSION --help
+```
+{% endtab %}
+<!-- /docker -->
+
+<!-- jar -->
+{% tab install-specmatic JAR %}
+
+The standalone JAR file can be downloaded from the following sources:
+
 * [Github](https://github.com/specmatic/specmatic/releases/download/{{ site.specmatic-core-version }}/specmatic.jar)
 * [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.specmatic-core-version }}/specmatic-executable-all-{{ site.specmatic-core-version }}.jar)
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic) - `docker pull specmatic/specmatic`.
-* [NPM](https://www.npmjs.com/package/specmatic) - `npx specmatic`.
-* [Python](https://pypi.org/project/specmatic/) - `pip install specmatic` (to be consumed as a library).
 
-Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standalone executable.
+For older versions, please refer to the [Releases](https://github.com/specmatic/specmatic/releases) page.
+
+{% endtab %}
+<!-- /jar -->
+<!-- linux/macos -->
+{% tab install-specmatic Linux/macOS %}
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-{% tabs install-specmatic %}
-{% tab install-specmatic Linux/macOS %}
-```bash
+To install the latest version:
+```shell
+# install the latest version
 curl {{site.url}}/install-specmatic.sh | bash
 ```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://github.com/specmatic/specmatic/releases) page.
+```shell
+curl {{site.url}}/install-specmatic.sh | bash -- --version VERSION
+```
+
 {% endtab %}
+<!-- /linux/macos -->
+
+<!-- windows -->
 {% tab install-specmatic Windows %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
 ```bash
 irm {{site.url}}/install-specmatic.ps1 | iex
 ```
+{% endtab %}
+<!-- /windows -->
+
+<!-- npm -->
+{% tab install-specmatic NPM %}
+
+To run the latest version:
+```bash
+npx specmatic
+```
+
+For older versions, replace `VERSION` with the desired version number from the [NPM Registry](https://www.npmjs.com/package/specmatic?activeTab=versions) page
+```bash
+npx specmatic@VERSION
+```
+
+{% endtab %}
+<!-- /npm -->
+
+{% tab install-specmatic Python %}
+
+To install Specmatic via pip, run the following command:
+```bash
+pip install specmatic
+```
+
+To install a specific version, replace `VERSION` with the desired version number from the [PyPI](https://pypi.org/project/specmatic/#history) page:
+```bash
+pip install specmatic==VERSION
+```
+
 {% endtab %}
 {% endtabs %}
 
 # Specmatic Commercial offerings
 
 ## Specmatic OpenAPI
+
+
 
 Specmatic OpenAPI can be downloaded from the following sources:
 * [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-openapi) - `docker pull specmatic/specmatic-openapi`
