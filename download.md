@@ -424,37 +424,6 @@ irm {{site.url}}/install-specmatic-redis.ps1 | iex
 <!-- /windows -->
 {% endtabs %}
 
-## Specmatic Google PubSub
-
-{% tabs install-specmatic-google-pubsub %}
-<!-- docker -->
-{% tab install-specmatic-google-pubsub Docker %}
-
-To run the latest version:
-```bash
-docker run -it --rm specmatic/specmatic-google-pubsub --help
-```
-
-For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-google-pubsub/tags) page
-```bash
-docker run -it --rm specmatic/specmatic-google-pubsub:VERSION --help
-```
-{% endtab %}
-<!-- /docker -->
-
-<!-- jar -->
-{% tab install-specmatic-google-pubsub JAR %}
-
-The standalone JAR file can be downloaded from the following sources:
-
-* [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/google-pubsub/specmatic-google-pubsub-all/{{ site.specmatic-google-pubsub }}/specmatic-google-pubsub-all-{{ site.specmatic-google-pubsub }}.jar)
-
-For older versions, please refer to the [Releases](https://repo.specmatic.io/#releases/io/specmatic/google-pubsub/specmatic-google-pubsub-all/) page.
-
-{% endtab %}
-<!-- /jar -->
-{% endtabs %}
-
 ## Specmatic JDBC
 
 Specmatic JDBC needs to be imported as a dependency in your project:
