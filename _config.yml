@@ -11,6 +11,7 @@ specmatic-jdbc-version: 0.12.2
 specmatic-redis-version: 0.9.5
 specmatic-release-test-version: 0.0.2
 specmatic-grpc-version: 0.1.12
+specmatic-graphql-version: 1.5.0
 contact_us_url: "https://specmatic.io/contact-us"
 
 spec_cmd: "java -jar /path/to/specmatic.jar"
