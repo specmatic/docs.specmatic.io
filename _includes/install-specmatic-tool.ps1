@@ -56,7 +56,7 @@ if (-not (Test-Path -Path $DownloadDir)) {
     Write-Info "Using existing directory $DownloadDir"
 }
 
-$jarPath = Join-Path $DownloadDir $"$downloadTarget.jar"
+$jarPath = Join-Path $DownloadDir "$downloadTarget.jar"
 if (Test-Path -Path $jarPath) {
     Remove-Item -Path $jarPath -Force
     Write-Info "Removed existing $downloadTarget.jar"
