@@ -69,6 +69,12 @@ on:
         type: string
         default: ''
 
+      specmatic-arazzo-version:
+        description: Specmatic Arazzo Version
+        required: false
+        type: string
+        default: ''
+
 jobs:
   bump_version:
     runs-on: ubuntu-latest
@@ -187,7 +193,14 @@ jobs:
           echo "No Specmatic GraphQL Version provided, skipping bump."
         fi
 
-
+        if [ -n "${{ github.event.inputs.specmatic-arazzo-version }}" ]; then
+          echo "Bumping Specmatic Arazzo Version to ${{ github.event.inputs.specmatic-arazzo-version }}"
+          sed -i "s/^specmatic-arazzo-version: .*/specmatic-arazzo-version: ${{ github.event.inputs.specmatic-arazzo-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic Arazzo Version To ${{ github.event.inputs.specmatic-arazzo-version }}"
+        else
+          echo "No Specmatic Arazzo Version provided, skipping bump."
+        fi
 
     - name: Git push
       run: git push
