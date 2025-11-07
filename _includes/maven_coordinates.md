@@ -36,7 +36,7 @@ repositories {
 Add the following dependency in the `dependencies` section:
 
 ```groovy
-implementation '{{ io.specmatic }}:{{ include.artifact_id }}:{{ include.version }}'
+implementation '{{ include.group_id }}:{{ include.artifact_id }}:{{ include.version }}'
 ```
 {% endtab %}
 {% tab specmatic-maven-tab Kotlin DSL %}
@@ -54,7 +54,7 @@ repositories {
 Add the following dependency in the `dependencies` section:
 
 ```kotlin
-implementation("{{ io.specmatic }}:{{ include.artifact_id }}:{{ include.version }}")
+implementation("{{ include.group_id }}:{{ include.artifact_id }}:{{ include.version }}")
 ```
 {% endtab %}
 
