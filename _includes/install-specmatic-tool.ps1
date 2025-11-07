@@ -1,12 +1,39 @@
+[CmdletBinding(PositionalBinding=$false)]
 param(
-    [string]$DownloadDir = "$HOME\.specmatic"
+	[Parameter()][Alias('o', 'download-dir')]
+    [string]$DownloadDir = "$HOME\.specmatic",
+
+	[Parameter()][Alias('v')]
+    [string]$Version = "latest",
+
+	[Alias('h','?','help')]
+	[switch]$ShowHelp,
+
+	[Parameter(ValueFromRemainingArguments=$true)]
+    [string[]]$RemainingArgs = @()
 )
 
 function Write-Info { Write-Host "💡 [INFO] $args" -ForegroundColor Cyan }
 function Write-Warn { Write-Host "⚠️ [WARN] $args" -ForegroundColor Yellow }
 function Write-Error { Write-Host "❌ [ERROR] $args" -ForegroundColor Red }
 
-$toolVersion = "{{ include.tool_version }}"
+for ($i = 0; $i -lt $RemainingArgs.Count; $i++) {
+	switch ($RemainingArgs[$i]) {
+		'--help' { $ShowHelp = $true }
+		'--version' { $Version = $RemainingArgs[$i + 1] }
+		'--download-dir' { $DownloadDir = $RemainingArgs[$i + 1] }
+		'--downloadDir' { $DownloadDir = $RemainingArgs[$i + 1] }
+	}	
+}
+
+if ($ShowHelp) {
+  Write-Host "Usage: install-specmatic-tool.ps1 [-downloadDir, --downloadDir, -download-dir, --download-dir, -o] <dir> [-version, --version, -v] <version>"
+  Write-Host "  [-downloadDir, --downloadDir, -download-dir, --download-dir, -o] : Directory where the JAR will be saved (default: $DownloadDir)"
+  Write-Host "  [-version, --version, -v]           				   : Version of the tool to install (default: $Version)"
+  exit 0
+}
+
+$toolVersion = if ($Version -ne "latest") { $Version } else { "{{ include.latest_version }}" }
 $downloadTarget = "{{ include.download_target }}"
 $downloadUrls = @({{ download_urls | strip }})
 $toolName = "{{ include.tool_name | strip }}"
@@ -15,33 +42,6 @@ if (-not $downloadUrls -or $downloadUrls.Count -eq 0) {
     Write-Error "Download URLs list is empty or not defined. Exiting."
     exit 1
 }
-
-$argsList = @($args)
-while ($argsList.Count -gt 0) {
-    $arg = $argsList[0]
-    switch -Regex ($arg) {
-        '^(-h|--help)$' {
-            Write-Host "Usage: install-specmatic-tool.ps1 [--download-dir=<dir>]"
-            Write-Host "  --download-dir: Directory where $downloadTarget.jar will be downloaded (default: $DownloadDir)"
-            exit 0
-        }
-        '^--download-dir=(.+)$' {
-            $DownloadDir = $matches[1]
-        }
-        default {
-            Write-Host "Unknown argument: $arg"
-            Write-Host "Usage: install-specmatic-tool.ps1 [--download-dir=<dir>]"
-            exit 1
-        }
-    }
-    
-    if ($argsList.Count -gt 1) {
-        $argsList = $argsList[1..($argsList.Count - 1)]
-    } else {
-        $argsList = @()
-    }
-}
-
 
 Write-Info "Using download directory $DownloadDir"
 if (-not (Test-Path -Path $DownloadDir)) {
@@ -56,16 +56,16 @@ if (-not (Test-Path -Path $DownloadDir)) {
     Write-Info "Using existing directory $DownloadDir"
 }
 
-$jarPath = Join-Path $DownloadDir $downloadTarget
+$jarPath = Join-Path $DownloadDir $"$downloadTarget.jar"
 if (Test-Path -Path $jarPath) {
     Remove-Item -Path $jarPath -Force
-    Write-Info "Removed existing $downloadTarget"
+    Write-Info "Removed existing $downloadTarget.jar"
 }
 
-
 $downloadSuccess = $false
-foreach ($url in $downloadUrls) {
-    Write-Info "Downloading $toolName from $url..."
+foreach ($originalUrl  in $downloadUrls) {
+    $url = $originalUrl -replace '\$\{tool_version\}', $toolVersion
+    Write-Info "Attempting to download $toolName from $url..."
     try {
         Invoke-WebRequest -Uri $url -OutFile $jarPath -UseBasicParsing
         if (Test-Path $jarPath) {

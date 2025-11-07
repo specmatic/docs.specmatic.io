@@ -51,7 +51,7 @@ curl {{site.url}}/install-specmatic.sh | bash
 ```
 
 To install an older version, replace `VERSION` with the desired version number from the [Releases](https://github.com/specmatic/specmatic/releases) page.
-```shell
+```bash
 curl {{site.url}}/install-specmatic.sh | bash -- --version VERSION
 ```
 
@@ -63,8 +63,14 @@ curl {{site.url}}/install-specmatic.sh | bash -- --version VERSION
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-```bash
+To install the latest version:
+```powershell
 irm {{site.url}}/install-specmatic.ps1 | iex
+```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://github.com/specmatic/specmatic/releases) page.
+```powershell
+iex "& { $(irm '{{site.url}}/install-specmatic.ps1') } --version VERSION"
 ```
 {% endtab %}
 <!-- /windows -->
@@ -136,12 +142,13 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
+To run the latest version:
 ```bash
 curl {{site.url}}/install-specmatic-openapi.sh | bash
 ```
 
-To install an older version, replace `VERSION` with the desired version number from the [Releases](https://github.com/specmatic/specmatic/releases) page.
-```shell
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/openapi/specmatic-openapi-all/) page.
+```bash
 curl {{site.url}}/install-specmatic-openapi.sh | bash -- --version VERSION
 ```
 {% endtab %}
@@ -152,9 +159,16 @@ curl {{site.url}}/install-specmatic-openapi.sh | bash -- --version VERSION
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-```bash
+To install the latest version:
+```powershell
 irm {{site.url}}/install-specmatic-openapi.ps1 | iex
 ```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/openapi/specmatic-openapi-all/) page.
+```powershell
+iex "& { $(irm '{{site.url}}/install-specmatic-openapi.ps1') } --version VERSION"
+```
+
 {% endtab %}
 <!-- /windows -->
 {% endtabs %}
@@ -193,13 +207,14 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
+To run the latest version:
 ```bash
 curl {{site.url}}/install-specmatic-studio.sh | bash
 ```
 
 To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/studio/specmatic-studio/) page.
 
-```shell
+```bash
 curl {{site.url}}/install-specmatic-studio.sh | bash -- --version VERSION
 ```
 
@@ -211,9 +226,16 @@ curl {{site.url}}/install-specmatic-studio.sh | bash -- --version VERSION
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-```bash
+To install the latest version:
+```powershell
 irm {{site.url}}/install-specmatic-studio.ps1 | iex
 ```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/studio/specmatic-studio/) page.
+```powershell
+iex "& { $(irm '{{site.url}}/install-specmatic-studio.ps1') } --version VERSION"
+```
+
 {% endtab %}
 <!-- /windows -->
 {% endtabs %}
@@ -252,13 +274,14 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
+To install the latest version:
 ```bash
 curl {{site.url}}/install-specmatic-kafka.sh | bash
 ```
 
 To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all/) page.
 
-```shell
+```bash
 curl {{site.url}}/install-specmatic-kafka.sh | bash -- --version VERSION
 ```
 
@@ -271,9 +294,16 @@ curl {{site.url}}/install-specmatic-kafka.sh | bash -- --version VERSION
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-```bash
+To install the latest version:
+```powershell
 irm {{site.url}}/install-specmatic-kafka.ps1 | iex
 ```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all/) page.
+```powershell
+iex "& { $(irm '{{site.url}}/install-specmatic-kafka.ps1') } --version VERSION"
+```
+
 {% endtab %}
 <!-- /windows -->
 {% endtabs %}
@@ -295,7 +325,6 @@ docker run -it --rm specmatic/specmatic-grpc:VERSION --help
 ```
 {% endtab %}
 <!-- /docker -->
-
 <!-- jar -->
 {% tab install-specmatic-grpc JAR %}
 
@@ -307,6 +336,40 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 
 {% endtab %}
 <!-- /jar -->
+<!-- /linux/macos -->
+{% tab install-specmatic-grpc Linux/macOS %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+To install the latest version:
+```bash
+curl {{site.url}}/install-specmatic-grpc.sh | bash
+```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/grpc/specmatic-grpc-all/) page.
+```bash
+curl {{site.url}}/install-specmatic-grpc.sh | bash -- --version VERSION
+```
+
+{% endtab %}
+<!-- /linux/macos -->
+<!-- windows -->
+{% tab install-specmatic-grpc Windows %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+To install the latest version:
+```powershell
+irm {{site.url}}/install-specmatic-grpc.ps1 | iex
+```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/grpc/specmatic-grpc-all/) page.
+```powershell
+iex "& { $(irm '{{site.url}}/install-specmatic-grpc.ps1') } --version VERSION"
+```
+
+{% endtab %}
+<!-- /windows -->
 {% endtabs %}
 
 ## Specmatic GraphQL
@@ -338,6 +401,40 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 
 {% endtab %}
 <!-- /jar -->
+<!-- /linux/macos -->
+{% tab install-specmatic-graphql Linux/macOS %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+To install the latest version:
+```bash
+curl {{site.url}}/install-specmatic-graphql.sh | bash
+```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/graphql/specmatic-graphql-all/) page.
+```bash
+curl {{site.url}}/install-specmatic-graphql.sh | bash -- --version VERSION
+```
+
+{% endtab %}
+<!-- /linux/macos -->
+<!-- windows -->
+{% tab install-specmatic-graphql Windows %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+To install the latest version:
+```powershell
+irm {{site.url}}/install-specmatic-graphql.ps1 | iex
+```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/graphql/specmatic-graphql-all/) page.
+```powershell
+iex "& { $(irm '{{site.url}}/install-specmatic-graphql.ps1') } --version VERSION"
+```
+
+{% endtab %}
+<!-- /windows -->
 {% endtabs %}
 
 ## Specmatic Arazzo
@@ -369,6 +466,40 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 
 {% endtab %}
 <!-- /jar -->
+<!-- /linux/macos -->
+{% tab install-specmatic-arazzo Linux/macOS %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+To install the latest version:
+```bash
+curl {{site.url}}/install-specmatic-arazzo.sh | bash
+```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/arazzo/specmatic-arazzo-all/) page.
+```bash
+curl {{site.url}}/install-specmatic-arazzo.sh | bash -- --version VERSION
+```
+
+{% endtab %}
+<!-- /linux/macos -->
+<!-- windows -->
+{% tab install-specmatic-arazzo Windows %}
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+To install the latest version:
+```powershell
+irm {{site.url}}/install-specmatic-arazzo.ps1 | iex
+```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/arazzo/specmatic-arazzo-all/) page.
+```powershell
+iex "& { $(irm '{{site.url}}/install-specmatic-arazzo.ps1') } --version VERSION"
+```
+
+{% endtab %}
+<!-- /windows -->
 {% endtabs %}
 
 ## Specmatic Redis
@@ -405,8 +536,14 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
+To install the latest version:
 ```bash
 curl {{site.url}}/install-specmatic-redis.sh | bash
+```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/redis/specmatic-redis-all/) page.
+```bash
+curl {{site.url}}/install-specmatic-redis.sh | bash -- --version VERSION
 ```
 
 {% endtab %}
@@ -417,9 +554,16 @@ curl {{site.url}}/install-specmatic-redis.sh | bash
 
 If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
-```bash
+To install the latest version:
+```powershell
 irm {{site.url}}/install-specmatic-redis.ps1 | iex
 ```
+
+To install an older version, replace `VERSION` with the desired version number from the [Releases](https://repo.specmatic.io/#releases/io/specmatic/redis/specmatic-redis-all/) page.
+```powershell
+iex "& { $(irm '{{site.url}}/install-specmatic-redis.ps1') } --version VERSION"
+```
+
 {% endtab %}
 <!-- /windows -->
 {% endtabs %}
