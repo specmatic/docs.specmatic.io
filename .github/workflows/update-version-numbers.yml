@@ -3,77 +3,32 @@ name: Bump tool versions
 on:
   workflow_dispatch:
     inputs:
-      specmatic-release-test-version:
-        description: Specmatic Release Test Version
-        required: false
+      product-name:
+        description: Name of the product to set version for
+        required: true
+        type: choice
+        options:
+          - specmatic-jms
+          - specmatic-core
+          - specmatic-grpc
+          - specmatic-jdbc
+          - specmatic-async
+          - specmatic-redis
+          - specmatic-arazzo
+          - specmatic-studio
+          - specmatic-graphql
+          - specmatic-openapi
+          - specmatic-release-test
+          - specmatic-build-reporter
+      
+      product-version:
+        description: Product version to set for the specified product
+        required: true
         type: string
-        default: ''
 
-      specmatic-core-version:
-        description: Specmatic Core Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-studio-version:
-        description: Specmatic Studio Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-async-version:
-        description: Specmatic Async Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-openapi-version:
-        description: Specmatic OpenAPI Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-build-reporter-version:
-        description: Specmatic Build Reporter Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-jms-version:
-        description: Specmatic JMS Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-redis-version:
-        description: Specmatic Redis Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-jdbc-version:
-        description: Specmatic JDBC Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-grpc-version:
-        description: Specmatic GRPC Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-graphql-version:
-        description: Specmatic GraphQL Version
-        required: false
-        type: string
-        default: ''
-
-      specmatic-arazzo-version:
-        description: Specmatic Arazzo Version
-        required: false
-        type: string
-        default: ''
+concurrency:
+  group: bump-version
+  cancel-in-progress: false
 
 jobs:
   bump_version:
@@ -88,119 +43,60 @@ jobs:
         fetch-depth: 0
         ref: main
         token: "${{ secrets.SPECMATIC_GITHUB_TOKEN }}"
+
     - name: Configure git cli
       run: |
         git config --global user.email "github-service-account@specmatic.io"
         git config --global user.name "Specmatic GitHub Service Account"
-    - name: Bump version
+    
+    - name: Validate version format
+      env:
+        PRODUCT_NAME: ${{ github.event.inputs.product-name }}
+        PRODUCT_VERSION: ${{ github.event.inputs.product-version }}
       run: |
-        if [ -n "${{ github.event.inputs.specmatic-release-test-version }}" ]; then
-          echo "Bumping Specmatic Release Test version to ${{ github.event.inputs.specmatic-release-test-version }}"
-          sed -i "s/^specmatic-release-test-version: .*/specmatic-release-test-version: ${{ github.event.inputs.specmatic-release-test-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic Release Test Version To ${{ github.event.inputs.specmatic-release-test-version }}"
-        else
-          echo "No Specmatic Release Test version provided, skipping bump."
+        if [[ -z "${PRODUCT_NAME}" ]] || [[ -z "${PRODUCT_VERSION}" ]]; then
+          echo "ERROR: Product name or version is empty" >&2
+          exit 1
         fi
 
-        if [ -n "${{ github.event.inputs.specmatic-core-version }}" ]; then
-          echo "Bumping Specmatic Core version to ${{ github.event.inputs.specmatic-core-version }}"
-          sed -i "s/^specmatic-core-version: .*/specmatic-core-version: ${{ github.event.inputs.specmatic-core-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic Core Version To ${{ github.event.inputs.specmatic-core-version }}"
-        else
-          echo "No Specmatic Core version provided, skipping bump."
+        if [[ ! "${PRODUCT_VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
+          echo "ERROR: Invalid version format. Expected: X.Y.Z or X.Y.Z-suffix"
+          exit 1
         fi
 
-        if [ -n "${{ github.event.inputs.specmatic-studio-version }}" ]; then
-          echo "Bumping Specmatic Studio version to ${{ github.event.inputs.specmatic-studio-version }}"
-          sed -i "s/^specmatic-studio-version: .*/specmatic-studio-version: ${{ github.event.inputs.specmatic-studio-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic Studio Version To ${{ github.event.inputs.specmatic-studio-version }}"
+    - name: Bump version and commit
+      env:
+        PRODUCT_NAME: ${{ github.event.inputs.product-name }}
+        PRODUCT_VERSION: ${{ github.event.inputs.product-version }}
+      run: |
+        set -euo pipefail
+        CONFIG_KEY="${PRODUCT_NAME}-version"
+        
+        echo "Bumping ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
+        awk -v key="$CONFIG_KEY" -v ver="$PRODUCT_VERSION" \
+          '$1 == key ":" { $0 = key ": " ver; found=1 } 1; END { if (!found) exit 1 }' \
+          _config.yml > _config.yml.tmp
+        
+        # Check if awk succeeded
+        if [[ $? -ne 0 ]]; then
+          echo "ERROR: Config key '${CONFIG_KEY}' not found in _config.yml" >&2
+          rm -f _config.yml.tmp
+          exit 1
+        fi
+        
+        # Move and verify the update
+        mv _config.yml.tmp _config.yml
+        if ! grep -qF "${CONFIG_KEY}: ${PRODUCT_VERSION}" _config.yml; then
+          echo "ERROR: Failed to update version in _config.yml" >&2
+          exit 1
+        fi
+        
+        git add _config.yml
+        if ! git diff --cached --quiet; then
+          git commit -m "Updated ${PRODUCT_NAME} Version To ${PRODUCT_VERSION}"
+          git push
+          echo "Updated ${PRODUCT_NAME} Version To ${PRODUCT_VERSION}"
         else
-          echo "No Specmatic Studio version provided, skipping bump."
+          echo "No changes to commit, version is already up to date."
         fi
 
-        if [ -n "${{ github.event.inputs.specmatic-async-version }}" ]; then
-          echo "Bumping Specmatic Async version to ${{ github.event.inputs.specmatic-async-version }}"
-          sed -i "s/^specmatic-async-version: .*/specmatic-async-version: ${{ github.event.inputs.specmatic-async-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic Async Version To ${{ github.event.inputs.specmatic-async-version }}"
-        else
-          echo "No Specmatic Async version provided, skipping bump."
-        fi
-
-        if [ -n "${{ github.event.inputs.specmatic-openapi-version }}" ]; then
-          echo "Bumping Specmatic OpenAPI version to ${{ github.event.inputs.specmatic-openapi-version }}"
-          sed -i "s/^specmatic-openapi-version: .*/specmatic-openapi-version: ${{ github.event.inputs.specmatic-openapi-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic OpenAPI Version To ${{ github.event.inputs.specmatic-openapi-version }}"
-        else
-          echo "No Specmatic OpenAPI version provided, skipping bump."
-        fi
-
-        if [ -n "${{ github.event.inputs.specmatic-build-reporter-version }}" ]; then
-          echo "Bumping Specmatic Build Reporter Version to ${{ github.event.inputs.specmatic-build-reporter-version }}"
-          sed -i "s/^specmatic-build-reporter-version: .*/specmatic-build-reporter-version: ${{ github.event.inputs.specmatic-build-reporter-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic Build Reporter Version To ${{ github.event.inputs.specmatic-build-reporter-version }}"
-        else
-          echo "No Specmatic Build Reporter Version provided, skipping bump."
-        fi
-
-        if [ -n "${{ github.event.inputs.specmatic-jms-version }}" ]; then
-          echo "Bumping Specmatic JMS Version to ${{ github.event.inputs.specmatic-jms-version }}"
-          sed -i "s/^specmatic-jms-version: .*/specmatic-jms-version: ${{ github.event.inputs.specmatic-jms-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic JMS Version To ${{ github.event.inputs.specmatic-jms-version }}"
-        else
-          echo "No Specmatic JMS Version provided, skipping bump."
-        fi
-
-        if [ -n "${{ github.event.inputs.specmatic-redis-version }}" ]; then
-          echo "Bumping Specmatic Redis Version to ${{ github.event.inputs.specmatic-redis-version }}"
-          sed -i "s/^specmatic-redis-version: .*/specmatic-redis-version: ${{ github.event.inputs.specmatic-redis-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic Redis Version To ${{ github.event.inputs.specmatic-redis-version }}"
-        else
-          echo "No Specmatic Redis Version provided, skipping bump."
-        fi
-
-        if [ -n "${{ github.event.inputs.specmatic-jdbc-version }}" ]; then
-          echo "Bumping Specmatic JDBC Version to ${{ github.event.inputs.specmatic-jdbc-version }}"
-          sed -i "s/^specmatic-jdbc-version: .*/specmatic-jdbc-version: ${{ github.event.inputs.specmatic-jdbc-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic JDBC Version To ${{ github.event.inputs.specmatic-jdbc-version }}"
-        else
-          echo "No Specmatic JDBC Version provided, skipping bump."
-        fi
-
-        if [ -n "${{ github.event.inputs.specmatic-grpc-version }}" ]; then
-          echo "Bumping Specmatic GRPC Version to ${{ github.event.inputs.specmatic-grpc-version }}"
-          sed -i "s/^specmatic-grpc-version: .*/specmatic-grpc-version: ${{ github.event.inputs.specmatic-grpc-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic GRPC Version To ${{ github.event.inputs.specmatic-grpc-version }}"
-        else
-          echo "No Specmatic GRPC Version provided, skipping bump."
-        fi
-
-        if [ -n "${{ github.event.inputs.specmatic-graphql-version }}" ]; then
-          echo "Bumping Specmatic GraphQL Version to ${{ github.event.inputs.specmatic-graphql-version }}"
-          sed -i "s/^specmatic-graphql-version: .*/specmatic-graphql-version: ${{ github.event.inputs.specmatic-graphql-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic GraphQL Version To ${{ github.event.inputs.specmatic-graphql-version }}"
-        else
-          echo "No Specmatic GraphQL Version provided, skipping bump."
-        fi
-
-        if [ -n "${{ github.event.inputs.specmatic-arazzo-version }}" ]; then
-          echo "Bumping Specmatic Arazzo Version to ${{ github.event.inputs.specmatic-arazzo-version }}"
-          sed -i "s/^specmatic-arazzo-version: .*/specmatic-arazzo-version: ${{ github.event.inputs.specmatic-arazzo-version }}/" _config.yml
-          git add .
-          git commit -m "Updated Specmatic Arazzo Version To ${{ github.event.inputs.specmatic-arazzo-version }}"
-        else
-          echo "No Specmatic Arazzo Version provided, skipping bump."
-        fi
-
-    - name: Git push
-      run: git push
