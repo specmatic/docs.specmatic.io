@@ -17,6 +17,21 @@ Download the latest Specmatic standalone executable from the following sources:
 
 Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standalone executable.
 
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+{% tabs install-specmatic %}
+{% tab install-specmatic Linux/macOS %}
+```bash
+curl {{site.url}}/install-specmatic.sh | bash
+```
+{% endtab %}
+{% tab install-specmatic Windows %}
+```bash
+irm {{site.url}}/install-specmatic.ps1 | iex
+```
+{% endtab %}
+{% endtabs %}
+
 # Specmatic Commercial offerings
 
 ## Specmatic OpenAPI
@@ -26,6 +41,21 @@ Specmatic OpenAPI can be downloaded from the following sources:
 * As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/openapi/specmatic-openapi-all/{{ site.specmatic-openapi-version }}/specmatic-openapi-all-{{ site.specmatic-openapi-version }}.jar).
 * Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/openapi/specmatic-openapi-all/).
 
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+{% tabs install-specmatic-openapi %}
+{% tab install-specmatic-openapi Linux/macOS %}
+```bash
+curl {{site.url}}/install-specmatic-openapi.sh | bash
+```
+{% endtab %}
+{% tab install-specmatic-openapi Windows %}
+```bash
+irm {{site.url}}/install-specmatic-openapi.ps1 | iex
+```
+{% endtab %}
+{% endtabs %}
+
 ## Specmatic Studio
 
 Specmatic Studio can be downloaded from the following sources:
@@ -33,12 +63,42 @@ Specmatic Studio can be downloaded from the following sources:
 * As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/studio/specmatic-studio/{{ site.specmatic-studio-version }}/specmatic-studio-{{ site.specmatic-studio-version }}.jar).
 * Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/studio/specmatic-studio/).
 
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+{% tabs install-specmatic-studio %}
+{% tab install-specmatic-studio Linux/macOS %}
+```bash
+curl {{site.url}}/install-specmatic-studio.sh | bash
+```
+{% endtab %}
+{% tab install-specmatic-studio Windows %}
+```bash
+irm {{site.url}}/install-specmatic-studio.ps1 | iex
+```
+{% endtab %}
+{% endtabs %}
+
 ## Specmatic Kafka
 
 Specmatic Kafka can be downloaded from the following sources:
 * [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-kafka) - `docker pull specmatic/specmatic-kafka`
 * As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-async-version }}/specmatic-kafka-all-{{ site.specmatic-async-version }}.jar)
 * Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all/).
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+{% tabs install-specmatic-kafka %}
+{% tab install-specmatic-kafka Linux/macOS %}
+```bash
+curl {{site.url}}/install-specmatic-kafka.sh | bash
+```
+{% endtab %}
+{% tab install-specmatic-kafka Windows %}
+```bash
+irm {{site.url}}/install-specmatic-kafka.ps1 | iex
+```
+{% endtab %}
+{% endtabs %}
 
 ## Specmatic gRPC
 
@@ -67,3 +127,42 @@ Specmatic Redis can be downloaded from the following sources:
 * [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-redis)
 * As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/redis/specmatic-redis-all/{{ site.specmatic-redis-version }}/specmatic-redis-all-{{ site.specmatic-redis-version }}.jar)
 * Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/redis/specmatic-redis-all/).
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+{% tabs install-specmatic-redis %}
+{% tab install-specmatic-redis Linux/macOS %}
+```bash
+curl {{site.url}}/install-specmatic-redis.sh | bash
+```
+{% endtab %}
+{% tab install-specmatic-redis Windows %}
+```bash
+irm {{site.url}}/install-specmatic-redis.ps1 | iex
+```
+{% endtab %}
+{% endtabs %}
+
+
+## Specmatic Build Reporter
+
+Specmatic Build Reporter can be downloaded from the following sources:
+* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-reporter)
+* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/build-reporter/specmatic-reporter-all/{{ site.specmatic-build-reporter-version }}/specmatic-reporter-all-{{ site.specmatic-build-reporter-version }}.jar)
+* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/build-reporter/specmatic-reporter-all/).
+
+
+If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+
+{% tabs install-specmatic-build-reporter %}
+{% tab install-specmatic-build-reporter Linux/macOS %}
+```bash
+curl {{site.url}}/install-specmatic-reporter.sh | bash
+```
+{% endtab %}
+{% tab install-specmatic-build-reporter Windows %}
+```bash
+irm {{site.url}}/install-specmatic-reporter.ps1 | iex
+```
+{% endtab %}
+{% endtabs %}
