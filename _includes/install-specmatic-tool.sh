@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-tool_version="{{ include.tool_version }}"
+latest_tool_version="{{ include.tool_version }}"
 download_target="{{ include.download_target }}"
 download_urls=({{ download_urls | strip }})
 tool_name="{{ include.tool_name | strip }}"
 main_picocli_command="{{ include.main_picocli_command }}"
 # usage:
-# curl -s {{site.url}}/{{ page.name }} | bash -s -- [--download-dir=<dir>] [--shell=bash|zsh]
+# curl -s {{site.url}}/{{ page.name }} | bash -s -- [--download-dir=<dir>] [--shell=bash|zsh] [--version=<version>]
 
 info() {
   echo -e "💡 \033[1;34m[INFO]\033[0m $*"
@@ -27,26 +27,38 @@ JAR_PATH_ACTUAL="${DOWNLOAD_DIR_ACTUAL}/$download_target.jar"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help)
-      echo "Usage: {{ page.name }} [--download-dir=<dir>] [--shell=bash|zsh]"
+      echo "Usage: {{ page.name }} [--download-dir=<dir>] [--shell=bash|zsh] [--version=<version>]"
       echo "  --download-dir: Directory where $download_target.jar will be downloaded (default: ~/.specmatic/)"
       exit 0
       ;;
     --download-dir=*)
       DOWNLOAD_DIR="${1#*=}"
       ;;
+    --download-dir)
+      shift
+      DOWNLOAD_DIR="$1"
+      ;;
+    --version=*)
+      tool_version="${1#*=}"
+      ;;
+    --version)
+      shift
+      tool_version="$1"
+      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: {{ page.name }} [--download-dir=<dir>] [--shell=bash|zsh]"
+      echo "Usage: {{ page.name }} [--download-dir=<dir>] [--shell=bash|zsh] [--version=<version>]"
       exit 1
       ;;
   esac
   shift
 done
 
+if [ -z "$tool_version" ]; then
+  tool_version="$latest_tool_version"
+fi
 
 info "Download directory: $DOWNLOAD_DIR"
-
-
 
 if command -v wget >/dev/null 2>&1; then
   DOWNLOADER="wget"
@@ -64,9 +76,10 @@ info "Using downloader: $DOWNLOADER"
 
 mkdir -p ${DOWNLOAD_DIR_ACTUAL}
 
-
 download_success=0
-for url in "${download_urls[@]}"; do
+for original_url in "${download_urls[@]}"; do
+  # Replace placeholder with actual version
+  url="${original_url//$latest_tool_version/$tool_version}"
   info "Attempting to download $tool_name from $url"
   if "$DOWNLOADER" "${DOWNLOADER_ARGS[@]}" "$JAR_PATH_ACTUAL" "$url"; then
     info "Downloaded $tool_name to $JAR_PATH"
