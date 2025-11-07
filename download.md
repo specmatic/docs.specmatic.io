@@ -148,63 +148,21 @@ irm {{site.url}}/install-specmatic-redis.ps1 | iex
 
 Specmatic JDBC needs to be imported as a dependency in your project:
 
-{% tabs specmatic-jdbc %}
-{% tab specmatic-jdbc Maven %}
+{% capture specmatic_jdbc_version %}{{ site.specmatic-jdbc-version }}{% endcapture %}
 
-Be sure to add the following repository to the `repositories` section of your `pom.xml` if you haven't already:
+{% include maven_coordinates.md
+  group_id="io.specmatic.jdbc"
+  artifact_id="specmatic-jdbc"
+  version=specmatic_jdbc_version %}
 
-```xml
-<repository>
-    <id>specmatic-repo</id>
-    <url>https://repo.specmatic.io/releases/</url>
-</repository>
-```
 
-Then add the following dependency to the `dependencies` section of your `pom.xml`:
+## Specmatic JMS
 
-```xml
-  <dependency>
-    <groupId>io.specmatic</groupId>
-    <artifactId>specmatic-jdbc</artifactId>
-    <version>{{ site.specmatic-jdbc-version }}</version>
-</dependency>
-```
-{% endtab %}
-{% tab specmatic-jdbc Gradle %}
+Specmatic JMS needs to be imported as a dependency in your project:
 
-Be sure to register the Specmatic repository in your `repositories` section if you haven't already:
+{% capture specmatic_jms_version %}{{ site.specmatic-jms-version }}{% endcapture %}
 
-```groovy
-repositories {
-    maven {
-        url "https://repo.specmatic.io/releases/"
-    }
-}
-```
-
-Add the following dependency in the `dependencies` section:
-
-```groovy
-implementation 'io.specmatic:specmatic-jdbc:{{ site.specmatic-jdbc-version }}'
-```
-{% endtab %}
-{% tab specmatic-jdbc Kotlin DSL %}
-
-Be sure to register the Specmatic repository in your `repositories` section if you haven't already:
-
-```kotlin
-repositories {
-    maven {
-        url = uri("https://repo.specmatic.io/releases/")
-    }
-}
-```
-
-Add the following dependency in the `dependencies` section:
-
-```kotlin
-implementation("io.specmatic:specmatic-jdbc:{{ site.specmatic-jdbc-version }}")
-```
-{% endtab %}
-
-{% endtabs %}
+{% include maven_coordinates.md
+  group_id="io.specmatic.jms"
+  artifact_id="specmatic-jms"
+  version=specmatic_jms_version %}
