@@ -8,7 +8,7 @@ layout: none
   "https://repo.specmatic.io/releases/io/specmatic/specmatic-executable-all/{tool_version}/specmatic-executable-all-{tool_version}.jar"
 {% endcapture %}
 
-{% include install-specmatic-tool.sh
+{% include install-specmatic-tool.ps1
   main_picocli_command="application.SpecmaticCommand"
   tool_name="Specmatic"
   latest_version=latest_version

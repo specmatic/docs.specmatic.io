@@ -64,7 +64,7 @@ if (Test-Path -Path $jarPath) {
 
 $downloadSuccess = $false
 foreach ($originalUrl  in $downloadUrls) {
-    $url = $originalUrl -replace '\$\{tool_version\}', $toolVersion
+    $url = $originalUrl -replace '\{tool_version\}', $toolVersion
     Write-Info "Attempting to download $toolName from $url..."
     try {
         Invoke-WebRequest -Uri $url -OutFile $jarPath -UseBasicParsing
