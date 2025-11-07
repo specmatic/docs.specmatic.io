@@ -79,6 +79,10 @@
 
 .tab-content > li.active {
     display: block;
+    li {
+        list-style-position: inside;
+        padding-left: 10px;
+    }
 }
 
 .tab-content > li::before,
