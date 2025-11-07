@@ -38,7 +38,7 @@ on:
         required: false
         type: string
         default: ''
-      
+
       specmatic-jms-version:
         description: Specmatic JMS Version
         required: false
@@ -53,6 +53,12 @@ on:
 
       specmatic-jdbc-version:
         description: Specmatic JDBC Version
+        required: false
+        type: string
+        default: ''
+
+      specmatic-grpc-version:
+        description: Specmatic GRPC Version
         required: false
         type: string
         default: ''
@@ -155,6 +161,15 @@ jobs:
           git commit -m "Updated Specmatic JDBC Version To ${{ github.event.inputs.specmatic-jdbc-version }}"
         else
           echo "No Specmatic JDBC Version provided, skipping bump."
+        fi
+
+        if [ -n "${{ github.event.inputs.specmatic-grpc-version }}" ]; then
+          echo "Bumping Specmatic GRPC Version to ${{ github.event.inputs.specmatic-grpc-version }}"
+          sed -i "s/^specmatic-grpc-version: .*/specmatic-grpc-version: ${{ github.event.inputs.specmatic-grpc-version }}/" _config.yml
+          git add .
+          git commit -m "Updated Specmatic GRPC Version To ${{ github.event.inputs.specmatic-grpc-version }}"
+        else
+          echo "No Specmatic GRPC Version provided, skipping bump."
         fi
 
     - name: Git push
