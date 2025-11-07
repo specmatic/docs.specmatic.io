@@ -69,6 +69,12 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | --------------------------- | -------- | --------------------------------------------------------------------------------------- |
 | specmatic-hooks-java-sample | Kotlin   | [specmatic-hooks-java-sample](https://github.com/specmatic/specmatic-hooks-java-sample) |
 
+### Converting existing mocks to Specmatic
+
+| Convert from | Sample Project                                                                         |
+| ------------ | -------------------------------------------------------------------------------------- |
+| Wiremock     | [wiremock-to-specmatic](https://github.com/specmatic/wiremock-to-specmatic-conversion) |
+
 {% endtab %}
 
 <!-- ASYNCAPI -->
@@ -248,20 +254,6 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | Name                      | Repository                                                                          |
 | ------------------------- | ----------------------------------------------------------------------------------- |
 | Specmatic Order Contracts | [specmatic-order-contracts](https://github.com/specmatic/specmatic-order-contracts) |
-
-{% endtab %}
-
-<!-- Conversion -->
-
-{% tab modules Conversion %}
-
-Converting existing mocks to Specmatic.
-
-### Projects
-
-| Convert from | Sample Project                                                                         |
-| ------------ | -------------------------------------------------------------------------------------- |
-| Wiremock     | [wiremock-to-specmatic](https://github.com/specmatic/wiremock-to-specmatic-conversion) |
 
 {% endtab %}
 
