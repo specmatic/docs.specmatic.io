@@ -142,27 +142,3 @@ irm {{site.url}}/install-specmatic-redis.ps1 | iex
 ```
 {% endtab %}
 {% endtabs %}
-
-
-## Specmatic Build Reporter
-
-Specmatic Build Reporter can be downloaded from the following sources:
-* [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-reporter)
-* As a JAR file from [Specmatic Repository](https://repo.specmatic.io/releases/io/specmatic/build-reporter/specmatic-reporter-all/{{ site.specmatic-build-reporter-version }}/specmatic-reporter-all-{{ site.specmatic-build-reporter-version }}.jar)
-* Previous JAR versions can be found [here](https://repo.specmatic.io/#releases/io/specmatic/build-reporter/specmatic-reporter-all/).
-
-
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
-
-{% tabs install-specmatic-build-reporter %}
-{% tab install-specmatic-build-reporter Linux/macOS %}
-```bash
-curl {{site.url}}/install-specmatic-reporter.sh | bash
-```
-{% endtab %}
-{% tab install-specmatic-build-reporter Windows %}
-```bash
-irm {{site.url}}/install-specmatic-reporter.ps1 | iex
-```
-{% endtab %}
-{% endtabs %}
