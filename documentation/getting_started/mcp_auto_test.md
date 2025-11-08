@@ -1,8 +1,10 @@
 ---
 layout: default
 title: MCP Auto Test
-parent: Documentation
-nav_order: 6
+parent: Getting Started
+nav_order: 3
+redirect_from:
+  - /documentation/mcp_auto_test.html
 ---
 
 # MCP Auto Test

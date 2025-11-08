@@ -1,15 +1,18 @@
 ---
 layout: default
-title: Getting started (in 5 min)
-nav_exclude: true
+title: CLI Quick Start
+parent: Getting Started
+nav_order: 2
+redirect_from:
+  - /getting_started.html
 ---
-Getting started
+CLI Quick Start
 ===============
 
 > **Download Specmatic:** You can download the latest Specmatic executable, Docker image, or Maven dependency from the [Download page](/download.html).
 
-- [Getting started](#getting-started)
-    - [Setup](#setup)
+- [CLI Quick Start](#cli-quick-start)
+    - [Set up](#set-up)
     - [Example Application - PetStore](#example-application---petstore)
     - [PetStore API Specification](#petstore-api-specification)
     - [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
@@ -21,7 +24,7 @@ Getting started
       - [Intelligent Service Virtualization](#intelligent-service-virtualization)
       - [Externalising stub responses](#externalising-stub-responses)
 
-### Setup
+### Set up
 
 {% include setup_command_line.md %}
 

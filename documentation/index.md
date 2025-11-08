@@ -9,9 +9,9 @@ has_toc: false
 # Documentation
 
 ## Getting started
-* [5 minute Studio quick start](/studio_quick_start.html)
-* [5 minute CLI quick start](/getting_started.html)
-* [Specmatic MCP Auto Tests](/documentation/mcp_auto_test.html)
+* [5 minute Studio quick start](/documentation/getting_started/studio_quick_start.html)
+* [5 minute CLI quick start](/documentation/getting_started/cli_quick_start.html)
+* [Specmatic MCP Auto Tests](/documentation/getting_started/mcp_auto_test.html)
 
 ## Tutorials
 * [Contract Testing](/documentation/contract_testing.html)

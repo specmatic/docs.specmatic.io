@@ -1,7 +1,10 @@
 ---
 layout: default
-title: Getting started with Studio
-nav_exclude: true
+title: Studio Quick Start
+parent: Getting Started
+nav_order: 1
+redirect_from:
+  - /studio_quick_start.html
 ---
 
 Getting started with Studio
@@ -29,11 +32,11 @@ This tutorial will run online on [Specmatic Studio](https://studio.specmatic.com
 
 Hover over the little pop-out hamburger shown below, and click on the `petstore.yaml` specification.
 
-![screenshot of the file browser pop-out](images/studio-file-browser.png)
+![screenshot of the file browser pop-out](/images/studio-file-browser.png)
 
 Then click on the Spec tab at the top to view the spec, as in the following screenshot.
 
-![screenshot of the sample petstore.yaml spec](images/studio-sample-specification.png)
+![screenshot of the sample petstore.yaml spec](/images/studio-sample-specification.png)
 
 Here's a <a href="/original_petstore_spec.html" target="_blank">copy of the petstore specification</a> if needed for use later in the tutorial.
 
