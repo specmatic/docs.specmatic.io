@@ -21,19 +21,27 @@ This approach works across any CI setup which can include the auth params as par
 {% tabs config %}
 {% tab config specmatic.yaml %}
 ```yaml
-provider: git
-repository: https://${TOKEN}@github.com/specmatic/central-contract-repo-private.git
-provides:
-  - io/specmatic/examples/store/openapi/api_order_v3.yaml
+version: 2
+contracts:
+  - git:
+      url: https://${TOKEN}@github.com/specmatic/central-contract-repo-private.git
+    provides:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% tab config specmatic.json %}
 ```json
 {
-  "provider": "git",
-  "repository": "https://${TOKEN}@github.com/specmatic/central-contract-repo-private.git",
-  "provides": [
-    "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://${TOKEN}@github.com/specmatic/central-contract-repo-private.git"
+      },
+      "provides": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
   ]
 }
 ```
@@ -65,19 +73,27 @@ Detailed steps
 {% tabs config %}
 {% tab config specmatic.yaml %}
 ```yaml
-provider: git
-repository: https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/specmatic/central-contract-repo-private.git
-provides:
-  - io/specmatic/examples/store/openapi/api_order_v3.yaml
+version: 2
+contracts:
+  - git:
+      url: https://${CENTRAL_CONTRACT_REPO_PAT}@@github.com/specmatic/central-contract-repo-private.git
+    provides:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
 ```
 {% endtab %}
 {% tab config specmatic.json %}
 ```json
 {
-  "provider": "git",
-  "repository": "https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/specmatic/central-contract-repo-private.git",
-  "provides": [
-    "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://${CENTRAL_CONTRACT_REPO_PAT}@github.com/specmatic/central-contract-repo-private.git"
+      },
+      "provides": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
   ]
 }
 ```

@@ -45,6 +45,11 @@ Also if your contracts are stored in a source control system like Git, we need t
 If you have an old version of the config, Specmatic can upgrade it to the latest version.
 
 {% tabs compare %}
+{% tab compare docker %}
+```bash
+docker run -v "/your-local-specs-directory:/specs" specmatic/specmatic config upgrade --input "/specs/specmatic.yaml" --output "specmatic_new.yaml"
+```
+{% endtab %}
 {% tab compare java %}
 ```bash
 java -jar specmatic.jar config upgrade --input specmatic_old.yaml --output specmatic.yaml
@@ -53,11 +58,6 @@ java -jar specmatic.jar config upgrade --input specmatic_old.yaml --output specm
 {% tab compare npm %}
 ```bash
 npx specmatic config upgrade --input specmatic_old.yaml --output specmatic.yaml
-```
-{% endtab %}
-{% tab compare docker %}
-```bash
-docker run -v "/your-local-specs-directory:/specs" specmatic/specmatic config upgrade --input "/specs/specmatic.yaml" --output "specmatic_new.yaml"
 ```
 {% endtab %}
 {% endtabs %}
@@ -84,7 +84,7 @@ test:
 
 Note: The value of `enable` can hold the following values:
 - `all`
-- `positiveOnly` — will not run negative tests
+- `positiveOnly` — will not run negative tests
 - `none` - the default
 
 #### Externalized Examples Directories
