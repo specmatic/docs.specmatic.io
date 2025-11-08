@@ -4,7 +4,7 @@ title: Download
 nav_exclude: true
 
 ---
-# Specmatic Open Source
+# [Specmatic Open Source](https://github.com/specmatic/specmatic)
 
 ## Open Source CLI standalone executable
 
@@ -42,7 +42,7 @@ For older versions, please refer to the [Releases](https://github.com/specmatic/
 <!-- linux/macos -->
 {% tab install-specmatic Linux/macOS %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```shell
@@ -61,7 +61,7 @@ curl {{site.url}}/install-specmatic.sh | bash -- --version VERSION
 <!-- windows -->
 {% tab install-specmatic Windows %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```powershell
@@ -140,7 +140,7 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 <!-- linux/macos -->
 {% tab install-specmatic-openapi Linux/macOS %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To run the latest version:
 ```bash
@@ -157,7 +157,7 @@ curl {{site.url}}/install-specmatic-openapi.sh | bash -- --version VERSION
 <!-- windows -->
 {% tab install-specmatic-openapi Windows %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```powershell
@@ -173,7 +173,7 @@ iex "& { $(irm '{{site.url}}/install-specmatic-openapi.ps1') } --version VERSION
 <!-- /windows -->
 {% endtabs %}
 
-## Specmatic Studio
+## [Specmatic Studio](https://specmatic.io/specmatic-studio/)
 
 {% tabs install-specmatic-studio %}
 <!-- docker -->
@@ -205,7 +205,7 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 <!-- linux/macos -->
 {% tab install-specmatic-studio Linux/macOS %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To run the latest version:
 ```bash
@@ -224,7 +224,7 @@ curl {{site.url}}/install-specmatic-studio.sh | bash -- --version VERSION
 <!-- windows -->
 {% tab install-specmatic-studio Windows %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```powershell
@@ -240,7 +240,7 @@ iex "& { $(irm '{{site.url}}/install-specmatic-studio.ps1') } --version VERSION"
 <!-- /windows -->
 {% endtabs %}
 
-## Specmatic Kafka
+## [Specmatic Kafka](https://specmatic.io/features/kafka-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
 
 {% tabs install-specmatic-kafka %}
 <!-- docker -->
@@ -272,7 +272,7 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 <!-- linux/macos -->
 {% tab install-specmatic-kafka Linux/macOS %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```bash
@@ -292,7 +292,7 @@ curl {{site.url}}/install-specmatic-kafka.sh | bash -- --version VERSION
 <!-- windows -->
 {% tab install-specmatic-kafka Windows %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```powershell
@@ -308,7 +308,7 @@ iex "& { $(irm '{{site.url}}/install-specmatic-kafka.ps1') } --version VERSION"
 <!-- /windows -->
 {% endtabs %}
 
-## Specmatic gRPC
+## [Specmatic gRPC](https://specmatic.io/features/transform-your-grpc-proto-files-into-executable-contracts-in-seconds-with-specmatic/)
 
 {% tabs install-specmatic-grpc %}
 <!-- docker -->
@@ -339,7 +339,7 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 <!-- /linux/macos -->
 {% tab install-specmatic-grpc Linux/macOS %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```bash
@@ -356,7 +356,7 @@ curl {{site.url}}/install-specmatic-grpc.sh | bash -- --version VERSION
 <!-- windows -->
 {% tab install-specmatic-grpc Windows %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```powershell
@@ -372,7 +372,7 @@ iex "& { $(irm '{{site.url}}/install-specmatic-grpc.ps1') } --version VERSION"
 <!-- /windows -->
 {% endtabs %}
 
-## Specmatic GraphQL
+## [Specmatic GraphQL](https://specmatic.io/features/transform-your-graphql-specs-into-executable-contracts-in-seconds-with-specmatic/)
 
 {% tabs install-specmatic-graphql %}
 <!-- docker -->
@@ -404,7 +404,7 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 <!-- /linux/macos -->
 {% tab install-specmatic-graphql Linux/macOS %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```bash
@@ -421,7 +421,7 @@ curl {{site.url}}/install-specmatic-graphql.sh | bash -- --version VERSION
 <!-- windows -->
 {% tab install-specmatic-graphql Windows %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```powershell
@@ -437,7 +437,7 @@ iex "& { $(irm '{{site.url}}/install-specmatic-graphql.ps1') } --version VERSION
 <!-- /windows -->
 {% endtabs %}
 
-## Specmatic Arazzo
+## [Specmatic Arazzo](https://specmatic.io/features/author-test-arazzo-api-workflows-drag-drop-simplicity/)
 
 {% tabs install-specmatic-arazzo %}
 <!-- docker -->
@@ -469,7 +469,7 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 <!-- /linux/macos -->
 {% tab install-specmatic-arazzo Linux/macOS %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```bash
@@ -486,7 +486,7 @@ curl {{site.url}}/install-specmatic-arazzo.sh | bash -- --version VERSION
 <!-- windows -->
 {% tab install-specmatic-arazzo Windows %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```powershell
@@ -502,7 +502,7 @@ iex "& { $(irm '{{site.url}}/install-specmatic-arazzo.ps1') } --version VERSION"
 <!-- /windows -->
 {% endtabs %}
 
-## Specmatic Redis
+## [Specmatic Redis](https://specmatic.io/features/api-resiliency-and-contract-testing-for-resp-redis/)
 
 {% tabs install-specmatic-redis %}
 <!-- docker -->
@@ -534,7 +534,7 @@ For older versions, please refer to the [Releases](https://repo.specmatic.io/#re
 <!-- linux/macos -->
 {% tab install-specmatic-redis Linux/macOS %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```bash
@@ -552,7 +552,7 @@ curl {{site.url}}/install-specmatic-redis.sh | bash -- --version VERSION
 <!-- windows -->
 {% tab install-specmatic-redis Windows %}
 
-If you have have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
+If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
 To install the latest version:
 ```powershell
@@ -568,7 +568,7 @@ iex "& { $(irm '{{site.url}}/install-specmatic-redis.ps1') } --version VERSION"
 <!-- /windows -->
 {% endtabs %}
 
-## Specmatic JDBC
+## [Specmatic JDBC](https://specmatic.io/features/jdbc-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
 
 Specmatic JDBC needs to be imported as a dependency in your project:
 
@@ -580,7 +580,7 @@ Specmatic JDBC needs to be imported as a dependency in your project:
   version=specmatic_jdbc_version %}
 
 
-## Specmatic JMS
+## [Specmatic JMS](https://specmatic.io/features/jms-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
 
 Specmatic JMS needs to be imported as a dependency in your project:
 
@@ -592,7 +592,7 @@ Specmatic JMS needs to be imported as a dependency in your project:
   version=specmatic_jms_version %}
 
 
-## Specmatic Google pubsub
+## [Specmatic Google pubsub](https://specmatic.io/features/google-pubsub-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
 
 Specmatic Google pubsub needs to be imported as a dependency in your project:
 
