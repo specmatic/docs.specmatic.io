@@ -1,11 +1,16 @@
 ---
 layout: default
 title: Arazzo
-parent: Documentation
-nav_order: 18
+parent: Supported Protocols
+nav_order: 4
+redirect_from:
+  - /documentation/arazzo.html
 ---
 
 # Arazzo
+{: .d-inline-block }
+Commercial
+{: .label }
 
 - [Arazzo](#arazzo)
   - [Introduction](#introduction)

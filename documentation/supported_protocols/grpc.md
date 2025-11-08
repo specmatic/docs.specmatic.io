@@ -1,26 +1,35 @@
 ---
 layout: default
 title: gRPC
-parent: Documentation
-nav_order: 18
+parent: Supported Protocols
+nav_order: 2
+redirect_from:
+  - /documentation/grpc.html
 ---
 
 # gRPC
+{: .d-inline-block }
+Commercial
+{: .label }
 
-- [gRPC](#grpc)
-  - [Introduction](#introduction)
-  - [What Can You Achieve with Specmatic's gRPC Support?](#what-can-you-achieve-with-specmatics-grpc-support)
-  - [Quick Start](#quick-start)
-  - [Detailed explanation](#detailed-explanation)
-    - [Using your proto files as your API Contracts](#using-your-proto-files-as-your-api-contracts)
-    - [Support for Local Imports in Proto Files](#support-for-local-imports-in-proto-files)
-    - [Support for Well-Known Remote Imports](#support-for-well-known-remote-imports)
-    - [Using Externalized Examples as Test/Stub Data for gRPC in Contract Tests and Service Virtualization](#using-externalized-examples-as-teststub-data-for-grpc-in-contract-tests-and-service-virtualization)
-    - [Using the Docker Image](#using-the-docker-image)
-      - [Starting the Stub Service](#starting-the-stub-service)
-      - [Running Tests](#running-tests)
-    - [Proto 3 (required, optional) and Proto Validate](#proto-3-required-optional-and-proto-validate)
-  - [Sample Projects](#sample-projects)
+<!-- TOC -->
+* [gRPC](#grpc)
+  * [Introduction](#introduction)
+  * [What Can You Achieve with Specmatic's gRPC Support?](#what-can-you-achieve-with-specmatics-grpc-support)
+  * [Quick Start](#quick-start)
+  * [Detailed explanation](#detailed-explanation)
+    * [Using your proto files as your API Contracts](#using-your-proto-files-as-your-api-contracts)
+    * [Support for Local Imports in Proto Files](#support-for-local-imports-in-proto-files)
+      * [Example: Local Import Usage](#example-local-import-usage)
+    * [Support for Well-Known Remote Imports](#support-for-well-known-remote-imports)
+    * [Using Externalized Examples as Test/Stub Data for gRPC in Contract Tests and Service Virtualization](#using-externalized-examples-as-teststub-data-for-grpc-in-contract-tests-and-service-virtualization)
+      * [Understanding the Example Format](#understanding-the-example-format)
+    * [Using the Docker Image](#using-the-docker-image)
+      * [Starting the Stub Service](#starting-the-stub-service)
+      * [Running Tests](#running-tests)
+    * [Proto 3 (required, optional) and Proto Validate](#proto-3-required-optional-and-proto-validate)
+  * [Sample Projects](#sample-projects)
+<!-- TOC -->
 
 ## Introduction
 
@@ -303,6 +312,6 @@ So Specmatic gRPC support is designed to use add on validation mechanisms like [
 
 We have created sample projects to demonstrate how to use Specmatic with gRPC in different languages and scenarios, please follow the link for the latest sample projects
 
-* [gRPC sample projects](https://docs.specmatic.io/documentation/sample_projects.html)
+* [gRPC sample projects](/sample_projects.html#grpc)
 
 These projects provide practical examples of how to integrate Specmatic gRPC support into your workflow, including setting up stubs, writing tests, and handling different languages, frameworks and running them on CI like GitHub actions.

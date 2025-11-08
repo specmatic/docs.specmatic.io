@@ -1,17 +1,19 @@
 ---
 layout: default
-title: Database Stubbing
-parent: Documentation
-nav_exclude: true
+title: JDBC
+parent: Supported Protocols
+nav_order: 6
+redirect_from: 
+  - /documentation/stubbing-database.html
 ---
 
-# Database Stubbing
+# JDBC
 {: .d-inline-block }
 Commercial
 {: .label }
 
-- [Database Stubbing](#database-stubbing)
-    - [Introduction to Database Stubbing](#introduction-to-database-stubbing)
+- [JDBC](#jdbc)
+    - [Introduction to JDBC Stubbing](#introduction-to-jdbc-stubbing)
     - [Pre-requisites](#pre-requisites)
     - [Set up The Stub Server](#set-up-the-stub-server)
     - [Setting Up Database Expectations](#setting-up-database-expectations)
@@ -30,7 +32,7 @@ Commercial
 {: .note}
 The `specmatic-jdbc` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
 
-### Introduction to Database Stubbing
+### Introduction to JDBC Stubbing
 
 Database stubbing allows you to simulate database behavior without connecting to a real database. It’s useful for testing application logic, verifying SQL queries, and controlling predictable responses during development. 
 

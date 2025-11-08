@@ -22,16 +22,16 @@ has_toc: false
 
 ## Supported Specifications and Protocols
 * [AsyncAPI support](https://specmatic.io/features/transform-your-asyncapi-specs-into-executable-contracts-in-seconds-with-specmatic/)
-  * [Kafka support](/documentation/kafka.html)
+  * [Kafka support](/documentation/supported_protocols/asyncapi/kafka.html)
   * [Google Pub/Sub support](https://specmatic.io/features/google-pubsub-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
-  * [JMS support](/documentation/stubbing-jms.html)
-* [gRPC support](/documentation/grpc.html)
-* [GraphQL support](/documentation/graphql.html)
-* [Arazzo support](/documentation/arazzo.html)
+  * [JMS support](/documentation/supported_protocols/asyncapi/jms.html)
+* [gRPC support](/documentation/supported_protocols/grpc.html)
+* [GraphQL support](/documentation/supported_protocols/graphql.html)
+* [Arazzo support](/documentation/supported_protocols/arazzo.html)
 * [Avro support](https://specmatic.io/features/contract-testing-avro-schema-files-asyncapi-specmatic/)
-* [Redis support](/documentation/stubbing-redis.html)
-* [JDBC support](/documentation/stubbing_database.html)
-* [WSDL support](/documentation/wsdl.html)
+* [Redis support](/documentation/supported_protocols/redis.html)
+* [JDBC support](/documentation/supported_protocols/jdbc.html)
+* [SOAP support](/documentation/supported_protocols/soap.html)
 
 ## Features
 * [Authentication](/documentation/authentication.html)

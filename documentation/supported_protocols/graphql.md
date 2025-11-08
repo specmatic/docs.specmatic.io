@@ -1,11 +1,16 @@
 ---
 layout: default
 title: GraphQL
-parent: Documentation
-nav_order: 18
+parent: Supported Protocols
+nav_order: 3
+redirect_from:
+  - /documentation/graphql.html
 ---
 
 # GraphQL
+{: .d-inline-block }
+Commercial
+{: .label }
 
 <!-- TOC -->
 - [GraphQL](#graphql)
@@ -50,7 +55,7 @@ With Specmatic GraphQL support you will be to leverage your GraphQL SDL files as
 
 Here are sample projects in different languages and frameworks that demonstrate below features in various languages and scenarios. Refer to the latest projects here:
 
-* [GraphQL sample projects](https://docs.specmatic.io/documentation/sample_projects.html#graphql)
+* [GraphQL sample projects](/sample_projects.html#graphql)
 
 README of each of these projects include
 * detailed animated architecture diagram

@@ -1,10 +1,40 @@
 ---
 layout: default
 title: Kafka
-parent: Documentation
-nav_order: 18
+parent: AsyncAPI
+nav_order: 1
+redirect_from:
+  - /documentation/kafka.html
 ---
-# Starting Kafka Mock Server from command line
+# Kafka
+{: .d-inline-block }
+Commercial
+{: .label }
+
+<!-- TOC -->
+* [Kafka](#kafka)
+  * [Starting Kafka Mock Server from command line](#starting-kafka-mock-server-from-command-line)
+  * [Interacting with the API server](#interacting-with-the-api-server)
+    * [📘 Specmatic Kafka Mock Server API Guide](#-specmatic-kafka-mock-server-api-guide)
+      * [✅ API Capabilities](#-api-capabilities)
+      * [🚀 Step 1: Start a Kafka Broker](#-step-1-start-a-kafka-broker)
+      * [⚙️ Step 2: Launch the Kafka Mock Server](#-step-2-launch-the-kafka-mock-server)
+        * [📄 Create a specification file: `spec.yaml`](#-create-a-specification-file-specyaml)
+      * [📝 Step 3: Set Expectations](#-step-3-set-expectations)
+        * [Request](#request)
+          * [When to use topicsToIgnore?](#when-to-use-topicstoignore)
+      * [📨 Step 4: Publish a Message](#-step-4-publish-a-message)
+      * [✅ Step 5: Verify Expectations](#-step-5-verify-expectations)
+        * [Request](#request-1)
+        * [Successful Response](#successful-response)
+      * [ℹ️ Additional Notes](#ℹ-additional-notes)
+  * [Running Contract Tests Against a Kafka-Based Request-Reply Service](#running-contract-tests-against-a-kafka-based-request-reply-service)
+    * [Service Implementation](#service-implementation)
+    * [Specmatic Configuration](#specmatic-configuration)
+    * [Testing the Service](#testing-the-service)
+<!-- TOC -->
+
+## Starting Kafka Mock Server from command line
 
 Create a file named `specmatic.yaml` with below content.
 
@@ -411,7 +441,7 @@ If the verification fails, the response will include details of the mismatches.
 - Ensure all published messages adhere to the schema defined in the spec.
 
 
-# Running Contract Tests Against a Kafka-Based Request-Reply Service
+## Running Contract Tests Against a Kafka-Based Request-Reply Service
 
 Create a service which implements the kafka messaging architecture as per the [order_service_async.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/asyncapi/order_service_async_v1.yaml) specification.
 
@@ -447,4 +477,4 @@ To get information around all the CLI args of the `test` command, run the follow
 docker run specmatic/specmatic-kafka test --help
 ```
 
-To get a hands-on experience, refer to [these](https://docs.specmatic.io/documentation/sample_projects.html#kafka) sample projects.
+To get a hands-on experience, refer to [these](/sample_projects.html#kafka) sample projects.

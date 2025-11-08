@@ -1,16 +1,18 @@
 ---
 layout: default
-title: JMS Stubbing
-parent: Documentation
-nav_exclude: true
+title: JMS
+parent: AsyncAPI
+nav_order: 2
+redirect_from:
+  - /documentation/stubbing-jms.html
 ---
 
-# JMS Stubbing 
+# JMS 
 {: .d-inline-block }
 Commercial
 {: .label }
 
-- [JMS Stubbing](#jms-stubbing)
+- [JMS](#jms)
     - [Introduction](#introduction)
     - [Pre-requisite Setup](#pre-requisite-setup)
     - [Start the JMS Server](#start-the-jms-server)

@@ -3,7 +3,7 @@ layout: default
 title: Sample Projects
 nav_order: 3
 redirect_from:
-  - documentation/sample_projects.html
+  - /documentation/sample_projects.html
 ---
 
 ## Specmatic in Action: Sample Projects

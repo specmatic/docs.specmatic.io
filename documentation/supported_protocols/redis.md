@@ -1,8 +1,10 @@
 ---
 layout: default
-title: Redis Stubbing
-parent: Documentation
-nav_exclude: true
+title: Redis
+parent: Supported Protocols
+nav_order: 5
+redirect_from: 
+  - /documentation/stubbing-redis.html
 ---
 
 # Redis Stubbing

@@ -1,21 +1,22 @@
 ---
 layout: default
-title: WSDL
-parent: Documentation
-nav_order: 17
+title: SOAP
+parent: Supported Protocols
+nav_order: 7
 redirect_from:
   - documentation/soap.html
+  - documentation/wsdl.html
 ---
-# WSDL
+# SOAP
 
-- [WSDL](#wsdl)
-  - [Contract Testing with WSDL](#contract-testing-with-wsdl)
+- [SOAP](#soap)
+  - [Contract Testing SOAP Services with WSDL](#contract-testing-soap-services-with-wsdl)
   - [Mocking SOAP Services with WSDL](#mocking-soap-services-with-wsdl)
   - [Examples for WSDL Contracts](#examples-for-wsdl-contracts)
   - [Sample Applications](#sample-applications)
 
 
-## Contract Testing with WSDL
+## Contract Testing SOAP Services with WSDL
 
 Similar to how you can perform contract testing for HTTP services using the OpenAPI specification, you can also conduct contract testing for SOAP services utilizing WSDL files. If you have a WSDL file on your local file system (for example, `my_soap_service.wsdl` located in your current directory), you can initiate contract tests with the following Docker command:
 

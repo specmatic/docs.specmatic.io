@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Kafka Stubbing
-parent: Documentation
+parent: AsyncAPI
 nav_exclude: true
+redirect_from:
+  - /documentation/stubbing-kafka.html
 ---
 
 # Kafka Stubbing
