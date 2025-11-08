@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Dictionary
-parent: Documentation
-nav_order: 8
+parent: Features
+nav_order: 2
+redirect_from:
+  - /documentation/dictionary.html
 ---
 # Dictionary
 
@@ -679,4 +681,4 @@ The values from the dictionary are used in the responses. Keep in mind that thes
 
 ## Dictionary with Examples
 
-You can also utilize dictionary with the example commands and the examples interactive server, allowing values to be retrieved from the dictionary for both request and response generation of examples, refer to [External Examples](/documentation/external_examples.html) for more details.
+You can also utilize dictionary with the example commands and the examples interactive server, allowing values to be retrieved from the dictionary for both request and response generation of examples, refer to [External Examples](/documentation/features/external_examples.html) for more details.

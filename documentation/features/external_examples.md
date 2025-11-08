@@ -1,8 +1,10 @@
 ---
 layout: default
 title: External Examples
-parent: Documentation
-nav_order: 7
+parent: Features
+nav_order: 3
+redirect_from:
+    - /documentation/external_examples.html
 ---
 
 # External Examples
@@ -408,7 +410,7 @@ Let's try the validation out.
 
 ### Competing Requests by Identical Values
 
-We will continue to use the `employee_details.yaml` [spec from above](https://docs.specmatic.io/documentation/external_examples.html#creating-validating-and-fixing-examples).
+We will continue to use the `employee_details.yaml` [spec from above](/documentation/features/external_examples.html#creating-validating-and-fixing-examples).
 
 **1.** Create following examples with the same request but a different response in the directory `employee_details_examples`:
 
@@ -537,7 +539,7 @@ ERROR: Competing requests detected in the given examples
 
 ### Competing Requests by Identical Data Type Values
 
-Similar to [Competing Requests by Identical Values](https://docs.specmatic.io/documentation/external_examples.html#competing-requests-by-identical-values), lets see how [data type-based examples](/documentation/tutorials/service_virtualization.html#data-type-based-examples) could end up competing for some incoming requests.
+Similar to [Competing Requests by Identical Values](/documentation/features/external_examples.html#competing-requests-by-identical-values), lets see how [data type-based examples](/documentation/tutorials/service_virtualization.html#data-type-based-examples) could end up competing for some incoming requests.
 
 **1.** Create following examples with the same request but a different response in the directory `employee_details_examples`:
 
@@ -715,7 +717,7 @@ ERROR: Competing requests detected in the given examples
 
 ### Competing Requests by Overlapping Data Type Values
 
-Now, unlike [Competing Requests by Identical Data Type Values](http://docs.specmatic.io/documentation/external_examples.html#competing-requests-by-identical-data-type-values)
+Now, unlike [Competing Requests by Identical Data Type Values](/documentation/features/external_examples.html#competing-requests-by-identical-data-type-values)
 lets see how [data type based examples](/documentation/tutorials/service_virtualization.html#data-type-based-examples) could end up competing for incoming request in spite of assigning data type to different keys in the request.
 
 **1.** Create following examples with the same request but a different response in the directory  `employee_details_examples`:

@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Authentication
-parent: Documentation
-nav_order: 16
+parent: Features
+nav_order: 1
+redirect_from:
+    - /documentation/authentication.html
 ---
 Authentication
 ==============

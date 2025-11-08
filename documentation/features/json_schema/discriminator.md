@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Discriminator
-parent: Documentation
-nav_order: 29
+parent: JSON Schema
+nav_order: 2
+redirect_from:
+    - /documentation/discriminator.html
 ---
 
 # Discriminator Support in Specmatic

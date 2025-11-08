@@ -1,11 +1,12 @@
 ---
 layout: default
-title: API Gateways
-parent: Documentation
-nav_exclude: true
-search_exclude: true
+title: Hooks to Modify Specs
+parent: Features
+nav_order: 5
+redirect_from:
+  - /documentation/api_gateways.html
 ---
-API Gateways
+Hooks to Modify Specs
 ============
 
 ## Architecture With An API Gateway

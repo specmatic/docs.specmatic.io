@@ -745,8 +745,8 @@ environments:
 The environments key in this example contains configuration for the `staging` environment. It can contain configuration for any number of environments.
 
 Each environment configuration can contain
-- `baseurls` - needed when running contracts as test as part of [authentication](documentation/../authentication.html)
-- `variables` - these values are plugged into the Examples rows of an auth contract for [authentication](documentation/../authentication.html), or even when running regular contract tests
+- `baseurls` - needed when running contracts as test as part of [authentication](/documentation/features/authentication.html)
+- `variables` - these values are plugged into the Examples rows of an auth contract for [authentication](/documentation/features/authentication.html), or even when running regular contract tests
 
 
 

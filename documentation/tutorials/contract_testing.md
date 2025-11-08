@@ -294,7 +294,7 @@ The test results will look as shown below. Specmatic has run one test per extern
 
 ```Tests run: 5, Successes: 5, Failures: 0, Errors: 0```
 
-The complete test data format can be referred to [here](/documentation/external_examples.html#example-format).
+The complete test data format can be referred to [here](/documentation/features/external_examples.html#example-format).
 
 ### Generating examples
 
@@ -707,7 +707,7 @@ Since it is a JUnit5 test, you can run it in all the ways you are used to. If yo
 
 ### Handling Application authentication
 
-If the OpenAPI contract defines API authentication using security schemas, these information will be used by Specmatic when running contract tests. Read more about it on the page on [authentication](authentication.html).
+If the OpenAPI contract defines API authentication using security schemas, these information will be used by Specmatic when running contract tests. Read more about it on the page on [authentication](/documentation/features/authentication.html).
 
 ### Authentication In CI For HTTPS Git Source
 

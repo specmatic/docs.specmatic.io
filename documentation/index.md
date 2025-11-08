@@ -34,13 +34,13 @@ has_toc: false
 * [SOAP support](/documentation/supported_protocols/soap.html)
 
 ## Features
-* [Authentication](/documentation/authentication.html)
-* [Dictionary Support](/documentation/dictionary.html)
-* [External Examples](/documentation/external_examples.html)
+* [Authentication](/documentation/features/authentication.html)
+* [Dictionary Support](/documentation/features/dictionary.html)
+* [External Examples](/documentation/features/external_examples.html)
 * JSON Schema
-  * [anyOf Support](/documentation/anyOf-support.html)
-  * [Discriminators](/documentation/discriminators.html)
-* [Hooks to modify Specs](/documentation/api_gateways.html)
+  * [anyOf Support](/documentation/features/json_schema/anyOf-support.html)
+  * [Discriminator Support](/documentation/features/json_schema/discriminator.html)
+* [Hooks to modify Specs](/documentation/features/hooks_to_modify_specs.html)
 
 ## References
 * [Configuration](/documentation/configuration.html)

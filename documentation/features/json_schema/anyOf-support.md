@@ -1,8 +1,10 @@
 ---
 layout: default
 title: anyOf Support
-parent: Documentation
-nav_order: 34
+parent: JSON Schema
+nav_order: 1
+redirect_from:
+  - /documentation/anyOf-support.html
 ---
 
 anyOf Support

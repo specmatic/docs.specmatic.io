@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Authentication
-parent: Documentation
+parent: Features
 nav_exclude: true
 ---
 

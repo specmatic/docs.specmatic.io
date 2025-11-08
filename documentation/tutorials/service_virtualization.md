@@ -969,7 +969,7 @@ The same idea extends to the response.
 
 When Specmatic's stub receives a request and finds no matching examples for it, Specmatic returns a response generated from the response schema in the API specification. While the generated response is schema-valid, it will not have meaningful values drawn from the context of your business domain. So in order to get domain-relevant responses when there examples, you can provide a dictionary of sample values to Specmatic. Specmatic will look up this dictionary when it needs to generate domain-relevant examples.
 
-Refer to [Dictionary with service virtualization](/documentation/dictionary.html#dictionary-with-service-virtualization) for more details.
+Refer to [Dictionary with service virtualization](/documentation/features/dictionary.html#dictionary-with-service-virtualization) for more details.
 
 ## Delay Simulation
 
