@@ -62,4 +62,4 @@ The following features are not yet supported:
 2. x-www-form-urlencoded data with more than one field
 3. XML contracts
 
-For SOAP, simply replace the .spec or .qontract file with the original WSDL file. Read more about it [here](/documentation/authoring_contracts.html#importing-a-wsdl-file).
+For SOAP, simply replace the .spec or .qontract file with the original WSDL file. Read more about it [here](/documentation/tutorials/generating_api_specifications.html#importing-a-wsdl-file).

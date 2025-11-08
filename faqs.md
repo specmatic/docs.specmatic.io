@@ -18,8 +18,8 @@ More on this [here](/contract_driven_development.html).
 Yes, Specmatic is a standalone executable that is completely programming language and technology stack agnostic. This is because it works at the level of communication protocols such as http.
 
 Programmatic support is available in JVM languages as a convenience.
-* [Programmatically running stub server](/documentation/service_virtualization_tutorial.html#programmatically-starting-stub-server-within-tests)
-* [Programmatically running contract tests](https://docs.specmatic.io/documentation/contract_testing.html#programmtically-executing-specmatic-contract-tests)
+* [Programmatically running stub server](/documentation/tutorials/service_virtualization.html#programmatically-starting-stub-server-within-tests)
+* [Programmatically running contract tests](/documentation/tutorials/contract_testing.html#programmtically-executing-specmatic-contract-tests)
 
 ### How much code do I have to write to get Specmatic running?
 

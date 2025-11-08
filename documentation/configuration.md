@@ -293,7 +293,7 @@ contracts:
 #### Service Virtualization Delay
 
 A delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter,
-you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/documentation/service_virtualization_tutorial.html#delay-simulation)
+you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/documentation/tutorials/service_virtualization.html#delay-simulation)
 
 #### Use specifications on local file system
 
@@ -394,7 +394,7 @@ contracts:
 {% endtabs %}
 
 As per the above configuration, the specs `api_order_v1.yaml` and `api_user_v1.yaml` will run on port 9000 and the spec `api_auth_v1.yaml` will run on port 9001.
-You can also specify `host`, `basePath`, and even the complete `baseUrl` in the `consumes` field. For more details, refer to the [Service Virtualization](/documentation/service_virtualization_tutorial#specmatic-configuration-with-base-url-host-port-and-path)
+You can also specify `host`, `basePath`, and even the complete `baseUrl` in the `consumes` field. For more details, refer to the [Service Virtualization](/documentation/tutorials/service_virtualization.html#specmatic-configuration-with-base-url-host-port-and-path)
 
 #### Configure contract test baseUrls for different specs
 

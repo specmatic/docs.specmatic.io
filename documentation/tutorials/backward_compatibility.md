@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Backward Compatibility
-parent: Documentation
-nav_order: 10
+parent: Tutorials
+nav_order: 3
+redirect_from:
+  - /documentation/backward_compatibility.html
 ---
 Backward Compatibility
 ==========
@@ -388,7 +390,7 @@ Once the specification is complete you can remove the WIP tag.
 
 Maintaining backward compatibility is about changing the API provider WITHOUT breaking any existing consumer. Consumers should just continue working as-is, without needing to "keep up".
 
-[Read this for more](https://docs.specmatic.io/documentation/backward_compatibility_rules.html).
+[Read this for more](/documentation/tutorials/backward_compatibility_rules.html).
 
 
 > [!IMPORTANT]

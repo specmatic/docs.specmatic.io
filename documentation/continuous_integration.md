@@ -120,8 +120,8 @@ contracts:
 
 ### Generic settings for any other CI setup
 
-* [Authentication In CI For HTTPS Git Source](/documentation/contract_testing.html#authentication-in-ci-for-https-git-source)
-* [Authentication In CI For SSH Git Source](/documentation/contract_testing.html#authentication-in-ci-for-ssh-git-source)
+* [Authentication In CI For HTTPS Git Source](/documentation/tutorials/contract_testing.html#authentication-in-ci-for-https-git-source)
+* [Authentication In CI For SSH Git Source](/documentation/tutorials/contract_testing.html#authentication-in-ci-for-ssh-git-source)
 
 ## Featured utilities
 

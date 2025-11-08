@@ -1,8 +1,11 @@
 ---
 layout: default
 title: Service Virtualization
-parent: Documentation
-nav_order: 6
+parent: Tutorials
+nav_order: 2
+redirect_from:
+  - /documentation/service_virtualization_tutorial.html
+  - /documentation/service_virtualisation.html
 ---
 Service Virtualization
 ======================
@@ -77,7 +80,7 @@ Service Virtualization
 ## Pre-requisites
 
 - Create a directory named `specmatic` in your home directory.
-- Make sure you have installed Specmatic. Explore the [Getting Started](/documentation/service_virtualization_tutorial.html) page for all options for installing Specmatic.
+- Make sure you have installed Specmatic from [Download page](/download.html).
 
 ## Inline Examples
 
@@ -974,7 +977,7 @@ Specmatic allows granular control over simulating a slow response for certain re
 
 ### Example Specific Delay
 
-Let us create another expectation file on the same lines as [expectation.json](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10) in the products-api_examples folder and call it expectation-with-delay.json with below content.
+Let us create an expectation file in the products-api_examples folder and call it expectation-with-delay.json with below content.
 
 ```yaml
 {
@@ -1162,7 +1165,7 @@ fun setUp() {
 }
 ```
 
-We can now programmatically set [dynamic expectations](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expectations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expectations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
+We can now programmatically set [dynamic expectations](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expectations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [seen here](#externalizing-example-data)
 
 ```java
 stub.setExpectation(expectationJson);

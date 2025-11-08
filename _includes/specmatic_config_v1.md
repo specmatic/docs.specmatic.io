@@ -314,7 +314,7 @@ sources:
 #### Service Virtualization Delay
 
 A delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter, 
-you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/documentation/service_virtualization_tutorial.html#delay-simulation)
+you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/documentation/tutorials/service_virtualization.html#delay-simulation)
 
 #### Use specifications on local file system
 

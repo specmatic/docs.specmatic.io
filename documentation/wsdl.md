@@ -35,7 +35,7 @@ docker run -p 9000:9000 -v "$(pwd):/usr/src/app" specmatic/specmatic virtualize 
 ```
 
 - By default, the mock server will run on port `9000`, but this can be modified using command-line options.
-- Additionally, if you're working with a JVM-based language, this can also be executed programmatically. For more information, please consult [Programmatically Executing Specmatic Mocks](./service_virtualization_tutorial#programmatically-starting-stub-server-within-tests)
+- Additionally, if you're working with a JVM-based language, this can also be executed programmatically. For more information, please consult [Programmatically Executing Specmatic Mocks](/documentation/tutorials/service_virtualization.html#programmatically-starting-stub-server-within-tests)
 
 ## Examples for WSDL Contracts
 

@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Generating API Specifications
-parent: Documentation
-nav_order: 11
+parent: Tutorials
+nav_order: 5
+redirect_from:
+  - /documentation/authoring_contracts.html
 ---
 Generating API Specifications
 =============================

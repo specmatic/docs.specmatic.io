@@ -1,10 +1,11 @@
 ---
 layout: default
 title: Contract Testing
-parent: Documentation
-nav_order: 5
+parent: Tutorials
+nav_order: 1
 redirect_from:
-  - documentation/contract_tests.html
+  - /documentation/contract_tests.html
+  - /documentation/contract_testing.html
 ---
 Contract Testing
 ==============
@@ -261,7 +262,7 @@ Thus, the request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken tog
 
 Note that the response example named `FETCH_EMPLOYEE_SUCCESS` is not compared with values returned by the application. This is what sets a Contract Test apart from an API Test. A Contract Test is concerned with checking the APIs signature, while API tests are concerned with checking the APIs logic.
 
-However, the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualization](/documentation/service_virtualization_tutorial.html#examples-as-expectations).
+However, the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualization](/documentation/tutorials/service_virtualization.html#examples-as-expectations).
 
 ### Externalising examples / test cases
 
@@ -1004,7 +1005,7 @@ Note the quotes around the name, which are necessary because of the space requir
 
 When the test for this example runs, it will log the run details and failures without breaking the build. In the test report, it shows up as `WIP`. However, the use of `WIP` does not bypass the contract validation, the contract itself should be in valid state.
 
-Also, please note that this use of `[WIP]` differs from the WIP tags given [here](./backward_compatibility.html#handling-changes-in-progress). WIP tags can be applied to the path/endpoint, while this works only on example names.
+Also, please note that this use of `[WIP]` differs from the WIP tags given [here](backward_compatibility.html#handling-changes-in-progress). WIP tags can be applied to the path/endpoint, while this works only on example names.
 
 ### Examples that trigger 400 responses
 
@@ -1649,7 +1650,7 @@ This approach:
 - Accurately tests backend service requirements
 - Simulates API Gateway behavior in your test environment
 
-> **Note:** If you're looking to modify headers during service virtualization using Specmatic's `stub` command, then please refer to stub-specific header modifications documentation : [Using Hooks during Stub Creation](service_virtualization_tutorial.html#hooks)
+> **Note:** If you're looking to modify headers during service virtualization using Specmatic's `stub` command, then please refer to stub-specific header modifications documentation : [Using Hooks during Stub Creation](/documentation/tutorials/service_virtualization.html#hooks)
 
 ### Conclusion
 
@@ -2091,7 +2092,7 @@ System.setProperty("MAX_TEST_REQUEST_COMBINATIONS", "2");
 
 Specmatic can be configured to use a branch of the central repo with the same name as the branch that is locally checked out.
 
-More details [here](/documentation/service_virtualization_tutorial.html#using-matching-branches-in-the-central-contract-repo).
+More details [here](/documentation/tutorials/service_virtualization.html#using-matching-branches-in-the-central-contract-repo).
 
 ### Sample Project
 

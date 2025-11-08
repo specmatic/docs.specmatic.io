@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Central Contract Repository
-parent: Documentation
-nav_order: 28
+parent: Tutorials
+nav_order: 4
+redirect_from:
+  - /documentation/central_contract_repository.html
 ---
 
 # Context

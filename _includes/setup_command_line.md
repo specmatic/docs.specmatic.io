@@ -1,4 +1,4 @@
-Specmatic can be used as a standalone executable and also included [programmatically](https://docs.specmatic.io/documentation/service_virtualization_tutorial.html#programmatically-starting-stub-server-within-tests) as part of your test suite.
+Specmatic can be used as a standalone executable and also included [programmatically](/documentation/tutorials/service_virtualization.html#programmatically-starting-stub-server-within-tests) as part of your test suite.
 
 For getting started quickly, let us use Specmatic standalone executable within our command line.
 

@@ -375,7 +375,7 @@ Specmatic also check backward compatibility of discriminator based OpenAPI Speci
 specmatic backward-compatibility-check
 ```
 
-> **Note**: For complete understanding of backward compatibility please refer [Backward Compatibility User Guide](/documentation/backward_compatibility.html)
+> **Note**: For complete understanding of backward compatibility please refer [Backward Compatibility User Guide](/documentation/tutorials/backward_compatibility.html)
 
 Specmatic checks for breaking changes in:
 - Discriminator property names

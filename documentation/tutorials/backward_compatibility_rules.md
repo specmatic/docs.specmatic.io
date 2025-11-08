@@ -1,8 +1,11 @@
 ---
 layout: default
 title: Backward Compatibility Rules
-parent: Documentation
-nav_order: 19
+parent: Tutorials
+nav_exclude: true
+toc_include: false
+redirect_from:
+  - /documentation/backward_compatibility_rules.html
 ---
 
 Backward Compatibility Rules

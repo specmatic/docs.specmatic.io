@@ -337,7 +337,7 @@ Please refer to below videos for extensive demos on Contract Tests.
 * [Video: Boundary Condition Testing](https://youtu.be/U5Agz-mvYIU?t=51) - Verifying edge cases
 * [Video: Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract Tests to Test Drive your Code
 
-[**Learn more about Contract Testing here.**](/documentation/contract_testing.html)
+[**Learn more about Contract Testing here.**](/documentation/tutorials/contract_testing.html)
 
 ### Consumer Side - Contract As A Stub / Intelligent Service Virtualization
 
@@ -641,4 +641,4 @@ To know more about **Intelligent Service Virtualization** please refer to below 
 * [Video: Intelligent Service Virtualization](https://youtu.be/U5Agz-mvYIU?t=750)
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
-[**Learn more about Stubbing / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)
+[**Learn more about Stubbing / Smart Mocks here.**](/documentation/tutorials/service_virtualization.html)

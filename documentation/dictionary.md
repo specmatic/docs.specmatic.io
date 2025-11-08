@@ -548,7 +548,7 @@ The Dictionary can be utilized in contract testing, allowing Specmatic to use th
 For the moment, we will remove the `employees_examples` directory to observe how contract testing operates without examples.
 
 ### Run the tests
-Now to execute contract tests on the specification using the dictionary a service is required, we will utilize [service-virtualization](/documentation/service_virtualization_tutorial.html) for this purpose.
+Now to execute contract tests on the specification using the dictionary a service is required, we will utilize [service-virtualization](/documentation/tutorials/service_virtualization.html) for this purpose.
 
 {% tabs test %}
 {% tab test java %}

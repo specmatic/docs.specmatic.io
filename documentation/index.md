@@ -14,11 +14,11 @@ has_toc: false
 * [Specmatic MCP Auto Tests](/documentation/getting_started/mcp_auto_test.html)
 
 ## Tutorials
-* [Contract Testing](/documentation/contract_testing.html)
-* [Smart Service Virtualization](/documentation/service_virtualization_tutorial.html)
-* [Backward Compatibility Testing](/documentation/backward_compatibility.html)
-* [Central Contract Repository](/documentation/central_contract_repository.html)
-* [Authoring API Specifications](/documentation/authoring_contracts.html)
+* [Contract Testing](/documentation/tutorials/contract_testing.html)
+* [Smart Service Virtualization](/documentation/tutorials/service_virtualization.html)
+* [Backward Compatibility Testing](/documentation/tutorials/backward_compatibility.html)
+* [Central Contract Repository](/documentation/tutorials/central_contract_repository.html)
+* [Authoring API Specifications](/documentation/tutorials/generating_api_specifications.html)
 
 ## Supported Specifications and Protocols
 * [AsyncAPI support](https://specmatic.io/features/transform-your-asyncapi-specs-into-executable-contracts-in-seconds-with-specmatic/)
