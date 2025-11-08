@@ -10,6 +10,8 @@ nav_order: 4
 
 **Contract Driven Development** leverages API Specifications (such as [OpenAPI](https://www.openapis.org/), [AsyncAPI](https://www.asyncapi.com/), [gRPC proto files](https://grpc.io/docs/what-is-grpc/introduction/), [GraphQL](https://graphql.org/), [Arazzo](https://spec.openapis.org/arazzo/), [Avro](https://avro.apache.org/), [MCP](https://modelcontextprotocol.io/about), [WSDL](https://www.w3schools.com/xml/xml_wsdl.asp) and more) as Executable Contracts. This approach allows us to shift-left the identification of contract compatibility issues, making it essential for developing and deploying #microservices independently. 
 
+<img alt="Contract Driven Development" src="/images/api-specifications-as-executable-contracts.png" />
+
 Here are **5 key practices of CDD**:
 
 1. **API design first**: Collaboratively design and document the API using standard specifications.
