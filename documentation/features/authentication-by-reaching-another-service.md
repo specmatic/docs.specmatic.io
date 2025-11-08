@@ -3,6 +3,8 @@ layout: default
 title: Authentication
 parent: Features
 nav_exclude: true
+redirect_from:
+  - /documentation/authentication-by-reaching-another-service.html
 ---
 
 - [Authentication](#authentication)
@@ -121,7 +123,7 @@ In `($auth.token)`, `auth` is the `value` that we declared above, and `token` is
 ## 3. Run the contract tests
 
 ### Declare the application contract in specmatic.json
-Make sure to declare the contract you're running as a test in [the Specmatic configuration](/documentation/configuration.html). Take a look at [specmatic.json in the petstore sample project](https://github.com/specmatic/petstore/blob/master/specmatic.json) for an example of this. You can read more about [running contract tests using Specmatic here](/documentation/tutorials/contract_testing.html).
+Make sure to declare the contract you're running as a test in [the Specmatic configuration](/documentation/references/configuration.html). Take a look at [specmatic.json in the petstore sample project](https://github.com/specmatic/petstore/blob/master/specmatic.json) for an example of this. You can read more about [running contract tests using Specmatic here](/documentation/tutorials/contract_testing.html).
 
 ### Execute the tests
 Finally, run the tests. You must specify the environment while doing so, for Specmatic to pick up the variables and baseurls relevant to that environment.

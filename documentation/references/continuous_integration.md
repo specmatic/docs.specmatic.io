@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Continuous Integration
-parent: Documentation
-nav_order: 31
+parent: References
+nav_order: 2
+redirect_from:
+  - /documentation/continuous_integration.html
 ---
 
 Contract Tests
@@ -102,7 +104,7 @@ contracts:
 
 ### GitHub Actions
 
-**Note:** We are in the process of standardising on a uniform approach ([Authentication params in Git Repo URI](/documentation/continuous_integration.html#authentication-params-in-git-repo-uri)) across GitHub, GitLab, Azure and more. We suggest considering the [steps listed here](/documentation/continuous_integration.html#github-actions) before going ahead with below technique. Below approach will also continue to be supported.
+**Note:** We are in the process of standardising on a uniform approach ([Authentication params in Git Repo URI](/documentation/references/continuous_integration.html#authentication-params-in-git-repo-uri)) across GitHub, GitLab, Azure and more. We suggest considering the [steps listed here](/documentation/references/continuous_integration.html#github-actions) before going ahead with below technique. Below approach will also continue to be supported.
 
 * Set up a [Personal Access Token in GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with "Read" access for contents on your Central Contract Repository (we recommend using [fine-grained tokens](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/))
 * Add this PAT as a [repo secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) in your repository where Specmatic Contract Test / and or Service Virtualization is used. Example: `CENTRAL_CONTRACT_REPO_ACCESS_TOKEN=<your PAT>`

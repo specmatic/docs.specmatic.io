@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Troubleshooting
-parent: Documentation
-nav_order: 33
+parent: References
+nav_order: 5
+redirect_from:
+  - /documentation/troubleshooting.html
 ---
 Troubleshooting
 ===============

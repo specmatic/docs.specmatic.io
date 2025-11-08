@@ -1,8 +1,10 @@
 ---
 layout: default
 title: Understanding Errors
-parent: Documentation
-nav_order: 30
+parent: References
+nav_order: 4
+redirect_from:
+  - /documentation/reading_reports.html
 ---
 Understanding Errors
 ====================

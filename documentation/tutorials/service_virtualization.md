@@ -1111,7 +1111,7 @@ Specmatic stub server can accept expectation json through below http endpoint.
 http://localhost:9000/_specmatic/expectations
 ```
 
-Please see <a href="/documentation/SpecmaticExpectations-postman_collection.json" download>postman collection</a> for reference.
+Please see <a href="/documentation/tutorials/SpecmaticExpectations-postman_collection.json" download>postman collection</a> for reference.
 
 Specmatic will verify these expectations against the OpenAPI Specifications and will only return a 2xx response if they are as per API Specifications. Specmatic returns 4xx response if the expectation json is not as per the OpenAPI Specifications.
 
@@ -1155,7 +1155,7 @@ Now you can import the utility to create the stub server. Below code snippets ar
 import io.specmatic.stub.createStub
 ```
 
-This utility can now be used in your test ```setup``` / ```beforeAll``` method to start the stub server. Specmatic automatically looks for your [Specmatic configuration](/documentation/configuration.html) file in project root directory / classpath to locate your API Specification files that need to run as part of the stub server.
+This utility can now be used in your test ```setup``` / ```beforeAll``` method to start the stub server. Specmatic automatically looks for your [Specmatic configuration](/documentation/references/configuration.html) file in project root directory / classpath to locate your API Specification files that need to run as part of the stub server.
 
 ```kotlin
 @BeforeAll

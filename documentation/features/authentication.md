@@ -4,7 +4,7 @@ title: Authentication
 parent: Features
 nav_order: 1
 redirect_from:
-    - /documentation/authentication.html
+  - /documentation/authentication.html
 ---
 Authentication
 ==============

@@ -1,9 +1,12 @@
 ---
 layout: default
-title: Insights setup guide
-parent: Documentation
-nav_order: 20
+title: Insights Setup Guide
+parent: References
+nav_order: 3
+redirect_from:
+  - /documentation/insights.html
 ---
+# Specmatic Insights Integration Guide
 
 <!-- TOC depthfrom:2 orderedlist:false -->
 
@@ -32,8 +35,6 @@ nav_order: 20
 
 <!-- /TOC -->
 
-# Specmatic Insights Integration Guide
-
 ## Overview
 
 This guide provides step-by-step instructions for integrating Specmatic Insights into your API ecosystem. It is intended for developers and testers adopting contract-driven development and looking to visualize and monitor their microservices architecture. This guide will help you set up, configure, and troubleshoot Specmatic Insights.
@@ -53,7 +54,7 @@ Specmatic Insights offers several key features:
 
 Here are some examples of what you can expect to see in Specmatic Insights:
 
-![Insights Dashboard](../images/insights_feature_1.png)
+![Insights Dashboard](/images/insights_feature_1.png)
 
 Additionally, the dashboard provides a comprehensive overview of your API ecosystem, offering valuable insights such as:
 
@@ -63,7 +64,7 @@ Additionally, the dashboard provides a comprehensive overview of your API ecosys
 - Operations used exclusively for testing and stubbing
 - Overall API coverage
 
-![Insights Dashboard](../images/insights_feature_2.png)
+![Insights Dashboard](/images/insights_feature_2.png)
 
 ## What You will Achieve
 
@@ -79,7 +80,7 @@ Let's get started!
 
 > **Note:** To publish builds to Specmatic Insights, you must have a valid license key issued by Specmatic Insights. Please ensure you have obtained your license before proceeding with the setup.
 
-For details on acquiring and managing your license, refer to the [License Key Guide](license_key.html).
+For details on acquiring and managing your license, refer to the [License Key Guide](/documentation/license_key.html).
 
 ## Step 1: Setting Up a Central Contract Repository
 
@@ -87,7 +88,7 @@ For details on acquiring and managing your license, refer to the [License Key Gu
 
 A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing. In this tutorial, we'll be working with a typical scenario of microservices & microfrontends involving a Backend-for-Frontend (BFF) and a Domain Service. Here's an overview of what we'll be setting up:
 
-![Order Microservices architecture](../images/insights_demo_architecture.png)
+![Order Microservices architecture](/images/insights_demo_architecture.png)
 
 In this architecture:
 
@@ -186,7 +187,7 @@ We'll be working with two OpenAPI specifications:
 
 After successfully setting up your central contract repository and running the CI pipeline, you should see output similar to this:
 
-![Successful contract repo](../images/insights_step1_successful.png)
+![Successful contract repo](/images/insights_step1_successful.png)
 
 ## Step 2: Setting up Client, Provider and Domain services
 
@@ -283,7 +284,7 @@ jobs:
 
 Upon successful execution of the client CI pipeline, you should see output resembling this:
 
-![Successful Client CI Pipeline](../images/insights_step2_1_successful.png)
+![Successful Client CI Pipeline](/images/insights_step2_1_successful.png)
 
 ### Step 2.2: Setting up CI pipeline for BFF Service
 
@@ -348,7 +349,7 @@ jobs:
 
 After running the BFF service CI pipeline, you should see results similar to:
 
-![Successful BFF CI pipeline](../images/insights_step2_2_successful.png)
+![Successful BFF CI pipeline](/images/insights_step2_2_successful.png)
 
 ### Step 2.3: Setting up CI pipeline for Order API
 
@@ -402,7 +403,7 @@ jobs:
 
 Upon completion of the Order API CI pipeline, you should see output like this:
 
-![Success Order API CI pipeline](../images/insights_step2_3_successful.png)
+![Success Order API CI pipeline](/images/insights_step2_3_successful.png)
 
 ### Summary of Progress
 
@@ -464,7 +465,7 @@ Once your CI/CD pipelines are set up and have run, you can view your service mes
 
 For example, if you've been following the Order example, your service mesh might look like this:
 
-![Petstore Service Mesh](../images/insights_dashboard_1.png)
+![Petstore Service Mesh](/images/insights_dashboard_1.png)
 
 ### Understanding the Dashboard
 
@@ -476,7 +477,7 @@ The Specmatic Insights dashboard provides several key pieces of information:
 
 Here's an example of what you might see if you have followed the instructions and have been able to set up insights
 
-![Petstore Dashboard](../images/insights_dashboard_2.png)
+![Petstore Dashboard](/images/insights_dashboard_2.png)
 
 ## Next Steps
 
@@ -522,7 +523,7 @@ Replace `your-proxy-host` with your actual proxy server address and `3128` with 
 
 > **Tip:** If you encounter issues, check the following common problems:
 
-- **License Key Invalid or Missing:** Ensure your license key is correctly configured and not expired. Refer to the [License Key Guide](license_key.html).
+- **License Key Invalid or Missing:** Ensure your license key is correctly configured and not expired. Refer to the [License Key Guide](/documentation/license_key.html).
 - **Build Report Not Visible:** Confirm that your CI pipeline is publishing reports to the correct Insights endpoint and that network access is not blocked.
 - **Specmatic Docker Image Issues:** Make sure you are using the latest Specmatic Docker image and that your environment has Docker installed and running.
 - **API Spec Errors:** Validate your OpenAPI specifications for syntax and compatibility before running the pipeline.

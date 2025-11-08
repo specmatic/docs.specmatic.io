@@ -1,8 +1,11 @@
 ---
 layout: default
 title: Configuration
-parent: Documentation
-nav_order: 14
+parent: References
+nav_order: 1
+redirect_from:
+  - /documentation/configuration.html
+  - /documentation/specmatic_json.html
 ---
 
 <span style="color:gray;">Update Date:  14/02/2025</span>
@@ -32,7 +35,7 @@ Configuration
     - [Hooks](#hooks)
 
 
-Note: Version 2 is the latest as of 14/02/2025. If you are looking for an older version of the configs, refer to [older configuration versions](/documentation/older_configuration_versions.html) page.
+Note: Version 2 is the latest as of 14/02/2025. If you are looking for an older version of the configs, refer to [older configuration versions](/documentation/references/older_configuration_versions.html) page.
 
 ### Getting started
 

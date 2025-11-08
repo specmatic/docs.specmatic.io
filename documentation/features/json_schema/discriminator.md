@@ -4,7 +4,7 @@ title: Discriminator
 parent: JSON Schema
 nav_order: 2
 redirect_from:
-    - /documentation/discriminator.html
+  - /documentation/discriminator.html
 ---
 
 # Discriminator Support in Specmatic

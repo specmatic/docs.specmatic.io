@@ -43,8 +43,8 @@ has_toc: false
 * [Hooks to modify Specs](/documentation/features/hooks_to_modify_specs.html)
 
 ## References
-* [Configuration](/documentation/configuration.html)
-* [Continuous Integration](/documentation/continuous_integration.html)
-* [Specmatic Insights Setup](/documentation/insights.html)
-* [Understanding error reports](/documentation/reading_reports.html)
-* [Troubleshooting](/documentation/troubleshooting.html)
+* [Configuration](/documentation/references/configuration.html)
+* [Continuous Integration](/documentation/references/continuous_integration.html)
+* [Specmatic Insights Setup](/documentation/references/insights.html)
+* [Understanding error reports](/documentation/references/understanding_errors.html)
+* [Troubleshooting](/documentation/references/troubleshooting.html)

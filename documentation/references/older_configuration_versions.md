@@ -1,7 +1,10 @@
 ---
 layout: default
 title: Older Configuration Versions
+parent: References
 nav_exclude: true
+redirect_from:
+  - /documentation/older_configuration_versions.html
 ---
 
 Older Configuration Versions
@@ -9,4 +12,4 @@ Older Configuration Versions
 
 These versions are supported, but we recommended that you update to the latest to benefit from the newest features.
 
-See the [configuration](/documentation/configuration.html) page learn how.
+See the [configuration](/documentation/references/configuration.html) page learn how.

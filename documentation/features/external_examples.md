@@ -4,7 +4,7 @@ title: External Examples
 parent: Features
 nav_order: 3
 redirect_from:
-    - /documentation/external_examples.html
+  - /documentation/external_examples.html
 ---
 
 # External Examples
