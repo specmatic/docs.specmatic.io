@@ -1,13 +1,15 @@
 ---
 layout: default
-title: Contract Tests
+title: Contract Testing
 parent: Documentation
 nav_order: 5
+redirect_from:
+  - documentation/contract_tests.html
 ---
-Contract Tests
+Contract Testing
 ==============
 
-- [Contract Tests](#contract-tests)
+- [Contract Testing](#contract-testing)
     - [Overview](#overview)
     - [Specmatic Contract Test - Command Line](#specmatic-contract-test---command-line)
     - [How the contract test works (step-by-step)](#how-the-contract-test-works-step-by-step)

@@ -3,6 +3,8 @@ layout: default
 title: WSDL
 parent: Documentation
 nav_order: 17
+redirect_from:
+  - documentation/soap.html
 ---
 # WSDL
 

@@ -136,7 +136,7 @@ Please refer to below videos for extensive demos on Contract Tests.
 * [Video: Boundary Condition Testing](https://youtu.be/U5Agz-mvYIU?t=51) - Verifying edge cases
 * [Video: Tracer Bullet Approach](https://youtu.be/U5Agz-mvYIU?t=1112) - Leveraging Contract Tests to Test Drive your Code
 
-[**Learn more about Contract Tests here.**](/documentation/contract_tests.html)
+[**Learn more about Contract Testing here.**](/documentation/contract_testing.html)
 
 ### Consumer Side - Contract As A Mock / Intelligent Service Virtualization
 

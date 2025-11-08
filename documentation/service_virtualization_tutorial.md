@@ -1499,7 +1499,7 @@ The hook script in this example performs a simple transformation:
 
 This allows the stub to accept requests with the `X-auth-token` header that the frontend uses, while maintaining the original specification for the backend API.
 
-> **Note:** If you're looking to modify headers during test using Specmatic's `test` command, then please refer to test-specific header modifications documentation : [Using Hooks during Tests](contract_tests.html#hooks)
+> **Note:** If you're looking to modify headers during test using Specmatic's `test` command, then please refer to test-specific header modifications documentation : [Using Hooks during Tests](contract_testing.html#hooks)
 
 ---
 
