@@ -10,7 +10,7 @@ redirect_from:
 Contract Testing
 ==============
 
-<img alt="Contract Testing" src="/images/contract-testing.png" />
+<img alt="Contract Testing" src="/images/contract-testing.png" style="max-width: 100%; height: auto;" />
 
 <!-- TOC -->
 * [Contract Testing](#contract-testing)

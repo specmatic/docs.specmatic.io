@@ -9,7 +9,7 @@ redirect_from:
 
 # Central Contract Repository
 
-<img alt="Central Contract Repository" src="/images/Central-Contract-Repo.png" />
+<img alt="Central Contract Repository" src="/images/Central-Contract-Repo.png" style="max-width: 100%; height: auto;" />
 
 <!-- TOC -->
 * [Central Contract Repository](#central-contract-repository)

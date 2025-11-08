@@ -9,7 +9,7 @@ redirect_from:
 Backward Compatibility
 ==========
 
-<img alt="Backward Compatibility" src="/images/backward-compatibility.png" />
+<img alt="Backward Compatibility" src="/images/backward-compatibility.png" style="max-width: 100%; height: auto;" />
 
 <!-- TOC -->
 * [Backward Compatibility](#backward-compatibility)

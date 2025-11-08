@@ -9,7 +9,7 @@ redirect_from:
 ---
 Service Virtualization
 ======================
-<img alt="Mocking" src="/images/mocking.png" />
+<img alt="Mocking" src="/images/mocking.png" style="max-width: 100%; height: auto;" />
 
 <!-- TOC -->
 * [Service Virtualization](#service-virtualization)
@@ -1119,7 +1119,7 @@ Specmatic will verify these expectations against the OpenAPI Specifications and 
 
 ### Anatomy of a Component / API Test
 
-<img alt="Anatomy of a Component / API Test" src="https://specmatic.io/wp-content/uploads/2022/09/Contact-as-stub.png" />
+<img alt="Anatomy of a Component / API Test" src="https://specmatic.io/wp-content/uploads/2022/09/Contact-as-stub.png" style="max-width: 100%; height: auto;" />
 
 Please see this [video](https://youtu.be/U5Agz-mvYIU?t=998) for reference.
 
