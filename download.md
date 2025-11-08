@@ -590,3 +590,15 @@ Specmatic JMS needs to be imported as a dependency in your project:
   group_id="io.specmatic.jms"
   artifact_id="specmatic-jms"
   version=specmatic_jms_version %}
+
+
+## Specmatic Google pubsub
+
+Specmatic Google pubsub needs to be imported as a dependency in your project:
+
+{% capture specmatic_google_pubsub_version %}{{ site.specmatic-google-pubsub-version }}{% endcapture %}
+
+{% include maven_coordinates.md
+  group_id="io.specmatic.googlepubsub"
+  artifact_id="specmatic-google-pubsub"
+  version=specmatic_google_pubsub_version %}
