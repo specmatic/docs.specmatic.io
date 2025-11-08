@@ -9,6 +9,18 @@ redirect_from:
 
 # Discriminator Support in Specmatic
 
+<!-- TOC -->
+* [Discriminator Support in Specmatic](#discriminator-support-in-specmatic)
+  * [Overview](#overview)
+  * [Example Implementation](#example-implementation)
+    * [1. Service Virtualization with Discriminator Support](#1-service-virtualization-with-discriminator-support)
+    * [2. Contract Testing with Discriminator Awareness](#2-contract-testing-with-discriminator-awareness)
+    * [3. Example Generation](#3-example-generation)
+    * [4. Backward Compatibility](#4-backward-compatibility)
+  * [Best Practices](#best-practices)
+  * [References](#references)
+<!-- TOC -->
+
 > **Note**: For best support of this feature please use Specmatic version 2.0.41 onwards.
 
 ## Overview
@@ -148,7 +160,6 @@ API Specification Summary: petstore.yaml
 
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
-
 
 The stub server provides two key functionalities with discriminator support:
 

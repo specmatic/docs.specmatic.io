@@ -9,33 +9,32 @@ redirect_from:
 Backward Compatibility
 ==========
 
-
-- [Backward Compatibility](#backward-compatibility)
-- [Why Backward Compatibility Matters](#why-backward-compatibility-matters)
-- [What's New](#whats-new)
-- [How it works](#how-it-works)
-- [Using Backward Compatibility](#using-backward-compatibility)
-  - [Command Essentials](#command-essentials)
-    - [Key Options](#key-options)
-  - [Common Use Cases](#common-use-cases)
-    - [1. Validating Work in Progress (local development)](#1-validating-work-in-progress-local-development)
-    - [2. As a pre-commit hook](#2-as-a-pre-commit-hook)
-    - [3. Pre-Merge Validation (in your CI pipeline)](#3-pre-merge-validation-in-your-ci-pipeline)
-    - [4. Analyzing specific files](#4-analyzing-specific-files)
-    - [5. Comparing with a different branch](#5-comparing-with-a-different-branch)
-    - [6. Analyzing a specific directory](#6-analyzing-a-specific-directory)
-  - [Practical Examples (Try it yourself)](#practical-examples-try-it-yourself)
-    - [Orders API Evolution](#orders-api-evolution)
-    - [Breaking Change](#breaking-change)
-  - [Handling Changes In Progress](#handling-changes-in-progress)
-  - [Backward Compatibility Rules](#backward-compatibility-rules)
-- [Backward Compatibility Commands (Deprecated)](#backward-compatibility-commands-deprecated)
-  - [Comparing Two Contracts (Deprecated)](#comparing-two-contracts-deprecated)
-  - [Validating Changes In Git On Your Laptop (Deprecated)](#validating-changes-in-git-on-your-laptop-deprecated)
-  - [Validating Changes In CI (Deprecated)](#validating-changes-in-ci-deprecated)
-  - [Troubleshooting](#troubleshooting)
-
-
+<!-- TOC -->
+* [Backward Compatibility](#backward-compatibility)
+* [Why Backward Compatibility Matters](#why-backward-compatibility-matters)
+* [What's New](#whats-new)
+* [How it works](#how-it-works)
+* [Using Backward Compatibility](#using-backward-compatibility)
+  * [Command Essentials](#command-essentials)
+    * [Key Options](#key-options)
+  * [Common Use Cases](#common-use-cases)
+    * [1. Validating Work in Progress (local development)](#1-validating-work-in-progress-local-development)
+    * [2. As a pre-commit hook](#2-as-a-pre-commit-hook)
+    * [3. Pre-Merge Validation (in your CI pipeline)](#3-pre-merge-validation-in-your-ci-pipeline)
+    * [4. Analyzing specific files](#4-analyzing-specific-files)
+    * [5. Comparing with a different branch](#5-comparing-with-a-different-branch)
+    * [6. Analyzing a specific directory](#6-analyzing-a-specific-directory)
+  * [Practical Examples (Try it yourself)](#practical-examples-try-it-yourself)
+    * [Orders API Evolution](#orders-api-evolution)
+    * [Breaking Change](#breaking-change)
+  * [Handling Changes In Progress](#handling-changes-in-progress)
+  * [Backward Compatibility Rules](#backward-compatibility-rules)
+* [Backward Compatibility Commands (Deprecated)](#backward-compatibility-commands-deprecated)
+  * [Comparing Two Contracts (Deprecated)](#comparing-two-contracts-deprecated)
+  * [Validating Changes In Git On Your Laptop (Deprecated)](#validating-changes-in-git-on-your-laptop-deprecated)
+  * [Validating Changes In CI (Deprecated)](#validating-changes-in-ci-deprecated)
+  * [Troubleshooting](#troubleshooting)
+<!-- TOC -->
 
 # Why Backward Compatibility Matters
 Backward compatibility ensures that updates to your API specifications don't accidentally break compatibility. and prevents rework. Perform automated backward compatibility checks to ensure we are not accidentally breaking compatibility.

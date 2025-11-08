@@ -8,32 +8,31 @@ redirect_from:
 ---
 # Specmatic Insights Integration Guide
 
-<!-- TOC depthfrom:2 orderedlist:false -->
-
-- [Overview](#overview)
-- [Introduction](#introduction)
-  - [Features](#features)
-- [What You will Achieve](#what-you-will-achieve)
-- [Prerequisites](#prerequisites)
-- [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
-  - [Setup overview](#setup-overview)
-  - [Setting up the central contract repository](#setting-up-the-central-contract-repository)
-- [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
-  - [Step 2.1: Setting Up CI pipeline for client](#step-21-setting-up-ci-pipeline-for-client)
-  - [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
-  - [Step 2.3: Setting up CI pipeline for Order API](#step-23-setting-up-ci-pipeline-for-order-api)
-  - [Summary of Progress](#summary-of-progress)
-- [Step 3: Configuring Specmatic Insights](#step-3-configuring-specmatic-insights)
-  - [Setting Up Specmatic Insights](#setting-up-specmatic-insights)
-  - [Integrating with CI/CD Pipelines](#integrating-with-cicd-pipelines)
-- [Step 4: Visualizing Your API Ecosystem](#step-4-visualizing-your-api-ecosystem)
-  - [Viewing Your Service Mesh](#viewing-your-service-mesh)
-  - [Understanding the Dashboard](#understanding-the-dashboard)
-- [Next Steps](#next-steps)
-- [Working with proxies](#working-with-proxies)
-- [Troubleshooting](#troubleshooting)
-
-<!-- /TOC -->
+<!-- TOC -->
+* [Specmatic Insights Integration Guide](#specmatic-insights-integration-guide)
+  * [Overview](#overview)
+  * [Introduction](#introduction)
+    * [Features](#features)
+  * [What You will Achieve](#what-you-will-achieve)
+  * [Prerequisites](#prerequisites)
+  * [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
+    * [Setup overview](#setup-overview)
+    * [Setting up the central contract repository](#setting-up-the-central-contract-repository)
+  * [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
+    * [Step 2.1: Setting Up CI pipeline for client](#step-21-setting-up-ci-pipeline-for-client)
+    * [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
+    * [Step 2.3: Setting up CI pipeline for Order API](#step-23-setting-up-ci-pipeline-for-order-api)
+    * [Summary of Progress](#summary-of-progress)
+  * [Step 3: Configuring Specmatic Insights](#step-3-configuring-specmatic-insights)
+    * [Setting Up Specmatic Insights](#setting-up-specmatic-insights)
+    * [Integrating with CI/CD Pipelines](#integrating-with-cicd-pipelines)
+  * [Step 4: Visualizing Your API Ecosystem](#step-4-visualizing-your-api-ecosystem)
+    * [Viewing Your Service Mesh](#viewing-your-service-mesh)
+    * [Understanding the Dashboard](#understanding-the-dashboard)
+  * [Next Steps](#next-steps)
+  * [Working with proxies](#working-with-proxies)
+  * [Troubleshooting](#troubleshooting)
+<!-- TOC -->
 
 ## Overview
 

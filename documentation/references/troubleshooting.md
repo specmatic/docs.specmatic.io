@@ -9,9 +9,11 @@ redirect_from:
 Troubleshooting
 ===============
 
-- [Troubleshooting](#troubleshooting)
-    - [When I try to run contract tests using SpecmaticJUnitSupport, I'm getting an exception saying that XYZ method or class is missing. What do I do?](#when-i-try-to-run-contract-tests-using-specmaticjunitsupport-im-getting-an-exception-saying-that-xyz-method-or-class-is-missing-what-do-i-do)
-    - [Maven properties in Spring projects](#maven-properties-in-spring-projects)
+<!-- TOC -->
+* [Troubleshooting](#troubleshooting)
+    * [When I try to run contract tests using SpecmaticJUnitSupport, I'm getting an exception saying that XYZ method or class is missing. What do I do?](#when-i-try-to-run-contract-tests-using-specmaticjunitsupport-im-getting-an-exception-saying-that-xyz-method-or-class-is-missing-what-do-i-do)
+    * [Maven properties in Spring projects](#maven-properties-in-spring-projects)
+<!-- TOC -->
 
 ### When I try to run contract tests using SpecmaticJUnitSupport, I'm getting an exception saying that XYZ method or class is missing. What do I do?
 

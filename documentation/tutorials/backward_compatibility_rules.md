@@ -11,6 +11,12 @@ redirect_from:
 Backward Compatibility Rules
 ============================
 
+<!-- TOC -->
+* [Backward Compatibility Rules](#backward-compatibility-rules)
+  * [Requests](#requests)
+  * [Responses](#responses)
+<!-- TOC -->
+
 There are a few simple rules, and a couple of exceptions.
 
 - Requests: do not add mandatories (e.g. adding a new mandatory field, making an optional field mandatory)

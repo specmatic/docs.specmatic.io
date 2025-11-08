@@ -9,25 +9,27 @@ redirect_from:
 Generating API Specifications
 =============================
 
-- [Generating API Specifications](#generating-api-specifications)
-  - [From an existing application using Proxy Mode](#from-an-existing-application-using-proxy-mode)
-    - [Step 1: Start the Proxy Server](#step-1-start-the-proxy-server)
-    - [Step 2: Verify Proxy Health (Optional)](#step-2-verify-proxy-health-optional)
-    - [Step 3: Send Test Requests](#step-3-send-test-requests)
-        - [Request 1: Get todo with ID 1](#request-1-get-todo-with-id-1)
-        - [Request 2: Get todo with ID 100](#request-2-get-todo-with-id-100)
-    - [Step 4: Generate the Contract and Examples](#step-4-generate-the-contract-and-examples)
-    - [Generated Contract Example](#generated-contract-example)
-    - [Final Directory Structure](#final-directory-structure)
-  - [What You've Accomplished](#what-youve-accomplished)
-  - [Next Steps](#next-steps)
-  - [From a sample request and response](#from-a-sample-request-and-response)
-    - [Create the sample file](#create-the-sample-file)
-    - [Convert the sample into a contract](#convert-the-sample-into-a-contract)
-  - [Importing a Postman collection](#importing-a-postman-collection)
-    - [Export the collection](#export-the-collection)
-    - [Generate the contract](#generate-the-contract)
-    - [Authenticated APIs in Postman](#authenticated-apis-in-postman)
+<!-- TOC -->
+* [Generating API Specifications](#generating-api-specifications)
+  * [## From an existing application using Proxy Mode](#-from-an-existing-application-using-proxy-mode)
+    * [Step 1: Start the Proxy Server](#step-1-start-the-proxy-server)
+    * [Step 2: Verify Proxy Health (Optional)](#step-2-verify-proxy-health-optional)
+    * [Step 3: Send Test Requests](#step-3-send-test-requests)
+        * [Request 1: Get todo with ID 1](#request-1-get-todo-with-id-1)
+        * [Request 2: Get todo with ID 100](#request-2-get-todo-with-id-100)
+    * [Step 4: Generate the Contract and Examples](#step-4-generate-the-contract-and-examples)
+    * [Generated Contract Example](#generated-contract-example)
+    * [Final Directory Structure](#final-directory-structure)
+  * [What You've Accomplished](#what-youve-accomplished)
+  * [Next Steps](#next-steps)
+  * [From a sample request and response](#from-a-sample-request-and-response)
+    * [Create the sample file](#create-the-sample-file)
+    * [Convert the sample into a contract](#convert-the-sample-into-a-contract)
+  * [Importing a Postman collection](#importing-a-postman-collection)
+    * [Export the collection](#export-the-collection)
+    * [Generate the contract](#generate-the-contract)
+    * [Authenticated APIs in Postman](#authenticated-apis-in-postman)
+<!-- TOC -->
 
 ## From an existing application using Proxy Mode
 ---

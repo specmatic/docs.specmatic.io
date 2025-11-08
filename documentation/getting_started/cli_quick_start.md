@@ -11,18 +11,20 @@ CLI Quick Start
 
 > **Download Specmatic:** You can download the latest Specmatic executable, Docker image, or Maven dependency from the [Download page](/download.html).
 
-- [CLI Quick Start](#cli-quick-start)
-    - [Set up](#set-up)
-    - [Example Application - PetStore](#example-application---petstore)
-    - [PetStore API Specification](#petstore-api-specification)
-    - [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
-      - [Understanding the output](#understanding-the-output)
-      - [Where did Specmatic get the test data to generate the HTTP request](#where-did-specmatic-get-the-test-data-to-generate-the-http-request)
-      - [How does this all work?](#how-does-this-all-work)
-      - [What happens when OpenAPI goes out of sync with the application or vice versa?](#what-happens-when-openapi-goes-out-of-sync-with-the-application-or-vice-versa)
-    - [Consumer Side - Contract As A Stub / Intelligent Service Virtualization](#consumer-side---contract-as-a-stub--intelligent-service-virtualization)
-      - [Intelligent Service Virtualization](#intelligent-service-virtualization)
-      - [Externalising stub responses](#externalising-stub-responses)
+<!-- TOC -->
+* [CLI Quick Start](#cli-quick-start)
+    * [Set up](#set-up)
+    * [Example Application - PetStore](#example-application---petstore)
+    * [PetStore API Specification](#petstore-api-specification)
+    * [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
+      * [Understanding the output](#understanding-the-output)
+      * [Where did Specmatic get the test data to generate the HTTP request](#where-did-specmatic-get-the-test-data-to-generate-the-http-request)
+      * [How does this all work?](#how-does-this-all-work)
+      * [What happens when OpenAPI goes out of sync with the application or vice versa?](#what-happens-when-openapi-goes-out-of-sync-with-the-application-or-vice-versa)
+    * [Consumer Side - Contract As A Stub / Intelligent Service Virtualization](#consumer-side---contract-as-a-stub--intelligent-service-virtualization)
+      * [Intelligent Service Virtualization](#intelligent-service-virtualization)
+      * [Externalising stub responses](#externalising-stub-responses)
+<!-- TOC -->
 
 ### Set up
 

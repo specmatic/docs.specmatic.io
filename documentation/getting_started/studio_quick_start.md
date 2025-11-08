@@ -10,17 +10,19 @@ redirect_from:
 Getting started with Studio
 ===========================
 
-- [Getting started with Studio](#getting-started-with-studio)
-    - [Account Setup](#account-setup)
-    - [PetStore API Specification](#petstore-api-specification)
-    - [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
-      - [Where did Specmatic get the test data to generate the HTTP request](#where-did-specmatic-get-the-test-data-to-generate-the-http-request)
-      - [How does this all work?](#how-does-this-all-work)
-      - [What happens when OpenAPI goes out of sync with the application or vice versa?](#what-happens-when-openapi-goes-out-of-sync-with-the-application-or-vice-versa)
-    - [Consumer Side - Contract As A Mock / Intelligent Service Virtualization](#consumer-side---contract-as-a-mock--intelligent-service-virtualization)
-      - [Intelligent Service Virtualization](#intelligent-service-virtualization)
-      - [Externalising mock responses](#externalising-mock-responses)
-    - [A more complicated example](#a-more-complicated-example)
+<!-- TOC -->
+* [Getting started with Studio](#getting-started-with-studio)
+    * [Account Setup](#account-setup)
+    * [PetStore API Specification](#petstore-api-specification)
+    * [Provider Side - Contract as a Test](#provider-side---contract-as-a-test)
+      * [Where did Specmatic get the test data to generate the HTTP request](#where-did-specmatic-get-the-test-data-to-generate-the-http-request)
+      * [How does this all work?](#how-does-this-all-work)
+      * [What happens when OpenAPI goes out of sync with the application or vice versa?](#what-happens-when-openapi-goes-out-of-sync-with-the-application-or-vice-versa)
+    * [Consumer Side - Contract As A Mock / Intelligent Service Virtualization](#consumer-side---contract-as-a-mock--intelligent-service-virtualization)
+      * [Intelligent Service Virtualization](#intelligent-service-virtualization)
+      * [Externalising mock responses](#externalising-mock-responses)
+    * [A more complicated example](#a-more-complicated-example)
+<!-- TOC -->
 
 ### Account Setup
 

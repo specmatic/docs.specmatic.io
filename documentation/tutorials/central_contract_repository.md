@@ -9,16 +9,18 @@ redirect_from:
 
 # Context
 
-- [Context](#context)
-- [Treat Contract as Code](#treat-contract-as-code)
-- [Central Contract Repo - Single source of truth](#central-contract-repo---single-source-of-truth)
-  - [File organization](#file-organization)
-  - [Pull Request / Merge Request Process](#pull-request--merge-request-process)
-    - [Pre-merge checks](#pre-merge-checks)
-      - [Sample Central Contract Repository with Pre-merge checks](#sample-central-contract-repository-with-pre-merge-checks)
-    - [Collaborating over API Design](#collaborating-over-api-design)
-  - [Referring to Contracts in Central Contract Repo](#referring-to-contracts-in-central-contract-repo)
-    - [Specmatic Configuration](#specmatic-configuration)
+<!-- TOC -->
+* [Context](#context)
+* [Treat Contract as Code](#treat-contract-as-code)
+* [Central Contract Repo - Single source of truth](#central-contract-repo---single-source-of-truth)
+  * [File organization](#file-organization)
+  * [Pull Request / Merge Request Process](#pull-request--merge-request-process)
+    * [Pre-merge checks](#pre-merge-checks)
+      * [Sample Central Contract Repository with Pre-merge checks](#sample-central-contract-repository-with-pre-merge-checks)
+    * [Collaborating over API Design](#collaborating-over-api-design)
+  * [Referring to Contracts in Central Contract Repo](#referring-to-contracts-in-central-contract-repo)
+    * [Specmatic Configuration](#specmatic-configuration)
+<!-- TOC -->
 
 **Contract Driven Development** leverages API Specifications as Executable Contracts to keep both consumers and providers working well with each other. If consumers and providers are referring to different versions of the API Specifications then it is not possible to guarantee this. This sort of deviation can happen when API Specifications are shared over documentation sites, email, or other non-standard mechanisms.
 

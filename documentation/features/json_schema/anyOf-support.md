@@ -9,10 +9,12 @@ redirect_from:
 
 anyOf Support
 =============
-- [anyOf Support](#anyof-support)
-  - [Test generation](#test-generation)
-  - [Object generation](#object-generation)
-  - [Validation](#validation)
+<!-- TOC -->
+* [anyOf Support](#anyof-support)
+  * [Test generation](#test-generation)
+  * [Object generation](#object-generation)
+  * [Validation](#validation)
+<!-- TOC -->
 
 While `anyOf`  contains a list of schemas, like `oneOf`, a value may match one or more of the schemas in the list, while with oneOf the value may match just one of the schemas in the list. This results in subtle differences in how anyOf support has been implemented, which are documented here.
 

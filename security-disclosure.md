@@ -7,6 +7,14 @@ nav_order: 6
 
 # Security Disclosure Process
 
+<!-- TOC -->
+* [Security Disclosure Process](#security-disclosure-process)
+  * [Our Commitment to Security](#our-commitment-to-security)
+  * [How to Report a Vulnerability](#how-to-report-a-vulnerability)
+  * [What Happens Next](#what-happens-next)
+  * [Guidelines for Responsible Disclosure](#guidelines-for-responsible-disclosure)
+<!-- TOC -->
+
 ## Our Commitment to Security
 
 At **Specmatic.io**, we are committed to building secure software and fostering a secure ecosystem. We deeply value the

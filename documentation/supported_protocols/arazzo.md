@@ -12,28 +12,29 @@ redirect_from:
 Commercial
 {: .label }
 
-- [Arazzo](#arazzo)
-  - [Introduction](#introduction)
-  - [What Can You Achieve with Specmatic’s Arazzo Support?](#what-can-you-achieve-with-specmatics-arazzo-support)
-  - [Generating Workflows](#generating-workflows)
-    - [Interactive through Specmatic Studio](#interactive-through-specmatic-studio)
-    - [Command Line Interface](#command-line-interface)
-  - [Understanding Generated Files](#understanding-generated-files)
-    - [Arazzo Workflow Specification `(*.arazzo.yaml)`](#arazzo-workflow-specification-arazzoyaml)
-    - [Arazzo Input Data `(*.arazzo_inputs.json)`](#arazzo-input-data-arazzo_inputsjson)
-      - [Understanding the Structure](#understanding-the-structure)
-      - [Scenario Behavior](#scenario-behavior)
-  - [Running Workflow Tests](#running-workflow-tests)
-    - [Interactively through Specmatic Studio](#interactively-through-specmatic-studio)
-    - [Command Line Interface](#command-line-interface-1)
-      - [1. Utilize `--serverUrlIndex` and `--serverUrlName`:](#1-utilize---serverurlindex-and---serverurlname)
-      - [2. Fine-Grained Control via System Properties:](#2-fine-grained-control-via-system-properties)
-      - [3. Fallback Host and Port:](#3-fallback-host-and-port)
-  - [Workflow Mocking](#workflow-mocking)
-    - [Interactively through Specmatic Studio](#interactively-through-specmatic-studio-1)
-    - [Command Line Interface](#command-line-interface-2)
-  - [Sample Projects](#sample-projects)
-
+<!-- TOC -->
+* [Arazzo](#arazzo)
+  * [Introduction](#introduction)
+  * [What Can You Achieve with Specmatic’s Arazzo Support?](#what-can-you-achieve-with-specmatics-arazzo-support)
+  * [Generating Workflows](#generating-workflows)
+    * [Interactive through Specmatic Studio](#interactive-through-specmatic-studio)
+    * [Command Line Interface](#command-line-interface)
+  * [Understanding Generated Files](#understanding-generated-files)
+    * [Arazzo Workflow Specification `(*.arazzo.yaml)`](#arazzo-workflow-specification-arazzoyaml)
+    * [Arazzo Input Data `(*.arazzo_inputs.json)`](#arazzo-input-data-arazzo_inputsjson)
+      * [Understanding the Structure](#understanding-the-structure)
+      * [Scenario Behavior](#scenario-behavior)
+  * [Running Workflow Tests](#running-workflow-tests)
+    * [Interactively through Specmatic Studio](#interactively-through-specmatic-studio)
+    * [Command Line Interface](#command-line-interface-1)
+      * [1. Utilize `--serverUrlIndex` and `--serverUrlName`:](#1-utilize---serverurlindex-and---serverurlname)
+      * [2. Fine-Grained Control via System Properties:](#2-fine-grained-control-via-system-properties)
+      * [3. Fallback Host and Port:](#3-fallback-host-and-port)
+  * [Workflow Mocking](#workflow-mocking)
+    * [Interactively through Specmatic Studio](#interactively-through-specmatic-studio-1)
+    * [Command Line Interface](#command-line-interface-2)
+  * [Sample Projects](#sample-projects)
+<!-- TOC -->
 
 ## Introduction
 

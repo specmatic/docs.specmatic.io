@@ -9,12 +9,13 @@ redirect_from:
 ---
 # SOAP
 
-- [SOAP](#soap)
-  - [Contract Testing SOAP Services with WSDL](#contract-testing-soap-services-with-wsdl)
-  - [Mocking SOAP Services with WSDL](#mocking-soap-services-with-wsdl)
-  - [Examples for WSDL Contracts](#examples-for-wsdl-contracts)
-  - [Sample Applications](#sample-applications)
-
+<!-- TOC -->
+* [SOAP](#soap)
+  * [Contract Testing SOAP Services with WSDL](#contract-testing-soap-services-with-wsdl)
+  * [Mocking SOAP Services with WSDL](#mocking-soap-services-with-wsdl)
+  * [Examples for WSDL Contracts](#examples-for-wsdl-contracts)
+  * [Sample Applications](#sample-applications)
+<!-- TOC -->
 
 ## Contract Testing SOAP Services with WSDL
 

@@ -12,28 +12,28 @@ redirect_from:
 
 Configuration
 =============
-
-- [Configuration](#configuration)
-    - [Getting started](#getting-started)
-      - [Upgrade older configuration to the latest version](#upgrade-older-configuration-to-the-latest-version)
-      - [Resiliency Tests](#resiliency-tests)
-      - [Externalized Examples Directories](#externalized-examples-directories)
-      - [Contract Test Timeout](#contract-test-timeout)
-      - [Configuring Stubs](#configuring-stubs)
-      - [Stub Start Timeout](#stub-start-timeout)
-      - [Service Virtualization Delay](#service-virtualization-delay)
-      - [Use specifications on local file system](#use-specifications-on-local-file-system)
-      - [Run stub on different ports for different specifications](#run-stub-on-different-ports-for-different-specifications)
-      - [Configure contract test baseUrls for different specs](#configure-contract-test-baseurls-for-different-specs)
-      - [Source control authentication](#source-control-authentication)
-      - [Report Configuration](#report-configuration)
-      - [Formatters](#formatters)
-      - [API Coverage report](#api-coverage-report)
-      - [Complete sample specmatic.json with all attributes](#complete-sample-specmaticjson-with-all-attributes)
-    - [Declare pipeline details](#declare-pipeline-details)
-    - [Declare environment configuration](#declare-environment-configuration)
-    - [Hooks](#hooks)
-
+<!-- TOC -->
+* [Configuration](#configuration)
+    * [Getting started](#getting-started)
+      * [Upgrade older configuration to the latest version](#upgrade-older-configuration-to-the-latest-version)
+      * [Resiliency Tests](#resiliency-tests)
+      * [Externalized Examples Directories](#externalized-examples-directories)
+      * [Contract Test Timeout](#contract-test-timeout)
+      * [Configuring Stubs](#configuring-stubs)
+      * [Stub Start Timeout](#stub-start-timeout)
+      * [Service Virtualization Delay](#service-virtualization-delay)
+      * [Use specifications on local file system](#use-specifications-on-local-file-system)
+      * [Run stub on different ports for different specifications](#run-stub-on-different-ports-for-different-specifications)
+      * [Configure contract test baseUrls for different specs](#configure-contract-test-baseurls-for-different-specs)
+      * [Source control authentication](#source-control-authentication)
+      * [Report Configuration](#report-configuration)
+      * [Formatters](#formatters)
+      * [API Coverage report](#api-coverage-report)
+      * [Complete sample specmatic.json with all attributes](#complete-sample-specmaticjson-with-all-attributes)
+    * [Declare pipeline details](#declare-pipeline-details)
+    * [Declare environment configuration](#declare-environment-configuration)
+    * [Hooks](#hooks)
+<!-- TOC -->
 
 Note: Version 2 is the latest as of 14/02/2025. If you are looking for an older version of the configs, refer to [older configuration versions](/documentation/references/older_configuration_versions.html) page.
 

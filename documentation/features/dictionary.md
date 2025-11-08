@@ -8,27 +8,28 @@ redirect_from:
 ---
 # Dictionary
 
-
-- [Dictionary](#dictionary)
-  - [Structure](#structure)
-    - [Basic Field Mapping](#basic-field-mapping)
-    - [Parameters Mapping](#parameters-mapping)
-    - [Nested Properties](#nested-properties)
-    - [Handling Arrays](#handling-arrays)
-      - [Nested properties in Arrays](#nested-properties-in-arrays)
-    - [Referencing Other Schemas](#referencing-other-schemas)
-  - [Dictionary Generation](#dictionary-generation)
-    - [Specification](#specification)
-    - [Examples](#examples)
-    - [Generating the Dictionary](#generating-the-dictionary)
-    - [Understanding the Dictionary](#understanding-the-dictionary)
-  - [Dictionary with Contract Testing](#dictionary-with-contract-testing)
-    - [Run the tests](#run-the-tests)
-    - [Generative Tests](#generative-tests)
-  - [Dictionary with Service Virtualization](#dictionary-with-service-virtualization)
-    - [Run Service Virtualization](#run-service-virtualization)
-    - [Making Requests](#making-requests)
-  - [Dictionary with Examples](#dictionary-with-examples)
+<!-- TOC -->
+* [Dictionary](#dictionary)
+  * [Structure](#structure)
+    * [Basic Field Mapping](#basic-field-mapping)
+    * [Parameters Mapping](#parameters-mapping)
+    * [Nested Properties](#nested-properties)
+    * [Handling Arrays](#handling-arrays)
+      * [Nested properties in Arrays](#nested-properties-in-arrays)
+    * [Referencing Other Schemas](#referencing-other-schemas)
+  * [Dictionary Generation](#dictionary-generation)
+    * [Specification](#specification)
+    * [Examples](#examples)
+    * [Generating the Dictionary](#generating-the-dictionary)
+    * [Understanding the Dictionary](#understanding-the-dictionary)
+  * [Dictionary with Contract Testing](#dictionary-with-contract-testing)
+    * [Run the tests](#run-the-tests)
+    * [Generative Tests](#generative-tests)
+  * [Dictionary with Service Virtualization](#dictionary-with-service-virtualization)
+    * [Run Service Virtualization](#run-service-virtualization)
+    * [Making Requests](#making-requests)
+  * [Dictionary with Examples](#dictionary-with-examples)
+<!-- TOC -->
 
 When Specmatic generates requests while running tests or responses while running as a stub and no examples have been provided, Specmatic will generate values for fields based on the schema in the OpenAPI specifications.
 

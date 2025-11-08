@@ -2,9 +2,16 @@
 layout: default
 title: Feature Hub Stubbing
 parent: Documentation
-nav_order: 32
+exclude_nav: true
 ---
 # FeatureHub Stubbing
+
+<!-- TOC -->
+* [FeatureHub Stubbing](#featurehub-stubbing)
+  * [Introduction to FeatureHub Stubbing](#introduction-to-featurehub-stubbing)
+    * [Pre-requisite Setup](#pre-requisite-setup)
+    * [Set Feature Flag Expectation](#set-feature-flag-expectation)
+<!-- TOC -->
 
 ## Introduction to FeatureHub Stubbing
 

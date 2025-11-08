@@ -9,17 +9,19 @@ redirect_from:
 Authentication
 ==============
 
-- [Authentication](#authentication)
-  - [Testing with real auth](#testing-with-real-auth)
-    - [OAuth2](#oauth2)
-    - [API Key](#api-key)
-    - [Bearer](#bearer)
-    - [Basic Authentication](#basic-authentication)
-  - [Testing with mock auth](#testing-with-mock-auth)
-    - [OAuth2](#oauth2-1)
-      - [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication)
-    - [API Key Authentication](#api-key-authentication)
-      - [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication-1)
+<!-- TOC -->
+* [Authentication](#authentication)
+  * [Testing with real auth](#testing-with-real-auth)
+    * [OAuth2](#oauth2)
+    * [API Key](#api-key)
+    * [Bearer](#bearer)
+    * [Basic Authentication](#basic-authentication)
+  * [Testing with mock auth](#testing-with-mock-auth)
+    * [OAuth2](#oauth2-1)
+      * [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication)
+    * [API Key Authentication](#api-key-authentication)
+      * [Wiring up dummy / mock authentication](#wiring-up-dummy--mock-authentication-1)
+<!-- TOC -->
 
 Most APIs have some form of security (authentication and authorization). Specmatic reads [OpenAPI Security Schemes](https://spec.openapis.org/oas/v3.0.1#security-scheme-object) in your API Specifications to come up with appropriate request parameters.
 Specmatic supports the following security schemes:

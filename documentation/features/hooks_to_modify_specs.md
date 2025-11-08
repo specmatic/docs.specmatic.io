@@ -8,6 +8,10 @@ redirect_from:
 ---
 Hooks to Modify Specs
 ============
+<!-- TOC -->
+* [Hooks to Modify Specs](#hooks-to-modify-specs)
+  * [Architecture With An API Gateway](#architecture-with-an-api-gateway)
+<!-- TOC -->
 
 ## Architecture With An API Gateway
 

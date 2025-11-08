@@ -9,27 +9,36 @@ redirect_from:
 
 # MCP Auto Test
 
+<!-- TOC -->
+* [MCP Auto Test](#mcp-auto-test)
+  * [Automated Testing for MCP Tools](#automated-testing-for-mcp-tools-)
+  * [Overview](#overview)
+  * [Key Features](#key-features)
+  * [Usage Guide](#usage-guide)
+    * [1. Preparing the Dictionary File](#1-preparing-the-dictionary-file)
+      * [Dictionary Structure](#dictionary-structure)
+      * [Sample dictionary with partial fields](#sample-dictionary-with-partial-fields)
+    * [2. Running Automated Tests](#2-running-automated-tests)
+      * [Authentication](#authentication)
+      * [Selective Testing](#selective-testing)
+    * [3. Enabling Resiliency Testing](#3-enabling-resiliency-testing)
+      * [What Resiliency Testing Does](#what-resiliency-testing-does)
+  * [Complete Example: Testing Postman's MCP Server](#complete-example-testing-postmans-mcp-server)
+    * [Step 1: Create the Dictionary File](#step-1-create-the-dictionary-file)
+    * [Step 2: Update values in dictionary](#step-2-update-values-in-dictionary)
+    * [Step 3: Run Basic Tests](#step-3-run-basic-tests)
+  * [Complete Example: Testing resiliency of tools exposed by huggingface's mcp server](#complete-example-testing-resiliency-of-tools-exposed-by-huggingfaces-mcp-server)
+  * [Advanced Topics](#advanced-topics)
+    * [Authentication Support](#authentication-support)
+    * [Transport Modes](#transport-modes)
+    * [Reporting & Artifacts](#reporting--artifacts)
+  * [Troubleshooting & FAQs](#troubleshooting--faqs)
+<!-- TOC -->
+
 ## Automated Testing for MCP Tools  
 Testing MCP tools today is often limited to manual, ad hoc validation through utilities like MCP Inspector. This approach makes it difficult to ensure consistent quality, slows down release cycles, and leaves room for regressions when new features are introduced.
 
 MCP Auto Test addresses this gap by providing a reproducible, fully automated framework for schema drift Detection, regression, edge case, and input-combination testing of MCP tools exposed by an MCP Server. With automated coverage, teams can shift-left and catch issues earlier, improve reliability, and release changes with greater confidence.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Usage Guide](#usage-guide)
-  - [1. Preparing the Dictionary File](#1-preparing-the-dictionary-file)
-  - [2. Running Automated Tests](#2-running-automated-tests)
-  - [3. Enabling Resiliency Testing](#3-enabling-resiliency-testing)
-- [Complete Example: Testing Postman's MCP Server](#complete-example-testing-postmans-mcp-server)
-- [Advanced Topics](#advanced-topics)
-  - [Authentication Support](#authentication-support)
-  - [Transport Modes](#transport-modes)
-  - [Reporting & Artifacts](#reporting--artifacts)
-- [Troubleshooting & FAQs](#troubleshooting--faqs)
 
 ---
 

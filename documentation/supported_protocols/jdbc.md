@@ -12,22 +12,23 @@ redirect_from:
 Commercial
 {: .label }
 
-- [JDBC](#jdbc)
-    - [Introduction to JDBC Stubbing](#introduction-to-jdbc-stubbing)
-    - [Pre-requisites](#pre-requisites)
-    - [Set up The Stub Server](#set-up-the-stub-server)
-    - [Setting Up Database Expectations](#setting-up-database-expectations)
-    - [Expectations Formats](#expectations-formats)
-      - [SELECT statements](#select-statements)
-      - [DML Statements (INSERT, UPDATE, DELETE)](#dml-statements-insert-update-delete)
-        - [INSERT statements](#insert-statements)
-        - [UPDATE statements](#update-statements)
-        - [DELETE statements](#delete-statements)
-      - [Mocking Aggregate or Computed Results](#mocking-aggregate-or-computed-results)
-      - [Using Placeholders and Special Value Types](#using-placeholders-and-special-value-types)
-      - [Regex Matching for Flexible Queries](#regex-matching-for-flexible-queries)
-    - [Sample Applications](#sample-applications)
-
+<!-- TOC -->
+* [JDBC](#jdbc)
+    * [Introduction to JDBC Stubbing](#introduction-to-jdbc-stubbing)
+    * [Pre-requisites](#pre-requisites)
+    * [Set up The Stub Server](#set-up-the-stub-server)
+    * [Setting Up Database Expectations](#setting-up-database-expectations)
+    * [Expectations Formats](#expectations-formats)
+      * [SELECT statements](#select-statements)
+      * [DML Statements (INSERT, UPDATE, DELETE)](#dml-statements-insert-update-delete)
+        * [INSERT statements](#insert-statements)
+        * [UPDATE statements](#update-statements)
+        * [DELETE statements](#delete-statements)
+      * [Mocking Aggregate or Computed Results](#mocking-aggregate-or-computed-results)
+      * [Using Placeholders and Special Value Types](#using-placeholders-and-special-value-types)
+      * [Regex Matching for Flexible Queries](#regex-matching-for-flexible-queries)
+    * [Sample Applications](#sample-applications)
+<!-- TOC -->
 
 {: .note}
 The `specmatic-jdbc` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.

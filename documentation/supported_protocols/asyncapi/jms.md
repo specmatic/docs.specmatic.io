@@ -12,15 +12,17 @@ redirect_from:
 Commercial
 {: .label }
 
-- [JMS](#jms)
-    - [Introduction](#introduction)
-    - [Pre-requisite Setup](#pre-requisite-setup)
-    - [Start the JMS Server](#start-the-jms-server)
-    - [Set Expectations](#set-expectations)
-    - [Verify Expectations](#verify-expectations)
-    - [Stop the JMS Server](#stop-the-jms-server)
-    - [Inject an ActiveMQ JMS client using JNDI](#inject-an-activemq-jms-client-using-jndi)
-    - [Sample Applications](#sample-applications)
+<!-- TOC -->
+* [JMS](#jms-)
+    * [Introduction](#introduction)
+    * [Pre-requisite Setup](#pre-requisite-setup)
+    * [Start the JMS Server](#start-the-jms-server)
+    * [Set Expectations](#set-expectations)
+    * [Verify Expectations](#verify-expectations)
+    * [Stop the JMS Server](#stop-the-jms-server)
+    * [Inject an ActiveMQ JMS client using JNDI](#inject-an-activemq-jms-client-using-jndi)
+    * [Sample Applications](#sample-applications)
+<!-- TOC -->
 
 {: .note}
 The `specmatic-jms` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.

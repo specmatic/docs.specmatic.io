@@ -8,16 +8,14 @@ nav_order: 35
 # Using and Deploying Specmatic License Keys
 
 <!-- TOC -->
-
-- [Using and Deploying Specmatic License Keys](#using-and-deploying-specmatic-license-keys)
-  - [Types of Specmatic Licenses](#types-of-specmatic-licenses)
-    - [User Licenses](#user-licenses)
-      - [How to retrieve your user license](#how-to-retrieve-your-user-license)
-    - [Service Account Licenses](#service-account-licenses)
-      - [Setting Up the License Key (for service accounts)](#setting-up-the-license-key-for-service-accounts)
-  - [Using Specmatic with Docker](#using-specmatic-with-docker)
-
-<!-- /TOC -->
+* [Using and Deploying Specmatic License Keys](#using-and-deploying-specmatic-license-keys)
+  * [Types of Specmatic Licenses](#types-of-specmatic-licenses)
+    * [User Licenses](#user-licenses)
+      * [How to retrieve your user license](#how-to-retrieve-your-user-license)
+    * [Service Account Licenses](#service-account-licenses)
+      * [Setting Up the License Key (for service accounts)](#setting-up-the-license-key-for-service-accounts)
+  * [Using Specmatic with Docker](#using-specmatic-with-docker)
+<!-- TOC -->
 
 ## Types of Specmatic Licenses
 

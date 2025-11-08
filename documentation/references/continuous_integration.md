@@ -9,6 +9,18 @@ redirect_from:
 
 Contract Tests
 ==============
+<!-- TOC -->
+* [Contract Tests](#contract-tests)
+  * [Cloning API specifications from authenticated Central Contract Repositories](#cloning-api-specifications-from-authenticated-central-contract-repositories)
+    * [Authentication params in Git Repo URI](#authentication-params-in-git-repo-uri)
+      * [GitLab](#gitlab)
+      * [GitHub Actions](#github-actions)
+    * [GitHub Actions](#github-actions-1)
+    * [Generic settings for any other CI setup](#generic-settings-for-any-other-ci-setup)
+  * [Featured utilities](#featured-utilities)
+    * [GitHub action to set up specmatic environment](#github-action-to-set-up-specmatic-environment)
+      * [Examples](#examples)
+<!-- TOC -->
 
 Specmatic is a platform and programming language independent executable. We can run it in all CI environments through [command line](/getting_started.html#setup).
 

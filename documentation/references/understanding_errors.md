@@ -9,10 +9,12 @@ redirect_from:
 Understanding Errors
 ====================
 
-- [Understanding Errors](#understanding-errors)
-  - [Report Format](#report-format)
-  - [Error In The Request](#error-in-the-request)
-  - [Error in JSON request](#error-in-json-request)
+<!-- TOC -->
+* [Understanding Errors](#understanding-errors)
+  * [Report Format](#report-format)
+  * [Error In The Request](#error-in-the-request)
+  * [Error in JSON request](#error-in-json-request)
+<!-- TOC -->
 
 ## Report Format
 

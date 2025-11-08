@@ -12,16 +12,18 @@ redirect_from:
 Commercial
 {: .label }
 
-- [Redis Stubbing](#redis-stubbing)
-    - [Introduction to Redis Stubbing](#introduction-to-redis-stubbing)
-    - [Pre-requisite Setup](#pre-requisite-setup)
-    - [Managing Redis Server](#managing-redis-server)
-    - [Setting Expectations](#setting-expectations)
-      - [Setting expectation for a string response](#setting-expectation-for-a-string-response)
-      - [Setting expectation for a JSON string response](#setting-expectation-for-a-json-string-response)
-      - [Setting expectation for a Long/Integer response](#setting-expectation-for-a-longinteger-response)
-      - [Setting expectation for an array response](#setting-expectation-for-an-array-response)
-    - [Sample Applications](#sample-applications)
+<!-- TOC -->
+* [Redis Stubbing](#redis-stubbing)
+    * [Introduction to Redis Stubbing](#introduction-to-redis-stubbing)
+    * [Pre-requisite Setup](#pre-requisite-setup)
+    * [Managing Redis Server](#managing-redis-server)
+    * [Setting Expectations](#setting-expectations)
+      * [Setting expectation for a string response](#setting-expectation-for-a-string-response)
+      * [Setting expectation for a JSON string response](#setting-expectation-for-a-json-string-response)
+      * [Setting expectation for a Long/Integer response](#setting-expectation-for-a-longinteger-response)
+      * [Setting expectation for an array response](#setting-expectation-for-an-array-response)
+    * [Sample Applications](#sample-applications)
+<!-- TOC -->
 
 {: .note}
 The `specmatic-redis` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
