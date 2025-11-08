@@ -14,8 +14,8 @@ Getting started with Studio
       - [Where did Specmatic get the test data to generate the HTTP request](#where-did-specmatic-get-the-test-data-to-generate-the-http-request)
       - [How does this all work?](#how-does-this-all-work)
       - [What happens when OpenAPI goes out of sync with the application or vice versa?](#what-happens-when-openapi-goes-out-of-sync-with-the-application-or-vice-versa)
-    - [Consumer Side - Contract As A Mock / Intelligent Service Virtualisation](#consumer-side---contract-as-a-mock--intelligent-service-virtualisation)
-      - [Intelligent Service Virtualisation](#intelligent-service-virtualisation)
+    - [Consumer Side - Contract As A Mock / Intelligent Service Virtualization](#consumer-side---contract-as-a-mock--intelligent-service-virtualization)
+      - [Intelligent Service Virtualization](#intelligent-service-virtualization)
       - [Externalising mock responses](#externalising-mock-responses)
     - [A more complicated example](#a-more-complicated-example)
 
@@ -29,11 +29,11 @@ This tutorial will run online on [Specmatic Studio](https://studio.specmatic.com
 
 Hover over the little pop-out hamburger shown below, and click on the `petstore.yaml` specification.
 
-![screenshot of the file browser pop-out](../images/studio-file-browser.png)
+![screenshot of the file browser pop-out](images/studio-file-browser.png)
 
 Then click on the Spec tab at the top to view the spec, as in the following screenshot.
 
-![screenshot of the sample petstore.yaml spec](../images/studio-sample-specification.png)
+![screenshot of the sample petstore.yaml spec](images/studio-sample-specification.png)
 
 Here's a <a href="/original_petstore_spec.html" target="_blank">copy of the petstore specification</a> if needed for use later in the tutorial.
 
@@ -92,7 +92,7 @@ And try running the tests again.
 
 This results in a test failure because the sample application returns a `404`. Drill-down into the test details, and take a closer look at the URL of the test request. Where before we saw `GET /specmatic/specmatic-documentation-examples/pets/1` (the value of the petId parameter here is `1`), you'll now see a random `petId`. Since we removed the examples named `SCOOBY_200_OK`, Specmatic generated a random example of petId (which is a number in the spec). The request went out this random `petId` in the path. The application returned a `404` because it has no data for this `petId`.
 
-Click on `Spec` tab, restore `petstore.yaml` back to it's original state by pasting <a href="/original_petstore_spec.html" target="_blank">this content</a> back in, save it, and run the tests. With the example back, the tests will pass once again.
+Click on `Spec` tab, restore `petstore.yaml` back to its original state by pasting <a href="/original_petstore_spec.html" target="_blank">this content</a> back in, save it, and run the tests. With the example back, the tests will pass once again.
 
 #### How does this all work?
 
@@ -138,7 +138,7 @@ Please refer to below videos for extensive demos on Contract Tests.
 
 [**Learn more about Contract Tests here.**](/documentation/contract_tests.html)
 
-### Consumer Side - Contract As A Mock / Intelligent Service Virtualisation
+### Consumer Side - Contract As A Mock / Intelligent Service Virtualization
 
 To spin up a mock server with `petstore.yaml`, go to the `Mock` tab and press the `Run` button.
 
@@ -182,12 +182,12 @@ It will always return below values:
 
 This is thanks to the example `SCOOBY_200_OK` in the `petstore.yaml` spec file, which we earlier saw being used while running contract test. Specmatic also uses it to serves a mock response.
 
-With this we have effectively achived three goals in one go.
+With this we have effectively achieved three goals in one go.
 * Examples serve as sample data for people referring to the API specification as documentation
 * The same examples are used in contract tests to create the HTTP request
 * And these examples also serve as mock data when we run Specmatic mock command
 
-#### Intelligent Service Virtualisation
+#### Intelligent Service Virtualization
 
 Let us try a few experiments. Remove the `status` field in the `200_OKAY` response example in `petstore.yaml` (the very last line in that file) and run the mock command again.
 
@@ -276,8 +276,8 @@ Specmatic again rejects the expectation / canned response since it is not in lin
 
 We can now start consumer development against this mock without any dependency on the real API.
 
-To know more about **Intelligent Service Virtualisation** please refer to below video demos
-* [Video: Intelligent Service Virtualisation](https://youtu.be/U5Agz-mvYIU?t=750)
+To know more about **Intelligent Service Virtualization** please refer to below video demos
+* [Video: Intelligent Service Virtualization](https://youtu.be/U5Agz-mvYIU?t=750)
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
 [**Learn more about Mocking / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)

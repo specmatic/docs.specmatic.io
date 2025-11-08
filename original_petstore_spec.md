@@ -7,7 +7,7 @@ nav_exclude: true
 Original Petstore Spec
 ======================
 
-Here's the petstore spec used with the [5 Minute Tutorial](/studio_quick_start.html) for Studio.
+Here's the petstore spec used with the [5-Minute Tutorial](/studio_quick_start.html) for Studio.
 
 ```
 openapi: 3.0.1

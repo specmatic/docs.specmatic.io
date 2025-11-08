@@ -9,7 +9,7 @@ Frequently Asked Questions
 
 ### What is "Contract Driven Development"?
 
-Contract Driven Development leverages API Specifications (such as [OpenAPI](https://www.openapis.org/)) as Executable Contracts to shift-left the contract compatibility issue identification. Here is a quick [explainer video](https://www.youtube.com/watch?v=3HPgpvd8MGg&list=PL9Z-JgiTsOYRERcsy9o3y6nsi5yK3IB_w).
+Contract Driven Development leverages API Specifications (such as [OpenAPI](https://www.openapis.org/)) as Executable Contracts to shift-left the contract compatibility issue identification. Here is a quick [explainer video](https://www.youtube.com/watch?v=0Za1IW_Nr6M&list=PL9Z-JgiTsOYRERcsy9o3y6nsi5yK3IB_w).
 
 More on this [here](/contract_driven_development.html).
 
@@ -27,7 +27,7 @@ Specmatic has a #NOCODE approach to Contract Driven Development and is able to d
 
 ### How does it compare with other tools?
 
-Here are [detailed comparison](https://specmatic.io/category/comparisons/) with other tools and approaches
+Here are [detailed comparison](https://specmatic.io/comparisons/) with other tools and approaches
 
 ### I need some help adopting Contract Driven Development with Specmatic OR would like to request a feature
 

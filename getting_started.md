@@ -17,8 +17,8 @@ Getting started
       - [Where did Specmatic get the test data to generate the HTTP request](#where-did-specmatic-get-the-test-data-to-generate-the-http-request)
       - [How does this all work?](#how-does-this-all-work)
       - [What happens when OpenAPI goes out of sync with the application or vice versa?](#what-happens-when-openapi-goes-out-of-sync-with-the-application-or-vice-versa)
-    - [Consumer Side - Contract As A Stub / Intelligent Service Virtualisation](#consumer-side---contract-as-a-stub--intelligent-service-virtualisation)
-      - [Intelligent Service Virtualisation](#intelligent-service-virtualisation)
+    - [Consumer Side - Contract As A Stub / Intelligent Service Virtualization](#consumer-side---contract-as-a-stub--intelligent-service-virtualization)
+      - [Intelligent Service Virtualization](#intelligent-service-virtualization)
       - [Externalising stub responses](#externalising-stub-responses)
 
 ### Setup
@@ -336,9 +336,9 @@ Please refer to below videos for extensive demos on Contract Tests.
 
 [**Learn more about Contract Tests here.**](/documentation/contract_tests.html)
 
-### Consumer Side - Contract As A Stub / Intelligent Service Virtualisation
+### Consumer Side - Contract As A Stub / Intelligent Service Virtualization
 
-We have so far established that Specmatic will keep OpenAPI spec and the API implementation in sync. This gives us the confidence to use the same OpenAPI spec `service.yaml` on the Consumer side for **Intelligent Service Virtualisation** with Specmatic. This will help us isolate our UI development and make progress independent of the Provider / API. Here is a sequence diagram illustrating the same where UI no longer has to interact with the real backend for testing purposes. UI can instead rely on Specmatic Stub which is emulating the Provider / API.
+We have so far established that Specmatic will keep OpenAPI spec and the API implementation in sync. This gives us the confidence to use the same OpenAPI spec `service.yaml` on the Consumer side for **Intelligent Service Virtualization** with Specmatic. This will help us isolate our UI development and make progress independent of the Provider / API. Here is a sequence diagram illustrating the same where UI no longer has to interact with the real backend for testing purposes. UI can instead rely on Specmatic Stub which is emulating the Provider / API.
 
     UI (Consumer)         Specmatic Stub <- service.yaml
           | --- getPetById ---> |
@@ -456,7 +456,7 @@ With this we have effectively achived three goals in one go.
 * The same examples are used in contract tests to create the HTTP request
 * And these examples also serve as stub data when we run Specmatic stub command
 
-#### Intelligent Service Virtualisation
+#### Intelligent Service Virtualization
 
 Let us try a few experiments. Remove the `status` field in the `200_OKAY` response example in `service.yaml` (the very last line in that file) and run the stub command again.
 
@@ -634,8 +634,8 @@ Specmatic again rejects the expectation / canned response since it is not in lin
 
 We can now start consumer development against this stub without any dependency on the real API.
 
-To know more about **Intelligent Service Virtualisation** please refer to below video demos
-* [Video: Intelligent Service Virtualisation](https://youtu.be/U5Agz-mvYIU?t=750)
+To know more about **Intelligent Service Virtualization** please refer to below video demos
+* [Video: Intelligent Service Virtualization](https://youtu.be/U5Agz-mvYIU?t=750)
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
 [**Learn more about Stubbing / Smart Mocks here.**](/documentation/service_virtualization_tutorial.html)

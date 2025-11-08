@@ -1,8 +1,7 @@
 ---
 layout: default
 title: Download
-nav_exclude: true
-
+nav_order: 2
 ---
 # [Specmatic Open Source](https://github.com/specmatic/specmatic)
 
