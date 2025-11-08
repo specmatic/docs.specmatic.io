@@ -57,9 +57,10 @@ Before you can use Specmatic with your gRPC services, you need to define your se
 2. Create a `specmatic.yaml` file in the root of your project to reference these contracts. Here's an example:
 
 ```yaml
-sources:
-  - provider: git
-    repository: https://your-central-contract-repo.com
+version: 2
+contracts:
+  - git:
+      url: https://your-central-contract-repo.com
     consumes:
       - /path/to/your/service.proto
 ```
@@ -273,9 +274,10 @@ This command mounts your local `specmatic.yaml` file into the container and expo
 To run tests, again update your `specmatic.yaml` to include a `provides` section.
 
 ```yaml
-sources:
-  - provider: git
-    repository: https://your-central-contract-repo.com
+version: 2
+contracts:
+  - git:
+      url: https://your-central-contract-repo.com
     consumes:
       - /path/to/your/dependency_service.proto
     provides:

@@ -10,9 +10,10 @@ Create a file named `specmatic.yaml` with below content.
 
 ```yaml
 #specmatic.yaml
-sources:
-  - provider: git
-    repository: https://github.com/specmatic/specmatic-order-contracts.git
+version: 2
+contracts:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
     consumes:
       - io/specmatic/examples/store/asyncapi/kafka.yaml
 ```
@@ -423,11 +424,12 @@ This service will use a Kafka consumer to listen to the `place-order` topic, and
 ### Specmatic Configuration
 Create a specmatic.yaml configuration file to specify the contract for the service:
 ```yaml
-sources:
-- provider: "git"
-  repository: "https://github.com/specmatic/specmatic-order-contracts.git"
-  provides:
-  - "io/specmatic/examples/store/asyncapi/order_service_async_v1.yaml"
+version: 2
+contracts:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
+    provides:
+      - io/specmatic/examples/store/asyncapi/order_service_async_v1.yaml
 ```
 This configuration informs Specmatic that the service provides the implementation as per the specification listed under the provides key. This setup allows Specmatic to run tests against the service using the provided spec.
 

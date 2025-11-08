@@ -196,10 +196,11 @@ Now that we have our OpenAPI specification checked in, let's bring our Order ser
 * Virtualize the BFF service for the client application (based on the `order_bff.yaml` contract), helping to isolate the client.
 
 ```yaml
-sources:
-  - provider: git
-    repository: (your-git-repository)
-    stub:
+version: 2
+contracts:
+  - git:
+      url: (your-git-repository)
+    consumes:
       - path/to/your/spec/in/git/order_bff.yaml # BFF service contract
 ```
 
@@ -209,22 +210,24 @@ sources:
 
 
 ```yaml
-sources:
-  - provider: git
-    repository: (your-git-repository)
-    test:
+version: 2
+contracts:
+  - git:
+      url: (your-git-repository)
+    provides:
       - path/to/your/spec/in/git/order_bff.yaml # BFF service contract
-    stub:
+    consumes:
       - path/to/your/spec/in/git/order_api.yaml # Domain service contract
 ```
 
 **Domain Service** - After implementing domain service, place the following configuration in a file named `specmatic.yaml` at the root level of your project. This will test the domain API based on the `order_api.yaml` contract.
 
 ```yaml
-sources:
-  - provider: git
-    repository: (your-git-repository)
-    test:
+version: 2
+contracts:
+  - git:
+      url: (your-git-repository)
+    provides:
       - path/to/your/spec/in/git/order_api.yaml # Domain service contract
 ```
 
