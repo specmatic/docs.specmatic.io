@@ -7,10 +7,12 @@ redirect_from:
   - /documentation/central_contract_repository.html
 ---
 
-# Context
+# Central Contract Repository
+
+<img alt="Central Contract Repository" src="/images/Central-Contract-Repo.png" />
 
 <!-- TOC -->
-* [Context](#context)
+* [Central Contract Repository](#central-contract-repository)
 * [Treat Contract as Code](#treat-contract-as-code)
 * [Central Contract Repo - Single source of truth](#central-contract-repo---single-source-of-truth)
   * [File organization](#file-organization)
@@ -47,8 +49,6 @@ API Specifications are code, and they are best stored in a version control syste
 ## Pull Request / Merge Request Process
 
 It is a good idea to prevent any direct commits to your master / main branch of Central Contract Repo. All changes have to go through a Pull Request or a Merge Request.
-
-<img alt="Central Contract Repository" src="https://specmatic.io/wp-content/uploads/2022/09/Treat-Contract-as-Code.png" />
 
 ### Pre-merge checks
 

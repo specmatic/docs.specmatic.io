@@ -1,4 +1,4 @@
-Copy paste below text into a file with name "service.yaml". This, as you can see, uses the Gherkin syntax to describe a basic GET request. 
+Copy and paste below text into a file with name "service.yaml". This, as you can see, uses the Gherkin syntax to describe a basic GET request. 
 
     ---
     openapi: "3.0.1"

@@ -9,6 +9,7 @@ redirect_from:
 ---
 Service Virtualization
 ======================
+<img alt="Mocking" src="/images/mocking.png" />
 
 <!-- TOC -->
 * [Service Virtualization](#service-virtualization)

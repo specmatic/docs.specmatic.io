@@ -9,6 +9,8 @@ redirect_from:
 Backward Compatibility
 ==========
 
+<img alt="Backward Compatibility" src="/images/backward-compatibility.png" />
+
 <!-- TOC -->
 * [Backward Compatibility](#backward-compatibility)
 * [Why Backward Compatibility Matters](#why-backward-compatibility-matters)
@@ -44,9 +46,6 @@ Specmatic offers this powerful feature to check for backward compatibility betwe
 - **Catch issues early:** Detect compatibility problems before any code is written
 - **Specification-Based Analysis:** By comparing the old and new versions of your API specification, Specmatic provides instant feedback on potential breaking changes.
 - **Shift-Left Testing:** Detect breaking changes during API design phase, reduce costly downstream fixes and client disruptions.
-
-
-<img src="https://specmatic.io/wp-content/uploads/2022/09/Compatability.png" width="60%" height="60%" alt="Compatibility" />
 
 In the following sections, we'll show you how to use Specmatic to maintain backward compatibility in your microservices & microfrontend development process.
 
