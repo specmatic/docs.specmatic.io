@@ -13,7 +13,7 @@ Commercial
 - [Database Stubbing](#database-stubbing)
     - [Introduction to Database Stubbing](#introduction-to-database-stubbing)
     - [Pre-requisites](#pre-requisites)
-    - [Setup The Stub Server](#setup-the-stub-server)
+    - [Set up The Stub Server](#set-up-the-stub-server)
     - [Setting Up Database Expectations](#setting-up-database-expectations)
     - [Expectations Formats](#expectations-formats)
       - [SELECT statements](#select-statements)
@@ -78,11 +78,11 @@ testImplementation("xerces:xercesImpl:2.12.0")
 {% endtab %}
 {% endtabs %}
 
-### Setup The Stub Server
+### Set up The Stub Server
 
 Specmatic JDBC leverages the Specmatic HTTP server, as the two have a number of features in common<br/>
 
-* Setup the following bean in your tests:
+* Set up the following bean in your tests:
 
   ```java
   @Primary
@@ -99,7 +99,7 @@ Specmatic JDBC leverages the Specmatic HTTP server, as the two have a number of 
   ```
 
 ### Setting Up Database Expectations
-When writing integration or contract tests involving database stubs, you need to set expectations representing the database queries and their expected results. This can be done by passing the a directory of expectation files to Specmatic JDBC as part of the test setup.
+When writing integration or contract tests involving database stubs, you need to set expectations representing the database queries and their expected results. This can be done by passing a directory of expectation files to Specmatic JDBC as part of the test setup.
 
 ```java
 jdbcMockFactory.createDataSource(DATABASE_STUB_PORT, DATABASE_EXPECTATIONS_DIRECTORY);
@@ -217,7 +217,7 @@ Valid types include: `date`, `timestamp`, `time`. These kinds of values are stri
 
 #### Regex Matching for Flexible Queries
 
-When query parameters vary but you want to match the general pattern, you can use `queryRegex` instead of an exact query field. This allows for pattern-based matching.
+When query parameters vary, but you want to match the general pattern, you can use `queryRegex` instead of an exact query field. This allows for pattern-based matching.
 
 For example this stub matches any `UPDATE` statement that changes the language column for some country, regardless of the specific values:
 

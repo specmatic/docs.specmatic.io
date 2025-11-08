@@ -244,7 +244,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 {% endtab %}
 
-<!-- CENTRAL REPOSTORIES -->
+<!-- CENTRAL REPOSITORIES -->
 
 {% tab modules Central Repo %}
 ![Central Contract Repository](/images/Central-Contract-Repo.png)

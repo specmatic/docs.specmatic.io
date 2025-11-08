@@ -32,7 +32,7 @@ Generating API Specifications
 
 ![](/images/specmatic-reverse-proxy.svg)
 
-Specmatic acts as a transparent proxy between the client (Postman, your application, etc) & the API.
+Specmatic acts as a transparent proxy between the client (Postman, your application, etc.) & the API.
 
 ### Step 1: Start the Proxy Server
 Let's begin by setting up Specmatic as a proxy between your client and the API:
@@ -289,7 +289,7 @@ This command will read the Postman collection, and write the new specmatic file 
 
 If any of the APIs in the Postman collection require authentication, Specmatic will not be able to invoke them directly with the needed credentials.
 
-Instead, from within Postman, plug in in the required credentials, invoke the API, and save the request and response as an example.
+Instead, from within Postman, plug in the required credentials, invoke the API, and save the request and response as an example.
 
 Then export the collection, and import it into Specmatic.
 

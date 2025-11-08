@@ -112,7 +112,7 @@ A more formal structure of the dictionary can be summarised as follows:
 ```
 
 - **Values** can be primitives (strings, numbers), arrays, or nested objects.
-- **Partial specification** is allowed: you only need to set fields that are important for your test coverage. Unspecified fields will be auto-filled.
+- **Partial specification** is allowed: you only need to set fields that are important for your test coverage. Unspecified fields will be filled automatically.
 - **Multiple values** per argument enable value randomization across tests for increased coverage:
 
 ```json

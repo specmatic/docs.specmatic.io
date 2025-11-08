@@ -15,7 +15,7 @@ Service Virtualization
       - [Key Points:](#key-points)
   - [Externalizing Example Data](#externalizing-example-data)
       - [Handling No Response Body APIs](#handling-no-response-body-apis)
-  - [Intelligent Service Virtualisation - Example cannot go out of sync](#intelligent-service-virtualisation---example-cannot-go-out-of-sync)
+  - [Intelligent Service Virtualization - Example cannot go out of sync](#intelligent-service-virtualization---example-cannot-go-out-of-sync)
   - [Strict Mode](#strict-mode)
   - [Data Type-Based Examples](#data-type-based-examples)
   - [Plain Text Request Bodies - Examples With Regular Expressions](#plain-text-request-bodies---examples-with-regular-expressions)
@@ -32,7 +32,7 @@ Service Virtualization
   - [SSL / HTTPS  Stubbing](#ssl--https--stubbing)
     - [Auto-Generated Cert Store](#auto-generated-cert-store)
     - [Bring Your Own Key Store](#bring-your-own-key-store)
-  - [Dynamic Expectations (a.k.a. Dynamic Stubbing Or Mocking) - Setting Expecations Over Specmatic Http Api](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expecations-over-specmatic-http-api)
+  - [Dynamic Expectations (a.k.a. Dynamic Stubbing Or Mocking) - Setting Expectations Over Specmatic Http Api](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expectations-over-specmatic-http-api)
     - [Context](#context)
     - [Expectations Http Endpoint](#expectations-http-endpoint)
     - [Anatomy of a Component / API Test](#anatomy-of-a-component--api-test)
@@ -385,7 +385,7 @@ When this file is placed in the `employees_examples` directory and the stub is r
 
 **Note:** You may add more example files into the `employees_examples` directory. There is no limit to the number of example files that can be added.
 
-## Intelligent Service Virtualisation - Example cannot go out of sync
+## Intelligent Service Virtualization - Example cannot go out of sync
 
 An important and unique feature of Specmatic is that it constantly validates both inline and external examples against the specification to make sure they are always aligned.
 
@@ -493,7 +493,7 @@ docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -
 
 Sometimes the exact value may not be that important in an example.
 
-For example, suppose that in the request we expect, the important values to be matched against `department` and `designation`. `name` must be present but we don't particularly care about the exact value.
+For example, suppose that in the request we expect, the important values to be matched against `department` and `designation`. `name` must be present, but we don't particularly care about the exact value.
 
 Let's see how we can formulate an example that meets these requirements.
 
@@ -670,7 +670,7 @@ paths:
 ```
 
 - If the `bodyRegex` matches the incoming request body, that example is utilized. Otherwise, a random response is generated.
-- Try modifying the last name in the curl request. As long as the request begins with `John` case insensitive, you will receive the same response as defined by the regex in the `bodyRegex` in the example.
+- Try modifying the last name in the curl request. As long as the request begins with `John` case-insensitive, you will receive the same response as defined by the regex in the `bodyRegex` in the example.
 
 ## Correlated Request And Response Values
 
@@ -877,11 +877,11 @@ Let's try this out.
 
 ## Partial Examples
 
-This feature let's you focus on the keys that need, allowing Specmatic to fill in the missing details.
+This feature lets you focus on the keys that need, allowing Specmatic to fill in the missing details.
 
 ### Partial Request Examples
 
-For example, suppose I want to setup a response for all requests with `name` set to "George". I don't care about the specific values of `name`, `employeeCode` (which is mandatory), `department` or `designation` in the request.
+For example, suppose I want to set up a response for all requests with `name` set to "George". I don't care about the specific values of `name`, `employeeCode` (which is mandatory), `department` or `designation` in the request.
 
 - Create a file in `employees_examples` named partial.json, with the following contents:
 
@@ -960,11 +960,11 @@ The same idea extends to the response.
   ```
 
 - Note that the two mandatory keys in the response named `id` and `employeeCode` are omitted from the example.
-- But because it's a partial example, when you make the execute the previous curl command, Specmatic will autogenerate values for `id` and `employeeCode` from their schemas in the specification.
+- But because it's a partial example, when you execute the previous curl command, Specmatic will autogenerate values for `id` and `employeeCode` from their schemas in the specification.
 
 ## Use Meaningful Response Values From An External Dictionary
 
-When Specmatic's stub receives a request and finds no matching examples for it, Specmatic returns a response generated from the response schema in the API specification. While the generated response is schema-valid, it will not have meaningful values drawn from the context of your business domain. So in order to get domain-relevant responses when there examples, you can provide a dictionary of sample values to Specmatic. Specmatic will lookup this dictionary when it needs to generate domain-relevant examples.
+When Specmatic's stub receives a request and finds no matching examples for it, Specmatic returns a response generated from the response schema in the API specification. While the generated response is schema-valid, it will not have meaningful values drawn from the context of your business domain. So in order to get domain-relevant responses when there examples, you can provide a dictionary of sample values to Specmatic. Specmatic will look up this dictionary when it needs to generate domain-relevant examples.
 
 Refer to [Dictionary with service virtualization](/documentation/dictionary.html#dictionary-with-service-virtualization) for more details.
 
@@ -993,7 +993,7 @@ Let us create another expectation file on the same lines as [expectation.json](/
 }
 ```
 
-We have set the delay to 3 seconds here. Once the Specmatic stub server has loaded this expectation, time the request for product id 11 and you should see a 3 second delay.
+We have set the delay to 3 seconds here. Once the Specmatic stub server has loaded this expectation, time the request for product id 11, and you should see a 3-second delay.
 
 ```shell
 % time curl http://localhost:9000/products/11
@@ -1003,15 +1003,15 @@ We have set the delay to 3 seconds here. Once the Specmatic stub server has load
 }curl http://localhost:9000/products/11  0.01s user 0.01s system 0% cpu 3.082 total
 ```
 
-All other requests, other than the specific request (product id 11) where a delay has been setup, will have either no delay or fallback to global delay.
+All other requests, other than the specific request (product id 11) where a delay has been set up, will have either no delay or fallback to global delay.
 
 ### Global Delay
 
 A Global delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter in Specmatic Config,
 you can simulate response times with the specified delay in milliseconds.
 
-{% tabs stubs_serviceVirtualisation %}
-{% tab stubs_serviceVirtualisation specmatic.yaml %}
+{% tabs stubs_serviceVirtualization %}
+{% tab stubs_serviceVirtualization specmatic.yaml %}
 ```yaml
 version: 2
 contracts:
@@ -1023,7 +1023,7 @@ stub:
   delayInMilliseconds: 3000
 ```
 {% endtab %}
-{% tab stubs_serviceVirtualisation specmatic.json %}
+{% tab stubs_serviceVirtualization specmatic.json %}
 ```json
 {
   "version": 2,
@@ -1073,11 +1073,11 @@ docker run -p 443:443 -v "${PWD}/product-api.yaml:/usr/src/app/product-api.yaml"
 {% endtab %}
 {% endtabs %}
 
-This will create a `specmatic.jks` file in the dir that you mentioned above and you can now access the stub over https.
+This will create a `specmatic.jks` file in the dir that you mentioned above, and you can now access the stub over https.
 
 ### Bring Your Own Key Store
 
-If you already have a keystore and self signed certificate you can pass it to Specmatic through below command options.
+If you already have a keystore and self-signed certificate you can pass it to Specmatic through below command options.
 
 ```shell
 % specmatic stub --help
@@ -1091,11 +1091,11 @@ If you already have a keystore and self signed certificate you can pass it to Sp
                              Key password if any
 ```
 
-## Dynamic Expectations (a.k.a. Dynamic Stubbing Or Mocking) - Setting Expecations Over Specmatic Http Api
+## Dynamic Expectations (a.k.a. Dynamic Stubbing Or Mocking) - Setting Expectations Over Specmatic Http Api
 
 ### Context
-It is not always possible to know ahead of time what expecation data needs to be setup. Example: Consider below scenario
-* Let us say our system under test needs to lookup the SKU value from another service (over which we do not have control or cannot mock) before creating products
+It is not always possible to know ahead of time what expectation data needs to be setup. Example: Consider below scenario
+* Let us say our system under test needs to look up the SKU value from another service (over which we do not have control or cannot mock) before creating products
 * In this scenario we will be unable to create the expectation json file with any specific value of SKU since we will only know this at test runtime / dynamically
 
 **Dynamic Stubs** are helpful in such scenarios which involve a **work flow** with multiple steps where the input of a step depends on output of its previous step.
@@ -1110,7 +1110,7 @@ http://localhost:9000/_specmatic/expectations
 
 Please see <a href="/documentation/SpecmaticExpectations-postman_collection.json" download>postman collection</a> for reference.
 
-Specmatic will verify these expecations against the OpenAPI Specifications and will only return a 2xx response if they are as per API Specifications. Specmatic returns 4xx reponse if the expectation json is not as per the OpenAPI Specifications.
+Specmatic will verify these expectations against the OpenAPI Specifications and will only return a 2xx response if they are as per API Specifications. Specmatic returns 4xx response if the expectation json is not as per the OpenAPI Specifications.
 
 ### Anatomy of a Component / API Test
 
@@ -1122,11 +1122,11 @@ The above image shows how Specmatic Smart Mocking fits into your Component Test.
 
 **API Tests are just Component Tests where the System Under Test is a Service / API**. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/ApiTests.kt) of how you can leverage Specmatic dynamic mocking in an API Test. Below are the pieces involved.
 * **System Under Test** - [Find Available Products Service](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/main/kotlin/com/component/orders/controllers/Products.kt) - Invokes products API to get all products and filters out products where inventory is zero.
-* **Dependency** - Products API mocked by Specmatic. Specmatic is setup to leverage [OpenAPI Specification of Products API](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) in the [central contract repo](https://github.com/specmatic/specmatic-order-contracts) through [specmatic.yaml](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml) configuration.
+* **Dependency** - Products API mocked by Specmatic. Specmatic is set up to leverage [OpenAPI Specification of Products API](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) in the [central contract repo](https://github.com/specmatic/specmatic-order-contracts) through [specmatic.yaml](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml) configuration.
 
 Let us analyse each phase of this API test.
-* **Arrange** - In this step, we setup Specmatic stub server with expectation json through Specmatic http endpoint to emulate the Products API to return expected response. We also verify that Specmatic has accepted this expectation data by asserting that the response code is 2xx. This confirms that are our expectation data is in line with the OpenAPI Specification of Products OpenAPI Specification.
-* **Act** - Here the test invokes System Under Test to exercise the functionality we need to test. This inturn results in the System Under Test invoking its dependency (Products Service) which is being emulated by Specmatic. Specmatic returns the response we have setup in the previous step to the System Under Test. System Under Test processes this data and responds to API Test.
+* **Arrange** - In this step, we set up Specmatic stub server with expectation json through Specmatic http endpoint to emulate the Products API to return expected response. We also verify that Specmatic has accepted this expectation data by asserting that the response code is 2xx. This confirms that are our expectation data is in line with the OpenAPI Specification of Products OpenAPI Specification.
+* **Act** - Here the test invokes System Under Test to exercise the functionality we need to test. This inturn results in the System Under Test invoking its dependency (Products Service) which is being emulated by Specmatic. Specmatic returns the response we have set up in the previous step to the System Under Test. System Under Test processes this data and responds to API Test.
 * **Assert** - We now verify the response from System Under Test to ascertain if it has returned the correct response.
 
 ## Programmatically Starting Stub Server Within Tests
@@ -1146,7 +1146,7 @@ Add `specmatic-core` jar dependency with scope set to test since this need not b
 </dependency>
 ```
 
-Now you can import the utilty to create the stub server. Below code snippets are in Kotlin. However the overall concept is the same across all JVM languages such as Clojure, Scala or plain Java.
+Now you can import the utility to create the stub server. Below code snippets are in Kotlin. However, the overall concept is the same across all JVM languages such as Clojure, Scala or plain Java.
 
 ```kotlin
 import io.specmatic.stub.createStub
@@ -1162,19 +1162,19 @@ fun setUp() {
 }
 ```
 
-We can now programmatically set [dynamic expectations](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expecations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expecations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
+We can now programmatically set [dynamic expectations](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expectations-over-specmatic-http-api) on the ```stub``` with the ```setExpectation(<expectationJson>)``` method where ```<expecationJson>``` is in the same format as [static expectations](/documentation/service_virtualization_tutorial.html#fix-the-response-to-products10)
 
 ```java
 stub.setExpectation(expectationJson);
 ```
 
-If you have several such JSON expectation files that you would like to setup at once, you can pass a list of files or dir containing these expectation JSON files while creating the stub.
+If you have several such JSON expectation files that you would like to set up at once, you can pass a list of files or dir containing these expectation JSON files while creating the stub.
 
 ```kotlin
 httpStub = createStub(listOf("./src/test/resources"))
 ```
 
-The above `createStub()` function creates your Specmatic HTTP stub with default host, port, etc. Below is an example with all values being passedin
+The above `createStub()` function creates your Specmatic HTTP stub with default host, port, etc. Below is an example with all values being passed in
 
 ```kotlin
 @BeforeAll
@@ -1186,7 +1186,7 @@ fun setUp() {
 
 The last parameter (`strict = true`), enables **strict** mode where Specmatic HTTP Stub will only respond to requests where expectations have been set. For any other requests, `400 Bad Request` is returned.
 
-And subsequently once your tests are done, you can shutdown the stub server as part of your ```teardown``` / ```afterAll``` method.
+And subsequently once your tests are done, you can shut down the stub server as part of your ```teardown``` / ```afterAll``` method.
 
 ```kotlin
 @AfterAll
@@ -1201,7 +1201,7 @@ Here is a complete example of Specmatic Contract Tests that leverages the above 
 
 [Kotlin Example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/kotlin/com/component/orders/contract/ContractTests.kt)
 
-Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happpen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/specmatic/specmatic/blob/main/CONTRIBUTING.md).
+Please note that this is only a utility for the purpose of convenience in Java projects. Other programming languages can simply run the Specmatic standalone executable just as easily. If you do happen to write a thin wrapper and would like to contribute the same to the project, please refer to our [contribution guidelines](https://github.com/specmatic/specmatic/blob/main/CONTRIBUTING.md).
 
 {% endtab %}
 {% tab virtualization python %}
@@ -1234,7 +1234,7 @@ If your tests are written in Python, you can start and stop the stub server with
        .run()
    ```
 
-   In this example, we are passing an instance of wsgi app like flask. `stub_host`, `stub_port`, and `expectation_json_file` are the the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively. Replace `app` with your Flask application object.
+   In this example, we are passing an instance of wsgi app like flask. `stub_host`, `stub_port`, and `expectation_json_file` are the host and port for the stub server, and the path to a JSON file containing expectations for the stub, respectively. Replace `app` with your Flask application object.
 
    Here are complete example of [Specmatic stub server](https://github.com/specmatic/specmatic-order-bff-python/blob/main/test/test_contract.py) usage in Python.
 {% endtab %}
@@ -1270,7 +1270,7 @@ This is useful particularly when there are no distinguishing features of the req
 
 ### Clearing Transient Expectations
 
-If the test fails and you need to start a new run of the test, you may need to clear all the transient mocks so that the two tests do not step on eachother's toes.
+If the test fails and you need to start a new run of the test, you may need to clear all the transient mocks so that the two tests do not step on each other's toes.
 
 To do that, make an API call to the path /_specmatic/http-stub/<http-stub-token> with the DELETE verb.
 
@@ -1304,7 +1304,7 @@ paths:
                 type: number
 ```
 
-This OpenAPI specification expects given input to be multiplied by three. It may not be possible to create expectation for each individual number. In this can we can create an expecation that can call an external command to which it can pass the incoming request and then return the value generated by that external command.
+This OpenAPI specification expects given input to be multiplied by three. It may not be possible to create expectation for each individual number. In this can we can create an expectation that can call an external command to which it can pass the incoming request and then return the value generated by that external command.
 
 ```json
 {
@@ -1320,7 +1320,7 @@ This OpenAPI specification expects given input to be multiplied by three. It may
 }
 ```
 
-In the above expecation file since we are providing the ```externalisedResponseCommand```, Specmatic will ignore the data inside ```http-reponse body```. Instead it call the command (```response.sh```) that is mentioned in ```externalisedResponseCommand``` and pass the incoming request as a environment variable ```SPECMATIC_REQUEST```.
+In the above expectation file since we are providing the ```externalisedResponseCommand```, Specmatic will ignore the data inside ```http-reponse body```. Instead, it calls the command (```response.sh```) that is mentioned in ```externalisedResponseCommand``` and pass the incoming request as an environment variable ```SPECMATIC_REQUEST```.
 
 ```shell
 #!/bin/bash
@@ -1561,7 +1561,7 @@ paths:
 
 By default, Specmatic stub servers run on `http://0.0.0.0:9000` *(Default BaseURL)*<br/>
 However, you can customize the endpoint by specifying the `host`, `port`, `basePath`, or the complete `baseUrl` according to your requirements in the Specmatic Config.
-- Specifying only `host`, `port`, or `basePath` will auto-fill missing parts from the default base URL.
+- Specifying only `host`, `port`, or `basePath` will autofill missing parts from the default base URL.
 - If `baseUrl` is specified, it will be used directly.
 
 ### Specifying Host
@@ -1893,7 +1893,7 @@ matchBranch: true
 
 To understand where this may be useful, consider the following scenario. Let's say there's a branch in the central contract repo named 'product-discount' with changes to the product API specification. Then to develop the feature, the API developer creates a branch named 'product-discount' in the API repo and makes changes to the API implementation to support the new feature.
 
-With this setup, the API dveloper can run `specmatic test --match-branch` with the 'product-discount' branch checked out in the API repository, and since there is a branch on the central repo with the same name, specifications from the 'product-discount' branch on the central repo will be used to run tests.
+With this setup, the API developer can run `specmatic test --match-branch` with the 'product-discount' branch checked out in the API repository, and since there is a branch on the central repo with the same name, specifications from the 'product-discount' branch on the central repo will be used to run tests.
 
 The same is true for the consumer of the API, who can run `specmatic stub --match-branch`.
 

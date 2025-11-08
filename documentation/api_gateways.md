@@ -14,7 +14,7 @@ A contract represents the interface provided by the API provider to the API cons
 
 Where the consumer calls the provider directly, there are just two parties.
 
-However an API gateway changes this picture. API gateways subtly modify incoming requests, by adding headers or rewriting the URL. As a result, the contract seen by the consumer is slightly different from that provided by the API.
+However, an API gateway changes this picture. API gateways subtly modify incoming requests, by adding headers or rewriting the URL. As a result, the contract seen by the consumer is slightly different from that provided by the API.
 
 There are also direct consumers of the API lying behind the API gateway.
 
@@ -26,7 +26,7 @@ Specmatic's approach is to write the contract the way the API provider and inter
 
 This way, the API provider can run contract tests using the contract as is, and the internal consumer can stub it out.
 
-That leaves the external consumer, which needs to use the contract for service virtualisation.
+That leaves the external consumer, which needs to use the contract for service virtualization.
 
 Specmatic provides a hook named `stub_load_contract` in which the necessary modifications can be made to the provider contract, so that it looks exactly the way a consumer sees it.
 

@@ -27,7 +27,7 @@ Feature: Random API
     And response-body (number)
 ```
 
-Start up Command Prompt (Windows) or Terminal (MacOS). cd into the directory containing this file.
+Start up Command Prompt (Windows) or Terminal (macOS). cd into the directory containing this file.
 
 Convert it to yaml using `java -jar specmatic.jar to-openapi ./random.spec`
 

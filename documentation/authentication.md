@@ -72,7 +72,7 @@ components:
 
 To use a real API key header in contract tests, an environment variable with the name of the security scheme needs to be defined.
 
-For the above example, define an environment variable named `ApiKeyAuthHeader` having the API key as it's value.
+For the above example, define an environment variable named `ApiKeyAuthHeader` having the API key as its value.
 
 For example, in the above case, we would define an environment variable named `ApiKeyAuthHeader`. Assuming that Authorization header value has to be `my-api-key-abc123`, set the value of this environment variable to `my-api-key-abc123`.
 
@@ -110,7 +110,7 @@ For example, in the above case, we would define an environment variable named `B
 
 ## Testing with mock auth
 
-While Specmatic supports testing with real authentication as seen above, in a component / contract test like setup, it is recommended to isolate the SUT (System Under Test) which is your service from other dependencies such as auth providers. So at a contract / component test level it is sufficient to validate if an API implementation / service accepts the security parameters it is advertising in its API Specification. However it is not necessary to validate if the security itself is working. That is for later stages of tests where you can hook up a security service dependency such as DB, OAuth provider, etc.
+While Specmatic supports testing with real authentication as seen above, in a component / contract test like setup, it is recommended to isolate the SUT (System Under Test) which is your service from other dependencies such as auth providers. So at a contract / component test level it is sufficient to validate if an API implementation / service accepts the security parameters it is advertising in its API Specification. However, it is not necessary to validate if the security itself is working. That is for later stages of tests where you can hook up a security service dependency such as DB, OAuth provider, etc.
 
 So for Contract Tests we recommend having a “Test Security Configuration” where you are still exercise your security plumbing, however not actually fetching real user information. This is similar to running an in-memory DB in test setup instead of running a real DB in CI. Below are some examples of the same.
 
@@ -134,7 +134,7 @@ Please refer to [sample springboot application](https://github.com/specmatic/spe
 
 This has two API security configurations
 * [Production Security Config](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/main/java/com/store/config/SecurityConfig.kt) - This fetches user from the DB based on api token in request header
-* [Test Security Config](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/config/TestSecurityConfig.kt) - This always returns a dummy user principal. However rest of the code such as reading the authentication token from header etc. are still tested.
+* [Test Security Config](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/config/TestSecurityConfig.kt) - This always returns a dummy user principal. However, rest of the code such as reading the authentication token from header etc. are still tested.
 
 So when you run the [ContractTest](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) it will still exercise your security plumbing (does the application accept the proper header name, datatype, etc.).
 
@@ -142,6 +142,6 @@ This is just an example of how we can wire up security configurations for test a
 
 The same can be achieved in almost any programming language and stack.
 * Dot Net - Register a custom [AuthenticationHandler](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.authenticationhandler-1?view=aspnetcore-7.0) for mock authentication in tests
-* NodeJS - Switch auth middleware based on ```process.env.NODE_ENV```
+* Node.js - Switch auth middleware based on ```process.env.NODE_ENV```
 
 In general the overall idea is to inject a mock authentication mechanism while running Specmatic Contract Tests

@@ -18,7 +18,7 @@ nav_order: 28
   - [Referring to Contracts in Central Contract Repo](#referring-to-contracts-in-central-contract-repo)
     - [Specmatic Configuration](#specmatic-configuration)
 
-**Contract Driven Development** leverages API Specifications as Executable Contracts to keep both consumers and providers working well with each other. If consumers and providers are referring to different versions of the API Specifications then it is not possible to guarantee this. This sort of deviation can happen when API Specifications are shared over documentation sites, email, or other non standard mechanisms.
+**Contract Driven Development** leverages API Specifications as Executable Contracts to keep both consumers and providers working well with each other. If consumers and providers are referring to different versions of the API Specifications then it is not possible to guarantee this. This sort of deviation can happen when API Specifications are shared over documentation sites, email, or other non-standard mechanisms.
 
 It is critical to have a **Single Source of Truth** to store the API Specifications for all stakeholders.
 
@@ -26,7 +26,7 @@ Here is a **[video](https://youtu.be/U5Agz-mvYIU?t=1827)** on this.
 
 # Treat Contract as Code
 
-API Specifications are code and they are best stored in a version control system such as Git. This way we can leverage the version control system as a way to collaborate between all stakeholders through mechanisms such as Pull Requests, Merge Requests, etc.
+API Specifications are code, and they are best stored in a version control system such as Git. This way we can leverage the version control system as a way to collaborate between all stakeholders through mechanisms such as Pull Requests, Merge Requests, etc.
 
 # Central Contract Repo - Single source of truth
 
@@ -50,18 +50,18 @@ It is a good idea to prevent any direct commits to your master / main branch of 
 
 * **Syntax checks and Linting** - We leverage [Spectral](https://stoplight.io/open-source/spectral) for this. Read more about this [here](https://github.com/specmatic/specmatic-order-contracts#linting)
 * **Specmatic Backward Compatibility Testing** This step is crucial in identifying **backward breaking** changes to the specifications.
-  * Specmatic Backward Compatiblity Check can compare the spec files in your Central Contract Repository (Git Repo) to identify the differences. Examples:
-    * **Github Action** -  Please see this [Github Workflow file](https://github.com/specmatic/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are running the `specmatic backwardCompatibilityCheck` on the central repo. This command does two levels of checks.
+  * Specmatic Backward Compatibility Check can compare the spec files in your Central Contract Repository (Git Repo) to identify the differences. Examples:
+    * **GitHub Action** -  Please see this [GitHub Workflow file](https://github.com/specmatic/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are running the `specmatic backwardCompatibilityCheck` on the central repo. This command does two levels of checks.
       * Any files that have changed in the Pull Request branch and compares them against their respective version in default branch (which is target of the PR)
-      * Also any files which refer to the change set are also tested for breaking changes (this is necessary to cover the scenario where common schema has been extracted to a separate file and changes to this file impacts backward compatibility of other files that refer to it)
+      * Also, any files which refer to the change set are also tested for breaking changes (this is necessary to cover the scenario where common schema has been extracted to a separate file and changes to this file impacts backward compatibility of other files that refer to it)
     * **Example Validation** - The `specmatic backwardCompatibilityCheck` fails when backward-incompatible changes are detected, and when named examples are out of line with their schema.
   * Specmatic returns a 0 or 1 just like any command line tool for success and error respectively based on which we can fail the build. At this point the team can decide if they should version bump the specification or change the code such that it is backward compatible
 
 #### Sample Central Contract Repository with Pre-merge checks
  Here are some sample pre-merge pipelines to disallow merges when specification changes have linter errors or backward breaking changes.
 
-- [Github Action](https://github.com/specmatic/specmatic-order-contracts)
-- [Gitlab CI](https://gitlab.com/znsio/contract-driven-development/central-contract-repository) - This also uses [Specmatic Docker Image](https://hub.docker.com/r/specmatic/specmatic)
+- [GitHub Action](https://github.com/specmatic/specmatic-order-contracts)
+- [GitLab CI](https://gitlab.com/znsio/contract-driven-development/central-contract-repository) - This also uses [Specmatic Docker Image](https://hub.docker.com/r/specmatic/specmatic)
 
 ### Collaborating over API Design
 

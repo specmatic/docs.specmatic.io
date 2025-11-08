@@ -16,7 +16,7 @@ docker run specmatic/specmatic
 {% endtab %}
 
 {% tab install java %}
-Download the standalone jar from our [Github releases](<https://github.com/specmatic/specmatic/releases/download/{{ site.specmatic-core-version }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.specmatic-core-version }}/specmatic-executable-all-{{ site.specmatic-core-version }}.jar).
+Download the standalone jar from our [GitHub releases](<https://github.com/specmatic/specmatic/releases/download/{{ site.specmatic-core-version }}/specmatic.jar>) or [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.specmatic-core-version }}/specmatic-executable-all-{{ site.specmatic-core-version }}.jar).
 
 If you have downloaded the standalone jar from Maven Central, you may want to rename it as shown below for convenience.
 
@@ -29,7 +29,7 @@ Run specmatic as below to list all the options available
 java -jar specmatic.jar
 ```
 
-Follow the quick tips below to setup commands for easily running `java -jar specmatic.jar`.
+Follow the quick tips below to set up commands for easily running `java -jar specmatic.jar`.
 
 #### Command-line alias on MacOS / Linux
 

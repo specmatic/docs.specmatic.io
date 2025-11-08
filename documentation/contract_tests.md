@@ -216,7 +216,7 @@ components:
           type: string
 ```
 
-Here is a sample application that is is implementing this specification. You can run a curl command on this URL to see the sample data.
+Here is a sample application that is implementing this specification. You can run a curl command on this URL to see the sample data.
 
 `https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples/employees/`
 
@@ -269,7 +269,7 @@ Let's try it out. Please clone below sample repo.
 
 [https://github.com/specmatic/externalised-example-jsons-sample](https://github.com/specmatic/externalised-example-jsons-sample)
 
-The [`employees.yaml`](https://github.com/specmatic/externalised-example-jsons-sample/blob/main/employees.yaml) file in this repo is similar to the spec we saw in the above section with the difference that it does not include inline examples. Instead all the examples are externalised to JSON files inside a folder named [`employees_examples`](https://github.com/specmatic/externalised-example-jsons-sample/tree/main/employees_examples). Please have a look at each of the examples files (which have self explanatory names) to understand the syntax.
+The [`employees.yaml`](https://github.com/specmatic/externalised-example-jsons-sample/blob/main/employees.yaml) file in this repo is similar to the spec we saw in the above section with the difference that it does not include inline examples. Instead, all the examples are externalised to JSON files inside a folder named [`employees_examples`](https://github.com/specmatic/externalised-example-jsons-sample/tree/main/employees_examples). Please have a look at each of the examples files (which have self-explanatory names) to understand the syntax.
 
 Let us now run `employees.yaml` as a test against the sample application.
 
@@ -285,7 +285,7 @@ Alternatively, we can also run the same command with the Docker image:
 docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
-Note: Since the folder is named `employees_examples` and colocated with the spec file `employees.yaml`, by convention it is automatically picked up. However if your folder has different name and / or located in another path, you can explicitly pass that folder as a parameter using the `--examples` CLI Argument (Please run `specmatic test --help` to learn more).
+Note: Since the folder is named `employees_examples` and colocated with the spec file `employees.yaml`, by convention it is automatically picked up. However, if your folder has different name and / or located in another path, you can explicitly pass that folder as a parameter using the `--examples` CLI Argument (Please run `specmatic test --help` to learn more).
 
 The test results will look as shown below. Specmatic has run one test per external example file at this point. This is quite similar to our earlier test run.
 
@@ -305,7 +305,7 @@ In the above case, example JSON files will be written into the directory named `
 
 ### Boundary Condition Testing
 
-In the above example, we only ran the happy path test cases. What if we send an number to a boolean parameter? What if we send a null to a non-nullable parameter? What if we do not send a mandatory parameter? How does the application handle these errors? Input validation is an important aspect of your api security strategy ([OWASP reference](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)).
+In the above example, we only ran the happy path test cases. What if we send a number to a boolean parameter? What if we send a null to a non-nullable parameter? What if we do not send a mandatory parameter? How does the application handle these errors? Input validation is an important aspect of your api security strategy ([OWASP reference](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)).
 
 Specmatic can help you verify / assess such boundary condition behavior and the associated error handling in your application. Let us run the Specmatic tests with the ```SPECMATIC_GENERATIVE_TESTS``` environment variable set to true.
 
@@ -327,7 +327,7 @@ Earlier for the same input we saw 4 tests and all of which were successful. This
 
 Exercise: Analyse the logs to understand what input validations need to be added to the application.
 
-If you want to start small, set the flag `ONLY_POSITIVE` to true, either as an environment variable or as a Java system property. With this flag switched on, requests with all combinations of properties and values permitted by the spec will be generated and used as tests against your API. However negative tests (e.g. sending a number where boolean is required) will not be run.
+If you want to start small, set the flag `ONLY_POSITIVE` to true, either as an environment variable or as a Java system property. With this flag switched on, requests with all combinations of properties and values permitted by the spec will be generated and used as tests against your API. However, negative tests (e.g. sending a number where boolean is required) will not be run.
 
 Demo: [Video](https://youtu.be/U5Agz-mvYIU?t=216)
 
@@ -344,7 +344,7 @@ components:
         maxLength: 2147483647 # Int max.. a 2GB length string.. ?!
 ```
 
-Usually this is not intentional. It may happen for inocuous reasons, e.g. a flag was set / unset in some framework/generator tool. Just imagine generating a 2GB-length string in a test (or even a stub). And usually it is due to a small mistake in the spec-gen metadata. In fact, most strings in an API aren't larger than a few bytes in length. Maybe a few KB. Very rarely do they cross an MB.
+Usually this is not intentional. It may happen for innocuous reasons, e.g. a flag was set / unset in some framework/generator tool. Just imagine generating a 2GB-length string in a test (or even a stub). And usually it is due to a small mistake in the spec-gen metadata. In fact, most strings in an API aren't larger than a few bytes in length. Maybe a few KB. Very rarely do they cross an MB.
 
 So for any string with `maxLength` (or `minLength`) greater than 4MB, Specmatic uses a length of 4MB instead, a more-than-large-enough length for any string in an API call, and prints a warning during the parsing of the specification. Doing so at parse-time allows Specmatic to run smoothly, while the warning tells you clearly what to fix.
 
@@ -374,7 +374,7 @@ Now let us experiment by making some changes to the datatypes in the ```employee
 
 Examples:
 * Change the datatype of ```designation``` to integer in scheme component Employee - You will notice that Specmatic will complain that your examples are not as per the Specification
-* Now lets update all the examples for ```designation``` to value ```1``` - Now Specmatic will run the test and you should see a single failure
+* Now lets update all the examples for ```designation``` to value ```1``` - Now Specmatic will run the test, and you should see a single failure
 
 We encourage you to try more such modifications to the specification such as adding / removing parameters, updating datatypes, etc. This will give you picture of how Contract Tests work.
 
@@ -459,7 +459,7 @@ The path `/items/free` in the example matches both `/items/{type}` and `/items/f
 
 ### Declaring Contracts In Configuration
 
-In the last example, we ran run contract tests above by passing the contract path to Specmatic. The drawback here is that the command is not easily machine parseable. It will not be easy for tools to find out which contract is being run as test on which service, and do further analysis. Updating the command to add more contracts will also be more error prone.
+In the last example, we ran contract tests by passing the contract path to Specmatic. The drawback here is that the command is not easily machine parseable. It will not be easy for tools to find out which contract is being run as test on which service, and do further analysis. Updating the command to add more contracts will also be more error-prone.
 
 So instead:
 
@@ -521,10 +521,10 @@ Since Specmatic uses the Specmatic configuration file in the current working dir
 Since Specmatic uses git under-the-hood, any authentication requirements of your git server will be handled by the underlying git command.
 
 Note:
-1. The value of "url" in "git" field is the git repository in which the contracts are declared. It can be any git repo, not just github.
+1. The value of "url" in "git" field is the git repository in which the contracts are declared. It can be any git repo, not just GitHub.
 2. The value of "provides" is a list of contract paths, relative to the repository root, which should be run as contract tests.
 3. You may declare multiple contracts in the "provides" list.
-4. "contracts" holds a list. You may declare multiple contracts if required. However we recommend using a single contract repository to be shared across your organisation, or ecosystem within the organisation (if your org is large).
+4. "contracts" holds a list. You may declare multiple contracts if required. However, we recommend using a single contract repository to be shared across your organisation, or ecosystem within the organisation (if your org is large).
 
 If you need to experiment with files on the local filesystem, here's how you can declare specifications locally (no need to specify the `filesystem` field if the config is in the same directory as the relative path of `provides` and if this isn't the case then specify `filesystem` with `directory` field), in the Specmatic configuration file:
 
@@ -753,7 +753,7 @@ auth:
 
 In CI, the necessary oauth2 token must be fetched and stored in a file named central_repo_auth_token.txt (as configured) side-by-side with the Specmatic configuration file, before running contract tests.
 
-If you are using Microsoft Azure as both your git provider as well as CI, you can use a secret build variable named System.AccessToken, provided by Microsoft Azure, as your OAuth2 bearer token. Before running the tests, use a script to place the value of this variable in a file. For example:
+If you are using Microsoft Azure as both your git provider and for CI, you can use a secret build variable named System.AccessToken, provided by Microsoft Azure, as your OAuth2 bearer token. Before running the tests, use a script to place the value of this variable in a file. For example:
 
 ```yaml
 # Sample azure pipeline snippet
@@ -1000,7 +1000,7 @@ For example, an example of a failing contract tests for a 200 response could loo
 ```
 Note the quotes around the name, which are necessary because of the space required between `[WIP]` and `SUCCESS`.
 
-When the test for this example runs, it will log the run details and failures without breaking the build. In the test report, it show up as `WIP`. However, the use of `WIP` does not bypass the contract validation, the contract itself should be in valid state.
+When the test for this example runs, it will log the run details and failures without breaking the build. In the test report, it shows up as `WIP`. However, the use of `WIP` does not bypass the contract validation, the contract itself should be in valid state.
 
 Also, please note that this use of `[WIP]` differs from the WIP tags given [here](./backward_compatibility.html#handling-changes-in-progress). WIP tags can be applied to the path/endpoint, while this works only on example names.
 
@@ -1741,7 +1741,7 @@ In Java, you could use this:
 System.setProperty("SPECMATIC_GENERATIVE_TESTS", "true")
 ```
 
-The best way to see it in action is to try it out with one of your micro-services and it's API specifications.
+The best way to see it in action is to try it out with one of your microservices and its API specifications.
 
 ### Smart Resiliency Orchestration
 
@@ -1759,7 +1759,7 @@ A **202 Accepted** HTTP status code indicates that a request has been accepted f
 
 - The specification must define a **202 Accepted** response for the specific path and HTTP method
 - The response must include a [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link) with an `title` parameter set to `"monitor"`
-- The specification must also include a operation that corresponds to the URL provided in the [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link), on which Specmatic can **poll** for the completion of the operation
+- The specification must also include an operation that corresponds to the URL provided in the [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link), on which Specmatic can **poll** for the completion of the operation
 - The response from the polled endpoint must conform to a standard schema
 - By default, a maximum of **3** monitoring attempts will be executed before the test fail, with delay resulting from the [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) Header if present, or exponential backoff otherwise
 
@@ -1782,7 +1782,7 @@ This feature ensures that your tests are not brittle and can correctly validate 
 ##### Monitor Response Schema
 {: style="font-size:1rem!important" }
 
-The response from the polled endpoint must adhere to a standard schema that is either equal to or a superset, i.e. encompassess the schema outlined below:
+The response from the polled endpoint must adhere to a standard schema that is either equal to or a superset, i.e. encompasses the schema outlined below:
 
 ```yaml
 AnyValue: 
@@ -1846,7 +1846,7 @@ Smart Resiliency Orchestration in Specmatic gracefully handles this scenario wit
 ##### Core Requirements
 {: style="font-size:1rem!important" }
 
-- The sepcification must define a **429 Too Many Requests** response for the specific path and method
+- The specification must define a **429 Too Many Requests** response for the specific path and method
 - The response can include a [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) Header
   - If the [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) value is an integer, it indicates delay in **seconds** between retries
   - If [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) is a valid **HTTP Date**, Specmatic will calculate the delay based on the current time.

@@ -15,7 +15,7 @@ nav_order: 18
   - [Starting a stub server](#starting-a-stub-server)
   - [Stubbing out specific values using example data](#stubbing-out-specific-values-using-example-data)
       - [Providing a custom examples directory](#providing-a-custom-examples-directory)
-      - [Example file file format](#example-file-file-format)
+      - [Example file format](#example-file-format)
   - [HTTP Headers](#http-headers)
   - [GraphQL Variables](#graphql-variables)
   - [Delayed responses](#delayed-responses)
@@ -40,7 +40,7 @@ Specmatic supports service virtualization, contract testing and backward compati
 
 With Specmatic GraphQL support you will be to leverage your GraphQL SDL files as executable contracts.
 
-1. Intelligent Service Virtualisation: Stub out GraphQL services for testing and development
+1. Intelligent Service Virtualization: Stub out GraphQL services for testing and development
 2. Contract Testing: Validate requests and responses against your GraphQL SDL files
 3. Backward Compatibility Checks: Compare two versions of your GraphQL SDL files to identify breaking changes without writing any code
 4. Central Contract Repo: Store your GraphQL SDL files in central Git repo which will serve as single source of truth for both providers and consumers
@@ -208,7 +208,7 @@ This time though, you will receive a response with the specified example defined
 
 By convention, Specmatic automatically loads all examples defined for the GraphQL SDL file, say `<graphql_sdl_filename>.graphql`, from a colocated directory called `<graphql_sdl_filename>_examples`. However, in case your examples are in a different directory, you can pass it as an argument programmatically or through CLI args while running tests or service virtualization.
 
-#### Example file file format
+#### Example file format
 
 Let us now take deeper look at the external example format.
 * At the top level we have two YAML root nodes called `request` and `response`
@@ -219,7 +219,7 @@ Let us now take deeper look at the external example format.
 
 ## HTTP Headers
 
-Although GraphQL SDL files do not support HTTP request headers, you may directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml below. The headers will be leveraged if present both by the contract tests as well as service virtualization.
+Although GraphQL SDL files do not support HTTP request headers, you may directly add them to your Specmatic example files in `httpHeaders` under the `request` key, as seen in the example yaml below. The headers will be leveraged if present both by the contract tests and service virtualization.
 
 ```yaml
 request:
@@ -263,7 +263,7 @@ Say suppose, below request is that is being sent by your GraphQL Consumer to Spe
 }
 ```
 
-As you can see, the above request from GraphQL consumer includes a variable called `$pageSize`. However in our example we will not be using it, instead we will be using the actual value (`pageSize: 10`) to match a request that comes with that value.
+As you can see, the above request from GraphQL consumer includes a variable called `$pageSize`. However, in our example we will not be using it, instead we will be using the actual value (`pageSize: 10`) to match a request that comes with that value.
 
 ```yaml
 request:
@@ -845,7 +845,7 @@ To run contract test:
 docker run --network host -v "$(pwd)/specmatic.yml:/usr/src/app/specmatic.yml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic"  -e SPECMATIC_GENERATIVE_TESTS=true specmatic/specmatic-graphql test --port=8080
 ```
 
-This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating GraphQL requests based on the GrapqhQL SDL files listed under `provides` section along with examples if any provided in the colocated directory named `<GraphQL SDL file without extension>_examples`.
+This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating GraphQL requests based on the GraphQL SDL files listed under `provides` section along with examples if any provided in the colocated directory named `<GraphQL SDL file without extension>_examples`.
 Also, it mounts the build artifacts from the docker container onto your local machine once the test run is completed.
 
 ## Using your GraphQL files as your API Contracts from Central Contract Repository

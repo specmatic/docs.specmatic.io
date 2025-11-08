@@ -38,7 +38,7 @@ Note: Version 2 is the latest as of 14/02/2025. If you are looking for an older 
 
 We often have to pass more than one API Specification file to Specmatic to stub or test. While it is possible to send all the files as command line options, there is a better way.
 
-Also if your contracts are stored in a source control system like Git, we need to provide details about the repository so that Specmatic can pull your specifications directly from your version control.
+Also, if your contracts are stored in a source control system like Git, we need to provide details about the repository so that Specmatic can pull your specifications directly from your version control.
 
 #### Upgrade older configuration to the latest version
 
@@ -450,7 +450,7 @@ contracts:
 
 Usually source control requires authentication. Below are the ways in which you can set it up.
 * Recommended approach - Provide a Git SSH URL and make sure your environment already has necessary keys loaded. If the git clone command works on your regular command line, it will work within Specmatic too. This is most suitable in CI, because your CI server may already be setup to clone the application code (for which the CI server should already have the necessary keys). So it should already be able to clone your API Specifications also. The same also should be applicable for local development and testing environments.
-* Alternatives - With https URLs you can provide the bearer token or other means. Please reach us (raise a [github issue](https://github.com/specmatic/specmatic/issues/new/choose)) if you need help with this.
+* Alternatives - With https URLs you can provide the bearer token or other means. Please reach us (raise a [GitHub issue](https://github.com/specmatic/specmatic/issues/new/choose)) if you need help with this.
 
 #### Report Configuration
 Specmatic can generate reports based on the below configuration:

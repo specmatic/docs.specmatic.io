@@ -111,7 +111,7 @@ sources:
 {% endtabs %}
 
 Place this file in the root folder of your project (Here is an [example](https://github.com/specmatic/specmatic-order-api-java)). Let us now go through each of the lines in this file.
-* **provider** - At the moment we support all git based source control systems. Example: GitHub, Gitlab, Azure, etc.
+* **provider** - At the moment we support all git based source control systems. Example: GitHub, GitLab, Azure, etc.
 * **repository** - The git repository URL
 * **provides** - This is the list of API Specifications that need to be run as a test. Note that the path is relative to the source control repository root.
 
@@ -393,7 +393,7 @@ Note that the `consumes` and `provides` can both contain URLs. `http` and `https
 #### Source control authentication
 
 Usually source control requires authentication. Below are the ways in which you can set it up.
-* Recommended approach - Provide a Git SSH URL and make sure your environment already has necessary keys loaded. If the git clone command works on your regular command line, it will work within Specmatic too. This is most suitable in CI, because your CI server may already be setup to clone the application code (for which the CI server should already have the necessary keys). So it should already be able to clone your API Specifications also. The same also should be applicable for local development and testing environments.
+* Recommended approach - Provide a Git SSH URL and make sure your environment already has necessary keys loaded. If the git clone command works on your regular command line, it will work within Specmatic too. This is most suitable in CI, because your CI server may already be set up to clone the application code (for which the CI server should already have the necessary keys). So it should already be able to clone your API Specifications also. The same also should be applicable for local development and testing environments.
 * Alternatives - With https URLs you can provide the bearer token or other means. Please reach us (raise a [github issue](https://github.com/specmatic/specmatic/issues/new/choose)) if you need help with this.
 
 #### Report Configuration

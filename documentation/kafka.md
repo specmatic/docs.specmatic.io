@@ -382,7 +382,7 @@ echo '{"id":12345,"orderItems":[{"id":1,"name":"Macbook","quantity":1,"price":20
 
 #### ✅ Step 5: Verify Expectations
 
-Check whether the expected messages were received and they were **schema valid** as per the specification using the `GET` verification endpoint:
+Check whether the expected messages were received, and they were **schema valid** as per the specification using the `GET` verification endpoint:
 
 ##### Request
 

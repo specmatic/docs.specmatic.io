@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Service Virtualisation
+title: Service Virtualization
 parent: Documentation
 nav_exclude: true
 search_exclude: true
 ---
-Service Virtualisation
+Service Virtualization
 ======================
-This page is deprecated. Please refer to [Service Virtualization Tutorial](/documentation/service_virtualization_tutorial.html) for service virtualisation capabilities.
+This page is deprecated. Please refer to [Service Virtualization Tutorial](/documentation/service_virtualization_tutorial.html) for service virtualization capabilities.

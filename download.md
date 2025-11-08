@@ -32,7 +32,7 @@ docker run -it --rm specmatic/specmatic:VERSION --help
 
 The standalone JAR file can be downloaded from the following sources:
 
-* [Github](https://github.com/specmatic/specmatic/releases/download/{{ site.specmatic-core-version }}/specmatic.jar)
+* [GitHub](https://github.com/specmatic/specmatic/releases/download/{{ site.specmatic-core-version }}/specmatic.jar)
 * [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{{ site.specmatic-core-version }}/specmatic-executable-all-{{ site.specmatic-core-version }}.jar)
 
 For older versions, please refer to the [Releases](https://github.com/specmatic/specmatic/releases) page.

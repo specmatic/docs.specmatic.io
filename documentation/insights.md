@@ -170,7 +170,7 @@ We'll be working with two OpenAPI specifications:
           - name: Write specmatic license key to file
             run: echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
-          - name: Run Specmatic Insights Github Build Reporter
+          - name: Run Specmatic Insights GitHub Build Reporter
             run: |
               docker run --rm \
                 -v "${{ github.workspace }}:/api-contracts:rw" \
@@ -424,7 +424,7 @@ To start using Specmatic Insights, please contact [Specmatic support]({{ site.co
 To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for your Client, BFF Service & Order Domain API service
 
 1. As explained in above steps, ensure Specmatic is present in your CI pipelines, helping 'test' and 'virtualize'.
-2. Then, add the 'Specmatic Insights GitHub Build Reporter' to your CI pipelines after specmatic has run on all of the following:
+2. Then, add the 'Specmatic Insights GitHub Build Reporter' to your CI pipelines after specmatic has run on the following:
 2.1 client
 2.2 BFF service
 2.3 and Order API CI workflow
@@ -471,7 +471,7 @@ The Specmatic Insights dashboard provides several key pieces of information:
 - **API Coverage**: Indicates how much of your API is covered by tests and contracts.
 - **Operations Usage**: Breaks down operations used by both providers and consumers, as tests only, and as stubs only.
 
-Here's an example of what you might see if you have followed the instructions and have been able to setup insights
+Here's an example of what you might see if you have followed the instructions and have been able to set up insights
 
 ![Petstore Dashboard](../images/insights_dashboard_2.png)
 

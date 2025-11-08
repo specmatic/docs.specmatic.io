@@ -7,8 +7,8 @@ nav_exclude: true
 
 - [Authentication](#authentication)
   - [1. Write the auth contract](#1-write-the-auth-contract)
-    - [Setup the auth credentials](#setup-the-auth-credentials)
-    - [Setup base urls](#setup-base-urls)
+    - [Set up the auth credentials](#set-up-the-auth-credentials)
+    - [Set up base urls](#set-up-base-urls)
     - [Exporting auth tokens in the contract](#exporting-auth-tokens-in-the-contract)
   - [2. Wire up auth in the application contract](#2-wire-up-auth-in-the-application-contract)
     - [Using the auth variables](#using-the-auth-variables)
@@ -28,15 +28,15 @@ Here's a quick walk through of how it works.
 
 ## 1. Write the auth contract
 
-First off, write the contract of the auth API, and in it, declare tokens such as cookies, json value in the response, etc as exports.
+First off, write the contract of the auth API, and in it, declare tokens such as cookies, json value in the response, etc. as exports.
 
-In step 3, Specmatic will run this as as a test against the auth service to get the auth tokens. So we must provide the base url of the actual auth service in environment configuration.
+In step 3, Specmatic will run this as a test against the auth service to get the auth tokens. So we must provide the base url of the actual auth service in environment configuration.
 
-Here's a [the petstore's auth contract](https://github.com/specmatic/petstore-contracts/blob/master/in/specmatic/examples/petstore/auth.spec).
+Here's [the petstore's auth contract](https://github.com/specmatic/petstore-contracts/blob/master/in/specmatic/examples/petstore/auth.spec).
 
-### Setup the auth credentials
+### Set up the auth credentials
 
-Look at the Examples table, in which we use the variables `$username` and `$password`. We do not hardcode them, because each environment (local, staging, etc) will need different auth credentials. These values come from environment configuration, where we can specify the auth credentials needed by each environment. See how this is done in `specmatic.json` in the [sample petstore application](https://github.com/specmatic/petstore/blob/master/specmatic.json).
+Look at the Examples table, in which we use the variables `$username` and `$password`. We do not hardcode them, because each environment (local, staging, etc.) will need different auth credentials. These values come from environment configuration, where we can specify the auth credentials needed by each environment. See how this is done in `specmatic.json` in the [sample petstore application](https://github.com/specmatic/petstore/blob/master/specmatic.json).
 
 Note how we have declared two variables, username and password, in the staging environment:
 
@@ -54,7 +54,7 @@ Note how we have declared two variables, username and password, in the staging e
   }
 ```
 
-### Setup base urls
+### Set up base urls
 
 In step 3, Specmatic runs this `auth.spec` as a test against the auth service in the environment, and stores the exports declared by `auth.spec` for later.
 

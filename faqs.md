@@ -32,6 +32,6 @@ Here are [detailed comparison](https://specmatic.io/category/comparisons/) with 
 ### I need some help adopting Contract Driven Development with Specmatic OR would like to request a feature
 
 Please do reach us through any of below mechanisms
-* Raise [issues / feature request](https://github.com/specmatic/specmatic/issues/new/choose) on [Github](https://github.com/specmatic/specmatic)
+* Raise [issues / feature request](https://github.com/specmatic/specmatic/issues/new/choose) on [GitHub](https://github.com/specmatic/specmatic)
 * Already know how to fix the issue / add a feature, please create a [Pull Request](https://github.com/specmatic/specmatic/pulls)
 * [Contact Us]({{ site.contact_us_url }}) with a brief description of how we can help to schedule a call with us

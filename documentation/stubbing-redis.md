@@ -101,6 +101,6 @@ redisStub.when("lrange")
 
 ### Sample Applications
 
-Please have a look at one of the below mentioned sample applications to understand how to utilize `Specmatic-Redis` in your application:
+Please have a look at one of the below-mentioned sample applications to understand how to utilize `Specmatic-Redis` in your application:
 - [specmatic-redis-sample](https://github.com/specmatic/specmatic-redis-sample/tree/main/src/test/java/io/specmatic/redis/example)
 - [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample/tree/main/tests/redis)

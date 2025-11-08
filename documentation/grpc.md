@@ -30,11 +30,11 @@ Specmatic supports service virtualization, contract testing and backward compati
 
 With Specmatic gRPC support you will be to leverage your proto files as executable contracts.
 
-1. Intelligent Service Virtualisation: Stub out gRPC services for testing and development
+1. Intelligent Service Virtualization: Stub out gRPC services for testing and development
 2. Contract Testing: Validate requests and responses against your proto files
 3. Backward Compatibility Checks: Compare two versions of your proto files to identify breaking changes without writing any code
 4. Central Contract Repo: Store your proto files in central Git repo which will serve as single source of truth for both providers and consumers
-5. API resiliency : Generate negative and edge cases to verify the resiliency of your API impementation again based on your proto files and validations rules within them.
+5. API resiliency : Generate negative and edge cases to verify the resiliency of your API implementation again based on your proto files and validations rules within them.
 
 These capabilities enable you to develop and test gRPC-based applications more efficiently and with greater confidence in your API contracts.
 
@@ -252,11 +252,11 @@ This format makes it straightforward to create reusable test and stub data that 
 
 ### Using the Docker Image
 
-So far in the above explanation the sample project is invoking Specmatic gRPC support programmatically. However if you wish to run the same from CLI then below Docker image wraps the same Specmatic gRPC capabilities.
+So far in the above explanation the sample project is invoking Specmatic gRPC support programmatically. However, if you wish to run the same from CLI then below Docker image wraps the same Specmatic gRPC capabilities.
 
 [`specmatic/specmatic-grpc`](https://hub.docker.com/r/specmatic/specmatic-grpc)
 
-Also the Specmatic gRPC Docker image, by nature, is completely language and tech stack agnostic.
+Also, the Specmatic gRPC Docker image, by nature, is completely language and tech stack agnostic.
 
 #### Starting the Stub Service
 
@@ -266,7 +266,7 @@ To start the stub/service virtualization service, use the following command:
 docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic-grpc virtualize
 ```
 
-This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualisation server.
+This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualization server.
 
 #### Running Tests
 
@@ -292,7 +292,7 @@ This command mounts your `specmatic.yaml` file and runs tests against a service 
 
 ### Proto 3 (required, optional) and Proto Validate
 
-Proto 3 dropped required fields. Please see [Github discussion](https://github.com/protocolbuffers/protobuf/issues/2497#issuecomment-267422550) for more details.
+Proto 3 dropped required fields. Please see [GitHub discussion](https://github.com/protocolbuffers/protobuf/issues/2497#issuecomment-267422550) for more details.
 
 Thereby it is hard to communicate constraints such as `required`, ranges (`gte`, `lte`, etc.).
 So Specmatic gRPC support is designed to use add on validation mechanisms like [protovalidate](https://github.com/bufbuild/protovalidate). Please refer to our sample projects section below for more details on how this is being used.
@@ -303,4 +303,4 @@ We have created sample projects to demonstrate how to use Specmatic with gRPC in
 
 * [gRPC sample projects](https://docs.specmatic.io/documentation/sample_projects.html)
 
-These projects provide practical examples of how to integrate Specmatic gRPC support into your workflow, including setting up stubs, writing tests, and handling different languages, frameworks and running them on CI like Github actions.
+These projects provide practical examples of how to integrate Specmatic gRPC support into your workflow, including setting up stubs, writing tests, and handling different languages, frameworks and running them on CI like GitHub actions.

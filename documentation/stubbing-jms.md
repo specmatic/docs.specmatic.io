@@ -27,9 +27,9 @@ The `specmatic-jms` module described in this document is available in the [Pro p
 
 Specmatic spins up an ActiveMQ server, and expects the system under test to use an ActiveMQ JMS client when running tests. This is both vendor-agnostic and easy to do, given that all JMS clients implement a Java JMS interface.
 
-The crux of the solution is, when running tests, to use the ActiveMQ JMS client and point the application at the ActiveMQ server started by Specmatic. This enables Specmatic to both see the messages sent by the system-under-test, as well as send contract-valid message to the system-under-test.
+The crux of the solution is, when running tests, to use the ActiveMQ JMS client and point the application at the ActiveMQ server started by Specmatic. This enables Specmatic to both see the messages sent by the system-under-test and send contract-valid message to the system-under-test.
 
-This document describes how to stub out JMS in applications that use JNDI with Spring Boot, as we have found this to be a common enough case. However when you can, we recommend that in your tests you disable JNDI and use Spring annotations to instantiate the application's JMS client object.
+This document describes how to stub out JMS in applications that use JNDI with Spring Boot, as we have found this to be a common enough case. However, when you can, we recommend that in your tests you disable JNDI and use Spring annotations to instantiate the application's JMS client object.
 
 ### Pre-requisite Setup
 
