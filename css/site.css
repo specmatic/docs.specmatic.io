@@ -122,3 +122,11 @@ pre {
   content: "⚠️ WARNING ";
   color: #f44336;
 }
+
+.table-with-overflow {
+  overflow-x: scroll;
+  width: 150%;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding-bottom: 0.5rem;
+}

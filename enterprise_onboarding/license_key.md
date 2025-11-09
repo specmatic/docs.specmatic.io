@@ -23,20 +23,22 @@ redirect_from:
 
 Specmatic provides two types of licenses:
 
-**User License:** Intended for individual users such as developers and testers who use Specmatic interactively (locally, or for manual contract authoring and testing). Each user should generate their own license key from the Specmatic Insights Server.
+**1\. User License:** Intended for individual users such as developers and testers who use Specmatic interactively (locally, or for manual contract authoring and testing). Each user should generate their own license key from the Specmatic Insights Server.
 
-**Service Account License:** Intended for automated systems, build servers, or shared environments where Specmatic is run as part of a service or automation. Service account licenses can be generated and managed centrally for use by these systems.
+**2\. Service Account License:** Intended for automated systems, build servers, or shared environments where Specmatic is run as part of a service or automation. Service account licenses can be generated and managed centrally for use by these systems.
 
 Both license types are managed and downloaded from the Specmatic Insights Server. The setup and usage instructions for each are provided in the sections below.
 
 ### User Licenses
 
-User licenses are intended for developers and testers who use Specmatic interactively, such as running Specmatic locally, or for manual contract authoring and testing. Each user should download their own license key from the Specmatic Insights Server.
+User licenses are intended for human users who want to use Specmatic interactively, such as running Specmatic locally for contract authoring, testing and mocking. Each user should download their own license key from the Specmatic Insights Server.
 
 #### How to retrieve your user license
 {: style="font-size:1rem!important;letter-spacing:0.5px;margin-bottom:1rem" }
 
-To download your user license, execute the following command in your terminal:
+**Step 1.** Login into [Specmatic Insights](https://insights.specmatic.io) to ensure you've a valid account.
+
+**Step 2.** Download your user license by executing the following command in your terminal:
 
 {: style="margin:0;" }
 {% tabs download_commands %}
@@ -71,7 +73,7 @@ Please visit https://insights.specmatic.io/dashboard/validate-license?code=XXXXX
 ```
 
 Click the link to validate your license request in the browser, following the given instructions.<br/>
-Once validated, Specmatic will automatically download your license and display the retrieved license details in the terminal as follows:
+Once validated, Specmatic will automatically download your license file in the background and display the retrieved license details in the terminal as follows:
 
 ```plain
 License successfully retrieved.
@@ -85,12 +87,38 @@ Organisation ID: ...
 Insights server: https://insights.specmatic.io
 License ID: ...
 ```
+To check if you have a valid license, you can run the following command:
+
+{% tabs view_license_commands %}
+{% tab view_license_commands Executable %}
+```shell
+specmatic show-license
+```
+{% endtab %}
+{% tab view_license_commands Docker-Unix %}
+```shell
+docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic show-license
+```
+{% endtab %}
+{% tab view_license_commands Docker-Windows-Powershell %}
+```shell
+docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic show-license
+```
+{% endtab %}
+{% tab view_license_commands Docker-Windows-CommandPrompt %}
+```shell
+docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic show-license
+```
+{% endtab %}
+{% endtabs %}
 
 The retrieved license file must be stored in `~/.specmatic`. If you are using Docker, make sure to mount this directory to `/root/.specmatic` within your Docker container.
 If you are executing the commands mentioned above as-is, this will be handled automatically.
 {: .note}
 
 ### Service Account Licenses
+
+**Only to be used by Admins** who are setting up Specmatic for automated systems, build servers, or shared environments.
 
 ![License Key Download](../../images/insights-license.gif)
 
@@ -119,8 +147,20 @@ The license file can be placed in one of the following locations, in order of pr
 
 When using Specmatic with Docker, you must pass the license key as follows:
 
+{% tabs use_specmatic_commands %}
+{% tab use_specmatic_commands Docker-Unix %}
 ```shell
-docker run -it \
-  -v /path/to/specmatic-license.txt:/root/.specmatic/specmatic-license.txt \
- specmatic/specmatic-[IMAGE_NAME]
+docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic-openapi -h
 ```
+{% endtab %}
+{% tab use_specmatic_commands Docker-Windows-Powershell %}
+```shell
+docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
+```
+{% endtab %}
+{% tab use_specmatic_commands Docker-Windows-CommandPrompt %}
+```shell
+docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
+```
+{% endtab %}
+{% endtabs %}
