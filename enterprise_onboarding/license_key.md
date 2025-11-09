@@ -39,23 +39,24 @@ User licenses are intended for developers and testers who use Specmatic interact
 To download your user license, execute the following command in your terminal:
 
 {: style="margin:0;" }
-{% tabs commands %}
-{% tab commands Executable %}
+{% tabs download_commands %}
+{% tab download_commands Executable %}
 ```shell
 specmatic get-license
 ```
+Please refer to the [downloads page](/download.html#specmatic-open-source) if the `specmatic` command is not found.
 {% endtab %}
-{% tab commands Docker-Unix %}
+{% tab download_commands Docker-Unix %}
 ```shell
 docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic get-license
 ```
 {% endtab %}
-{% tab commands Docker-Windows-Powershell %}
+{% tab download_commands Docker-Windows-Powershell %}
 ```shell
 docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic get-license
 ```
 {% endtab %}
-{% tab commands Docker-Windows-CommandPrompt %}
+{% tab download_commands Docker-Windows-CommandPrompt %}
 ```shell
 docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic get-license
 ```
