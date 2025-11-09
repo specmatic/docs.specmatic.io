@@ -45,6 +45,5 @@ has_toc: false
 ## References
 * [Configuration](/documentation/references/configuration.html)
 * [Continuous Integration](/documentation/references/continuous_integration.html)
-* [Specmatic Insights Setup](/documentation/references/insights.html)
 * [Understanding error reports](/documentation/references/understanding_errors.html)
 * [Troubleshooting](/documentation/references/troubleshooting.html)

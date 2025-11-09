@@ -2,7 +2,7 @@
 title: Security Disclosure Process
 description: How to responsibly report security vulnerabilities in Specmatic.
 layout: default
-nav_order: 6
+nav_order: 7
 ---
 
 # Security Disclosure Process

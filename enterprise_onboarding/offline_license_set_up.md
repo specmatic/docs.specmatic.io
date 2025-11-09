@@ -1,0 +1,46 @@
+---
+layout: default
+title: Offline License Set Up
+parent: Enterprise Onboarding
+nav_order: 3
+---
+# Offline License Set Up Guide
+
+If you've opted for an offline license during your Specmatic Enterprise onboarding, follow the steps below to set up your license without connecting to Specmatic Insights.
+  * Specmatic Team will email you the offline license file named `specmatic-license.txt`.
+  * You have two options to supply the license to Specmatic
+    * Bake in the license into your custom Docker image and push this image to an internal docker registry. This image can then be used by your users and CI systems.
+
+```dockerfile
+# specify the respective Specmatic image as the base image
+# you can find the full list of images here https://hub.docker.com/u/specmatic
+FROM specmatic/specmatic-studio
+
+# There are 2 ways to make the license into the image
+# 1. copy the license file into a known location `$HOME/.specmatic/specmatic-license.txt`
+COPY .specmatic/specmatic-license.txt /root/.specmatic/specmatic-license.txt
+
+# OR
+# 2. Copy the license file to any location and set the environment variable `SPECMATIC_LICENSE_PATH` to point to that location
+# Uncomment the below lines and provide the license key to specmatic
+# COPY specmatic-license.txt /specmatic/specmatic-license.txt
+# ENV SPECMATIC_LICENSE_PATH=/specmatic/specmatic-license.txt
+```
+  * Using Docker Compose file to mount the license file from the host machine to the docker container at runtime.
+
+```yaml
+services:
+  studio:
+    image: specmatic/specmatic-studio:latest
+    container_name: studio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+      - "9090:9090"
+    volumes:
+      - ./specs:/usr/src/app
+      - .specmatic/specmatic-license.txt:/usr/src/app/specmatic-license.txt
+    environment:
+      SPECMATIC_LICENSE_PATH: /usr/src/app/specmatic-license.txt
+```

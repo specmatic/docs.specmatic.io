@@ -1,14 +1,16 @@
 ---
 layout: default
 title: Specmatic License Keys
-parent: Documentation
-nav_order: 35
+parent: Enterprise Onboarding
+nav_order: 1
+redirect_from:
+  - /documentation/license_key.html
 ---
 
-# Using and Deploying Specmatic License Keys
+# Provisioning and Using Specmatic License Keys
 
 <!-- TOC -->
-* [Using and Deploying Specmatic License Keys](#using-and-deploying-specmatic-license-keys)
+* [Provisioning and Using Specmatic License Keys](#provisioning-and-using-specmatic-license-keys)
   * [Types of Specmatic Licenses](#types-of-specmatic-licenses)
     * [User Licenses](#user-licenses)
       * [How to retrieve your user license](#how-to-retrieve-your-user-license)
