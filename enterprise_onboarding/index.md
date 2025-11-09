@@ -20,6 +20,7 @@ has_toc: false
   * [3\. Recommended Approach for New Customers](#3-recommended-approach-for-new-customers-)
   * [Summary of the Options](#summary-of-the-options)
   * [Provisioning and Using Specmatic License Keys](#provisioning-and-using-specmatic-license-keys)
+  * [Download Specmatic](#download-specmatic)
   * [Insights Set Up Guide](#insights-set-up-guide)
 <!-- TOC -->
 
@@ -85,5 +86,7 @@ For organisations **without immediate InfoSec clearance**:
 {: .table-with-overflow}
 
 ## [Provisioning and Using Specmatic License Keys](/enterprise_onboarding/license_key.html)
+
+## [Download Specmatic](/download.html#specmatic-commercial-offerings)
 
 ## [Insights Set Up Guide](/enterprise_onboarding/insights.html)

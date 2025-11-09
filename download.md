@@ -117,6 +117,8 @@ To run the latest version:
 ```bash
 docker run -it --rm specmatic/specmatic-openapi --help
 ```
+Please make sure to mount the license file as described in the [License Setup Guide](/enterprise_onboarding/license_key.html#using-specmatic-with-docker)
+{: .note}
 
 For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-openapi/tags) page
 ```bash
@@ -182,6 +184,9 @@ To run the latest version:
 ```bash
 docker run -it --rm specmatic/specmatic-studio --help
 ```
+
+Please make sure to mount the license file as described in the [License Setup Guide](/enterprise_onboarding/license_key.html#using-specmatic-with-docker)
+{: .note}
 
 For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-studio/tags) page
 ```bash
@@ -249,6 +254,9 @@ To run the latest version:
 ```bash
 docker run -it --rm specmatic/specmatic-kafka --help
 ```
+
+Please make sure to mount the license file as described in the [License Setup Guide](/enterprise_onboarding/license_key.html#using-specmatic-with-docker)
+{: .note}
 
 For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-kafka/tags) page
 ```bash
@@ -318,6 +326,9 @@ To run the latest version:
 docker run -it --rm specmatic/specmatic-grpc --help
 ```
 
+Please make sure to mount the license file as described in the [License Setup Guide](/enterprise_onboarding/license_key.html#using-specmatic-with-docker)
+{: .note}
+
 For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-grpc/tags) page
 ```bash
 docker run -it --rm specmatic/specmatic-grpc:VERSION --help
@@ -381,6 +392,9 @@ To run the latest version:
 ```bash
 docker run -it --rm specmatic/specmatic-graphql --help
 ```
+
+Please make sure to mount the license file as described in the [License Setup Guide](/enterprise_onboarding/license_key.html#using-specmatic-with-docker)
+{: .note}
 
 For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-graphql/tags) page
 ```bash
@@ -447,6 +461,9 @@ To run the latest version:
 docker run -it --rm specmatic/specmatic-arazzo --help
 ```
 
+Please make sure to mount the license file as described in the [License Setup Guide](/enterprise_onboarding/license_key.html#using-specmatic-with-docker)
+{: .note}
+
 For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-arazzo/tags) page
 ```bash
 docker run -it --rm specmatic/specmatic-arazzo:VERSION --help
@@ -511,6 +528,9 @@ To run the latest version:
 ```bash
 docker run -it --rm specmatic/specmatic-redis --help
 ```
+
+Please make sure to mount the license file as described in the [License Setup Guide](/enterprise_onboarding/license_key.html#using-specmatic-with-docker)
+{: .note}
 
 For older versions, replace `VERSION` with the desired version number from the [Docker Hub](https://hub.docker.com/r/specmatic/specmatic-redis/tags) page
 ```bash

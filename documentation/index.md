@@ -44,6 +44,7 @@ has_toc: false
 
 ## References
 * [Configuration](/documentation/references/configuration.html)
+* [Using Docker Images](/documentation/references/docker_images.html)
 * [Continuous Integration](/documentation/references/continuous_integration.html)
 * [Understanding error reports](/documentation/references/understanding_errors.html)
 * [Troubleshooting](/documentation/references/troubleshooting.html)

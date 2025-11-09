@@ -1,11 +1,13 @@
 ---
 layout: default
-title: Docker images
-parent: Documentation
-nav_order: 30
+title: Using Docker Images
+parent: References
+nav_order: 2
+redirect_from:
+   - /documentation/docker_images.html
 ---
 
-Specmatic docker images
+Specmatic Docker Images
 =======================
 
 Specmatic provides docker images for all its tools. These images are available on [Docker Hub](https://hub.docker.com/u/specmatic).
@@ -40,11 +42,23 @@ specmatic --help
 
 If you are using a commercial Specmatic module, you will need to provide a valid license key. When running Specmatic in Docker, mount your license file into the container and set the environment variable so Specmatic can find it. For example:
 
+{% tabs use_specmatic_commands %}
+{% tab use_specmatic_commands Docker-Unix %}
 ```shell
-docker run -it \
-  -v /path/to/specmatic-license.txt:/root/.specmatic/specmatic-license.txt \
- specmatic/specmatic-openapi [OPTION] # can also be specmatic-kafka, or specmatic-arazzo
+docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic-openapi -h
 ```
+{% endtab %}
+{% tab use_specmatic_commands Docker-Windows-Powershell %}
+```shell
+docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
+```
+{% endtab %}
+{% tab use_specmatic_commands Docker-Windows-CommandPrompt %}
+```shell
+docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
+```
+{% endtab %}
+{% endtabs %}
 
 This ensures that the license file is available inside the container and Specmatic can pick it up automatically. For more details, see the [Specmatic License Keys documentation](/documentation/license_key.html).
 
@@ -56,7 +70,7 @@ This ensures that the license file is available inside the container and Specmat
 ```shell
 docker run -it --rm \
   -v /path/to/your/my-spec.yml:/usr/src/app \
-  specmatic/specmatic test my-spec.yml # can also be specmatic-kafka, or specmatic-arazzo
+  specmatic/specmatic-openapi test my-spec.yml # can also be specmatic-kafka, or specmatic-arazzo
 ```
 
 ## What's Included in the Docker Image?

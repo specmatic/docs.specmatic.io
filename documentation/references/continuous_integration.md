@@ -2,7 +2,7 @@
 layout: default
 title: Continuous Integration
 parent: References
-nav_order: 2
+nav_order: 3
 redirect_from:
   - /documentation/continuous_integration.html
 ---
