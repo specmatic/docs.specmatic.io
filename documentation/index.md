@@ -23,7 +23,7 @@ has_toc: false
 ## Supported Specifications and Protocols
 * [AsyncAPI support](https://specmatic.io/features/transform-your-asyncapi-specs-into-executable-contracts-in-seconds-with-specmatic/)
   * [Kafka support](/documentation/supported_protocols/asyncapi/kafka.html)
-  * [Google Pub/Sub support](https://specmatic.io/features/google-pubsub-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
+  * [Google Pub/Sub support](/documentation/supported_protocols/asyncapi/google-pub-sub.html)
   * [JMS support](/documentation/supported_protocols/asyncapi/jms.html)
 * [gRPC support](/documentation/supported_protocols/grpc.html)
 * [GraphQL support](/documentation/supported_protocols/graphql.html)

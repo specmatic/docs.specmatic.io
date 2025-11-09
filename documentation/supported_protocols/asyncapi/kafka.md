@@ -11,6 +11,8 @@ redirect_from:
 Commercial
 {: .label }
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QmT1sG6JLGc?si=fwrgyYiVatavUO_4" title="Contract Testing Kafka Data Pipeline" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 <!-- TOC -->
 * [Kafka](#kafka)
   * [Starting Kafka Mock Server from command line](#starting-kafka-mock-server-from-command-line)
