@@ -27,7 +27,7 @@
 
 .tab > li > .tab-click {
     display: inline-block;
-    padding: 8px 12px;
+    padding: 8px 6px;
     appearance: none;
     border: 1px solid transparent;
     border-bottom: none;
