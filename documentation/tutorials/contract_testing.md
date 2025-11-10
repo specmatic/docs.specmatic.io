@@ -1242,7 +1242,7 @@ The data from the coverage report is saved to a file located at `build/reports/s
 ### Introduction
 [Overlays](https://www.openapis.org/blog/2024/10/22/announcing-overlay-specification) provide a powerful mechanism to modify OpenAPI specifications without altering the base specification. They're particularly useful when you need to simulate middleware behavior, such as API gateways modifying requests, or when you need to extend an existing API specification.
 
-![Overlays diagram](../images/overlays-concept.svg)
+![Overlays diagram](/images/overlays-concept.svg)
 
 ### Understanding with a Real-World Example
 

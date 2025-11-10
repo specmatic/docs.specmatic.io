@@ -120,7 +120,7 @@ If you are executing the commands mentioned above as-is, this will be handled au
 
 **Only to be used by Admins** who are setting up Specmatic for automated systems, build servers, or shared environments.
 
-![License Key Download](../../images/insights-license.gif)
+![License Key Download](..//images/insights-license.gif)
 
 1. Login to your [Specmatic Insights account](https://insights.specmatic.io).
 2. Navigate to the "Settings" section.

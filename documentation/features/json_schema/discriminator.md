@@ -305,7 +305,7 @@ specmatic examples interactive --spec-file=petstore.yaml
 
 This launches an interactive server and provides a URL [http://localhost:9001/_specmatic/examples](http://localhost:9001/_specmatic/examples). Opening this in your browser shows:
 
-![Screenshot of Interactive Example Generator Interface](../images/interactive_examples.png)
+![Screenshot of Interactive Example Generator Interface](/images/interactive_examples.png)
 
 The interface allows you to:
 1. Select different operations
@@ -314,7 +314,7 @@ The interface allows you to:
 
 For our Pet Store API, press the **Generate** button, to generates examples for each discriminator type. Following is how the interface would look once the examples are generated:
 
-![Screenshot of Interactive Example Generator Interface](../images/interactive_examples_generated.png)
+![Screenshot of Interactive Example Generator Interface](/images/interactive_examples_generated.png)
 
 Please find below, the two examples that got generated
 

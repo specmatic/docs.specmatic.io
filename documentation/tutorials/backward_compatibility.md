@@ -257,7 +257,7 @@ specmatic backward-compatibility-check --target-path ./api_products_v1.yaml
 
 Specmatic will approve this change, as adding an optional field maintains backward compatibility. Here is the sample output of the command
 
-![specmatic backward compatibility - compatible](../images/bcc_compatible.png)
+![specmatic backward compatibility - compatible](/images/bcc_compatible.png)
 
 ### Breaking Change
 
@@ -305,7 +305,7 @@ specmatic backward-compatibility-check --target-path ./api_products_v1.yaml
 
 Specmatic will flag this as incompatible, protecting your API consumers from unexpected changes. Following is the output of the command.
 
-![Specmatic, backward compatibility breaking changes](../images/bcc_incompatible.png)
+![Specmatic, backward compatibility breaking changes](/images/bcc_incompatible.png)
 
 ## Handling Changes In Progress
 

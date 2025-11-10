@@ -139,15 +139,15 @@ You can then click on the link in the console, or by visiting http://localhost:9
 
 ### Generating and Updating Examples
 
-> ![Generate](../images/gui-generate.png)
+> ![Generate](/images/gui-generate.png)
 
 The generated files will be saved alongside your specification in a `{specification-name}_examples` directory. In this case it will be `employee_details_examples` directory.
 
-> ![View details](../images/gui-more-details.png)
+> ![View details](/images/gui-more-details.png)
 
 View details section will give additional info and a live code editor to make changes in the generated example.
 
-> ![Update](../images/gui-update.png)
+> ![Update](/images/gui-update.png)
 
 This page will help you to edit, update, validate, fix and save your examples.
 
@@ -155,13 +155,13 @@ This page will help you to edit, update, validate, fix and save your examples.
 
 You can validate one example at a time (as we saw above), or you validate them in bulk.
 
-> ![Validate](../images/gui-validate.png)
+> ![Validate](/images/gui-validate.png)
 
 ### Fixing Examples
 
-> ![Fix](../images/gui-fix.png)
+> ![Fix](/images/gui-fix.png)
 
-> ![After Fix](../images/gui-after-fix.png)
+> ![After Fix](/images/gui-after-fix.png)
 
 Fix can also be done in bulk (similar to validate).
 
