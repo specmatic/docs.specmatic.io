@@ -64,7 +64,7 @@ This ensures that the license file is available inside the container and Specmat
 
 ## Volume mounts
 
-`/usr/src/app` is the working directory for specmatic, from where specmatic picks up files (API specifications, examples) and configurations (`specmatic.yml`). Reports are also generated relative to this directory.
+**`/usr/src/app`** is the **working directory** for specmatic, this is where specmatic will pick up files (API specifications, examples) and configurations (`specmatic.yml`). Reports are also generated relative to this directory.
 
 
 ```shell
