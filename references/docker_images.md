@@ -61,7 +61,7 @@ docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/spe
 {% endtab %}
 {% endtabs %}
 
-This ensures that the license file is available inside the container and Specmatic can pick it up automatically. For more details, see the [Specmatic License Keys documentation](/documentation/license_key.html).
+This ensures that the license file is available inside the container and Specmatic can pick it up automatically. For more details, see the [Specmatic License Keys documentation](/enterprise_onboarding/license_key.html).
 
 ## Volume mounts
 

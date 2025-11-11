@@ -53,7 +53,7 @@ contracts:
 
 This file instructs Specmatic to pull the [AsyncAPI spec named `kafka.yaml`](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/asyncapi/kafka.yaml) from a Git repo. The AsyncAPI spec itself has the details regarding Kafka topics, schema, etc.
 
-Please refer to [Specmatic documentation](https://docs.specmatic.io/documentation/) for more details about the above `specmatic.yaml` config file.
+Please refer to [Specmatic documentation](references/configuration.html) for more details about the above `specmatic.yaml` config file.
 
 Now we can run below command to spin a Kafka mock server. Please note the volume mapping to pass the specmatic.yaml to the Kafka Docker image and also the port mappings.
 
@@ -480,4 +480,4 @@ To get information around all the CLI args of the `test` command, run the follow
 docker run specmatic/specmatic-kafka test --help
 ```
 
-To get a hands-on experience, refer to [these](/sample_projects.html#kafka) sample projects.
+To get a hands-on experience, refer to [these](/sample_projects.html#tab-sample-asyncapi) sample projects.
