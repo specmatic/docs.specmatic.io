@@ -139,11 +139,11 @@ pip install specmatic==VERSION
 {% capture specmatic_openapi_jar_url %}https://repo.specmatic.io/releases/io/specmatic/openapi/specmatic-openapi-all/{{ site.specmatic-openapi-version }}/specmatic-openapi-all-{{ site.specmatic-openapi-version }}.jar{% endcapture %}
 {% capture specmatic_openapi_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/openapi/specmatic-openapi-all/{% endcapture %}
 
-{% include commercial_download.md 
-    image_name="specmatic/specmatic-openapi" 
+{% include commercial_download.md
+    image_name="specmatic/specmatic-openapi"
     tool_version=specmatic_openapi_version
-    jar_url=specmatic_openapi_jar_url 
-    repo_url=specmatic_openapi_repo_url 
+    jar_url=specmatic_openapi_jar_url
+    repo_url=specmatic_openapi_repo_url
     install_script="install-specmatic-openapi" %}
 
 ## [Specmatic Studio](https://specmatic.io/specmatic-studio/)
