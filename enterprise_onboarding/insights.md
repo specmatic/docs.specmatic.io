@@ -516,7 +516,7 @@ npx specmatic
 
 Replace `your-proxy-host` with your actual proxy server address and `3128` with the appropriate port number. Contact your IT administrator for the correct proxy configuration details if you're unsure.
 
-> **Note:** Specmatic does not support NTLM (NT LAN Manager) authentication for proxies. If your corporate environment uses NTLM proxies, you'll need to set up an intermediary proxy server (such as [CNTLM](http://cntlm.sourceforge.net/) or [Px](https://github.com/genotrance/px)) that can handle NTLM authentication and provide basic/digest authentication or no authentication to Specmatic.
+> **Note:** Specmatic does not support NTLM (NT LAN Manager) authentication for proxies. If your corporate environment uses NTLM proxies, you'll need to set up an intermediary proxy server (such as [CNTLM](https://cntlm.sourceforge.net/) or [Px](https://github.com/genotrance/px)) that can handle NTLM authentication and provide basic/digest authentication or no authentication to Specmatic.
 
 ## Troubleshooting
 
