@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Enterprise Onboarding
-nav_order: 6
+nav_order: 8
 has_children: true
 has_toc: false
 ---
@@ -13,11 +13,11 @@ has_toc: false
   * [Getting started](#getting-started)
   * [1\. License Setup Options](#1-license-setup-options)
     * [Option A: Offline License (No Insights Integration)](#option-a-offline-license-no-insights-integration)
-    * [Option B: Use Specmatic Insights](#option-b-use-specmatic-insights-)
-  * [2\. User Provisioning Options (for Insights Users)](#2-user-provisioning-options-for-insights-users-)
+    * [Option B: Use Specmatic Insights](#option-b-use-specmatic-insights)
+  * [2\. User Provisioning Options (for Insights Users)](#2-user-provisioning-options-for-insights-users)
     * [2\.1\. SSO Integration](#21-sso-integration)
     * [2\.2\. Manual (Backend) User Provisioning](#22-manual-backend-user-provisioning)
-  * [3\. Recommended Approach for New Customers](#3-recommended-approach-for-new-customers-)
+  * [3\. Recommended Approach for New Customers](#3-recommended-approach-for-new-customers)
   * [Summary of the Options](#summary-of-the-options)
   * [Provisioning and Using Specmatic License Keys](#provisioning-and-using-specmatic-license-keys)
   * [Download Specmatic](#download-specmatic)
@@ -40,7 +40,7 @@ Specmatic offers flexible options for managing **licenses** based on your organi
  * Please refer to the [Offline License Setup Guide](/enterprise_onboarding/offline_license_set_up.html) for detailed instructions.
  * **Note:** Individual user-level usage tracking is not available in this mode.
 
-###  Option B: Use Specmatic Insights 
+###  Option B: Use Specmatic Insights
 
 Specmatic Insights can be used to provision licenses to your users, and also gain visibility into license usage plus user activity.
 
@@ -49,7 +49,7 @@ You can choose between:
   1.  **Self-Hosted Insights (On-Premises)** – host and manage the Insights instance within your infrastructure.
   2.  **Specmatic Hosted Insights (SaaS)** – use our secure cloud-hosted Insights service.
 
-##  2\. User Provisioning Options (for Insights Users) 
+##  2\. User Provisioning Options (for Insights Users)
 
 If you’re using Specmatic Insights, there are two ways to onboard users:
 
@@ -63,7 +63,7 @@ If you’re using Specmatic Insights, there are two ways to onboard users:
   *   Share a list of user email IDs with the Specmatic team.
   *   We will create accounts and send each user their login credentials via email.
 
-##  3\. Recommended Approach for New Customers 
+##  3\. Recommended Approach for New Customers
 
 For organisations **without immediate InfoSec clearance**:
 

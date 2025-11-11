@@ -8,7 +8,7 @@ nav_order: 2
 
 ## Open Source CLI standalone executable
 
-Read our "[Getting started (in 5 min)](/getting_started.html)" section learn more about using the standalone executable.
+Read our "[CLI Quick Start (in 5 min)](/getting_started/cli_quick_start.html)" section and learn more about using the standalone executable.
 
 {% tabs install-specmatic %}
 <!-- docker -->

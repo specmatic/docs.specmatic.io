@@ -11,15 +11,15 @@ Frequently Asked Questions
 
 Contract Driven Development leverages API Specifications (such as [OpenAPI](https://www.openapis.org/)) as Executable Contracts to shift-left the contract compatibility issue identification. Here is a quick [explainer video](https://www.youtube.com/watch?v=0Za1IW_Nr6M&list=PL9Z-JgiTsOYRERcsy9o3y6nsi5yK3IB_w).
 
-More on this [here](/contract_driven_development.html).
+More on this [here](/contract_driven_development).
 
 ### Does Specmatic work with all programming languages?
 
 Yes, Specmatic is a standalone executable that is completely programming language and technology stack agnostic. This is because it works at the level of communication protocols such as http.
 
 Programmatic support is available in JVM languages as a convenience.
-* [Programmatically running stub server](/documentation/tutorials/service_virtualization.html#programmatically-starting-stub-server-within-tests)
-* [Programmatically running contract tests](/documentation/tutorials/contract_testing.html#programmtically-executing-specmatic-contract-tests)
+* [Programmatically running stub server](/contract_driven_development/service_virtualization.html#programmatically-starting-stub-server-within-tests)
+* [Programmatically running contract tests](/contract_driven_development/contract_testing.html#programmtically-executing-specmatic-contract-tests)
 
 ### How much code do I have to write to get Specmatic running?
 

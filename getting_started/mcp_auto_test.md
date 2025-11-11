@@ -1,0 +1,515 @@
+---
+layout: default
+title: MCP Auto Test
+parent: Getting Started
+nav_order: 3
+redirect_from:
+  - /documentation/mcp_auto_test.html
+  - /documentation/getting_started/mcp_auto_test.html
+---
+
+# MCP Auto Test
+
+<!-- TOC -->
+* [MCP Auto Test](#mcp-auto-test)
+  * [Automated Testing for MCP Tools](#automated-testing-for-mcp-tools-)
+  * [Overview](#overview)
+  * [Key Features](#key-features)
+  * [Usage Guide](#usage-guide)
+    * [1. Preparing the Dictionary File](#1-preparing-the-dictionary-file)
+      * [Dictionary Structure](#dictionary-structure)
+      * [Sample dictionary with partial fields](#sample-dictionary-with-partial-fields)
+    * [2. Running Automated Tests](#2-running-automated-tests)
+      * [Authentication](#authentication)
+      * [Selective Testing](#selective-testing)
+    * [3. Enabling Resiliency Testing](#3-enabling-resiliency-testing)
+      * [What Resiliency Testing Does](#what-resiliency-testing-does)
+  * [Complete Example: Testing Postman's MCP Server](#complete-example-testing-postmans-mcp-server)
+    * [Step 1: Create the Dictionary File](#step-1-create-the-dictionary-file)
+    * [Step 2: Update values in dictionary](#step-2-update-values-in-dictionary)
+    * [Step 3: Run Basic Tests](#step-3-run-basic-tests)
+  * [Complete Example: Testing resiliency of tools exposed by huggingface's mcp server](#complete-example-testing-resiliency-of-tools-exposed-by-huggingfaces-mcp-server)
+  * [Advanced Topics](#advanced-topics)
+    * [Authentication Support](#authentication-support)
+    * [Transport Modes](#transport-modes)
+    * [Reporting & Artifacts](#reporting--artifacts)
+  * [Troubleshooting & FAQs](#troubleshooting--faqs)
+<!-- TOC -->
+
+## Automated Testing for MCP Tools  
+Testing MCP tools today is often limited to manual, ad hoc validation through utilities like MCP Inspector. This approach makes it difficult to ensure consistent quality, slows down release cycles, and leaves room for regressions when new features are introduced.
+
+MCP Auto Test addresses this gap by providing a reproducible, fully automated framework for schema drift Detection, regression, edge case, and input-combination testing of MCP tools exposed by an MCP Server. With automated coverage, teams can shift-left and catch issues earlier, improve reliability, and release changes with greater confidence.
+
+---
+
+## Overview
+
+**MCP Auto Test** addresses a critical gap in the MCP tool development lifecycle: automated, repeatable, and systematic testing of server-exposed MCP tools. Manual testing, as enabled by tools like MCP Inspector, is slow, non-repeatable, and limits comprehensive regression verification. In contrast, MCP Auto Test enables users to:
+
+- Define sample inputs and expected behaviors upfront via a flexible "dictionary" configuration file.
+- Execute large suites of positive and negative test scenarios with a single command.
+- Detect regressions immediately as the MCP server or its tools evolve.
+
+By integrating MCP Auto Test, teams can accelerate their delivery pipelines and confidently make frequent changes to MCP tools without introducing risk.
+
+---
+
+## Key Features
+
+- **Generate tests automatically**: Dynamically builds and runs test cases for all defined MCP tools, leveraging schemas and user-provided sample data.
+- **Detect edge cases**: Simulates both valid and invalid argument combinations, surfacing issues that might only appear in production.
+- **Avoid Regression**: Allows rapid reruns of the complete test suite after any change, protecting against accidental breaking changes or feature regressions.
+- **Runs on local or CI**: Can be invoked with Docker in CI/CD or local workflows, and supports optional bearer authentication.
+- **Detailed test report**: Outputs both tool schemas and JSON test reports for auditability and debugging.
+
+---
+
+## Usage Guide
+
+Automated testing with MCP Auto Test requires minimal setup. Below, we outline typical usage in three steps.
+
+---
+
+### 1. Preparing the Dictionary File
+
+The **dictionary** is a JSON-formatted file that provides sample data for the MCP tools you wish to test. This allows you to specify complete or partial request argument sets for each tool, supporting fine control over generated test scenarios.
+
+#### Dictionary Structure
+
+Consider a tool schema:
+```json
+{
+  "name": "createUser",
+  "description": "Creates a new user in the system",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "age": { "type": "integer" },
+      "address": {
+        "type": "object",
+        "properties": {
+          "city": { "type": "string" },
+          "zip": { "type": "string" }
+        }
+      }
+    },
+    "required": ["name", "age"]
+  }
+}
+```
+
+Based on this schema, a test dictionary can be written as:
+```json
+{
+  "createUser": {
+    "name": ["Alice", "Bob"],
+    "age": [25, 40],
+    "address": {
+      "city": "Paris"
+    }
+  }
+}
+```
+
+A more formal structure of the dictionary can be summarised as follows:
+```json
+{
+  "tool_name": {
+    "input_argument_1": "value1",
+    "input_argument_2": "value2"
+  }
+}
+```
+
+- **Values** can be primitives (strings, numbers), arrays, or nested objects.
+- **Partial specification** is allowed: you only need to set fields that are important for your test coverage. Unspecified fields will be filled automatically.
+- **Multiple values** per argument enable value randomization across tests for increased coverage:
+
+```json
+{
+  "tool_name": {
+    "name": ["Anna", "Bob", "Chris"]
+  }
+}
+```
+
+#### Sample dictionary with partial fields
+
+Suppose your MCP tool expects the following input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "age": {
+      "type": "number"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "city": { "type": "string" },
+        "state": { "type": "string" }
+      },
+      "required": ["city", "state"]
+    },
+    "hobbies": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["name", "age"]
+}
+```
+
+A matching dictionary could be:
+
+```json
+{
+  "tool_name": {
+    "name": "John Doe",
+    "address": {
+      "city": "New York"
+    },
+    "hobbies": ["reading"]
+  }
+}
+```
+
+The above dictionary does not contain all the fields present in the input schema. It just specifies the values for the fields which are required to be set with a value.
+
+**Tip:** You can provide diverse or minimal datasets as required. The tool's runner will internally generate a variety of tests leveraging this dictionary.
+
+---
+
+### 2. Running Automated Tests
+
+Once your dictionary file is ready, launch MCP Auto Test against your target MCP server with a single Docker command:
+
+```bash
+docker run -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
+  -v "$(pwd)/<PATH_TO_DICTIONARY_FILE>:/usr/src/app/<PATH_TO_DICTIONARY_FILE>" \
+  specmatic/specmatic mcp test \
+  --url <MCP_SERVER_URL> \
+  --dictionary-file <PATH_TO_DICTIONARY_FILE>
+```
+
+- Replace `<MCP_SERVER_URL>` with your MCP server's public or private endpoint.
+- Replace `<PATH_TO_DICTIONARY_FILE>` with the path to your JSON dictionary.
+
+#### Authentication
+
+If your MCP server requires authentication, include a bearer token as follows:
+
+```bash
+  --bearer-token <YOUR_BEARER_TOKEN>
+```
+
+#### Selective Testing
+
+To skip or include specific tools:
+
+- Use `--skip-tools` with a comma-separated list to **exclude** tools from the current run.
+- Use `--filter-tools` to **only** test selected tools.
+
+---
+
+### 3. Enabling Resiliency Testing
+
+MCP Auto Test provides optional **resiliency** scenarios—thoroughly exercising input validation and uncovering boundary bugs or regressions.
+
+To enable resiliency testing:
+
+```bash
+docker run -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
+  -v "$(pwd)/<PATH_TO_DICTIONARY_FILE>:/usr/src/app/<PATH_TO_DICTIONARY_FILE>" \
+  specmatic/specmatic mcp test \
+  --url <MCP_SERVER_URL> \
+  --dictionary-file <PATH_TO_DICTIONARY_FILE> \
+  --enable-resiliency-tests
+```
+
+#### What Resiliency Testing Does
+
+- **Positive tests:** Generates valid input permutations (e.g., each enum value).
+- **Negative tests:** Intentionally mutates input types and values to violate schemas, expecting the server to reject them.
+
+---
+
+## Complete Example: Testing Postman's MCP Server
+
+This section provides a complete walkthrough using Postman's public MCP server as an example.
+
+### Step 1: Create the Dictionary File
+
+Create a file named `postman_dict.json` with the following content:
+
+```json
+{
+  "createCollectionResponse": {
+    "collectionId": "11289221-b4e2512b-ff4e-4b9f-9d8f-1f46182abdfb",
+    "name": "products_api_updated",
+    "requestId": "11289221-305a04e2-a6fb-4266-9287-ec38c4b91c52"
+  },
+  "getGeneratedCollectionSpecs": {
+    "elementType": "spec",
+    "collectionUid": "11289221-b4e2512b-ff4e-4b9f-9d8f-1f46182abdfb"
+  },
+  "createEnvironment": {
+    "workspace": "14c2db94-fa11-494d-8e6b-31fdca14185c",
+    "environment": {
+      "name": "Production Environment",
+      "values": [
+        {
+          "key": "base_url",
+          "value": "https://api.example.com",
+          "enabled": true,
+          "type": "default"
+        },
+        {
+          "key": "api_key",
+          "value": "your-api-key-here",
+          "enabled": true,
+          "type": "secret"
+        }
+      ]
+    }
+  },
+  "updateWorkspace": {
+    "workspaceId": "14c2db94-fa11-494d-8e6b-31fdca14185c",
+    "workspace": {
+      "name": "products_api_updated",
+      "description": "This is an updated description for the workspace.",
+      "type": "public",
+      "about": "This workspace is for the /products APIs"
+    }
+  },
+  "getAllSpecs": {
+    "workspaceId": "14c2db94-fa11-494d-8e6b-31fdca14185c",
+    "cursor": "",
+    "limit": 1
+  },
+  "getSpecCollections": {
+    "elementType": "collection",
+    "limit": 1,
+    "specId": "11289221-spec-id-example",
+    "cursor": "eyJpZCI6IjEyMzQ1In0"
+  },
+  "generateCollection": {
+    "elementType": "collection",
+    "specId": "11289221-spec-id-example",
+    "name": "products_api_spec",
+    "options": {
+      "requestNameSource": "Fallback",
+      "parametersResolution": "Schema",
+      "folderStrategy": "Paths",
+      "includeAuthInfoInExample": true,
+      "enableOptionalParameters": true,
+      "includeDeprecated": true
+    }
+  },
+  "generateSpecFromCollection": {
+    "elementType": "spec",
+    "type": "OPENAPI:3.0",
+    "collectionUid": "11289221-b4e2512b-ff4e-4b9f-9d8f-1f46182abdfb",
+    "name": "products_api_spec",
+    "format": "JSON"
+  },
+  "createSpec": {
+    "workspaceId": "14c2db94-fa11-494d-8e6b-31fdca14185c",
+    "name": "products_api_spec",
+    "type": "OPENAPI:3.0",
+    "files": [
+      {
+        "path": "openapi.yaml",
+        "content": "openapi: 3.0.0\ninfo:\n  title: Products API\n  version: 1.0.0\npaths:\n  /products:\n    get:\n      summary: Get all products\n      responses:\n        '200':\n          description: Successful response"
+      }
+    ]
+  },
+  "createMock": {
+    "workspace": "14c2db94-fa11-494d-8e6b-31fdca14185c",
+    "mock": {
+      "collection": "11289221-b4e2512b-ff4e-4b9f-9d8f-1f46182abdfb"
+    }
+  },
+  "createCollection": {
+    "collection": {
+      "info": {
+        "name": "products_api",
+        "description": "A fake collection for product API endpoints",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+      },
+      "item": [
+        {
+          "name": "Get Products",
+          "request": {
+            "method": "GET",
+            "header": []
+          }
+        }
+      ]
+    },
+    "workspace": "14c2db94-fa11-494d-8e6b-31fdca14185c"
+  },
+  "getCollection": {
+    "collectionId": "11289221-b4e2512b-ff4e-4b9f-9d8f-1f46182abdfb",
+    "access_key": "<ACCESS_KEY>"
+  },
+  "getCollections": {
+    "workspace": "14c2db94-fa11-494d-8e6b-31fdca14185c"
+  },
+  "putCollection": {
+    "collectionId": "b4e2512b-ff4e-4b9f-9d8f-1f46182abdfb",
+    "collection": {
+      "info": {
+        "name": "products_api_updated",
+        "description": "Updated description for products API collection",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+      },
+      "item": [
+        {
+          "name": "Get Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.example.com/products",
+              "host": [
+                "api.example.com"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Test Product\", \"price\": 99.99}"
+            },
+            "url": {
+              "raw": "https://api.example.com/products",
+              "host": [
+                "api.example.com"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Prefer": "respond-async"
+  },
+  "duplicateCollection": {
+    "collectionId": "b4e2512b-ff4e-4b9f-9d8f-1f46182abdfb",
+    "suffix": "_copy",
+    "workspace": "14c2db94-fa11-494d-8e6b-31fdca14185c"
+  },
+  "createCollectionRequest": {
+    "collectionId": "b4e2512b-ff4e-4b9f-9d8f-1f46182abdfb",
+    "name": "Delete Product"
+  },
+  "createWorkspace": {
+    "workspace": {
+      "name": [
+        "workspace#300", 
+        "workspace#301", 
+        "workspace#302", 
+        "workspace#303",
+        "workspace#333",
+        "workspace#305",
+        "workspace#306"
+      ],
+      "description": "dummy",
+      "about": "dummy"
+    }
+  }
+}
+```
+
+### Step 2: Update values in dictionary
+Update values in the dictionary like workspaceId, collectionId etc. as per your postman setup.
+
+### Step 3: Run Basic Tests
+
+```bash
+docker run -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
+  -v "$(pwd)/postman_dict.json:/usr/src/app/postman_dict.json" \
+  specmatic/specmatic mcp test \
+  --url https://mcp.postman.com/minimal \
+  --bearer-token <YOUR_BEARER_TOKEN> \
+  --dictionary-file postman_dict.json \
+  --skip-tools createCollectionResponse,createMock,createSpecFile,generateSpecFromCollection,getTaggedEntities
+```
+
+**Note:** We skip certain tools here as their data setup requires additional context about how those specific tools work.
+
+## Complete Example: Testing resiliency of tools exposed by huggingface's mcp server
+
+For comprehensive testing including edge cases:
+
+```bash
+docker run -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
+  specmatic/specmatic mcp test \
+  --url https://huggingface.co/mcp \
+  --transport-kind=STREAMABLE_HTTP \
+  --bearer-token <YOUR_BEARER_TOKEN> \
+  --enable-resiliency-tests \
+  --filter-tools gr1_flux1_schnell_infer
+```
+
+**Note:** The `--filter-tools` argument limits resiliency testing to a single tool for focused testing.
+
+---
+
+## Advanced Topics
+
+### Authentication Support
+
+If running tests against secured endpoints, supply the bearer token using the `--bearer-token` argument. For public endpoints or local development, this can be omitted.
+
+### Transport Modes
+
+Currently, MCP Auto Test supports only the **Streamable HTTP** transport for communication with the server. Ensure your server is configured accordingly.
+
+### Reporting & Artifacts
+
+Test runs generate two artifacts in your `build/reports/specmatic` directory:
+
+1. The **tools schema file** (describes the MCP tools and argument schemas)
+2. The **JSON test report**, summarizing test outcomes for each tool and input combination
+
+Use these artifacts for auditing, debugging, and integrating with CI/CD pipelines.
+
+---
+
+## Troubleshooting & FAQs
+
+- **Q: The test reports errors for certain tools. What should I do?**  
+  Verify that the values being sent in the request align with the schema. Recheck your dictionary values for schema alignment. For required authentication or environment-specific data, verify that the correct token and values are provided.
+
+- **Q: How do I minimize noise from tools I don't want to test?**  
+  Use `--skip-tools` or `--filter-tools` for targeted runs.
+
+- **Q: Why are some tools skipped in the Postman example?**  
+  Certain tools require specific data setup or context that would be unique to your environment. If this were your own server, you would know how to properly set up data for those tools.
+
+---
+
+By leveraging MCP Auto Test, teams can elevate the reliability and quality of their MCP-powered integrations, ensuring comprehensive testing coverage from day one and enabling continuous delivery with confidence.

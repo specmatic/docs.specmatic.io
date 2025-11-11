@@ -18,7 +18,7 @@ Go from idea to AI-ready API, instantly. Describe your business requirements in 
 
 Powerful API workflow and contract testing at your fingertips. Visually configure tests, validate contract compliance, and seamlessly integrate with CI/CD — all with #NoCode.
 
-[Try Online](https://specmatic.io/specmatic-studio/){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Use Docker Desktop Extension](https://hub.docker.com/extensions/specmatic/specmatic-docker-desktop-extension){: .btn .fs-5 .mb-4 .mb-md-0 } [5 Minute Tutorial](/documentation/getting_started/studio_quick_start.html){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Try Online](https://specmatic.io/specmatic-studio/){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Use Docker Desktop Extension](https://hub.docker.com/extensions/specmatic/specmatic-docker-desktop-extension){: .btn .fs-5 .mb-4 .mb-md-0 } [5 Minute Tutorial](/getting_started/studio_quick_start.html){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ## 📊 Establish your API Governance with [**Insights**](https://specmatic.io/insights/)
 
@@ -30,7 +30,7 @@ Govern and optimize your API ecosystem; API contract adoption, dependency tracki
 
 Use Specmatic as a plain executable both on your local machine, CI pipelines, and more. Specmatic is also available as a Docker image and Kubernetes operator. Follow the links below to know more.
 
-[Get started in less than 5 min](/documentation/getting_started/cli_quick_start.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get started in less than 5 min](/getting_started/cli_quick_start.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ## 🧪 Automatically Test Your MCP Servers with **MCP Auto Tests**
 
@@ -40,7 +40,7 @@ Tired of guessing whether your MCP server truly honours its published schema? Sp
 - Detect schema drift, broken contracts, and inconsistencies
 - Ensure agent integrations remain stable and predictable
 
-[Get started](/documentation/mcp_auto_test.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get started](/getting_started/mcp_auto_test.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/specmatic/specmatic){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ## 🤖 Establish Guardrails for your Coding Agents with our MCP
 

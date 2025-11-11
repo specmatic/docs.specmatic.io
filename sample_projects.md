@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Sample Projects
-nav_order: 3
+nav_order: 5
 redirect_from:
   - /documentation/sample_projects.html
 ---

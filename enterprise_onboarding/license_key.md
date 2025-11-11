@@ -144,7 +144,7 @@ docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/spe
 {% endtab %}
 {% endtabs %}
 
-Refer to the [Specmatic Docker Images documentation](/documentation/references/docker_images.html) for more details on using Specmatic with Docker.
+Refer to the [Specmatic Docker Images documentation](/references/docker_images.html) for more details on using Specmatic with Docker.
 
 ---
 
@@ -167,7 +167,7 @@ Refer to the [Specmatic Docker Images documentation](/documentation/references/d
 The license file can be placed in one of the following locations, in order of priority:
 
 1. **Central Contract Repository**
-   We recommend checking in the license file with the name `specmatic-license.txt` into the [central contract repository](/documentation/tutorials/central_contract_repository.html). When Specmatic executes, it will checkout the central contract repository as specified in your Specmatic config. It will then scan for the license file (`specmatic-license.txt`) in any subfolders of the repository. This ensures the license is available to everyone using the central contract repository.
+   We recommend checking in the license file with the name `specmatic-license.txt` into the [central contract repository](/contract_driven_development/central_contract_repository.html). When Specmatic executes, it will checkout the central contract repository as specified in your Specmatic config. It will then scan for the license file (`specmatic-license.txt`) in any subfolders of the repository. This ensures the license is available to everyone using the central contract repository.
 
 2. **Home Directory (One-Time Setup)**
    If the above option is not feasible, you can save the license file under `$HOME/.specmatic/specmatic-license.txt` as a one-time setup.
