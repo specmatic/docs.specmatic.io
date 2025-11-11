@@ -49,17 +49,17 @@ specmatic get-license
 ```
 Please refer to the [downloads page](/download.html#specmatic-open-source) if the `specmatic` command is not found.
 {% endtab %}
-{% tab download_commands Docker-Unix %}
+{% tab download_commands Docker Linux/macOS %}
 ```shell
 docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic get-license
 ```
 {% endtab %}
-{% tab download_commands Docker-Windows-Powershell %}
+{% tab download_commands Docker-Win-Powershell %}
 ```shell
 docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic get-license
 ```
 {% endtab %}
-{% tab download_commands Docker-Windows-CommandPrompt %}
+{% tab download_commands Docker-Win-CommandPrompt %}
 ```shell
 docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic get-license
 ```
@@ -100,17 +100,17 @@ To check if you have a valid license, you can run the following command:
 specmatic show-license
 ```
 {% endtab %}
-{% tab view_license_commands Docker-Unix %}
+{% tab view_license_commands Docker Linux/macOS %}
 ```shell
 docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic show-license
 ```
 {% endtab %}
-{% tab view_license_commands Docker-Windows-Powershell %}
+{% tab view_license_commands Docker-Win-Powershell %}
 ```shell
 docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic show-license
 ```
 {% endtab %}
-{% tab view_license_commands Docker-Windows-CommandPrompt %}
+{% tab view_license_commands Docker-Win-CommandPrompt %}
 ```shell
 docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic show-license
 ```
@@ -127,17 +127,17 @@ If you are executing the commands mentioned above as-is, this will be handled au
 When using Specmatic with Docker, you must pass the license key as follows:
 
 {% tabs use_specmatic_commands %}
-{% tab use_specmatic_commands Docker-Unix %}
+{% tab use_specmatic_commands Docker Linux/macOS %}
 ```shell
 docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic-openapi -h
 ```
 {% endtab %}
-{% tab use_specmatic_commands Docker-Windows-Powershell %}
+{% tab use_specmatic_commands Docker-Win-Powershell %}
 ```shell
 docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
 ```
 {% endtab %}
-{% tab use_specmatic_commands Docker-Windows-CommandPrompt %}
+{% tab use_specmatic_commands Docker-Win-CommandPrompt %}
 ```shell
 docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
 ```

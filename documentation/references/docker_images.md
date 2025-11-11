@@ -43,17 +43,17 @@ specmatic --help
 If you are using a commercial Specmatic module, you will need to provide a valid license key. When running Specmatic in Docker, mount your license file into the container and set the environment variable so Specmatic can find it. For example:
 
 {% tabs use_specmatic_commands %}
-{% tab use_specmatic_commands Docker-Unix %}
+{% tab use_specmatic_commands Docker Linux/macOS %}
 ```shell
 docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic-openapi -h
 ```
 {% endtab %}
-{% tab use_specmatic_commands Docker-Windows-Powershell %}
+{% tab use_specmatic_commands Docker-Win-Powershell %}
 ```shell
 docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
 ```
 {% endtab %}
-{% tab use_specmatic_commands Docker-Windows-CommandPrompt %}
+{% tab use_specmatic_commands Docker-Win-CommandPrompt %}
 ```shell
 docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
 ```

@@ -2,7 +2,7 @@
 
 {% tabs install-specmatic-commercial %}
 <!-- docker linux/macOS -->
-{% tab install-specmatic-commercial Docker linux/macOS %}
+{% tab install-specmatic-commercial Docker Linux/macOS %}
 
 {% include docker_run_volume_mount.md image_name=image_name %}
 
@@ -10,7 +10,7 @@
 <!-- /docker linux/macOS -->
 
 <!-- docker Windows-Powershell -->
-{% tab install-specmatic-commercial Docker Windows-Powershell %}
+{% tab install-specmatic-commercial Docker Win-Powershell %}
 
 {% include docker_run_volume_mount.md image_name=image_name shell="Powershell" %}
 
@@ -18,7 +18,7 @@
 <!-- /docker Windows-Powershell -->
 
 <!-- docker Windows-CMD -->
-{% tab install-specmatic-commercial Docker Windows-Command-Prompt %}
+{% tab install-specmatic-commercial Docker Win-Command-Prompt %}
 
 {% include docker_run_volume_mount.md image_name=image_name shell="Cmd" %}
 
