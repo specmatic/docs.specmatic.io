@@ -1,8 +1,9 @@
 {% capture image_name %}{{ include.image_name }}{% endcapture %}
+{% assign tab_name = include.image_name | replace: 'specmatic/', '' %}
 
-{% tabs install-specmatic-commercial %}
+{% tabs download-{{ tab_name }} %}
 <!-- docker linux/macOS -->
-{% tab install-specmatic-commercial Docker Linux/macOS %}
+{% tab download-{{ tab_name }} Docker Linux/macOS %}
 
 {% include docker_run_volume_mount.md image_name=image_name %}
 
@@ -10,7 +11,7 @@
 <!-- /docker linux/macOS -->
 
 <!-- docker Windows-Powershell -->
-{% tab install-specmatic-commercial Docker Win-Powershell %}
+{% tab download-{{ tab_name }} Docker Win-Powershell %}
 
 {% include docker_run_volume_mount.md image_name=image_name shell="Powershell" %}
 
@@ -18,7 +19,7 @@
 <!-- /docker Windows-Powershell -->
 
 <!-- docker Windows-CMD -->
-{% tab install-specmatic-commercial Docker Win-Command-Prompt %}
+{% tab download-{{ tab_name }} Docker Win-Command-Prompt %}
 
 {% include docker_run_volume_mount.md image_name=image_name shell="Cmd" %}
 
@@ -26,7 +27,7 @@
 <!-- /docker Windows-CMD -->
 
 <!-- jar -->
-{% tab install-specmatic-commercial JAR %}
+{% tab download-{{ tab_name }} JAR %}
 
 The standalone JAR file can be downloaded from the following sources:
 
@@ -37,7 +38,7 @@ For older versions, please refer to the [Releases]({{ include.repo_url }}) page.
 {% endtab %}
 <!-- /jar -->
 <!-- linux/macos -->
-{% tab install-specmatic-commercial Linux/macOS %}
+{% tab download-{{ tab_name }} Linux/macOS %}
 
 If you have Java 17 or above installed, you can install the executable using the following command and follow the onscreen instructions:
 
@@ -56,7 +57,7 @@ curl {{site.url}}/{{ include.install_script }}.sh | bash -- --version VERSION
 <!-- /linux/macos -->
 
 <!-- windows -->
-{% tab install-specmatic-commercial Windows %}
+{% tab download-{{ tab_name }} Windows %}
 
 If you have Java 17 or above installed, you can install the executable using the following PowerShell command and follow the onscreen instructions:
 

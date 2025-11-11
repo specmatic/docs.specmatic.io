@@ -1,14 +1,17 @@
 <div class="tab-wrapper">
   <ul class="tab">
-    <% environment["tabs-#{@name}"].each_with_index do |(key, value), index| %>
+    <% (environment["tabs-#{@name}"] || {}).each_with_index do |(key, value), index| %>
         <li <%= index == 0 ? ' class="active"' : ''%>>
-            <button class="tab-click" data-tab-content-selector="<%= uuid %>-<%= @name %>-<%= key %>"><%= key %></button>
+            <button
+              class="tab-click"
+              id='<%= sanitizeName("tab-#{@name}-#{key}") %>'
+              data-tab-content-selector="<%= uuid %>-<%= @name %>-<%= key %>"><%= key %></button>
         </li>
     <% end %>
   </ul>
 
   <ul class="tab-content">
-    <% environment["tabs-#{@name}"].each_with_index do |(key, value), index| %>
+    <% (environment["tabs-#{@name}"] || {}).each_with_index do |(key, value), index| %>
         <li <%= index == 0 ? ' class="active"' : ''%> data-tab-content-id="<%= uuid %>-<%= @name %>-<%= key %>"><%= value %></li>
     <% end %>
   </ul>

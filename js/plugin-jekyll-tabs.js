@@ -1,45 +1,89 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const tabWrappers = document.querySelectorAll('.tab-wrapper');
+    function synchronizeTabsInPage(targetTab, label) {
+        document.querySelectorAll('.tab-click').forEach(otherTab => {
+            if (otherTab === targetTab) {
+                return; // already handled
+            }
 
-  tabWrappers.forEach(wrapper => {
-    const tabs = wrapper.querySelectorAll('.tab-click');
+            const otherLabel = otherTab.textContent.trim();
+            if (otherLabel !== label) {
+                return;
+            }
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', (event) => {
-        const clickedTab = tab; // use the bound element (handles clicks on inner elements)
-        const targetSelector = clickedTab.getAttribute('data-tab-content-selector');
-        const label = clickedTab.getAttribute('data-tab-label') || clickedTab.textContent.trim();
+            const otherWrapper = otherTab.closest('.tab-wrapper');
+            if (!otherWrapper) {
+                return;
+            }
 
+            // Deactivate all tabs/contents in that wrapper
+            otherWrapper.querySelectorAll('.tab li').forEach(li => li.classList.remove('active'));
+            otherWrapper.querySelectorAll('.tab-content li').forEach(li => li.classList.remove('active'));
+
+            // Activate the matching tab and its corresponding content in that wrapper
+            otherTab.parentElement.classList.add('active');
+            const otherSelector = otherTab.getAttribute('data-tab-content-selector');
+            const otherContent = otherWrapper.querySelector(`[data-tab-content-id="${otherSelector}"]`);
+            if (otherContent) {
+                otherContent.classList.add('active');
+            }
+        });
+    }
+
+    function activateTabAndSync(wrapper, targetTab, targetSelector, synchronizeTabsInPage, label) {
         // Deactivate all tabs and contents within the same wrapper
         wrapper.querySelectorAll('.tab li').forEach(li => li.classList.remove('active'));
         wrapper.querySelectorAll('.tab-content li').forEach(li => li.classList.remove('active'));
 
-        // Activate the clicked tab and its corresponding content
-        clickedTab.parentElement.classList.add('active');
+        // Activate the target tab and its corresponding content
+        targetTab.parentElement.classList.add('active');
         const targetContent = wrapper.querySelector(`[data-tab-content-id="${targetSelector}"]`);
-        if (targetContent) targetContent.classList.add('active');
+        if (targetContent) {
+            targetContent.classList.add('active');
+        }
 
         // Synchronize other tabs across the document that have the same label
-        document.querySelectorAll('.tab-click').forEach(otherTab => {
-          if (otherTab === clickedTab) return; // already handled
+        synchronizeTabsInPage(targetTab, label);
+    }
 
-          const otherLabel = otherTab.getAttribute('data-tab-label') || otherTab.textContent.trim();
-          if (otherLabel !== label) return;
 
-          const otherWrapper = otherTab.closest('.tab-wrapper');
-          if (!otherWrapper) return;
+    function activateTabById(tabId) {
+        const targetTab = document.getElementById(tabId);
+        if (targetTab) {
+            const wrapper = targetTab.closest('.tab-wrapper');
+            if (wrapper) {
+                const targetSelector = targetTab.getAttribute('data-tab-content-selector');
+                const label = targetTab.textContent.trim();
 
-          // Deactivate all tabs/contents in that wrapper
-          otherWrapper.querySelectorAll('.tab li').forEach(li => li.classList.remove('active'));
-          otherWrapper.querySelectorAll('.tab-content li').forEach(li => li.classList.remove('active'));
+                activateTabAndSync(wrapper, targetTab, targetSelector, synchronizeTabsInPage, label);
+                return true;
+            }
+        }
+        return false;
+    }
 
-          // Activate the matching tab and its corresponding content in that wrapper
-          otherTab.parentElement.classList.add('active');
-          const otherSelector = otherTab.getAttribute('data-tab-content-selector');
-          const otherContent = otherWrapper.querySelector(`[data-tab-content-id="${otherSelector}"]`);
-          if (otherContent) otherContent.classList.add('active');
+    const tabWrappers = document.querySelectorAll('.tab-wrapper');
+
+    tabWrappers.forEach(wrapper => {
+        const tabs = wrapper.querySelectorAll('.tab-click');
+
+        tabs.forEach(targetTab => {
+            targetTab.addEventListener('click', (event) => {
+                const targetSelector = targetTab.getAttribute('data-tab-content-selector');
+                const label = targetTab.textContent.trim();
+                const tabId = targetTab.id;
+
+                // Update URL hash without causing scroll
+                history.replaceState(null, null, `#${tabId}`);
+
+                activateTabAndSync(wrapper, targetTab, targetSelector, synchronizeTabsInPage, label);
+            });
         });
-      });
     });
-  });
+
+
+    // Check for hash in URL and activate the corresponding tab on page load
+    if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        activateTabById(hash);
+    }
 });
