@@ -12,7 +12,7 @@ Generating API Specifications
 
 <!-- TOC -->
 * [Generating API Specifications](#generating-api-specifications)
-  * [## From an existing application using Proxy Mode](#-from-an-existing-application-using-proxy-mode)
+  * [From an existing application using Proxy Mode](#from-an-existing-application-using-proxy-mode)
     * [Step 1: Start the Proxy Server](#step-1-start-the-proxy-server)
     * [Step 2: Verify Proxy Health (Optional)](#step-2-verify-proxy-health-optional)
     * [Step 3: Send Test Requests](#step-3-send-test-requests)
@@ -33,7 +33,6 @@ Generating API Specifications
 <!-- TOC -->
 
 ## From an existing application using Proxy Mode
----
 
 ![](/images/specmatic-reverse-proxy.svg)
 

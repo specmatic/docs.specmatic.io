@@ -8,7 +8,7 @@ redirect_from:
   - /documentation/supported_protocols/asyncapi/jms.html
 ---
 
-# JMS 
+# JMS
 {: .d-inline-block }
 Commercial
 {: .label }
@@ -16,7 +16,7 @@ Commercial
 <iframe width="560" height="315" src="https://www.youtube.com/embed/gExD3hWaDvg?si=qgdZDcCp33KI9EDf" title="JMS Mocking with AsyncAPI using Specmatic" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <!-- TOC -->
-* [JMS](#jms-)
+* [JMS](#jms)
     * [Introduction](#introduction)
     * [Pre-requisite Setup](#pre-requisite-setup)
     * [Start the JMS Server](#start-the-jms-server)

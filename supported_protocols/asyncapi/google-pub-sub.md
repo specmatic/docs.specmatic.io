@@ -7,7 +7,7 @@ redirect_from:
   - /documentation/supported_protocols/asyncapi/google-pub-sub.html
 ---
 
-# Google PubSub 
+# Google PubSub
 {: .d-inline-block }
 Commercial
 {: .label }
@@ -15,7 +15,7 @@ Commercial
 <iframe width="560" height="315" src="https://www.youtube.com/embed/cPXfZwHzkh8?si=A9JzK8uSEbcgheQZ" title="Contract Testing Google Pub/Sub: Using AsyncAPI specs as Executable Contracts" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <!-- TOC -->
-* [Google PubSub](#google-pubsub-)
+* [Google PubSub](#google-pubsub)
   * [Introduction](#introduction)
   * [Sample Applications](#sample-applications)
 <!-- TOC -->

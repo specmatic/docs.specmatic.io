@@ -21,7 +21,7 @@ Commercial
     * [📘 Specmatic Kafka Mock Server API Guide](#-specmatic-kafka-mock-server-api-guide)
       * [✅ API Capabilities](#-api-capabilities)
       * [🚀 Step 1: Start a Kafka Broker](#-step-1-start-a-kafka-broker)
-      * [⚙️ Step 2: Launch the Kafka Mock Server](#-step-2-launch-the-kafka-mock-server)
+      * [⚙ Step 2: Launch the Kafka Mock Server](#-step-2-launch-the-kafka-mock-server)
         * [📄 Create a specification file: `spec.yaml`](#-create-a-specification-file-specyaml)
       * [📝 Step 3: Set Expectations](#-step-3-set-expectations)
         * [Request](#request)
@@ -30,7 +30,7 @@ Commercial
       * [✅ Step 5: Verify Expectations](#-step-5-verify-expectations)
         * [Request](#request-1)
         * [Successful Response](#successful-response)
-      * [ℹ️ Additional Notes](#ℹ-additional-notes)
+      * [ℹ Additional Notes](#ℹ-additional-notes)
   * [Running Contract Tests Against a Kafka-Based Request-Reply Service](#running-contract-tests-against-a-kafka-based-request-reply-service)
     * [Service Implementation](#service-implementation)
     * [Specmatic Configuration](#specmatic-configuration)
@@ -246,7 +246,7 @@ Ensure the containers start successfully before proceeding.
 
 ---
 
-#### ⚙️ Step 2: Launch the Kafka Mock Server
+#### ⚙ Step 2: Launch the Kafka Mock Server
 
 ##### 📄 Create a specification file: `spec.yaml`
 
@@ -437,7 +437,7 @@ If the verification fails, the response will include details of the mismatches.
 
 ---
 
-#### ℹ️ Additional Notes
+#### ℹ Additional Notes
 
 - You can mount a different `spec.yaml` anytime to simulate different message contracts.
 - Use the `topicsToIgnore` field to exclude system/internal topics.

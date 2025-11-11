@@ -19,7 +19,7 @@ Yes, Specmatic is a standalone executable that is completely programming languag
 
 Programmatic support is available in JVM languages as a convenience.
 * [Programmatically running stub server](/contract_driven_development/service_virtualization.html#programmatically-starting-stub-server-within-tests)
-* [Programmatically running contract tests](/contract_driven_development/contract_testing.html#programmtically-executing-specmatic-contract-tests)
+* [Programmatically running contract tests](/contract_driven_development/contract_testing.html#programmatically-executing-specmatic-contract-tests)
 
 ### How much code do I have to write to get Specmatic running?
 

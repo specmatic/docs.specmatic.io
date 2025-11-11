@@ -27,7 +27,7 @@ docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic test "my_
 ```
 
 - This command will execute contract tests for the service hosted at `http://localhost:9000` using the WSDL file `my_soap_service.wsdl`.
-- Additionally, this can be achieved programmatically if you are using a JVM-based language. For further details, please refer to [Programmatically Executing Specmatic Contract Tests](./contract_tests#programmatically-executing-specmatic-contract-tests)
+- Additionally, this can be achieved programmatically if you are using a JVM-based language. For further details, please refer to [Programmatically Executing Specmatic Contract Tests](/contract_driven_development/contract_testing.html#programmatically-executing-specmatic-contract-tests)
 
 ## Mocking SOAP Services with WSDL
 
