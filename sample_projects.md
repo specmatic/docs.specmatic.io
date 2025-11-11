@@ -34,9 +34,9 @@ Let's discover how Specmatic works across different layers of an app, with help 
 ## Sample Projects
 
 <div id="sample-projects-tabs">
-{% tabs modules %}
+{% tabs sample %}
 <!-- OPENAPI -->
-{% tab modules OpenAPI %}
+{% tab sample OpenAPI %}
 ![OpenAPI Architecture](/images/specmatic-openapi-architecture.gif)
 
 ### Projects
@@ -80,7 +80,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- ASYNCAPI -->
 
-{% tab modules AsyncAPI %}
+{% tab sample AsyncAPI %}
 ![Async Architecture](/images/specmatic-kafka-architecture.gif)
 
 ### Projects
@@ -104,7 +104,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- GRPC -->
 
-{% tab modules gRPC %}
+{% tab sample gRPC %}
 ![gRPC architecture](/images/SpecmaticGRPCSupport.gif)
 
 ### Projects
@@ -119,7 +119,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- GraphQL -->
 
-{% tab modules GraphQL %}
+{% tab sample GraphQL %}
 ![GraphQL Architecture](/images/specmatic-graphql-architecture.gif)
 
 ### Projects
@@ -134,7 +134,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- JDBC -->
 
-{% tab modules JDBC %}
+{% tab sample JDBC %}
 ![JDBC Architecture](/images/specmatic-jdbc-architecture.gif)
 
 ### Projects
@@ -147,7 +147,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- REDIS -->
 
-{% tab modules Redis %}
+{% tab sample Redis %}
 ![Redis Architecture](/images/specmatic-redis-architecture.gif)
 
 ### Projects
@@ -161,7 +161,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- WSDL -->
 
-{% tab modules WSDL %}
+{% tab sample WSDL %}
 
 ```
                                       PRODUCTION SETUP
@@ -218,7 +218,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- ARAZZO -->
 
-{% tab modules Arazzo %}
+{% tab sample Arazzo %}
 ![Arazzo Flow](/images/arazzo-flow.svg)
 
 ### Projects
@@ -233,7 +233,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- MCP -->
 
-{% tab modules MCP %}
+{% tab sample MCP %}
 ![MCP Architecture](/images/MCP-Architecture.png)
 
 ### Projects
@@ -247,7 +247,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 <!-- CENTRAL REPOSITORIES -->
 
-{% tab modules Central Repo %}
+{% tab sample Central Repo %}
 ![Central Contract Repository](/images/Central-Contract-Repo.png)
 
 ### Projects

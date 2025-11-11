@@ -313,6 +313,6 @@ So Specmatic gRPC support is designed to use add on validation mechanisms like [
 
 We have created sample projects to demonstrate how to use Specmatic with gRPC in different languages and scenarios, please follow the link for the latest sample projects
 
-* [gRPC sample projects](/sample_projects.html#grpc)
+* [gRPC sample projects](/sample_projects.html#tab-sample-grpc)
 
 These projects provide practical examples of how to integrate Specmatic gRPC support into your workflow, including setting up stubs, writing tests, and handling different languages, frameworks and running them on CI like GitHub actions.

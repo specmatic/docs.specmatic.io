@@ -56,7 +56,7 @@ With Specmatic GraphQL support you will be to leverage your GraphQL SDL files as
 
 Here are sample projects in different languages and frameworks that demonstrate below features in various languages and scenarios. Refer to the latest projects here:
 
-* [GraphQL sample projects](/sample_projects.html#graphql)
+* [GraphQL sample projects](/sample_projects.html#tab-sample-graphql)
 
 README of each of these projects include
 * detailed animated architecture diagram
