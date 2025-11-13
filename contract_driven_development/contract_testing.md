@@ -309,6 +309,12 @@ docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/emp
 
 In the above case, example JSON files will be written into the directory named `employees_examples`. You can then update the files to suit your needs and use them.
 
+### Strict Mode
+
+By default, Specmatic generates tests for an API when there are no examples. However, if you want to enforce that examples must be present for all parameters and responses, you can enable strict mode using configuration as described [here](/references/configuration.html#strict-mode).
+
+When you enable strict mode, Specmatic will skip test generation from APIs for which there are no examples.
+
 ### Boundary Condition Testing
 
 In the above example, we only ran the happy path test cases. What if we send a number to a boolean parameter? What if we send a null to a non-nullable parameter? What if we do not send a mandatory parameter? How does the application handle these errors? Input validation is an important aspect of your api security strategy ([OWASP reference](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)).

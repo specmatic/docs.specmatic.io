@@ -23,6 +23,7 @@ Configuration
       * [Configuring Stubs](#configuring-stubs)
       * [Stub Start Timeout](#stub-start-timeout)
       * [Service Virtualization Delay](#service-virtualization-delay)
+      * [Strict Mode](#strict-mode)
       * [Use specifications on local file system](#use-specifications-on-local-file-system)
       * [Run stub on different ports for different specifications](#run-stub-on-different-ports-for-different-specifications)
       * [Configure contract test baseUrls for different specs](#configure-contract-test-baseurls-for-different-specs)
@@ -298,6 +299,32 @@ contracts:
 
 A delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter,
 you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/contract_driven_development/service_virtualization.html#delay-simulation)
+
+#### Strict Mode
+
+Both test and stub may run in strict mode. You can read more about [test in strict mode here](/contract_driven_development/service_virtualization.html#strict-mode), and [stub in strict mode here](/contract_driven_development/contract_testing.html#strict-mode).
+
+You can configure Specmatic to run test in strict mode using the following configuration:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+    - /path/to/spec.yaml
+test:
+  strictMode: true
+```
+
+And likewise, you can configure Specmatic to run stub in strict mode using the following configuration:
+
+```yaml
+version: 2
+contracts:
+  - consumes:
+    - /path/to/spec.yaml
+stub:
+  strictMode: true
+```
 
 #### Use specifications on local file system
 
