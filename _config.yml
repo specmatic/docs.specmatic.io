@@ -3,7 +3,7 @@ markdown: kramdown
 title: "Specmatic"
 specmatic-core-version: 2.30.0
 specmatic-jms-version: 0.6.1
-specmatic-async-version: 1.6.9
+specmatic-async-version: 1.6.10
 specmatic-studio-version: 1.12.0
 specmatic-openapi-version: 1.17.0
 specmatic-build-reporter-version: 0.0.24
