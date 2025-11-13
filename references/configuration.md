@@ -536,7 +536,7 @@ The CTRF report generation is only available in the commercial version of Specma
 
 
 #### API Coverage report
-This gives you a comprehensive analysis of any mismatch between your api specification and implementation. [Here](https://specmatic.io/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) is an article with a detailed write-up about this feature.
+This gives you a comprehensive analysis of any mismatch between your api specification and implementation. [Here](https://specmatic.io/demonstration/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) is an article with a detailed write-up about this feature.
 
 #### Complete sample specmatic.json with all attributes
 

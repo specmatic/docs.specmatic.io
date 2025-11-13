@@ -183,7 +183,7 @@ Executed at 2025-03-14T17:16:35.943405
 * Specmatic parsed your API specification and printed a brief `API Specification Summary`
 * Then it generated and started `Executing 1 tests` because our API specification contains only one endpoint with a single GET operation
 * Specmatic then logged the `HTTP Request` that it generated and the `HTTP response` it received from the API implementation
-* And finally it prints out the test results along with an API Coverage Report (Read our detailed post on [API Coverage Report](https://specmatic.io/updates/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) to know more.)
+* And finally it prints out the test results along with an API Coverage Report (Read our detailed post on [API Coverage Report](https://specmatic.io/demonstration/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) to know more.)
 
 #### Where did Specmatic get the test data to generate the HTTP request
 
