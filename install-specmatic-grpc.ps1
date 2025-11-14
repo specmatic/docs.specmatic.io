@@ -7,7 +7,7 @@ layout: none
 {% endcapture %}
 
 {% include install-specmatic-tool.ps1
-  main_picocli_command="io.specmatic.grpc.application.SpecmaticGrpcApplicationd"
+  main_picocli_command="io.specmatic.grpc.application.SpecmaticGrpcApplication"
   tool_name="Specmatic GRPC"
   latest_version=latest_version
   download_target="specmatic-grpc"
