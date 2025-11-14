@@ -20,6 +20,7 @@ Contract Testing
     * [How the contract test works (step-by-step)](#how-the-contract-test-works-step-by-step)
     * [Externalising examples / test cases](#externalising-examples--test-cases)
     * [Generating examples](#generating-examples)
+    * [Strict Mode](#strict-mode)
     * [Boundary Condition Testing](#boundary-condition-testing)
     * [Very large strings](#very-large-strings)
     * [JUnit Output From The Command](#junit-output-from-the-command)

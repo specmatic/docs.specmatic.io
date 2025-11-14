@@ -493,7 +493,9 @@ docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -
 
 - Specmatic will return a 400, with a detailed error message.
 
-- To recap, in `strict` mode, Specmatic will only respond to requests that have matching examples, inline or external.
+To recap, in `strict` mode, Specmatic will only respond to requests that have matching examples, inline or external.
+
+You can enable strict mode using configuration as described [here](/references/configuration.html#strict-mode).
 
 ## Data Type-Based Examples
 

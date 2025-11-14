@@ -302,7 +302,7 @@ you can simulate response times with the specified delay in milliseconds, as men
 
 #### Strict Mode
 
-Both test and stub may run in strict mode. You can read more about [test in strict mode here](/contract_driven_development/service_virtualization.html#strict-mode), and [stub in strict mode here](/contract_driven_development/contract_testing.html#strict-mode).
+Both test and stub may run in strict mode. You can read more about [test in strict mode here](/contract_driven_development/contract_testing.html#strict-mode), and [stub in strict mode here](/contract_driven_development/service_virtualization.html#strict-mode).
 
 You can configure Specmatic to run test in strict mode using the following configuration:
 
