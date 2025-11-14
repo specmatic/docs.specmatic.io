@@ -450,8 +450,6 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
 {% endraw %}
 ```
 
-For more details, refer to the [Specmatic Insights GitHub Action documentation](https://github.com/specmatic/specmatic-insights-build-reporter-github-action).
-
 ## Step 4: Visualizing Your API Ecosystem
 
 ### Viewing Your Service Mesh
