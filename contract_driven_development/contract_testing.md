@@ -20,6 +20,7 @@ Contract Testing
     * [How the contract test works (step-by-step)](#how-the-contract-test-works-step-by-step)
     * [Externalising examples / test cases](#externalising-examples--test-cases)
     * [Generating examples](#generating-examples)
+    * [Strict Mode](#strict-mode)
     * [Boundary Condition Testing](#boundary-condition-testing)
     * [Very large strings](#very-large-strings)
     * [JUnit Output From The Command](#junit-output-from-the-command)
@@ -308,6 +309,12 @@ docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/emp
 ```
 
 In the above case, example JSON files will be written into the directory named `employees_examples`. You can then update the files to suit your needs and use them.
+
+### Strict Mode
+
+By default, Specmatic generates tests for an API when there are no examples. However, if you want to enforce that examples must be present for all parameters and responses, you can enable strict mode using configuration as described [here](/references/configuration.html#strict-mode).
+
+When you enable strict mode, Specmatic will skip test generation from APIs for which there are no examples.
 
 ### Boundary Condition Testing
 
