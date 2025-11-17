@@ -168,7 +168,9 @@ We'll be working with two OpenAPI specifications:
                 central-contract-repo-report
 
           - name: Write specmatic license key to file
-            run: echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+            run: |
+              mkdir -p ~/.specmatic
+              echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
           - name: Run Specmatic Insights GitHub Build Reporter
             run: |
@@ -433,7 +435,9 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
 ```yaml
 {% raw %}
 - name: Write specmatic license key to file
-  run: echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+  run: |
+    mkdir -p ~/.specmatic
+    echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 - name: Publish specmatic reports to Specmatic Insights
   run: |
     docker run --rm \
