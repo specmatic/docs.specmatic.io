@@ -1,23 +1,30 @@
 ---
 layout: default
-title: Hook Processors
+title: Processor Hooks
 parent: Features
 nav_order: 5
 ---
-Hook Processors
+Processor Hooks
 ===============
+{: .d-inline-block }
+Commercial
+{: .label }
+
 <!-- TOC -->
-- [Hook Processors](#hook-processors)
-  - [Hooks](#hooks)
-    - [pre\_specmatic\_request\_processor](#pre_specmatic_request_processor)
-    - [pre\_specmatic\_response\_processor](#pre_specmatic_response_processor)
-    - [post\_specmatic\_response\_processor](#post_specmatic_response_processor)
-  - [Configuring Hook Processors](#configuring-hook-processors)
-  - [Notes On Writing Hook Scripts](#notes-on-writing-hook-scripts)
-  - [Sample Project](#sample-project)
+* [Processor Hooks](#processor-hooks)
+  * [Hooks](#hooks-)
+    * [pre_specmatic_request_processor](#pre_specmatic_request_processor)
+    * [pre_specmatic_response_processor](#pre_specmatic_response_processor)
+    * [post_specmatic_response_processor](#post_specmatic_response_processor)
+  * [Configuring Processor Hooks](#configuring-processor-hooks)
+  * [Notes On Writing Hook Scripts](#notes-on-writing-hook-scripts)
+  * [Sample Project](#sample-project)
 <!-- TOC -->
 
-Specmatic hook processors let you transform traffic that comes to the proxy and the stub. They are useful when the provider and consumer speak a wire format that differs in some way from the the actual data that traverses the wire. For example, a consumer may encrypt data JSON data in the request sent to the provider. You may want specification to capture the application/json format, even though the request payload sent across the wire is encrypted and sent as text/plain.
+{: .note}
+Processor Hooks is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
+
+Specmatic's processor hooks let you transform traffic that comes to the proxy and the stub. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire. For example, a consumer may encrypt data JSON data in the request sent to the provider. You may want specification to capture the application/json format, even though the request payload sent across the wire is encrypted and sent as text/plain.
 
 ## Hooks 
 
@@ -167,9 +174,9 @@ Sample output from the hook (STDOUT):
 }
 ```
 
-## Configuring Hook Processors
+## Configuring Processor Hooks
 
-Hook processors are configured in `specmatic.yaml`. Each hook entry should point to an executable file (script or binary) that will be run by Specmatic.
+Processor Hooks are configured in `specmatic.yaml`. Each hook entry should point to an executable file (script or binary) that will be run by Specmatic.
 
 ```yaml
 hooks:
@@ -189,4 +196,4 @@ The configuration is evaluated relative to the directory in which Specmatic is l
 
 ## Sample Project
 
-See [`sample-projects/hooks-demo`](../sample-projects/hooks-demo/README.md) for a complete, runnable example that uses hooks to translate base64 payloads between the consumer and provider while keeping the recorded contract in JSON.
+See [`hooks-demo`](https://github.com/specmatic/hooks-demo) for a complete, runnable example.
