@@ -420,8 +420,6 @@ With this foundation in place, you can now move on to configuring Specmatic Insi
 
 ### Setting Up Specmatic Insights
 
-To start using Specmatic Insights, please contact [Specmatic support]({{ site.contact_us_url }}). We will create an account and set up your dashboard.
-
 ### Integrating with CI/CD Pipelines
 
 To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for your Client, BFF Service & Order Domain API service
