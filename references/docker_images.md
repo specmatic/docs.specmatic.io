@@ -83,3 +83,11 @@ The Specmatic Docker image contains everything needed to run Specmatic out of th
     > Under the hood, this script acts as a pass-through to invoke the Specmatic tool jar. The wrapper also accepts an optional `JAVA_OPTS` environment variable, allowing users to override or specify additional JVM parameters if needed.
 
 2. **Utilities**: Common utilities such as `git`, `bash`, `curl` and `jq`, are included to support scripting, version control, and automation tasks within the container. This makes it easy to integrate Specmatic with your existing workflows and scripts.
+
+## Docker Desktop Alternatives
+
+If you need alternatives to Docker Desktop, consider these container runtime options:
+
+- [Podman Desktop](https://podman-desktop.io/downloads/) - Daemonless container engine compatible with Docker commands
+- [Rancher Desktop](https://rancherdesktop.io/) - Open-source container management with Kubernetes support
+- [Colima](https://github.com/abiosoft/colima) - Lightweight container runtime for macOS
