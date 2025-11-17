@@ -189,10 +189,11 @@ The configuration is evaluated relative to the directory in which Specmatic is l
 
 ## Notes On Writing Hook Scripts
 
-- Your script must print the transformed JSON document to STDOUT.
-- Exit with status `0` to let Specmatic continue. Any non-zero status will abort the interaction and surface an error to the caller.
-- Make sure dependencies such as `jq`, `base64`, or language runtimes are available in the environment where Specmatic runs.
-- If you're using executable scripts, remember to grant execute permissions (`chmod +x hooks/*.sh`) so Specmatic can invoke the hook scripts.
+- The script must print the transformed JSON document to STDOUT.
+- The script may need to change the `Content-Type` of the request or response if the transformation alters the payload format.
+- Exit with status `0` to let Specmatic continue. Any non-zero status will be detected by Specmatic. The script's output will be printed to the console, and the hook unprocessed request will be used instead.
+- Make sure dependencies, language runtimes, etc required by the hook are available in the environment where Specmatic runs.
+- If the hooks are executable scripts, remember to grant execute permissions (`chmod +x hooks/*.sh`) so Specmatic can invoke the hook scripts.
 
 ## Sample Project
 
