@@ -347,7 +347,14 @@ jobs:
       run: sleep 30
 
     - name: Contract Test BFF service using Specmatic
-      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "specmatic/specmatic" test --port=8080 --host=localhost
+      run: |
+        docker run \
+          -v ./specmatic.yaml:/usr/src/app/specmatic.yaml \
+          --network=host \
+          specmatic/specmatic \
+          test \
+          --port=8080 \
+          --host=localhost
 
 {% endraw %}
 ```
