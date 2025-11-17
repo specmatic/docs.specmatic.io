@@ -52,7 +52,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | Back-end for Front-end (BFF) | Python   | Flask       | [specmatic-order-bff-python](https://github.com/specmatic/specmatic-order-bff-python)             |
 | Back-end for Front-end (BFF) | Python   | FastAPI     | [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample)       |
 | Back-end for Front-end (BFF) | Python   | Sanic       | [specmatic-order-bff-python-sanic](https://github.com/specmatic/specmatic-order-bff-python-sanic) |
-| Back-end for Front-end (BFF) | GoLang   | Gin         | [specmatic-order-bff-go](https://github.com/znsio/specmatic-order-bff-go)                         |
+| Back-end for Front-end (BFF) | GoLang   | Gin         | [specmatic-order-bff-go](https://github.com/specmatic/specmatic-order-bff-go)                     |
 | Back-end for Front-end (BFF) | C#       | .NET        | [specmatic-order-bff-csharp](https://github.com/specmatic/specmatic-order-bff-csharp)             |
 | Frontend                     | JS       | React       | [specmatic-order-ui-react](https://github.com/specmatic/specmatic-order-ui-react)                 |
 
@@ -90,7 +90,7 @@ Let's discover how Specmatic works across different layers of an app, with help 
 | Kafka    | Fire-n-Forget       | Kotlin   | Spring Boot | [specmatic-order-bff-java](https://github.com/specmatic/specmatic-order-bff-java)     |
 | Kafka    | Fire-n-Forget       | NodeJS   | Express     | [specmatic-order-bff-nodejs](https://github.com/specmatic/specmatic-order-bff-nodejs) |
 | Kafka    | Request-Reply       | Kotlin   | Spring Boot | [specmatic-kafka-sample](https://github.com/specmatic/specmatic-kafka-sample)         |
-| JMS      | Request-Reply       | Kotlin   | Spring Boot | [specmatic-order-bff-jms](https://github.com/znsio/specmatic-order-bff-jms)           |
+| JMS      | Request-Reply       | Kotlin   | Spring Boot | [specmatic-order-bff-jms](https://github.com/specmatic/specmatic-order-bff-jms)       |
 
 ### Schema Registries
 
@@ -139,9 +139,9 @@ Let's discover how Specmatic works across different layers of an app, with help 
 
 ### Projects
 
-| Layer   | Language | Framework   | Sample Project                                                          |
-| ------- | -------- | ----------- | ----------------------------------------------------------------------- |
-| Backend | Kotlin   | Spring Boot | [specmatic-jdbc-sample](https://github.com/znsio/specmatic-jdbc-sample) |
+| Layer   | Language | Framework   | Sample Project                                                              |
+| ------- | -------- | ----------- | --------------------------------------------------------------------------- |
+| Backend | Kotlin   | Spring Boot | [specmatic-jdbc-sample](https://github.com/specmatic/specmatic-jdbc-sample) |
 
 {% endtab %}
 
