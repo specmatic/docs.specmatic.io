@@ -162,15 +162,6 @@ Refer to the [Specmatic Docker Images documentation](/references/docker_images.h
 6. Click "Generate" to create the license key.
 7. Click the "Download" button to download the license file (`specmatic-license.txt`)
 
-#### Setting Up the License Key (for service accounts)
+#### Using the service account license key in CI/CD or automated systems
 
-The license file can be placed in one of the following locations, in order of priority:
-
-1. **Central Contract Repository**
-   We recommend checking in the license file with the name `specmatic-license.txt` into the [central contract repository](/contract_driven_development/central_contract_repository.html). When Specmatic executes, it will checkout the central contract repository as specified in your Specmatic config. It will then scan for the license file (`specmatic-license.txt`) in any subfolders of the repository. This ensures the license is available to everyone using the central contract repository.
-
-2. **Home Directory (One-Time Setup)**
-   If the above option is not feasible, you can save the license file under `$HOME/.specmatic/specmatic-license.txt` as a one-time setup.
-
-3. **Custom Location with Environment Variable**
-   If neither of the above options work, you can save the license file in any location of your choice and set the environment variable `SPECMATIC_LICENSE_PATH` to point to the license file.
+[Enterprise Onboarding - Specmatic License Keys](/enterprise_onboarding/insights.html#step-3-configuring-specmatic-insights) provides detailed instructions on how to set up and use the license key in CI/CD pipelines and automated systems.
