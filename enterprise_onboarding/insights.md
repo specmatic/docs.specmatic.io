@@ -433,7 +433,7 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
 ```yaml
 {% raw %}
 - name: Write specmatic license key to file
-  echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+  run: echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 - name: Publish specmatic reports to Specmatic Insights
   run: |
     docker run --rm \
