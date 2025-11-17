@@ -155,15 +155,14 @@ We'll be working with two OpenAPI specifications:
           - name: Run OpenAPI Backward Compatibility Check using Specmatic
             run: |
               docker run --rm \
-              -v "${{ github.workspace }}:/api-contracts:rw" \
-              -w /api-contracts \
-              specmatic/specmatic \
-              backward-compatibility-check
+                -v ${{ github.workspace }}:/usr/src/app \
+                specmatic/specmatic \
+                backward-compatibility-check
 
           - name: Generate central contract repo report
             run: |
               docker run --rm \
-                -v "${{ github.workspace }}:/api-contracts:rw" \
+                -v ${{ github.workspace }}:/usr/src/app \
                 specmatic/specmatic \
                 central-contract-repo-report
 
@@ -175,7 +174,7 @@ We'll be working with two OpenAPI specifications:
           - name: Run Specmatic Insights GitHub Build Reporter
             run: |
               docker run --rm \
-                -v "${{ github.workspace }}:/api-contracts:rw" \
+                -v ${{ github.workspace }}:/usr/src/app \
                 -v ~/.specmatic:/root/.specmatic \
                 specmatic/specmatic \
                 send-report \
@@ -244,6 +243,7 @@ After the client is up and running and checked into a Git repository, you can cr
 (note: we implemented the client in react, so setting up pipeline accordingly)
 
 ```yaml
+{% raw %}
 name: Client Contract Test
 
 on:
@@ -269,8 +269,8 @@ jobs:
 
     - name: Run Specmatic stub to virtualize the BFF service
       run: |
-        docker run -d --name specmatic-stub \
-          -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+        docker run -d \
+          -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
           -p 8080:8080 \
           specmatic/specmatic stub
 
@@ -281,6 +281,7 @@ jobs:
       run: npm run test:component
       env:
         STUB_URL: http://localhost:8080
+{% endraw %}
 ```
 
 Upon successful execution of the client CI pipeline, you should see output resembling this:
@@ -297,6 +298,7 @@ Make sure the BFF service is checked into a Git repository. Then create the foll
 (note: we implemented the BFF service in Kotlin, so setting up pipeline accordingly)
 
 ```yaml
+{% raw %}
 name: BFF Service (Kotlin) CI with Gradle
 
 on:
@@ -330,8 +332,8 @@ jobs:
 
     - name: Run Specmatic stub to virtualize the Order API service
       run: |
-        docker run -d --name specmatic-stub \
-          -v "${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+        docker run -d \
+          -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
           -p 9000:9000 \
           specmatic/specmatic stub
 
@@ -346,6 +348,8 @@ jobs:
 
     - name: Contract Test BFF service using Specmatic
       run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "specmatic/specmatic" test --port=8080 --host=localhost
+
+{% endraw %}
 ```
 
 After running the BFF service CI pipeline, you should see results similar to:
@@ -442,7 +446,7 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
   run: |
     docker run --rm \
       -v ~/.specmatic:/root/.specmatic \
-      -v "${{ github.workspace }}:/api-contracts:rw" \
+      -v ${{ github.workspace }}:/usr/src/app \
       specmatic/specmatic \
       send-report \
       --branch-name ${{ github.ref_name }} \
