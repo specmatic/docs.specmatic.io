@@ -312,11 +312,7 @@ In the above case, example JSON files will be written into the directory named `
 
 ### Strict Mode
 
-By default, Specmatic generates tests for an API when there are no examples. However, if you want to enforce that examples must be present for all parameters and responses, you can enable strict mode using configuration as described [here](/references/configuration.html#strict-mode).
-
-When you enable strict mode, Specmatic will skip test generation from APIs for which there are no examples.
-
-You can also run strict mode using the `--strict` command-line parameter:
+By default, Specmatic generates tests for an API when there are no examples. However, if you want to skip test generation from APIs for which there are no examples, you can enable strict mode using configuration as described [here](/references/configuration.html#strict-mode), or using the `--strict` command-line parameter as shown below:
 
 ```bash
 {{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com --strict employees.yaml
