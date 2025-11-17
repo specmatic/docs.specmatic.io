@@ -2,7 +2,7 @@
 layout: default
 title: Hooks to Modify Specs
 parent: Features
-nav_order: 5
+nav_order: 6
 redirect_from:
   - /documentation/api_gateways.html
   - /documentation/features/hooks_to_modify_specs.html
