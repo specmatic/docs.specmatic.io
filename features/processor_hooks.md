@@ -11,20 +11,22 @@ Commercial
 {: .label }
 
 <!-- TOC -->
-* [Processor Hooks](#processor-hooks)
-  * [Hooks](#hooks-)
-    * [pre_specmatic_request_processor](#pre_specmatic_request_processor)
-    * [pre_specmatic_response_processor](#pre_specmatic_response_processor)
-    * [post_specmatic_response_processor](#post_specmatic_response_processor)
-  * [Configuring Processor Hooks](#configuring-processor-hooks)
-  * [Notes On Writing Hook Scripts](#notes-on-writing-hook-scripts)
-  * [Sample Project](#sample-project)
+- [Processor Hooks](#processor-hooks)
+  - [Hooks](#hooks)
+    - [pre\_specmatic\_request\_processor](#pre_specmatic_request_processor)
+    - [pre\_specmatic\_response\_processor](#pre_specmatic_response_processor)
+    - [post\_specmatic\_response\_processor](#post_specmatic_response_processor)
+  - [Configuring Processor Hooks](#configuring-processor-hooks)
+  - [Notes On Writing Hook Scripts](#notes-on-writing-hook-scripts)
+  - [Sample Project](#sample-project)
 <!-- TOC -->
 
 {: .note}
 Processor Hooks is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
 
-Specmatic's processor hooks let you transform traffic that comes to the proxy and the stub. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire. For example, a consumer may encrypt data JSON data in the request sent to the provider. You may want specification to capture the application/json format, even though the request payload sent across the wire is encrypted and sent as text/plain.
+Specmatic's processor hooks let you transform traffic that comes to the proxy and the stub. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire.
+
+For example, a consumer may encrypt data `application/json` data in the request sent to the provider. And thus while the data in the request body is JSON (`application/json`), on the wire after encryption it might be a string (`text/plain`). You may want the specification to capture the `application/json` format, rather than text/plain.
 
 ## Hooks 
 
