@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Configuring SAML SSO with Microsoft Entra
-parent: Enterprise Onboarding
-nav_order: 3
+parent: Configuring SAML SSO
+nav_order: 1
 ---
 
 # Configuring SAML SSO with Microsoft Entra
@@ -24,7 +24,7 @@ This guide walks you through setting up SAML Single Sign-On (SSO) between Micros
 ## Step 2: Create Enterprise Application in Entra
 
 1. Log in to the [Microsoft Entra admin center](https://entra.microsoft.com/).
-2. Navigate to **Entra ID** > **Enterprise Applications** in the left sidebar.
+2. Navigate to **Entra ID** > **Enterprise Apps** in the left sidebar.
 3. Click **New Application**.
 4. Select **Create your own application**.
 5. Enter the application name (e.g., "Specmatic Insights").
@@ -40,32 +40,34 @@ This guide walks you through setting up SAML Single Sign-On (SSO) between Micros
    - **Identifier (Entity ID)**: `https://insights.specmatic.io/saml2/<RANDOM_CHARACTERS>`
    - **Reply URL (Assertion Consumer Service URL)**: `https://insights.specmatic.io/login/saml2/sso/<RANDOM_CHARACTERS>`
 
-   ![Entra SAML Configuration](/enterprise_onboarding/entra/01-entra-saml-config.png)
+   ![Entra SAML Configuration](/enterprise_onboarding/SSO/entra/01-entra-saml-config.png)
+   *Figure 1: Configuring Basic SAML Settings in Microsoft Entra*
 
 5. Click **Save**.
 
-## Step 4: Get Entra Configuration Details
+## Step 4: Get Entra Configuration Details and Configure Specmatic Insights
 
 1. From the **SAML Certificates** section, copy the **App Federation Metadata URL**.
 
-   ![Federation Metadata URL](/enterprise_onboarding/entra/02-federation-metadata-url.png)
+   ![Federation Metadata URL](/enterprise_onboarding/SSO/entra/02-federation-metadata-url.png)
+   *Figure 2: Copy the App Federation Metadata URL from the SAML Certificates section*
 
-2. From the **Set up Specmatic Insights** section, copy the **Microsoft Entra Identifier**.
+3. Paste the **App Federation Metadata URL** from Microsoft Entra into the **Metadata URL** field in Specmatic Insights.
 
-   ![Microsoft Entra Identifier](/enterprise_onboarding/entra/03-microsoft-entra-identifier.png)
+   ![Specmatic Insights Metadata URL](/enterprise_onboarding/SSO/entra/04-specmatic-insights-metadata-url.png)
+   *Figure 3: Paste the App Federation Metadata URL into the Metadata URL field in Specmatic Insights*
 
-## Step 5: Configure Specmatic Insights
+4. From the **Set up Specmatic Insights** section from Microsoft Entra, copy the **Microsoft Entra Identifier**
 
-1. In your Specmatic Insights instance, navigate to the SAML SSO configuration section.
-2. Paste the **App Federation Metadata URL** into the **Metadata URL** field.
+   ![Microsoft Entra Identifier](/enterprise_onboarding/SSO/entra/03-microsoft-entra-identifier.png)
+   *Figure 4: Copy the Microsoft Entra Identifier from the Set up Specmatic Insights section*
 
-   ![Specmatic Insights Metadata URL](/enterprise_onboarding/entra/04-specmatic-insights-metadata-url.png)
+5. Paste the **Microsoft Entra Identifier** into the **Issuer URL** field in Specmatic Insights.
 
-3. Paste the **Microsoft Entra Identifier** into the **Issuer URL** field.
+   ![Specmatic Insights Issuer URL](/enterprise_onboarding/SSO/entra/05-specmatic-insights-issuer-url.png)
+   *Figure 5: Paste the Microsoft Entra Identifier into the Issuer URL field in Specmatic Insights*
 
-   ![Specmatic Insights Issuer URL](/enterprise_onboarding/entra/05-specmatic-insights-issuer-url.png)
-
-4. Enable SAML SSO and save the configuration.
+6. Enable SAML SSO and save the configuration.
 
 ## Next Steps
 
