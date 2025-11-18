@@ -26,9 +26,12 @@ Processor Hooks is only available in the commercial version of Specmatic. For fu
 
 Specmatic's processor hooks let you transform traffic that comes to the proxy and the stub. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire.
 
-For example, a consumer may encrypt data `application/json` data in the request sent to the provider. And thus while the data in the request body is JSON (`application/json`), on the wire after encryption it might be a string (`text/plain`). You may want the specification to capture the `application/json` format, rather than text/plain.
+For example, a consumer may encrypt data `application/json` data in the request sent to the provider. And thus while the data in the request body is JSON (`application/json`), on the wire after encryption it might be a string (`text/plain`). You may want the specification to capture the `application/json` format, rather than `text/plain`. But if you do, the specification no longer describes the actual traffic on the wire. How then might we record a specification that reflects the format of data processed by the application, while still allowing the consumer and provider to exchange data in the expected wire format?
+
 
 ## Hooks 
+
+Hooks can bridge that gap between the wire format of the HTTP message and the format of the data as processed by the application. They can act as a translation layer between the wire format and the application format.
 
 Specmatic exposes three hook entry points that run at different stages of request or response handling. They give you precise control over how traffic is translated between the consumer, Specmatic, and the provider.
 
