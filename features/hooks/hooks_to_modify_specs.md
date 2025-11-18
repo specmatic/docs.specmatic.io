@@ -1,17 +1,18 @@
 ---
 layout: default
 title: Hooks to Modify Specs
-parent: Features
-nav_order: 6
+parent: Hooks
+nav_order: 2
 redirect_from:
   - /documentation/api_gateways.html
   - /documentation/features/hooks_to_modify_specs.html
+  - /features/hooks_to_modify_specs.html
 ---
 Hooks to Modify Specs
 ============
 <!-- TOC -->
-* [Hooks to Modify Specs](#hooks-to-modify-specs)
-  * [Architecture With An API Gateway](#architecture-with-an-api-gateway)
+- [Hooks to Modify Specs](#hooks-to-modify-specs)
+  - [Architecture With An API Gateway](#architecture-with-an-api-gateway)
 <!-- TOC -->
 
 ## Architecture With An API Gateway

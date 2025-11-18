@@ -1,17 +1,19 @@
 ---
 layout: default
-title: Processor Hooks
-parent: Features
-nav_order: 5
+title: Request and Response Processing
+parent: Hooks
+nav_order: 1
+redirect_from:
+  - /features/processor_hooks.html
 ---
-Processor Hooks
+Request and Response Processing
 ===============
 {: .d-inline-block }
 Commercial
 {: .label }
 
 <!-- TOC -->
-- [Processor Hooks](#processor-hooks)
+- [Request and Response Processing](#request-and-response-processing)
   - [Hooks](#hooks)
     - [pre\_specmatic\_request\_processor](#pre_specmatic_request_processor)
     - [pre\_specmatic\_response\_processor](#pre_specmatic_response_processor)
@@ -22,7 +24,7 @@ Commercial
 <!-- TOC -->
 
 {: .note}
-Processor Hooks is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
+This feature is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
 
 Specmatic's processor hooks let you transform traffic that comes to the proxy and the stub. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire.
 
