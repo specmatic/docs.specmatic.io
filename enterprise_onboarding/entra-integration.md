@@ -24,7 +24,7 @@ This guide walks you through setting up SAML Single Sign-On (SSO) between Micros
 ## Step 2: Create Enterprise Application in Entra
 
 1. Log in to the [Microsoft Entra admin center](https://entra.microsoft.com/).
-2. Navigate to **Enterprise Applications** in the left sidebar.
+2. Navigate to **Entra ID** > **Enterprise Applications** in the left sidebar.
 3. Click **New Application**.
 4. Select **Create your own application**.
 5. Enter the application name (e.g., "Specmatic Insights").
