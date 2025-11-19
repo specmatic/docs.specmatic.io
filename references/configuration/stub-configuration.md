@@ -1,0 +1,207 @@
+---
+layout: default
+title: Stub Configuration
+parent: Configuration
+grand_parent: References
+nav_order: 4
+---
+
+# Stub Configuration
+
+## Configuring Stubs
+
+The same configuration file can be leveraged to define stubs also.
+
+{% tabs contracts_configuration %}
+{% tab contracts_configuration specmatic.yaml %}
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+```
+{% endtab %}
+{% tab contracts_configuration specmatic.json %}
+```json
+{
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
+      },
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
+  ]
+}
+```
+{% endtab %}
+{% endtabs %}
+
+Please note that now we are now listing the `api_order_v3.yaml` is listed as a stub dependency. You can run the `specmatic stub` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml).
+
+## Stub Start Timeout
+
+The `startTimeoutInMilliseconds` setting in Specmatic ensures that a stub service, whether started via the _stub command_ or programmatically using _createStub_ exits if it doesn't start within the defined time.
+
+{% tabs stubTimeout %}
+{% tab stubTimeout specmatic.yaml %}
+```yaml
+contracts:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+stub:
+  startTimeoutInMilliseconds: 10000
+```
+{% endtab %}
+{% tab stubTimeout specmatic.json %}
+```json
+{
+  "contracts": [
+    {
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
+      },
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
+  ],
+  "stub": {
+    "startTimeoutInMilliseconds": 10000
+  }
+}
+```
+{% endtab %}
+{% endtabs %}
+
+## Service Virtualization Delay
+
+A delay can be applied to all requests handled by service virtualization. By configuring the `delayInMilliseconds` parameter,
+you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/contract_driven_development/service_virtualization.html#delay-simulation)
+
+## Strict Mode
+
+Stub may run in strict mode. You can read more about [stub in strict mode here](/contract_driven_development/service_virtualization.html#strict-mode).
+
+You can configure Specmatic to run stub in strict mode using the following configuration:
+
+```yaml
+version: 2
+contracts:
+  - consumes:
+    - /path/to/spec.yaml
+stub:
+  strictMode: true
+```
+
+## Run Stub on Different Ports for Different Specifications
+
+If you want to run stubs on different ports for different specifications, you can specify the port number in the `port` field under `consumes` key and assign the list of `specs` to it.
+
+{% tabs local_configuration %}
+{% tab local_configuration specmatic.yaml %}
+```yaml
+version: 2
+contracts:
+  - filesystem:
+      directory: <Path to directory where all the specmatic should look for specifications>
+    consumes:
+      - specs:
+          - api_order_v1.yaml
+          - api_user_v1.yaml
+        port: 9000
+      - specs:
+          - api_auth_v1.yaml
+        port: 9001
+```
+{% endtab %}
+{% tab local_configuration specmatic.json %}
+```json
+{
+  "version": 2,
+  "contracts": [
+    {
+      "filesystem": {
+        "directory": "<Path to directory where all the specmatic should look for specifications>"
+      },
+      "consumes": [
+        {
+          "specs": [
+            "api_order_v1.yaml",
+            "api_user_v1.yaml"
+          ],
+          "port": 9000
+        },
+        {
+          "specs": [
+            "api_auth_v1.yaml"
+          ],
+          "port": 9001
+        }
+      ]
+    }
+  ]
+}
+```
+{% endtab %}
+{% endtabs %}
+
+As per the above configuration, the specs `api_order_v1.yaml` and `api_user_v1.yaml` will run on port 9000 and the spec `api_auth_v1.yaml` will run on port 9001.
+
+You can also specify `host`, `basePath`, and even the complete `baseUrl` in the `consumes` field. For more details, refer to the [Service Virtualization](/contract_driven_development/service_virtualization.html#specmatic-configuration-with-base-url-host-port-and-path)
+
+
+## Externalized Examples Directories
+
+By default, Specmatic searches for the directory ending with `_examples` to pickup externalized examples. However, if needed, you can specify a list of directories containing externalized examples under `examples` key in specmatic configuration. Specmatic will retrieve the examples from these directories for use in both contract testing and service virtualization.
+
+{% tabs stubs_configuration %}
+{% tab stubs_configuration specmatic.yaml %}
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
+    provides:
+      - io/specmatic/examples/store/openapi/product_search_bff_v4.yaml
+    consumes:
+      - io/specmatic/examples/store/openapi/api_order_v3.yaml
+examples:
+  - order_service/examples
+  - product_service/examples
+```
+{% endtab %}
+{% tab stubs_configuration specmatic.json %}
+```json
+{
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
+      },
+      "provides": [
+        "io/specmatic/examples/store/openapi/product_search_bff_v4.yaml"
+      ],
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
+  ],
+  "examples": [
+    "order_service/examples",
+    "product_service/examples"
+    ]
+}
+```
+{% endtab %}
+{% endtabs %}
+
+**Note**: if the `_examples` directory is present, it will still be included alongside any additional directories specified under the `examples` key.
