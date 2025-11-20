@@ -7,13 +7,31 @@ nav_order: 6
 ---
 
 # Reports
+{: .no_toc }
 
-## Report Configuration
+## Table of contents
+{: .no_toc .text-delta }
 
-Specmatic can generate reports based on the below configuration:
+1. TOC
+{:toc}
 
-{% tabs report_configuration %}
-{% tab report_configuration specmatic.yaml %}
+---
+
+## Overview
+
+Specmatic can generate various types of reports to help you understand your API testing coverage and results. Report configuration is specified under the `report` key in your Specmatic configuration file.
+
+## Configuration Structure
+
+The `report` configuration has two optional properties:
+
+- **`types`** - Configure behavior for specific report types
+- **`formatters`** - Control how reports are generated and formatted
+
+### Basic Example
+
+{% tabs report_basic %}
+{% tab report_basic specmatic.yaml %}
 ```yaml
 version: 2
 report:
@@ -29,7 +47,7 @@ report:
           enforce: true
 ```
 {% endtab %}
-{% tab report_configuration specmatic.json %}
+{% tab report_basic specmatic.json %}
 ```json
 {
   "version": 2,
@@ -57,23 +75,193 @@ report:
 {% endtab %}
 {% endtabs %}
 
-## Formatters
+---
 
-If no formatters are provided, `text` and `html` formatters are used by default. The `text` formatter will print the report on to the console / terminal.
+## Report Types
 
-### CTRF Report
+### API Coverage Report
 
-To generate a CTRF report for contract tests, add a formatter of type `ctrf` as shown below:
+The API Coverage report provides a comprehensive analysis of any mismatches between your API specification and implementation. It helps you identify:
 
-{% tabs ctrf_report_configuration %}
-{% tab ctrf_report_configuration specmatic.yaml %}
+- Endpoints defined in your spec but not implemented
+- Implemented endpoints not documented in your spec
+- Coverage percentage across your API surface
+
+Currently, Specmatic supports API Coverage configuration for OpenAPI specifications.
+
+{: .important }
+For detailed information about API Coverage configuration keys and their functions, see our [in-depth article](https://specmatic.io/demonstration/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0).
+
+---
+
+## Report Formatters
+
+Formatters control how Specmatic generates and presents reports. You can configure multiple formatters to generate reports in different formats simultaneously.
+
+### Default Behavior
+
+{: .note }
+If no formatters are specified, Specmatic generates both `text` and `html` reports by default.
+
+### Available Formatter Types
+
+Specmatic supports three formatter types:
+
+| Type | Description |
+|------|-------------|
+| `text` | Console/terminal output with optional table layout |
+| `html` | Rich, interactive HTML reports with customizable branding |
+| `ctrf` | Common Test Report Format for CI/CD integration |
+
+---
+
+## Text Formatter
+
+The text formatter outputs reports directly to your console or terminal, making it ideal for CI/CD pipelines and quick feedback during development.
+
+### Configuration Options
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `type` | string | `text` | Formatter type |
+| `layout` | string | `table` | Output layout format |
+
+### Example
+
+{% tabs text_formatter %}
+{% tab text_formatter specmatic.yaml %}
+```yaml
+report:
+  formatters:
+    - type: text
+      layout: table
+```
+{% endtab %}
+{% tab text_formatter specmatic.json %}
+```json
+{
+  "report": {
+    "formatters": [
+      {
+        "type": "text",
+        "layout": "table"
+      }
+    ]
+  }
+}
+```
+{% endtab %}
+{% endtabs %}
+
+---
+
+## HTML Formatter
+
+The HTML formatter generates rich, interactive reports with customizable branding and styling. These reports are ideal for sharing with stakeholders and archiving test results.
+
+### Configuration Options
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `type` | string | `html` | Formatter type |
+| `lite` | boolean | `false` | Generate a lightweight version of the report |
+| `title` | string | `"Specmatic Report"` | Browser tab title |
+| `logo` | string | `"assets/specmatic-logo.svg"` | Path to custom logo image |
+| `logoAltText` | string | `"Specmatic"` | Alt text for the logo |
+| `heading` | string | `"Contract Test Results"` | Main heading displayed in the report |
+| `outputDirectory` | string | `"./build/reports/specmatic/html"` | Directory where HTML reports are saved |
+
+### Basic Example
+
+{% tabs html_basic %}
+{% tab html_basic specmatic.yaml %}
+```yaml
+report:
+  formatters:
+    - type: html
+```
+{% endtab %}
+{% tab html_basic specmatic.json %}
+```json
+{
+  "report": {
+    "formatters": [
+      {
+        "type": "html"
+      }
+    ]
+  }
+}
+```
+{% endtab %}
+{% endtabs %}
+
+### Customized Example
+
+{% tabs html_custom %}
+{% tab html_custom specmatic.yaml %}
+```yaml
+report:
+  formatters:
+    - type: html
+      title: "API Contract Test Report - Production"
+      logo: "assets/company-logo.png"
+      logoAltText: "Company Name"
+      heading: "Production API Test Results"
+      outputDirectory: "./reports/api-tests"
+      lite: false
+```
+{% endtab %}
+{% tab html_custom specmatic.json %}
+```json
+{
+  "report": {
+    "formatters": [
+      {
+        "type": "html",
+        "title": "API Contract Test Report - Production",
+        "logo": "assets/company-logo.png",
+        "logoAltText": "Company Name",
+        "heading": "Production API Test Results",
+        "outputDirectory": "./reports/api-tests",
+        "lite": false
+      }
+    ]
+  }
+}
+```
+{% endtab %}
+{% endtabs %}
+
+---
+
+## CTRF Formatter
+
+The [Common Test Report Format (CTRF)](https://ctrf.io/docs/intro) is a standardized JSON schema for test results that enables seamless integration across different testing tools and CI/CD platforms.
+
+### Why Use CTRF?
+
+- **Universal Compatibility**: Works with popular CI/CD platforms (GitHub Actions, Jenkins, GitLab CI, etc.)
+- **Tool Agnostic**: Standardized format means reports can be consumed by various visualization and analysis tools
+- **Better Insights**: Leverage CTRF-compatible tools for advanced analytics, trend analysis, and reporting dashboards
+- **Easy Integration**: JSON format makes it simple to parse and integrate with custom tooling
+
+{: .warning }
+**Commercial Feature**: CTRF report generation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+
+### Configuration
+
+CTRF reports require minimal configuration - just specify the type:
+
+{% tabs ctrf_formatter %}
+{% tab ctrf_formatter specmatic.yaml %}
 ```yaml
 report:
   formatters:
     - type: ctrf
 ```
 {% endtab %}
-{% tab ctrf_report_configuration specmatic.json %}
+{% tab ctrf_formatter specmatic.json %}
 ```json
 {
   "report": {
@@ -90,9 +278,143 @@ report:
 
 The CTRF report for contract tests will be generated in the `build/reports/specmatic/ctrf` directory.
 
-{: .note}
-The CTRF report generation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
+---
 
-## API Coverage Report
+## Multiple Formatters
 
-This gives you a comprehensive analysis of any mismatch between your api specification and implementation. [Here](https://specmatic.io/demonstration/detect-mismatches-between-your-api-specifications-and-implementation-specmatic-api-coverage-report/#gsc.tab=0) is an article with a detailed write-up about this feature.
+You can configure multiple formatters to generate reports in different formats simultaneously:
+
+{% tabs multiple_formatters %}
+{% tab multiple_formatters specmatic.yaml %}
+```yaml
+report:
+  formatters:
+    - type: text
+      layout: table
+    - type: html
+      title: "API Contract Tests"
+      heading: "Test Results Dashboard"
+      outputDirectory: "./reports/html"
+    - type: ctrf
+```
+{% endtab %}
+{% tab multiple_formatters specmatic.json %}
+```json
+{
+  "report": {
+    "formatters": [
+      {
+        "type": "text",
+        "layout": "table"
+      },
+      {
+        "type": "html",
+        "title": "API Contract Tests",
+        "heading": "Test Results Dashboard",
+        "outputDirectory": "./reports/html"
+      },
+      {
+        "type": "ctrf"
+      }
+    ]
+  }
+}
+```
+{% endtab %}
+{% endtabs %}
+
+---
+
+## Complete Configuration Example
+
+Here's a comprehensive example showing all report configuration options:
+
+{% tabs complete_config %}
+{% tab complete_config specmatic.yaml %}
+```yaml
+version: 2
+report:
+  formatters:
+    - type: text
+      layout: table
+    - type: html
+      layout: table
+      lite: false
+      title: "Specmatic API Tests - QA Environment"
+      logo: "assets/qa-logo.svg"
+      logoAltText: "QA Environment"
+      heading: "Contract Test Results - QA"
+      outputDirectory: "./build/reports/specmatic/html"
+    - type: ctrf
+  types:
+    APICoverage:
+      OpenAPI:
+        successCriteria:
+          minThresholdPercentage: 100
+          maxMissedEndpointsInSpec: 0
+          enforce: true
+```
+{% endtab %}
+{% tab complete_config specmatic.json %}
+```json
+{
+  "version": 2,
+  "report": {
+    "formatters": [
+      {
+        "type": "text",
+        "layout": "table"
+      },
+      {
+        "type": "html",
+        "layout": "table",
+        "lite": false,
+        "title": "Specmatic API Tests - QA Environment",
+        "logo": "assets/qa-logo.svg",
+        "logoAltText": "QA Environment",
+        "heading": "Contract Test Results - QA",
+        "outputDirectory": "./build/reports/specmatic/html"
+      },
+      {
+        "type": "ctrf"
+      }
+    ],
+    "types": {
+      "APICoverage": {
+        "OpenAPI": {
+          "successCriteria": {
+            "minThresholdPercentage": 100,
+            "maxMissedEndpointsInSpec": 0,
+            "enforce": true
+          }
+        }
+      }
+    }
+  }
+}
+```
+{% endtab %}
+{% endtabs %}
+
+---
+
+## Quick Reference
+
+### Formatter Types
+
+- `text` - Console output (default)
+- `html` - Interactive HTML reports (default)
+- `ctrf` - Common Test Report Format (commercial only)
+
+### Common Properties
+
+| Property | Applies To | Required |
+|----------|------------|----------|
+| `type` | All formatters | Yes |
+| `layout` | text | No |
+| `lite` | html | No |
+| `title` | html | No |
+| `logo` | html | No |
+| `logoAltText` | html | No |
+| `heading` | html | No |
+| `outputDirectory` | html | No |
