@@ -10,7 +10,7 @@ specmatic-build-reporter-version: 0.1.3
 specmatic-jdbc-version: 0.12.2
 specmatic-redis-version: 0.9.5
 specmatic-release-test-version: 0.0.2
-specmatic-grpc-version: 0.1.17
+specmatic-grpc-version: 0.1.18
 specmatic-graphql-version: 1.5.2
 specmatic-arazzo-version: 1.3.6
 specmatic-google-pubsub-version: 1.6.1
