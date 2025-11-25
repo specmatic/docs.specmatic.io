@@ -13,71 +13,103 @@ Service Virtualization
 <img alt="Mocking" src="/images/mocking.png" style="max-width: 100%; height: auto;" />
 
 <!-- TOC -->
-* [Service Virtualization](#service-virtualization)
-  * [Pre-requisites](#pre-requisites)
-  * [Inline Examples](#inline-examples)
-    * [Inline Examples for Responses with No Body](#inline-examples-for-responses-with-no-body)
-      * [Example Usage](#example-usage)
-      * [Key Points:](#key-points)
-  * [Externalizing Example Data](#externalizing-example-data)
-      * [Handling No Response Body APIs](#handling-no-response-body-apis)
-  * [Intelligent Service Virtualization - Example cannot go out of sync](#intelligent-service-virtualization---example-cannot-go-out-of-sync)
-  * [Strict Mode](#strict-mode)
-  * [Data Type-Based Examples](#data-type-based-examples)
-  * [Plain Text Request Bodies - Examples With Regular Expressions](#plain-text-request-bodies---examples-with-regular-expressions)
-  * [Correlated Request And Response Values](#correlated-request-and-response-values)
-    * [Direct Substitution - Copying Values From Request To Response](#direct-substitution---copying-values-from-request-to-response)
-    * [Data Lookup](#data-lookup)
-  * [Partial Examples](#partial-examples)
-    * [Partial Request Examples](#partial-request-examples)
-    * [Partial Response Examples](#partial-response-examples)
-  * [Use Meaningful Response Values From An External Dictionary](#use-meaningful-response-values-from-an-external-dictionary)
-  * [Delay Simulation](#delay-simulation)
-    * [Example Specific Delay](#example-specific-delay)
-    * [Global Delay](#global-delay)
-  * [SSL / HTTPS  Stubbing](#ssl--https--stubbing)
-    * [Auto-Generated Cert Store](#auto-generated-cert-store)
-    * [Bring Your Own Key Store](#bring-your-own-key-store)
-  * [Dynamic Expectations (a.k.a. Dynamic Stubbing Or Mocking) - Setting Expectations Over Specmatic Http Api](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expectations-over-specmatic-http-api)
-    * [Context](#context)
-    * [Expectations Http Endpoint](#expectations-http-endpoint)
-    * [Anatomy of a Component / API Test](#anatomy-of-a-component--api-test)
-  * [Programmatically Starting Stub Server Within Tests](#programmatically-starting-stub-server-within-tests)
-  * [Transient Expectations (a.k.a. Transient Stubs)](#transient-expectations-aka-transient-stubs)
-    * [Setting transient expectations](#setting-transient-expectations)
-    * [Clearing Transient Expectations](#clearing-transient-expectations)
-  * [Externalised Response Generation](#externalised-response-generation)
-  * [Hooks](#hooks)
-    * [Overview](#overview)
-    * [Use Case: API Gateway Header Transformation](#use-case-api-gateway-header-transformation)
-    * [Implementation Steps](#implementation-steps)
-    * [How It Works](#how-it-works)
-  * [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
-  * [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
-      * [Example `curl` Request:](#example-curl-request)
-  * [Specmatic Configuration with Base URL, Host, Port, and Path](#specmatic-configuration-with-base-url-host-port-and-path)
-    * [Specifying Host](#specifying-host)
-    * [Specifying Port](#specifying-port)
-    * [Specifying Base Path](#specifying-base-path)
-    * [Specifying Combination of Host, Port, and Base Path](#specifying-combination-of-host-port-and-base-path)
-    * [Specifying Base URL](#specifying-base-url)
-    * [Customizing the Default Base URL](#customizing-the-default-base-url)
-  * [Running Specmatic Stubs on Multiple BaseURLs](#running-specmatic-stubs-on-multiple-baseurls)
-    * [Overview](#overview-1)
-    * [Directory Structure](#directory-structure)
-    * [Specmatic Configuration](#specmatic-configuration)
-    * [API Specifications](#api-specifications)
-      * [imported_product.yaml](#imported_productyaml)
-      * [exported_product.yaml](#exported_productyaml)
-    * [Examples](#examples)
-      * [post_imported_product.json](#post_imported_productjson)
-      * [post_exported_product.json](#post_exported_productjson)
-    * [Run the stub server](#run-the-stub-server)
-    * [Example Requests](#example-requests)
-    * [Benefits](#benefits)
-  * [Disable hot-reload](#disable-hot-reload)
-  * [Using matching branches in the central contract repo](#using-matching-branches-in-the-central-contract-repo)
-  * [Sample Java Project](#sample-java-project)
+- [Service Virtualization](#service-virtualization)
+  - [Pre-requisites](#pre-requisites)
+  - [Inline Examples](#inline-examples)
+    - [Inline Examples for Responses with No Body](#inline-examples-for-responses-with-no-body)
+      - [Example Usage](#example-usage)
+      - [Key Points:](#key-points)
+  - [Externalizing Example Data](#externalizing-example-data)
+      - [Handling No Response Body APIs](#handling-no-response-body-apis)
+  - [Intelligent Service Virtualization - Example cannot go out of sync](#intelligent-service-virtualization---example-cannot-go-out-of-sync)
+  - [Strict Mode](#strict-mode)
+  - [Data Type-Based Examples](#data-type-based-examples)
+  - [Plain Text Request Bodies - Examples With Regular Expressions](#plain-text-request-bodies---examples-with-regular-expressions)
+  - [Correlated Request And Response Values](#correlated-request-and-response-values)
+    - [Direct Substitution - Copying Values From Request To Response](#direct-substitution---copying-values-from-request-to-response)
+    - [Data Lookup](#data-lookup)
+  - [Partial Examples](#partial-examples)
+    - [Partial Request Examples](#partial-request-examples)
+    - [Partial Response Examples](#partial-response-examples)
+  - [Use Meaningful Response Values From An External Dictionary](#use-meaningful-response-values-from-an-external-dictionary)
+  - [Delay Simulation](#delay-simulation)
+    - [Example Specific Delay](#example-specific-delay)
+    - [Global Delay](#global-delay)
+  - [Request Matchers](#request-matchers)
+    - [Why Use Matchers?](#why-use-matchers)
+      - [Key Benefits](#key-benefits)
+    - [Equality Matcher: `$eq`](#equality-matcher-eq)
+      - [Matcher Reference](#matcher-reference)
+      - [Configuration Keys](#configuration-keys)
+      - [Example](#example)
+    - [Inequality Matcher: `$neq`](#inequality-matcher-neq)
+      - [Matcher Reference](#matcher-reference-1)
+      - [Configuration Keys](#configuration-keys-1)
+      - [Example](#example-1)
+    - [Pattern Matcher: `$pattern`](#pattern-matcher-pattern)
+      - [Matcher Reference](#matcher-reference-2)
+      - [Configuration Keys](#configuration-keys-2)
+      - [Matching Modes](#matching-modes)
+      - [Example 1: Built-in Type Validation](#example-1-built-in-type-validation)
+      - [Example 2: Custom Schema with Partial Matching](#example-2-custom-schema-with-partial-matching)
+    - [Repetition Matcher: `$repeat`](#repetition-matcher-repeat)
+      - [Matcher Reference](#matcher-reference-3)
+      - [Configuration Keys](#configuration-keys-3)
+      - [Counting Strategies](#counting-strategies)
+      - [Stub Exhaustion Rules](#stub-exhaustion-rules)
+      - [Example 1: Total Volume Repetition](#example-1-total-volume-repetition)
+      - [Example 2: Unique Value Repetition](#example-2-unique-value-repetition)
+      - [Example 3: Combined Repetition Strategies](#example-3-combined-repetition-strategies)
+    - [Composite Matcher: `$match`](#composite-matcher-match)
+      - [Matcher Reference](#matcher-reference-4)
+      - [Using Multiple Matchers Together](#using-multiple-matchers-together)
+      - [Example](#example-2)
+    - [Simulating Downstream Dependency Failures using matchers](#simulating-downstream-dependency-failures-using-matchers)
+      - [First 2 Requests - Simulated Latency](#first-2-requests---simulated-latency)
+      - [Requests After Exhaustion - Recovery:](#requests-after-exhaustion---recovery)
+  - [SSL / HTTPS  Stubbing](#ssl--https--stubbing)
+    - [Auto-Generated Cert Store](#auto-generated-cert-store)
+    - [Bring Your Own Key Store](#bring-your-own-key-store)
+  - [Dynamic Expectations (a.k.a. Dynamic Stubbing Or Mocking) - Setting Expectations Over Specmatic Http Api](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expectations-over-specmatic-http-api)
+    - [Context](#context)
+    - [Expectations Http Endpoint](#expectations-http-endpoint)
+    - [Anatomy of a Component / API Test](#anatomy-of-a-component--api-test)
+  - [Programmatically Starting Stub Server Within Tests](#programmatically-starting-stub-server-within-tests)
+  - [Transient Expectations (a.k.a. Transient Stubs)](#transient-expectations-aka-transient-stubs)
+    - [Setting transient expectations](#setting-transient-expectations)
+    - [Clearing Transient Expectations](#clearing-transient-expectations)
+  - [Externalised Response Generation](#externalised-response-generation)
+  - [Hooks](#hooks)
+    - [Overview](#overview)
+    - [Use Case: API Gateway Header Transformation](#use-case-api-gateway-header-transformation)
+    - [Implementation Steps](#implementation-steps)
+    - [How It Works](#how-it-works)
+  - [Precedence Across Types Of Examples](#precedence-across-types-of-examples)
+  - [Checking Health Status Of Stub Server](#checking-health-status-of-stub-server)
+      - [Example `curl` Request:](#example-curl-request)
+  - [Specmatic Configuration with Base URL, Host, Port, and Path](#specmatic-configuration-with-base-url-host-port-and-path)
+    - [Specifying Host](#specifying-host)
+    - [Specifying Port](#specifying-port)
+    - [Specifying Base Path](#specifying-base-path)
+    - [Specifying Combination of Host, Port, and Base Path](#specifying-combination-of-host-port-and-base-path)
+    - [Specifying Base URL](#specifying-base-url)
+    - [Customizing the Default Base URL](#customizing-the-default-base-url)
+  - [Running Specmatic Stubs on Multiple BaseURLs](#running-specmatic-stubs-on-multiple-baseurls)
+    - [Overview](#overview-1)
+    - [Directory Structure](#directory-structure)
+    - [Specmatic Configuration](#specmatic-configuration)
+    - [API Specifications](#api-specifications)
+      - [imported\_product.yaml](#imported_productyaml)
+      - [exported\_product.yaml](#exported_productyaml)
+    - [Examples](#examples)
+      - [post\_imported\_product.json](#post_imported_productjson)
+      - [post\_exported\_product.json](#post_exported_productjson)
+    - [Run the stub server](#run-the-stub-server)
+    - [Example Requests](#example-requests)
+    - [Benefits](#benefits)
+  - [Disable hot-reload](#disable-hot-reload)
+  - [Using matching branches in the central contract repo](#using-matching-branches-in-the-central-contract-repo)
+  - [Sample Java Project](#sample-java-project)
 <!-- TOC -->
 
 ## Pre-requisites
@@ -1055,6 +1087,468 @@ stub:
 
 **Note:** If the delay is specified in the example file, it will be used to simulate response times for that specific example.
 Otherwise, the global delay will be applied.
+
+## Request Matchers
+
+Specmatic provides a range of matchers that can be used to compare incoming requests with predefined examples and deliver the appropriate responses
+
+These matchers can match `data types`, `exact values`, and `repetitions`, etc, and Specmatic will only respond with the corresponding response if all the matchers are satisfied
+
+{:.note}
+> It is critical to understand that Specmatic enforces validations in a specific order:
+> - **OpenAPI Spec Validation**: First, the request is validated against your OpenAPI specification. If a field is marked as required in the spec, it must be present and valid
+> - **Matcher Validation**: The custom matcher (like `$pattern` or `$match`) only execute after the request has satisfied the base contract
+
+### Why Use Matchers?
+
+Matchers provide fine-grained control over how your stub server responds to incoming requests. Instead of relying solely on static examples, matchers enable dynamic, stateful, conditional response selection based on request content.
+
+#### Key Benefits
+
+- **Stateful Behavior**: Track request counts and simulate exhaustion for advanced scenarios
+- **Resilience**: Simulate downstream service behaviors including failures, delays, and edge cases
+- **Flexible Request Matching**: Respond differently based on field values, types, or patterns, etc.
+- **Schema Validation**: Enforce incoming requests to conform to sub-schemas before returning responses
+
+### Equality Matcher: `$eq`
+
+**Purpose**: Validate exact equality of a field value in incoming requests
+
+#### Matcher Reference
+
+| Attribute        | Value                                                                           |
+| ---------------- | ------------------------------------------------------------------------------- |
+| Syntax           | `$eq(Value)`                                                                    |
+| Description      | Succeeds only if the incoming request value is identical to the specified value |
+| Supported Types  | Strings, numbers, and other data types                                          |
+| Case Sensitivity | Yes                                                                             |
+
+
+#### Configuration Keys
+
+| Key         | Description                       |
+| ----------- | --------------------------------- |
+| `exact`     | The exact value to match          |
+| `matchType` | MatchType defaults to eq (eqauls) |
+
+
+#### Example
+
+**Requirement**: Confirm that the incoming user's role is strictly `Admin`,
+The stub responds with HTTP 200 OK only if the matcher is satisfied.
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/verifyUser",
+    "body": {
+      "role": "$eq(Admin)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "status-text": "OK"
+  }
+}
+```
+
+### Inequality Matcher: `$neq`
+
+**Purpose**: Validate that a field value in incoming requests differs from a specified value
+
+#### Matcher Reference
+
+| Attribute        | Value                                                                   |
+| ---------------- | ----------------------------------------------------------------------- |
+| Syntax           | `$neq(Value)`                                                           |
+| Description      | Succeeds if the incoming request value differs from the specified value |
+| Supported Types  | Strings, numbers, and other data types                                  |
+| Case Sensitivity | Yes                                                                     |
+
+#### Configuration Keys
+
+| Key         | Description                             |
+| ----------- | --------------------------------------- |
+| `exact`     | The value to not match                  |
+| `matchType` | Set to `neq` (not equal) for inequality |
+
+#### Example
+
+**Requirement**: Confirm that the incoming request status is NOT `Pending`, The stub responds with HTTP 200 OK only if the matcher is satisfied.
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/verifyUser",
+    "body": {
+      "status": "$neq(Pending)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "status-text": "OK"
+  }
+}
+```
+
+### Pattern Matcher: `$pattern`
+
+**Purpose**: Validate that a field's structure in incoming requests matches a specific schema (built-in types or custom schemas).
+
+#### Matcher Reference
+
+| Attribute          | Value                                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| Syntax             | `$pattern(Schema)` or `$pattern(dataType: Schema, partial: boolean)`                                   |
+| Description        | Validates incoming request data against a schema definition with configurable partial matching support |
+| Supported Patterns | Built-in types (`uuid`, `email`, `date`, etc.) and custom schemas from your specification              |
+| Matching Modes     | Strict or Partial                                                                                      |
+
+#### Configuration Keys
+
+| Key        | Description                            | Values                                        |
+| ---------- | -------------------------------------- | --------------------------------------------- |
+| `dataType` | The schema name to validate against    | Built-in type or custom schema name           |
+| `partial`  | Allow missing fields during validation | `true` (partial) or `false` (strict, default) |
+
+#### Matching Modes
+
+| Mode        | Behavior                                                                                 | When to Use                                           |
+| ----------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Strict**  | Incoming data must contain all required fields. Missing fields cause validation failure. | When exact schema compliance is required              |
+| **Partial** | Keys present must match the schema, but missing keys are allowed.                        | When validating subset of data (e.g., PATCH requests) |
+
+#### Example 1: Built-in Type Validation
+
+**Requirement**: Ensure that the incoming payment request contains a valid UUID for the `transactionId`, The stub only responds with `processing` if the matcher is satisfied.
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/processPayment",
+    "body": {
+      "amount": 100,
+      "transactionId": "$pattern(uuid)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "processing"
+    }
+  }
+}
+```
+
+#### Example 2: Custom Schema with Partial Matching
+
+**Requirement**: Validate an incoming `PATCH` request where only some contact fields may be updated.
+The stub should accept partial updates that match the `ContactInfo` schema structure.
+
+**API Specification**:
+
+```yaml
+paths:
+  '/users/{id}':
+    patch:
+      summary: Update user details
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contact:
+                  type: object
+components:
+  schemas:
+    ContactInfo:
+      type: object
+      required:
+        - email
+        - phone
+        - city
+      properties:
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        city:
+          type: string
+```
+
+**Example File**:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/users/123",
+    "body": {
+      "contact": "$pattern(dataType: ContactInfo, partial: true)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "status-text": "Updated"
+  }
+}
+```
+
+**How this works**:
+1. **Spec Validation**: The PATCH endpoint allows `contact` as a flexible object, so this passes.
+2. **Matcher Validation**: The matcher validates that fields in the incoming `contact` object conform to `ContactInfo`, Missing fields are **not** treated as failures because `partial: true` is specified.
+
+### Repetition Matcher: `$repeat`
+
+**Purpose**: Track and limit how many times a specific example response can be returned across multiple incoming requests (stateful matcher), For this to work the example must be marked as `transient`
+
+#### Matcher Reference
+
+| Attribute   | Value                                                                                 |
+| ----------- | ------------------------------------------------------------------------------------- |
+| Syntax      | `$repeat(times: N, value: Strategy)`                                                  |
+| Description | Limits the reusability of an example based on incoming request count or unique values |
+| Stateful    | Yes (tracks across multiple requests)                                                 |
+| Exhaustion  | Example becomes unavailable after matcher conditions are met                          |
+
+#### Configuration Keys
+
+| Key     | Description                                                | Values                                        |
+| ------- | ---------------------------------------------------------- | --------------------------------------------- |
+| `value` | Counting strategy for determining usage                    | `any` (total count) or `each` (unique values) |
+| `times` | Number of times the matcher allows reuse before exhaustion | Integer (e.g., `3`, `5`, `10`)                |
+
+#### Counting Strategies
+
+| Strategy | Logic                                                                                      | Example                                    |
+| -------- | ------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| `any`    | Every incoming matching request consumes 1 count, irrespective of data content             | Three requests → count reaches 3           |
+| `each`   | Only unique values in incoming requests consume a count; identical values do not increment | Three identical requests → count reaches 1 |
+
+#### Stub Exhaustion Rules
+
+An example is considered **exhausted** when:
+1. All repetition matchers within the example have met their `times` limit in accordance with their `value` strategy
+2. Combination of the repetition matchers has also been exhausted `N` times, where `N` is the maximum of all repetition matchers within the example
+
+Once exhausted, Specmatic stops returning this example and moves to the next matching example.
+
+#### Example 1: Total Volume Repetition
+
+**Requirement**: The `/status` endpoint should return the same response for the first 3 incoming requests (total volume count), 
+After 3 requests, the example is exhausted and the next matching example is used.
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "GET",
+    "path": "/status",
+    "body": {
+      "requestId": "$repeat(times: 3, value: any)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "message": "Service operational"
+    }
+  }
+}
+```
+
+**Request Sequence**:
+- Request 1 → Returns response (count: 1)
+- Request 2 → Returns response (count: 2)
+- Request 3 → Returns response (count: 3, **exhausted**)
+- Request 4 → Uses next matching example
+
+#### Example 2: Unique Value Repetition
+
+**Requirement**: The `/user/{userId}` endpoint should return the same response once per unique `userId` in incoming requests, 
+After 5 unique userIds are seen, the example is exhausted.
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "GET",
+    "path": "/user/(number)",
+    "body": {
+      "userId": "$repeat(times: 5, value: each)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "name": "John Doe"
+    }
+  }
+}
+```
+
+**Request Sequence**:
+- Request 1 (userId: 1) → Returns response (unique count: 1)
+- Request 2 (userId: 1) → Returns response (unique count: 1, no increment)
+- Request 3 (userId: 2) → Returns response (unique count: 2)
+- Request 4 (userId: 2) → Returns response (unique count: 2, no increment)
+- Request 5 (userId: 3) → Returns response (unique count: 3)
+- Request 6 (userId: 4) → Returns response (unique count: 4)
+- Request 7 (userId: 5) → Returns response (unique count: 5, **exhausted**)
+- Request 8 (userId: 6) → Uses next matching example
+
+#### Example 3: Combined Repetition Strategies
+
+**Requirement**: The `/validate` endpoint contains two repeating fields with different constraints:
+1. `category`: Should match up to 2 unique values (value: each)
+2. `requestId`: Should match up to 4 total requests (value: any)
+
+**Exhaustion Rule**: The example is considered exhausted when the request count reaches 4 (the maximum of 2 and 4). Until that limit is reached, the stub remains active provided incoming requests satisfy both local matchers and the overall exhaustion rule. Note that individual matchers may reach their limits earlier than the overall exhaustion point.
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "POST",
+    "path": "/validate",
+    "body": {
+      "category": "$repeat(times: 2, value: each)",
+      "requestId": "$repeat(times: 4, value: any)"
+    }
+  },
+  "http-response": {
+    "status": 202,
+    "body": {
+      "status": "Accepted"
+    }
+  }
+}
+```
+
+**Request Sequence**:
+- Request 1 (`category`: "A", `requestId`: "101") 
+- → Returns 202 (category count: 1/2, requestId count: 1/4, **Active**)
+- Request 2 (`category`: "B", `requestId`: "102") 
+- → Returns 202 (category count: 2/2, requestId count: 2/4, **Active**)
+- Request 3 (`category`: "C", `requestId`: "103") 
+- → Returns 202 (category count: 2/2 - *Local Limit Met*, requestId count: 3/4, **Active**)
+- Request 4 (`category`: "D", `requestId`: "104") 
+- → Returns 202 (category count: 2/2 - *Local Limit Met*, requestId count: 4/4, **Exhausted**)
+- Request 5 (`category`: "E", `requestId`: "105") → Uses next matching example (first example is fully exhausted)
+
+### Composite Matcher: `$match`
+
+**Purpose**: Combine multiple validation rules into a single flexible matcher configuration for incoming requests.
+
+#### Matcher Reference
+
+| Attribute              | Value                                                                                                     |
+| ---------------------- | --------------------------------------------------------------------------------------------------------- |
+| Syntax                 | `$match(key1: value1, key2: value2, ...)`                                                                 |
+| Description            | Combines equality, type validation, partial matching, and/or repetition constraints for incoming requests |
+| Supported Combinations | Any compatible combination of configuration keys                                                          |
+| Flexibility            | Highly flexible for complex scenarios                                                                     |
+
+#### Using Multiple Matchers Together
+
+The `$match` composite matcher allows you to combine validation capabilities from any of the individual matchers (`$eq`, `$neq`, `$pattern`, `$repeat`) within a single field. Simply include the configuration keys you need from the matchers you want to use.
+
+For example:
+- To combine `$pattern` and `$repeat`: use `dataType` and `times` / `value` keys
+- To combine `$eq` and `$repeat`: use `exact` and `times` / `value` keys
+- To combine `$pattern` and `$neq`: use `dataType`, `exact`, and `matchType` keys
+
+Refer to the configuration keys from each individual matcher section for the parameters you need. This keeps your composite matchers flexible and prevents redundancy when new matchers or keys are added.
+
+#### Example
+
+**Requirement**: Validate that an incoming request field matches the `PaymentInfo` schema partially and can be used for 3 unique values before exhaustion.
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "POST",
+    "path": "/payment",
+    "body": {
+      "info": "$match(dataType: PaymentInfo, partial: true, times: 3, value: each)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "transactionId": "12345"
+    }
+  }
+}
+```
+
+### Simulating Downstream Dependency Failures using matchers
+
+One of the most valuable applications of matchers is **resilience testing**, for example, by utilizing the `delay-in-seconds` feature within Specmatic stubs, you can verify that your API implementation enforces strict timeouts when downstream services become unresponsive or slow.
+
+**Scenario**: Your API depends on a payment service. You need to verify that your implementation does not wait indefinitely for a slow downstream response, which could lead to thread pool exhaustion or hung connections. Instead, your API should detect the latency, abort the connection early, and return a `429 (Too Many Requests)` or appropriate failure status to the client.
+
+#### First 2 Requests - Simulated Latency
+
+The stub introduces a 5-second delay before responding. The goal is to prove that your implementation does not wait the full 5 seconds. 
+It should ideally timeout earlier (e.g., at 2 seconds) and release the connection.
+
+```json
+{
+  "transient": true,
+  "delay-in-seconds": 5,
+  "http-request": {
+    "method": "POST",
+    "path": "/payments",
+    "body": {
+      "amount": "$repeat(times: 2, value: any)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "delayed_success",
+      "transactionId": "txn-12345"
+    },
+  }
+}
+
+```
+
+#### Requests After Exhaustion - Recovery:
+
+Once the first matcher exhausts (after 2 requests), the next example takes over. 
+This simulates the downstream service recovering its performance, allowing your implementation to process requests normally.
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/payments"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "success",
+      "transactionId": "txn-12345"
+    }
+  }
+}
+```
+
+**How this works**:
+1. **Requests 1-2**: The stub receives the request and delays response by 5 seconds
+2. **Verification**: Your API implementation, configured with a shorter timeout (e.g., 2000ms), should trigger a SocketTimeoutException (or equivalent) before the stub responds.
+3. **Resource Management**: Instead of holding the connection open, your API catches the timeout, aborts the downstream call, and returns HTTP 429 to the client
+4. **Requests 3+**: The first matcher is exhausted. The second example responds immediately with a 200 OK, confirming the system returns to a healthy state once the downstream service recovers
+
+Specmatic can assist you in testing this scenario during contract testing. In the case of a `429 (Too Many Requests)` response, Specmatic will retry the request, adhering to the specified delay until it either succeeds or the maximum number of retries is reached. For additional details, please refer to the [Smart Resiliency Orchestration](/contract_driven_development/contract_testing.html#smart-resiliency-orchestration) section.
 
 ## SSL / HTTPS  Stubbing
 
