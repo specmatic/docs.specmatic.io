@@ -23,6 +23,7 @@ redirect_from:
     * [Examples](#examples)
     * [Generating the Dictionary](#generating-the-dictionary)
     * [Understanding the Dictionary](#understanding-the-dictionary)
+    * [Example Directory Parameter](#example-directory-parameter)
   * [Dictionary with Contract Testing](#dictionary-with-contract-testing)
     * [Run the tests](#run-the-tests)
     * [Generative Tests](#generative-tests)
@@ -544,6 +545,14 @@ Error:
 We have not included the invalid value of `department` in the bad-request example. This filtering is not restricted to `4xx` examples,
 the command will include only valid values in the dictionary, allowing it to be executed even with invalid examples.
 {: .note }
+
+### Example Directory Parameter
+
+If you have examples in some other existing directory, such as `./examples`, you can provide the path to that directory using the `--examples-dir` option as shown below:
+
+```shell
+docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/examples:/usr/src/app/examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic-openapi examples dictionary --spec-file employees.yaml --examples-dir ./examples
+```
 
 ## Dictionary with Contract Testing
 
