@@ -7,7 +7,6 @@ layout: none
 {% endcapture %}
 
 {% include install-specmatic-tool.sh
-  main_picocli_command="io.specmatic.arazzo.Application"
   tool_name="Specmatic Arazzo"
   tool_version=tool_version
   download_target="specmatic-arazzo"

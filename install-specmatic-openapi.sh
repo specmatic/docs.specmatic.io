@@ -7,7 +7,6 @@ layout: none
 {% endcapture %}
 
 {% include install-specmatic-tool.sh
-  main_picocli_command="io.specmatic.openapi.application.SpecmaticOpenAPICommand"
   tool_name="Specmatic OpenAPI"
   tool_version=tool_version
   download_target="specmatic-openapi"
