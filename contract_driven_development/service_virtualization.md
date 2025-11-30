@@ -1592,6 +1592,7 @@ One of the most valuable applications of matchers is **resilience testing**, for
 #### First 2 Requests - Simulated Latency
 
 The stub introduces a 5-second delay before responding. The goal is to prove that your implementation does not wait the full 5 seconds. 
+
 It should ideally timeout earlier (e.g., at 2 seconds) and release the connection.
 
 ```json
@@ -1613,13 +1614,15 @@ It should ideally timeout earlier (e.g., at 2 seconds) and release the connectio
     },
   }
 }
-
 ```
+
+Transient requests take priority over others. So this example will be matched first for the first 2 requests with any `amount` value.
 
 #### Requests After Exhaustion - Recovery
 
-Once the first matcher exhausts (after 2 requests), the next example takes over. 
-This simulates the downstream service recovering its performance, allowing your implementation to process requests normally.
+Once the first example gets exhausted (after 2 requests), it will match no more requests. Then the next example kicks in.
+
+We'd also have an example available that simulates the downstream service recovering its performance, allowing your implementation to process requests normally.
 
 ```json
 {
