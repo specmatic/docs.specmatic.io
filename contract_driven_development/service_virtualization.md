@@ -35,19 +35,6 @@ Service Virtualization
   * [Delay Simulation](#delay-simulation)
     * [Example Specific Delay](#example-specific-delay)
     * [Global Delay](#global-delay)
-  * [Request Matchers](#request-matchers)
-    * [Why Use Matchers?](#why-use-matchers)
-      * [Key Benefits](#key-benefits)
-    * [`$eq`](#eq)
-    * [`$neq`](#neq)
-    * [`$match`](#match)
-      * [Parameter: exact](#parameter-exact)
-      * [Parameter: datatype](#parameter-datatype)
-      * [Parameters: value and times](#parameters-value-and-times)
-      * [Multiple matchers with **value** and **times**](#multiple-matchers-with-value-and-times)
-    * [Simulating Downstream Dependency Failures using matchers](#simulating-downstream-dependency-failures-using-matchers)
-      * [First 2 Requests - Simulated Latency](#first-2-requests---simulated-latency)
-      * [Requests After Exhaustion - Recovery:](#requests-after-exhaustion---recovery)
   * [SSL / HTTPS  Stubbing](#ssl--https--stubbing)
     * [Auto-Generated Cert Store](#auto-generated-cert-store)
     * [Bring Your Own Key Store](#bring-your-own-key-store)
@@ -59,6 +46,19 @@ Service Virtualization
   * [Transient Expectations (a.k.a. Transient Stubs)](#transient-expectations-aka-transient-stubs)
     * [Setting transient expectations](#setting-transient-expectations)
     * [Clearing Transient Expectations](#clearing-transient-expectations)
+  * [Request Matchers](#request-matchers)
+    * [Matcher: `$neq`](#matcher-neq)
+    * [Matcher: `$match`](#matcher-match)
+      * [Parameter: exact](#parameter-exact)
+      * [Parameter: datatype](#parameter-datatype)
+      * [Parameters: `value` and `times`](#parameters-value-and-times)
+        * [Match each unique value a specified number of times](#match-each-unique-value-a-specified-number-of-times)
+        * [Match any value a specified number of times](#match-any-value-a-specified-number-of-times)
+      * [Multiple matchers with **value** and **times**](#multiple-matchers-with-value-and-times)
+      * [Recap of `value` and `times`](#recap-of-value-and-times)
+    * [Simulating Downstream Dependency Failures using matchers](#simulating-downstream-dependency-failures-using-matchers)
+      * [First 2 Requests - Simulated Latency](#first-2-requests---simulated-latency)
+      * [Requests After Exhaustion - Recovery](#requests-after-exhaustion---recovery)
   * [Externalised Response Generation](#externalised-response-generation)
   * [Hooks](#hooks)
     * [Overview](#overview)
@@ -1067,447 +1067,8 @@ stub:
 {% endtabs %}
 
 **Note:** If the delay is specified in the example file, it will be used to simulate response times for that specific example.
+
 Otherwise, the global delay will be applied.
-
-## Request Matchers
-
-Specmatic provides a range of matchers that can be used to compare incoming requests with predefined examples and deliver the appropriate responses
-
-These matchers can match data types, exact values, and repetitions, etc, and Specmatic will only respond with the corresponding response if all the matchers are satisfied
-
-{:.note}
-> It is critical to understand that Specmatic enforces validations in a specific order:
-> - **OpenAPI Spec Validation**: First, the request is validated against your OpenAPI specification. If a field is marked as required in the spec, it must be present and valid
-> - **Matcher Validation**: The custom matcher (like `$pattern` or `$match`) only execute after the request has satisfied the base contract
-
-### Why Use Matchers?
-
-Matchers provide fine-grained control over how your stub server responds to incoming requests. Instead of relying solely on static examples, matchers enable dynamic, stateful, conditional response selection based on request content.
-
-#### Key Benefits
-
-- **Stateful Behavior**: Track request counts and simulate exhaustion for advanced scenarios
-- **Resilience**: Simulate downstream service behaviors including failures, delays, and edge cases
-- **Flexible Request Matching**: Respond differently based on field values, types, or patterns, etc.
-- **Schema Validation**: Enforce incoming requests to conform to sub-schemas before returning responses
-
-### `$eq`
-
-Use it to validate exact value of a field value in incoming requests.
-
-For example, to ensure that only requests with `role` set to `Admin` receive a successful response, you can use the `$eq` matcher as shown below.
-
-```json
-{
-  "http-request": {
-    "method": "POST",
-    "path": "/verifyUser",
-    "body": {
-      "role": "$eq(Admin)"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "status-text": "OK"
-  }
-}
-```
-
-### `$neq`
-
-Use this matcher to validate that a field value in incoming requests is NOT equal to a specified value.
-
-For example, to ensure that requests with `status` not equal to `Pending` receive a successful response, you can use the `$neq` matcher as shown below.
-
-```json
-{
-  "http-request": {
-    "method": "POST",
-    "path": "/verifyUser",
-    "body": {
-      "status": "$neq(Pending)"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "status-text": "OK"
-  }
-}
-```
-
-### `$match`
-
-**Purpose**: Use multiple validation rules in a single flexible matcher configuration for incoming requests.
-
-Syntax: `$matcher(exact: value, dataType: datatype, partial: true, times: 2, value: each/any)`
-
-Let's take each parameter one by one.
-
-#### Parameter: exact
-
-Validates that the field value in incoming requests is exactly equal to the specified value.
-
-```
-{
-  "http-request": {
-    "method": "POST",
-    "path": "/greet",
-    "body": {
-      "message": "$match(exact: hello)"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "reply": "Hi there!"
-    }
-  }
-}
-```
-
-This will match the following request:
-
-```json
-{
-  "message": "hello"
-}
-```
-
-It will not match:
-
-```json
-{
-  "message": "hi"
-}
-```
-
-#### Parameter: datatype
-
-Validates that the field structure in incoming requests matches a specific schema (built-in types or custom schemas).
-
-Consider the following OpenAPI specification snippet:
-
-```yaml
-paths:
-  /order:
-    patch:
-      summary: Place an order
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                details:
-                  oneOf:
-                    - type: string
-                    - type: integer
-      responses:
-        '200':
-          description: Order Response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-components:
-  schemas:
-    OrderDetails:
-      type: object
-      required:
-        - itemId
-        - quantity
-      properties:
-        itemId:
-          type: integer
-        quantity:
-          type: integer
-        notes:
-          type: string
-```
-
-And the following example file:
-
-```json
-{
-  "http-request": {
-    "method": "PATCH",
-    "path": "/order",
-    "body": {
-      "id": 10,
-      "details": "$match(dataType: string)"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "status": "Order received"
-    }
-  }
-}
-```
-
-Specmatic stub will match this example with the following request:
-
-```json
-{
-  "id": 10,
-  "details": "This is a sample order"
-}
-```
-
-The response returned will be:
-
-```json
-{
-  "status": "Order received"
-}
-```
-
-It will not match:
-
-```json
-{
-  "id": 10,
-  "details": 12345
-}
-```
-
-Note that although details may be a number in the specification, it must be a string to match this example due to the `$match(dataType: string)` matcher.
-
-
-#### Parameters: value and times
-
-**value**: Works with **times** to define the counting strategy for determining usage.
-
-When the example has matched requests the defined number of times, it becomes **exhausted** and will not match further requests. In other words, when a request comes in, it will not match this example, even if the datatypes align, when the example has been **exhausted**.
-
-These parameters make the example transient, and hence "transient": true must also be set in the example to make it transient.
-
-Consider this example:
-
-```
-{
-  "transient": true,
-  "http-request": {
-    "method": "POST",
-    "path": "/echo",
-    "body": {
-      "text": "$match(times: 2, value: any)"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "echoedText": "$(text)"
-    }
-  }
-}
-```
-
-Specmatic will allow this example to be used two times in total, regardless of the actual value of `text` in incoming requests. After that, the example is considered **exhausted**. An **exhausted** example will match no further requests.
-
-For example, if Specmatic stub first receives the following request:
-
-```json
-{
-  "text": "hello"
-}
-```
-
-And then receives the following request:
-
-```json
-{
-  "text": "world"
-}
-```
-
-The matcher has been exercised two times now, so the example is exhausted. Because it it exhausted, it will not match the following request, even though the datatypes align with the example.
-
-```json
-{
-  "text": "hi there"
-}
-```
-
-But now look at this example:
-
-```
-{
-  "transient": true,
-  "http-request": {
-    "method": "POST",
-    "path": "/echo",
-    "body": {
-      "text": "$match(times: 2, value: each)"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "echoedText": "$(text)"
-    }
-  }
-}
-```
-
-Specmatic will allow this example to be used two times for each unique value of `text` in incoming requests.
-
-For example, if Specmatic stub first receives the following request:
-
-```json
-{
-  "text": "hello"
-}
-```
-
-And then receives the following request:
-
-```json
-{
-  "text": "hello"
-}
-```
-
-The matcher has been exercised two times for the unique value "hello", so the example is exhausted for that value. Because it it exhausted for "hello", it will not match the same request a third time.
-
-However, it will match the following request, because "world" is a new unique value.
-
-```json
-{
-  "text": "world"
-}
-```
-
-#### Multiple matchers with **value** and **times**
-
-Consider the following example:
-
-```
-{
-  "transient": true,
-  "http-request": {
-    "method": "POST",
-    "path": "/echo",
-    "body": {
-      "name": "$match(dataType: string, times: 1, value: any)",
-      "type": "$match(dataType: string, times: 2, value: any)"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "echoedText": "$(text)"
-    }
-  }
-}
-```
-
-Now consider the following sequence of requests:
-
-- Request 1:
-
-```json
-{
-  "name": "Alice",
-  "type": "greeting"
-}
-```
-
-After matching and responding with this matcher, the matcher states are:
-- name count: 1/1 - **Exhausted**
-- type count: 1/2 - **Active**
-
-- Request 2:
-
-```json
-{
-  "name": "Bob",
-  "type": "greeting"
-}
-```
-
-After matching and responding with this matcher, the matcher states are:
-- name count: 1/1 - **Exhausted**
-- type count: 2/2 - **Exhausted**
-
-- Request 3:
-
-```json
-{
-  "name": "Charlie",
-  "type": "farewell"
-}
-```
-
-At this point, both matchers are exhausted, so this request will not match this example.
-
-### Simulating Downstream Dependency Failures using matchers
-
-One of the most valuable applications of matchers is **resilience testing**, for example, by utilizing the `delay-in-seconds` feature within Specmatic stubs, you can verify that your API implementation enforces strict timeouts when downstream services become unresponsive or slow.
-
-**Scenario**: Your API depends on a payment service. You need to verify that your implementation does not wait indefinitely for a slow downstream response, which could lead to thread pool exhaustion or hung connections. Instead, your API should detect the latency, abort the connection early, and return a `429 (Too Many Requests)` or appropriate failure status to the client.
-
-#### First 2 Requests - Simulated Latency
-
-The stub introduces a 5-second delay before responding. The goal is to prove that your implementation does not wait the full 5 seconds. 
-It should ideally timeout earlier (e.g., at 2 seconds) and release the connection.
-
-```json
-{
-  "transient": true,
-  "delay-in-seconds": 5,
-  "http-request": {
-    "method": "POST",
-    "path": "/payments",
-    "body": {
-      "amount": "$repeat(times: 2, value: any)"
-    }
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "status": "delayed_success",
-      "transactionId": "txn-12345"
-    },
-  }
-}
-
-```
-
-#### Requests After Exhaustion - Recovery:
-
-Once the first matcher exhausts (after 2 requests), the next example takes over. 
-This simulates the downstream service recovering its performance, allowing your implementation to process requests normally.
-
-```json
-{
-  "http-request": {
-    "method": "POST",
-    "path": "/payments"
-  },
-  "http-response": {
-    "status": 200,
-    "body": {
-      "status": "success",
-      "transactionId": "txn-12345"
-    }
-  }
-}
-```
-
-**How this works**:
-1. **Requests 1-2**: The stub receives the request and delays response by 5 seconds
-2. **Verification**: Your API implementation, configured with a shorter timeout (e.g., 2000ms), should throw a TimeoutException or equivalent before the stub responds.
-3. **Resource Management**: Instead of holding the connection open, your API catches the timeout, aborts the downstream call, and returns HTTP 429 to the client
-4. **Requests 3+**: The first matcher is exhausted. So when the consumer retries, the second example responds immediately with a 200 OK, thus showing how the system returns to a healthy state once the downstream service recovers
-
-Specmatic can assist you in testing this scenario during contract testing. In the case of a `429 (Too Many Requests)` response, Specmatic will retry the request, adhering to the delay specified in the `Retry-After` header. For additional details, please refer to the [Smart Resiliency Orchestration](/contract_driven_development/contract_testing.html#smart-resiliency-orchestration) section.
 
 ## SSL / HTTPS  Stubbing
 
@@ -1703,7 +1264,7 @@ If your tests are written in Python, you can start and stop the stub server with
 
 ## Transient Expectations (a.k.a. Transient Stubs)
 
-A transient mock disappears immediately after it has been exercised.
+A transient mock becomes unavailable immediately after it has been exercised.
 
 ### Setting transient expectations
 
@@ -1736,6 +1297,353 @@ If the test fails and you need to start a new run of the test, you may need to c
 To do that, make an API call to the path /_specmatic/http-stub/<http-stub-token> with the DELETE verb.
 
 To clear the transient mock in the above example, you would call http://localhost:9000/_specmatic/http-stub/123 with the DELETE verb.
+
+## Request Matchers
+
+Specmatic provides powerful matchers that offer dynamic, fine-grained control over how your stub server responds to incoming requests, enabling you to simulate complex and evolving scenarios.
+
+{: .note} Requests are validated against the specification first, before any matchers in examples are evaluated.
+
+### Matcher: `$neq`
+
+**Syntax:** `$neq(<exact-value>)`
+
+Use this matcher to ensure that a field value in incoming requests is **not equal** to a specific value.
+
+For example, the following example matches only requests where `status` is not equal to `Pending`:
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/verifyUser",
+    "body": {
+      "status": "$neq(Pending)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "status-text": "OK"
+  }
+}
+```
+
+### Matcher: `$match`
+
+**Syntax:** `$match(exact: <exact-value>, dataType: <specmatic-datatype>, times: <number>, value: each|any)`
+
+This matcher provides flexible options to control how request fields match example data and how many times a particular example can be used.
+
+#### Match an exact value a fixed number of times
+
+Consider the following **transient** example:
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "POST",
+    "path": "/greet",
+    "body": {
+      "message": "$match(exact: hello, times: 2)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "reply": "Hi there!"
+    }
+  }
+}
+```
+
+This matcher will respond to two requests where `message` is exactly `hello`. After two successful matches, the matcher becomes **exhausted**, and subsequent requests with `{"message": "hello"}` will no longer match this example.
+
+**Example:**
+
+Request 1:
+
+```json
+{
+  "message": "hello"
+}
+```
+
+Request 2:
+
+```json
+{
+  "message": "hello"
+}
+```
+
+After these two requests, the matcher becomes **exhausted**, and this transient example will not match further requests such as:
+
+Request 3:
+
+```json
+{
+  "message": "hello"
+}
+```
+
+If there are multiple matchers in an example, the example remains active until **all** of its matchers are exhausted.
+
+##### Each unique value matched a fixed number of times
+
+Consider the following **transient** example:
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "POST",
+    "path": "/echo",
+    "body": {
+      "text": "$match(dataType: string, value: each, times: 2)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "echoedText": "$(text)"
+    }
+  }
+}
+```
+
+Each unique value for `text` can be matched twice. For example:
+
+**Request payload 1:** `{ "text": "hello" }`
+
+**Request payload 2:** `{ "text": "hello" }`
+
+After these two requests, the matcher for `text` with value `hello` becomes **exhausted**.
+
+**Request payload 3:** `{ "text": "world" }`
+
+The value "world" has never been seen before, and hence this matcher will be active for "world", and will match it twice before getting exhausted.
+
+If there are multiple matchers in an example, the example remains active until **all** of its matchers are exhausted.
+
+##### Any value matched a fixed number of times
+
+Consider this **transient** example:
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "POST",
+    "path": "/echo",
+    "body": {
+      "text": "$match(dataType: string, value: any, times: 2)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "echoedText": "$(text)"
+    }
+  }
+}
+```
+
+Here, the matcher can match any value twice, regardless of what it is. After two matches, it becomes **exhausted**, and the example will no longer be used.
+
+#### Multiple `value: each` matchers working together
+
+In a previous section we looked at an example with a single `value: each` matcher. But now, let's see what happens when there are multiple `value: each` matchers work.
+
+Consider this **transient** example where both `id` and `details` use `value: each` with `times: 1`:
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "PATCH",
+    "path": "/order/10",
+    "body": {
+      "id": "$match(dataType: integer, times: 1, value: each)",
+      "details": "$match(dataType: string, times: 1, value: each)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "Order updated"
+    }
+  }
+}
+```
+
+When there are multiple `value: each` matchers in an example, Specmatic tracks the usage of each unique combination of matcher values.
+
+Let's walk through a sequence of requests.
+
+**Initial state:**
+
+* No `(id, details)` pairs have been used.
+* `id` matcher: all values are **Active**.
+* `details` matcher: all values are **Active**.
+
+**Request 1**
+
+```json
+{
+  "id": 10,
+  "details": "packed"
+}
+```
+
+This is the first time the stub sees `id: 10` together with `details: "packed"`, so it matches.
+
+**Matcher state after Request 1:**
+
+* Pair `id: 10`, `details: "packed"`: used 1/1 (**Exhausted** for this pair)
+
+**Request 2**
+
+```json
+{
+  "id": 10,
+  "details": "packed"
+}
+```
+
+This is the exact same pair as Request 1.
+
+**Matcher state after Request 2:**
+
+* Pair `id: 10`, `details: "packed"` is already 1/1 (**Exhausted**) → this request will **not** match this example.
+
+**Request 3**
+
+```json
+{
+  "id": 10,
+  "details": "shipped"
+}
+```
+
+This is a new pair: `id: 10` with `details: "shipped"`.
+
+**Matcher state after Request 3:**
+
+* Pair `id: 10`, `details: "packed"`: **Exhausted**.
+* Pair `id: 10`, `details: "shipped"`: **Exhausted**.
+
+Even though `id = 10` was seen before, this request works because this exact combination (`10` + `"shipped"`) had not been used previously.
+
+**Request 4**
+
+```json
+{
+  "id": 10,
+  "details": "shipped"
+}
+```
+
+This reuses the pair from Request 3.
+
+**Matcher state after Request 4:**
+
+* Pair `id: 10`, `details: "shipped"` is already 1/1 (**Exhausted**) → this request does **not** match this example.
+
+**Request 5**
+
+```json
+{
+  "id": 20,
+  "details": "packed"
+}
+```
+
+Now we have a new pair: `id: 20` with `details: "packed"`.
+
+**Matcher state after Request 5:**
+
+* Pair `id: 10`, `details: "packed"`: **Exhausted**.
+* Pair `id: 10`, `details: "shipped"`: **Exhausted**.
+* Pair `id: 20`, `details: "packed"`: used 1/1 (**Exhausted** for this pair).
+
+This request matches because, although `"packed"` was seen earlier with `id = 10`, the combination `id: 20`, `details: "packed"` is new.
+
+In summary:
+
+* The stub accepts each unique `id` + `details` combination exactly once.
+* Reusing the same pair again will not match the example.
+* Reusing either `id` or `details` with a new partner is allowed until that new combination has also been used once.
+
+**Key takeaway:**
+
+* Each matcher (`name` and `type`) tracks its own count independently.
+* Once a matcher reaches its `times` limit, it moves from **Active** to **Exhausted** and stops matching.
+* When all matchers in a transient example are exhausted, the example itself is considered exhausted and will no longer be used to match incoming request payloads.
+
+### Simulating Downstream Dependency Failures using matchers
+
+Let's bring this together with a practical example.
+
+One of the most valuable applications of matchers is **resilience testing**, for example, by utilizing the `delay-in-seconds` feature within Specmatic stubs, you can verify that your API implementation enforces strict timeouts when downstream services become unresponsive or slow.
+
+**Scenario**: Your API depends on a payment service. You need to verify that your implementation does not wait indefinitely for a slow downstream response, which could lead to thread pool exhaustion or hung connections. Instead, your API should detect the latency, abort the connection early, and return a `429 (Too Many Requests)` or appropriate failure status to the client.
+
+#### First 2 Requests - Simulated Latency
+
+The stub introduces a 5-second delay before responding. The goal is to prove that your implementation does not wait the full 5 seconds. 
+It should ideally timeout earlier (e.g., at 2 seconds) and release the connection.
+
+```json
+{
+  "transient": true,
+  "delay-in-seconds": 5,
+  "http-request": {
+    "method": "POST",
+    "path": "/payments",
+    "body": {
+      "amount": "$repeat(times: 2, value: any)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "delayed_success",
+      "transactionId": "txn-12345"
+    },
+  }
+}
+
+```
+
+#### Requests After Exhaustion - Recovery
+
+Once the first matcher exhausts (after 2 requests), the next example takes over. 
+This simulates the downstream service recovering its performance, allowing your implementation to process requests normally.
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/payments"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "success",
+      "transactionId": "txn-12345"
+    }
+  }
+}
+```
+
+**How this works**:
+1. **Requests 1-2**: The stub receives the request and delays response by 5 seconds
+2. **Verification**: Your API implementation, configured with a shorter timeout (e.g., 2000ms), should throw a TimeoutException or equivalent before the stub responds.
+3. **Resource Management**: Instead of holding the connection open, your API catches the timeout, aborts the downstream call, and returns HTTP 429 to the client
+4. **Requests 3+**: The first matcher is exhausted. So when the consumer retries, the second example responds immediately with a 200 OK, thus showing how the system returns to a healthy state once the downstream service recovers
+
+Specmatic can assist you in testing this scenario during contract testing. In the case of a `429 (Too Many Requests)` response, Specmatic will retry the request, adhering to the delay specified in the `Retry-After` header. For additional details, please refer to the [Smart Resiliency Orchestration](/contract_driven_development/contract_testing.html#smart-resiliency-orchestration) section.
 
 ## Externalised Response Generation
 
