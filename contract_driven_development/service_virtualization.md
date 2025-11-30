@@ -49,13 +49,10 @@ Service Virtualization
   * [Request Matchers](#request-matchers)
     * [Matcher: `$neq`](#matcher-neq)
     * [Matcher: `$match`](#matcher-match)
-      * [Parameter: exact](#parameter-exact)
-      * [Parameter: datatype](#parameter-datatype)
-      * [Parameters: `value` and `times`](#parameters-value-and-times)
-        * [Match each unique value a specified number of times](#match-each-unique-value-a-specified-number-of-times)
-        * [Match any value a specified number of times](#match-any-value-a-specified-number-of-times)
-      * [Multiple matchers with **value** and **times**](#multiple-matchers-with-value-and-times)
-      * [Recap of `value` and `times`](#recap-of-value-and-times)
+      * [Match an specific value a fixed number of times](#match-an-specific-value-a-fixed-number-of-times)
+      * [Match any unique value a fixed number of times](#match-any-unique-value-a-fixed-number-of-times)
+      * [Match any value a fixed number of times](#match-any-value-a-fixed-number-of-times)
+      * [Multiple `value: each` matchers working together](#multiple-value-each-matchers-working-together)
     * [Simulating Downstream Dependency Failures using matchers](#simulating-downstream-dependency-failures-using-matchers)
       * [First 2 Requests - Simulated Latency](#first-2-requests---simulated-latency)
       * [Requests After Exhaustion - Recovery](#requests-after-exhaustion---recovery)
@@ -518,7 +515,7 @@ For example, suppose that in the request we expect, the important values to be m
 
 Let's see how we can formulate an example that meets these requirements.
 
-- Create a new file in the `employees_examples` directory named `any_name.json`:
+- Create a new file in the `employees_examples` directory named `any_name.json` with the following contents:
 
   ```json
   {
@@ -1302,7 +1299,8 @@ To clear the transient mock in the above example, you would call http://localhos
 
 Specmatic provides powerful matchers that offer dynamic, fine-grained control over how your stub server responds to incoming requests, enabling you to simulate complex and evolving scenarios.
 
-{: .note} Requests are validated against the specification first, before any matchers in examples are evaluated.
+{: .note}
+Requests are validated against the specification first, before any matchers in examples are evaluated.
 
 ### Matcher: `$neq`
 
@@ -1334,7 +1332,7 @@ For example, the following example matches only requests where `status` is not e
 
 This matcher provides flexible options to control how request fields match example data and how many times a particular example can be used.
 
-#### Match an exact value a fixed number of times
+#### Match an specific value a fixed number of times
 
 Consider the following **transient** example:
 
@@ -1361,7 +1359,7 @@ This matcher will respond to two requests where `message` is exactly `hello`. Af
 
 **Example:**
 
-Request 1:
+Request 1 payload:
 
 ```json
 {
@@ -1369,7 +1367,7 @@ Request 1:
 }
 ```
 
-Request 2:
+Request 2 payload:
 
 ```json
 {
@@ -1379,7 +1377,7 @@ Request 2:
 
 After these two requests, the matcher becomes **exhausted**, and this transient example will not match further requests such as:
 
-Request 3:
+Request 3 payload:
 
 ```json
 {
@@ -1389,7 +1387,7 @@ Request 3:
 
 If there are multiple matchers in an example, the example remains active until **all** of its matchers are exhausted.
 
-##### Each unique value matched a fixed number of times
+#### Match any unique value a fixed number of times
 
 Consider the following **transient** example:
 
@@ -1414,19 +1412,19 @@ Consider the following **transient** example:
 
 Each unique value for `text` can be matched twice. For example:
 
-**Request payload 1:** `{ "text": "hello" }`
+Request 1 payload: `{ "text": "hello" }`
 
-**Request payload 2:** `{ "text": "hello" }`
+Request 2 payload: `{ "text": "hello" }`
 
 After these two requests, the matcher for `text` with value `hello` becomes **exhausted**.
 
-**Request payload 3:** `{ "text": "world" }`
+Request 3 payload: `{ "text": "world" }`
 
 The value "world" has never been seen before, and hence this matcher will be active for "world", and will match it twice before getting exhausted.
 
 If there are multiple matchers in an example, the example remains active until **all** of its matchers are exhausted.
 
-##### Any value matched a fixed number of times
+#### Match any value a fixed number of times
 
 Consider this **transient** example:
 
@@ -1453,9 +1451,9 @@ Here, the matcher can match any value twice, regardless of what it is. After two
 
 #### Multiple `value: each` matchers working together
 
-In a previous section we looked at an example with a single `value: each` matcher. But now, let's see what happens when there are multiple `value: each` matchers work.
+Specmatic actually tracks the usage of each unique combination of matcher values in the presence of `value: each`. This can be better understood with an example which has multiple matching having `value: each`.
 
-Consider this **transient** example where both `id` and `details` use `value: each` with `times: 1`:
+Consider this **transient** example where both `id` and `details` use `value: each` with `times: 1`.
 
 ```json
 {
@@ -1477,17 +1475,14 @@ Consider this **transient** example where both `id` and `details` use `value: ea
 }
 ```
 
-When there are multiple `value: each` matchers in an example, Specmatic tracks the usage of each unique combination of matcher values.
-
 Let's walk through a sequence of requests.
 
-**Initial state:**
+Initial state:
 
-* No `(id, details)` pairs have been used.
-* `id` matcher: all values are **Active**.
-* `details` matcher: all values are **Active**.
+* `id` matcher: **Active**.
+* `details` matcher: **Active**.
 
-**Request 1**
+Request 1 payload:
 
 ```json
 {
@@ -1498,11 +1493,12 @@ Let's walk through a sequence of requests.
 
 This is the first time the stub sees `id: 10` together with `details: "packed"`, so it matches.
 
-**Matcher state after Request 1:**
+Matcher state after Request 1:
 
-* Pair `id: 10`, `details: "packed"`: used 1/1 (**Exhausted** for this pair)
+* `id` matcher with value `10` given `details: "packed"`: used `/` (**Exhausted**)
+* `details` matcher with value `packed` given `id: 0`: used `/` (**Exhausted**)
 
-**Request 2**
+Request 2 payload
 
 ```json
 {
@@ -1513,12 +1509,11 @@ This is the first time the stub sees `id: 10` together with `details: "packed"`,
 
 This is the exact same pair as Request 1.
 
-**Matcher state after Request 2:**
+Matcher state after Request 2:
 
 * Pair `id: 10`, `details: "packed"` is already 1/1 (**Exhausted**) → this request will **not** match this example.
 
-**Request 3**
-
+Request 3 payload
 ```json
 {
   "id": 10,
@@ -1528,14 +1523,16 @@ This is the exact same pair as Request 1.
 
 This is a new pair: `id: 10` with `details: "shipped"`.
 
-**Matcher state after Request 3:**
+Matcher state after Request 3:
 
-* Pair `id: 10`, `details: "packed"`: **Exhausted**.
-* Pair `id: 10`, `details: "shipped"`: **Exhausted**.
+* `id` matcher with value `10` given `details: "packed"`: used `/` (**Exhausted**)
+* `id` matcher with value `10` given `details: "shipped"`: used `/` (**Exhausted**)
+* `details` matcher with value `packed` given `id: 10`: used `/` (**Exhausted**)
+* `details` matcher with value `shipped` given `id: 10`: used `/` (**Exhausted**)
 
-Even though `id = 10` was seen before, this request works because this exact combination (`10` + `"shipped"`) had not been used previously.
+Even though `id = 10` was seen before, this request worked because this exact combination (`10` + `"shipped"`) had not been used previously. But with `times: 1`, this combination is now exhausted.
 
-**Request 4**
+Request 4 payload:
 
 ```json
 {
@@ -1544,14 +1541,16 @@ Even though `id = 10` was seen before, this request works because this exact com
 }
 ```
 
-This reuses the pair from Request 3.
+This reuses the pair from Request 3. But given that these values have already been used together once, this request will not match.
 
-**Matcher state after Request 4:**
+Matcher state after Request 4:
 
-* Pair `id: 10`, `details: "shipped"` is already 1/1 (**Exhausted**) → this request does **not** match this example.
+* `id` matcher with value `10` given `details: "packed"`: used `/` (**Exhausted**)
+* `id` matcher with value `10` given `details: "shipped"`: used `/` (**Exhausted**)
+* `details` matcher with value `packed` given `id: 10`: used `/` (**Exhausted**)
+* `details` matcher with value `shipped` given `id: 10`: used `/` (**Exhausted**)
 
-**Request 5**
-
+Request 5 payload
 ```json
 {
   "id": 20,
@@ -1561,11 +1560,14 @@ This reuses the pair from Request 3.
 
 Now we have a new pair: `id: 20` with `details: "packed"`.
 
-**Matcher state after Request 5:**
+Matcher state after Request 5:
 
-* Pair `id: 10`, `details: "packed"`: **Exhausted**.
-* Pair `id: 10`, `details: "shipped"`: **Exhausted**.
-* Pair `id: 20`, `details: "packed"`: used 1/1 (**Exhausted** for this pair).
+* `id` matcher with value `10` given `details: "packed"`: used `/` (**Exhausted**)
+* `id` matcher with value `10` given `details: "shipped"`: used `/` (**Exhausted**)
+* `id` matcher with value `20` given `details: "packed"`: used `/` (**Exhausted**)
+* `details` matcher with value `packed` given `id: 10`: used `/` (**Exhausted**)
+* `details` matcher with value `shipped` given `id: 10`: used `/` (**Exhausted**)
+* `details` matcher with value `packed` given `id: 20`: used `/` (**Exhausted**)
 
 This request matches because, although `"packed"` was seen earlier with `id = 10`, the combination `id: 20`, `details: "packed"` is new.
 
@@ -1575,11 +1577,10 @@ In summary:
 * Reusing the same pair again will not match the example.
 * Reusing either `id` or `details` with a new partner is allowed until that new combination has also been used once.
 
-**Key takeaway:**
+### Note On Matcher Exhaustion
 
-* Each matcher (`name` and `type`) tracks its own count independently.
-* Once a matcher reaches its `times` limit, it moves from **Active** to **Exhausted** and stops matching.
-* When all matchers in a transient example are exhausted, the example itself is considered exhausted and will no longer be used to match incoming request payloads.
+* An example will continue to match incoming requests as long as at least one of its matchers is not **exhausted** for the given request values.
+* When all matchers in a transient example are exhausted for the incoming request, the example itself is considered **exhausted** and will not return match success, even though the actual values in the request align with the data in the example.
 
 ### Simulating Downstream Dependency Failures using matchers
 
