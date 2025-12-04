@@ -1,7 +1,7 @@
 theme: just-the-docs
 markdown: kramdown
 title: "Specmatic"
-specmatic-core-version: 2.32.1
+specmatic-core-version: 2.33.0
 specmatic-jms-version: 0.6.1
 specmatic-async-version: 1.7.1
 specmatic-studio-version: 1.13.1
