@@ -99,7 +99,7 @@ For detailed information about API Coverage configuration keys and their functio
 Specmatic can generate reports in various formats.
 ### Text Formats
 
-The text format outputs reports directly to your console or terminal
+The text format outputs reports directly to your console or terminal.
 
 ### HTML Formatter
 
