@@ -10,15 +10,17 @@ redirect_from:
 # Provisioning and Using Specmatic License Keys
 
 <!-- TOC -->
-* [Provisioning and Using Specmatic License Keys](#provisioning-and-using-specmatic-license-keys)
-  * [Types of Specmatic Licenses](#types-of-specmatic-licenses)
-    * [User Licenses](#user-licenses)
-      * [How to retrieve your user license](#how-to-retrieve-your-user-license)
-      * [Validate your user license](#validate-your-user-license)
-      * [Using Specmatic License with Docker](#using-specmatic-license-with-docker)
-    * [Service Account Licenses](#service-account-licenses)
-      * [Setting Up the License Key (for service accounts)](#setting-up-the-license-key-for-service-accounts)
-<!-- TOC -->
+
+- [Provisioning and Using Specmatic License Keys](#provisioning-and-using-specmatic-license-keys)
+  - [Types of Specmatic Licenses](#types-of-specmatic-licenses)
+    - [User Licenses](#user-licenses)
+      - [How to retrieve your user license](#how-to-retrieve-your-user-license)
+      - [Validate your user license](#validate-your-user-license)
+      - [Using Specmatic License with Docker](#using-specmatic-license-with-docker)
+    - [Service Account Licenses](#service-account-licenses)
+      - [Using the service account license key in CI/CD or automated systems](#using-the-service-account-license-key-in-cicd-or-automated-systems)
+
+<!-- /TOC -->
 
 ## Types of Specmatic Licenses
 
