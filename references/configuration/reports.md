@@ -97,17 +97,29 @@ For detailed information about API Coverage configuration keys and their functio
 ## Report Formats
 
 Specmatic can generate reports in various formats.
-### Text Formats
+### Text Format
 
-The text format outputs reports directly to your console or terminal.
+The text format outputs reports directly to your console or terminal, making it ideal for CI/CD pipelines and quick feedback during development.
 
-### HTML Formatter
+### HTML Format
 
 The HTML format generates rich, interactive reports with customizable branding and styling. These reports are ideal for sharing with stakeholders and archiving test results.
 
-### CTRF Formats
+### CTRF Format
 
 The [Common Test Report Format (CTRF)](https://ctrf.io/docs/intro) is a standardized JSON schema for test results that enables seamless integration across different testing tools and CI/CD platforms.
+
+---
+
+#### Why Use CTRF?
+
+- **Universal Compatibility**: Works with popular CI/CD platforms (GitHub Actions, Jenkins, GitLab CI, etc.)
+- **Tool Agnostic**: Standardized format means reports can be consumed by various visualization and analysis tools
+- **Better Insights**: Leverage CTRF-compatible tools for advanced analytics, trend analysis, and reporting dashboards
+- **Easy Integration**: JSON format makes it simple to parse and integrate with custom tooling
+
+{: .warning }
+**Commercial Feature**: CTRF report generation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 
 ---
 
