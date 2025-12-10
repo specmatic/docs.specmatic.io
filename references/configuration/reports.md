@@ -94,152 +94,24 @@ For detailed information about API Coverage configuration keys and their functio
 
 ---
 
-## Report Formatters
+## Report Formats
 
-Formatters control how Specmatic generates and presents reports. You can configure multiple formatters to generate reports in different formats simultaneously.
+Specmatic can generate reports in various formats.
+### Text Format
 
-### Default Behavior
+The text format outputs reports directly to your console or terminal, making it ideal for CI/CD pipelines and quick feedback during development.
 
-{: .note }
-If no formatters are specified, Specmatic generates both `text` and `html` reports by default.
+### HTML Format
 
-### Available Formatter Types
+The HTML format generates rich, interactive reports with customizable branding and styling. These reports are ideal for sharing with stakeholders and archiving test results.
 
-Specmatic supports three formatter types:
-
-| Type | Description |
-|------|-------------|
-| `text` | Console/terminal output with optional table layout |
-| `html` | Rich, interactive HTML reports with customizable branding |
-| `ctrf` | Common Test Report Format for CI/CD integration |
-
----
-
-## Text Formatter
-
-The text formatter outputs reports directly to your console or terminal, making it ideal for CI/CD pipelines and quick feedback during development.
-
-### Configuration Options
-
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `type` | string | `text` | Formatter type |
-| `layout` | string | `table` | Output layout format |
-
-### Example
-
-{% tabs text_formatter %}
-{% tab text_formatter specmatic.yaml %}
-```yaml
-report:
-  formatters:
-    - type: text
-      layout: table
-```
-{% endtab %}
-{% tab text_formatter specmatic.json %}
-```json
-{
-  "report": {
-    "formatters": [
-      {
-        "type": "text",
-        "layout": "table"
-      }
-    ]
-  }
-}
-```
-{% endtab %}
-{% endtabs %}
-
----
-
-## HTML Formatter
-
-The HTML formatter generates rich, interactive reports with customizable branding and styling. These reports are ideal for sharing with stakeholders and archiving test results.
-
-### Configuration Options
-
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `type` | string | `html` | Formatter type |
-| `lite` | boolean | `false` | Generate a lightweight version of the report |
-| `title` | string | `"Specmatic Report"` | Browser tab title |
-| `logo` | string | `"assets/specmatic-logo.svg"` | Path to custom logo image |
-| `logoAltText` | string | `"Specmatic"` | Alt text for the logo |
-| `heading` | string | `"Contract Test Results"` | Main heading displayed in the report |
-| `outputDirectory` | string | `"./build/reports/specmatic/html"` | Directory where HTML reports are saved |
-
-### Basic Example
-
-{% tabs html_basic %}
-{% tab html_basic specmatic.yaml %}
-```yaml
-report:
-  formatters:
-    - type: html
-```
-{% endtab %}
-{% tab html_basic specmatic.json %}
-```json
-{
-  "report": {
-    "formatters": [
-      {
-        "type": "html"
-      }
-    ]
-  }
-}
-```
-{% endtab %}
-{% endtabs %}
-
-### Customized Example
-
-{% tabs html_custom %}
-{% tab html_custom specmatic.yaml %}
-```yaml
-report:
-  formatters:
-    - type: html
-      title: "API Contract Test Report - Production"
-      logo: "assets/company-logo.png"
-      logoAltText: "Company Name"
-      heading: "Production API Test Results"
-      outputDirectory: "./reports/api-tests"
-      lite: false
-```
-{% endtab %}
-{% tab html_custom specmatic.json %}
-```json
-{
-  "report": {
-    "formatters": [
-      {
-        "type": "html",
-        "title": "API Contract Test Report - Production",
-        "logo": "assets/company-logo.png",
-        "logoAltText": "Company Name",
-        "heading": "Production API Test Results",
-        "outputDirectory": "./reports/api-tests",
-        "lite": false
-      }
-    ]
-  }
-}
-```
-{% endtab %}
-{% endtabs %}
-
----
-
-## CTRF Formatter
+### CTRF Format
 
 The [Common Test Report Format (CTRF)](https://ctrf.io/docs/intro) is a standardized JSON schema for test results that enables seamless integration across different testing tools and CI/CD platforms.
 
-### Why Use CTRF?
+---
+
+#### Why Use CTRF?
 
 - **Universal Compatibility**: Works with popular CI/CD platforms (GitHub Actions, Jenkins, GitLab CI, etc.)
 - **Tool Agnostic**: Standardized format means reports can be consumed by various visualization and analysis tools
@@ -248,80 +120,6 @@ The [Common Test Report Format (CTRF)](https://ctrf.io/docs/intro) is a standard
 
 {: .warning }
 **Commercial Feature**: CTRF report generation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
-
-### Configuration
-
-CTRF reports require minimal configuration - just specify the type:
-
-{% tabs ctrf_formatter %}
-{% tab ctrf_formatter specmatic.yaml %}
-```yaml
-report:
-  formatters:
-    - type: ctrf
-```
-{% endtab %}
-{% tab ctrf_formatter specmatic.json %}
-```json
-{
-  "report": {
-    "formatters": [
-      {
-        "type": "ctrf"
-      }
-    ]
-  }
-}
-```
-{% endtab %}
-{% endtabs %}
-
-The CTRF report for contract tests will be generated in the `build/reports/specmatic/ctrf` directory.
-
----
-
-## Multiple Formatters
-
-You can configure multiple formatters to generate reports in different formats simultaneously:
-
-{% tabs multiple_formatters %}
-{% tab multiple_formatters specmatic.yaml %}
-```yaml
-report:
-  formatters:
-    - type: text
-      layout: table
-    - type: html
-      title: "API Contract Tests"
-      heading: "Test Results Dashboard"
-      outputDirectory: "./reports/html"
-    - type: ctrf
-```
-{% endtab %}
-{% tab multiple_formatters specmatic.json %}
-```json
-{
-  "report": {
-    "formatters": [
-      {
-        "type": "text",
-        "layout": "table"
-      },
-      {
-        "type": "html",
-        "title": "API Contract Tests",
-        "heading": "Test Results Dashboard",
-        "outputDirectory": "./reports/html"
-      },
-      {
-        "type": "ctrf"
-      }
-    ]
-  }
-}
-```
-{% endtab %}
-{% endtabs %}
 
 ---
 
