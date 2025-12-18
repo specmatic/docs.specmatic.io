@@ -18,7 +18,7 @@ task :check do
   require 'html-proofer'
   options = {
       :disable_external     => should_not_run_external_url_checks?,
-      :ignore_urls          => [],
+      :ignore_urls          => [/http:\/\/localhost/, /http:\/\/127\.0\.0\.1/],
       :allow_hash_href      => false,
       :allow_missing_href   => true,
       :check_external_hash  => false,

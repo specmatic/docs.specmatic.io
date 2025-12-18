@@ -312,7 +312,7 @@ In the above case, example JSON files will be written into the directory named `
 
 ### Strict Mode
 
-By default, Specmatic generates tests for an API when there are no examples. However, if you want to skip test generation from APIs for which there are no examples, you can enable strict mode using configuration as described [here](/references/configuration.html#strict-mode), or using the `--strict` command-line parameter as shown below:
+By default, Specmatic generates tests for an API when there are no examples. However, if you want to skip test generation from APIs for which there are no examples, you can enable strict mode using configuration as described [here](/references/configuration/stub-configuration.html#strict-mode), or using the `--strict` command-line parameter as shown below:
 
 ```bash
 {{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com --strict employees.yaml
@@ -1806,7 +1806,7 @@ This feature ensures that your tests are not brittle and can correctly validate 
 The response from the polled endpoint must adhere to a standard schema that is either equal to or a superset, i.e. encompasses the schema outlined below:
 
 ```yaml
-AnyValue: 
+AnyValue:
   description: Can be any value - string, number, boolean, array or object.
 MonitorResponse:
   type: object
@@ -1853,14 +1853,14 @@ HeaderItem:
       type: string
 ```
 
-> Specmatic will extract request and response from the `MonitorResponse` to reconstruct the original request and response for validation and further processing.  
+> Specmatic will extract request and response from the `MonitorResponse` to reconstruct the original request and response for validation and further processing.
 > - **Explicit Case**: The extracted request and response must align with any non-202 2xx scenarios defined in the specification
 > - **Implicit Case**: The extracted request and response must conform to the scenario that was being tested, such as `201 Created`
 {: .note}
 
 #### Too Many Requests Handling
 
-A **429 Too Many Requests** HTTP status code indicates that the client has sent too many requests within a specified timeframe, or there may be an issue downstream causing it to be rate-limited by the server. 
+A **429 Too Many Requests** HTTP status code indicates that the client has sent too many requests within a specified timeframe, or there may be an issue downstream causing it to be rate-limited by the server.
 
 Smart Resiliency Orchestration in Specmatic gracefully handles this scenario with intelligent retry behavior, ensuring that requests are retried in accordance with rate-limit guidance and that the operation eventually resolves after the permitted number of retries
 
@@ -1893,8 +1893,8 @@ This approach ensures that tests accurately represent real-world service conditi
 #### Example
 
 Below is an example specification for smart resiliency orchestration in action.
-- It outlines a `GET /products` endpoint with response scenarios for **200 OK** and **429 Too Many Requests**.  
-- It describes a `POST /order` endpoint with response scenarios for **201 Created** and **202 Accepted**.  
+- It outlines a `GET /products` endpoint with response scenarios for **200 OK** and **429 Too Many Requests**.
+- It describes a `POST /order` endpoint with response scenarios for **201 Created** and **202 Accepted**.
 - It specifies a `GET /monitor/{id}` endpoint to **poll** for the completion of asynchronous operations.
 
 
