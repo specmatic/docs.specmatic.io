@@ -22,7 +22,7 @@ task :check do
       /http:\/\/localhost/,
       /http:\/\/127\.0\.0\.1/,
       /https:\/\/www\.youtube\.com\//,
-      /https:\/\/github\.com\/specmatic\/docs.specmatic.io\/edit\//
+      /https:\/\/github\.com\// # ignore github links as they often have rate limiting issues
     ],
     allow_hash_href:       false,
     allow_missing_href:    true,
