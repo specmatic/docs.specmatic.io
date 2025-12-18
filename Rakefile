@@ -34,6 +34,7 @@ task :check do
       },
       :ignore_missing_alt   => true,
       :log_level            => :info,
+      :hydra => { :max_concurrency => 5 },
   }
 
   STDERR.puts "WARNING: Not checking outbound links. Set environment variable: " +
