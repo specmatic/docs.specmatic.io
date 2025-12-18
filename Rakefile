@@ -38,7 +38,11 @@ task :check do
       connecttimeout:  500,
       accept_encoding: "gzip",
       # pretend to be a real browser
-      headers: { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0" }
+      headers: {
+        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0',
+        'Accept'=> 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language' => 'en-US,en;q=0.5',
+        }
     },
     hydra:  { max_concurrency: 2 },
     ignore_missing_alt:  true,
