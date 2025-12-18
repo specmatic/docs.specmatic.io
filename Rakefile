@@ -23,7 +23,8 @@ task :check do
       /http:\/\/127\.0\.0\.1/,
       /https:\/\/www\.youtube\.com\//,
       /https:\/\/github\.com\//, # ignore github links as they often have rate limiting issues
-      /https:\/\/www\.npmjs\.com\// # ignore npm registry due to Cloudflare anti-bot measures
+      /https:\/\/www\.npmjs\.com\//, # ignore npm registry due to Cloudflare anti-bot measures
+      /https:\/\/cntlm\.sourceforge\.net\// # ignore sourceforge links due to Cloudflare anti-bot measures
     ],
     allow_hash_href:       false,
     allow_missing_href:    true,
