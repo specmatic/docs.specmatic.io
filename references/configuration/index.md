@@ -5,6 +5,7 @@ parent: References
 nav_order: 1
 has_children: true
 redirect_from:
+  - /references/configuration/
   - /documentation/configuration.html
   - /documentation/specmatic_json.html
   - /documentation/references/configuration.html
