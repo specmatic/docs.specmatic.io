@@ -33,7 +33,7 @@ task :check do
       report_missing_names:  false ,
     },
     typhoeus:  {
-      verbose:  true,
+      # verbose:  true,
       followlocation:  true,
       connecttimeout:  500,
       accept_encoding: "gzip",
