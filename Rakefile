@@ -22,7 +22,8 @@ task :check do
       /http:\/\/localhost/,
       /http:\/\/127\.0\.0\.1/,
       /https:\/\/www\.youtube\.com\//,
-      /https:\/\/github\.com\// # ignore github links as they often have rate limiting issues
+      /https:\/\/github\.com\//, # ignore github links as they often have rate limiting issues
+      /https:\/\/www\.npmjs\.com\// # ignore npm registry due to Cloudflare anti-bot measures
     ],
     allow_hash_href:       false,
     allow_missing_href:    true,
@@ -44,7 +45,7 @@ task :check do
         'Accept-Language' => 'en-US,en;q=0.5',
         }
     },
-    hydra:  { max_concurrency: 2 },
+    hydra:  { max_concurrency: 1 },
     ignore_missing_alt:  true,
     log_level:  :info,
 
