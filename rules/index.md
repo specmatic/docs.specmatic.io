@@ -16,9 +16,9 @@ search_exclude: true
     - [R2003](#r2003)
     - [R3000](#r3000)
     - [R3001](#r3001)
-    - [R3001](#r3001-1)
     - [R3002](#r3002)
     - [R3003](#r3003)
+    - [R3004](#r3004)
 
 
 ### R1001
@@ -597,7 +597,7 @@ Corrected request:
 }
 ```
 
-### R3001
+### R3002
 
 Property not in any schema options
 
@@ -683,7 +683,7 @@ Corrected request:
 }
 ```
 
-### R3002
+### R3003
 
 Property matches no schema option
 
@@ -757,7 +757,7 @@ Corrected request:
 }
 ```
 
-### R3003
+### R3004
 
 No matching schema option
 
