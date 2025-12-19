@@ -23,9 +23,9 @@ search_exclude: true
 
 ### R1001
 
-**Value mismatch**
+Value mismatch
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -50,7 +50,7 @@ components:
         - status
 ```
 
-**Expected response payload:**
+Expected response payload:
 
 ```json
 {
@@ -60,7 +60,7 @@ components:
 
 _Note: The same expectation applies to requests reaching a Specmatic mock, or when validating examples as per the spec._
 
-**If the actual response contains:**
+If the actual response contains:
 
 ```json
 {
@@ -68,17 +68,17 @@ _Note: The same expectation applies to requests reaching a Specmatic mock, or wh
 }
 ```
 
-Specmatic raises **R1001** because the response breaks the `const` rule declared in the schema.
+Specmatic raises R1001 because the response breaks the `const` rule declared in the schema.
 
-**Why this is a problem**
+Why this is a problem
 
 Downstream systems depend on the enumerated value to drive business flows. Returning an unexpected value confuses consumers and causes conditional logic to fail.
 
-**How it can be fixed**
+How it can be fixed
 
 Return the exact value mandated by the contract.
 
-**Corrected response:**
+Corrected response:
 
 ```json
 {
@@ -88,9 +88,9 @@ Return the exact value mandated by the contract.
 
 ### R1002
 
-**Type mismatch**
+Type mismatch
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -120,7 +120,7 @@ components:
         - customerId
 ```
 
-**Expected request payload:**
+Expected request payload:
 
 ```json
 {
@@ -130,7 +130,7 @@ components:
 
 _Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
 
-**If the actual request contains:**
+If the actual request contains:
 
 ```json
 {
@@ -138,17 +138,17 @@ _Note: The same validation applies when a contract test matches the response com
 }
 ```
 
-Specmatic raises **R1002** because the field is a string instead of the integer type that the contract specifies.
+Specmatic raises R1002 because the field is a string instead of the integer type that the contract specifies.
 
-**Why this is a problem**
+Why this is a problem
 
 Type mismatches break deserialization and validation logic, often causing requests to be rejected or data to be stored incorrectly.
 
-**How it can be fixed**
+How it can be fixed
 
 Send the value using the data type defined in the specification.
 
-**Corrected request:**
+Corrected request:
 
 ```json
 {
@@ -158,9 +158,9 @@ Send the value using the data type defined in the specification.
 
 ### R1003
 
-**Constraint violation**
+Constraint violation
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -187,7 +187,7 @@ components:
         - orderId
 ```
 
-**Expected request payload:**
+Expected request payload:
 
 ```json
 {
@@ -197,7 +197,7 @@ components:
 
 _Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
 
-**If the actual request contains:**
+If the actual request contains:
 
 ```json
 {
@@ -205,17 +205,17 @@ _Note: The same validation applies when a contract test matches the response com
 }
 ```
 
-Specmatic raises **R1003** because the value fails the regular-expression constraint declared for `orderId`.
+Specmatic raises R1003 because the value fails the regular-expression constraint declared for `orderId`.
 
-**Why this is a problem**
+Why this is a problem
 
 Constraint violations lead to inconsistent identifiers and cause downstream services to reject the payload or misroute it.
 
-**How it can be fixed**
+How it can be fixed
 
 Emit values that meet every constraint defined in the schema.
 
-**Corrected request:**
+Corrected request:
 
 ```json
 {
@@ -225,9 +225,9 @@ Emit values that meet every constraint defined in the schema.
 
 ### R2001
 
-**Missing required property**
+Missing required property
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -257,7 +257,7 @@ components:
           format: email
 ```
 
-**Expected request payload:**
+Expected request payload:
 
 ```json
 {
@@ -268,7 +268,7 @@ components:
 
 _Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
 
-**If the actual request contains:**
+If the actual request contains:
 
 ```json
 {
@@ -276,17 +276,17 @@ _Note: The same validation applies when a contract test matches the response com
 }
 ```
 
-Specmatic raises **R2001** because the required `email` property is missing.
+Specmatic raises R2001 because the required `email` property is missing.
 
-**Why this is a problem**
+Why this is a problem
 
 Consumers expect required fields to be present so that essential processing (like sending notifications) can proceed without guessing or defaulting.
 
-**How it can be fixed**
+How it can be fixed
 
 Always include every property listed in the `required` array.
 
-**Corrected request:**
+Corrected request:
 
 ```json
 {
@@ -297,9 +297,9 @@ Always include every property listed in the `required` array.
 
 ### R2002
 
-**Missing optional property**
+Missing optional property
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -331,7 +331,7 @@ components:
         nickname: "Bender Bending Rodríguez"
 ```
 
-**Expected request payload (when SSO is enabled):**
+Expected request payload (when SSO is enabled):
 
 ```json
 {
@@ -342,7 +342,7 @@ components:
 
 _Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
 
-**If the actual request contains:**
+If the actual request contains:
 
 ```json
 {
@@ -350,17 +350,17 @@ _Note: The same validation applies when a contract test matches the response com
 }
 ```
 
-Specmatic raises **R2002** because the interaction scenario (SSO enabled) describes `nickname`, yet the request omits it.
+Specmatic raises R2002 because the interaction scenario (SSO enabled) describes `nickname`, yet the request omits it.
 
-**Why this is a problem**
+Why this is a problem
 
 Scenario-specific optional fields still carry essential context. Omitting them when required by the example or description leads to incomplete user profiles.
 
-**How it can be fixed**
+How it can be fixed
 
 Include optional properties whenever the documented scenario dictates their presence.
 
-**Corrected request:**
+Corrected request:
 
 ```json
 {
@@ -371,9 +371,9 @@ Include optional properties whenever the documented scenario dictates their pres
 
 ### R2003
 
-**Unknown property**
+Unknown property
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -396,7 +396,7 @@ components:
           type: integer
 ```
 
-**Expected response payload:**
+Expected response payload:
 
 ```json
 {
@@ -406,7 +406,7 @@ components:
 
 _Note: The same expectation applies to requests reaching a Specmatic mock, or when validating examples as per the spec._
 
-**If the actual response contains:**
+If the actual response contains:
 
 ```json
 {
@@ -415,17 +415,17 @@ _Note: The same expectation applies to requests reaching a Specmatic mock, or wh
 }
 ```
 
-Specmatic raises **R2003** because the payload introduces `unexpected`, which the contract forbids via `additionalProperties: false`.
+Specmatic raises R2003 because the payload introduces `unexpected`, which the contract forbids via `additionalProperties: false`.
 
-**Why this is a problem**
+Why this is a problem
 
 Undocumented fields create ambiguity—clients might ignore them or throw errors, leading to unpredictable integrations.
 
-**How it can be fixed**
+How it can be fixed
 
 Send only the properties defined in the contract, or extend the specification before emitting extra fields.
 
-**Corrected response:**
+Corrected response:
 
 ```json
 {
@@ -435,9 +435,9 @@ Send only the properties defined in the contract, or extend the specification be
 
 ### R3000
 
-**Discriminator mismatch**
+Discriminator mismatch
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -488,7 +488,7 @@ components:
           type: string
 ```
 
-**Expected request payload:**
+Expected request payload:
 
 ```json
 {
@@ -499,7 +499,7 @@ components:
 
 _Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
 
-**If the actual request contains:**
+If the actual request contains:
 
 ```json
 {
@@ -508,17 +508,17 @@ _Note: The same validation applies when a contract test matches the response com
 }
 ```
 
-Specmatic raises **R3000** because the discriminator points to the `BankTransferPayment` schema while the payload fields belong to the card branch.
+Specmatic raises R3000 because the discriminator points to the `BankTransferPayment` schema while the payload fields belong to the card branch.
 
-**Why this is a problem**
+Why this is a problem
 
 Polymorphic contracts rely on discriminators to choose the correct schema. A mismatch means the payload cannot be validated or processed correctly.
 
-**How it can be fixed**
+How it can be fixed
 
 Set the discriminator to the branch that matches the payload structure.
 
-**Corrected request:**
+Corrected request:
 
 ```json
 {
@@ -529,9 +529,9 @@ Set the discriminator to the branch that matches the payload structure.
 
 ### R3001
 
-**Missing discriminator**
+Missing discriminator
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -559,7 +559,7 @@ components:
         propertyName: type
 ```
 
-**Expected request payload:**
+Expected request payload:
 
 ```json
 {
@@ -570,7 +570,7 @@ components:
 
 _Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
 
-**If the actual request contains:**
+If the actual request contains:
 
 ```json
 {
@@ -578,17 +578,17 @@ _Note: The same validation applies when a contract test matches the response com
 }
 ```
 
-Specmatic raises **R3001** because the discriminator property `type` is absent, leaving the validator unable to pick a schema.
+Specmatic raises R3001 because the discriminator property `type` is absent, leaving the validator unable to pick a schema.
 
-**Why this is a problem**
+Why this is a problem
 
 Without the discriminator, polymorphic payloads cannot be resolved to a concrete schema, so validation has no reference point.
 
-**How it can be fixed**
+How it can be fixed
 
 Include the discriminator property specified by the contract alongside branch-specific fields.
 
-**Corrected request:**
+Corrected request:
 
 ```json
 {
@@ -599,9 +599,9 @@ Include the discriminator property specified by the contract alongside branch-sp
 
 ### R3001
 
-**Property not in any schema options**
+Property not in any schema options
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -644,7 +644,7 @@ components:
           type: string
 ```
 
-**Expected request payload (card branch):**
+Expected request payload (card branch):
 
 ```json
 {
@@ -655,7 +655,7 @@ components:
 
 _Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
 
-**If the actual request contains:**
+If the actual request contains:
 
 ```json
 {
@@ -664,17 +664,17 @@ _Note: The same validation applies when a contract test matches the response com
 }
 ```
 
-Specmatic raises **R3001** because `wireReference` belongs to the bank transfer schema, yet the discriminator selects the card branch.
+Specmatic raises R3001 because `wireReference` belongs to the bank transfer schema, yet the discriminator selects the card branch.
 
-**Why this is a problem**
+Why this is a problem
 
 Mixing properties from different schema options means no branch can validate the payload, leaving the consumer unsure how to interpret it.
 
-**How it can be fixed**
+How it can be fixed
 
 Send only the properties defined for the selected schema option.
 
-**Corrected request:**
+Corrected request:
 
 ```json
 {
@@ -685,9 +685,9 @@ Send only the properties defined for the selected schema option.
 
 ### R3002
 
-**Property matches no schema option**
+Property matches no schema option
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -718,7 +718,7 @@ components:
           pattern: ^\d{16}$
 ```
 
-**Expected request payload:**
+Expected request payload:
 
 ```json
 {
@@ -729,7 +729,7 @@ components:
 
 _Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
 
-**If the actual request contains:**
+If the actual request contains:
 
 ```json
 {
@@ -738,17 +738,17 @@ _Note: The same validation applies when a contract test matches the response com
 }
 ```
 
-Specmatic raises **R3002** because the provided values fail to satisfy the constraints of any schema option; the card branch rejects the short number, while other branches expect different discriminators.
+Specmatic raises R3002 because the provided values fail to satisfy the constraints of any schema option; the card branch rejects the short number, while other branches expect different discriminators.
 
-**Why this is a problem**
+Why this is a problem
 
 When no schema option matches, the consumer cannot map the payload to a valid business object, so processing stops.
 
-**How it can be fixed**
+How it can be fixed
 
 Adjust the values so they comply with at least one schema option's requirements.
 
-**Corrected request:**
+Corrected request:
 
 ```json
 {
@@ -759,9 +759,9 @@ Adjust the values so they comply with at least one schema option's requirements.
 
 ### R3003
 
-**No matching schema option**
+No matching schema option
 
-**Suppose the spec says this:**
+Suppose the spec says this:
 
 ```yaml
 paths:
@@ -788,7 +788,7 @@ components:
           bank-transfer: '#/components/schemas/BankTransferPayment'
 ```
 
-**Expected response payload (card option):**
+Expected response payload (card option):
 
 ```json
 {
@@ -799,7 +799,7 @@ components:
 
 _Note: The same expectation applies to requests reaching a Specmatic mock, or when validating examples as per the spec._
 
-**If the actual response contains:**
+If the actual response contains:
 
 ```json
 {
@@ -808,17 +808,17 @@ _Note: The same expectation applies to requests reaching a Specmatic mock, or wh
 }
 ```
 
-Specmatic raises **R3003** because the discriminator references an option (`crypto`) that the specification does not define.
+Specmatic raises R3003 because the discriminator references an option (`crypto`) that the specification does not define.
 
-**Why this is a problem**
+Why this is a problem
 
 Unsupported discriminator values leave consumers without a schema to validate against, so the payload cannot be trusted or processed.
 
-**How it can be fixed**
+How it can be fixed
 
 Return a payload that matches a documented option, or extend the specification with a new schema before using the new discriminator.
 
-**Corrected response:**
+Corrected response:
 
 ```json
 {
