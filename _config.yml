@@ -27,6 +27,7 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-redirect-from
+  - jekyll-last-modified-at
 
 logo: "/images/specmatic-logo.png"
 favicon_ico: /images/favicon/favicon.ico
