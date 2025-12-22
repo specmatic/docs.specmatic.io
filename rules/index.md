@@ -9,71 +9,6 @@ search_exclude: true
 
 ### R1001
 
-Value mismatch
-
-Suppose the spec says this:
-
-```yaml
-paths:
-  /approvals/{id}:
-    get:
-      responses:
-        '200':
-          description: Approval status
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApprovalStatus'
-components:
-  schemas:
-    ApprovalStatus:
-      type: object
-      properties:
-        status:
-          type: string
-          const: APPROVED
-      required:
-        - status
-```
-
-Expected response payload:
-
-```json
-{
-  "status": "APPROVED"
-}
-```
-
-_Note: The same expectation applies to requests reaching a Specmatic mock, or when validating examples as per the spec._
-
-If the actual response contains:
-
-```json
-{
-  "status": "PENDING"
-}
-```
-
-Specmatic raises R1001 because the response breaks the `const` rule declared in the schema.
-
-Why this is a problem
-
-Downstream systems depend on the enumerated value to drive business flows. Returning an unexpected value confuses consumers and causes conditional logic to fail.
-
-How it can be fixed
-
-Return the exact value mandated by the contract.
-
-Corrected response:
-
-```json
-{
-  "status": "APPROVED"
-}
-```
-
-### R1002
-
 Type mismatch
 
 Suppose the spec says this:
@@ -139,6 +74,71 @@ Corrected request:
 ```json
 {
   "customerId": 12345
+}
+```
+
+### R1002
+
+Value mismatch
+
+Suppose the spec says this:
+
+```yaml
+paths:
+  /approvals/{id}:
+    get:
+      responses:
+        '200':
+          description: Approval status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalStatus'
+components:
+  schemas:
+    ApprovalStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          const: APPROVED
+      required:
+        - status
+```
+
+Expected response payload:
+
+```json
+{
+  "status": "APPROVED"
+}
+```
+
+_Note: The same expectation applies to requests reaching a Specmatic mock, or when validating examples as per the spec._
+
+If the actual response contains:
+
+```json
+{
+  "status": "PENDING"
+}
+```
+
+Specmatic raises this error because the response breaks the `const` rule declared in the schema.
+
+Why this is a problem
+
+Downstream systems depend on the enumerated value to drive business flows. Returning an unexpected value confuses consumers and causes conditional logic to fail.
+
+How it can be fixed
+
+Return the exact value mandated by the contract.
+
+Corrected response:
+
+```json
+{
+  "status": "APPROVED"
 }
 ```
 
@@ -419,7 +419,7 @@ Corrected response:
 }
 ```
 
-### R3000
+### R3001
 
 Discriminator mismatch
 
@@ -513,7 +513,7 @@ Corrected request:
 }
 ```
 
-### R3001
+### R3002
 
 Missing discriminator
 
@@ -583,7 +583,7 @@ Corrected request:
 }
 ```
 
-### R3002
+### R3003
 
 Property not in any schema options
 
@@ -669,7 +669,7 @@ Corrected request:
 }
 ```
 
-### R3003
+### R3004
 
 Property matches no schema option
 
@@ -743,7 +743,7 @@ Corrected request:
 }
 ```
 
-### R3004
+### R3005
 
 No matching schema option
 
@@ -812,4 +812,3 @@ Corrected response:
   "cardNumber": "4111111111111111"
 }
 ```
-
