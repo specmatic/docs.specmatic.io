@@ -6,6 +6,7 @@ gem "jekyll"
 gem "jekyll-seo-tag"
 gem "jekyll-sitemap"
 gem "jekyll-redirect-from"
+gem "jekyll-last-modified-at"
 
 # other stuff needed by jekyll
 gem "sass-embedded"
