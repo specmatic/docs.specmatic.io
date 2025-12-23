@@ -39,11 +39,17 @@ Commercial
 
 ## Introduction
 
-Specmatic-Arazzo facilitates the generation of workflows, testing, mocking, and additional functionalities by utilizing the industry-standard [Arazzo Specification](https://www.openapis.org/arazzo-specification)
+Want to test the functionality of an entire business workflow of your microservices architecture that involves both synchronous HTTP calls and asynchronous event-driven interactions?
+
+![API Workflow](/images/arazzo-workflow.gif)
+
+Using a simple drag-and-drop approach, Specmatic-Arazzo facilitates the generation of an entire workflows and exporting that as an industry-standard [Arazzo Specification](https://www.openapis.org/arazzo-specification). Once you've created the Arazzo specification, you can leverage Specmatic-Arazzo to perform end-to-end workflow testing and mocking of your microservices architecture.
 
 **Specmatic-Arazzo** stands out as the only tool that currently supports orchestrating complete workflows with event-driven steps powered by AsyncAPI
 {: .note }
 
+<br>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fXWzgqLdWcg?si=uq1IJ-j4T1qxQ0A3" title="Workflow Testing with OpenAPI and AsyncAPI Using Specmatic's Visual Arazzo Spec Authoring" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## What Can You Achieve with Specmatic’s Arazzo Support?
 
@@ -214,6 +220,7 @@ docker run -v "$(pwd):/usr/src/app" specmatic/specmatic-arazzo mock --spec-file 
 
 Here are several sample projects you can explore to begin working with Specmatic-Arazzo. Each project includes detailed instructions in its respective README file, along with a video walkthrough that covers everything from generating an Arazzo specification to testing and mocking workflows using Specmatic-Arazzo.
 
+- [From REST to Events: API Workflow Testing and Mocking with a Single Arazzo Spec](https://github.com/specmatic/specmatic-arazzo-openapi-asyncapi-sample)
 - [Microservices Sample](https://github.com/specmatic/specmatic-arazzo-sample)
 - [Microservices with Frontend Sample](https://github.com/specmatic/specmatic-arazzo-ui-sample)
 - [Microservices with Event-Driven Architecture Sample](https://github.com/specmatic/specmatic-arazzo-async-sample)
