@@ -250,7 +250,7 @@ docker run --rm --network host \
 
 This generates and executes contract tests based on your AsyncAPI specification.
 
-**Example Project**: [View complete working example →](#)
+**Example Project**: [View complete working example →](https://github.com/specmatic/specmatic-sqs-kafka-sample)
 
 ---
 
