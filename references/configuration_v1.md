@@ -8,6 +8,6 @@ redirect_from:
   - /documentation/references/configuration_v1.html
 ---
 
-## Note: this version of the config is out of date. Please upgrade your configuration by following instructions on the [configuration page](/references/configuration.html).
+## Note: this version of the config is out of date. Please upgrade your configuration by following instructions on the [configuration page](/references/configuration).
 
 {% include specmatic_config_v1.md %}

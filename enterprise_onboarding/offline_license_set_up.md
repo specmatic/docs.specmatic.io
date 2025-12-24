@@ -25,8 +25,19 @@ COPY .specmatic/specmatic-license.txt /root/.specmatic/specmatic-license.txt
 # Uncomment the below lines and provide the license key to specmatic
 # COPY specmatic-license.txt /specmatic/specmatic-license.txt
 # ENV SPECMATIC_LICENSE_PATH=/specmatic/specmatic-license.txt
+
+# OR
+# 3. Set the contents of the license file as an environment variable `SPECMATIC_LICENSE_CONTENT`
+# Uncomment the below line and provide the license key to specmatic
+# ENV SPECMATIC_LICENSE_CONTENT="<<contents of specmatic-license.txt>>"
+
+# OR
+# 4. Set the system property `specmatic.license.path`
+# Uncomment the below line and provide the license key to specmatic
+# ENV JAVA_OPTS=-Dspecmatic.license.path=/specmatic/specmatic-license.txt
 ```
-  * Using Docker Compose file to mount the license file from the host machine to the docker container at runtime.
+
+  2. Using Docker Compose file to mount the license file from the host machine to the docker container at runtime.
 
 ```yaml
 services:

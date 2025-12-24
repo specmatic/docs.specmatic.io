@@ -151,6 +151,16 @@ Sample input to the hook (STDIN):
 
 ```json
 {
+  "http-request": {
+    "method": "POST",
+    "path": "/api/data",
+    "headers": {
+      "Content-Type": "text/plain"
+    },
+    "body": {
+      "data": "some content"
+    }
+  }
   "http-response": {
     "status": 200,
     "headers": {

@@ -1,18 +1,17 @@
 theme: just-the-docs
 markdown: kramdown
 title: "Specmatic"
-specmatic-core-version: 2.31.3
+specmatic-core-version: 2.34.2
 specmatic-jms-version: 0.6.1
-specmatic-async-version: 1.6.17
-specmatic-studio-version: 1.12.2
-specmatic-openapi-version: 1.19.2
-specmatic-build-reporter-version: 0.1.5
+specmatic-async-version: 1.7.7
+specmatic-studio-version: 1.14.0
+specmatic-openapi-version: 1.22.1
 specmatic-jdbc-version: 0.12.2
 specmatic-redis-version: 0.9.5
 specmatic-release-test-version: 0.0.2
-specmatic-grpc-version: 0.1.19
-specmatic-graphql-version: 1.5.2
-specmatic-arazzo-version: 1.3.6
+specmatic-grpc-version: 0.1.25
+specmatic-graphql-version: 1.5.6
+specmatic-arazzo-version: 1.4.2
 specmatic-google-pubsub-version: 1.6.1
 contact_us_url: "https://specmatic.io/contact-us"
 
@@ -27,6 +26,7 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-redirect-from
+  - jekyll-last-modified-at
 
 logo: "/images/specmatic-logo.png"
 favicon_ico: /images/favicon/favicon.ico

@@ -78,7 +78,7 @@ jmsMock.start()
 {% endtab %}
 {% endtabs %}
 {: .note}
-If you have the [Specmatic Config](/references/configuration.html) set up, you can define the specifications in the `consumes` section and utilize `JmsMock.create(host, port)` in your test setup to create the JMS mock.
+If you have the [Specmatic Config](/references/configuration) set up, you can define the specifications in the `consumes` section and utilize `JmsMock.create(host, port)` in your test setup to create the JMS mock.
 
 This will start the JMS server running on port: 61616 on localhost.
 
@@ -108,7 +108,7 @@ This returns `VerificationResult` which contains `success` boolean and `errors` 
 {% tabs verifyExpectations %}
 {% tab verifyExpectations java %}
 ```java
-VerificationResult result = jmsMock.verifyExpectations();    
+VerificationResult result = jmsMock.verifyExpectations();
 assertThat(result.success).isTrue();
 assertThat(result.errors).isEmpty();
 ```

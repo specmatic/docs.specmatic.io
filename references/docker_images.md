@@ -88,6 +88,6 @@ The Specmatic Docker image contains everything needed to run Specmatic out of th
 
 If you need alternatives to Docker Desktop, consider these container runtime options:
 
-- [Podman Desktop](https://podman-desktop.io/downloads/) - Daemonless container engine compatible with Docker commands
+- [Podman Desktop](https://podman-desktop.io/downloads) - Daemonless container engine compatible with Docker commands
 - [Rancher Desktop](https://rancherdesktop.io/) - Open-source container management with Kubernetes support
 - [Colima](https://github.com/abiosoft/colima) - Lightweight container runtime for macOS

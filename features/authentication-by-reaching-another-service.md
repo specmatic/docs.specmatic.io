@@ -126,7 +126,7 @@ In `($auth.token)`, `auth` is the `value` that we declared above, and `token` is
 ## 3. Run the contract tests
 
 ### Declare the application contract in specmatic.json
-Make sure to declare the contract you're running as a test in [the Specmatic configuration](/references/configuration.html). Take a look at [specmatic.json in the petstore sample project](https://github.com/specmatic/petstore/blob/master/specmatic.json) for an example of this. You can read more about [running contract tests using Specmatic here](/contract_driven_development/contract_testing.html).
+Make sure to declare the contract you're running as a test in [the Specmatic configuration](/references/configuration). Take a look at [specmatic.json in the petstore sample project](https://github.com/specmatic/petstore/blob/master/specmatic.json) for an example of this. You can read more about [running contract tests using Specmatic here](/contract_driven_development/contract_testing.html).
 
 ### Execute the tests
 Finally, run the tests. You must specify the environment while doing so, for Specmatic to pick up the variables and baseurls relevant to that environment.
@@ -137,5 +137,14 @@ If you're running the tests from code, set a property named `environments`. Take
 
 ### How Specmatic runs the tests
 The tests are run in 2 stages.
-* Stage 1: The application contract depends on the auth contract. So Specmatic first runs contract tests from the auth contract, and stores all the exported values for the application contract to use.
-* Stage 2: Specmatic then plugs the exported values into the application contract where required, and goes on to run the application contract in test mode.
+- Authentication
+  - 1. Write the auth contract
+    - Set up the auth credentials
+    - Set up base urls
+    - Exporting auth tokens in the contract
+  - 2. Wire up auth in the application contract
+    - Using the auth variables
+  - 3. Run the contract tests
+    - Declare the application contract in specmatic.json
+    - Execute the tests
+    - How Specmatic runs the tests

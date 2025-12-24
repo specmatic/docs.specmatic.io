@@ -505,7 +505,7 @@ docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -
 
 To recap, in `strict` mode, Specmatic will only respond to requests that have matching examples, inline or external.
 
-You can enable strict mode using configuration as described [here](/references/configuration.html#strict-mode).
+You can enable strict mode using configuration as described [here](/references/configuration/stub-configuration.html#strict-mode).
 
 ## Data Type-Based Examples
 
@@ -1171,7 +1171,7 @@ Now you can import the utility to create the stub server. Below code snippets ar
 import io.specmatic.stub.createStub
 ```
 
-This utility can now be used in your test ```setup``` / ```beforeAll``` method to start the stub server. Specmatic automatically looks for your [Specmatic configuration](/references/configuration.html) file in project root directory / classpath to locate your API Specification files that need to run as part of the stub server.
+This utility can now be used in your test ```setup``` / ```beforeAll``` method to start the stub server. Specmatic automatically looks for your [Specmatic configuration](/references/configuration) file in project root directory / classpath to locate your API Specification files that need to run as part of the stub server.
 
 ```kotlin
 @BeforeAll

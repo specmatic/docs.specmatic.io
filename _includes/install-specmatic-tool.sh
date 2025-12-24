@@ -96,7 +96,15 @@ if [ "$download_success" -eq 0 ]; then
 fi
 
 info "Generating shell completion script..."
-java -cp "$JAR_PATH_ACTUAL" picocli.AutoComplete -n $download_target --force -o "$DOWNLOAD_DIR_ACTUAL/$download_target-completion.sh" "$main_picocli_command"
+
+if java -jar "$JAR_PATH_ACTUAL" generate-completion > /dev/null 2>&1; then
+  info "Generating completion script using 'generate-completion' command."
+  java -jar "$JAR_PATH_ACTUAL" generate-completion > "$DOWNLOAD_DIR_ACTUAL/$download_target-completion.sh"
+
+else
+  info "Falling back to picocli AutoComplete for generating completion script."
+  java -cp "$JAR_PATH_ACTUAL" picocli.AutoComplete -n $download_target --force -o "$DOWNLOAD_DIR_ACTUAL/$download_target-completion.sh" "$main_picocli_command"
+fi
 
 case "$SHELL" in
   */bash)

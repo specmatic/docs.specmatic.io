@@ -9,7 +9,6 @@ layout: none
 {% endcapture %}
 
 {% include install-specmatic-tool.sh
-  main_picocli_command="application.SpecmaticCommand"
   tool_name="Specmatic"
   tool_version=tool_version
   download_target="specmatic"
