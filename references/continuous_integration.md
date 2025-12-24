@@ -145,6 +145,8 @@ After successfully setting up your central contract repository and running the C
 
 ![Successful contract repo](/images/insights_step1_successful.png)
 
+Also, you can see our sample [central contract repository build report on GitHub](https://github.com/specmatic/specmatic-order-contracts/actions/workflows/central-contract-repo-report.yaml)
+
 ## Step 2: Setting up Client, Provider and Domain services
 
 Now that we have our OpenAPI specification checked in, let's bring our Order services to life!
@@ -244,6 +246,8 @@ Upon successful execution of the client CI pipeline, you should see output resem
 
 ![Successful Client CI Pipeline](/images/insights_step2_1_successful.png)
 
+Also, you can see our sample [client build report on GitHub](https://github.com/specmatic/specmatic-order-ui-react/actions/workflows/main.yml)
+
 ### Step 2.2: Setting up CI pipeline for BFF Service
 
 Make sure the BFF service is checked into a Git repository. Then create the following CI pipeline to:
@@ -318,6 +322,8 @@ After running the BFF service CI pipeline, you should see results similar to:
 
 ![Successful BFF CI pipeline](/images/insights_step2_2_successful.png)
 
+Also, you can see our sample [BFF build report on GitHub](https://github.com/specmatic/specmatic-order-bff-java/actions/workflows/gradle.yml)
+
 ### Step 2.3: Setting up CI pipeline for Order API
 
 Make sure Order Domain API service is checked in to a git repository. Then create the following CI pipeline to :
@@ -371,6 +377,8 @@ jobs:
 Upon completion of the Order API CI pipeline, you should see output like this:
 
 ![Success Order API CI pipeline](/images/insights_step2_3_successful.png)
+
+Also, you can see our sample [Order API build report on GitHub](https://github.com/specmatic/specmatic-order-api-java/actions/workflows/maven.yml)
 
 ### Summary of Progress
 
