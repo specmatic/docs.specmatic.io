@@ -12,10 +12,12 @@ Continuous Integration
 ==============
 <!-- TOC -->
 * [Continuous Integration](#continuous-integration)
-  * [What You will Achieve](#what-you-will-achieve)
+  * [Objective of this tutorial](#objective-of-this-tutorial)
+  * [Architecture Overview](#architecture-overview)
   * [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
     * [Setup overview](#setup-overview)
     * [Setting up the central contract repository](#setting-up-the-central-contract-repository)
+    * [CI Pipeline Setup](#ci-pipeline-setup)
   * [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
     * [Step 2.1: Setting Up CI pipeline for client](#step-21-setting-up-ci-pipeline-for-client)
     * [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
@@ -33,9 +35,9 @@ Continuous Integration
       * [Examples](#examples)
 <!-- TOC -->
 
-Specmatic is a platform and programming language independent executable. We can run it in all CI environments through [command line](/getting_started/cli_quick_start.html#set-up).
+Specmatic is a platform and programming language independent executable. We can run it in all CI environments through the [command line interface](/getting_started/cli_quick_start.html#set-up).
 
-## What You will Achieve
+## Objective of this tutorial
 
 By the end of this tutorial, you'll have CI Pipeline running Specmatic on your:
 
@@ -45,27 +47,33 @@ By the end of this tutorial, you'll have CI Pipeline running Specmatic on your:
 
 Let's get started!
 
-## Step 1: Setting Up a Central Contract Repository
-
-### Setup overview
-
-A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing. In this tutorial, we'll be working with a typical scenario of microservices & microfrontends involving a Backend-for-Frontend (BFF) and a Domain Service. Here's an overview of what we'll be setting up:
+## Architecture Overview
+In this tutorial, we'll be working with a typical scenario of microservices & microfrontends involving a Backend-for-Frontend (BFF) and a Domain Service. Here's an overview of what we'll be setting up:
 
 ![Order Microservices architecture](/images/insights_demo_architecture.png)
 
 In this architecture:
 
-The App represents the client application (e.g., a mobile app or web frontend)
-The *BFF (Backend-for-Frontend)* acts as an intermediary, tailoring the API for the specific client needs. The *Domain Service* represents the core business logic and data management
+- The App represents the client application (e.g., a mobile app or web frontend)
+- The *BFF (Backend-for-Frontend)* acts as an intermediary, tailoring the API for specific client needs 
+- The *Domain Service* represents the core business logic and data management
 
 We'll be working with two OpenAPI specifications:
 
-* `order_bff.yaml`: Implemented by the BFF services, this specification defines the API contract for clients (like the mobile app).
-* `order_api.yaml`: Implemented by the Domain Service, this specification defines the API contract for BFFs.
+* `order_bff.yaml`: Implemented by the `BFF services`, this specification defines the API contract between `clients` (like the mobile app) and the `BFF`.
+* `order_api.yaml`: Implemented by the `Domain Service`, this specification defines the API contract between the `BFF` and the `Domain Service`.
+
+## Step 1: Setting Up a Central Contract Repository
+
+### Setup overview
+
+A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing.
+
+If you already have a central contract repository, you can use that instead and skip to the [next section](#ci-pipeline-setup).
 
 ### Setting up the central contract repository
 
-1. Create a new Git repository named "api-contracts".
+1. Create a new Git repository named "api-contracts". 
 2. In this repository, create a folder structure to organize your OpenAPI specifications. For our example, we will do it as follows:
 
       ```
@@ -81,15 +89,16 @@ We'll be working with two OpenAPI specifications:
   - [Order BFF OpenAPI Spec](ci_tutorial_spec_files/order_bff.yaml)
   - [Order Domain API OpenAPI Spec](ci_tutorial_spec_files/order_api.yaml)
 
-4. Set up a simple CI pipeline to perform the following actions on OpenAPI specs in the central contract repo:
+### CI Pipeline Setup
+We need to set up a simple CI pipeline to perform the following actions on OpenAPI specs in the central contract repo:
 * lint
 * check backward compatibility of your contracts using Specmatic
 * generate insights report, using specmatic docker image
-* run specmatic insights build reporter
+* publish build reports to specmatic insights
 
 ```yaml
 {% raw %}
-name: Lint specifications and check Backward Compatibility
+name: Lint specifications, check backward compatibility and generate report
 
 on:
   push:
