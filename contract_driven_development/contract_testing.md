@@ -14,84 +14,75 @@ Contract Testing
 <img alt="Contract Testing" src="/images/contract-testing.png" style="max-width: 100%; height: auto;" />
 
 <!-- TOC -->
-- [Contract Testing](#contract-testing)
-    - [Overview](#overview)
-    - [Specmatic Contract Test - Command Line](#specmatic-contract-test---command-line)
-    - [How the contract test works (step-by-step)](#how-the-contract-test-works-step-by-step)
-    - [Externalising examples / test cases](#externalising-examples--test-cases)
-    - [Generating examples](#generating-examples)
-    - [Strict Mode](#strict-mode)
-    - [Boundary Condition Testing](#boundary-condition-testing)
-    - [Very large strings](#very-large-strings)
-    - [JUnit Output From The Command](#junit-output-from-the-command)
-    - [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
-    - [When The Example Path Matches Multiple Paths In The API Specification](#when-the-example-path-matches-multiple-paths-in-the-api-specification)
-    - [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
-    - [Configuring base urls](#configuring-base-urls)
-    - [Handling multipart form-data and file uploads](#handling-multipart-form-data-and-file-uploads)
-    - [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
-    - [Handling Application authentication](#handling-application-authentication)
-    - [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
-    - [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
-    - [Programmatically executing Specmatic Contract Tests](#programmatically-executing-specmatic-contract-tests)
-    - [HTML Report](#html-report)
-      - [Summary](#summary)
-      - [Coverage Table](#coverage-table)
-      - [Remarks](#remarks)
-    - [Referring to local specifications](#referring-to-local-specifications)
-    - [Examples that are not passing yet](#examples-that-are-not-passing-yet)
-    - [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
-  - [Running Specific Tests](#running-specific-tests)
-    - [Supported Filters \& Operators](#supported-filters--operators)
-    - [Filter Examples](#filter-examples)
-    - [CLI Usage](#cli-usage)
-    - [Programmatic Usage](#programmatic-usage)
-    - [Additional Tips](#additional-tips)
-  - [API Coverage](#api-coverage)
-      - [Enable the Actuator Mapping Endpoint](#enable-the-actuator-mapping-endpoint)
-      - [Use Swagger UI](#use-swagger-ui)
-  - [Overlays](#overlays)
-    - [Introduction](#introduction)
-    - [Understanding with a Real-World Example](#understanding-with-a-real-world-example)
-    - [Base Specification](#base-specification)
-    - [Overlay Specification](#overlay-specification)
-    - [Using Overlays in Specmatic](#using-overlays-in-specmatic)
-      - [Step 1: Setting Up Files](#step-1-setting-up-files)
-      - [Step 2: Specifying Overlay Files](#step-2-specifying-overlay-files)
-      - [Step 3: Understanding the Results](#step-3-understanding-the-results)
-    - [Further Reading](#further-reading)
-  - [Hooks](#hooks)
-    - [Overview](#overview-1)
-    - [Real-World Scenarios](#real-world-scenarios)
-    - [API Gateway Transformations](#api-gateway-transformations)
-    - [Implementation Example](#implementation-example)
-      - [Initial Client API Specification](#initial-client-api-specification)
-    - [Setting Up Test Hooks](#setting-up-test-hooks)
-    - [Sample Project Access](#sample-project-access)
-      - [Creating the JAR File](#creating-the-jar-file)
-    - [How It Works](#how-it-works)
-    - [Conclusion](#conclusion)
-  - [Advanced Features](#advanced-features)
-    - [Generative Tests](#generative-tests)
-    - [Smart Resiliency Orchestration](#smart-resiliency-orchestration)
-      - [Accepted Response Handling](#accepted-response-handling)
-        - [Core Requirements](#core-requirements)
-        - [Using Examples](#using-examples)
-        - [Unexpected Accepted Response](#unexpected-accepted-response)
-        - [Monitor Response Schema](#monitor-response-schema)
-      - [Too Many Requests Handling](#too-many-requests-handling)
-        - [Core Requirements](#core-requirements-1)
-        - [Using Examples](#using-examples-1)
-        - [Unexpected Too Many Requests Response](#unexpected-too-many-requests-response)
-      - [Example](#example)
-    - [Limiting the Count of Tests](#limiting-the-count-of-tests)
-    - [Using matching branches in the central contract repo](#using-matching-branches-in-the-central-contract-repo)
-    - [Sample Project](#sample-project)
+* [Contract Testing](#contract-testing)
+    * [Overview](#overview)
+    * [Specmatic Contract Test - Command Line](#specmatic-contract-test---command-line)
+    * [How the contract test works (step-by-step)](#how-the-contract-test-works-step-by-step)
+    * [Externalising examples / test cases](#externalising-examples--test-cases)
+    * [Generating examples](#generating-examples)
+    * [Strict Mode](#strict-mode)
+    * [Boundary Condition Testing](#boundary-condition-testing)
+    * [Very large strings](#very-large-strings)
+    * [JUnit Output From The Command](#junit-output-from-the-command)
+    * [When The API Does Not Match The API Specification](#when-the-api-does-not-match-the-api-specification)
+    * [When The Example Path Matches Multiple Paths In The API Specification](#when-the-example-path-matches-multiple-paths-in-the-api-specification)
+    * [Declaring Contracts In Configuration](#declaring-contracts-in-configuration)
+    * [Configuring base urls](#configuring-base-urls)
+    * [Handling multipart form-data and file uploads](#handling-multipart-form-data-and-file-uploads)
+    * [The Java Helper For Java Projects](#the-java-helper-for-java-projects)
+    * [Handling Application authentication](#handling-application-authentication)
+    * [Authentication In CI For HTTPS Git Source](#authentication-in-ci-for-https-git-source)
+    * [Authentication In CI For SSH Git Source](#authentication-in-ci-for-ssh-git-source)
+    * [Programmatically executing Specmatic Contract Tests](#programmatically-executing-specmatic-contract-tests)
+    * [HTML Report](#html-report)
+      * [Summary](#summary)
+      * [Coverage Table](#coverage-table)
+      * [Remarks](#remarks)
+    * [Referring to local specifications](#referring-to-local-specifications)
+    * [Examples that are not passing yet](#examples-that-are-not-passing-yet)
+    * [Examples that trigger 400 responses](#examples-that-trigger-400-responses)
+  * [Running Specific Tests](#running-specific-tests)
+    * [Supported Filters & Operators](#supported-filters--operators)
+    * [Filter Examples](#filter-examples)
+    * [CLI Usage](#cli-usage)
+    * [Programmatic Usage](#programmatic-usage)
+    * [Additional Tips](#additional-tips)
+  * [API Coverage](#api-coverage)
+      * [Enable the Actuator Mapping Endpoint](#enable-the-actuator-mapping-endpoint)
+      * [Use Swagger UI](#use-swagger-ui)
+  * [Overlays](#overlays)
+  * [Hooks](#hooks)
+    * [Overview](#overview-1)
+    * [Real-World Scenarios](#real-world-scenarios)
+    * [API Gateway Transformations](#api-gateway-transformations)
+    * [Implementation Example](#implementation-example)
+      * [Initial Client API Specification](#initial-client-api-specification)
+    * [Setting Up Test Hooks](#setting-up-test-hooks)
+    * [Sample Project Access](#sample-project-access)
+      * [Creating the JAR File](#creating-the-jar-file)
+    * [How It Works](#how-it-works)
+    * [Conclusion](#conclusion)
+  * [Advanced Features](#advanced-features)
+    * [Generative Tests](#generative-tests)
+    * [Smart Resiliency Orchestration](#smart-resiliency-orchestration)
+      * [Accepted Response Handling](#accepted-response-handling)
+        * [Core Requirements](#core-requirements)
+        * [Using Examples](#using-examples)
+        * [Unexpected Accepted Response](#unexpected-accepted-response)
+        * [Monitor Response Schema](#monitor-response-schema)
+      * [Too Many Requests Handling](#too-many-requests-handling)
+        * [Core Requirements](#core-requirements-1)
+        * [Using Examples](#using-examples-1)
+        * [Unexpected Too Many Requests Response](#unexpected-too-many-requests-response)
+      * [Example](#example)
+    * [Limiting the Count of Tests](#limiting-the-count-of-tests)
+    * [Using matching branches in the central contract repo](#using-matching-branches-in-the-central-contract-repo)
+    * [Sample Project](#sample-project)
 <!-- TOC -->
 
 ### Overview
 
-As seen in "[getting started](/getting_started/cli_quick_start.html#provider-side---contract-as-a-test)" Specmatic is able to leverage your API Specifications as "Contract Tests" to verify if your application is adhering the specification. This step is critical in making sure that your application / provider is honouring its side of the contract in the "Contract Driven Development" process just like how consumers build against a smart mock that is based the same OpenAPI Specification.
+As seen in "[getting started](/getting_started/cli_quick_start.html#provider-side---contract-as-a-test)" Specmatic is able to leverage your API Specifications as "Contract Tests" to verify if your application is adhering the specification. This step is critical in making sure that your application / provider is honouring its side of the contract in the "Contract Driven Development" process. Similar to how consumers build against a smart mock that is based the same OpenAPI Specification.
 
 ### Specmatic Contract Test - Command Line
 
@@ -270,7 +261,7 @@ However, the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and use
 
 ### Externalising examples / test cases
 
-You can store test data in json files side-by-side to be used in the contract test, instead of inline examples.
+You can store test data in JSON files side-by-side to be used in the contract test, instead of inline examples.
 
 Let's try it out. Please clone below sample repo.
 
@@ -385,7 +376,7 @@ Alternatively, we can also run the same command with the Docker image:
 docker run specmatic/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
 ```
 
-The command will create JUnit test xml output in the specified directory which you can then include as part of CI pipeline results etc.
+The command will create JUnit test XML output in the specified directory which you can then include as part of CI pipeline results etc.
 
 ### When The API Does Not Match The API Specification
 
@@ -632,7 +623,7 @@ contracts:
 
 Specmatic adheres to [OpenAPI multipart content support](https://spec.openapis.org/oas/latest.html#special-considerations-for-multipart-content).
 
-Here is a snippet of OpenAPI yaml that demonstrates the same.
+Here is a snippet of OpenAPI YAML that demonstrates the same.
 
 ```yaml
 "/products/{id}/image":
@@ -689,7 +680,7 @@ Here is a snippet of OpenAPI yaml that demonstrates the same.
 
 Note how we are referencing the image file in the example as `externalValue`. Specmatic will look for this file (box_image.jpg) in project dir and send the contents as part of the multipart HTTP request.
 
-Please read through the [complete OpenAPI spec](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) and try out the [sample project which implements this endpoint](https://github.com/specmatic/specmatic-order-api-java). The sample project even dumps the file that it receives as part of the test request to a gitignored folder called `.images` in the project root directory so that you can verify that encoding is also preserved as part of the test.
+Please read through the [complete OpenAPI spec](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) and try out the [sample project which implements this endpoint](https://github.com/specmatic/specmatic-order-api-java). The sample project even dumps the file that it receives as part of the test request to a git ignored folder called `.images` in the project root directory so that you can verify that encoding is also preserved as part of the test.
 
 ### The Java Helper For Java Projects
 
@@ -983,7 +974,7 @@ Remarks are displayed for each row in table and act as a summary of the tests ex
 | Remark              | Definition                                                                                                                     |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------|
 | **Covered**         | Tests were run for this group. Red indicates a failure in one or more tests, while green means all tests passed                |
-| **Missing In Spec** | The endpoint is implemented on the service but isn't documented in the OpenAPI Specification                                     |
+| **Missing In Spec** | The endpoint is implemented on the service but isn't documented in the OpenAPI Specification                                   |
 | **Not Implemented** | The endpoint is documented in the OpenAPI Specification but isn't implemented by the service                                   |
 | **Not Covered**     | Tests for this group were not executed or were skipped                                                                         |
 | **WIP**             | This endpoint is marked WIP in the OpenAPI Specification, Any failures in this grouped are indicated by yellow and disregarded |
@@ -1065,12 +1056,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Employee'
-              SUCCESS:
-                value:
-                  id: 10
-                  name: "Heidi"
-                  department: "Engineering"
-                  designation: "Team Lead"
+              examples: 
+                SUCCESS:
+                  value:
+                    id: 10
+                    name: "Heidi"
+                    department: "Engineering"
+                    designation: "Team Lead"
         '400':
           description: Invalid request
           content:
@@ -1078,7 +1070,8 @@ paths:
               schema:
                 type: string
               examples:
-                INVALID_ID
+                INVALID_ID:
+                  value: "Invalid ID provided"
 components:
   schemas:
     Employee:
@@ -1117,35 +1110,35 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 
 ### Supported Filters & Operators
 
-| Available Filters           | Test  | Stub  | Description                                                                                               |
-|-----------------------------|:--:|:--:|-----------------------------------------------------------------------------------------------------------|
-| `STATUS`                    | ✅ | ✅ | Filter by status (`200`, `500`)                                                                           |
-| `PATH`                      | ✅ | ✅ | Filter by request paths (`/users`, `/products`), supports wildcard using `*` (`/users/*`, `/products/*`) |
-| `METHOD`                    | ✅ | ✅ | Filter by HTTP methods (`GET`, `POST`, etc.)                                                              |
-| `PARAMETERS.QUERY`          | ✅ | ✅ | Filter by query parameters, supports key-value match (`PARAMETERS.QUERY.byName='John'`)                  |
-| `PARAMETERS.HEADER`         | ✅ | ✅ | Filter by header parameters, supports key-value match (`PARAMETERS.HEADER.X-REQUEST-ID='Hello1234'`)     |
-| `PARAMETERS.PATH`           | ✅ | ✅ | Filter by path parameters, supports key-value match (`PARAMETERS.PATH.id='99'`)                           |
-| `REQUEST-BODY.CONTENT-TYPE` | ✅ | ✅ | Filter by request body media type (MIME type) (`application/json`, `text/plain`, `application/*`)        |
-| `RESPONSE.CONTENT-TYPE`     | ✅ | ✅ | Filter by response content type (`application/json`, `text/plain`, `application/*`)                       |
-| `EXAMPLE-NAME`              | ✅ | ✅ | Filter by example name (`SUCCESS_200_OK`, `PETS_200_OK`)                                                  |
-| `TAGS`                      | ✅ | ✅ | Filter by tags                                                                                            |
-| `SUMMARY`                   | ✅ | ✅ | Filter by summary                                                                                         |
-| `OPERATION-ID`              | ✅ | ✅ | Filter by operation ID                                                                                    |
-| `DESCRIPTION`               | ✅ | ✅ | Filter by description                                                                                     |
+| Available Filters           | Test | Stub | Description                                                                                              |
+|-----------------------------|:----:|:----:|----------------------------------------------------------------------------------------------------------|
+| `STATUS`                    |  ✅   |  ✅   | Filter by status (`200`, `500`)                                                                          |
+| `PATH`                      |  ✅   |  ✅   | Filter by request paths (`/users`, `/products`), supports wildcard using `*` (`/users/*`, `/products/*`) |
+| `METHOD`                    |  ✅   |  ✅   | Filter by HTTP methods (`GET`, `POST`, etc.)                                                             |
+| `PARAMETERS.QUERY`          |  ✅   |  ✅   | Filter by query parameters, supports key-value match (`PARAMETERS.QUERY.byName='John'`)                  |
+| `PARAMETERS.HEADER`         |  ✅   |  ✅   | Filter by header parameters, supports key-value match (`PARAMETERS.HEADER.X-REQUEST-ID='Hello1234'`)     |
+| `PARAMETERS.PATH`           |  ✅   |  ✅   | Filter by path parameters, supports key-value match (`PARAMETERS.PATH.id='99'`)                          |
+| `REQUEST-BODY.CONTENT-TYPE` |  ✅   |  ✅   | Filter by request body media type (MIME type) (`application/json`, `text/plain`, `application/*`)        |
+| `RESPONSE.CONTENT-TYPE`     |  ✅   |  ✅   | Filter by response content type (`application/json`, `text/plain`, `application/*`)                      |
+| `EXAMPLE-NAME`              |  ✅   |  ✅   | Filter by example name (`SUCCESS_200_OK`, `PETS_200_OK`)                                                 |
+| `TAGS`                      |  ✅   |  ✅   | Filter by tags                                                                                           |
+| `SUMMARY`                   |  ✅   |  ✅   | Filter by summary                                                                                        |
+| `OPERATION-ID`              |  ✅   |  ✅   | Filter by operation ID                                                                                   |
+| `DESCRIPTION`               |  ✅   |  ✅   | Filter by description                                                                                    |
 
 
-| Operator        | Description                                           |
-|----------------|-------------------------------------------------------|
-| `&&`           | Represents a logical AND operator.                    |
-| `||`           | Represents a logical OR operator.                     |
-| `!`            | Negates the applied condition.                        |
-| `=`, `!=`      | Comparison operators for comparing a key with its value. |
-| `(`, `)`       | Parentheses are used to group multiple filter expressions. |
+| Operator  | Description                                                |
+|-----------|------------------------------------------------------------|
+| `&&`      | Represents a logical AND operator.                         |
+| `||`      | Represents a logical OR operator.                          |
+| `!`       | Negates the applied condition.                             |
+| `=`, `!=` | Comparison operators for comparing a key with its value.   |
+| `(`, `)`  | Parentheses are used to group multiple filter expressions. |
 
 ### Filter Examples
 
 | Filter                      | Examples                                                                                                                                                |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `STATUS`                    | • `STATUS='200'` (only 200 responses)<br>• `STATUS>='400'` (all errors)<br>• `STATUS<'500'` (exclude 5xx errors)                                        |
 | `PATH`                      | • `PATH='/users'` (exact match)<br>• `PATH='/products/*'` (matches all subpaths under /products)                                                        |
 | `METHOD`                    | • `METHOD='GET'` (GET requests)<br>• `METHOD='POST'` (POST requests)                                                                                    |
@@ -1203,8 +1196,6 @@ specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' &
 specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
 ```
 
-9.
-
 ### Programmatic Usage
 
 Set environment properties in your test setup:
@@ -1254,184 +1245,9 @@ The data from the coverage report is saved to a file located at `build/reports/s
 ---
 
 ## Overlays
+Specmatic supports overlays to modify API specifications at runtime without changing the original specification files. Overlays are useful when you want to add or modify certain aspects of the API specification for specific testing scenarios.
 
-### Introduction
-[Overlays](https://www.openapis.org/blog/2024/10/22/announcing-overlay-specification) provide a powerful mechanism to modify OpenAPI specifications without altering the base specification. They're particularly useful when you need to simulate middleware behavior, such as API gateways modifying requests, or when you need to extend an existing API specification.
-
-![Overlays diagram](/images/overlays-concept.svg)
-
-### Understanding with a Real-World Example
-
-Consider this common scenario in microservices architecture:
-
-```mermaid
-graph LR
-    Client[Client] -->|Original Headers| Gateway[API Gateway]
-    Gateway -->|Modified Headers| Backend[Backend Service]
-    style Gateway fill:#f9f,stroke:#333,stroke-width:4px
-```
-
-In this scenario:
-1. A client sends requests to your service through an API gateway
-2. The gateway modifies headers (adds new ones, transforms existing ones)
-3. Your backend service receives the modified request
-
-### Base Specification
-Here's our base employee service specification:
-
-```yaml
-openapi: 3.0.0
-info:
-  title: Employees
-  version: '1.0'
-servers: []
-paths:
-  '/employees':
-    post:
-      summary: Fetch employee details
-      tags: []
-      parameters:
-        - in: header
-          name: correlation-id
-          schema:
-            type: string
-          required: true
-          description: Request correlation ID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-      responses:
-        '200':
-          description: Details for employee id in request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-components:
-  schemas:
-    Employee:
-      title: Employee
-      type: object
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        department:
-          type: string
-        designation:
-          type: string
-```
-
-### Overlay Specification
-To simulate API gateway behavior, we'll use an overlay to modify headers:
-
-```yaml
-overlay: 1.0.0
-actions:
-  - target: $.paths['/employees'].post
-    update:
-      parameters:
-        - in: header
-          name: X-Correlation-ID
-          schema:
-            type: string
-          required: true
-          description: Correlation ID for request tracking
-        - in: header
-          name: X-Gateway-Token
-          schema:
-            type: string
-          required: true
-          description: API Gateway authentication token
-        - in: header
-          name: X-Request-ID
-          schema:
-            type: string
-            format: uuid
-          required: true
-          description: Unique request identifier for tracing
-```
-
-### Using Overlays in Specmatic
-
-#### Step 1: Setting Up Files
-1. Save your base specification as `employees.yaml`
-2. Save your overlay specification as `gateway_overlay.yaml`
-
-#### Step 2: Specifying Overlay Files
-
-You can specify overlay files in three ways:
-
-1. **Automatic Detection in Test Mode** (Recommended)
-   - Name your overlay file following the pattern: `<specname>_overlay.yaml`
-   - Place it in the same directory as your spec file
-   - Specmatic will automatically detect and apply it when running in test mode
-
-  Example:
-```bash
-  # If your spec file is named:
-  employees.yaml
-
-  # Name your overlay file as:
-  employees_overlay.yaml
-```
-  Note: The automatic detection is:
-
-  Only available in test mode
-  Case insensitive
-  Only works with .yaml extension
-  Requires exact naming pattern with underscore: _overlay.yaml
-
-
-2. **Command Line Approach**
-
-```shell
-  specmatic test --port 9000 --overlay-file gateway_overlay.yaml
-```
-
-3. **Environment Variable Approach**
-
-```shell
-  export OVERLAY_FILE_PATH=gateway_overlay.yaml
-  # Then run your tests programmatically or via command line
-````
-
-The environment variable approach is particularly useful when:
-
-Running tests programmatically
-Setting up CI/CD pipelines
-Working with test frameworks
-Need to specify overlays globally for multiple test runs
-
-#### Step 3: Understanding the Results
-When Specmatic runs the tests, it will send requests with the modified headers:
-
-```shell
-POST /employees
-X-Correlation-ID: correlation-123
-X-Gateway-Token: gateway-token-456
-X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
-Content-Type: application/json
-
-{
-  "id": 1,
-  "name": "John Doe",
-  "department": "Engineering",
-  "designation": "Senior Engineer"
-}
-```
-
-### Further Reading
-For a complete list of modifications possible with overlays, refer to the [OpenAPI Overlay Specification](https://spec.openapis.org/overlay/v1.0.0.html).
-
----
+More details on overlays can be found in the [Overlays Documentation](/features/overlays.html).
 
 ## Hooks
 
@@ -1546,7 +1362,7 @@ Both configurations are equivalent and can be used interchangeably in your Specm
 
 Step 2: **Create the hook script:**
 
-Specmatic supports hook script in any executable format (Python, Shell, Java, Javascript etc.). Below are examples in Python and Java.
+Specmatic supports hook script in any executable format (Python, Shell, Java, JavaScript etc.). Below are examples in Python and Java.
 
 Please note:
 * In the hook script we access an environment variable CONTRACT_FILE which is automatically set by Specmatic
@@ -1723,7 +1539,7 @@ paths:
                   value:
                     id: 10
         '400':
-          description: Repsonse to a bad product creation
+          description: Response to a bad product creation
           content:
             application/json:
               schema:
@@ -1921,7 +1737,8 @@ paths:
           description: Too many requests
           headers:
             Retry-After:
-              type: integer
+              schema: 
+                type: integer
 
   /order:
     post:
@@ -1986,6 +1803,17 @@ components:
       allOf:
         - $ref: '#/components/schemas/BaseProduct'
         - $ref: '#/components/schemas/Id'
+    Order:
+      title: Order Details
+      type: object
+      properties:
+        productid:
+          type: integer
+        count:
+          type: integer
+      required:
+        - productid
+        - count
     MonitorResponse:
       type: object
       description: Monitoring of resources
