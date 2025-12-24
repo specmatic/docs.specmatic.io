@@ -263,3 +263,9 @@ Headers: {}
 [Specmatic::Test] Result: PASSED
 [Specmatic::Test] << Test finished
 ```
+### Sample Project
+Please have a look at the following sample project to understand how to utilize `Specmatic` for testing event flows and behaviors in your application:
+- [specmatic-kafka-sample-asyncapi3](https://github.com/specmatic/specmatic-kafka-sample-asyncapi3)
+
+## Conclusion
+By leveraging OpenAPI Overlays with AsyncAPI specifications, Specmatic empowers teams to define and test triggers and side effects in event-driven systems. This approach enables comprehensive end-to-end testing of event flows and behaviors without relying on mocks or brittle test harnesses.
