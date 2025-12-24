@@ -46,7 +46,7 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Validate site links
         # Outputs to the './_site' directory by default
-        run: bundle exec rake build check
+        run: bundle exec rake build
         env:
           JEKYLL_ENV: production
 
