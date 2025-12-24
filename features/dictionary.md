@@ -548,7 +548,7 @@ the command will include only valid values in the dictionary, allowing it to be 
 
 ### Example Directory Parameter
 
-If you have examples in some other existing directory, such as `./examples`, you can provide the path to that directory using the `--examples-dir` option as shown below:
+If you have examples in some other existing directory, you could provide the path to that directory using the `--examples-dir` option as shown below:
 
 ```shell
 docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/examples:/usr/src/app/examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic-openapi examples dictionary --spec-file employees.yaml --examples-dir ./examples
