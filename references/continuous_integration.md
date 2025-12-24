@@ -8,10 +8,10 @@ redirect_from:
   - /documentation/references/continuous_integration.html
 ---
 
-Contract Tests
+Continuous Integration
 ==============
 <!-- TOC -->
-* [Contract Tests](#contract-tests)
+* [Continuous Integration](#continuous-integration)
   * [Cloning API specifications from authenticated Central Contract Repositories](#cloning-api-specifications-from-authenticated-central-contract-repositories)
     * [Authentication params in Git Repo URI](#authentication-params-in-git-repo-uri)
       * [GitLab](#gitlab)
