@@ -44,6 +44,10 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+      - name: show jekyll config
+        run: |
+          env
+          cat _config.yml
       - name: Validate site links
         # Outputs to the './_site' directory by default
         run: bundle exec rake build
