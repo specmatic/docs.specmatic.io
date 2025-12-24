@@ -166,4 +166,4 @@ Refer to the [Specmatic Docker Images documentation](/references/docker_images.h
 
 #### Using the service account license key in CI/CD or automated systems
 
-[Enterprise Onboarding - Specmatic License Keys](/enterprise_onboarding/insights.html#step-3-configuring-specmatic-insights) provides detailed instructions on how to set up and use the license key in CI/CD pipelines and automated systems.
+[Enterprise Onboarding - Specmatic License Keys](/enterprise_onboarding/insights.html#step-2-configuring-specmatic-insights) provides detailed instructions on how to set up and use the license key in CI/CD pipelines and automated systems.

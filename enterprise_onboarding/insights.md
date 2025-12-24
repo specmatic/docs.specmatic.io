@@ -13,20 +13,11 @@ redirect_from:
   * [Overview](#overview)
   * [Introduction](#introduction)
     * [Features](#features)
-  * [What You will Achieve](#what-you-will-achieve)
   * [Prerequisites](#prerequisites)
-  * [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
-    * [Setup overview](#setup-overview)
-    * [Setting up the central contract repository](#setting-up-the-central-contract-repository)
-  * [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
-    * [Step 2.1: Setting Up CI pipeline for client](#step-21-setting-up-ci-pipeline-for-client)
-    * [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
-    * [Step 2.3: Setting up CI pipeline for Order API](#step-23-setting-up-ci-pipeline-for-order-api)
-    * [Summary of Progress](#summary-of-progress)
-  * [Step 3: Configuring Specmatic Insights](#step-3-configuring-specmatic-insights)
-    * [Setting Up Specmatic Insights](#setting-up-specmatic-insights)
+  * [Step 1: Setting up CI/CD Pipelines with Specmatic](#step-1-setting-up-cicd-pipelines-with-specmatic)
+  * [Step 2: Configuring Specmatic Insights](#step-2-configuring-specmatic-insights)
     * [Integrating with CI/CD Pipelines](#integrating-with-cicd-pipelines)
-  * [Step 4: Visualizing Your API Ecosystem](#step-4-visualizing-your-api-ecosystem)
+  * [Step 3: Visualizing Your API Ecosystem](#step-3-visualizing-your-api-ecosystem)
     * [Viewing Your Service Mesh](#viewing-your-service-mesh)
     * [Understanding the Dashboard](#understanding-the-dashboard)
   * [Next Steps](#next-steps)
@@ -65,383 +56,24 @@ Additionally, the dashboard provides a comprehensive overview of your API ecosys
 
 ![Insights Dashboard](/images/insights_feature_2.png)
 
-## What You will Achieve
-
-By the end of this tutorial, you'll have:
-
-1. A central repository for your API contracts
-2. CI pipelines for both API providers and consumers using Specmatic
-3. A clear visualization of your API ecosystem with Specmatic Insights
-
-Let's get started!
-
 ## Prerequisites
 
-> **Note:** To publish builds to Specmatic Insights, you must have a valid license key issued by Specmatic Insights. Please ensure you have obtained your license before proceeding with the setup.
+> **Note:** To publish builds to Specmatic Insights, you must have a valid license key issued by Specmatic. Please ensure you have obtained your license before proceeding with the setup.
 
 For details on acquiring and managing your license, refer to the [License Key Guide](/enterprise_onboarding/license_key.html).
 
-## Step 1: Setting Up a Central Contract Repository
+## Step 1: Setting up CI/CD Pipelines with Specmatic
 
-### Setup overview
+Please go through the detailed [Continuous Integration](/references/continuous_integration.html) guide to set up Specmatic in your CI/CD pipelines for: 
+- Central Contract Repo
+- API Consumers 
+- API Providers 
 
-A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing. In this tutorial, we'll be working with a typical scenario of microservices & microfrontends involving a Backend-for-Frontend (BFF) and a Domain Service. Here's an overview of what we'll be setting up:
-
-![Order Microservices architecture](/images/insights_demo_architecture.png)
-
-In this architecture:
-
-The App represents the client application (e.g., a mobile app or web frontend)
-The *BFF (Backend-for-Frontend)* acts as an intermediary, tailoring the API for the specific client needs. The *Domain Service* represents the core business logic and data management
-
-We'll be working with two OpenAPI specifications:
-
-* `order_bff.yaml`: Implemented by the BFF services, this specification defines the API contract for clients (like the mobile app).
-* `order_api.yaml`: Implemented by the Domain Service, this specification defines the API contract for BFFs.
-
-### Setting up the central contract repository
-
-1. Create a new Git repository named "api-contracts".
-2. In this repository, create a folder structure to organize your OpenAPI specifications. For our example, we will do it as follows:
-
-      ```
-      api-contracts/
-      ├── orders/
-      │   ├── order_bff.yaml
-      │   └── order_api.yaml
-      └── other-services/
-      ```
-
-3. Download and add the following OpenAPI specifications to the repository as depicted above
-
-    - [Order BFF OpenAPI Spec](insights_tutorial_spec_files/order_bff.yaml)
-    - [Order Domain API OpenAPI Spec](insights_tutorial_spec_files/order_api.yaml)
-
-4. Set up a simple CI pipeline to perform the following actions on OpenAPI specs in the central contract repo:
-* lint
-* check backward compatibility of your contracts using Specmatic
-* generate insights report, using specmatic docker image
-* run specmatic insights build reporter
-
-    ```yaml
-    {% raw %}
-    name: Lint specifications and check Backward Compatibility
-
-    on:
-      push:
-        branches: [ "main" ]
-      pull_request:
-        branches: [ "main" ]
-    jobs:
-      run-lint:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v5
-            with:
-              fetch-depth: 0
-
-          - name: Set up Node.js
-            uses: actions/setup-node@v5
-            with:
-              node-version: 'lts'
-
-          - name: Install OpenAPI linter
-            run: npm install -g @stoplight/spectral-cli
-
-          - name: Lint OpenAPI specs
-            run: spectral lint **/*.yaml
-
-          - name: Run OpenAPI Backward Compatibility Check using Specmatic
-            run: |
-              docker run --rm \
-                -v ${{ github.workspace }}:/usr/src/app \
-                specmatic/specmatic \
-                backward-compatibility-check
-
-          - name: Generate central contract repo report
-            run: |
-              docker run --rm \
-                -v ${{ github.workspace }}:/usr/src/app \
-                specmatic/specmatic \
-                central-contract-repo-report
-
-          - name: Write specmatic license key to file
-            run: |
-              mkdir -p ~/.specmatic
-              echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
-
-          - name: Run Specmatic Insights GitHub Build Reporter
-            run: |
-              docker run --rm \
-                -v ${{ github.workspace }}:/usr/src/app \
-                -v ~/.specmatic:/root/.specmatic \
-                specmatic/specmatic \
-                send-report \
-                --branch-name ${{ github.ref_name }} \
-                --repo-name ${{ github.event.repository.name }} \
-                --repo-id ${{ github.repository_id }} \
-                --repo-url ${{ github.event.repository.html_url }}
-      {% endraw %}
-    ```
-
-After successfully setting up your central contract repository and running the CI pipeline, you should see output similar to this:
-
-![Successful contract repo](/images/insights_step1_successful.png)
-
-## Step 2: Setting up Client, Provider and Domain services
-
-Now that we have our OpenAPI specification checked in, let's bring our Order services to life!
-
-**Client** - You can implement the client in the programming language of your choice. Once ready, place the following configuration in a file named `specmatic.yaml` at the root level of your project. This will:
-* Virtualize the BFF service for the client application (based on the `order_bff.yaml` contract), helping to isolate the client.
-
-```yaml
-version: 2
-contracts:
-  - git:
-      url: (your-git-repository)
-    consumes:
-      - path/to/your/spec/in/git/order_bff.yaml # BFF service contract
-```
-
-**BFF Service** - Implement the BFF service in the language of your choice. Once ready, place the following configuration in a file named `specmatic.yaml` at the root level of your project. This will:
-* Virtualize the Domain API service for the BFF application (based on the `order_api.yaml` contract)
-* Test the BFF service as a client (using the `order_bff.yaml` contract)
-
-
-```yaml
-version: 2
-contracts:
-  - git:
-      url: (your-git-repository)
-    provides:
-      - path/to/your/spec/in/git/order_bff.yaml # BFF service contract
-    consumes:
-      - path/to/your/spec/in/git/order_api.yaml # Domain service contract
-```
-
-**Domain Service** - After implementing domain service, place the following configuration in a file named `specmatic.yaml` at the root level of your project. This will test the domain API based on the `order_api.yaml` contract.
-
-```yaml
-version: 2
-contracts:
-  - git:
-      url: (your-git-repository)
-    provides:
-      - path/to/your/spec/in/git/order_api.yaml # Domain service contract
-```
-
-
-### Step 2.1: Setting Up CI pipeline for client
-
-After the client is up and running and checked into a Git repository, you can create the following CI pipeline to:
-* Build the client app
-* Virtualize the BFF service using `order_bff.yaml` and the **Specmatic** Docker image
-* Test the client implementation against the virtualized BFF service
-
-(note: we implemented the client in react, so setting up pipeline accordingly)
-
-```yaml
-{% raw %}
-name: Client Contract Test
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Run Specmatic stub to virtualize the BFF service
-      run: |
-        docker run -d \
-          -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
-          -p 8080:8080 \
-          specmatic/specmatic stub
-
-        # Wait for the stub to be ready
-        sleep 10
-
-    - name: Run component test against the Specmatic stub
-      run: npm run test:component
-      env:
-        STUB_URL: http://localhost:8080
-{% endraw %}
-```
-
-Upon successful execution of the client CI pipeline, you should see output resembling this:
-
-![Successful Client CI Pipeline](/images/insights_step2_1_successful.png)
-
-### Step 2.2: Setting up CI pipeline for BFF Service
-
-Make sure the BFF service is checked into a Git repository. Then create the following CI pipeline to:
-* Build the BFF service
-* Virtualize the Domain service using `order_api.yaml` and the **Specmatic** Docker image
-* Test the BFF service using `order_bff.yaml` and the **Specmatic** Docker image
-
-(note: we implemented the BFF service in Kotlin, so setting up pipeline accordingly)
-
-```yaml
-{% raw %}
-name: BFF Service (Kotlin) CI with Gradle
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: 'true'
-
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
-    - name: Validate Gradle wrapper
-      uses: gradle/wrapper-validation-action@v1
-
-    - name: Run Specmatic stub to virtualize the Order API service
-      run: |
-        docker run -d \
-          -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
-          -p 9000:9000 \
-          specmatic/specmatic stub
-
-        # Wait for the stub to be ready
-        sleep 10
-
-    - name: Start Spring Boot application
-      run: ./gradlew bootRun &
-
-    - name: Wait for application to start
-      run: sleep 30
-
-    - name: Contract Test BFF service using Specmatic
-      run: |
-        docker run \
-          -v ./specmatic.yaml:/usr/src/app/specmatic.yaml \
-          --network=host \
-          specmatic/specmatic \
-          test \
-          --port=8080 \
-          --host=localhost
-
-{% endraw %}
-```
-
-After running the BFF service CI pipeline, you should see results similar to:
-
-![Successful BFF CI pipeline](/images/insights_step2_2_successful.png)
-
-### Step 2.3: Setting up CI pipeline for Order API
-
-Make sure Order Domain API service is checked in to a git repository. Then create the following CI pipeline to :
-* build the Domain API service
-* test Domain API service using `order_api.yaml` and **Specmatic** docker image.
-
-(note: we implemented the Order Domain API service in Kotlin, so setting up pipeline accordingly)
-
-```yaml
-name: Domain API service CI with gradle
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: 'true'
-
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
-    - name: Validate Gradle wrapper
-      uses: gradle/wrapper-validation-action@v1
-
-    - name: Start Spring Boot application
-      run: ./gradlew bootRun &
-
-    - name: Wait for application to start
-      run: sleep 30
-
-    - name: Contract Test Domain API service using Specmatic
-      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "specmatic/specmatic" test --port=9000 --host=localhost
-```
-
-Upon completion of the Order API CI pipeline, you should see output like this:
-
-![Success Order API CI pipeline](/images/insights_step2_3_successful.png)
-
-### Summary of Progress
-
-Congratulations! At this point, you have successfully set up and configured:
-
-✅ Central contract repository with CI/CD for linting and backward compatibility checks <br>
-✅ Client application with CI/CD for building and testing against a virtualized BFF service <br>
-✅ BFF service with CI/CD for building, testing against a virtualized Domain service, and being tested as a provider <br>
-✅ Domain service with CI/CD for building and being tested as a provider <br>
-
-All four components are now integrated with Specmatic for contract testing and service virtualization. This setup ensures that your entire API ecosystem is continuously validated and maintains consistency across all services.
-With this foundation in place, you can now move on to configuring Specmatic Insights to visualize and analyze your API ecosystem.
-
-## Step 3: Configuring Specmatic Insights
-
-### Setting Up Specmatic Insights
+## Step 2: Configuring Specmatic Insights
 
 ### Integrating with CI/CD Pipelines
 
-To get the most out of Specmatic Insights, you need to integrate it into your CI/CD pipelines. Follow these steps for your Client, BFF Service & Order Domain API service
-
-1. As explained in above steps, ensure Specmatic is present in your CI pipelines, helping 'test' and 'virtualize'.
-2. Then, add the 'Specmatic Insights GitHub Build Reporter' to your CI pipelines after specmatic has run on the following:
-2.1 client
-2.2 BFF service
-2.3 and Order API CI workflow
+Please add the following 2 steps to your CI/CD pipeline configuration:
 
 ```yaml
 {% raw %}
@@ -449,7 +81,8 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
   run: |
     mkdir -p ~/.specmatic
     echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
-- name: Publish specmatic reports to Specmatic Insights
+
+- name: Publish Build Reports to Specmatic Insights
   run: |
     docker run --rm \
       -v ~/.specmatic:/root/.specmatic \
@@ -463,15 +96,17 @@ To get the most out of Specmatic Insights, you need to integrate it into your CI
 {% endraw %}
 ```
 
-## Step 4: Visualizing Your API Ecosystem
+This will ensure that your build reports are sent to Specmatic Insights after each CI/CD pipeline execution, allowing Specmatic Insights to aggregate and visualize your API ecosystem effectively.
+
+## Step 3: Visualizing Your API Ecosystem
 
 ### Viewing Your Service Mesh
 
-Once your CI/CD pipelines are set up and have run, you can view your service mesh on the Specmatic Insights dashboard:
+Once your CI/CD pipelines are set up and executed, you should be able to view your service mesh on the Specmatic Insights dashboard:
 
 1. Log in to your Specmatic Insights account.
-2. Navigate to the main dashboard.
-3. You should see a visualization of your services and their dependencies.
+2. After successful login, you will automatically land on the main dashboard.
+3. Now, you should see a visualization of your services and their dependencies.
 
 For example, if you've been following the Order example, your service mesh might look like this:
 
