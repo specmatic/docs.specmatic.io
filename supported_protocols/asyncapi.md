@@ -459,6 +459,312 @@ project/
 
 ---
 
+## Configuration Reference
+
+### Complete Configuration Structure
+
+The `specmatic.yaml` file supports detailed configuration for async messaging protocols. Here's the complete structure:
+
+```yaml
+version: 2
+contracts:
+  - provides:  # or consumes:
+      - specs:
+          - spec/your-service.yaml
+        specType: asyncapi
+        config:
+          # Schema Registry Configuration (optional)
+          schemaRegistry:
+            kind: CONFLUENT
+            url: http://localhost:8085
+            username: admin
+            password: admin-secret
+          
+          # Server Configurations
+          servers:
+            - host: <HOST_URL>
+              protocol: <PROTOCOL>
+              adminCredentials:
+                # Protocol-specific admin properties
+              client:
+                producer:
+                  # Protocol-specific producer properties
+                consumer:
+                  # Protocol-specific consumer properties
+```
+
+---
+
+### Protocol-Specific Configurations
+
+#### Kafka
+
+**Basic Configuration**:
+
+```yaml
+servers:
+  - host: localhost:9092
+    protocol: kafka
+```
+
+**With Authentication (SASL)**:
+
+```yaml
+servers:
+  - host: localhost:9092
+    protocol: kafka
+    adminCredentials:
+      security.protocol: SASL_PLAINTEXT
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin-secret";
+    client:
+      producer:
+        basic.auth.credentials.source: USER_INFO
+        basic.auth.user.info: admin:admin-secret
+      consumer:
+        basic.auth.credentials.source: USER_INFO
+        basic.auth.user.info: admin:admin-secret
+```
+
+**Configuration Options**:
+
+| Property | Description |
+|----------|-------------|
+| `host` | Kafka broker URL (e.g., `localhost:9092`) |
+| `protocol` | Must be `kafka` |
+| `adminCredentials` | Kafka admin client properties for topic management |
+| `client.producer` | Standard Kafka producer properties |
+| `client.consumer` | Standard Kafka consumer properties |
+
+{: .note }
+The `producer` and `consumer` sections accept any standard [Kafka producer](https://kafka.apache.org/documentation/#producerconfigs) and [consumer](https://kafka.apache.org/documentation/#consumerconfigs) configuration properties.
+
+---
+
+#### AWS SQS
+
+**Configuration**:
+
+```yaml
+servers:
+  - host: http://localhost:4566/000000000000
+    protocol: sqs
+    adminCredentials:
+      region: us-east-1
+      aws.access.key.id: test
+      aws.secret.access.key: test
+```
+
+**Configuration Options**:
+
+| Property | Description |
+|----------|-------------|
+| `host` | SQS endpoint URL including account ID |
+| `protocol` | Must be `sqs` |
+| `adminCredentials.region` | AWS region (e.g., `us-east-1`) |
+| `adminCredentials.aws.access.key.id` | AWS access key ID |
+| `adminCredentials.aws.secret.access.key` | AWS secret access key |
+
+{: .note }
+For LocalStack, use `http://localhost:4566/000000000000`. For production AWS, use the full SQS endpoint URL.
+
+---
+
+#### AWS EventBridge
+
+**Configuration**:
+
+```yaml
+servers:
+  - host: http://localhost:4566/000000000000
+    protocol: eventbridge
+    adminCredentials:
+      region: us-east-1
+      aws.access.key.id: test
+      aws.secret.access.key: test
+```
+
+**Configuration Options**:
+
+| Property | Description |
+|----------|-------------|
+| `host` | EventBridge endpoint URL including account ID |
+| `protocol` | Must be `eventbridge` |
+| `adminCredentials.region` | AWS region (e.g., `us-east-1`) |
+| `adminCredentials.aws.access.key.id` | AWS access key ID |
+| `adminCredentials.aws.secret.access.key` | AWS secret access key |
+
+---
+
+### Schema Registry Configuration
+
+Use Schema Registry to manage and validate message schemas (typically with Kafka).
+
+**Confluent Schema Registry**:
+
+```yaml
+config:
+  schemaRegistry:
+    kind: CONFLUENT
+    url: http://localhost:8085
+    username: admin
+    password: admin-secret
+  
+  servers:
+    - host: localhost:9092
+      protocol: kafka
+```
+
+**Configuration Options**:
+
+| Property | Description |
+|----------|-------------|
+| `kind` | Schema registry type (currently `CONFLUENT`) |
+| `url` | Schema registry endpoint URL |
+| `username` | Authentication username (optional) |
+| `password` | Authentication password (optional) |
+
+---
+
+### Multi-Protocol Example
+
+**Mixed SQS and Kafka Configuration**:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/order-service.yaml
+        specType: asyncapi
+        config:
+          servers:
+            # SQS for incoming messages
+            - host: http://localhost:4566/000000000000
+              protocol: sqs
+              adminCredentials:
+                region: us-east-1
+                aws.access.key.id: test
+                aws.secret.access.key: test
+            
+            # Kafka for outgoing messages
+            - host: localhost:9092
+              protocol: kafka
+              adminCredentials:
+                security.protocol: SASL_PLAINTEXT
+                sasl.mechanism: PLAIN
+                sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin-secret";
+              client:
+                producer:
+                  basic.auth.credentials.source: USER_INFO
+                  basic.auth.user.info: admin:admin-secret
+```
+
+[//]: # (---)
+
+[//]: # ()
+[//]: # (### Environment-Specific Configuration)
+
+[//]: # ()
+[//]: # (**Development &#40;LocalStack + Local Kafka&#41;**:)
+
+[//]: # ()
+[//]: # (```yaml)
+
+[//]: # (config:)
+
+[//]: # (  servers:)
+
+[//]: # (    - host: http://localhost:4566/000000000000)
+
+[//]: # (      protocol: sqs)
+
+[//]: # (      adminCredentials:)
+
+[//]: # (        region: us-east-1)
+
+[//]: # (        aws.access.key.id: test)
+
+[//]: # (        aws.secret.access.key: test)
+
+[//]: # (    - host: localhost:9092)
+
+[//]: # (      protocol: kafka)
+
+[//]: # (```)
+
+[//]: # (**Production &#40;AWS + Confluent Cloud&#41;**:)
+
+[//]: # ()
+[//]: # (```yaml)
+
+[//]: # (config:)
+
+[//]: # (  schemaRegistry:)
+
+[//]: # (    kind: CONFLUENT)
+
+[//]: # (    url: https://schema-registry.us-east-1.aws.confluent.cloud)
+
+[//]: # (    username: ${SCHEMA_REGISTRY_KEY})
+
+[//]: # (    password: ${SCHEMA_REGISTRY_SECRET})
+
+[//]: # (  )
+[//]: # (  servers:)
+
+[//]: # (    - host: https://sqs.us-east-1.amazonaws.com/${AWS_ACCOUNT_ID})
+
+[//]: # (      protocol: sqs)
+
+[//]: # (      adminCredentials:)
+
+[//]: # (        region: us-east-1)
+
+[//]: # (        aws.access.key.id: ${AWS_ACCESS_KEY_ID})
+
+[//]: # (        aws.secret.access.key: ${AWS_SECRET_ACCESS_KEY})
+
+[//]: # (    )
+[//]: # (    - host: ${KAFKA_BOOTSTRAP_SERVERS})
+
+[//]: # (      protocol: kafka)
+
+[//]: # (      adminCredentials:)
+
+[//]: # (        security.protocol: SASL_SSL)
+
+[//]: # (        sasl.mechanism: PLAIN)
+
+[//]: # (        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${KAFKA_API_KEY}" password="${KAFKA_API_SECRET}";)
+
+[//]: # (      client:)
+
+[//]: # (        producer:)
+
+[//]: # (          security.protocol: SASL_SSL)
+
+[//]: # (          sasl.mechanism: PLAIN)
+
+[//]: # (          sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${KAFKA_API_KEY}" password="${KAFKA_API_SECRET}";)
+
+[//]: # (        consumer:)
+
+[//]: # (          security.protocol: SASL_SSL)
+
+[//]: # (          sasl.mechanism: PLAIN)
+
+[//]: # (          sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${KAFKA_API_KEY}" password="${KAFKA_API_SECRET}";)
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # ({: .note })
+
+[//]: # (Use environment variables &#40;e.g., `${VARIABLE_NAME}`&#41; for sensitive credentials and environment-specific values.)
+
+---
+
 ## Troubleshooting
 
 ### Tests Not Running
