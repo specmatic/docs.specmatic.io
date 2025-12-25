@@ -1,7 +1,7 @@
 ---
 layout: none
 ---
-{% capture latest_version %}{{ site.specmatic-async-version }}{% endcapture %}
+{% capture latest_version %}{{ site.specmatic-kafka-version }}{% endcapture %}
 {% capture download_urls %}
   "https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{tool_version}/specmatic-kafka-all-{tool_version}.jar"
 {% endcapture %}

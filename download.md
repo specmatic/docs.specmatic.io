@@ -161,8 +161,8 @@ pip install specmatic==VERSION
 
 ## [Specmatic Kafka](https://specmatic.io/features/kafka-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
 
-{% capture specmatic_kafka_version %}{{ site.specmatic-async-version }}{% endcapture %}
-{% capture specmatic_kafka_jar_url %}https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-async-version }}/specmatic-kafka-all-{{ site.specmatic-async-version }}.jar{% endcapture %}
+{% capture specmatic_kafka_version %}{{ site.specmatic-kafka-version }}{% endcapture %}
+{% capture specmatic_kafka_jar_url %}https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-kafka-version }}/specmatic-kafka-all-{{ site.specmatic-kafka-version }}.jar{% endcapture %}
 {% capture specmatic_kafka_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all{% endcapture %}
 
 {% include commercial_download.md
