@@ -16,8 +16,8 @@ Continuous Integration
   * [Architecture Overview](#architecture-overview)
   * [Step 1: Setting Up a Central Contract Repository](#step-1-setting-up-a-central-contract-repository)
     * [Setup overview](#setup-overview)
-    * [Setting up the central contract repository](#setting-up-the-central-contract-repository)
     * [CI Pipeline Setup](#ci-pipeline-setup)
+      * [Sample Central Contract Repository with Pre-merge checks](#sample-central-contract-repository-with-pre-merge-checks)
   * [Step 2: Setting up Client, Provider and Domain services](#step-2-setting-up-client-provider-and-domain-services)
     * [Step 2.1: Setting Up CI pipeline for client](#step-21-setting-up-ci-pipeline-for-client)
     * [Step 2.2: Setting up CI pipeline for BFF Service](#step-22-setting-up-ci-pipeline-for-bff-service)
@@ -67,89 +67,86 @@ We'll be working with two OpenAPI specifications:
 
 ### Setup overview
 
-A central contract repository is crucial for maintaining consistency across your API specifications and enabling effective contract testing.
+A [central contract repository](/contract_driven_development/central_contract_repository.html) is crucial for maintaining consistency across your API specifications and enabling effective contract testing.
 
 If you already have a central contract repository, you can use that instead and skip to the [next section](#ci-pipeline-setup).
 
-### Setting up the central contract repository
-
-1. Create a new Git repository named "api-contracts". 
-2. In this repository, create a folder structure to organize your OpenAPI specifications. For our example, we will do it as follows:
-
-      ```
-      api-contracts/
-      ├── orders/
-      │   ├── order_bff.yaml
-      │   └── order_api.yaml
-      └── other-services/
-      ```
-
-3. Download and add the following OpenAPI specifications to the repository as depicted above
-
-  - [Order BFF OpenAPI Spec](ci_tutorial_spec_files/order_bff.yaml)
-  - [Order Domain API OpenAPI Spec](ci_tutorial_spec_files/order_api.yaml)
+Else you can follow the [setup up instructions](/contract_driven_development/central_contract_repository.html#setting-up-a-sample-central-contract-repository) to create one a sample central contact repo.
 
 ### CI Pipeline Setup
-We need to set up a simple CI pipeline to perform the following actions on OpenAPI specs in the central contract repo:
-* lint
+When any of the API Specs or their examples are updates, we want the author to raise a Pull Request (PR) / Merge Request (MR). 
+When a PR/MR is raised, we need to set up a simple CI pipeline to perform the following actions:
+* lint the specifications using [Spectral](https://github.com/stoplightio/spectral)/[Vacuum](https://quobix.com/vacuum/)
+* validate if the inline and external examples are still valid according to the updated specification
 * check backward compatibility of your contracts using Specmatic
-* generate insights report, using specmatic docker image
-* publish build reports to specmatic insights
 
 ```yaml
 {% raw %}
-name: Lint specifications, check backward compatibility and generate report
+name: Lint, Validate Examples and Check Backward Compatibility
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
+
 jobs:
-  run-lint:
+  build:
     runs-on: ubuntu-latest
+    name: Check API Contracts
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts'
 
-      - name: Install OpenAPI linter
+      - name: Install Spectral Linter
         run: npm install -g @stoplight/spectral-cli
 
-      - name: Lint OpenAPI specs using Spectral
-        run: spectral lint **/*.yaml
+      - name: Run Spectral linter
+        run: spectral lint **/*.yaml     
 
-      - name: Run OpenAPI Backward Compatibility Check using Specmatic
+      - name: Validate OpenAPI examples
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/usr/src/app \
+          docker run -v "$(pwd):/usr/src/app" \
             specmatic/specmatic \
-            backward-compatibility-check
+            examples validate --specs-dir=io/specmatic/examples/store/openapi
 
-      - name: Generate central contract repo report
+      - name: Create environment file
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/usr/src/app \
+          echo "GITHUB_SHA=${{ github.sha }}" >> env.list
+          echo "GITHUB_HEAD_REF=${{ github.head_ref }}" >> env.list
+          if [ -z "${{ github.base_ref }}" ]; then
+              echo "GITHUB_BASE_REF=${{ github.ref }}" | sed 's/refs\/heads\///' >> env.list
+          else
+            echo "GITHUB_BASE_REF=${{ github.base_ref }}" >> env.list
+          fi
+
+      - name: Run OpenAPI backward compatibility check
+        run: |
+          docker run -v "$(pwd):/usr/src/app" \
+            --user $(id -u):$(id -g) \
+            --env-file env.list \
             specmatic/specmatic \
-            central-contract-repo-report
+            backward-compatibility-check --base-branch=origin/main
 {% endraw %}
 ```
 
 After successfully setting up your central contract repository and running the CI pipeline, you should see output similar to this:
 
-![Successful contract repo](/images/insights_step1_successful.png)
+![Successful CI run for Central Contract Repo](/images/ci/central-contract-ci.png)
 
-Also, you can see our sample [central contract repository build report on GitHub](https://github.com/specmatic/specmatic-order-contracts/actions/workflows/central-contract-repo-report.yaml)
+#### Sample Central Contract Repository with Pre-merge checks
+Here are some sample pre-merge pipelines to disallow merges when specification changes have linter errors or backward breaking changes.
+
+- [GitHub Action](https://github.com/specmatic/specmatic-order-contracts/actions/workflows/central-contract-repo-report.yaml)
+- [GitLab CI](https://gitlab.com/znsio/contract-driven-development/central-contract-repository/-/pipelines)
 
 ## Step 2: Setting up Client, Provider and Domain services
 
-Now that we have our OpenAPI specification checked in, let's bring our Order services to life!
+Now that we have our API specifications checked in, let's bring our Order services to life!
 
 **Client** - You can implement the client in the programming language of your choice. Once ready, place the following configuration in a file named `specmatic.yaml` at the root level of your project. This will:
 * Virtualize the BFF service for the client application (based on the `order_bff.yaml` contract), helping to isolate the client.
@@ -166,7 +163,6 @@ contracts:
 **BFF Service** - Implement the BFF service in the language of your choice. Once ready, place the following configuration in a file named `specmatic.yaml` at the root level of your project. This will:
 * Virtualize the Domain API service for the BFF application (based on the `order_api.yaml` contract)
 * Test the BFF service as a client (using the `order_bff.yaml` contract)
-
 
 ```yaml
 version: 2
@@ -190,7 +186,6 @@ contracts:
       - path/to/your/spec/in/git/order_api.yaml # Domain service contract
 ```
 
-
 ### Step 2.1: Setting Up CI pipeline for client
 
 After the client is up and running and checked into a Git repository, you can create the following CI pipeline to:
@@ -200,13 +195,12 @@ After the client is up and running and checked into a Git repository, you can cr
 
 (note: we implemented the client in react, so setting up pipeline accordingly)
 
+**PR Build Pipeline for Client Application**
 ```yaml
 {% raw %}
 name: Client CI Build using Specmatic Serivce Virtualization
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -215,12 +209,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
 
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v6
       with:
-        node-version: '18'
+        node-version: 'lts'
 
     - name: Install dependencies
       run: npm ci
@@ -229,6 +223,7 @@ jobs:
       run: |
         docker run -d \
           -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
+          -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
           -p 8080:8080 \
           specmatic/specmatic stub
 
@@ -259,62 +254,48 @@ Make sure the BFF service is checked into a Git repository. Then create the foll
 
 ```yaml
 {% raw %}
-name: Provider CI Build using Specmatic Contract Test
+name: Provider and Consumer CI Build using Specmatic Contract Test and Service Virtualization
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
-
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: 'true'
+      - uses: actions/checkout@v6
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Run Specmatic stub to virtualize the Order API service
+        run: |
+          docker run -d \
+            -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
+            -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
+            -p 9000:9000 \
+            specmatic/specmatic stub
+  
+          # Wait for the stub to be ready
+          sleep 10
+  
+      - name: Start Spring Boot application
+        run: ./gradlew bootRun &
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      - name: Wait for application to start
+        run: sleep 30
 
-    - name: Validate Gradle wrapper
-      uses: gradle/wrapper-validation-action@v1
-
-    - name: Run Specmatic stub to virtualize the Order API service
-      run: |
-        docker run -d \
-          -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
-          -p 9000:9000 \
-          specmatic/specmatic stub
-
-        # Wait for the stub to be ready
-        sleep 10
-
-    - name: Start Spring Boot application
-      run: ./gradlew bootRun &
-
-    - name: Wait for application to start
-      run: sleep 30
-
-    - name: Contract Test BFF service using Specmatic
-      run: |
-        docker run \
-          -v ./specmatic.yaml:/usr/src/app/specmatic.yaml \
-          --network=host \
-          specmatic/specmatic \
-          test \
-          --port=8080 \
-          --host=localhost
+      - name: Contract Test BFF service using Specmatic
+        run: |
+          docker run \
+            -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
+            -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
+            --network=host \
+            specmatic/specmatic test \
+            --port=8080 \
+            --host=localhost
 {% endraw %}
 ```
 
@@ -336,42 +317,40 @@ Make sure Order Domain API service is checked in to a git repository. Then creat
 name: Domain API service CI Build using Specmatic Contract Test
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: 'true'
+    - uses: actions/checkout@v6
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
-        java-version: '21'
         distribution: 'temurin'
+        java-version: '17'
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
-    - name: Validate Gradle wrapper
-      uses: gradle/wrapper-validation-action@v1
+    - name: Setup Maven Action
+      uses: s4u/setup-maven-action@v1.19.0
 
     - name: Start Spring Boot application
-      run: ./gradlew bootRun &
+      run: ./mvnw spring-boot:run &
 
     - name: Wait for application to start
       run: sleep 30
 
-    - name: Contract Test Domain API service using Specmatic
-      run: docker run -v "./specmatic.yaml:/usr/src/app/specmatic.yaml" -e HOST_NETWORK=host --network=host "specmatic/specmatic" test --port=9000 --host=localhost
+    - name: Contract Test Domain API service using Specmatic Docker image
+      run: |
+        docker run \
+        -v "$(PWD)/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+        -v "$(PWD)/build/reports/specmatic:/usr/src/app/build/reports \
+        --network=host \
+        specmatic/specmatic test \
+        --port=9000 \
+        --host=localhost
 ```
 
 Upon completion of the Order API CI pipeline, you should see output like this:
@@ -495,7 +474,7 @@ contracts:
 
 ### GitHub Actions
 
-**Note:** We are in the process of standardising on a uniform approach ([Authentication params in Git Repo URI](#authentication-params-in-git-repo-uri)) across GitHub, GitLab, Azure and more. We suggest considering the [steps listed here](#github-actions) before going ahead with below technique. Below approach will also continue to be supported.
+**Note:** We are in the process of standardizing on a uniform approach ([Authentication params in Git Repo URI](#authentication-params-in-git-repo-uri)) across GitHub, GitLab, Azure and more. We suggest considering the [steps listed here](#github-actions) before going ahead with below technique. Below approach will also continue to be supported.
 
 * Set up a [Personal Access Token in GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with "Read" access for contents on your Central Contract Repository (we recommend using [fine-grained tokens](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/))
 * Add this PAT as a [repo secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) in your repository where Specmatic Contract Test / and or Service Virtualization is used. Example: `CENTRAL_CONTRACT_REPO_ACCESS_TOKEN=<your PAT>`

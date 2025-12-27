@@ -17,9 +17,9 @@ redirect_from:
 * [Treat Contract as Code](#treat-contract-as-code)
 * [Central Contract Repo - Single source of truth](#central-contract-repo---single-source-of-truth)
   * [File organization](#file-organization)
+    * [Setting up a sample central contract repository](#setting-up-a-sample-central-contract-repository)
   * [Pull Request / Merge Request Process](#pull-request--merge-request-process)
     * [Pre-merge checks](#pre-merge-checks)
-      * [Sample Central Contract Repository with Pre-merge checks](#sample-central-contract-repository-with-pre-merge-checks)
     * [Collaborating over API Design](#collaborating-over-api-design)
   * [Referring to Contracts in Central Contract Repo](#referring-to-contracts-in-central-contract-repo)
     * [Specmatic Configuration](#specmatic-configuration)
@@ -41,11 +41,29 @@ API Specifications are code, and they are best stored in a version control syste
 
 **[Sample Central Contract Repository](https://github.com/specmatic/specmatic-order-contracts)**
 
-* Package Naming Convention - In the [sample repo](https://github.com/specmatic/specmatic-order-contracts) we have the OpenAPI API Specifications organized in a manner similar to [package naming convention](https://github.com/specmatic/specmatic-order-contracts). This helps in easy identification of the appropriate files for organizations with large number of microservices and API Specifications.
+* Package Naming Convention - In the [sample repo](https://github.com/specmatic/specmatic-order-contracts) we have the API Specifications organized in a manner similar to [package naming convention](https://github.com/specmatic/specmatic-order-contracts). This helps in easy identification of the appropriate files for organizations with large number of microservices and API Specifications.
 * Specification file name - It is helpful to have the version number appended to the API Specification file name
 * Extracting common schema - We recommend extracting common schema components to avoid duplications. Example: [common.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/common.yaml) contains only schema components which are leveraged as remote references in [api_order_v3.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml). This has other advantages too
   * Consistency and standardisation - Commonly used parameter such as traceIds can be defined in one place and used across schemas
   * Avoid duplication related issues - It is common to miss updating / renaming some parts of a schema, by extracting common code we can significantly reduce it
+
+### Setting up a sample central contract repository
+
+1. Create a new Git repository named "api-contracts".
+2. In this repository, create a folder structure to organize your OpenAPI specifications. For our example, we will do it as follows:
+
+      ```
+      api-contracts/
+      ├── orders/
+      │   ├── order_bff.yaml
+      │   └── order_api.yaml
+      └── other-services/
+      ```
+
+3. Download and add the following OpenAPI specifications to the repository as depicted above
+
+- [Order BFF OpenAPI Spec](ccr_tutorial_spec_files/order_bff.yaml)
+- [Order Domain API OpenAPI Spec](ccr_tutorial_spec_files/order_api.yaml)
 
 ## Pull Request / Merge Request Process
 
@@ -53,20 +71,16 @@ It is a good idea to prevent any direct commits to your master / main branch of 
 
 ### Pre-merge checks
 
-* **Syntax checks and Linting** - We leverage [Spectral](https://stoplight.io/open-source/spectral) for this. Read more about this [here](https://github.com/specmatic/specmatic-order-contracts#linting)
+* **Syntax checks and Linting** - We leverage open-source packages like [Spectral](https://github.com/stoplightio/spectral) or [Vacuum](https://quobix.com/vacuum/) for linting the API Specifications. This helps in maintaining consistency and standardization across the specifications. You can also create your own custom rules to enforce organizational standards.
+* **Example Validation** - It is common to have examples defined in the API Specifications (inline examples) or have the request/response captured in JSON file as [external examples](/features/external_examples.html). Examples help your API consumers understand the request and response structures. However, over time these examples can go out of sync with the actual schema defined in the specification. Specmatic's example validate command can check if all the examples are in line with their respective schema in the Specification.
 * **Specmatic Backward Compatibility Testing** This step is crucial in identifying **backward breaking** changes to the specifications.
-  * Specmatic Backward Compatibility Check can compare the spec files in your Central Contract Repository (Git Repo) to identify the differences. Examples:
-    * **GitHub Action** -  Please see this [GitHub Workflow file](https://github.com/specmatic/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are running the `specmatic backwardCompatibilityCheck` on the central repo. This command does two levels of checks.
+  * Specmatic Backward Compatibility check can compare the spec files in your Central Contract Repository (Git Repo) to identify the differences. Examples:
+    * **GitHub Action** -  Please see this [GitHub Workflow file](https://github.com/specmatic/specmatic-order-contracts/blob/main/.github/workflows/pull_request_merge_checks.yaml) where we are running the `specmatic backward-compatibility-check` on the central repo. This command does two levels of checks.
       * Any files that have changed in the Pull Request branch and compares them against their respective version in default branch (which is target of the PR)
       * Also, any files which refer to the change set are also tested for breaking changes (this is necessary to cover the scenario where common schema has been extracted to a separate file and changes to this file impacts backward compatibility of other files that refer to it)
-    * **Example Validation** - The `specmatic backwardCompatibilityCheck` fails when backward-incompatible changes are detected, and when named examples are out of line with their schema.
   * Specmatic returns a 0 or 1 just like any command line tool for success and error respectively based on which we can fail the build. At this point the team can decide if they should version bump the specification or change the code such that it is backward compatible
 
-#### Sample Central Contract Repository with Pre-merge checks
- Here are some sample pre-merge pipelines to disallow merges when specification changes have linter errors or backward breaking changes.
-
-- [GitHub Action](https://github.com/specmatic/specmatic-order-contracts)
-- [GitLab CI](https://gitlab.com/znsio/contract-driven-development/central-contract-repository) - This also uses [Specmatic Docker Image](https://hub.docker.com/r/specmatic/specmatic)
+Please refer to the documentation on [CI Pipeline Setup](/references/continuous_integration.html#ci-pipeline-setup) for more details.
 
 ### Collaborating over API Design
 
