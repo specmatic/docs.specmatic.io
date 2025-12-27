@@ -9,806 +9,468 @@ search_exclude: true
 
 ### R1001
 
-Type mismatch
+**Type mismatch**
 
-Suppose the spec says this:
+The value type does not match the expected type defined in the specification.
+
+**Why this is a problem**
+
+Type mismatches cause validation failures and make clients/providers interpret data incorrectly.
+
+Example:
 
 ```yaml
-paths:
-  /customers:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomerReference'
-      responses:
-        '201':
-          description: Customer created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomerReference'
-components:
-  schemas:
-    CustomerReference:
-      type: object
-      properties:
-        customerId:
-          type: integer
-      required:
-        - customerId
+type: object
+required:
+  - price
+properties:
+  price:
+    type: number
 ```
 
-Expected request payload:
+Response from provider during a contract test:
 
 ```json
-{
-  "customerId": 12345
-}
+{"price": "9.99"}
 ```
 
-_Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
+When validating the response from the provider, `price` is a string instead of a number, so the contract test reports a type mismatch.
 
-If the actual request contains:
+**How this can be resolved**
 
-```json
-{
-  "customerId": "12345"
-}
-```
-
-Specmatic raises R1002 because the field is a string instead of the integer type that the contract specifies.
-
-Why this is a problem
-
-Type mismatches break deserialization and validation logic, often causing requests to be rejected or data to be stored incorrectly.
-
-How it can be fixed
-
-Send the value using the data type defined in the specification.
-
-Corrected request:
-
-```json
-{
-  "customerId": 12345
-}
-```
+- Update the provider to return a numeric `price`, not a string.
+- If the string is correct, update the specification to accept a string type.
 
 ### R1002
 
-Value mismatch
+**Value mismatch**
 
-Suppose the spec says this:
+The value does not match the expected value defined in the specification.
+
+**Why this is a problem**
+
+Exact-value expectations (like enums or consts) are used to guarantee fixed semantics; mismatches break downstream logic.
+
+Example:
 
 ```yaml
-paths:
-  /approvals/{id}:
-    get:
-      responses:
-        '200':
-          description: Approval status
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApprovalStatus'
-components:
-  schemas:
-    ApprovalStatus:
-      type: object
-      properties:
-        status:
-          type: string
-          const: APPROVED
-      required:
-        - status
+type: object
+required:
+  - status
+properties:
+  status:
+    type: string
+    enum: [created, confirmed]
 ```
 
-Expected response payload:
+Request from consumer to stub:
 
 ```json
-{
-  "status": "APPROVED"
-}
+{"status": "pending"}
 ```
 
-_Note: The same expectation applies to requests reaching a Specmatic mock, or when validating examples as per the spec._
+During validation of the request from consumer to stub, `status` is not one of the allowed enum values, so a value mismatch is reported.
 
-If the actual response contains:
+**How this can be resolved**
 
-```json
-{
-  "status": "PENDING"
-}
-```
-
-Specmatic raises this error because the response breaks the `const` rule declared in the schema.
-
-Why this is a problem
-
-Downstream systems depend on the enumerated value to drive business flows. Returning an unexpected value confuses consumers and causes conditional logic to fail.
-
-How it can be fixed
-
-Return the exact value mandated by the contract.
-
-Corrected response:
-
-```json
-{
-  "status": "APPROVED"
-}
-```
+- Send a value that matches the specification enum.
+- If the new value is valid, update the specification enum to include it.
 
 ### R1003
 
-Constraint violation
+**Constraint violation**
 
-Suppose the spec says this:
+The value does not satisfy the constraints defined in the specification.
+
+**Why this is a problem**
+
+Constraints like length, pattern, or range protect clients and providers from invalid or out-of-bounds data.
+
+Example:
 
 ```yaml
-paths:
-  /orders:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OrderIdentifier'
-      responses:
-        '201':
-          description: Order created
-components:
-  schemas:
-    OrderIdentifier:
-      type: object
-      properties:
-        orderId:
-          type: string
-          pattern: ^INV-[0-9]{6}$
-      required:
-        - orderId
+type: object
+required:
+  - username
+properties:
+  username:
+    type: string
+    minLength: 6
 ```
 
-Expected request payload:
+Request from consumer to stub:
 
 ```json
-{
-  "orderId": "INV-000001"
-}
+{"username": "amy"}
 ```
 
-_Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
+The request from consumer to stub is validated and fails because `username` is shorter than the minimum length.
 
-If the actual request contains:
+**How this can be resolved**
 
-```json
-{
-  "orderId": "INV-1"
-}
-```
-
-Specmatic raises R1003 because the value fails the regular-expression constraint declared for `orderId`.
-
-Why this is a problem
-
-Constraint violations lead to inconsistent identifiers and cause downstream services to reject the payload or misroute it.
-
-How it can be fixed
-
-Emit values that meet every constraint defined in the schema.
-
-Corrected request:
-
-```json
-{
-  "orderId": "INV-000001"
-}
-```
+- Provide values that satisfy the constraint (e.g., a longer `username`).
+- If the constraint is too strict, relax it in the specification.
 
 ### R2001
 
-Missing required property
+**Missing required property**
 
-Suppose the spec says this:
+A required property defined in the specification is missing.
+
+**Why this is a problem**
+
+Required properties are essential for processing; missing them can make behavior ambiguous or incorrect.
+
+Example:
 
 ```yaml
-paths:
-  /contacts:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Contact'
-      responses:
-        '201':
-          description: Contact created
-components:
-  schemas:
-    Contact:
-      type: object
-      required:
-        - name
-        - email
-      properties:
-        name:
-          type: string
-        email:
-          type: string
-          format: email
+type: object
+required:
+  - email
+properties:
+  email:
+    type: string
+  name:
+    type: string
 ```
 
-Expected request payload:
+Request from consumer to stub:
 
 ```json
-{
-  "name": "Leela Fry",
-  "email": "leela@example.com"
-}
+{"name": "Maya"}
 ```
 
-_Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
+Request validation fails because `email` is required but missing.
 
-If the actual request contains:
+**How this can be resolved**
 
-```json
-{
-  "name": "Leela Fry"
-}
-```
-
-Specmatic raises R2001 because the required `email` property is missing.
-
-Why this is a problem
-
-Consumers expect required fields to be present so that essential processing (like sending notifications) can proceed without guessing or defaulting.
-
-How it can be fixed
-
-Always include every property listed in the `required` array.
-
-Corrected request:
-
-```json
-{
-  "name": "Leela Fry",
-  "email": "leela@example.com"
-}
-```
+- Include all required properties in the payload.
+- If the property should not be required, update the specification.
 
 ### R2002
 
-Missing optional property
+**Missing optional property**
 
-Suppose the spec says this:
+An optional property defined in the specification is missing.
+
+**Why this is a problem**
+
+In strict validation modes where optional properties are treated as mandatory, missing optional data can hide partial responses.
+
+Example:
 
 ```yaml
-paths:
-  /users:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserProfile'
-      responses:
-        '201':
-          description: User created
-components:
-  schemas:
-    UserProfile:
-      type: object
-      required:
-        - username
-      properties:
-        username:
-          type: string
-        nickname:
-          type: string
-          description: Required when SSO integration is enabled.
-      example:
-        username: bender
-        nickname: "Bender Bending Rodríguez"
+type: object
+required:
+  - id
+properties:
+  id:
+    type: integer
+  description:
+    type: string
 ```
 
-Expected request payload (when SSO is enabled):
+Response from provider during a contract test (with optional fields treated as mandatory):
 
 ```json
-{
-  "username": "bender",
-  "nickname": "Bender Bending Rodríguez"
-}
+{"id": 101}
 ```
 
-_Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
+When optional fields are enforced, the missing `description` is reported as an optional property missing violation.
 
-If the actual request contains:
+**How this can be resolved**
 
-```json
-{
-  "username": "bender"
-}
-```
-
-Specmatic raises R2002 because the interaction scenario (SSO enabled) describes `nickname`, yet the request omits it.
-
-Why this is a problem
-
-Scenario-specific optional fields still carry essential context. Omitting them when required by the example or description leads to incomplete user profiles.
-
-How it can be fixed
-
-Include optional properties whenever the documented scenario dictates their presence.
-
-Corrected request:
-
-```json
-{
-  "username": "bender",
-  "nickname": "Bender Bending Rodríguez"
-}
-```
+- Provide the optional property when running with strict key checking.
+- If strict checking is not intended, run with the default optional behavior.
+- If the property should be required, mark it as required in the specification.
 
 ### R2003
 
-Unknown property
+**Unknown property**
 
-Suppose the spec says this:
+A property was found that is not defined in the specification.
+
+**Why this is a problem**
+
+Unexpected properties can signal drift between provider behavior and the specification, and may not be handled by clients.
+
+Example:
 
 ```yaml
-paths:
-  /entities/{id}:
-    get:
-      responses:
-        '200':
-          description: Entity details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/KnownFieldsOnly'
-components:
-  schemas:
-    KnownFieldsOnly:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
+type: object
+additionalProperties: false
+required:
+  - id
+properties:
+  id:
+    type: integer
+  status:
+    type: string
 ```
 
-Expected response payload:
+Payload being validated:
 
 ```json
-{
-  "id": 42
-}
+{"id": 5, "status": "active", "extra": "debug"}
 ```
 
-_Note: The same expectation applies to requests reaching a Specmatic mock, or when validating examples as per the spec._
+During response validation, `extra` is not defined and `additionalProperties: false` disallows it, so an unknown property violation is reported.
 
-If the actual response contains:
+**How this can be resolved**
 
-```json
-{
-  "id": 42,
-  "unexpected": true
-}
-```
-
-Specmatic raises R2003 because the payload introduces `unexpected`, which the contract forbids via `additionalProperties: false`.
-
-Why this is a problem
-
-Undocumented fields create ambiguity—clients might ignore them or throw errors, leading to unpredictable integrations.
-
-How it can be fixed
-
-Send only the properties defined in the contract, or extend the specification before emitting extra fields.
-
-Corrected response:
-
-```json
-{
-  "id": 42
-}
-```
+- Remove unexpected properties from the payload.
+- If the property is valid, add it to the specification or allow additional properties.
 
 ### R3001
 
-Discriminator mismatch
+**Discriminator mismatch**
 
-Suppose the spec says this:
+The value provided does not match the discriminator defined in the specification.
+
+**Why this is a problem**
+
+Discriminators determine which schema applies; an unknown discriminator value makes the payload ambiguous.
+
+Example:
 
 ```yaml
-paths:
-  /payments:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Payment'
-      responses:
-        '202':
-          description: Payment accepted
+oneOf:
+  - $ref: "#/components/schemas/Cat"
+  - $ref: "#/components/schemas/Dog"
+discriminator:
+  propertyName: type
+  mapping:
+    Cat: "#/components/schemas/Cat"
+    Dog: "#/components/schemas/Dog"
 components:
   schemas:
-    Payment:
-      type: object
-      oneOf:
-        - $ref: '#/components/schemas/CardPayment'
-        - $ref: '#/components/schemas/BankTransferPayment'
-      discriminator:
-        propertyName: type
-        mapping:
-          card: '#/components/schemas/CardPayment'
-          bank-transfer: '#/components/schemas/BankTransferPayment'
-    CardPayment:
+    Cat:
       type: object
       required:
         - type
-        - cardNumber
+        - whiskers
       properties:
         type:
           type: string
-          const: card
-        cardNumber:
-          type: string
-    BankTransferPayment:
+        whiskers:
+          type: integer
+    Dog:
       type: object
       required:
         - type
-        - accountNumber
+        - bark
       properties:
         type:
           type: string
-          const: bank-transfer
-        accountNumber:
-          type: string
+        bark:
+          type: boolean
 ```
 
-Expected request payload:
+Request from consumer to stub:
 
 ```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
+{"type": "Parrot", "beakLength": 10}
 ```
 
-_Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
+The discriminator value does not match any mapping, so validation of the request from consumer to stub reports a discriminator mismatch.
 
-If the actual request contains:
+**How this can be resolved**
 
-```json
-{
-  "type": "bank-transfer",
-  "cardNumber": "4111111111111111"
-}
-```
-
-Specmatic raises R3000 because the discriminator points to the `BankTransferPayment` schema while the payload fields belong to the card branch.
-
-Why this is a problem
-
-Polymorphic contracts rely on discriminators to choose the correct schema. A mismatch means the payload cannot be validated or processed correctly.
-
-How it can be fixed
-
-Set the discriminator to the branch that matches the payload structure.
-
-Corrected request:
-
-```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
-```
+- Use a discriminator value that maps to a defined schema.
+- If a new subtype is needed, add it to the specification and discriminator mapping.
 
 ### R3002
 
-Missing discriminator
+**Invalid discriminator setup**
 
-Suppose the spec says this:
+The discriminator property defined in the specification is missing from the subschemas.
+
+**Why this is a problem**
+
+If subschemas do not define the discriminator property, validation cannot reliably select the correct schema.
+
+Example:
 
 ```yaml
-paths:
-  /payments:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Payment'
-      responses:
-        '202':
-          description: Payment accepted
+oneOf:
+  - $ref: "#/components/schemas/Cat"
+  - $ref: "#/components/schemas/Dog"
+discriminator:
+  propertyName: type
+  mapping:
+    Cat: "#/components/schemas/Cat"
+    Dog: "#/components/schemas/Dog"
 components:
   schemas:
-    Payment:
+    Cat:
       type: object
       required:
-        - type
-      oneOf:
-        - $ref: '#/components/schemas/CardPayment'
-        - $ref: '#/components/schemas/BankTransferPayment'
-      discriminator:
-        propertyName: type
+        - whiskers
+      properties:
+        whiskers:
+          type: integer
+    Dog:
+      type: object
+      required:
+        - bark
+      properties:
+        bark:
+          type: boolean
 ```
 
-Expected request payload:
+Request from consumer to stub:
 
 ```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
+{"type": "Cat", "whiskers": 3}
 ```
 
-_Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
+The discriminator is declared, but neither subschema defines the `type` property, so the discriminator setup is invalid.
 
-If the actual request contains:
+**How this can be resolved**
 
-```json
-{
-  "cardNumber": "4111111111111111"
-}
-```
-
-Specmatic raises R3001 because the discriminator property `type` is absent, leaving the validator unable to pick a schema.
-
-Why this is a problem
-
-Without the discriminator, polymorphic payloads cannot be resolved to a concrete schema, so validation has no reference point.
-
-How it can be fixed
-
-Include the discriminator property specified by the contract alongside branch-specific fields.
-
-Corrected request:
-
-```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
-```
+- Add the discriminator property to each subschema and mark it required.
+- Ensure the discriminator mapping values align with the schema definitions.
 
 ### R3003
 
-Property not in any schema options
+**Missing discriminator**
 
-Suppose the spec says this:
+The discriminator property defined in the specification is missing.
+
+**Why this is a problem**
+
+Without the discriminator property, a composed schema cannot determine which subschema should apply.
+
+Example:
 
 ```yaml
-paths:
-  /payments:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - $ref: '#/components/schemas/CardPayment'
-                - $ref: '#/components/schemas/BankTransferPayment'
-      responses:
-        '202':
-          description: Payment accepted
+oneOf:
+  - $ref: "#/components/schemas/Cat"
+  - $ref: "#/components/schemas/Dog"
+discriminator:
+  propertyName: type
+  mapping:
+    Cat: "#/components/schemas/Cat"
+    Dog: "#/components/schemas/Dog"
 components:
   schemas:
-    CardPayment:
+    Cat:
       type: object
       required:
         - type
-        - cardNumber
+        - whiskers
       properties:
         type:
           type: string
-          const: card
-        cardNumber:
-          type: string
-    BankTransferPayment:
+        whiskers:
+          type: integer
+    Dog:
       type: object
       required:
         - type
-        - wireReference
+        - bark
       properties:
         type:
           type: string
-          const: bank-transfer
-        wireReference:
-          type: string
+        bark:
+          type: boolean
 ```
 
-Expected request payload (card branch):
+Request from consumer to stub:
 
 ```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
+{"whiskers": 3}
 ```
 
-_Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
+The payload lacks the discriminator property `type`, so validation reports a missing discriminator.
 
-If the actual request contains:
+**How this can be resolved**
 
-```json
-{
-  "type": "card",
-  "wireReference": "ABC123"
-}
-```
-
-Specmatic raises R3001 because `wireReference` belongs to the bank transfer schema, yet the discriminator selects the card branch.
-
-Why this is a problem
-
-Mixing properties from different schema options means no branch can validate the payload, leaving the consumer unsure how to interpret it.
-
-How it can be fixed
-
-Send only the properties defined for the selected schema option.
-
-Corrected request:
-
-```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
-```
+- Include the discriminator property in the payload.
+- If the discriminator is not needed, remove it and adjust the composed schema.
 
 ### R3004
 
-Property matches no schema option
+**Property not in any schema options**
 
-Suppose the spec says this:
+The property is not defined in any available schema options.
+
+**Why this is a problem**
+
+With `anyOf`, a property that does not exist in any option indicates the payload does not match the allowed shapes.
+
+Example:
 
 ```yaml
-paths:
-  /payments:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CardPayment'
-      responses:
-        '202':
-          description: Payment accepted
+anyOf:
+  - $ref: "#/components/schemas/OptionA"
+  - $ref: "#/components/schemas/OptionB"
 components:
   schemas:
-    CardPayment:
+    OptionA:
       type: object
-      required:
-        - type
-        - cardNumber
       properties:
-        type:
+        a:
           type: string
-          const: card
-        cardNumber:
-          type: string
-          pattern: ^\d{16}$
+    OptionB:
+      type: object
+      properties:
+        b:
+          type: number
 ```
 
-Expected request payload:
+Request payload being validated:
 
 ```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
+{"c": 10}
 ```
 
-_Note: The same validation applies when a contract test matches the response coming from the application to the spec, or when validating examples as per the spec._
+During validation of the request from consumer to stub, `c` is not present in any `anyOf` option, so the property not in any schema options violation is reported.
 
-If the actual request contains:
+**How this can be resolved**
 
-```json
-{
-  "type": "card",
-  "cardNumber": "123"
-}
-```
-
-Specmatic raises R3002 because the provided values fail to satisfy the constraints of any schema option; the card branch rejects the short number, while other branches expect different discriminators.
-
-Why this is a problem
-
-When no schema option matches, the consumer cannot map the payload to a valid business object, so processing stops.
-
-How it can be fixed
-
-Adjust the values so they comply with at least one schema option's requirements.
-
-Corrected request:
-
-```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
-```
+- Send a payload that matches at least one `anyOf` option.
+- If `c` is valid, add it to one of the option schemas or add another option.
 
 ### R3005
 
-No matching schema option
+**Property matches no schema option**
 
-Suppose the spec says this:
+The property does not satisfy any available schema options.
+
+**Why this is a problem**
+
+Even if a property exists in multiple options, it must still satisfy at least one option's constraints.
+
+Example:
 
 ```yaml
-paths:
-  /payments/{paymentId}:
-    get:
-      responses:
-        '200':
-          description: Payment details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Payment'
+anyOf:
+  - $ref: "#/components/schemas/StringOption"
+  - $ref: "#/components/schemas/NumberOption"
 components:
   schemas:
-    Payment:
+    StringOption:
       type: object
-      oneOf:
-        - $ref: '#/components/schemas/CardPayment'
-        - $ref: '#/components/schemas/BankTransferPayment'
-      discriminator:
-        propertyName: type
-        mapping:
-          card: '#/components/schemas/CardPayment'
-          bank-transfer: '#/components/schemas/BankTransferPayment'
+      properties:
+        common:
+          type: string
+    NumberOption:
+      type: object
+      properties:
+        common:
+          type: number
 ```
 
-Expected response payload (card option):
+Request from consumer to stub:
 
 ```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
+{"common": true}
 ```
 
-_Note: The same expectation applies to requests reaching a Specmatic mock, or when validating examples as per the spec._
+The property exists in both options but does not match either type, so validation reports no matching schema option.
 
-If the actual response contains:
+**How this can be resolved**
 
-```json
-{
-  "type": "crypto",
-  "wallet": "xyz"
-}
-```
-
-Specmatic raises R3003 because the discriminator references an option (`crypto`) that the specification does not define.
-
-Why this is a problem
-
-Unsupported discriminator values leave consumers without a schema to validate against, so the payload cannot be trusted or processed.
-
-How it can be fixed
-
-Return a payload that matches a documented option, or extend the specification with a new schema before using the new discriminator.
-
-Corrected response:
-
-```json
-{
-  "type": "card",
-  "cardNumber": "4111111111111111"
-}
-```
+- Provide a value that satisfies one of the schema options.
+- If boolean is valid, update the specification to allow it.
