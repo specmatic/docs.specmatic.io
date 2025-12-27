@@ -251,7 +251,32 @@ Make sure the BFF service is checked into a Git repository. Then create the foll
 * Test the BFF service using `order_bff.yaml` and the **Specmatic** Docker image
 
 (note: we implemented the BFF service in Kotlin, so setting up pipeline accordingly)
+{% tabs bffCI %}
+{% tab bffCI Specmatic JUnitTest Helper %}
+```yaml
+{% raw %}
+name: Provider and Consumer CI Build using Specmatic Contract Test and Service Virtualization
 
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+  
+      - name: Run Specmatic Contract Tests using JUnit helper which in-turn starts SpringBoot app and Specmatic stubs
+        run: ./gradlew test
+{% endraw %}
+```
+{% endtab %}
+{% tab bffCI Specmatic Docker %}
 ```yaml
 {% raw %}
 name: Provider and Consumer CI Build using Specmatic Contract Test and Service Virtualization
@@ -298,6 +323,8 @@ jobs:
             --host=localhost
 {% endraw %}
 ```
+{% endtab %}
+{% endtabs %}
 
 After running the BFF service CI pipeline, you should see results similar to:
 
