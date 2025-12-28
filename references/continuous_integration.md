@@ -80,6 +80,8 @@ When a PR/MR is raised, we need to set up a simple CI pipeline to perform the fo
 * validate if the inline and external examples are still valid according to the updated specification
 * check backward compatibility of your contracts using Specmatic
 
+{% tabs ccrCI %}
+{% tab ccrCI GitHub %}
 ```yaml
 {% raw %}
 name: Lint, Validate Examples and Check Backward Compatibility
@@ -133,6 +135,52 @@ jobs:
             backward-compatibility-check --base-branch=origin/main
 {% endraw %}
 ```
+{% endtab %}
+{% tab ccrCI GitLab %}
+```yaml
+{% raw %}
+stages:
+ - lint
+ - example_validation
+ - compatibility
+
+workflow:
+ rules:
+   - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+   - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+
+lint_openapi_files:
+ stage: lint
+ image: node:lts
+ script:
+   - npm install -g @stoplight/spectral-cli
+   - spectral lint "**/*.yaml"
+
+validate_openapi_examples:
+ stage: example_validation
+ image:
+   name: specmatic/specmatic:latest
+   entrypoint: [""]
+ script:
+   - specmatic examples validate --specs-dir=io/specmatic/examples/store
+
+compatibility:
+ stage: compatibility
+ image:
+   name: specmatic/specmatic:latest
+   entrypoint: [""]
+ rules:
+   - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+   - when: never
+ before_script:
+   - git fetch --unshallow || true
+   - git fetch origin main
+ script:
+   - specmatic backward-compatibility-check --base-branch=origin/main
+{% endraw %}
+```
+{% endtab %}
+{% endtabs %}
 
 After successfully setting up your central contract repository and running the CI pipeline, you should see output similar to this:
 
@@ -251,6 +299,7 @@ Make sure the BFF service is checked into a Git repository. Then create the foll
 * Test the BFF service using `order_bff.yaml` and the **Specmatic** Docker image
 
 (note: we implemented the BFF service in Kotlin, so setting up pipeline accordingly)
+
 {% tabs bffCI %}
 {% tab bffCI Specmatic JUnitTest Helper %}
 ```yaml
