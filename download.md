@@ -159,10 +159,23 @@ pip install specmatic==VERSION
     repo_url=specmatic_studio_repo_url
     install_script="install-specmatic-studio" %}
 
+## [Specmatic Async](https://hub.docker.com/r/specmatic/specmatic-async)
+
+{% capture specmatic_async_version %}{{ site.specmatic-async-version }}{% endcapture %}
+{% capture specmatic_async_jar_url %}https://repo.specmatic.io/releases/io/specmatic/async/specmatic-async-all/{{ site.specmatic-async-version }}/specmatic-async-all-{{ site.specmatic-async-version }}.jar{% endcapture %}
+{% capture specmatic_async_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-async-all{% endcapture %}
+
+{% include commercial_download.md
+image_name="specmatic/specmatic-async"
+tool_version=specmatic_async_version
+jar_url=specmatic_async_jar_url
+repo_url=specmatic_async_repo_url
+install_script="install-specmatic-async" %}
+
 ## [Specmatic Kafka](https://specmatic.io/features/kafka-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
 
-{% capture specmatic_kafka_version %}{{ site.specmatic-async-version }}{% endcapture %}
-{% capture specmatic_kafka_jar_url %}https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-async-version }}/specmatic-kafka-all-{{ site.specmatic-async-version }}.jar{% endcapture %}
+{% capture specmatic_kafka_version %}{{ site.specmatic-kafka-version }}{% endcapture %}
+{% capture specmatic_kafka_jar_url %}https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-kafka-version }}/specmatic-kafka-all-{{ site.specmatic-kafka-version }}.jar{% endcapture %}
 {% capture specmatic_kafka_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all{% endcapture %}
 
 {% include commercial_download.md

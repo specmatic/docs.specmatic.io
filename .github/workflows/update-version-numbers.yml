@@ -20,7 +20,6 @@ on:
           - specmatic-openapi
           - specmatic-google-pubsub
           - specmatic-release-test
-          - specmatic-build-reporter
 
       product-version:
         description: Product version to set for the specified product
@@ -39,7 +38,7 @@ jobs:
 
     steps:
     - name: Checkout documentation repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
         ref: main

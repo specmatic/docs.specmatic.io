@@ -10,7 +10,7 @@ def should_not_run_external_url_checks?
     false
   else
     ENV['RUN_EXTERNAL_CHECKS'].nil? || ENV['RUN_EXTERNAL_CHECKS'] == 'false'
-  end
+end
 end
 
 desc "Validate all links"
@@ -35,7 +35,7 @@ task :check do
       report_missing_names:  false ,
     },
     typhoeus:  {
-      # verbose:  true,
+      verbose:  true,
       followlocation:  true,
       connecttimeout:  500,
       accept_encoding: "gzip",
@@ -49,7 +49,7 @@ task :check do
     hydra:  { max_concurrency: 1 },
     ignore_missing_alt:  true,
     log_level:  :info,
-
+    swap_urls: {"https://docs.specmatic.io/" => "/"}
   }
 
   STDERR.puts "WARNING: Not checking outbound links. Set environment variable: " +
