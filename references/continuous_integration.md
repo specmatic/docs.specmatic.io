@@ -116,21 +116,10 @@ jobs:
             specmatic/specmatic \
             examples validate --specs-dir=io/specmatic/examples/store/openapi
 
-      - name: Create environment file
-        run: |
-          echo "GITHUB_SHA=${{ github.sha }}" >> env.list
-          echo "GITHUB_HEAD_REF=${{ github.head_ref }}" >> env.list
-          if [ -z "${{ github.base_ref }}" ]; then
-              echo "GITHUB_BASE_REF=${{ github.ref }}" | sed 's/refs\/heads\///' >> env.list
-          else
-            echo "GITHUB_BASE_REF=${{ github.base_ref }}" >> env.list
-          fi
-
       - name: Run OpenAPI backward compatibility check
         run: |
           docker run -v "$(pwd):/usr/src/app" \
             --user $(id -u):$(id -g) \
-            --env-file env.list \
             specmatic/specmatic \
             backward-compatibility-check --base-branch=origin/main
 {% endraw %}
@@ -147,7 +136,6 @@ stages:
 workflow:
  rules:
    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
-   - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
 
 lint_openapi_files:
  stage: lint
@@ -244,6 +232,8 @@ After the client is up and running and checked into a Git repository, you can cr
 (note: we implemented the client in react, so setting up pipeline accordingly)
 
 **PR Build Pipeline for Client Application**
+{% tabs clientCI %}
+{% tab clientCI GitHub %}
 ```yaml
 {% raw %}
 name: Client CI Build using Specmatic Serivce Virtualization
@@ -284,6 +274,46 @@ jobs:
         STUB_URL: http://localhost:8080
 {% endraw %}
 ```
+{% endtab %}
+{% tab clientCI GitLab %}
+```yaml
+{% raw %}
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+client_component_tests:
+  stage: test
+  image:
+    name: specmatic/specmatic:latest
+    entrypoint: [""]
+
+  before_script:
+    - |
+      apt-get update
+      curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+      apt-get install -y nodejs
+
+    - node --version
+    - npm --version
+
+  script:
+    - npm ci
+
+    - |
+      mkdir -p build/reports/specmatic
+      specmatic stub --port=8080 &
+
+    - sleep 10
+
+    - STUB_URL=http://localhost:8080 npm run test:component
+{% endraw %}
+```
+{% endtab %}
+{% endtabs %}
 
 Upon successful execution of the client CI pipeline, you should see output resembling this:
 
@@ -301,7 +331,7 @@ Make sure the BFF service is checked into a Git repository. Then create the foll
 (note: we implemented the BFF service in Kotlin, so setting up pipeline accordingly)
 
 {% tabs bffCI %}
-{% tab bffCI Specmatic JUnitTest Helper %}
+{% tab bffCI GitHub Specmatic JUnitTest Helper %}
 ```yaml
 {% raw %}
 name: Provider and Consumer CI Build using Specmatic Contract Test and Service Virtualization
@@ -325,7 +355,7 @@ jobs:
 {% endraw %}
 ```
 {% endtab %}
-{% tab bffCI Specmatic Docker %}
+{% tab bffCI GitHub Specmatic Docker %}
 ```yaml
 {% raw %}
 name: Provider and Consumer CI Build using Specmatic Contract Test and Service Virtualization
@@ -373,6 +403,24 @@ jobs:
 {% endraw %}
 ```
 {% endtab %}
+{% tab bffCI GitLab %}
+```yaml
+{% raw %}
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+provider_contract_tests:
+  stage: test
+  image: eclipse-temurin:17-jdk gradle
+  script:
+    - ./gradlew test
+{% endraw %}
+```
+{% endtab %}
 {% endtabs %}
 
 After running the BFF service CI pipeline, you should see results similar to:
@@ -388,8 +436,10 @@ Make sure Order Domain API service is checked in to a git repository. Then creat
 * test Domain API service using `order_api.yaml` and **Specmatic** docker image.
 
 (note: we implemented the Order Domain API service in Kotlin, so setting up pipeline accordingly)
-
+{% tabs domainCI %}
+{% tab domainCI GitHub %}
 ```yaml
+{% raw %}
 name: Domain API service CI Build using Specmatic Contract Test
 
 on:
@@ -427,7 +477,36 @@ jobs:
         specmatic/specmatic test \
         --port=9000 \
         --host=localhost
+{% endraw %}
 ```
+{% endtab %}
+{% tab domainCI GitLab %}
+```yaml
+{% raw %}
+domain_api_contract_tests:
+  stage: test
+  image:
+    name: specmatic/specmatic:latest
+    entrypoint: [""]
+
+  before_script:
+    - apt-get update
+    - apt-get install -y openjdk-17-jdk maven
+    - chmod +x mvnw
+
+  script:
+    - ./mvnw spring-boot:run &
+
+    - sleep 30
+
+    - |
+      mkdir -p build/reports/specmatic
+
+      specmatic test --port=9000 --host=localhost
+{% endraw %}
+```
+{% endtab %}
+{% endtabs %}
 
 Upon completion of the Order API CI pipeline, you should see output like this:
 
