@@ -293,9 +293,9 @@ client_component_tests:
 
   before_script:
     - |
-      apt-get update
+      apk update
       curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
-      apt-get install -y nodejs
+      apk add nodejs
 
     - node --version
     - npm --version
@@ -427,6 +427,126 @@ After running the BFF service CI pipeline, you should see results similar to:
 
 ![Successful BFF CI pipeline](/images/insights_step2_2_successful.png)
 
+Specmatic also supports CTRF reports for standardized reporting of the contract tests. To enable CTRF reports, please use the following CI workflow:
+
+{% tabs bffCI_CTRF %}
+{% tab bffCI_CTRF GitHub CTRF - Delta %}
+```yaml
+{% raw %}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CTRF_REPORT_PATH: './build/reports/specmatic/test/ctrf/*.json'
+    steps:
+      - name: Save Specmatic license
+        run: |
+          mkdir -p ~/.specmatic
+          echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+
+      - name: Upload CTRF Report
+        uses: actions/upload-artifact@v6
+        if: always() # Run even if tests fail
+        with:
+          name: ctrf-report
+          path: ${{ env.CTRF_REPORT_PATH }}
+          retention-days: 5
+
+      - name: Publish Test Results in CTRF format
+        uses: ctrf-io/github-test-reporter@v1
+        if: always() 
+        with:
+          report-path: ${{ env.CTRF_REPORT_PATH }}
+
+      - name: Upload HTML Test Report
+        uses: actions/upload-artifact@v6
+        with:
+          name: specmatic-html-report
+          path: ./build/reports/specmatic/html
+{% endraw %}
+```
+{% endtab %}
+{% tab bffCI_CTRF GitHub Specmatic with CTRF Report %}
+```yaml
+{% raw %}
+name: Provider and Consumer CI Build with CTRF Report
+
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CTRF_REPORT_PATH: './build/reports/specmatic/test/ctrf/*.json'
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Save Specmatic license
+        run: |
+          mkdir -p ~/.specmatic
+          echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+
+      - name: Run Specmatic stub to virtualize the Order API service
+        run: |
+          docker run -d \
+            -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
+            -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
+            -p 9000:9000 \
+            specmatic/specmatic-openapi stub
+
+          # Wait for the stub to be ready
+          sleep 10
+
+      - name: Start Spring Boot application
+        run: ./gradlew bootRun &
+
+      - name: Wait for application to start
+        run: sleep 30
+
+      - name: Contract Test BFF service using Specmatic
+        run: |
+          docker run \
+            -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
+            -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
+            --network=host \
+            specmatic/specmatic-openapi test \
+            --port=8080 \
+            --host=localhost
+
+      - name: Upload CTRF Report
+        uses: actions/upload-artifact@v6
+        if: always() # Run even if tests fail
+        with:
+          name: ctrf-report
+          path: ${{ env.CTRF_REPORT_PATH }}
+          retention-days: 5
+
+      - name: Publish Test Results in CTRF format
+        uses: ctrf-io/github-test-reporter@v1
+        if: always() 
+        with:
+          report-path: ${{ env.CTRF_REPORT_PATH }}
+
+      - name: Upload HTML Test Report
+        uses: actions/upload-artifact@v6
+        with:
+          name: specmatic-html-report
+          path: ./build/reports/specmatic/html
+{% endraw %}
+```
+{% endtab %}
+{% endtabs %}
+
+On successful completion of the BFF CI pipeline, you should see CTRF Report like this:
+
+![Successful BFF CI pipeline with CTRF report](/images/ci/bff-ctrf-ci.png)
+
 Also, you can see our sample [BFF build report on GitHub](https://github.com/specmatic/specmatic-order-bff-java/actions/workflows/gradle.yml)
 
 ### Step 2.3: Setting up CI pipeline for Order API
@@ -490,8 +610,8 @@ domain_api_contract_tests:
     entrypoint: [""]
 
   before_script:
-    - apt-get update
-    - apt-get install -y openjdk-17-jdk maven
+    - apk update
+    - apk add openjdk-17-jdk maven
     - chmod +x mvnw
 
   script:
