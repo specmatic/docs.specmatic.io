@@ -7,9 +7,41 @@ search_exclude: true
 
 # Rules
 
-### R0001
+<!-- TOC -->
+* [Rules](#rules)
+  * [R0001](#r0001)
+    * [HTTP method mismatch](#http-method-mismatch)
+  * [R0002](#r0002)
+    * [HTTP status mismatch](#http-status-mismatch)
+  * [R0007](#r0007)
+    * [No matching security scheme](#no-matching-security-scheme)
+  * [R1001](#r1001)
+    * [Type mismatch](#type-mismatch)
+  * [R1002](#r1002)
+    * [Value mismatch](#value-mismatch)
+  * [R1003](#r1003)
+    * [Constraint violation](#constraint-violation)
+  * [R2001](#r2001)
+    * [Missing required property](#missing-required-property)
+  * [R2002](#r2002)
+    * [Missing optional property](#missing-optional-property)
+  * [R2003](#r2003)
+    * [Unknown property](#unknown-property)
+  * [R3001](#r3001)
+    * [Discriminator mismatch](#discriminator-mismatch)
+  * [R3002](#r3002)
+    * [Invalid discriminator setup](#invalid-discriminator-setup)
+  * [R3003](#r3003)
+    * [Missing discriminator](#missing-discriminator)
+  * [R3004](#r3004)
+    * [Property not in any schema options](#property-not-in-any-schema-options)
+  * [R3005](#r3005)
+    * [Property matches no schema option](#property-matches-no-schema-option)
+<!-- TOC -->
 
-**HTTP method mismatch**
+## R0001
+
+### HTTP method mismatch
 
 The HTTP method does not match the method defined in the specification.
 
@@ -41,9 +73,9 @@ The contract expects `GET /orders`, but the request uses `POST`, so a method mis
 - Update the client or provider to use the method defined in the specification.
 - If the method should be different, update the specification accordingly.
 
-### R0002
+## R0002
 
-**HTTP status mismatch**
+### HTTP status mismatch
 
 The HTTP status code does not match the expected status code defined in the specification.
 
@@ -75,9 +107,9 @@ The contract expects a `200` response, but the provider returns `404`, so a stat
 - Return the status code defined in the specification.
 - If the actual status is correct, update the specification to reflect it.
 
-### R0007
+## R0007
 
-**No matching security scheme**
+### No matching security scheme
 
 The request does not satisfy the requirements of any defined security scheme.
 
@@ -111,9 +143,9 @@ The request does not include the required `X-API-Key` header, so no matching sec
 - Provide credentials that satisfy one of the defined security schemes.
 - If authentication is not required, remove or update the security requirement in the specification.
 
-### R1001
+## R1001
 
-**Type mismatch**
+### Type mismatch
 
 The value type does not match the expected type defined in the specification.
 
@@ -145,9 +177,9 @@ When validating the response from the provider, `price` is a string instead of a
 - Update the provider to return a numeric `price`, not a string.
 - If the string is correct, update the specification to accept a string type.
 
-### R1002
+## R1002
 
-**Value mismatch**
+### Value mismatch
 
 The value does not match the expected value defined in the specification.
 
@@ -180,9 +212,9 @@ During validation of the request from consumer to stub, `status` is not one of t
 - Send a value that matches the specification enum.
 - If the new value is valid, update the specification enum to include it.
 
-### R1003
+## R1003
 
-**Constraint violation**
+### Constraint violation
 
 The value does not satisfy the constraints defined in the specification.
 
@@ -215,9 +247,9 @@ The request from consumer to stub is validated and fails because `username` is s
 - Provide values that satisfy the constraint (e.g., a longer `username`).
 - If the constraint is too strict, relax it in the specification.
 
-### R2001
+## R2001
 
-**Missing required property**
+### Missing required property
 
 A required property defined in the specification is missing.
 
@@ -251,9 +283,9 @@ Request validation fails because `email` is required but missing.
 - Include all required properties in the payload.
 - If the property should not be required, update the specification.
 
-### R2002
+## R2002
 
-**Missing optional property**
+### Missing optional property
 
 An optional property defined in the specification is missing.
 
@@ -288,9 +320,9 @@ When optional fields are enforced, the missing `description` is reported as an o
 - If strict checking is not intended, run with the default optional behavior.
 - If the property should be required, mark it as required in the specification.
 
-### R2003
+## R2003
 
-**Unknown property**
+### Unknown property
 
 A property was found that is not defined in the specification.
 
@@ -325,9 +357,9 @@ During response validation, `extra` is not defined and `additionalProperties: fa
 - Remove unexpected properties from the payload.
 - If the property is valid, add it to the specification or allow additional properties.
 
-### R3001
+## R3001
 
-**Discriminator mismatch**
+### Discriminator mismatch
 
 The value provided does not match the discriminator defined in the specification.
 
@@ -383,9 +415,9 @@ The discriminator value does not match any mapping, so validation of the request
 - Use a discriminator value that maps to a defined schema.
 - If a new subtype is needed, add it to the specification and discriminator mapping.
 
-### R3002
+## R3002
 
-**Invalid discriminator setup**
+### Invalid discriminator setup
 
 The discriminator property defined in the specification is missing from the subschemas.
 
@@ -435,9 +467,9 @@ The discriminator is declared, but neither subschema defines the `type` property
 - Add the discriminator property to each subschema and mark it required.
 - Ensure the discriminator mapping values align with the schema definitions.
 
-### R3003
+## R3003
 
-**Missing discriminator**
+### Missing discriminator
 
 The discriminator property defined in the specification is missing.
 
@@ -493,9 +525,9 @@ The payload lacks the discriminator property `type`, so validation reports a mis
 - Include the discriminator property in the payload.
 - If the discriminator is not needed, remove it and adjust the composed schema.
 
-### R3004
+## R3004
 
-**Property not in any schema options**
+### Property not in any schema options
 
 The property is not defined in any available schema options.
 
@@ -536,9 +568,9 @@ During validation of the request from consumer to stub, `c` is not present in an
 - Send a payload that matches at least one `anyOf` option.
 - If `c` is valid, add it to one of the option schemas or add another option.
 
-### R3005
+## R3005
 
-**Property matches no schema option**
+### Property matches no schema option
 
 The property does not satisfy any available schema options.
 
