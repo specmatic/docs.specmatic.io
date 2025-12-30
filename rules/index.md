@@ -7,6 +7,110 @@ search_exclude: true
 
 # Rules
 
+### R0001
+
+**HTTP method mismatch**
+
+The HTTP method does not match the method defined in the specification.
+
+**Why this is a problem**
+
+Method mismatches indicate the consumer or provider is calling the wrong operation, which can lead to unexpected behavior or missing functionality.
+
+Example:
+
+```yaml
+paths:
+  /orders:
+    get:
+      responses:
+        "200":
+          description: OK
+```
+
+Request from consumer to stub:
+
+```http
+POST /orders HTTP/1.1
+```
+
+The contract expects `GET /orders`, but the request uses `POST`, so a method mismatch is reported.
+
+**How this can be resolved**
+
+- Update the client or provider to use the method defined in the specification.
+- If the method should be different, update the specification accordingly.
+
+### R0002
+
+**HTTP status mismatch**
+
+The HTTP status code does not match the expected status code defined in the specification.
+
+**Why this is a problem**
+
+Status codes communicate outcome semantics; a mismatch can mislead clients about success or failure.
+
+Example:
+
+```yaml
+paths:
+  /orders:
+    get:
+      responses:
+        "200":
+          description: OK
+```
+
+Response from provider during a contract test:
+
+```http
+HTTP/1.1 404 Not Found
+```
+
+The contract expects a `200` response, but the provider returns `404`, so a status mismatch is reported.
+
+**How this can be resolved**
+
+- Return the status code defined in the specification.
+- If the actual status is correct, update the specification to reflect it.
+
+### R0007
+
+**No matching security scheme**
+
+The request does not satisfy the requirements of any defined security scheme.
+
+**Why this is a problem**
+
+Security schemes define how clients authenticate; failing to meet them means the request is not authorized by the contract.
+
+Example:
+
+```yaml
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+security:
+  - apiKeyAuth: []
+```
+
+Request from consumer to stub:
+
+```http
+GET /orders HTTP/1.1
+```
+
+The request does not include the required `X-API-Key` header, so no matching security scheme is reported.
+
+**How this can be resolved**
+
+- Provide credentials that satisfy one of the defined security schemes.
+- If authentication is not required, remove or update the security requirement in the specification.
+
 ### R1001
 
 **Type mismatch**
