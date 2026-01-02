@@ -292,23 +292,14 @@ client_component_tests:
     entrypoint: [""]
 
   before_script:
-    - |
-      apk update
-      curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
-      apk add nodejs
-
+    - apk add -U nodejs
     - node --version
     - npm --version
 
   script:
     - npm ci
-
-    - |
-      mkdir -p build/reports/specmatic
-      specmatic stub --port=8080 &
-
+    - specmatic stub --port=8080 &
     - sleep 10
-
     - STUB_URL=http://localhost:8080 npm run test:component
 {% endraw %}
 ```
@@ -610,19 +601,12 @@ domain_api_contract_tests:
     entrypoint: [""]
 
   before_script:
-    - apk update
-    - apk add openjdk-17-jdk maven
-    - chmod +x mvnw
+    - apk add -U openjdk-17-jdk maven
 
   script:
     - ./mvnw spring-boot:run &
-
     - sleep 30
-
-    - |
-      mkdir -p build/reports/specmatic
-
-      specmatic test --port=9000 --host=localhost
+    - specmatic test --port=9000 --host=localhost
 {% endraw %}
 ```
 {% endtab %}
