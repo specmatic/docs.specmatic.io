@@ -2,7 +2,7 @@
 layout: default
 title: JMS
 parent: AsyncAPI
-nav_order: 3
+nav_order: 9
 redirect_from:
   - /documentation/stubbing-jms.html
   - /documentation/supported_protocols/asyncapi/jms.html

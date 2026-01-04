@@ -2,7 +2,7 @@
 layout: default
 title: Google PubSub
 parent: AsyncAPI
-nav_order: 2
+nav_order: 10
 redirect_from:
   - /documentation/supported_protocols/asyncapi/google-pub-sub.html
 ---
