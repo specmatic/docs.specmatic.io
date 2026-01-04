@@ -87,6 +87,8 @@ When a PR/MR is raised, we need to set up a simple CI pipeline to perform the fo
 name: Lint, Validate Examples and Check Backward Compatibility
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -136,6 +138,7 @@ stages:
 workflow:
  rules:
    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+   - if: '$CI_COMMIT_BRANCH == "main"'
 
 lint_openapi_files:
  stage: lint
@@ -239,6 +242,8 @@ After the client is up and running and checked into a Git repository, you can cr
 name: Client CI Build using Specmatic Serivce Virtualization
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -283,7 +288,8 @@ stages:
 
 workflow:
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
 
 client_component_tests:
   stage: test
@@ -328,6 +334,8 @@ Make sure the BFF service is checked into a Git repository. Then create the foll
 name: Provider and Consumer CI Build using Specmatic Contract Test and Service Virtualization
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs:
@@ -352,6 +360,8 @@ jobs:
 name: Provider and Consumer CI Build using Specmatic Contract Test and Service Virtualization
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs:
@@ -402,7 +412,8 @@ stages:
 
 workflow:
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
 
 provider_contract_tests:
   stage: test
@@ -463,6 +474,8 @@ jobs:
 name: Provider and Consumer CI Build with CTRF Report
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs:
@@ -554,6 +567,8 @@ Make sure Order Domain API service is checked in to a git repository. Then creat
 name: Domain API service CI Build using Specmatic Contract Test
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -594,6 +609,14 @@ jobs:
 {% tab domainCI GitLab %}
 ```yaml
 {% raw %}
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
 domain_api_contract_tests:
   stage: test
   image:

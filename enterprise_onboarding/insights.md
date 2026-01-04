@@ -75,6 +75,8 @@ Please go through the detailed [Continuous Integration](/references/continuous_i
 
 Please add the following 2 steps to your CI/CD pipeline configuration:
 
+{% tabs mergeCI %}
+{% tab mergeCI GitHub %}
 ```yaml
 {% raw %}
 - name: Write specmatic license key to file
@@ -83,6 +85,7 @@ Please add the following 2 steps to your CI/CD pipeline configuration:
     echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
 - name: Publish Build Reports to Specmatic Insights
+  if: github.ref == 'refs/heads/main'
   run: |
     docker run --rm \
       -v ~/.specmatic:/root/.specmatic \
@@ -95,8 +98,38 @@ Please add the following 2 steps to your CI/CD pipeline configuration:
       --repo-url ${{ github.event.repository.html_url }}
 {% endraw %}
 ```
+{% endtab %}
+{% tab mergeCI GitLab %}
+```yaml
+{% raw %}
+publish_specmatic_insights:
+  stage: report
+  image:
+    name: specmatic/specmatic:latest
+    entrypoint: [""]
 
-This will ensure that your build reports are sent to Specmatic Insights after each CI/CD pipeline execution, allowing Specmatic Insights to aggregate and visualize your API ecosystem effectively.
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+    - when: never
+
+  before_script:
+    - mkdir -p ~/.specmatic
+    - echo "$SPECMATIC_LICENSE_KEY" > ~/.specmatic/specmatic-license.txt
+
+  script:
+    - |
+      specmatic send-report \
+        --branch-name "$CI_COMMIT_BRANCH" \
+        --repo-name "$CI_PROJECT_NAME" \
+        --repo-id "$CI_PROJECT_ID" \
+        --repo-url "$CI_PROJECT_URL"  
+{% endraw %}
+```
+{% endtab %}
+{% endtabs %}
+
+This will ensure that only when you merge the changes to your main branch, your build reports are sent to Specmatic Insights after each CI/CD pipeline execution, allowing Specmatic Insights to aggregate and visualize your API ecosystem effectively.
 
 ## Step 3: Visualizing Your API Ecosystem
 
