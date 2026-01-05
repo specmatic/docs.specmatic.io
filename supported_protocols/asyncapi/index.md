@@ -264,12 +264,18 @@ docker run --rm --network host \
   -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
   -v "$PWD/spec:/usr/src/app/spec" \
   -v "$PWD/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
-  specmatic/specmatic-async-core test
+  specmatic/specmatic-async test
 ```
 
 This generates and executes contract tests based on your AsyncAPI specification.
 
 **Example Project**: [View complete working example →](https://github.com/specmatic/specmatic-sqs-kafka-sample)
+
+**Multi-protocol sample project**:
+
+Like `SQS -> Kafka`, if you want to try out `specmatic-async` on different flows like `JMS -> Kafka` or `AMQP -> SQS`, you can try out [this](https://github.com/specmatic/specmatic-async-sample) sample project.
+
+You can refer to the README of this sample project to understand how you can try it out with different protocols.
 
 ---
 
@@ -360,7 +366,7 @@ docker run --rm --network host \
   -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
   -v "$PWD/spec:/usr/src/app/spec" \
   -v "$PWD/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
-  specmatic/specmatic-async-core virtualize
+  specmatic/specmatic-async virtualize
 ```
 
 **How It Works**:
@@ -381,7 +387,7 @@ For examples in `<SPEC_NAME>_examples/` directory:
 ```bash
 docker run --rm \
   -v "$PWD/spec:/usr/src/app/spec" \
-  specmatic/specmatic-async-core examples validate \
+  specmatic/specmatic-async examples validate \
   --spec-file spec/order-service.yaml
 ```
 
@@ -391,7 +397,7 @@ docker run --rm \
 docker run --rm \
   -v "$PWD/spec:/usr/src/app/spec" \
   -v "$PWD/custom-examples:/usr/src/app/custom-examples" \
-  specmatic/specmatic-async-core examples validate \
+  specmatic/specmatic-async examples validate \
   --spec-file spec/order-service.yaml \
   --examples custom-examples
 ```
@@ -405,7 +411,7 @@ docker run --rm \
 Run contract tests against your application:
 
 ```bash
-specmatic-async-core test [OPTIONS]
+specmatic-async test [OPTIONS]
 ```
 
 **Options**:
@@ -422,7 +428,7 @@ Start a mock/stub server for async messaging protocols. Supports both external b
 **Aliases**: `stub`, `virtualize`
 
 ```bash
-specmatic-async-core virtualize [OPTIONS]
+specmatic-async virtualize [OPTIONS]
 ```
 
 **Options**:
@@ -441,7 +447,7 @@ The command automatically detects whether to use external brokers (if configured
 Validate test examples against the specification:
 
 ```bash
-specmatic-async-core examples validate [OPTIONS]
+specmatic-async examples validate [OPTIONS]
 ```
 
 **Options**:
