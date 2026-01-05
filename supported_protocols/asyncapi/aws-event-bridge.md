@@ -408,4 +408,3 @@ For a complete working example, see the [specmatic-event-bridge-sample](https://
 - [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0)
 - [AWS EventBridge Documentation](https://docs.aws.amazon.com/eventbridge/)
 - [Specmatic Documentation](https://specmatic.io/)
-- [LocalStack EventBridge](https://docs.localstack.cloud/user-guide/aws/eventbridge/)
