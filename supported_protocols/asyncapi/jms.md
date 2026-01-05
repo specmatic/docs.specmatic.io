@@ -17,20 +17,88 @@ Commercial
 
 <!-- TOC -->
 * [JMS](#jms)
-    * [Introduction](#introduction)
-    * [Pre-requisite Setup](#pre-requisite-setup)
-    * [Start the JMS Server](#start-the-jms-server)
-    * [Set Expectations](#set-expectations)
-    * [Verify Expectations](#verify-expectations)
-    * [Stop the JMS Server](#stop-the-jms-server)
-    * [Inject an ActiveMQ JMS client using JNDI](#inject-an-activemq-jms-client-using-jndi)
+    * [About JMS](#about-jms)
+    * [Using JMS in AsyncAPI Specifications](#using-jms-in-asyncapi-specifications)
+        * [Server Definition](#server-definition)
+        * [Channel Definition](#channel-definition)
+        * [Message Headers](#message-headers)
+    * [JMS Mocking](#jms-mocking)
+        * [Pre-requisite Setup](#pre-requisite-setup)
+        * [Start the JMS Server](#start-the-jms-server)
+        * [Set Expectations](#set-expectations)
+        * [Verify Expectations](#verify-expectations)
+        * [Stop the JMS Server](#stop-the-jms-server)
+        * [Inject an ActiveMQ JMS client using JNDI](#inject-an-activemq-jms-client-using-jndi)
+    * [Running Contract Tests with Specmatic-Async](#running-contract-tests-with-specmatic-async)
+        * [Step 1: Configure specmatic.yaml](#step-1-configure-specmaticyaml)
+        * [Step 2: Start JMS Infrastructure](#step-2-start-jms-infrastructure)
+        * [Step 3: Run Your Application](#step-3-run-your-application)
+        * [Step 4: Run Contract Tests](#step-4-run-contract-tests)
+        * [Step 5: Review Test Results](#step-5-review-test-results)
+    * [Tips for JMS Testing](#tips-for-jms-testing)
     * [Sample Applications](#sample-applications)
 <!-- TOC -->
 
 {: .note}
 The `specmatic-jms` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
 
-### Introduction
+## About JMS
+
+Java Message Service (JMS) is a Java API specification for messaging middleware that enables enterprise applications to create, send, receive, and read messages asynchronously. JMS supports both point-to-point (queues) and publish-subscribe (topics) messaging models. It provides features like transactions, message persistence, acknowledgment modes, and message selectors. Common JMS implementations include Apache ActiveMQ, ActiveMQ Artemis, IBM MQ, and WebSphere MQ. JMS is widely used in enterprise Java applications for reliable, transactional messaging.
+
+## Using JMS in AsyncAPI Specifications
+
+To define JMS-based messaging in your AsyncAPI specification, you need to declare a server with the `jms` protocol and reference it in your channels.
+
+### Server Definition
+
+```yaml
+servers:
+  jmsServer:
+    host: "tcp://localhost:61616"
+    protocol: "jms"
+    description: "JMS server"
+```
+
+The `host` should point to your JMS broker's connection URL. The format varies by implementation (e.g., ActiveMQ uses `tcp://`, ActiveMQ Artemis may use different schemes).
+
+### Channel Definition
+
+```yaml
+channels:
+  NewOrderPlaced:
+    address: "new-orders"
+    servers:
+      - $ref: "#/servers/jmsServer"
+    messages:
+      placeOrder.message:
+        $ref: "#/components/messages/OrderRequest"
+```
+
+The `address` field specifies the JMS destination name (queue or topic). Reference the JMS server in the `servers` array to indicate this channel uses JMS as the transport protocol.
+
+### Message Headers
+
+JMS supports rich message properties and headers for metadata:
+
+```yaml
+components:
+  messages:
+    OrderRequest:
+      headers:
+        type: "object"
+        properties:
+          orderCorrelationId:
+            type: "string"
+            description: "Unique identifier for the request"
+      payload:
+        type: "object"
+        # ... payload definition
+```
+
+JMS correlation IDs can be set via standard JMSCorrelationID header or custom properties.
+
+## JMS Mocking
 
 Specmatic spins up an ActiveMQ server, and expects the system under test to use an ActiveMQ JMS client when running tests. This is both vendor-agnostic and easy to do, given that all JMS clients implement a Java JMS interface.
 
@@ -77,6 +145,7 @@ jmsMock.start()
 ```
 {% endtab %}
 {% endtabs %}
+
 {: .note}
 If you have the [Specmatic Config](/references/configuration) set up, you can define the specifications in the `consumes` section and utilize `JmsMock.create(host, port)` in your test setup to create the JMS mock.
 
@@ -99,11 +168,9 @@ jmsMock.setExpectations(listOf(Expectation(channel = "product-queries", count = 
 {% endtab %}
 {% endtabs %}
 
-
 ### Verify Expectations
 
-At then end of the test, the code below shows how to check if the expectations have been met.
-This returns `VerificationResult` which contains `success` boolean and `errors` list of string errors
+At then end of the test, the code below shows how to check if the expectations have been met. This returns `VerificationResult` which contains `success` boolean and `errors` list of string errors
 
 {% tabs verifyExpectations %}
 {% tab verifyExpectations java %}
@@ -168,8 +235,107 @@ On running the application, JMS calls are redirected to the newly created server
 
 Depending on your context, you may need to additional methods in TestInitialContextFactory.
 
-### Sample Applications
+## Running Contract Tests with Specmatic-Async
 
-Please have a look at the following sample project to understand how to utilize `Specmatic-JMS` in your application:
+Specmatic-async enables you to run contract tests against applications using JMS by validating that your service correctly implements the AsyncAPI specification.
 
-- [specmatic-order-bff-jms](https://github.com/specmatic/specmatic-order-bff-jms/tree/main/src/test/kotlin/com/component/orders)
+{: .note}
+For a complete working example of JMS contract testing with Specmatic-Async, refer to the [specmatic-async-sample](https://github.com/specmatic/specmatic-async-sample) project.
+
+### Step 1: Configure specmatic.yaml
+
+Create or update your `specmatic.yaml` file to include the AsyncAPI specification and JMS server configuration:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/spec.yaml
+        specType: asyncapi
+        config:
+          servers:
+            - host: tcp://localhost:61616
+              protocol: jms
+              adminCredentials:
+                username: admin
+                password: admin
+```
+
+### Step 2: Start JMS Infrastructure
+
+Use Docker Compose to start a JMS broker (ActiveMQ Artemis):
+
+```yaml
+services:
+  artemis:
+    image: apache/activemq-artemis:latest
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    environment:
+      ARTEMIS_USER: admin
+      ARTEMIS_PASSWORD: admin
+```
+
+For Apache ActiveMQ Classic:
+
+```yaml
+services:
+  activemq:
+    image: apache/activemq-classic:latest
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    environment:
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: admin
+```
+
+Start the infrastructure:
+
+```bash
+docker compose up -d
+```
+
+### Step 3: Run Your Application
+
+Start your application that implements the AsyncAPI specification. The application should be configured to connect to the JMS broker and listen on the appropriate queues/topics defined in your contract.
+
+### Step 4: Run Contract Tests
+
+Execute the contract tests using the Specmatic Docker image:
+
+```bash
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+```
+
+Specmatic-async will:
+1. Read the AsyncAPI specification and identify JMS channels
+2. Connect to the configured JMS broker
+3. Send test messages to your application's input queues/topics
+4. Validate that your application sends correct responses to output queues/topics
+5. Verify that message payloads, headers, and correlation IDs conform to the contract
+
+### Step 5: Review Test Results
+
+Check the test output for detailed validation results, including any contract violations or failures.
+
+## Tips for JMS Testing
+
+- **Broker Selection**: Choose the JMS broker that matches your production environment (Artemis, ActiveMQ, IBM MQ, etc.)
+- **Connection Factory**: Ensure the connection factory configuration matches your broker type
+- **Transactions**: Consider enabling transacted sessions for test reliability
+- **Durable Subscriptions**: Use durable subscriptions for topics if message persistence is required
+- **Message Selectors**: Leverage JMS message selectors for filtered message consumption
+- **JMSCorrelationID**: Use the standard JMSCorrelationID header for request-reply patterns
+- **Acknowledgment Modes**: Choose appropriate acknowledgment mode (AUTO, CLIENT, DUPS_OK) for test scenarios
+- **Temporary Queues**: Use temporary queues for reply patterns to avoid queue cleanup issues
+- **Connection Pooling**: Configure connection pooling for better performance in high-volume tests
+
+## Sample Applications
+
+Please have a look at the following sample projects to understand how to utilize `Specmatic-JMS` in your application:
+
+- [specmatic-async-sample](https://github.com/specmatic/specmatic-async-sample) - Sample project demonstrating JMS contract testing with Specmatic-Async
+- [specmatic-order-bff-jms](https://github.com/specmatic/specmatic-order-bff-jms/tree/main/src/test/kotlin/com/component/orders) - Sample project for JMS mocking

@@ -16,8 +16,13 @@ Commercial
 
 <!-- TOC -->
 * [Kafka](#kafka)
-  * [Starting Kafka Mock Server from command line](#starting-kafka-mock-server-from-command-line)
-  * [Interacting with the API server](#interacting-with-the-api-server)
+  * [About Kafka](#about-kafka)
+  * [Using Kafka in AsyncAPI Specifications](#using-kafka-in-asyncapi-specifications)
+    * [Server Definition](#server-definition)
+    * [Channel Definition](#channel-definition)
+    * [Message Headers](#message-headers)
+  * [Starting Kafka Mock Server from Command Line](#starting-kafka-mock-server-from-command-line)
+  * [Interacting with the API Server](#interacting-with-the-api-server)
     * [📘 Specmatic Kafka Mock Server API Guide](#-specmatic-kafka-mock-server-api-guide)
       * [✅ API Capabilities](#-api-capabilities)
       * [🚀 Step 1: Start a Kafka Broker](#-step-1-start-a-kafka-broker)
@@ -35,9 +40,71 @@ Commercial
     * [Service Implementation](#service-implementation)
     * [Specmatic Configuration](#specmatic-configuration)
     * [Testing the Service](#testing-the-service)
+  * [Running Contract Tests with Specmatic-Async](#running-contract-tests-with-specmatic-async)
+    * [Step 1: Configure specmatic.yaml](#step-1-configure-specmaticyaml)
+    * [Step 2: Start Kafka Infrastructure](#step-2-start-kafka-infrastructure)
+    * [Step 3: Run Your Application](#step-3-run-your-application)
+    * [Step 4: Run Contract Tests](#step-4-run-contract-tests)
+    * [Step 5: Review Test Results](#step-5-review-test-results)
+  * [Tips for Kafka Testing](#tips-for-kafka-testing)
+  * [Sample Applications](#sample-applications)
 <!-- TOC -->
 
-## Starting Kafka Mock Server from command line
+## About Kafka
+
+Apache Kafka is a distributed event streaming platform designed for high-throughput, fault-tolerant messaging. It uses a publish-subscribe model with topics that support partitioning for horizontal scalability. Kafka is widely used for building real-time data pipelines, streaming applications, and event-driven architectures. Messages in Kafka are durably stored and can be replayed, making it ideal for scenarios requiring both high performance and data retention.
+
+## Using Kafka in AsyncAPI Specifications
+
+To define Kafka-based messaging in your AsyncAPI specification, you need to declare a server with the `kafka` protocol and reference it in your channels.
+
+### Server Definition
+
+```yaml
+servers:
+  kafkaServer:
+    host: "localhost:9092"
+    protocol: "kafka"
+    description: "Kafka broker"
+```
+
+The `host` should point to your Kafka broker's bootstrap server address.
+
+### Channel Definition
+
+```yaml
+channels:
+  NewOrderPlaced:
+    address: "new-orders"
+    servers:
+      - $ref: "#/servers/kafkaServer"
+    messages:
+      placeOrder.message:
+        $ref: "#/components/messages/OrderRequest"
+```
+
+The `address` field specifies the Kafka topic name. Reference the Kafka server in the `servers` array to indicate this channel uses Kafka as the transport protocol.
+
+### Message Headers
+
+Kafka supports custom headers that can be used for correlation IDs and other metadata:
+
+```yaml
+components:
+  messages:
+    OrderRequest:
+      headers:
+        type: "object"
+        properties:
+          orderCorrelationId:
+            type: "string"
+            description: "Unique identifier for the request"
+      payload:
+        type: "object"
+        # ... payload definition
+```
+
+## Starting Kafka Mock Server from Command Line
 
 Create a file named `specmatic.yaml` with below content.
 
@@ -96,8 +163,7 @@ The `--network host` flag is important when using `localhost` for the broker add
 
 ---
 
-
-## Interacting with the API server
+## Interacting with the API Server
 
 The API server provides endpoints to interact with the kafka mock server, allowing you to perform the following actions:
 1. Set Expectations: Configure the Kafka mock server with specific expectations.
@@ -389,11 +455,11 @@ This tells the mock server to expect **1 message** on the `place-order` topic an
 
 ###### When to use topicsToIgnore?
 
-When connecting the Specmatic Kafka Mock Server to an external Kafka broker, it’s common for other active topics to exist—many of which may be unrelated to the scope of your current testing.
+When connecting the Specmatic Kafka Mock Server to an external Kafka broker, it's common for other active topics to exist—many of which may be unrelated to the scope of your current testing.
 
 By default, Specmatic validates all Kafka activity against the topics defined in your AsyncAPI specification. Any message published to a topic not listed in the spec is treated as unexpected behavior, signaling a drift from the contract and resulting in a failure.
 
-This is where the topicsToIgnore configuration becomes essential. It allows you to exclude specific topics (e.g., __consumer_offsets, _schemas, or any infrastructure-related ones) from validation, ensuring that external system noise doesn’t interfere with your testing.
+This is where the topicsToIgnore configuration becomes essential. It allows you to exclude specific topics (e.g., __consumer_offsets, _schemas, or any infrastructure-related ones) from validation, ensuring that external system noise doesn't interfere with your testing.
 
 Use topicsToIgnore to maintain a clean and accurate environment, especially when dealing with shared or production-like Kafka brokers.
 
@@ -443,7 +509,6 @@ If the verification fails, the response will include details of the mismatches.
 - Use the `topicsToIgnore` field to exclude system/internal topics.
 - Ensure all published messages adhere to the schema defined in the spec.
 
-
 ## Running Contract Tests Against a Kafka-Based Request-Reply Service
 
 Create a service which implements the kafka messaging architecture as per the [order_service_async.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/asyncapi/order_service_async_v1.yaml) specification.
@@ -480,4 +545,104 @@ To get information around all the CLI args of the `test` command, run the follow
 docker run specmatic/specmatic-kafka test --help
 ```
 
-To get a hands-on experience, refer to [these](/sample_projects.html#tab-sample-asyncapi) sample projects.
+## Running Contract Tests with Specmatic-Async
+
+Specmatic-async enables you to run contract tests against applications using Kafka by validating that your service correctly implements the AsyncAPI specification.
+
+{: .note}
+For a complete working example of Kafka contract testing with Specmatic-Async, refer to the [specmatic-async-sample](https://github.com/specmatic/specmatic-async-sample) project.
+
+### Step 1: Configure specmatic.yaml
+
+Create or update your `specmatic.yaml` file to include the AsyncAPI specification and Kafka server configuration:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/spec.yaml
+        specType: asyncapi
+        config:
+          servers:
+            - host: localhost:9092
+              protocol: kafka
+```
+
+### Step 2: Start Kafka Infrastructure
+
+Use Docker Compose to start Kafka and Zookeeper:
+
+```yaml
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    ports:
+      - "9092:9092"
+```
+
+Start the infrastructure:
+
+```bash
+docker compose up -d
+```
+
+### Step 3: Run Your Application
+
+Start your application that implements the AsyncAPI specification. The application should be configured to connect to the Kafka broker and listen on the topics defined in your contract.
+
+### Step 4: Run Contract Tests
+
+Execute the contract tests using the Specmatic Docker image:
+
+```bash
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+```
+
+Specmatic-async will:
+1. Read the AsyncAPI specification and identify Kafka channels
+2. Connect to the configured Kafka broker
+3. Send test messages to your application's input topics
+4. Validate that your application sends correct responses to output topics
+5. Verify that message payloads, headers, and correlation IDs conform to the contract
+
+### Step 5: Review Test Results
+
+Check the test output for detailed validation results, including any contract violations or failures.
+
+## Tips for Kafka Testing
+
+- **Consumer Groups**: Use unique consumer group IDs for testing to avoid conflicts with running instances
+- **Topic Auto-creation**: Enable auto-creation in Kafka for development environments to simplify setup
+- **Partition Strategy**: Consider using message keys (like order IDs) if partition affinity is important
+- **Offset Management**: Configure appropriate offset reset strategy for tests to ensure all messages are consumed
+- **Replication Factor**: Use replication factor of 1 for local testing to avoid multiple broker requirements
+- **Message Serialization**: Ensure your application's serialization format matches the contract (JSON, Avro, etc.)
+- **Consumer Acknowledgment**: Configure appropriate acknowledgment strategies for reliable message processing
+- **Topic Retention**: Set appropriate retention policies for test environments
+- **Monitoring**: Use Kafka Console or third-party tools to monitor topics and consumer lag during testing
+- **Schema Registry**: Consider using a schema registry for Avro-based messaging to ensure schema compatibility
+- **Headers**: Leverage Kafka headers for correlation IDs and metadata to maintain request/response tracing
+
+## Sample Applications
+
+Please have a look at the following sample projects to understand how to utilize Kafka with Specmatic:
+
+- [specmatic-async-sample](https://github.com/specmatic/specmatic-async-sample) - Sample project demonstrating Kafka contract testing with Specmatic-Async
+
+To get a hands-on experience with additional examples, refer to [these](/sample_projects.html#tab-sample-asyncapi) sample projects.

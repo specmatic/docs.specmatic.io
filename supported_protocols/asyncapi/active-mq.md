@@ -9,3 +9,189 @@ nav_order: 2
 {: .d-inline-block }
 Commercial
 {: .label }
+
+## About ActiveMQ
+
+Apache ActiveMQ is a popular open-source message broker that supports multiple protocols including JMS, AMQP, STOMP, MQTT, and OpenWire. It provides enterprise messaging features such as message persistence, transactions, clustering, and high availability. ActiveMQ comes in two main variants: ActiveMQ Classic (the original implementation) and ActiveMQ Artemis (the next-generation broker with better performance and scalability). Both support the JMS API for Java applications and AMQP for cross-platform messaging.
+
+## Using ActiveMQ in AsyncAPI Specifications
+
+ActiveMQ can be accessed via JMS or AMQP protocols in AsyncAPI. For Java applications, JMS is the most common choice.
+
+### Server Definition (JMS)
+
+```yaml
+servers:
+  jmsServer:
+    host: "tcp://localhost:61616"
+    protocol: "jms"
+    description: "ActiveMQ JMS server"
+```
+
+The `host` should point to your ActiveMQ broker's OpenWire or AMQP port. ActiveMQ Classic typically uses port 61616 for OpenWire (JMS).
+
+### Server Definition (AMQP)
+
+```yaml
+servers:
+  amqpServer:
+    host: "amqp://localhost:5672"
+    protocol: "amqp"
+    description: "ActiveMQ AMQP server"
+```
+
+For AMQP connections, use port 5672 (ActiveMQ Artemis) or the configured AMQP port.
+
+### Channel Definition
+
+```yaml
+channels:
+  NewOrderPlaced:
+    address: "new-orders"
+    servers:
+      - $ref: "#/servers/jmsServer"
+    messages:
+      placeOrder.message:
+        $ref: "#/components/messages/OrderRequest"
+```
+
+The `address` field specifies the queue or topic name in ActiveMQ.
+
+### Message Headers
+
+Both JMS and AMQP support rich message headers:
+
+```yaml
+components:
+  messages:
+    OrderRequest:
+      headers:
+        type: "object"
+        properties:
+          orderCorrelationId:
+            type: "string"
+            description: "Unique identifier for the request"
+      payload:
+        type: "object"
+        # ... payload definition
+```
+
+## Running Contract Tests with Specmatic-Async
+
+Specmatic-async enables you to run contract tests against applications using ActiveMQ by validating that your service correctly implements the AsyncAPI specification.
+
+{: .note}
+For a complete working example of ActiveMQ contract testing with Specmatic-Async, refer to the [specmatic-async-sample](https://github.com/specmatic/specmatic-async-sample) project.
+
+### Step 1: Configure specmatic.yaml
+
+Create or update your `specmatic.yaml` file to include the AsyncAPI specification and ActiveMQ server configuration:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/spec.yaml
+        specType: asyncapi
+        config:
+          servers:
+            - host: tcp://localhost:61616
+              protocol: jms
+              adminCredentials:
+                username: admin
+                password: admin
+```
+
+### Step 2: Start ActiveMQ Infrastructure
+
+Use Docker Compose to start ActiveMQ Artemis or ActiveMQ Classic:
+
+#### For ActiveMQ Artemis:
+
+```yaml
+services:
+  artemis:
+    image: apache/activemq-artemis:latest
+    ports:
+      - "61616:61616"    # OpenWire/Core protocol
+      - "5672:5672"      # AMQP
+      - "8161:8161"      # Web Console
+    environment:
+      ARTEMIS_USER: admin
+      ARTEMIS_PASSWORD: admin
+```
+
+#### For ActiveMQ Classic:
+
+```yaml
+services:
+  activemq:
+    image: apache/activemq-classic:latest
+    ports:
+      - "61616:61616"    # OpenWire (JMS)
+      - "5672:5672"      # AMQP
+      - "8161:8161"      # Web Console
+    environment:
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: admin
+```
+
+Start the infrastructure:
+
+```bash
+docker compose up -d
+```
+
+### Step 3: Run Your Application
+
+Start your application that implements the AsyncAPI specification. The application should be configured to connect to the ActiveMQ broker and listen on the appropriate queues/topics defined in your contract.
+
+### Step 4: Run Contract Tests
+
+Execute the contract tests using the Specmatic Docker image:
+
+```bash
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+```
+
+Specmatic-async will:
+1. Read the AsyncAPI specification and identify ActiveMQ channels
+2. Connect to the configured ActiveMQ broker
+3. Send test messages to your application's input queues/topics
+4. Validate that your application sends correct responses to output queues/topics
+5. Verify that message payloads, headers, and correlation IDs conform to the contract
+
+### Step 5: Review Test Results
+
+Check the test output for detailed validation results, including any contract violations or failures.
+
+## ActiveMQ-Specific Features
+
+### Protocol Support
+
+ActiveMQ supports multiple protocols:
+- **OpenWire**: Native ActiveMQ protocol, optimized for performance
+- **AMQP**: Cross-platform messaging protocol
+- **STOMP**: Simple text-based protocol for web applications
+- **MQTT**: Lightweight protocol for IoT devices
+
+### Queue vs Topic
+
+- **Queues**: Point-to-point messaging (one consumer per message)
+- **Topics**: Publish-subscribe messaging (all subscribers receive messages)
+
+
+## Tips for ActiveMQ Testing
+
+- **Web Console**: Access ActiveMQ console at `http://localhost:8161` (admin/admin) to monitor queues and messages
+- **Artemis vs Classic**: Choose Artemis for new projects (better performance, active development); use Classic for legacy compatibility
+- **Transactions**: Use JMS transactions for reliable message processing
+- **Message Persistence**: ActiveMQ persists messages by default using KahaDB (Classic) or Journal (Artemis)
+- **Dead Letter Queue**: Configure DLQ to handle failed messages automatically
+- **Virtual Topics**: Use virtual topics for combining pub-sub with load balancing
+- **Connection Pooling**: Use connection pooling in your application for better performance
+- **Advisory Messages**: Monitor ActiveMQ advisory topics for broker events
+- **Security**: Configure authentication and authorization for production environments
+- **Broker Networks**: Use broker networks for distributed ActiveMQ deployments
+- **Memory Management**: Configure memory limits and paging for large message volumes

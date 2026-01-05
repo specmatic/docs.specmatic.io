@@ -9,3 +9,247 @@ nav_order: 4
 {: .d-inline-block }
 Commercial
 {: .label }
+
+Specmatic-async provides first-class support for contract testing applications that use AWS SNS, enabling you to validate pub/sub messaging patterns with confidence.
+
+## What is AWS SNS?
+
+Amazon Simple Notification Service (SNS) is a fully managed pub/sub messaging service that enables you to decouple microservices, distributed systems, and serverless applications. SNS provides topics for high-throughput, push-based, many-to-many messaging between distributed systems, microservices, and event-driven serverless applications.
+
+### Key Concepts
+
+- **Topics**: Communication channels for sending messages and subscribing to notifications
+- **Publishers**: Systems or applications that send messages to SNS topics
+- **Subscribers**: Endpoints that receive messages from topics (e.g., SQS queues, Lambda functions, HTTP endpoints, email addresses)
+- **Message Attributes**: Metadata that can be attached to messages for filtering and routing
+
+### Common Use Cases
+
+SNS is commonly used for:
+- Broadcasting notifications to multiple subscribers
+- Fan-out pattern: sending the same message to multiple queues or services
+- Mobile push notifications
+- Email and SMS notifications
+- Triggering Lambda functions or other AWS services
+- Application-to-application messaging in microservices architectures
+
+## Specifying SNS in AsyncAPI
+
+Specmatic-async uses AsyncAPI 3.0 specifications to define SNS contracts. Here's how to configure SNS in your AsyncAPI specification:
+
+### Server Configuration
+
+Define an SNS server in the `servers` section:
+
+```yaml
+servers:
+  snsServer:
+    host: 'http://localhost:4566'
+    protocol: sns
+    description: AWS SNS server for publishing notifications
+```
+
+For production environments, you would use the actual AWS SNS endpoint:
+
+```yaml
+servers:
+  snsServer:
+    host: 'https://sns.us-east-1.amazonaws.com'
+    protocol: sns
+    description: AWS SNS production server
+```
+
+### Channel Configuration
+
+Define SNS topics as channels:
+
+```yaml
+channels:
+  orderNotifications:
+    address: order-notifications-topic
+    servers:
+      - $ref: '#/servers/snsServer'
+    messages:
+      orderPlaced:
+        $ref: '#/components/messages/OrderPlacedNotification'
+      orderCancelled:
+        $ref: '#/components/messages/OrderCancelledNotification'
+    description: SNS topic for order-related notifications
+```
+
+The `address` field specifies the name of the SNS topic.
+
+### Message Schema with SNS Attributes
+
+SNS supports message attributes for filtering and routing. Define them in your message schemas:
+
+```yaml
+components:
+  schemas:
+    SNSMessageAttributes:
+      type: object
+      properties:
+        eventType:
+          type: string
+          description: Type of event for subscriber filtering
+        priority:
+          type: string
+          description: Message priority level
+          examples:
+            - high
+            - medium
+            - low
+
+  messages:
+    OrderPlacedNotification:
+      name: OrderPlacedNotification
+      title: Order Placed Notification
+      summary: Notification sent when a new order is placed
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/SNSMessageAttributes'
+      payload:
+        $ref: '#/components/schemas/OrderPlacedPayload'
+```
+
+### Defining Operations
+
+Specify operations that describe how your application interacts with SNS:
+
+```yaml
+operations:
+  publishOrderPlaced:
+    description: Publish order placed notification to SNS topic
+    action: send
+    channel:
+      $ref: '#/channels/orderNotifications'
+    messages:
+      - $ref: '#/channels/orderNotifications/messages/orderPlaced'
+```
+
+The `action: send` indicates that your application publishes messages to SNS topics.
+
+## Contract Testing with Specmatic-async
+
+Specmatic-async enables you to validate that your application correctly publishes and subscribes to SNS messages according to your AsyncAPI specification.
+
+### Setting Up Contract Tests
+
+#### 1. Create the AsyncAPI Specification
+
+Create your AsyncAPI specification file (e.g., `spec/order-notifications-async-api.yaml`) as described in the previous section.
+
+#### 2. Configure Specmatic
+
+Create a `specmatic.yaml` file to configure Specmatic-async:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/order-notifications-async-api.yaml
+        specType: asyncapi
+        config:
+          servers:
+            - host: http://localhost:4566
+              protocol: sns
+              adminCredentials:
+                region: us-east-1
+                aws.access.key.id: test
+                aws.secret.access.key: test
+```
+
+The `adminCredentials` section provides AWS credentials needed to interact with SNS (use test credentials for LocalStack).
+
+#### 3. Set Up Infrastructure
+
+For local testing, use Docker Compose to set up LocalStack (AWS simulation):
+
+```yaml
+services:
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sns,sqs
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - "./localstack-init:/etc/localstack/init/ready.d"
+```
+
+Create an initialization script to set up SNS resources (`localstack-init/init.sh`):
+
+```bash
+#!/bin/bash
+# Create SNS topic
+aws sns create-topic --name order-notifications-topic \
+  --endpoint-url=http://localhost:4566 \
+  --region=us-east-1
+
+# Create SQS queue (as a subscriber to SNS)
+aws sqs create-queue --queue-name order-notifications-queue \
+  --endpoint-url=http://localhost:4566 \
+  --region=us-east-1
+
+# Subscribe SQS queue to SNS topic
+aws sns subscribe \
+  --topic-arn arn:aws:sns:us-east-1:000000000000:order-notifications-topic \
+  --protocol sqs \
+  --notification-endpoint arn:aws:sqs:us-east-1:000000000000:order-notifications-queue \
+  --endpoint-url=http://localhost:4566 \
+  --region=us-east-1
+```
+
+Start the infrastructure:
+
+```bash
+docker compose up -d
+```
+
+#### 4. Run Your Application
+
+Start your application that implements the AsyncAPI specification. The application should be configured to connect to the SNS service and publish/subscribe to topics as defined in your contract.
+
+#### 5. Run Contract Tests
+
+Execute the contract tests using the Specmatic Docker image:
+
+```bash
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+```
+
+Specmatic-async will:
+1. Read the AsyncAPI specification and identify SNS channels
+2. Connect to the configured SNS service
+3. Validate that your application publishes messages with correct structure and attributes
+4. Verify that all messages conform to the contract
+5. Check message filtering and routing based on attributes
+
+#### 6. Review Test Results
+
+Check the test output for detailed validation results, including any contract violations or failures.
+
+### How Contract Testing Works
+
+When running contract tests:
+
+1. **Message Publishing Validation**: Specmatic verifies that messages published to SNS topics match the schema defined in your AsyncAPI specification
+2. **Attribute Validation**: Message attributes are validated against the defined schema
+3. **Topic Validation**: Ensures messages are published to the correct topics
+4. **Payload Validation**: JSON payloads are validated for structure, required fields, and data types
+5. **Subscriber Compatibility**: Verifies that messages can be consumed by subscribers as expected
+
+## Tips for SNS Testing
+
+- **LocalStack for Development**: Use LocalStack to simulate SNS locally without AWS costs
+- **Message Attributes**: Use message attributes for filtering instead of inspecting message body
+- **Fan-out Pattern**: Test that messages are correctly delivered to multiple subscribers
+- **Topic ARNs**: Use consistent topic naming across environments
+- **Subscription Filters**: Test subscription filter policies to ensure proper message routing
+- **Dead Letter Queues**: Configure DLQs for failed message delivery scenarios
+- **Message Deduplication**: For FIFO topics, ensure proper message deduplication
+- **Encryption**: Use encryption for sensitive data in production environments
+- **IAM Credentials**: Never commit AWS credentials to version control; use environment variables or IAM roles
+- **Monitoring**: Use CloudWatch metrics to monitor message delivery and failures

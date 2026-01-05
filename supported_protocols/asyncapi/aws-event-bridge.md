@@ -9,3 +9,403 @@ nav_order: 6
 {: .d-inline-block }
 Commercial
 {: .label }
+
+Specmatic-async provides first-class support for contract testing applications that use AWS EventBridge, enabling you to validate event-driven architectures with confidence.
+
+## What is AWS EventBridge?
+
+AWS EventBridge is a serverless event bus service that makes it easy to connect applications using events. It acts as a central event routing layer that receives events from various sources and delivers them to target services based on configurable rules.
+
+### Key Concepts
+
+- **Event Bus**: A central router that receives events from event sources and routes them to target destinations
+- **Events**: JSON-formatted data records that represent state changes or significant occurrences in your application
+- **Rules**: Pattern-matching criteria that determine which events are routed to which targets
+- **Targets**: Destinations where events are delivered (e.g., SQS queues, Lambda functions, SNS topics)
+
+### Common Use Cases
+
+EventBridge is commonly used for:
+- Building loosely coupled, event-driven microservices architectures
+- Integrating SaaS applications with custom applications
+- Implementing pub/sub messaging patterns at scale
+- Routing events to different services based on event content
+
+## Specifying EventBridge in AsyncAPI
+
+Specmatic-async uses AsyncAPI 3.0 specifications to define EventBridge contracts. Here's how to configure EventBridge in your AsyncAPI specification:
+
+### Server Configuration
+
+Define an EventBridge server in the `servers` section:
+
+```yaml
+servers:
+  eventBridgeServer:
+    host: 'http://localhost:4566'
+    protocol: eventbridge
+    description: AWS EventBridge server for receiving order events
+```
+
+For production environments, you would use the actual AWS EventBridge endpoint:
+
+```yaml
+servers:
+  eventBridgeServer:
+    host: 'https://events.us-east-1.amazonaws.com'
+    protocol: eventbridge
+    description: AWS EventBridge production server
+```
+
+### Channel Configuration
+
+Define the EventBridge event bus as a channel:
+
+```yaml
+channels:
+  orderEventsBus:
+    address: order-events-bus
+    servers:
+      - $ref: '#/servers/eventBridgeServer'
+    messages:
+      placeOrderEvent:
+        $ref: '#/components/messages/PlaceOrderEvent'
+      cancelOrderEvent:
+        $ref: '#/components/messages/CancelOrderEvent'
+    description: EventBridge bus where order events are published
+```
+
+The `address` field specifies the name of the EventBridge event bus.
+
+### Message Schema with EventBridge Headers
+
+EventBridge messages require specific headers for routing. Define them in your message schemas:
+
+```yaml
+components:
+  schemas:
+    EventBridgeHeaders:
+      type: object
+      properties:
+        detail-type:
+          type: string
+          description: EventBridge detail type for routing
+        source:
+          type: string
+          description: Source of the event
+          examples:
+            - order-service
+
+  messages:
+    PlaceOrderEvent:
+      name: PlaceOrderEvent
+      title: Place Order Event
+      summary: Event triggered when a new order is placed
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/EventBridgeHeaders'
+      payload:
+        $ref: '#/components/schemas/PlaceOrderEventPayload'
+```
+
+The `detail-type` header is crucial as it's commonly used in EventBridge rules to route events to appropriate targets.
+
+### Defining Operations
+
+Specify operations that describe how your application interacts with EventBridge:
+
+```yaml
+operations:
+  receivePlaceOrderEvent:
+    description: Receive a place-order event from EventBridge and publish the processed message to the place-order Kafka topic
+    action: receive
+    channel:
+      $ref: '#/channels/orderEventsBus'
+    messages:
+      - $ref: '#/channels/orderEventsBus/messages/placeOrderEvent'
+    reply:
+      channel:
+        $ref: '#/channels/placeOrderTopic'
+      messages:
+        - $ref: '#/channels/placeOrderTopic/messages/placeOrderProcessed'
+```
+
+The `action: receive` indicates that your application consumes events from EventBridge. If you have a reply channel (as shown above), it describes what happens after processing the event.
+
+## Contract Testing with Specmatic-async
+
+Specmatic-async enables you to validate that your application correctly handles EventBridge events according to your AsyncAPI specification.
+
+{: .note}
+For a complete working example of AWS Eventbridge contract testing with Specmatic-Async, refer to the [specmatic-event-bridge-sample](https://github.com/specmatic/specmatic-event-bridge-sample) project.
+
+
+### Setting Up Contract Tests
+
+#### 1. Create the AsyncAPI Specification
+
+Create your AsyncAPI specification file (e.g., `spec/order-events-async-api.yaml`) as described in the previous section.
+
+#### 2. Configure Specmatic
+
+Create a `specmatic.yaml` file to configure Specmatic-async:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/order-events-async-api.yaml
+        specType: asyncapi
+        config:
+          servers:
+            - host: http://localhost:4566
+              protocol: eventbridge
+              adminCredentials:
+                region: us-east-1
+                aws.access.key.id: test
+                aws.secret.access.key: test
+            - host: localhost:9092
+              protocol: kafka
+```
+
+The `adminCredentials` section provides AWS credentials needed to interact with EventBridge (use test credentials for LocalStack).
+
+#### 3. Set Up Infrastructure
+
+For local testing, use Docker Compose to set up LocalStack (AWS simulation) and any other required services:
+
+```yaml
+services:
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=events,sqs
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - "./localstack-init:/etc/localstack/init/ready.d"
+```
+
+Create an initialization script to set up EventBridge resources (`localstack-init/init.sh`):
+
+```bash
+#!/bin/bash
+# Create EventBridge event bus
+aws events create-event-bus --name order-events-bus \
+  --endpoint-url=http://localhost:4566 \
+  --region=us-east-1
+
+# Create SQS queue (as a target for EventBridge)
+aws sqs create-queue --queue-name order-events-queue \
+  --endpoint-url=http://localhost:4566 \
+  --region=us-east-1
+
+# Create EventBridge rule
+aws events put-rule \
+  --name place-order-rule \
+  --event-bus-name order-events-bus \
+  --event-pattern '{"detail-type":["place-order-event"]}' \
+  --state ENABLED \
+  --endpoint-url=http://localhost:4566 \
+  --region=us-east-1
+
+# Add SQS queue as target
+aws events put-targets \
+  --rule place-order-rule \
+  --event-bus-name order-events-bus \
+  --targets "Id"="1","Arn"="arn:aws:sqs:us-east-1:000000000000:order-events-queue" \
+  --endpoint-url=http://localhost:4566 \
+  --region=us-east-1
+```
+
+Start the infrastructure:
+
+```bash
+docker compose up -d
+```
+
+#### 4. Run Your Application
+
+Start your application that implements the AsyncAPI specification. The application should be configured to connect to the EventBridge service and publish/consume events as defined in your contract.
+
+#### 5. Run Contract Tests
+
+Execute the contract tests using the Specmatic Docker image:
+
+```bash
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+```
+
+Specmatic-async will:
+1. Read the AsyncAPI specification and identify EventBridge channels
+2. Connect to the configured EventBridge service
+3. Send test events to your application
+4. Validate that your application produces correct events with proper detail-type and payload structure
+5. Verify that all events conform to the contract
+
+#### 6. Review Test Results
+
+Check the test output for detailed validation results, including any contract violations or failures.
+
+### How Contract Testing Works
+
+When you run Specmatic-async contract tests against an EventBridge-based application:
+
+1. **Specmatic reads the AsyncAPI specification** to understand the expected event schemas and message flows
+
+2. **Specmatic generates test events** based on the schemas defined in your specification, including:
+   - Valid events with proper EventBridge headers (`detail-type`, `source`)
+   - Edge cases and boundary values
+   - Invalid events to verify error handling
+
+3. **Specmatic publishes events to EventBridge** using the configured event bus
+
+4. **Your application consumes and processes** the events (typically via SQS queue targets)
+
+5. **Specmatic validates the output** by checking:
+   - Events are correctly routed based on `detail-type`
+   - Payload structure matches the schema
+   - Response/reply messages (if defined) match expectations
+   - Message flow follows the defined operations
+
+6. **Test results are generated** showing which scenarios passed or failed
+
+### Best Practices
+
+#### Use Meaningful Event Types
+
+Define clear and descriptive `detail-type` values in your headers:
+
+```yaml
+headers:
+  type: object
+  properties:
+    detail-type:
+      type: string
+      enum:
+        - place-order-event
+        - cancel-order-event
+        - update-order-event
+```
+
+#### Include Comprehensive Examples
+
+Provide realistic examples in your schemas to help with test data generation:
+
+```yaml
+PlaceOrderEventPayload:
+  type: object
+  properties:
+    orderId:
+      type: string
+      examples:
+        - ORD-001
+        - ORD-12345
+    customerId:
+      type: string
+      examples:
+        - CUST-123
+    timestamp:
+      type: string
+      format: date-time
+      examples:
+        - '2025-12-24T10:00:00Z'
+```
+
+#### Define Required Fields
+
+Always specify which fields are required:
+
+```yaml
+required:
+  - timestamp
+  - orderId
+  - customerId
+  - items
+  - totalAmount
+```
+
+#### Use Separate Event Buses for Different Domains
+
+For complex applications, use multiple event buses to separate concerns:
+
+```yaml
+channels:
+  orderEventsBus:
+    address: order-events-bus
+    description: Events related to order management
+  
+  paymentEventsBus:
+    address: payment-events-bus
+    description: Events related to payment processing
+```
+
+#### Version Your Events
+
+Include version information in your event schemas:
+
+```yaml
+properties:
+  eventVersion:
+    type: string
+    const: "1.0"
+  eventType:
+    type: string
+    const: place-order-event
+```
+
+## Benefits of Contract Testing EventBridge Applications
+
+1. **Early Detection of Integration Issues**: Catch schema mismatches and routing problems before deployment
+
+2. **Documentation as Code**: Your AsyncAPI specification serves as living documentation of your event-driven architecture
+
+3. **Safe Refactoring**: Change your event schemas with confidence, knowing tests will catch breaking changes
+
+4. **Decoupled Development**: Teams can develop producers and consumers independently as long as they adhere to the contract
+
+5. **Reduced Testing Overhead**: Automated contract tests reduce the need for extensive integration testing
+
+6. **Production Confidence**: Deploy knowing your application correctly handles all event types defined in your contract
+
+## Troubleshooting
+
+### Events Not Being Received
+
+- Verify EventBridge rules are correctly configured with proper event patterns
+- Check that the `detail-type` in published events matches rule patterns
+- Ensure SQS queue is properly configured as a target for EventBridge rules
+- Verify AWS credentials are correctly configured in `specmatic.yaml`
+
+### Contract Test Failures
+
+- Review the test output to identify which scenarios are failing
+- Check that your application correctly handles all event types defined in the AsyncAPI spec
+- Verify message schemas in your application match the AsyncAPI definitions
+- Ensure proper error handling for invalid events
+
+### LocalStack Connection Issues
+
+- Confirm LocalStack container is running: `docker ps`
+- Check LocalStack health: `curl http://localhost:4566/_localstack/health`
+- Verify network configuration allows container-to-container communication
+- Review LocalStack logs: `docker logs localstack`
+
+## Example Repository
+
+For a complete working example, see the [specmatic-event-bridge-sample](https://github.com/specmatic/specmatic-event-bridge-sample) repository, which demonstrates:
+
+- A complete AsyncAPI specification for EventBridge
+- Application that consumes EventBridge events and publishes to Kafka
+- Contract tests using Specmatic-async
+- LocalStack setup for local testing
+- Docker Compose configuration for the entire stack
+
+## Additional Resources
+
+- [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0)
+- [AWS EventBridge Documentation](https://docs.aws.amazon.com/eventbridge/)
+- [Specmatic Documentation](https://specmatic.io/)
+- [LocalStack EventBridge](https://docs.localstack.cloud/user-guide/aws/eventbridge/)
