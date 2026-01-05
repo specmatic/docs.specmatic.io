@@ -271,6 +271,12 @@ This generates and executes contract tests based on your AsyncAPI specification.
 
 **Example Project**: [View complete working example →](https://github.com/specmatic/specmatic-sqs-kafka-sample)
 
+**Multi-protocol sample project**:
+
+Like `SQS -> Kafka`, if you want to try out `specmatic-async` on different flows like `JMS -> Kafka` or `AMQP -> SQS`, you can try out [this](https://github.com/specmatic/specmatic-async-sample) sample project.
+
+You can refer to the README of this sample project to understand how you can try it out with different protocols.
+
 ---
 
 ### Service Mocking
