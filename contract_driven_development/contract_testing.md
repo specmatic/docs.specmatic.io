@@ -386,7 +386,7 @@ You can get the JUnit output from the Specmatic command using an extra parameter
 {% endtab %}
 {% tab junit_output docker %}
 ```shell
-docker run specmatic/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
+docker run -v "${PWD}:/usr/src/app" specmatic/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
 ```
 {% endtab %}
 {% endtabs %}
