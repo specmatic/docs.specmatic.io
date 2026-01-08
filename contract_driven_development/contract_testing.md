@@ -95,7 +95,7 @@ info:
   version: '1.0'
 servers: []
 paths:
-  '/specmatic/specmatic/employees':
+  '/specmatic/specmatic-documentation-examples/employees':
     post:
       summary: ''
       requestBody:
@@ -124,7 +124,7 @@ paths:
                     name: Jill Doe
                     department: Engineering
                     designation: Director
-  '/specmatic/specmatic/employees/{id}':
+  '/specmatic/specmatic-documentation-examples/employees/{id}':
     parameters:
       - schema:
           type: number
