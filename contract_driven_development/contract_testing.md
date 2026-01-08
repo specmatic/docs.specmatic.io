@@ -220,15 +220,18 @@ Here is a sample application that is implementing this specification. You can ru
 
 Let us now run the ```employees.yaml``` as a test against the above sample application.
 
-```bash
+{% tabs contract_test_cli %}
+{% tab contract_test_cli java %}
+```shell
 {{ site.spec_cmd }} test employees.yaml --testBaseURL https://my-json-server.typicode.com
 ```
-
-Alternatively, we can also run the same command with the Docker image:
-
-```bash
+{% endtab %}
+{% tab contract_test_cli docker %}
+```shell
 docker run specmatic/specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
 ```
+{% endtab %}
+{% endtabs %}
 
 The results should end with below text.
 
@@ -271,17 +274,20 @@ The [`employees.yaml`](https://github.com/specmatic/externalised-example-jsons-s
 
 Let us now run `employees.yaml` as a test against the sample application.
 
-Here’s the shell command:
+Here are the commands:
 
-```bash
+{% tabs externalised_examples_test %}
+{% tab externalised_examples_test java %}
+```shell
 {{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
-
-Alternatively, we can also run the same command with the Docker image:
-
-```bash
+{% endtab %}
+{% tab externalised_examples_test docker %}
+```shell
 docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
+{% endtab %}
+{% endtabs %}
 
 Note: Since the folder is named `employees_examples` and colocated with the spec file `employees.yaml`, by convention it is automatically picked up. However, if your folder has different name and / or located in another path, you can explicitly pass that folder as a parameter using the `--examples` CLI Argument (Please run `specmatic test --help` to learn more).
 
@@ -305,15 +311,18 @@ In the above case, example JSON files will be written into the directory named `
 
 By default, Specmatic generates tests for an API when there are no examples. However, if you want to skip test generation from APIs for which there are no examples, you can enable strict mode using configuration as described [here](/references/configuration/stub-configuration.html#strict-mode), or using the `--strict` command-line parameter as shown below:
 
-```bash
+{% tabs strict_mode_test %}
+{% tab strict_mode_test java %}
+```shell
 {{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com --strict employees.yaml
 ```
-
-Alternatively, we can also run the same command with the Docker image:
-
-```bash
+{% endtab %}
+{% tab strict_mode_test docker %}
+```shell
 docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com --strict employees.yaml
 ```
+{% endtab %}
+{% endtabs %}
 
 ### Boundary Condition Testing
 
@@ -323,15 +332,18 @@ Specmatic can help you verify / assess such boundary condition behavior and the 
 
 ```export SPECMATIC_GENERATIVE_TESTS=true```
 
-```bash
+{% tabs boundary_condition_tests %}
+{% tab boundary_condition_tests java %}
+```shell
 {{ site.spec_cmd }} test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
-
-Alternatively, we can also run the same command with the Docker image:
-
-```bash
+{% endtab %}
+{% tab boundary_condition_tests docker %}
+```shell
 docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
+{% endtab %}
+{% endtabs %}
 
 Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failures.
 
@@ -366,15 +378,18 @@ Of course, it's just possible that the application does handle strings that are 
 
 You can get the JUnit output from the Specmatic command using an extra parameter.
 
-```bash
+{% tabs junit_output %}
+{% tab junit_output java %}
+```shell
 {{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
 ```
-
-Alternatively, we can also run the same command with the Docker image:
-
-```bash
+{% endtab %}
+{% tab junit_output docker %}
+```shell
 docker run specmatic/specmatic --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
 ```
+{% endtab %}
+{% endtabs %}
 
 The command will create JUnit test XML output in the specified directory which you can then include as part of CI pipeline results etc.
 
@@ -517,15 +532,18 @@ On the command line, `cd` into the directory containing the Specmatic configurat
 
 Run this command:
 
-```bash
+{% tabs config_contracts_test %}
+{% tab config_contracts_test java %}
+```shell
 {{ site.spec_cmd }} --testBaseURL https://my-json-server.typicode.com
 ```
-
-Alternatively, we can also run the same command with the Docker image:
-
-```bash
+{% endtab %}
+{% tab config_contracts_test docker %}
+```shell
 docker run specmatic/specmatic --testBaseURL https://my-json-server.typicode.com
 ```
+{% endtab %}
+{% endtabs %}
 Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
 Since Specmatic uses the Specmatic configuration file in the current working directory, it's important to use `cd` into the directory containing the Specmatic configuration. For Java projects, the Specmatic configuration file should be in the same directory as the pom.xml or build.gradle file.
