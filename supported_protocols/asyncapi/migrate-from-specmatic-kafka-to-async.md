@@ -10,37 +10,14 @@ redirect_from:
 
 # Migrating from `specmatic-kafka` to `specmatic-async`
 
-Migrating to `specmatic-async` unlocks multi-protocol support, improved configuration, and a unified approach to async contract testing and mocking. This guide walks you through the key steps and provides practical examples for a smooth transition.
+Migrating to `specmatic-async` unlocks multi-protocol support, improved configuration, and a unified approach to async contract testing and mocking. This guide walks you through the key steps for a smooth transition.
 
 ## Migration Steps
 
-### 1. Update Your AsyncAPI Specification
-Add a `servers` section and reference it in your channels. This is required by `specmatic-async` for multi-protocol support.
+### 1. Consolidate Configuration
+Move all your configuration into `specmatic.yaml`. If you have a `specmatic-kafka-config.properties` file, migrate those properties into the `specmatic.yaml` config and delete the properties file.
 
-**Before (specmatic-kafka):**
-```yaml
-channels:
-  my-topic:
-    ...
-```
-
-**After (specmatic-async):**
-```yaml
-servers:
-  kafkaServer:
-    host: 'localhost:9092'
-    protocol: kafka
-channels:
-  my-topic:
-    servers:
-      - $ref: '#/servers/kafkaServer'
-    ...
-```
-
-### 2. Update Your Configuration File
-If you use a `specmatic.yaml` config, update it as per the [Configuration Reference](/supported_protocols/asyncapi/index.html#configuration-reference). `specmatic-async` supports richer configuration, including multiple protocols, schema registry, and client/admin properties.
-
-**Example:**
+**Example `specmatic.yaml`:**
 ```yaml
 version: 2
 contracts:
@@ -70,7 +47,9 @@ contracts:
             password: admin-secret
 ```
 
-### 3. Update Docker Image
+Refer to the [Configuration Reference](/supported_protocols/asyncapi/index.html#configuration-reference) for all available options.
+
+### 2. Update Docker Image
 Replace the `specmatic-kafka` image with `specmatic-async` in your Docker commands.
 
 **Before:**
@@ -82,46 +61,12 @@ docker run specmatic/specmatic-kafka test
 docker run specmatic/specmatic-async test
 ```
 
-### 4. Update Programmatic Usage
+### 3. Update Programmatic Usage
 If you use Specmatic mocks/tests in code, update class names and imports:
 - Replace `KafkaMock` with `AsyncMock`
 - Replace `SpecmaticKafkaContractTest` with `SpecmaticAsyncContractTest`
-- Update import statements as per your IDE suggestions
 
 **Before:**
-```java
-import com.specmatic.kafka.KafkaMock;
-import com.specmatic.kafka.SpecmaticKafkaContractTest;
-```
-**After:**
-```java
-import com.specmatic.async.AsyncMock;
-import com.specmatic.async.SpecmaticAsyncContractTest;
-```
-
-## Migration Examples
-
-> **Before running migration commands:**
-> Ensure your `specmatic.yaml` configuration file is updated and present in your project root as described above. This is required for both Docker and programmatic usage.
-
-### Docker Setup Migration
-**Old (specmatic-kafka):**
-```bash
-docker run --rm \
-  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-  -v "$PWD/spec:/usr/src/app/spec" \
-  specmatic/specmatic-kafka test
-```
-**New (specmatic-async):**
-```bash
-docker run --rm \
-  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-  -v "$PWD/spec:/usr/src/app/spec" \
-  specmatic/specmatic-async test
-```
-
-### Programmatic Setup Migration
-**Old (specmatic-kafka):**
 ```java
 import com.specmatic.kafka.KafkaMock;
 import com.specmatic.kafka.SpecmaticKafkaContractTest;
@@ -130,7 +75,7 @@ public class KafkaContractTest implements SpecmaticKafkaContractTest {
     // ...
 }
 ```
-**New (specmatic-async):**
+**After:**
 ```java
 import com.specmatic.async.AsyncMock;
 import com.specmatic.async.SpecmaticAsyncContractTest;
@@ -140,9 +85,115 @@ public class AsyncContractTest implements SpecmaticAsyncContractTest {
 }
 ```
 
-> **Note:**
-> - Include all relevant Kafka config properties (schemaRegistry, client, adminCredentials, etc.) in your new config.
-> - Refer to the [Protocol-Specific Configurations](/supported_protocols/asyncapi/index.html#configuration-reference) for details on all supported options.
+## Migration Examples
+
+### GitHub Actions Workflow Migration
+
+**Before (specmatic-kafka):**
+```yaml
+{% raw %}name: Contract Tests
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Create specmatic.yaml
+        run: |
+          cat > specmatic.yaml << EOF
+          version: 2
+          contracts:
+            - provides:
+                - spec/your-service.yaml                    
+          EOF
+      
+      - name: Create Kafka config properties
+        run: |
+          cat > specmatic-kafka-config.properties << EOF
+          schema.registry.url=http://localhost:8085
+          basic.auth.credentials.source=USER_INFO
+          basic.auth.user.info=${{ secrets.SCHEMA_REGISTRY_USER }}:${{ secrets.SCHEMA_REGISTRY_PASSWORD }}
+          bootstrap.servers=localhost:9092
+          security.protocol=SASL_PLAINTEXT
+          sasl.mechanism=PLAIN
+          sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="${{ secrets.KAFKA_USER }}" password="${{ secrets.KAFKA_PASSWORD }}";
+          EOF
+      
+      - name: Run Contract Tests
+        run: |
+          docker run --rm \
+            -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+            -v "$PWD/spec:/usr/src/app/spec" \
+            -v "$PWD/specmatic-kafka-config.properties:/usr/src/app/specmatic-kafka-config.properties" \
+            specmatic/specmatic-kafka test{% endraw %}
+```
+
+**After (specmatic-async):**
+```yaml
+{% raw %}name: Contract Tests
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Create specmatic.yaml with configuration
+        run: |
+          cat > specmatic.yaml << EOF
+          version: 2
+          contracts:
+            - provides:
+                - specs:
+                    - spec/your-service.yaml
+                  specType: asyncapi
+                  config:
+                    servers:
+                      - host: localhost:9092
+                        protocol: kafka
+                        adminCredentials:
+                          security.protocol: SASL_PLAINTEXT
+                          sasl.mechanism: PLAIN
+                          sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${{ secrets.KAFKA_USER }}" password="${{ secrets.KAFKA_PASSWORD }}";
+                        client:
+                          producer:
+                            basic.auth.credentials.source: USER_INFO
+                            basic.auth.user.info: ${{ secrets.SCHEMA_REGISTRY_USER }}:${{ secrets.SCHEMA_REGISTRY_PASSWORD }}
+                          consumer:
+                            basic.auth.credentials.source: USER_INFO
+                            basic.auth.user.info: ${{ secrets.SCHEMA_REGISTRY_USER }}:${{ secrets.SCHEMA_REGISTRY_PASSWORD }}
+                    schemaRegistry:
+                      kind: CONFLUENT
+                      url: http://localhost:8085
+                      username: ${{ secrets.SCHEMA_REGISTRY_USER }}
+                      password: ${{ secrets.SCHEMA_REGISTRY_PASSWORD }}
+          EOF
+      
+      - name: Run Contract Tests
+        run: |
+          docker run --rm \
+            -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+            -v "$PWD/spec:/usr/src/app/spec" \
+            specmatic/specmatic-async test{% endraw %}
+```
+
+### Docker Setup Migration
+**Before (specmatic-kafka):**
+```bash
+docker run --rm \
+  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+  -v "$PWD/spec:/usr/src/app/spec" \
+  -v "$PWD/specmatic-kafka-config.properties:/usr/src/app/specmatic-kafka-config.properties" \
+  specmatic/specmatic-kafka test
+```
+**After (specmatic-async):**
+```bash
+docker run --rm \
+  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+  -v "$PWD/spec:/usr/src/app/spec" \
+  specmatic/specmatic-async test
+```
 
 ## Additional Resources
 - [AsyncAPI Protocol Support](/supported_protocols/asyncapi/index.html)
