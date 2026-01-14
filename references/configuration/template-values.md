@@ -30,7 +30,9 @@ Resolution order:
 {% tab template_scalar specmatic.yaml %}
 ```yaml
 version: 2
-contracts: []
+contracts:
+  - consumes:
+    - spec.yaml
 stub:
   generative: "{STUB_GENERATIVE:true}"
 ```
@@ -39,7 +41,13 @@ stub:
 ```json
 {
   "version": 2,
-  "contracts": [],
+  "contracts": [
+    {
+      "consumes": [
+        "spec.yaml"
+      ]
+    }
+  ],
   "stub": {
     "generative": "{STUB_GENERATIVE:true}"
   }
@@ -62,7 +70,9 @@ If the resolved value starts with `{` or `[`, it is parsed as JSON and used as a
 {% tab template_structured specmatic.yaml %}
 ```yaml
 version: 2
-contracts: []
+contracts:
+  - consumes:
+    - spec.yaml
 stub: "{STUB_CONFIG:{\"generative\": true}}"
 examples: "{EXAMPLE_DIRS:[\"examples/one\",\"examples/two\"]}"
 ```
@@ -71,7 +81,13 @@ examples: "{EXAMPLE_DIRS:[\"examples/one\",\"examples/two\"]}"
 ```json
 {
   "version": 2,
-  "contracts": [],
+  "contracts": [
+    {
+      "consumes": [
+        "spec.yaml"
+      ]
+    }
+  ],
   "stub": "{STUB_CONFIG:{\"generative\": true}}",
   "examples": "{EXAMPLE_DIRS:[\"examples/one\",\"examples/two\"]}"
 }
