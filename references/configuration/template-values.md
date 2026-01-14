@@ -8,7 +8,7 @@ nav_order: 9
 
 # Template Values
 
-Specmatic configuration supports simple template values so you can inject settings from environment variables or system properties.
+Specmatic configuration can pull in values from environment variables or system properties at runtime, through the use of template values.
 
 ## Template Syntax
 
