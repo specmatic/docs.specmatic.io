@@ -8,7 +8,7 @@ specmatic-kafka-version: 1.7.7
 specmatic-studio-version: 1.16.0
 specmatic-openapi-version: 1.24.1
 specmatic-jdbc-version: 0.12.2
-specmatic-redis-version: 0.9.5
+specmatic-redis-version: 0.9.6
 specmatic-release-test-version: 0.0.2
 specmatic-grpc-version: 0.1.27
 specmatic-graphql-version: 1.5.6
