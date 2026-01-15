@@ -8,6 +8,13 @@ nav_order: 9
 
 # Template Values
 
+- [Template Values](#template-values)
+  - [Template Syntax](#template-syntax)
+  - [Scalar Examples](#scalar-examples)
+  - [Structured Values (Object or Array)](#structured-values-object-or-array)
+  - [Using a JSON-Looking Value As String](#using-a-json-looking-value-as-string)
+  - [Notes](#notes)
+
 Specmatic configuration can pull in values from environment variables or system properties at runtime, through the use of template values.
 
 ## Template Syntax
@@ -102,11 +109,28 @@ export STUB_CONFIG='{"generative": false}'
 export EXAMPLE_DIRS='["examples/one","examples/two"]'
 ```
 
-## Forcing a JSON-Looking String
+## Using a JSON-Looking Value As String
 
 If the resolved value is a JSON string (quoted), Specmatic treats it as a string and removes the outer quotes. This lets you keep a JSON-looking value as plain text.
 
 Example:
+
+{% tabs force-string %}
+{% tab force-string-yaml label="YAML" %}
+```yaml
+stub: "{STUB_CONFIG:\"{\\\"generative\\\": true}\"}"
+```
+{% endtab %}
+{% tab force-string-json label="JSON" %}
+```json
+{
+  "stub": "{STUB_CONFIG:\"{\\\"generative\\\": true}\"}"
+}
+```
+{% endtab %}
+{% endtabs %}
+
+Set the value in a shell:
 
 ```
 export STUB_CONFIG='"{\"generative\": true}"'
