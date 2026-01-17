@@ -29,7 +29,9 @@ Note: Version 2 is the latest as of 14/02/2025. If you are looking for an older 
 - [Reports](reports.html) - Report generation and formatters
 - [Environments](environments.html) - Environment-specific configuration
 - [Hooks](hooks.html) - Custom commands and integrations
+- [Template Values](template-values.html) - Environment-driven configuration values
 - [Complete Examples](complete-examples.html) - Full configuration examples
+- [Upgrade Configuration](upgrade-specmatic-config.html) - Upgrading older configuration files
 
 ## Quick Start
 

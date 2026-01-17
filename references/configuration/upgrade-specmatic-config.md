@@ -3,7 +3,7 @@ layout: default
 title: Upgrade Configuration
 parent: Configuration
 grand_parent: References
-nav_order: 10
+nav_order: 11
 ---
 
 # Upgrade Older Configuration to the Latest Version
