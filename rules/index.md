@@ -37,6 +37,36 @@ search_exclude: true
     * [Property not in any schema options](#property-not-in-any-schema-options)
   * [R3005](#r3005)
     * [Property matches no schema option](#property-matches-no-schema-option)
+  * [OAS0001](#oas0001)
+    * [Invalid min length](#invalid-min-length)
+  * [OAS0002](#oas0002)
+    * [Invalid max length](#invalid-max-length)
+  * [OAS0003](#oas0003)
+    * [Excessive length](#excessive-length)
+  * [OAS0004](#oas0004)
+    * [Pattern length conflict](#pattern-length-conflict)
+  * [OAS0005](#oas0005)
+    * [Invalid numeric bounds](#invalid-numeric-bounds)
+  * [OAS0010](#oas0010)
+    * [Invalid parameter definition](#invalid-parameter-definition)
+  * [OAS0011](#oas0011)
+    * [Missing path parameter](#missing-path-parameter)
+  * [OAS0020](#oas0020)
+    * [Security property redefined](#security-property-redefined)
+  * [OAS0021](#oas0021)
+    * [Security scheme missing](#security-scheme-missing)
+  * [OAS0030](#oas0030)
+    * [Media type overridden](#media-type-overridden)
+  * [OAS0031](#oas0031)
+    * [Invalid response status](#invalid-response-status)
+  * [OAS0041](#oas0041)
+    * [Unresolved reference](#unresolved-reference)
+  * [OAS0042](#oas0042)
+    * [Invalid $ref usage](#invalid-ref-usage)
+  * [OAS0043](#oas0043)
+    * [Unclear schema](#unclear-schema)
+  * [OAS9999](#oas9999)
+    * [Unsupported feature](#unsupported-feature)
 <!-- TOC -->
 
 ## R0001
@@ -610,3 +640,153 @@ The property exists in both options but does not match either type, so validatio
 
 - Provide a value that satisfies one of the schema options.
 - If boolean is valid, update the specification to allow it.
+
+## OAS0001
+
+### Invalid min length
+
+Minimum length must be a positive integer.
+
+**How this can be resolved**
+
+- Set `minLength` to a positive integer.
+
+## OAS0002
+
+### Invalid max length
+
+Maximum length must be greater than or equal to minimum length.
+
+**How this can be resolved**
+
+- Ensure `maxLength` is greater than or equal to `minLength`.
+
+## OAS0003
+
+### Excessive length
+
+Length should not exceed recommended maximum of 4MB.
+
+**How this can be resolved**
+
+- Reduce `maxLength` to 4MB or lower.
+
+## OAS0004
+
+### Pattern length conflict
+
+Pattern must be able to generate values matching the minimum and maximum length.
+
+**How this can be resolved**
+
+- Update the `pattern` or length constraints so they are compatible.
+
+## OAS0005
+
+### Invalid numeric bounds
+
+Maximum must be greater than or equal to minimum.
+
+**How this can be resolved**
+
+- Ensure `maximum` is greater than or equal to `minimum`.
+
+## OAS0010
+
+### Invalid parameter definition
+
+Parameters must define required properties such as `name`, `schema`, etc.
+
+**How this can be resolved**
+
+- Define required parameter properties (`name`, `in`, `schema`, and `required` where applicable).
+
+## OAS0011
+
+### Missing path parameter
+
+All path template segments must be defined as parameters.
+
+**How this can be resolved**
+
+- Add parameter definitions for every path template segment.
+
+## OAS0020
+
+### Security property redefined
+
+Security scheme properties should not be redefined in parameters.
+
+**How this can be resolved**
+
+- Remove parameter redefinitions and rely on the security scheme.
+
+## OAS0021
+
+### Security scheme missing
+
+Referenced security schemes must be defined and resolve-able.
+
+**How this can be resolved**
+
+- Define the referenced security scheme or update the reference.
+
+## OAS0030
+
+### Media type overridden
+
+Media types should not be overridden by Content-Type parameters.
+
+**How this can be resolved**
+
+- Remove the conflicting `Content-Type` parameter or align it with `content`.
+
+## OAS0031
+
+### Invalid response status
+
+Response status must be a valid integer or literal default.
+
+**How this can be resolved**
+
+- Use valid numeric status codes or `default` for responses.
+
+## OAS0041
+
+### Unresolved reference
+
+References must resolve to a valid reusable component.
+
+**How this can be resolved**
+
+- Fix the `$ref` to point to an existing component.
+
+## OAS0042
+
+### Invalid $ref usage
+
+A `$ref` should not define sibling properties as per OAS 3.0 standards.
+
+**How this can be resolved**
+
+- Move sibling properties into the referenced schema or remove them.
+
+## OAS0043
+
+### Unclear schema
+
+The intent of this schema is unclear or may not be supported. Consider reaching out if this is an issue.
+
+**How this can be resolved**
+
+- Clarify or simplify the schema, or contact the Specmatic team for guidance.
+
+## OAS9999
+
+### Unsupported feature
+
+This feature is currently not yet supported, consider reaching out if you would like us to prioritise the support.
+
+**How this can be resolved**
+
+- Avoid the unsupported feature or contact the Specmatic team to request support.
