@@ -10,7 +10,7 @@ specmatic-openapi-version: 1.25.1
 specmatic-jdbc-version: 0.12.2
 specmatic-redis-version: 0.9.6
 specmatic-release-test-version: 0.0.2
-specmatic-grpc-version: 0.1.27
+specmatic-grpc-version: 0.1.28
 specmatic-graphql-version: 1.5.6
 specmatic-arazzo-version: 1.6.1
 specmatic-google-pubsub-version: 1.6.1
