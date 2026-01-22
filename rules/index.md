@@ -63,6 +63,8 @@ search_exclude: true
     * [Unresolved reference](#unresolved-reference)
   * [OAS0042](#oas0042)
     * [Invalid $ref usage](#invalid-ref-usage)
+  * [OAS0044](#oas0044)
+    * [Invalid additionalProperties usage](#invalid-additionalproperties-usage)
   * [OAS0043](#oas0043)
     * [Unclear schema](#unclear-schema)
   * [OAS9999](#oas9999)
@@ -770,6 +772,16 @@ A `$ref` should not define sibling properties as per OAS 3.0 standards.
 **How this can be resolved**
 
 - Move sibling properties into the referenced schema or remove them.
+
+## OAS0044
+
+### Invalid additionalProperties usage
+
+additionalProperties should only be used within object schemas.
+
+**How this can be resolved**
+
+- Use `additionalProperties` only on object schemas, or move it into the appropriate object definition.
 
 ## OAS0043
 
