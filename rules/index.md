@@ -649,6 +649,17 @@ The property exists in both options but does not match either type, so validatio
 
 Minimum length must be a positive integer.
 
+**Why this is a problem**
+
+Negative values are meaningless.
+
+Example:
+
+```yaml
+type: string
+minLength: -1
+```
+
 **How this can be resolved**
 
 - Set `minLength` to a positive integer.
@@ -658,6 +669,18 @@ Minimum length must be a positive integer.
 ### Invalid max length
 
 Maximum length must be greater than or equal to minimum length.
+
+**Why this is a problem**
+
+Conflicting bounds cannot be satisfied by any value, so validation becomes impossible.
+
+Example:
+
+```yaml
+type: string
+minLength: 10
+maxLength: 5
+```
 
 **How this can be resolved**
 
@@ -669,15 +692,41 @@ Maximum length must be greater than or equal to minimum length.
 
 Length should not exceed recommended maximum of 4MB.
 
+**Why this is a problem**
+
+Very large bounds can lead to memory pressure and poor performance in tooling and tests.
+
+Example:
+
+```yaml
+type: string
+maxLength: 2147483647
+```
+
+Just imagine if Specmatic were to generate a 2GB string in a contract test request and send it to your application, or generate a huge randomized value in a mock response!
+
 **How this can be resolved**
 
-- Reduce `maxLength` to 4MB or lower.
+- Reduce `maxLength` to 4MB or lower. To ensure that a large string can be safely generated, Specmatic will proactively treat any length above 4MB as 4MB.
 
 ## OAS0004
 
 ### Pattern length conflict
 
 Pattern must be able to generate values matching the minimum and maximum length.
+
+**Why this is a problem**
+
+If the pattern cannot produce any valid strings within the length bounds, the schema is unsatisfiable.
+
+Example:
+
+```yaml
+type: string
+minLength: 1
+maxLength: 1
+pattern: "^[0-9]{2}$"
+```
 
 **How this can be resolved**
 
@@ -689,6 +738,18 @@ Pattern must be able to generate values matching the minimum and maximum length.
 
 Maximum must be greater than or equal to minimum.
 
+**Why this is a problem**
+
+Conflicting numeric bounds cannot be satisfied by any value.
+
+Example:
+
+```yaml
+type: number
+minimum: 10
+maximum: 5
+```
+
 **How this can be resolved**
 
 - Ensure `maximum` is greater than or equal to `minimum`.
@@ -698,6 +759,18 @@ Maximum must be greater than or equal to minimum.
 ### Invalid parameter definition
 
 Parameters must define required properties such as `name`, `schema`, etc.
+
+**Why this is a problem**
+
+Incomplete parameter definitions prevent tools from understanding how to parse and validate requests.
+
+Example:
+
+```yaml
+parameters:
+  - in: query
+    required: true
+```
 
 **How this can be resolved**
 
@@ -709,6 +782,21 @@ Parameters must define required properties such as `name`, `schema`, etc.
 
 All path template segments must be defined as parameters.
 
+**Why this is a problem**
+
+Unspecified path parameters make it unclear how to validate or bind the request.
+
+Example:
+
+```yaml
+paths:
+  /orders/{id}:
+    get:
+      responses:
+        "200":
+          description: OK
+```
+
 **How this can be resolved**
 
 - Add parameter definitions for every path template segment.
@@ -718,6 +806,29 @@ All path template segments must be defined as parameters.
 ### Security property redefined
 
 Security scheme properties should not be redefined in parameters.
+
+**Why this is a problem**
+
+Redefining security details can introduce conflicting requirements and confuse users trying to understand validation errors.
+
+Example:
+
+```yaml
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+paths:
+  /orders:
+    get:
+      parameters:
+        - name: X-API-Key
+          in: header
+          schema:
+            type: string
+```
 
 **How this can be resolved**
 
@@ -729,6 +840,11 @@ Security scheme properties should not be redefined in parameters.
 
 Referenced security schemes must be defined and resolve-able.
 
+**Why this is a problem**
+
+If the security scheme in an API is not defined in the specification, the specification is incomplete. Specmatic will not be able to validate or enforce authentication requirements.
+
+
 **How this can be resolved**
 
 - Define the referenced security scheme or update the reference.
@@ -739,15 +855,51 @@ Referenced security schemes must be defined and resolve-able.
 
 Media types should not be overridden by Content-Type parameters.
 
+**Why this is a problem**
+
+Conflicting media type definitions create ambiguity about the actual request or response body format.
+
+In fact, the OpenAPI Specification disallows defining a `Content-Type` parameter alongside a `requestBody` or `responses` content type.
+
+Example:
+
+```yaml
+paths:
+  /orders:
+    post:
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+```
+
 **How this can be resolved**
 
-- Remove the conflicting `Content-Type` parameter or align it with `content`.
+- Remove the conflicting `Content-Type` parameter.
 
 ## OAS0031
 
 ### Invalid response status
 
 Response status must be a valid integer or literal default.
+
+**Why this is a problem**
+
+Non-standard status keys cannot be interpreted by tooling and break response matching.
+
+Example:
+
+```yaml
+responses:
+  "2xx":
+    description: OK
+```
 
 **How this can be resolved**
 
@@ -759,15 +911,38 @@ Response status must be a valid integer or literal default.
 
 References must resolve to a valid reusable component.
 
+**Why this is a problem**
+
+Broken references make the schema incomplete and unusable for validation.
+
+Example:
+
+```yaml
+schema:
+  $ref: "#/components/schemas/MissingType"
+```
+
 **How this can be resolved**
 
-- Fix the `$ref` to point to an existing component.
+- Fix the `$ref` to point to an existing component, or add the missing component.
 
 ## OAS0042
 
 ### Invalid $ref usage
 
 A `$ref` should not define sibling properties as per OAS 3.0 standards.
+
+**Why this is a problem**
+
+Sibling properties are ignored in OAS 3.0, leading to unexpected validation behavior.
+
+Example:
+
+```yaml
+schema:
+  $ref: "#/components/schemas/Order"
+  description: Order response
+```
 
 **How this can be resolved**
 
@@ -779,6 +954,17 @@ A `$ref` should not define sibling properties as per OAS 3.0 standards.
 
 additionalProperties should only be used within object schemas.
 
+**Why this is a problem**
+
+Using `additionalProperties` with non-object schemas is meaningless.
+
+Example:
+
+```yaml
+type: string
+additionalProperties: true
+```
+
 **How this can be resolved**
 
 - Use `additionalProperties` only on object schemas, or move it into the appropriate object definition.
@@ -789,16 +975,23 @@ additionalProperties should only be used within object schemas.
 
 The intent of this schema is unclear or may not be supported. Consider reaching out if this is an issue.
 
+**Why this is a problem**
+
+Ambiguous or unsupported schema constructs can cause inconsistent behavior across tools.
+
+Example:
+
+```yaml
+schema:
+  allOf: []
+```
+
 **How this can be resolved**
 
-- Clarify or simplify the schema, or contact the Specmatic team for guidance.
+Please reach out to the Specmatic team for help.
 
 ## OAS9999
 
 ### Unsupported feature
 
 This feature is currently not yet supported, consider reaching out if you would like us to prioritise the support.
-
-**How this can be resolved**
-
-- Avoid the unsupported feature or contact the Specmatic team to request support.
