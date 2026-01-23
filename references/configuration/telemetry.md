@@ -12,10 +12,44 @@ Specmatic offers users insights into the [usage](https://insights.specmatic.io/d
 [Specmatic Insights](/enterprise_onboarding/insights.html) provides reports on coverage, service dependency graphs, adoption by providers and consumers etc.
 
 ## Typical Payload
+Usage analytics are posted roughly every minute (and once at exit) with the following payload shape.
 
-## Opt-Out of Telemetry
+```json
+{
+  "usages": [
+    {
+      "labels": [
+        "label_1",
+        "label_2"
+      ],
+      "consumption": [
+        {
+          "product": "Specmatic AsyncAPI",
+          "feature": "test",
+          "used": 10,
+          "protocol": "mqtt+Amazon SQS"
+        }
+      ]
+    }
+  ],
+  "usageMetadata": {
+    "productName": "Specmatic AsyncAPI",
+    "productVersion": "2.1.3-SNAPSHOT",
+    "runId": "AD4BF181-6E88-4380-A344-9E0A85EF916D",
+    "osName": "Linux",
+    "osVersion": "6.12.54-linuxkit",
+    "osArch": "aarch64",
+    "javaVersion": "17.0.17+10-alpine-r0",
+    "javaVendor": "Alpine",
+    "executor": "docker"
+  }
+}
+```
+
+## Opt-Out of Usage Analytics
 Trial and other free-tier users may choose to opt-out of Telemetry with the following top-level configuration in specmatic.yml file.
+
 ```yaml
 disable_telemetry = true
 ```
-In case of docker images, you'll need to mount a local folder (e.g. $HOME/.specmatic) so that Specmatic has a place to maintain state.
+This will turn it off expected for a notification that it has been turned off.
