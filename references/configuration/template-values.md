@@ -116,12 +116,12 @@ If the resolved value is a JSON string (quoted), Specmatic treats it as a string
 Example:
 
 {% tabs force_string %}
-{% tab force_string_yaml specmatic.yaml %}
+{% tab force_string specmatic.yaml %}
 ```yaml
 stub: "{STUB_CONFIG:\"{\\\"generative\\\": true}\"}"
 ```
 {% endtab %}
-{% tab force_string_json specmatic.json %}
+{% tab force_string specmatic.json %}
 ```json
 {
   "stub": "{STUB_CONFIG:\"{\\\"generative\\\": true}\"}"
