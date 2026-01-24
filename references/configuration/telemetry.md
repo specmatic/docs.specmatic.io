@@ -33,7 +33,7 @@ Usage analytics are posted roughly every minute (and once at exit) with the foll
     }
   ],
   "usageMetadata": {
-    "productName": "Specmatic AsyncAPI",
+    "productName": "Specmatic Enterprise",
     "productVersion": "2.1.3-SNAPSHOT",
     "runId": "AD4BF181-6E88-4380-A344-9E0A85EF916D",
     "osName": "Linux",
@@ -52,4 +52,4 @@ Trial and other free-tier users may choose to opt-out of Telemetry with the foll
 ```yaml
 disable_telemetry = true
 ```
-This will turn it off expected for a notification that it has been turned off.
+This will turn off Telemetry and notify Specmatic Insights that the user has opted-out.
