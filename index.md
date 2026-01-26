@@ -4,6 +4,7 @@ title: Home
 nav_order: 1
 redirect_from:
   - documentation.html
+  - /documentation/
 ---
 
 # Ship AI-Ready APIs 10x Faster with Zero Integration Headaches
