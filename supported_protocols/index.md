@@ -6,6 +6,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /documentation/supported_protocols/
+  - /documentation/language.html
 ---
 
 <img src="/images/supported-specification-standards-and-protocols.png" alt="Supported Specification Standards and Protocols" style="max-width: 100%; height: auto;"/>

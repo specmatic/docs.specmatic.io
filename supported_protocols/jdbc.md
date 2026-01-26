@@ -5,6 +5,7 @@ parent: Supported Protocols
 nav_order: 6
 redirect_from: 
   - /documentation/stubbing-database.html
+  - /documentation/stubbing_database.html
   - /documentation/supported_protocols/jdbc.html
 ---
 

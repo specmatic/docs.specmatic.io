@@ -6,9 +6,12 @@ nav_order: 1
 has_children: true
 redirect_from:
   - /documentation/configuration.html
+  - /references/configuration.html
   - /documentation/specmatic_json.html
   - /documentation/references/configuration.html
   - /documentation/references
+  - /specmatic_json.html
+  - /supported_protocols/asyncapi/references/configuration.html
 ---
 
 <span style="color:gray;">Update Date: 14/02/2025</span>

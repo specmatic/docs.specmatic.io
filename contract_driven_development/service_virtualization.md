@@ -7,6 +7,7 @@ redirect_from:
   - /documentation/service_virtualization_tutorial.html
   - /documentation/service_virtualisation.html
   - /documentation/tutorials/service_virtualization.html
+  - /service_virtualization_tutorial.html
 ---
 Service Virtualization
 ======================

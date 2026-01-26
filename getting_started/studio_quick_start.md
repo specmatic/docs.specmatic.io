@@ -6,6 +6,7 @@ nav_order: 1
 redirect_from:
   - /studio_quick_start.html
   - /documentation/getting_started/studio_quick_start.html
+  - /Specmatic Studio
 ---
 
 Getting started with Studio

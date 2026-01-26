@@ -5,6 +5,7 @@ parent: Contract Driven Development
 nav_exclude: true
 toc_include: false
 redirect_from:
+  - /backward_compatibility_rules.html
   - /documentation/backward_compatibility_rules.html
   - /documentation/tutorials/backward_compatibility_rules.html
 ---

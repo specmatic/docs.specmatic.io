@@ -6,6 +6,8 @@ nav_order: 4
 has_toc: false
 redirect_from:
   - /contract_driven_development.html
+  - /documentation/contract_driven_development.html
+  - /documentation/tutorials/
 ---
 # Contract Driven Development
 {: .fs-9}

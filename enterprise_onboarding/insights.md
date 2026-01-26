@@ -5,6 +5,7 @@ parent: Enterprise Onboarding
 nav_order: 2
 redirect_from:
   - /documentation/insights.html
+  - /documentation/references/insights.html
 ---
 # Insights Set Up Guide
 

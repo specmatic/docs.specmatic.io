@@ -4,9 +4,11 @@ title: Contract Testing
 parent: Contract Driven Development
 nav_order: 1
 redirect_from:
+  - /contract_tests.html
   - /documentation/contract_tests.html
   - /documentation/contract_testing.html
   - /documentation/tutorials/contract_testing.html
+  - /documentation/supported_protocols/contract_tests
 ---
 Contract Testing
 ==============

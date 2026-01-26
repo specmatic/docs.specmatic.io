@@ -4,6 +4,7 @@ title: Backward Compatibility
 parent: Contract Driven Development
 nav_order: 3
 redirect_from:
+  - /backward_compatibility.html
   - /documentation/backward_compatibility.html
   - /documentation/tutorials/backward_compatibility.html
 ---
