@@ -5,6 +5,8 @@ parent: AsyncAPI
 nav_order: 1
 redirect_from:
   - /documentation/kafka.html
+  - /kafka.html
+  - /kafka/
   - /documentation/supported_protocols/asyncapi/kafka.html
 ---
 # Kafka
