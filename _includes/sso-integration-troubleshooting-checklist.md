@@ -26,7 +26,7 @@
 - **Check {{ include.idp_product_name }} sign-in logs**: Review the sign-in logs in {{ include.idp_product_name }} admin center for error details.
 - **Verify Specmatic Insights logs**: Check application logs for SAML processing errors.
 
-For additional help with SAML SSO configuration, consult the [Specmatic Insights documentation](/enterprise_onboarding/insights.html) or contact [Specmatic support](https://support.specmatic.io).
+For additional help with SAML SSO configuration, consult the [Specmatic Insights documentation](/enterprise_onboarding/insights.html) or contact [Specmatic support](https://support.specmatic.io/support/login).
 ## Troubleshooting
 
 > **Tip:** If you encounter issues during setup or login, check the following common problems:
@@ -55,4 +55,4 @@ For additional help with SAML SSO configuration, consult the [Specmatic Insights
 - **Check {{ include.idp_product_name }} sign-in logs**: Review the sign-in logs in {{ include.idp_product_name }} admin center for error details.
 - **Verify Specmatic Insights logs**: Check application logs for SAML processing errors.
 
-For additional help with SAML SSO configuration, consult the [Specmatic Insights documentation](/enterprise_onboarding/insights.html) or contact [Specmatic support](https://support.specmatic.io).
+For additional help with SAML SSO configuration, consult the [Specmatic Insights documentation](/enterprise_onboarding/insights.html) or contact [Specmatic support](https://support.specmatic.io/support/login).
