@@ -24,7 +24,8 @@ task :check do
       /https:\/\/www\.youtube\.com\//,
       /https:\/\/github\.com\//, # ignore github links as they often have rate limiting issues
       /https:\/\/www\.npmjs\.com\//, # ignore npm registry due to Cloudflare anti-bot measures
-      /https:\/\/cntlm\.sourceforge\.net\// # ignore sourceforge links due to Cloudflare anti-bot measures
+      /https:\/\/cntlm\.sourceforge\.net\//, # ignore sourceforge links due to Cloudflare anti-bot measures
+      /https:\/\/support\.specmatic\.io\//
     ],
     allow_hash_href:       false,
     allow_missing_href:    true,
