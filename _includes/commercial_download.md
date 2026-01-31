@@ -31,6 +31,7 @@
 
 The standalone JAR file can be downloaded from the following sources:
 
+{% if include.maven_central_url %}* [Maven Central]({{ include.maven_central_url }}){% endif %}
 * [Specmatic Repository]({{ include.jar_url }})
 
 For older versions, please refer to the [Releases]({{ include.repo_url }}) page.

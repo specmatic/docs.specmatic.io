@@ -133,95 +133,20 @@ pip install specmatic==VERSION
 
 # Specmatic Commercial offerings
 
-## Specmatic OpenAPI
+## Specmatic Enterprise
 
-{% capture specmatic_openapi_version %}{{ site.specmatic-openapi-version }}{% endcapture %}
-{% capture specmatic_openapi_jar_url %}https://repo.specmatic.io/releases/io/specmatic/openapi/specmatic-openapi-all/{{ site.specmatic-openapi-version }}/specmatic-openapi-all-{{ site.specmatic-openapi-version }}.jar{% endcapture %}
-{% capture specmatic_openapi_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/openapi/specmatic-openapi-all/{% endcapture %}
-
-{% include commercial_download.md
-    image_name="specmatic/specmatic-openapi"
-    tool_version=specmatic_openapi_version
-    jar_url=specmatic_openapi_jar_url
-    repo_url=specmatic_openapi_repo_url
-    install_script="install-specmatic-openapi" %}
-
-## [Specmatic Studio](https://specmatic.io/specmatic-studio/)
-
-{% capture specmatic_studio_version %}{{ site.specmatic-studio-version }}{% endcapture %}
-{% capture specmatic_studio_jar_url %}https://repo.specmatic.io/releases/io/specmatic/studio/specmatic-studio/{{ site.specmatic-studio-version }}/specmatic-studio-{{ site.specmatic-studio-version }}.jar{% endcapture %}
-{% capture specmatic_studio_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/studio/specmatic-studio/{% endcapture %}
+{% capture specmatic_enterprise_version %}{{ site.specmatic-enterprise-version }}{% endcapture %}
+{% capture specmatic_enterprise_jar_url %}https://repo.specmatic.io/releases/io/specmatic/enterprise/specmatic-enterprise-all/{{ site.specmatic-enterprise-version }}/specmatic-enterprise-all-{{ site.specmatic-enterprise-version }}.jar{% endcapture %}
+{% capture specmatic_enterprise_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/enterprise/specmatic-enterprise-all/{% endcapture %}
+{% capture specmatic_enterprise_maven_central_url %}https://repo1.maven.org/maven2/io/specmatic/enterprise/specmatic-enterprise-all/{{ site.specmatic-enterprise-version }}/specmatic-enterprise-all-{{ site.specmatic-enterprise-version }}.jar{% endcapture %}
 
 {% include commercial_download.md
-    image_name="specmatic/specmatic-studio"
-    tool_version=specmatic_studio_version
-    jar_url=specmatic_studio_jar_url
-    repo_url=specmatic_studio_repo_url
-    install_script="install-specmatic-studio" %}
-
-## [Specmatic Async](https://hub.docker.com/r/specmatic/specmatic-async)
-
-{% capture specmatic_async_version %}{{ site.specmatic-async-version }}{% endcapture %}
-{% capture specmatic_async_jar_url %}https://repo.specmatic.io/releases/io/specmatic/async/specmatic-async-all/{{ site.specmatic-async-version }}/specmatic-async-all-{{ site.specmatic-async-version }}.jar{% endcapture %}
-{% capture specmatic_async_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-async-all{% endcapture %}
-
-{% include commercial_download.md
-image_name="specmatic/specmatic-async"
-tool_version=specmatic_async_version
-jar_url=specmatic_async_jar_url
-repo_url=specmatic_async_repo_url
-install_script="install-specmatic-async" %}
-
-## [Specmatic Kafka](https://specmatic.io/features/kafka-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
-
-{% capture specmatic_kafka_version %}{{ site.specmatic-kafka-version }}{% endcapture %}
-{% capture specmatic_kafka_jar_url %}https://repo.specmatic.io/releases/io/specmatic/async/specmatic-kafka-all/{{ site.specmatic-kafka-version }}/specmatic-kafka-all-{{ site.specmatic-kafka-version }}.jar{% endcapture %}
-{% capture specmatic_kafka_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/async/specmatic-kafka-all{% endcapture %}
-
-{% include commercial_download.md
-    image_name="specmatic/specmatic-kafka"
-    tool_version=specmatic_kafka_version
-    jar_url=specmatic_kafka_jar_url
-    repo_url=specmatic_kafka_repo_url
-    install_script="install-specmatic-kafka" %}
-
-## [Specmatic gRPC](https://specmatic.io/features/transform-your-grpc-proto-files-into-executable-contracts-in-seconds-with-specmatic/)
-
-{% capture specmatic_grpc_version %}{{ site.specmatic-grpc-version }}{% endcapture %}
-{% capture specmatic_grpc_jar_url %}https://repo.specmatic.io/releases/io/specmatic/grpc/specmatic-grpc-all/{{ site.specmatic-grpc-version }}/specmatic-grpc-all-{{ site.specmatic-grpc-version }}.jar{% endcapture %}
-{% capture specmatic_grpc_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/grpc/specmatic-grpc-all/{% endcapture %}
-
-{% include commercial_download.md
-    image_name="specmatic/specmatic-grpc"
-    tool_version=specmatic_grpc_version
-    jar_url=specmatic_grpc_jar_url
-    repo_url=specmatic_grpc_repo_url
-    install_script="install-specmatic-grpc" %}
-
-## [Specmatic GraphQL](https://specmatic.io/features/transform-your-graphql-specs-into-executable-contracts-in-seconds-with-specmatic/)
-
-{% capture specmatic_graphql_version %}{{ site.specmatic-graphql-version }}{% endcapture %}
-{% capture specmatic_graphql_jar_url %}https://repo.specmatic.io/releases/io/specmatic/graphql/specmatic-graphql-all/{{ site.specmatic-graphql-version }}/specmatic-graphql-all-{{ site.specmatic-graphql-version }}.jar{% endcapture %}
-{% capture specmatic_graphql_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/graphql/specmatic-graphql-all/{% endcapture %}
-
-{% include commercial_download.md
-    image_name="specmatic/specmatic-graphql"
-    tool_version=specmatic_graphql_version
-    jar_url=specmatic_graphql_jar_url
-    repo_url=specmatic_graphql_repo_url
-    install_script="install-specmatic-graphql" %}
-
-## [Specmatic Arazzo](https://specmatic.io/features/author-test-arazzo-api-workflows-drag-drop-simplicity/)
-
-{% capture specmatic_arazzo_version %}{{ site.specmatic-arazzo-version }}{% endcapture %}
-{% capture specmatic_arazzo_jar_url %}https://repo.specmatic.io/releases/io/specmatic/arazzo/specmatic-arazzo-all/{{ site.specmatic-arazzo-version }}/specmatic-arazzo-all-{{ site.specmatic-arazzo-version }}.jar{% endcapture %}
-{% capture specmatic_arazzo_repo_url %}https://repo.specmatic.io/#releases/io/specmatic/arazzo/specmatic-arazzo-all/{% endcapture %}
-
-{% include commercial_download.md
-    image_name="specmatic/specmatic-arazzo"
-    tool_version=specmatic_arazzo_version
-    jar_url=specmatic_arazzo_jar_url
-    repo_url=specmatic_arazzo_repo_url install_script="install-specmatic-arazzo" %}
+    image_name="specmatic/enterprise"
+    tool_version=specmatic_enterprise_version
+    jar_url=specmatic_enterprise_jar_url
+    maven_central_url=specmatic_enterprise_maven_central_url
+    repo_url=specmatic_enterprise_repo_url
+    install_script="install-specmatic-enterprise" %}
 
 ## [Specmatic Redis](https://specmatic.io/features/api-resiliency-and-contract-testing-for-resp-redis/)
 
