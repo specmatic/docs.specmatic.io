@@ -415,14 +415,6 @@ const config = {
                   },
                   {
                     from: [
-                      '/documentation/references',
-                      '/documentation/references.html',
-                      '/documentation/references/'
-                    ],
-                    to: '/docs/references/configuration/'
-                  },
-                  {
-                    from: [
                       '/documentation/older_configuration_versions',
                       '/documentation/older_configuration_versions.html',
                       '/documentation/references/older_configuration_versions',
