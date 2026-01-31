@@ -54,7 +54,7 @@ docker run --rm --network host \
   -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
   -v "$PWD/spec:/usr/src/app/spec" \
   -v "$PWD/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
-  specmatic/specmatic-async test
+  specmatic/enterprise test
 ```
 
 ### Key Capabilities
@@ -239,7 +239,7 @@ contracts:
   - provides:
       - specs:
           - spec/order-service.yaml
-        specType: asyncapi 
+        specType: asyncapi
         config:
           servers:
             - host: <SQS_QUEUE_URL>
@@ -264,7 +264,7 @@ docker run --rm --network host \
   -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
   -v "$PWD/spec:/usr/src/app/spec" \
   -v "$PWD/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
-  specmatic/specmatic-async test
+  specmatic/enterprise test
 ```
 
 This generates and executes contract tests based on your AsyncAPI specification.
@@ -346,7 +346,7 @@ contracts:
   - consumes:
       - specs:
           - spec/order-service.yaml
-        specType: asyncapi 
+        specType: asyncapi
         config:
           servers:
             - host: <SQS_QUEUE_URL>
@@ -366,7 +366,7 @@ docker run --rm --network host \
   -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
   -v "$PWD/spec:/usr/src/app/spec" \
   -v "$PWD/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
-  specmatic/specmatic-async virtualize
+  specmatic/enterprise virtualize
 ```
 
 **How It Works**:
@@ -387,7 +387,7 @@ For examples in `<SPEC_NAME>_examples/` directory:
 ```bash
 docker run --rm \
   -v "$PWD/spec:/usr/src/app/spec" \
-  specmatic/specmatic-async examples validate \
+  specmatic/enterprise examples validate \
   --spec-file spec/order-service.yaml
 ```
 
@@ -397,7 +397,7 @@ docker run --rm \
 docker run --rm \
   -v "$PWD/spec:/usr/src/app/spec" \
   -v "$PWD/custom-examples:/usr/src/app/custom-examples" \
-  specmatic/specmatic-async examples validate \
+  specmatic/enterprise examples validate \
   --spec-file spec/order-service.yaml \
   --examples custom-examples
 ```
@@ -504,7 +504,7 @@ contracts:
             url: http://localhost:8085
             username: admin
             password: admin-secret
-          
+
           # Server Configurations
           servers:
             - host: <HOST_URL>
@@ -634,7 +634,7 @@ config:
     url: http://localhost:8085
     username: admin
     password: admin-secret
-  
+
   servers:
     - host: localhost:9092
       protocol: kafka
@@ -671,7 +671,7 @@ contracts:
                 region: us-east-1
                 aws.access.key.id: test
                 aws.secret.access.key: test
-            
+
             # Kafka for outgoing messages
             - host: localhost:9092
               protocol: kafka

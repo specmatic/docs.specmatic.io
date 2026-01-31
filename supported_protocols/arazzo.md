@@ -63,7 +63,7 @@ Using a simple drag-and-drop approach, Specmatic-Arazzo facilitates the generati
 
 ## Generating Workflows
 
-Workflows can be generated in two ways using Specmatic-Arazzo, either interactively through [Specmatic Studio](https://studio.specmatic.io) or programmatically via the Command Line Interface using the Docker image `specmatic/specmatic-arazzo`
+Workflows can be generated in two ways using Specmatic-Arazzo, either interactively through [Specmatic Studio](https://studio.specmatic.io) or programmatically via the Command Line Interface using the Docker image `specmatic/enterprise`
 
 ### Interactive through Specmatic Studio
 
@@ -156,7 +156,7 @@ During the test execution, Studio also enables you to:
 You can run workflow tests programmatically using the CLI with the `test` command from the Specmatic-Arazzo Docker image.
 
 ```shell
-docker run -v "$(pwd):/usr/src/app" specmatic/specmatic-arazzo test "<workflow.arazzo.yaml>"
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise test "<workflow.arazzo.yaml>"
 ```
 
 There are several methods to specify service URLs for your APIs via the CLI:
@@ -189,7 +189,7 @@ LocationApi=http://localhost:8081; OrderApi=http://localhost:8082
 
 #### 3. Fallback Host and Port:
 
-You can set a default fallback host and port using `--host <host> --port <port>` in the test command. 
+You can set a default fallback host and port using `--host <host> --port <port>` in the test command.
 These values will serve as a last resort if no other URL configurations match.
 
 ## Workflow Mocking
@@ -213,7 +213,7 @@ In Specmatic Studio, you can start a mock workflow session to simulate end-to-en
 You can also run workflow mocking through the CLI using the mock command from the Specmatic-Arazzo Docker image:
 
 ```shell
-docker run -v "$(pwd):/usr/src/app" specmatic/specmatic-arazzo mock --spec-file "<workflow.arazzo.yaml>"
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise mock --spec-file "<workflow.arazzo.yaml>"
 ```
 
 ## Sample Projects

@@ -114,21 +114,21 @@ PARAMETERS:
 ```yaml
 PARAMETERS:
   PATH:
-    userId: 
+    userId:
     - 123
     - 456
-    orderId: 
+    orderId:
     - 123
     - 456
   QUERY:
-    sort: 
+    sort:
     - date
     - time
-    page: 
+    page:
     - 10
     - 20
   HEADER:
-    x-request-id: 
+    x-request-id:
     - req-12345
     - req-67890
 ```
@@ -174,7 +174,7 @@ Employee:
 ```yaml
 Employee:
  name:
-  first_name: 
+  first_name:
   - John
   - Jane
   last_name:
@@ -329,7 +329,7 @@ Notice that the keys begin with `Address` instead than `Employee`, because the d
 Commercial
 {: .label }
 
-Manually creating a dictionary can be quite an involved process, especially when the schema is complex. This is where, [specmatic-openapi](https://hub.docker.com/r/specmatic/specmatic-openapi) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
+Manually creating a dictionary can be quite an involved process, especially when the schema is complex. This is where, [specmatic/enterprise](https://hub.docker.com/r/specmatic/enterprise) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
 
 {: .note}
 Automated dictionary generation is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
@@ -502,10 +502,10 @@ The `_examples` suffix is a naming convention that indicates to Specmatic to loo
 Create a file named `employees_dictionary.yaml` in the same directory as your `employees.yaml` file with an empty object i.e. `{}`, so we volume mount this file to the Docker container
 {: .important }
 
-After setting up, we can execute the `examples dictionary` command using the `specmatic-openapi` Docker image and provide the path to our `employees.yaml` file as shown below:
+After setting up, we can execute the `examples dictionary` command using the `specmatic/enterprise` Docker image and provide the path to our `employees.yaml` file as shown below:
 
 ```shell
-docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic-openapi examples dictionary --spec-file employees.yaml
+docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/enterprise examples dictionary --spec-file employees.yaml
 ```
 
 ### Understanding the Dictionary
@@ -551,12 +551,12 @@ the command will include only valid values in the dictionary, allowing it to be 
 If you have examples in some other existing directory, you could provide the path to that directory using the `--examples-dir` option as shown below:
 
 ```shell
-docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/examples:/usr/src/app/examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic-openapi examples dictionary --spec-file employees.yaml --examples-dir ./examples
+docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/examples:/usr/src/app/examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/enterprise examples dictionary --spec-file employees.yaml --examples-dir ./examples
 ```
 
 ## Dictionary with Contract Testing
 
-The Dictionary can be utilized in contract testing, allowing Specmatic to use the values defined in the dictionary when generating requests for tests. To illustrate this process, we will use the previous specification and dictionary as an example. 
+The Dictionary can be utilized in contract testing, allowing Specmatic to use the values defined in the dictionary when generating requests for tests. To illustrate this process, we will use the previous specification and dictionary as an example.
 
 For the moment, we will remove the `employees_examples` directory to observe how contract testing operates without examples.
 

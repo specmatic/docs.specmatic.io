@@ -63,7 +63,7 @@ channels:
     messages:
       placeOrder.message:
         $ref: '#/components/messages/OrderRequest'
-  
+
   OrderInitiated:
     address: wip-orders
     servers:
@@ -196,7 +196,7 @@ execSync(
   `docker run --rm --network host \
    -v "${cwd}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
    -v "${cwd}/specification:/usr/src/app/specification" \
-   specmatic/specmatic-async test \
+   specmatic/enterprise test \
    --overlay=specification/overlay.yaml`,
   { stdio: "inherit" }
 );
@@ -228,7 +228,7 @@ You can also run the application manually and use the docker command as follows:
 docker run --rm --network host \
  -v "${cwd}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
  -v "${cwd}/specification:/usr/src/app/specification" \
- specmatic/specmatic-async test \
+ specmatic/enterprise test \
  --overlay=specification/overlay.yaml
 ```
 
@@ -237,12 +237,12 @@ docker run --rm --network host \
 
 Specmatic-async automatically validates:
 
-✅ **Message Structure**: Ensures messages conform to the defined schema  
-✅ **Required Fields**: Validates all required fields are present  
-✅ **Data Types**: Checks field types match the specification  
-✅ **Channel Routing**: Verifies messages are sent/received on correct channels  
-✅ **Request-Reply Patterns**: Validates reply messages match expected responses  
-✅ **Enum Values**: Ensures enum fields contain valid values  
+✅ **Message Structure**: Ensures messages conform to the defined schema
+✅ **Required Fields**: Validates all required fields are present
+✅ **Data Types**: Checks field types match the specification
+✅ **Channel Routing**: Verifies messages are sent/received on correct channels
+✅ **Request-Reply Patterns**: Validates reply messages match expected responses
+✅ **Enum Values**: Ensures enum fields contain valid values
 ✅ **Triggers & Side Effects**: Validates HTTP triggers and side effects when configured
 
 ### Example Test Flow
@@ -251,15 +251,15 @@ For a complete order placement flow:
 
 1. **Client sends order request** → `/new-orders` channel
    - Specmatic validates the message structure
-   
+
 2. **Server processes and replies** → `/wip-orders` channel
    - Specmatic validates the reply matches the contract
    - Checks the order status is "INITIATED"
-   
+
 3. **Server sends acceptance** → `/accepted-orders` channel
    - HTTP trigger initiates the message
    - Specmatic validates the broadcast message
-   
+
 4. **Client requests delivery** → `/out-for-delivery-orders` channel
    - Specmatic validates the request
    - Side effect validation confirms order status change

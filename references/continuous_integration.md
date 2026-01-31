@@ -55,7 +55,7 @@ In this tutorial, we'll be working with a typical scenario of microservices & mi
 In this architecture:
 
 - The App represents the client application (e.g., a mobile app or web frontend)
-- The *BFF (Backend-for-Frontend)* acts as an intermediary, tailoring the API for specific client needs 
+- The *BFF (Backend-for-Frontend)* acts as an intermediary, tailoring the API for specific client needs
 - The *Domain Service* represents the core business logic and data management
 
 We'll be working with two OpenAPI specifications:
@@ -74,7 +74,7 @@ If you already have a central contract repository, you can use that instead and 
 Else you can follow the [setup up instructions](/contract_driven_development/central_contract_repository.html#setting-up-a-sample-central-contract-repository) to create one a sample central contact repo.
 
 ### CI Pipeline Setup
-When any of the API Specs or their examples are updates, we want the author to raise a Pull Request (PR) / Merge Request (MR). 
+When any of the API Specs or their examples are updates, we want the author to raise a Pull Request (PR) / Merge Request (MR).
 When a PR/MR is raised, we need to set up a simple CI pipeline to perform the following actions:
 * lint the specifications using [Spectral](https://github.com/stoplightio/spectral)/[Vacuum](https://quobix.com/vacuum/)
 * validate if the inline and external examples are still valid according to the updated specification
@@ -110,7 +110,7 @@ jobs:
         run: npm install -g @stoplight/spectral-cli
 
       - name: Run Spectral linter
-        run: spectral lint **/*.yaml     
+        run: spectral lint **/*.yaml
 
       - name: Validate OpenAPI examples
         run: |
@@ -348,7 +348,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
-  
+
       - name: Run Specmatic Contract Tests using JUnit helper which in-turn starts SpringBoot app and Specmatic stubs
         run: ./gradlew test
 {% endraw %}
@@ -382,10 +382,10 @@ jobs:
             -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
             -p 9000:9000 \
             specmatic/specmatic stub
-  
+
           # Wait for the stub to be ready
           sleep 10
-  
+
       - name: Start Spring Boot application
         run: ./gradlew bootRun &
 
@@ -456,7 +456,7 @@ jobs:
 
       - name: Publish Test Results in CTRF format
         uses: ctrf-io/github-test-reporter@v1
-        if: always() 
+        if: always()
         with:
           report-path: ${{ env.CTRF_REPORT_PATH }}
 
@@ -502,7 +502,7 @@ jobs:
             -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
             -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
             -p 9000:9000 \
-            specmatic/specmatic-openapi stub
+            specmatic/enterprise stub
 
           # Wait for the stub to be ready
           sleep 10
@@ -519,7 +519,7 @@ jobs:
             -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
             -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
             --network=host \
-            specmatic/specmatic-openapi test \
+            specmatic/enterprise test \
             --port=8080 \
             --host=localhost
 
@@ -533,7 +533,7 @@ jobs:
 
       - name: Publish Test Results in CTRF format
         uses: ctrf-io/github-test-reporter@v1
-        if: always() 
+        if: always()
         with:
           report-path: ${{ env.CTRF_REPORT_PATH }}
 
@@ -708,7 +708,7 @@ A quick test to see if your Git Repo URI is correct will be to run a command lin
 
 #### GitLab
 
-Examples: 
+Examples:
 
 * CI_JOB_TOKEN - `https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/contract-testing/central-contract-repo.git/`
 * Username / Password - `https://${USERNAME}:${PASSWORD}@gitlab.com/contract-testing/central-contract-repo.git/`

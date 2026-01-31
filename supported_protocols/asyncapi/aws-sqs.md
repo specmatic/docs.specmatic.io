@@ -115,13 +115,13 @@ services:
       -c "
       echo 'Waiting for LocalStack...';
       until awslocal sqs list-queues >/dev/null 2>&1; do sleep 2; done;
-      
+
       echo 'Creating SQS queues...';
       awslocal sqs create-queue --queue-name new-orders;
       awslocal sqs create-queue --queue-name wip-orders;
       awslocal sqs create-queue --queue-name to-be-cancelled-orders;
       awslocal sqs create-queue --queue-name cancelled-orders;
-      
+
       echo 'SQS queues created';
       "
 ```
@@ -141,7 +141,7 @@ Start your application that implements the AsyncAPI specification. The applicati
 Execute the contract tests using the Specmatic Docker image:
 
 ```bash
-docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/enterprise test
 ```
 
 Specmatic-async will:

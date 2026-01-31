@@ -304,7 +304,7 @@ The complete test data format can be referred to [here](/features/external_examp
 Instead of creating the above example JSONs by hand, you can also generate the example JSONs using the `examples` command:
 
 ```bash
-docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/specmatic-openapi examples generate employees.yaml
+docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/enterprise examples generate employees.yaml
 ```
 
 In the above case, example JSON files will be written into the directory named `employees_examples`. You can then update the files to suit your needs and use them.
@@ -1076,7 +1076,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Employee'
-              examples: 
+              examples:
                 SUCCESS:
                   value:
                     id: 10
@@ -1757,7 +1757,7 @@ paths:
           description: Too many requests
           headers:
             Retry-After:
-              schema: 
+              schema:
                 type: integer
 
   /order:

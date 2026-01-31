@@ -54,11 +54,11 @@ Replace the `specmatic-kafka` image with `specmatic-async` in your Docker comman
 
 **Before:**
 ```bash
-docker run specmatic/specmatic-kafka test
+docker run specmatic/enterprise test
 ```
 **After:**
 ```bash
-docker run specmatic/specmatic-async test
+docker run specmatic/enterprise test
 ```
 
 ### 3. Update Programmatic Usage
@@ -98,16 +98,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Create specmatic.yaml
         run: |
           cat > specmatic.yaml << EOF
           version: 2
           contracts:
             - provides:
-                - spec/your-service.yaml                    
+                - spec/your-service.yaml
           EOF
-      
+
       - name: Create Kafka config properties
         run: |
           cat > specmatic-kafka-config.properties << EOF
@@ -119,14 +119,14 @@ jobs:
           sasl.mechanism=PLAIN
           sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="${{ secrets.KAFKA_USER }}" password="${{ secrets.KAFKA_PASSWORD }}";
           EOF
-      
+
       - name: Run Contract Tests
         run: |
           docker run --rm \
             -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
             -v "$PWD/spec:/usr/src/app/spec" \
             -v "$PWD/specmatic-kafka-config.properties:/usr/src/app/specmatic-kafka-config.properties" \
-            specmatic/specmatic-kafka test{% endraw %}
+            specmatic/enterprise test{% endraw %}
 ```
 
 **After (specmatic-async):**
@@ -138,7 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Create specmatic.yaml with configuration
         run: |
           cat > specmatic.yaml << EOF
@@ -169,13 +169,13 @@ jobs:
                       username: ${{ secrets.SCHEMA_REGISTRY_USER }}
                       password: ${{ secrets.SCHEMA_REGISTRY_PASSWORD }}
           EOF
-      
+
       - name: Run Contract Tests
         run: |
           docker run --rm \
             -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
             -v "$PWD/spec:/usr/src/app/spec" \
-            specmatic/specmatic-async test{% endraw %}
+            specmatic/enterprise test{% endraw %}
 ```
 
 ### Docker Setup Migration
@@ -185,14 +185,14 @@ docker run --rm \
   -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
   -v "$PWD/spec:/usr/src/app/spec" \
   -v "$PWD/specmatic-kafka-config.properties:/usr/src/app/specmatic-kafka-config.properties" \
-  specmatic/specmatic-kafka test
+  specmatic/enterprise test
 ```
 **After (specmatic-async):**
 ```bash
 docker run --rm \
   -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
   -v "$PWD/spec:/usr/src/app/spec" \
-  specmatic/specmatic-async test
+  specmatic/enterprise test
 ```
 
 ## Additional Resources

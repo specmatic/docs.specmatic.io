@@ -277,7 +277,7 @@ Let's see how this is done.
 
 - Run the `examples` command:<br/><br/>
 ```shell
-docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/specmatic-openapi examples generate employees.yaml
+docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/enterprise examples generate employees.yaml
 ```
 
 - It generates a request-response mapping JSON file in the `employees_examples` directory containing an example of the API in the spec.
@@ -1593,7 +1593,7 @@ One of the most valuable applications of matchers is **resilience testing**, for
 
 #### First 2 Requests - Simulated Latency
 
-The stub introduces a 5-second delay before responding. The goal is to prove that your implementation does not wait the full 5 seconds. 
+The stub introduces a 5-second delay before responding. The goal is to prove that your implementation does not wait the full 5 seconds.
 
 It should ideally timeout earlier (e.g., at 2 seconds) and release the connection.
 

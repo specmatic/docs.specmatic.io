@@ -46,17 +46,17 @@ If you are using a commercial Specmatic module, you will need to provide a valid
 {% tabs use_specmatic_commands %}
 {% tab use_specmatic_commands Docker Linux/macOS %}
 ```shell
-docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic-openapi -h
+docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/enterprise -h
 ```
 {% endtab %}
 {% tab use_specmatic_commands Docker-Win-Powershell %}
 ```shell
-docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
+docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/enterprise -h
 ```
 {% endtab %}
 {% tab use_specmatic_commands Docker-Win-CommandPrompt %}
 ```shell
-docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
+docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/enterprise -h
 ```
 {% endtab %}
 {% endtabs %}
@@ -71,7 +71,7 @@ This ensures that the license file is available inside the container and Specmat
 ```shell
 docker run -it --rm \
   -v /path/to/your/my-spec.yml:/usr/src/app \
-  specmatic/specmatic-openapi test my-spec.yml # can also be specmatic-kafka, or specmatic-arazzo
+  specmatic/enterprise test my-spec.yml
 ```
 
 ## What's Included in the Docker Image?

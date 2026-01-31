@@ -14,7 +14,7 @@ If you've opted for an offline license during your Specmatic Enterprise onboardi
 ```dockerfile
 # specify the respective Specmatic image as the base image
 # you can find the full list of images here https://hub.docker.com/u/specmatic
-FROM specmatic/specmatic-studio
+FROM specmatic/enterprise
 
 # There are 2 ways to make the license into the image
 # 1. copy the license file into a known location `$HOME/.specmatic/specmatic-license.txt`
@@ -42,7 +42,7 @@ COPY .specmatic/specmatic-license.txt /root/.specmatic/specmatic-license.txt
 ```yaml
 services:
   studio:
-    image: specmatic/specmatic-studio:latest
+    image: specmatic/enterprise:latest
     container_name: studio
     restart: unless-stopped
     ports:
