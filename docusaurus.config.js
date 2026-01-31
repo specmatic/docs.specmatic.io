@@ -357,7 +357,6 @@ const config = {
                     from: [
                       '/documentation',
                       '/documentation/',
-                      '/documentation',
                       '/documentation.html'
                     ],
                     to: '/docs/home/'
