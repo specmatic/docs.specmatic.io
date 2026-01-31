@@ -5,7 +5,7 @@ This document summarizes the migration of all redirect configurations from docs.
 
 ## What Was Done
 
-1. **Extracted all redirects** from 50 markdown files in docs.specmatic.io repository
+1. **Extracted all redirects** from 48 markdown files in docs.specmatic.io repository
 2. **Generated comprehensive redirect configuration** for Docusaurus
 3. **Updated docusaurus.config.js** with all 48 redirect entries (covering 200+ redirect paths)
 
@@ -86,7 +86,7 @@ The following files had special path mappings due to naming differences between 
 - `getting_started/studio_quick_start` → `/docs/getting_started/studio-quick-start/`
 - `features/stubbing_featurehub` → `/docs/features/feature-hub-stubbing/`
 - `features/external_examples` → `/docs/features/external_example3/`
-- `features/json_schema/anyOf-support` → `/docs/features/json_schema/anyOf_support/`
+- `features/json_schema/anyOf-support` → `/docs/features/json-schema/anyOf-support/`
 - `references/docker_images` → `/docs/references/using_docker_image/`
 - `features/convert_gherkin_to_openapi` → `/docs/features/overlays/`
 - `features/authentication-by-reaching-another-service` → `/docs/references/configuration/authentication/`
@@ -120,7 +120,7 @@ Each redirect is configured to handle both `.html` and non-`.html` versions of U
 
 The configuration has been validated for:
 - ✅ JavaScript syntax correctness
-- ✅ All 50 files with redirect_from processed
+- ✅ All 48 files with redirect_from processed
 - ✅ Both .html and non-.html variants included
 - ✅ All historical paths preserved (/documentation/, /documentation/tutorials/, etc.)
 - ✅ Special path mappings applied correctly

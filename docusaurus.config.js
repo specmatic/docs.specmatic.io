@@ -183,7 +183,7 @@ const config = {
                       '/documentation/tutorials',
                       '/documentation/tutorials/'
                     ],
-                    to: '/docs/contract_driven_development/contract_testing/'
+                    to: '/docs/contract-driven-development/contract-testing/'
                   },
                   {
                     from: [
@@ -291,7 +291,7 @@ const config = {
                       '/documentation/features/json_schema/anyOf-support',
                       '/documentation/features/json_schema/anyOf-support.html'
                     ],
-                    to: '/docs/features/json_schema/anyOf_support/'
+                    to: '/docs/features/json-schema/anyOf-support/'
                   },
                   {
                     from: [
@@ -307,7 +307,7 @@ const config = {
                       '/documentation/features/json_schema',
                       '/documentation/features/json_schema/'
                     ],
-                    to: '/docs/features/json_schema/discriminator/'
+                    to: '/docs/features/json-schema/discriminator/'
                   },
                   {
                     from: [
@@ -357,8 +357,8 @@ const config = {
                     from: [
                       '/documentation',
                       '/documentation/',
-                      'documentation',
-                      'documentation.html'
+                      '/documentation',
+                      '/documentation.html'
                     ],
                     to: '/docs/home/'
                   },
@@ -560,10 +560,10 @@ const config = {
                     from: [
                       '/documentation/supported_protocols/soap',
                       '/documentation/supported_protocols/soap.html',
-                      'documentation/soap',
-                      'documentation/soap.html',
-                      'documentation/wsdl',
-                      'documentation/wsdl.html'
+                      '/documentation/soap',
+                      '/documentation/soap.html',
+                      '/documentation/wsdl',
+                      '/documentation/wsdl.html'
                     ],
                     to: '/docs/supported-protocols/soap/'
                   }
