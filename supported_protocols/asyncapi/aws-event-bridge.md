@@ -235,7 +235,7 @@ Start your application that implements the AsyncAPI specification. The applicati
 Execute the contract tests using the Specmatic Docker image:
 
 ```bash
-docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/enterprise test
 ```
 
 Specmatic-async will:
@@ -336,7 +336,7 @@ channels:
   orderEventsBus:
     address: order-events-bus
     description: Events related to order management
-  
+
   paymentEventsBus:
     address: payment-events-bus
     description: Events related to payment processing

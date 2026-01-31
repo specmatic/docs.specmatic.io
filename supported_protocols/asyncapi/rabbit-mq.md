@@ -116,17 +116,17 @@ services:
       -c "
       echo 'Waiting for RabbitMQ Management API...';
       until curl -s -u guest:guest http://localhost:15672/api/overview >/dev/null 2>&1; do sleep 2; done;
-      
+
       echo 'Creating RabbitMQ queues...';
-      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/new-orders 
+      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/new-orders
            -H 'content-type: application/json' -d '{\"durable\":true}';
-      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/wip-orders 
+      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/wip-orders
            -H 'content-type: application/json' -d '{\"durable\":true}';
-      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/to-be-cancelled-orders 
+      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/to-be-cancelled-orders
            -H 'content-type: application/json' -d '{\"durable\":true}';
-      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/cancelled-orders 
+      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/cancelled-orders
            -H 'content-type: application/json' -d '{\"durable\":true}';
-      
+
       echo 'RabbitMQ queues created successfully!';
       "
 ```
@@ -146,7 +146,7 @@ Start your application that implements the AsyncAPI specification. The applicati
 Execute the contract tests using the Specmatic Docker image:
 
 ```bash
-docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/enterprise test
 ```
 
 Specmatic-async will:
@@ -180,11 +180,11 @@ services:
     command: >
       -c "
       # Create exchange
-      curl -u guest:guest -X PUT http://localhost:15672/api/exchanges/%2F/orders-exchange 
+      curl -u guest:guest -X PUT http://localhost:15672/api/exchanges/%2F/orders-exchange
            -H 'content-type: application/json' -d '{\"type\":\"topic\",\"durable\":true}';
-      
+
       # Create binding with routing key
-      curl -u guest:guest -X POST http://localhost:15672/api/bindings/%2F/e/orders-exchange/q/new-orders 
+      curl -u guest:guest -X POST http://localhost:15672/api/bindings/%2F/e/orders-exchange/q/new-orders
            -H 'content-type: application/json' -d '{\"routing_key\":\"orders.new\"}';
       "
 ```

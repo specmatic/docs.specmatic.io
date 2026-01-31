@@ -126,7 +126,7 @@ To start the GUI execute below command,
 {% tabs examples-gui %}
 {% tab examples-gui docker %}
 ```shell
-docker run --rm -v "$(pwd):/specs" -p "9001:9001" specmatic/specmatic-openapi examples interactive --spec-file /specs/employee_details.yaml
+docker run --rm -v "$(pwd):/specs" -p "9001:9001" specmatic/enterprise examples interactive --spec-file /specs/employee_details.yaml
 ```
 {% endtab %}
 {% tab examples-gui java %}
@@ -401,13 +401,13 @@ specmatic examples validate --spec-file employee_details.yaml --examples-dir ./c
 Commercial
 {: .label }
 
-When using multiple examples, it's important to ensure each request is unique. 
+When using multiple examples, it's important to ensure each request is unique.
 
 If the same incoming request appears in multiple examples having different responses (e.g., one returns HTTP 200 and another HTTP 400), then Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve its response, ignoring the others. The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion.
 
 You can detect such issues with competing example requests early by using Specmatic to validate your examples.
 
-Let's try the validation out. 
+Let's try the validation out.
 
 ### Competing Requests by Identical Values
 
@@ -509,7 +509,7 @@ Use following command to detect such competing requests in examples.
 {% tabs competing-examples %}
 {% tab competing-examples docker %}
 ```shell
-docker run -v "$(pwd)/:/specs" specmatic/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd)/:/specs" specmatic/enterprise examples validate --spec-file "/specs/employee_details.yaml"
 ```
 {% endtab %}
 {% tab competing-examples java %}
@@ -679,7 +679,7 @@ Use following command to detect such competing requests in examples.
 {% tabs competing-examples %}
 {% tab competing-examples docker %}
 ```shell
-docker run -v "$(pwd)/:/specs" specmatic/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd)/:/specs" specmatic/enterprise examples validate --spec-file "/specs/employee_details.yaml"
 ```
 {% endtab %}
 {% tab competing-examples java %}
@@ -888,7 +888,7 @@ Use following command to detect such competing requests in examples.
 {% tabs competing-examples %}
 {% tab competing-examples docker %}
 ```shell
-docker run -v "$(pwd)/:/specs" specmatic/specmatic-openapi examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd)/:/specs" specmatic/enterprise examples validate --spec-file "/specs/employee_details.yaml"
 ```
 {% endtab %}
 {% tab competing-examples java %}

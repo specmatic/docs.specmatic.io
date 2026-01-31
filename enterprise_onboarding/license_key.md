@@ -131,17 +131,17 @@ When using Specmatic with Docker, you must pass the license key as follows:
 {% tabs use_specmatic_commands %}
 {% tab use_specmatic_commands Docker Linux/macOS %}
 ```shell
-docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/specmatic-openapi -h
+docker run -it --rm -v ~/.specmatic:/root/.specmatic specmatic/enterprise -h
 ```
 {% endtab %}
 {% tab use_specmatic_commands Docker-Win-Powershell %}
 ```shell
-docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
+docker run -it --rm -v "${env:USERPROFILE}/.specmatic:/root/.specmatic" specmatic/enterprise -h
 ```
 {% endtab %}
 {% tab use_specmatic_commands Docker-Win-CommandPrompt %}
 ```shell
-docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/specmatic-openapi -h
+docker run -it --rm -v "%USERPROFILE%\.specmatic:/root/.specmatic" specmatic/enterprise -h
 ```
 {% endtab %}
 {% endtabs %}

@@ -265,7 +265,7 @@ This format makes it straightforward to create reusable test and stub data that 
 
 So far in the above explanation the sample project is invoking Specmatic gRPC support programmatically. However, if you wish to run the same from CLI then below Docker image wraps the same Specmatic gRPC capabilities.
 
-[`specmatic/specmatic-grpc`](https://hub.docker.com/r/specmatic/specmatic-grpc)
+[`specmatic/enterprise`](https://hub.docker.com/r/specmatic/enterprise)
 
 Also, the Specmatic gRPC Docker image, by nature, is completely language and tech stack agnostic.
 
@@ -274,7 +274,7 @@ Also, the Specmatic gRPC Docker image, by nature, is completely language and tec
 To start the stub/service virtualization service, use the following command:
 
 ```bash
-docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic-grpc virtualize
+docker run -p 9000:9000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/enterprise virtualize
 ```
 
 This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualization server.
@@ -297,7 +297,7 @@ contracts:
 To run tests against your BFF (Backend for Frontend), use this command:
 
 ```bash
-docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" -e SPECMATIC_GENERATIVE_TESTS=true specmatic/specmatic-grpc test --port=8080 --host=host.docker.internal
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$(pwd)/build/reports/specmatic:/usr/src/app/build/reports/specmatic" -e SPECMATIC_GENERATIVE_TESTS=true specmatic/enterprise test --port=8080 --host=host.docker.internal
 ```
 
 This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating gRPC requests based on the profiles listed under `provides` section.

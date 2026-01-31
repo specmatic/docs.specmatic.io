@@ -20,6 +20,7 @@ on:
           - specmatic-openapi
           - specmatic-google-pubsub
           - specmatic-release-test
+          - specmatic-enterprise
 
       product-version:
         description: Product version to set for the specified product

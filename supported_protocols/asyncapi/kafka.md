@@ -142,7 +142,7 @@ Starting api server on port:29092
 
 The API server can be started on a port other than 29092 by passing the desired port via `--mock-server-api-port` CLI argument as follows.
 ```shell
-docker run -p 9092:9092 -p 2181:2181 -p 3000:3000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic-kafka --mock-server-api-port=3000
+docker run -p 9092:9092 -p 2181:2181 -p 3000:3000 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/enterprise --mock-server-api-port=3000
 ```
 
 **Note:**
@@ -156,7 +156,7 @@ For example, to connect to a Kafka broker running on `localhost:9092`, use the f
 docker run -p 9999:9999 \
   -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
   --network host \
-  specmatic/specmatic-kafka \
+  specmatic/enterprise \
   --external-broker-url localhost:9092
 ```
 
@@ -423,7 +423,7 @@ Start the Specmatic Kafka mock server using the following command:
 docker run --rm --name specmatic-kafka-mock \
   -p 9999:9999 \
   -v "$PWD/spec.yaml:/usr/src/app/spec.yaml" \
-  specmatic/specmatic-kafka \
+  specmatic/enterprise \
   virtualize spec.yaml \
   --external-broker-url host.docker.internal:9092
 ```
@@ -538,12 +538,12 @@ To test this service from the command line, follow the below steps.
 2. **Run the Service**: Start your service locally.
 3. **Run Contract Tests**: Use the following command to run the contract tests against the service by replacing `kafka_broker_host` and `kafka_broker_port` with appropriate values:
 ```shell
-docker run --network="host" -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic-kafka test --host=<kafka_broker_host> --port=<kafka_broker_port>
+docker run --network="host" -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/enterprise test --host=<kafka_broker_host> --port=<kafka_broker_port>
 ```
 
 To get information around all the CLI args of the `test` command, run the following command.
 ```shell
-docker run specmatic/specmatic-kafka test --help
+docker run specmatic/enterprise test --help
 ```
 
 ## Running Contract Tests with Specmatic-Async
@@ -612,7 +612,7 @@ Start your application that implements the AsyncAPI specification. The applicati
 Execute the contract tests using the Specmatic Docker image:
 
 ```bash
-docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/specmatic-async test
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/enterprise test
 ```
 
 Specmatic-async will:
