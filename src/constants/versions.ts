@@ -1,5 +1,5 @@
 export const VERSIONS = {
-    "specmatic-core-version": "2.37.2",
+    "specmatic-core-version": "2.38.0",
     "specmatic-jms-version": "0.6.1",
     "specmatic-async-version": "2.2.4",
     "specmatic-kafka-version": "1.7.7",
