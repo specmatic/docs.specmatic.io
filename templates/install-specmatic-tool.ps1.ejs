@@ -1,0 +1,129 @@
+[CmdletBinding(PositionalBinding=$false)]
+param(
+	[Parameter()][Alias('o', 'download-dir')]
+    [string]$DownloadDir = "$HOME\.specmatic",
+
+	[Parameter()][Alias('v')]
+    [string]$Version = "latest",
+
+	[Alias('h','?','help')]
+	[switch]$ShowHelp,
+
+	[Parameter(ValueFromRemainingArguments=$true)]
+    [string[]]$RemainingArgs = @()
+)
+
+function Write-Info { Write-Host "💡 [INFO] $args" -ForegroundColor Cyan }
+function Write-Warn { Write-Host "⚠️ [WARN] $args" -ForegroundColor Yellow }
+function Write-Error { Write-Host "❌ [ERROR] $args" -ForegroundColor Red }
+
+for ($i = 0; $i -lt $RemainingArgs.Count; $i++) {
+	switch ($RemainingArgs[$i]) {
+		'--help' { $ShowHelp = $true }
+		'--version' { $Version = $RemainingArgs[$i + 1] }
+		'--download-dir' { $DownloadDir = $RemainingArgs[$i + 1] }
+		'--downloadDir' { $DownloadDir = $RemainingArgs[$i + 1] }
+	}
+}
+
+if ($ShowHelp) {
+  Write-Host "Usage: install-specmatic-tool.ps1 [-downloadDir, --downloadDir, -download-dir, --download-dir, -o] <dir> [-version, --version, -v] <version>"
+  Write-Host "  [-downloadDir, --downloadDir, -download-dir, --download-dir, -o] : Directory where the JAR will be saved (default: $DownloadDir)"
+  Write-Host "  [-version, --version, -v]           				   : Version of the tool to install (default: $Version)"
+  exit 0
+}
+
+$toolVersion = if ($Version -ne "latest") { $Version } else { "<%= toolVersion %>" }
+$downloadTarget = "<%= downloadTarget %>"
+$downloadUrls = @(<% downloadUrls.forEach((url) => { %>"<%= url %>" <% }); %>)
+$toolName = "<%= toolName %>"
+
+if (-not $downloadUrls -or $downloadUrls.Count -eq 0) {
+    Write-Error "Download URLs list is empty or not defined. Exiting."
+    exit 1
+}
+
+Write-Info "Using download directory $DownloadDir"
+if (-not (Test-Path -Path $DownloadDir)) {
+    try {
+        New-Item -ItemType Directory -Path $DownloadDir -Force | Out-Null
+        Write-Info "Created directory $DownloadDir"
+    } catch {
+        Write-Error "Failed to create directory $DownloadDir"
+        exit 1
+    }
+} else {
+    Write-Info "Using existing directory $DownloadDir"
+}
+
+$jarPath = Join-Path $DownloadDir "$downloadTarget.jar"
+if (Test-Path -Path $jarPath) {
+    Remove-Item -Path $jarPath -Force
+    Write-Info "Removed existing $downloadTarget.jar"
+}
+
+$downloadSuccess = $false
+foreach ($originalUrl  in $downloadUrls) {
+    $url = $originalUrl -replace '\{tool_version\}', $toolVersion
+    Write-Info "Attempting to download $toolName from $url..."
+    try {
+        Invoke-WebRequest -Uri $url -OutFile $jarPath -UseBasicParsing
+        if (Test-Path $jarPath) {
+            Write-Info "Downloaded $toolName to $jarPath"
+            $downloadSuccess = $true
+            break
+        }
+    }
+    catch {
+        Write-Warn "Failed to download from $url"
+    }
+}
+
+if (-not $downloadSuccess) {
+    Write-Error "All download attempts failed. Exiting."
+    exit 1
+}
+
+
+if (-not (Get-Command java -ErrorAction SilentlyContinue)) {
+    Write-Warn @"
+========================================================================
+⚠️ Java is not installed or not found in your PATH.
+
+💡 You can download and install a JRE from one of the following sources:
+
+  🔗 AdoptOpenJDK (Eclipse Temurin): [https://adoptium.net/](https://adoptium.net/)
+  🔗 Oracle JDK: [https://www.oracle.com/java/technologies/downloads/](https://www.oracle.com/java/technologies/downloads/)
+  📦 SDKMAN: [https://sdkman.io/jdks](https://sdkman.io/jdks)
+
+After installation, ensure 'java' is available in your PATH.
+"@
+}
+
+$sanitizedToolName = $toolName -replace '\s', ''
+$funcDef = "function $sanitizedToolName { java -jar `"$jarPath`" `$args }"
+Write-Host @"
+==================================================================
+👍 $toolName $toolVersion installed successfully!
+
+📁 Directory: $DownloadDir
+📦 JAR file: $jarPath
+
+Usage:
+Run the tool with:
+    java -jar `"$jarPath`"
+
+To use $toolName conveniently:
+
+1. Add alias for the current session:
+    function $sanitizedToolName { java -jar `"$jarPath`" `$args }
+
+2. To persist alias add to your PowerShell profile file ($PROFILE):
+    Add-Content -Path $PROFILE -Value 'function $sanitizedToolName { java -jar `"$jarPath`" `$args }'
+
+3. Restart PowerShell or run:
+    . $PROFILE
+
+You can then run $sanitizedToolName directly with arguments, e.g. $sanitizedToolName --help
+==================================================================
+"@ -ForegroundColor Green

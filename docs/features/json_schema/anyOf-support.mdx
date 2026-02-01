@@ -1,0 +1,126 @@
+---
+layout: default
+title: anyOf Support
+parent: JSON Schema
+nav_order: 1
+redirect_from:
+  - /documentation/anyOf-support.html
+  - /documentation/features/json_schema/anyOf-support.html
+---
+
+# anyOf Support
+
+
+
+While `anyOf`  contains a list of schemas, like `oneOf`, a value may match one or more of the schemas in the list, while with oneOf the value may match just one of the schemas in the list. This results in subtle differences in how anyOf support has been implemented, which are documented here.
+
+## Test generation
+
+When generating tests for `anyOf`, one test is generated per schema, and if the schemas are JSON objects, one test at the end is generated from all the schemas in the list.
+
+For example, consider the following schema:
+
+```yaml
+paths:
+  /example:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  anyOf:
+                    - type: object
+                      properties:
+                        name:
+                          type: string
+                    - type: object
+                      properties:
+                        age:
+                          type: integer
+```
+
+The following test requests would be generated:
+1. a test with `data` containing a `name` property of type string
+2. a test with `data` containing an `age` property of type integer
+3. a test with `data` containing both `name` (string) and `age` (integer) properties
+
+The last at the end is not generated when generating tests for `oneOf`.
+
+## Object generation
+
+When generating a JSON object from a schema that contains `anyOf`, one schema is selected at random and an object is generated from it based on that schema. This applies to example generation as well as response generation during testing.
+
+## Validation
+
+Consider the same schema as above.
+
+The following values would match the anyOf, because they conform to at least one of the schemas in the anyOf list:
+
+```json
+{
+  "data": {
+    "name": "Alice"
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "age": 30
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "name": "Alice",
+    "age": 30
+  }
+}
+```
+
+However, the following value would not match the anyOf, because it contains an undeclared key `gender`:
+
+```json
+{
+  "data": {
+    "name": "Alice",
+    "age": 30,
+    "gender": "female" 
+  }
+}
+```
+
+Note: if a key in an object exists in multiple available schemas in an `anyOf`, but matches none of the types, it won't match the anyOf.
+
+Consider the following schema:
+
+```yaml
+type: object
+properties:
+  data:
+    anyOf:
+      - type: object
+        properties:
+          value:
+            type: string
+      - type: object
+        properties:
+          value:
+            type: integer
+```
+
+The following value would not match the anyOf, because the `value` key exists in both schemas, but matches neither type:
+
+```json
+{
+  "data": {
+    "value": true
+  }
+}
+```

@@ -1,0 +1,245 @@
+---
+title: JDBC
+sidebar_position: 6
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+# JDBC <span className="badge badge--primary" style={{ fontSize: '0.75rem' }}> Commercial </span>
+
+The `specmatic-jdbc` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
+
+### Introduction to JDBC Stubbing
+
+Database stubbing allows you to simulate database behavior without connecting to a real database. It’s useful for testing application logic, verifying SQL queries, and controlling predictable responses during development. 
+
+By defining stubs for different SQL operations such as `SELECT`, `INSERT`, `UPDATE`, and `DELETE` you can emulate how your application interacts with the database while keeping tests fast, isolated, and reproducible.
+
+### Pre-requisites
+
+The below-mentioned dependency needs to be in your application's `build.gradle` or `pom.xml`
+
+<Tabs groupId="dependencies">
+
+  <TabItem value="maven" label="maven">
+
+```xml
+<dependency>
+   <artifactId>specmatic-jdbc</artifactId>
+   <groupId>io.specmatic.jdbc</groupId>
+   <scope>test</scope>
+   <version><!-- TODO: Liquid variable removed: {{ site.specmatic-jdbc-version }} --></version>
+</dependency>
+```
+
+  </TabItem>
+
+  <TabItem value="gradle" label="gradle">
+
+```shell
+testImplementation("io.specmatic.jdbc:specmatic-jdbc:<!-- TODO: Liquid variable removed: {{ site.specmatic-jdbc-version }} -->")
+```
+
+  </TabItem>
+
+</Tabs>
+
+Sometimes there is a Xerces library version conflict. Find out the version of Xerces used by Specmatic, and pin it in your `build.gradle` or `pom.xml`, for example:
+
+<Tabs groupId="XercesConflict">
+
+  <TabItem value="maven" label="maven">
+
+```xml
+<dependency>
+  <groupId>xerces</groupId>
+  <artifactId>xercesImpl</artifactId>
+  <version>2.12.0</version>
+  <scope>test</scope>
+</dependency>
+```
+
+  </TabItem>
+
+  <TabItem value="gradle" label="gradle">
+
+```shell
+testImplementation("xerces:xercesImpl:2.12.0")
+```
+
+  </TabItem>
+
+</Tabs>
+
+### Set up The Stub Server
+
+Specmatic JDBC leverages the Specmatic HTTP server, as the two have a number of features in common<br/>
+
+* Set up the following bean in your tests:
+
+  ```java
+  @Primary
+  @Bean
+  public DataSource dataSource() {
+      return new JdbcStubFactory().createDataSource(DATABASE_STUB_PORT, DATABASE_EXPECTATIONS_DIRECTORY);
+  }
+  ```
+
+* And in the properties file:
+
+  ```properties
+  spring.main.allow-bean-definition-overriding=true
+  ```
+
+### Setting Up Database Expectations
+When writing integration or contract tests involving database stubs, you need to set expectations representing the database queries and their expected results. This can be done by passing a directory of expectation files to Specmatic JDBC as part of the test setup.
+
+```java
+jdbcMockFactory.createDataSource(DATABASE_STUB_PORT, DATABASE_EXPECTATIONS_DIRECTORY);
+```
+* `DATABASE_STUB_PORT`: The port on which the Specmatic database stub runs (e.g., `9090`).
+* `DATABASE_EXPECTATIONS_DIRECTORY`: The path to your expectations folder (e.g., `src/test/resources/db_stub_expectations`).
+
+### Expectations Formats
+
+The Expectations Formats define how to specify database query stubs for `Specmatic-JDBC` mock. Each expectation describes how a particular SQL statement should behave when executed, allowing you to define fixed results for `SELECT` queries or control update effects for `INSERT`, `UPDATE`, and `DELETE` statements.
+
+The following examples show consistent patterns for defining expectations across different SQL operations.
+
+#### SELECT statements
+
+`SELECT` statements are used to retrieve data from a table. When stubbing these, you simulate the database returning rows of structured data that the application would expect.
+
+Here’s an example showing how to mock a `SELECT` query for a column called name, returning two rows:
+
+```json
+{
+  "query": "SELECT name FROM NAMES",
+  "response": {
+    "rows": [
+      { "name": "Sumita" },
+      { "name": "Ashok" }
+    ]
+  }
+}
+```
+
+#### DML Statements (INSERT, UPDATE, DELETE)
+
+`INSERT`, `UPDATE`, and `DELETE` statements affect table data but typically don’t return rows. 
+Instead, they return metadata such as how many rows were modified or what new keys were generated.
+
+##### INSERT statements
+
+This stub represents an INSERT operation into the STUDENTS table, creating a new student named Charles and returning a generated key, 
+It communicates that one row was inserted and assigns the auto-generated ID 10 to the new record.
+
+```json
+{
+  "query": "INSERT INTO STUDENTS (id, name) values (default, \"Charles\")",
+  "response": {
+    "affectedRows": 1,
+    "generatedKeys": [
+      { "id": 10 }
+    ]
+  }
+}
+```
+
+##### UPDATE statements
+
+This stub simulates an `UPDATE` query that modifies two rows in the database:
+
+```json
+{
+  "query": "UPDATE EMPLOYEES set language=\"English\" where country=\"US\"",
+  "response": {
+    "affectedRows": 2
+  }
+}
+```
+
+##### DELETE statements
+
+This stub indicates that one row was deleted when the query was executed:
+
+```json
+{
+  "query": "DELETE FROM STUDENTS",
+  "response": {
+    "affectedRows": 1
+  }
+}
+```
+
+#### Mocking Aggregate or Computed Results
+
+Sometimes, the query doesn’t return full records but rather computed values such as counts or averages. You can stub these the same way as regular `SELECT` results.
+
+Here’s an example that mocks a query returning the result of a count operation, This example simulates a query reporting that the table contains 10 records:
+
+```json
+{
+  "query": "SELECT COUNT(*) FROM some_table",
+  "response": {
+    "rows": [
+      { "COUNT(*)": 10 }
+    ]
+  }
+}
+```
+
+#### Using Placeholders and Special Value Types
+
+Sometimes, mock data needs to convey not just the value but also its intended data type, for example, to show that a field should be treated as a date rather than as plain text.
+
+You can do this by using typed placeholders with the format `(mocktype:<type>)`, These markers indicate what kind of data the value represents.
+
+```json
+{
+  "query": "SELECT date_value FROM some_table",
+  "response": {
+    "rows": [
+      { "date_value": "(mocktype:date) 2019-01-01" }
+    ]
+  }
+}
+```
+
+Valid types include: `date`, `timestamp`, `time`. These kinds of values are strings in JSON, and the type hints are needed to tell the JDBC mock which JDBC type to cast them to in the returned data.
+
+#### Regex Matching for Flexible Queries
+
+When query parameters vary, but you want to match the general pattern, you can use `queryRegex` instead of an exact query field. This allows for pattern-based matching.
+
+For example this stub matches any `UPDATE` statement that changes the language column for some country, regardless of the specific values:
+
+```json
+{
+  "queryRegex": "UPDATE EMPLOYEES set language=\".*\" where country=\".*\"",
+  "response": {
+    "affectedRows": 2
+  }
+}
+```
+
+It acts like a flexible template that matches multiple similar update statements with different values, You can also use regex for `SELECT` statements. 
+
+For example this captures any vaguely similar SELECT statement and returns a mock record:
+
+```json
+{
+  "queryRegex": "select from .*",
+  "response": {
+    "rows": [
+      { "statement":  "hello \"world\"" }
+    ]
+  }
+}
+```
+
+### Sample Applications
+
+Please have a look at the following sample project to understand how to utilize `Specmatic-JDBC` in your application
+- [specmatic-jdbc-sample](https://github.com/specmatic/specmatic-jdbc-sample/tree/master/src/test/java/com/component/products)

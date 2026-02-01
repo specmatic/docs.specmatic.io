@@ -1,4 +1,0 @@
-Sitemap: https://docs.specmatic.io/sitemap.xml
-
-User-agent: *
-Disallow:

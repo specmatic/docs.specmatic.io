@@ -1,0 +1,84 @@
+---
+title: Authentication
+sidebar_position: 5
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+# Authentication
+
+## Source Control Authentication
+
+Usually source control requires authentication. Below are the ways in which you can set it up.
+
+* **Recommended approach** - Provide a Git SSH URL and make sure your environment already has necessary keys loaded. If the git clone command works on your regular command line, it will work within Specmatic too. This is most suitable in CI, because your CI server may already be setup to clone the application code (for which the CI server should already have the necessary keys). So it should already be able to clone your API Specifications also. The same also should be applicable for local development and testing environments.
+* **Alternatives** - With https URLs you can provide the bearer token or other means. Please reach us (raise a [GitHub issue](https://github.com/specmatic/specmatic/issues/new/choose)) if you need help with this.
+
+## Pipeline Authentication
+
+### Declare Pipeline Details
+
+Contains details of the project pipeline.
+
+<Tabs groupId="pipeline_configuration">
+
+  <TabItem value="specmatic-yaml" label="specmatic.yaml">
+
+```yaml
+version: 2
+auth:
+  bearer-file: ./central_repo_auth_token.txt
+
+pipeline:
+  provider: azure
+  organization: XNSio
+  project: XNSIO
+  definitionId: 4
+```
+
+  </TabItem>
+
+  <TabItem value="specmatic-json" label="specmatic.json">
+
+```json
+{
+  "version": 2,
+  "auth": {
+    "bearer-file": "./central_repo_auth_token.txt"
+  },
+
+  "pipeline": {
+    "provider": "azure",
+    "organization": "XNSio",
+    "project": "XNSIO",
+    "definitionId": 4
+  }
+}
+```
+
+  </TabItem>
+
+</Tabs>
+
+* `auth` section is needed for Azure pipelines
+* `pipeline` section is used by Specmatic install, to register a project's build pipeline to run when a contract changes.
+  * `provider` should remain `azure`, no need to change this
+  * Details such as `organization`, `project` and `definitionId` must be set up as per your project.
+
+### Azure Pipeline Authentication
+
+Specmatic fetches contracts from git repositories in Azure using the value of the pipeline variable `System.AccessToken` for authentication. This is a predefined variable in Azure build pipelines.
+
+It looks for this value in the file specified by `bearer-file`. `central_repo_auth_token.txt` is our recommended name for the file. This file should be in your project root.
+
+You can set it up by placing this snippet in the `steps` section of your Azure pipeline:
+
+```yaml
+steps:
+  - script: echo $SYSTEM_ACCESSTOKEN > central_repo_auth_token.txt
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+```
+
+You can read more about `System.AccessToken` [here](https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml).

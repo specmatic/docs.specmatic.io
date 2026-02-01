@@ -1,0 +1,155 @@
+---
+title: Configuring SAML SSO with Microsoft Entra
+sidebar_label: Configuring SAML SSO with Microsoft Entra
+sidebar_position: 1
+---
+
+# Configuring SAML SSO with Microsoft Entra
+
+This guide explains how to configure **SAML SSO** for **Specmatic Insights** using **Microsoft Entra** as the Identity Provider (IdP).
+
+## Prerequisites
+
+- Administrative access to Microsoft Entra
+- Administrative access to your Specmatic Insights instance
+
+## Step 1: Get SAML Configuration Values from Specmatic Insights
+
+1. In your [Specmatic Insights instance](https://insights.specmatic.io), navigate to the [SAML SSO configuration](https://insights.specmatic.io/dashboard/settings/sso-configuration) section.
+2. Copy the following values, which you'll need for the Microsoft Entra configuration:
+   - **Service Provider Entity ID**: `https://insights.specmatic.io/saml2/<RANDOM_CHARACTERS>`
+   - **Assertion Consumer Service URL/SSO Redirect URL**: `https://insights.specmatic.io/login/saml2/sso/<RANDOM_CHARACTERS>`
+
+
+## Step 2: Create Enterprise Application in Entra
+
+1. Log in to the [Microsoft Entra admin center](https://entra.microsoft.com/).
+2. Navigate to **Entra ID** > **Enterprise Apps** in the left sidebar.
+3. Click **New Application**.
+4. Select **Create your own application**.
+5. Enter the application name (e.g., "Specmatic Insights").
+6. Select **Integrate any other application you don't find in the gallery (Non-gallery)**.
+7. Click **Create**.
+
+## Step 3: Configure SAML SSO in Entra
+
+1. In your newly created application, go to **Single sign-on**.
+2. Select **SAML** as the single sign-on method.
+3. In the **Basic SAML Configuration** section, click **Edit**.
+4. Enter the values you copied from Specmatic Insights in Step 1:
+   - **Identifier (Entity ID)**: `https://insights.specmatic.io/saml2/<RANDOM_CHARACTERS>`
+   - **Reply URL (Assertion Consumer Service URL)**: `https://insights.specmatic.io/login/saml2/sso/<RANDOM_CHARACTERS>`
+
+   ![Entra SAML Configuration](/img/enterprise_onboarding/SSO/entra/01-entra-saml-config.png)
+   *Figure 1: Configuring Basic SAML Settings in Microsoft Entra*
+
+5. Click **Save**.
+
+## Step 4: Get Entra configuration details and configure Specmatic Insights
+
+1. From the **SAML Certificates** section, copy the **App Federation Metadata URL**.
+
+   ![Federation Metadata URL](/img/enterprise_onboarding/SSO/entra/02-federation-metadata-url.png)
+   *Figure 2: Copy the App Federation Metadata URL from the SAML Certificates section*
+
+2. Paste the **App Federation Metadata URL** from Microsoft Entra into the **Metadata URL** field in Specmatic Insights SSO configuration.
+
+   ![Specmatic Insights Metadata URL](/img/enterprise_onboarding/SSO/entra/03-specmatic-insights-metadata-url.png)
+   *Figure 3: Paste the App Federation Metadata URL into the Metadata URL field in Specmatic Insights*
+
+3. From the **Set up Specmatic Insights** section in Microsoft Entra, copy the **Microsoft Entra Identifier**.
+
+   ![Microsoft Entra Identifier](/img/enterprise_onboarding/SSO/entra/04-microsoft-entra-identifier.png)
+   *Figure 4: Copy the Microsoft Entra Identifier from the Set up Specmatic Insights section*
+
+4. Paste the **Microsoft Entra Identifier** into the **Identity Provider Entity ID** field in Specmatic Insights SSO configuration.
+
+   ![Specmatic Insights Issuer URL](/img/enterprise_onboarding/SSO/entra/05-specmatic-insights-issuer-url.png)
+   *Figure 5: Paste the Microsoft Entra Identifier into the Issuer URL field in Specmatic Insights*
+
+5. Enable SAML SSO and save the configuration.
+
+## Step 5: Configure user attributes (Optional)
+
+To ensure proper user information is passed from Entra to Specmatic Insights:
+
+1. In your Entra application, go to **Single sign-on** > **Attributes & Claims**.
+2. Verify the default claims are configured:
+   - **Unique User Identifier (Name ID)**: `user.userprincipalname` (this must match the user’s email address in Microsoft Entra).
+
+> **Note:** These attribute mappings ensure that user information is correctly synchronized between Entra and Specmatic Insights.
+
+## Step 6: Assign users to the application
+
+1. In your Entra application, navigate to **Users and groups**.
+2. Click **Add user/group**.
+3. Select the users or groups that should have access to Specmatic Insights.
+4. Click **Assign**.
+
+> **Important:** Users must be assigned to the application in Entra before they can access Specmatic Insights via SSO.
+
+## Step 7: Test the SAML SSO integration
+
+1. Open the Specmatic Insights login page.
+2. Click **Sign in with SSO** (or your org’s SSO option).
+3. Sign in via Microsoft Entra and confirm you are redirected back to Insights successfully.
+
+## Troubleshooting
+
+> **Tip:** If you encounter issues during setup or login, check the following common problems:
+
+### SAML Configuration Issues
+
+- **Invalid Entity ID or Reply URL**: Double-check that the values from Specmatic Insights exactly match what's configured in Microsoft Entra.
+- **Metadata URL not accessible**: Ensure the App Federation Metadata URL from Microsoft Entra is publicly accessible and correctly copied.
+- **Certificate issues**: If using custom certificates, verify they are valid and properly configured.
+
+### User Access Issues
+
+- **User not assigned**: Ensure users are assigned to the application in Microsoft Entra (Step 6).
+- **User attributes missing**: Verify that required user attributes (email, name) are being sent in the SAML response.
+- **User doesn't exist in Specmatic Insights**: Some SSO configurations require users to be pre-created in the target application.
+
+### Authentication Flow Issues
+
+- **Redirect loops**: Check that the Reply URL in Microsoft Entra exactly matches the Assertion Consumer Service URL from Specmatic Insights.
+- **Invalid SAML response**: Use browser developer tools to inspect SAML responses for error messages.
+- **Clock skew**: Ensure system clocks are synchronized between Microsoft Entra and Specmatic Insights servers.
+
+### Testing and Validation
+
+- **Use SAML tracer tools**: Browser extensions like SAML-tracer can help debug SAML authentication flows.
+- **Check Microsoft Entra sign-in logs**: Review the sign-in logs in Microsoft Entra admin center for error details.
+- **Verify Specmatic Insights logs**: Check application logs for SAML processing errors.
+
+For additional help with SAML SSO configuration, consult the [Specmatic Insights documentation](/enterprise_onboarding/insights) or contact [Specmatic support](https://support.specmatic.io).
+## Troubleshooting
+
+> **Tip:** If you encounter issues during setup or login, check the following common problems:
+
+### SAML Configuration Issues
+
+- **Invalid Entity ID or Reply URL**: Double-check that the values from Specmatic Insights exactly match what's configured in Microsoft Entra.
+- **Metadata URL not accessible**: Ensure the App Federation Metadata URL from Microsoft Entra is publicly accessible and correctly copied.
+- **Certificate issues**: If using custom certificates, verify they are valid and properly configured.
+
+### User Access Issues
+
+- **User not assigned**: Ensure users are assigned to the application in Microsoft Entra (Step 6).
+- **User attributes missing**: Verify that required user attributes (email, name) are being sent in the SAML response.
+- **User doesn't exist in Specmatic Insights**: Some SSO configurations require users to be pre-created in the target application.
+
+### Authentication Flow Issues
+
+- **Redirect loops**: Check that the Reply URL in Microsoft Entra exactly matches the Assertion Consumer Service URL from Specmatic Insights.
+- **Invalid SAML response**: Use browser developer tools to inspect SAML responses for error messages.
+- **Clock skew**: Ensure system clocks are synchronized between Microsoft Entra and Specmatic Insights servers.
+
+### Testing and Validation
+
+- **Use SAML tracer tools**: Browser extensions like SAML-tracer can help debug SAML authentication flows.
+- **Check Microsoft Entra sign-in logs**: Review the sign-in logs in Microsoft Entra admin center for error details.
+- **Verify Specmatic Insights logs**: Check application logs for SAML processing errors.
+
+For additional help with SAML SSO configuration, consult the [Specmatic Insights documentation](/enterprise_onboarding/insights) or contact [Specmatic support](https://support.specmatic.io).
+

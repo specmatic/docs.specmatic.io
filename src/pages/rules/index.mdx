@@ -1,0 +1,998 @@
+---
+layout: default
+title: Rules
+nav_exclude: true
+search_exclude: true
+---
+
+# Rules
+
+<!-- TOC -->
+* [Rules](#rules)
+  * [R0001](#r0001)
+    * [HTTP method mismatch](#http-method-mismatch)
+  * [R0002](#r0002)
+    * [HTTP status mismatch](#http-status-mismatch)
+  * [R0007](#r0007)
+    * [No matching security scheme](#no-matching-security-scheme)
+  * [R1001](#r1001)
+    * [Type mismatch](#type-mismatch)
+  * [R1002](#r1002)
+    * [Value mismatch](#value-mismatch)
+  * [R1003](#r1003)
+    * [Constraint violation](#constraint-violation)
+  * [R2001](#r2001)
+    * [Missing required property](#missing-required-property)
+  * [R2002](#r2002)
+    * [Missing optional property](#missing-optional-property)
+  * [R2003](#r2003)
+    * [Unknown property](#unknown-property)
+  * [R3001](#r3001)
+    * [Discriminator mismatch](#discriminator-mismatch)
+  * [R3002](#r3002)
+    * [Invalid discriminator setup](#invalid-discriminator-setup)
+  * [R3003](#r3003)
+    * [Missing discriminator](#missing-discriminator)
+  * [R3004](#r3004)
+    * [Property not in any schema options](#property-not-in-any-schema-options)
+  * [R3005](#r3005)
+    * [Property matches no schema option](#property-matches-no-schema-option)
+  * [OAS0001](#oas0001)
+    * [Invalid min length](#invalid-min-length)
+  * [OAS0002](#oas0002)
+    * [Invalid max length](#invalid-max-length)
+  * [OAS0003](#oas0003)
+    * [Excessive length](#excessive-length)
+  * [OAS0004](#oas0004)
+    * [Pattern length conflict](#pattern-length-conflict)
+  * [OAS0005](#oas0005)
+    * [Invalid numeric bounds](#invalid-numeric-bounds)
+  * [OAS0010](#oas0010)
+    * [Invalid parameter definition](#invalid-parameter-definition)
+  * [OAS0011](#oas0011)
+    * [Missing path parameter](#missing-path-parameter)
+  * [OAS0020](#oas0020)
+    * [Security property redefined](#security-property-redefined)
+  * [OAS0021](#oas0021)
+    * [Security scheme missing](#security-scheme-missing)
+  * [OAS0030](#oas0030)
+    * [Media type overridden](#media-type-overridden)
+  * [OAS0031](#oas0031)
+    * [Invalid response status](#invalid-response-status)
+  * [OAS0041](#oas0041)
+    * [Unresolved reference](#unresolved-reference)
+  * [OAS0042](#oas0042)
+    * [Invalid $ref usage](#invalid-ref-usage)
+  * [OAS0044](#oas0044)
+    * [Invalid additionalProperties usage](#invalid-additionalproperties-usage)
+  * [OAS0043](#oas0043)
+    * [Unclear schema](#unclear-schema)
+  * [OAS9999](#oas9999)
+    * [Unsupported feature](#unsupported-feature)
+<!-- TOC -->
+
+## R0001
+
+### HTTP method mismatch
+
+The HTTP method does not match the method defined in the specification.
+
+**Why this is a problem**
+
+Method mismatches indicate the consumer or provider is calling the wrong operation, which can lead to unexpected behavior or missing functionality.
+
+Example:
+
+```yaml
+paths:
+  /orders:
+    get:
+      responses:
+        "200":
+          description: OK
+```
+
+Request from consumer to stub:
+
+```http
+POST /orders HTTP/1.1
+```
+
+The contract expects `GET /orders`, but the request uses `POST`, so a method mismatch is reported.
+
+**How this can be resolved**
+
+- Update the client or provider to use the method defined in the specification.
+- If the method should be different, update the specification accordingly.
+
+## R0002
+
+### HTTP status mismatch
+
+The HTTP status code does not match the expected status code defined in the specification.
+
+**Why this is a problem**
+
+Status codes communicate outcome semantics; a mismatch can mislead clients about success or failure.
+
+Example:
+
+```yaml
+paths:
+  /orders:
+    get:
+      responses:
+        "200":
+          description: OK
+```
+
+Response from provider during a contract test:
+
+```http
+HTTP/1.1 404 Not Found
+```
+
+The contract expects a `200` response, but the provider returns `404`, so a status mismatch is reported.
+
+**How this can be resolved**
+
+- Return the status code defined in the specification.
+- If the actual status is correct, update the specification to reflect it.
+
+## R0007
+
+### No matching security scheme
+
+The request does not satisfy the requirements of any defined security scheme.
+
+**Why this is a problem**
+
+Security schemes define how clients authenticate; failing to meet them means the request is not authorized by the contract.
+
+Example:
+
+```yaml
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+security:
+  - apiKeyAuth: []
+```
+
+Request from consumer to stub:
+
+```http
+GET /orders HTTP/1.1
+```
+
+The request does not include the required `X-API-Key` header, so no matching security scheme is reported.
+
+**How this can be resolved**
+
+- Provide credentials that satisfy one of the defined security schemes.
+- If authentication is not required, remove or update the security requirement in the specification.
+
+## R1001
+
+### Type mismatch
+
+The value type does not match the expected type defined in the specification.
+
+**Why this is a problem**
+
+Type mismatches cause validation failures and make clients/providers interpret data incorrectly.
+
+Example:
+
+```yaml
+type: object
+required:
+  - price
+properties:
+  price:
+    type: number
+```
+
+Response from provider during a contract test:
+
+```json
+{"price": "9.99"}
+```
+
+When validating the response from the provider, `price` is a string instead of a number, so the contract test reports a type mismatch.
+
+**How this can be resolved**
+
+- Update the provider to return a numeric `price`, not a string.
+- If the string is correct, update the specification to accept a string type.
+
+## R1002
+
+### Value mismatch
+
+The value does not match the expected value defined in the specification.
+
+**Why this is a problem**
+
+Exact-value expectations (like enums or consts) are used to guarantee fixed semantics; mismatches break downstream logic.
+
+Example:
+
+```yaml
+type: object
+required:
+  - status
+properties:
+  status:
+    type: string
+    enum: [created, confirmed]
+```
+
+Request from consumer to stub:
+
+```json
+{"status": "pending"}
+```
+
+During validation of the request from consumer to stub, `status` is not one of the allowed enum values, so a value mismatch is reported.
+
+**How this can be resolved**
+
+- Send a value that matches the specification enum.
+- If the new value is valid, update the specification enum to include it.
+
+## R1003
+
+### Constraint violation
+
+The value does not satisfy the constraints defined in the specification.
+
+**Why this is a problem**
+
+Constraints like length, pattern, or range protect clients and providers from invalid or out-of-bounds data.
+
+Example:
+
+```yaml
+type: object
+required:
+  - username
+properties:
+  username:
+    type: string
+    minLength: 6
+```
+
+Request from consumer to stub:
+
+```json
+{"username": "amy"}
+```
+
+The request from consumer to stub is validated and fails because `username` is shorter than the minimum length.
+
+**How this can be resolved**
+
+- Provide values that satisfy the constraint (e.g., a longer `username`).
+- If the constraint is too strict, relax it in the specification.
+
+## R2001
+
+### Missing required property
+
+A required property defined in the specification is missing.
+
+**Why this is a problem**
+
+Required properties are essential for processing; missing them can make behavior ambiguous or incorrect.
+
+Example:
+
+```yaml
+type: object
+required:
+  - email
+properties:
+  email:
+    type: string
+  name:
+    type: string
+```
+
+Request from consumer to stub:
+
+```json
+{"name": "Maya"}
+```
+
+Request validation fails because `email` is required but missing.
+
+**How this can be resolved**
+
+- Include all required properties in the payload.
+- If the property should not be required, update the specification.
+
+## R2002
+
+### Missing optional property
+
+An optional property defined in the specification is missing.
+
+**Why this is a problem**
+
+In strict validation modes where optional properties are treated as mandatory, missing optional data can hide partial responses.
+
+Example:
+
+```yaml
+type: object
+required:
+  - id
+properties:
+  id:
+    type: integer
+  description:
+    type: string
+```
+
+Response from provider during a contract test (with optional fields treated as mandatory):
+
+```json
+{"id": 101}
+```
+
+When optional fields are enforced, the missing `description` is reported as an optional property missing violation.
+
+**How this can be resolved**
+
+- Provide the optional property when running with strict key checking.
+- If strict checking is not intended, run with the default optional behavior.
+- If the property should be required, mark it as required in the specification.
+
+## R2003
+
+### Unknown property
+
+A property was found that is not defined in the specification.
+
+**Why this is a problem**
+
+Unexpected properties can signal drift between provider behavior and the specification, and may not be handled by clients.
+
+Example:
+
+```yaml
+type: object
+additionalProperties: false
+required:
+  - id
+properties:
+  id:
+    type: integer
+  status:
+    type: string
+```
+
+Payload being validated:
+
+```json
+{"id": 5, "status": "active", "extra": "debug"}
+```
+
+During response validation, `extra` is not defined and `additionalProperties: false` disallows it, so an unknown property violation is reported.
+
+**How this can be resolved**
+
+- Remove unexpected properties from the payload.
+- If the property is valid, add it to the specification or allow additional properties.
+
+## R3001
+
+### Discriminator mismatch
+
+The value provided does not match the discriminator defined in the specification.
+
+**Why this is a problem**
+
+Discriminators determine which schema applies; an unknown discriminator value makes the payload ambiguous.
+
+Example:
+
+```yaml
+oneOf:
+  - $ref: "#/components/schemas/Cat"
+  - $ref: "#/components/schemas/Dog"
+discriminator:
+  propertyName: type
+  mapping:
+    Cat: "#/components/schemas/Cat"
+    Dog: "#/components/schemas/Dog"
+components:
+  schemas:
+    Cat:
+      type: object
+      required:
+        - type
+        - whiskers
+      properties:
+        type:
+          type: string
+        whiskers:
+          type: integer
+    Dog:
+      type: object
+      required:
+        - type
+        - bark
+      properties:
+        type:
+          type: string
+        bark:
+          type: boolean
+```
+
+Request from consumer to stub:
+
+```json
+{"type": "Parrot", "beakLength": 10}
+```
+
+The discriminator value does not match any mapping, so validation of the request from consumer to stub reports a discriminator mismatch.
+
+**How this can be resolved**
+
+- Use a discriminator value that maps to a defined schema.
+- If a new subtype is needed, add it to the specification and discriminator mapping.
+
+## R3002
+
+### Invalid discriminator setup
+
+The discriminator property defined in the specification is missing from the subschemas.
+
+**Why this is a problem**
+
+If subschemas do not define the discriminator property, validation cannot reliably select the correct schema.
+
+Example:
+
+```yaml
+oneOf:
+  - $ref: "#/components/schemas/Cat"
+  - $ref: "#/components/schemas/Dog"
+discriminator:
+  propertyName: type
+  mapping:
+    Cat: "#/components/schemas/Cat"
+    Dog: "#/components/schemas/Dog"
+components:
+  schemas:
+    Cat:
+      type: object
+      required:
+        - whiskers
+      properties:
+        whiskers:
+          type: integer
+    Dog:
+      type: object
+      required:
+        - bark
+      properties:
+        bark:
+          type: boolean
+```
+
+Request from consumer to stub:
+
+```json
+{"type": "Cat", "whiskers": 3}
+```
+
+The discriminator is declared, but neither subschema defines the `type` property, so the discriminator setup is invalid.
+
+**How this can be resolved**
+
+- Add the discriminator property to each subschema and mark it required.
+- Ensure the discriminator mapping values align with the schema definitions.
+
+## R3003
+
+### Missing discriminator
+
+The discriminator property defined in the specification is missing.
+
+**Why this is a problem**
+
+Without the discriminator property, a composed schema cannot determine which subschema should apply.
+
+Example:
+
+```yaml
+oneOf:
+  - $ref: "#/components/schemas/Cat"
+  - $ref: "#/components/schemas/Dog"
+discriminator:
+  propertyName: type
+  mapping:
+    Cat: "#/components/schemas/Cat"
+    Dog: "#/components/schemas/Dog"
+components:
+  schemas:
+    Cat:
+      type: object
+      required:
+        - type
+        - whiskers
+      properties:
+        type:
+          type: string
+        whiskers:
+          type: integer
+    Dog:
+      type: object
+      required:
+        - type
+        - bark
+      properties:
+        type:
+          type: string
+        bark:
+          type: boolean
+```
+
+Request from consumer to stub:
+
+```json
+{"whiskers": 3}
+```
+
+The payload lacks the discriminator property `type`, so validation reports a missing discriminator.
+
+**How this can be resolved**
+
+- Include the discriminator property in the payload.
+- If the discriminator is not needed, remove it and adjust the composed schema.
+
+## R3004
+
+### Property not in any schema options
+
+The property is not defined in any available schema options.
+
+**Why this is a problem**
+
+With `anyOf`, a property that does not exist in any option indicates the payload does not match the allowed shapes.
+
+Example:
+
+```yaml
+anyOf:
+  - $ref: "#/components/schemas/OptionA"
+  - $ref: "#/components/schemas/OptionB"
+components:
+  schemas:
+    OptionA:
+      type: object
+      properties:
+        a:
+          type: string
+    OptionB:
+      type: object
+      properties:
+        b:
+          type: number
+```
+
+Request payload being validated:
+
+```json
+{"c": 10}
+```
+
+During validation of the request from consumer to stub, `c` is not present in any `anyOf` option, so the property not in any schema options violation is reported.
+
+**How this can be resolved**
+
+- Send a payload that matches at least one `anyOf` option.
+- If `c` is valid, add it to one of the option schemas or add another option.
+
+## R3005
+
+### Property matches no schema option
+
+The property does not satisfy any available schema options.
+
+**Why this is a problem**
+
+Even if a property exists in multiple options, it must still satisfy at least one option's constraints.
+
+Example:
+
+```yaml
+anyOf:
+  - $ref: "#/components/schemas/StringOption"
+  - $ref: "#/components/schemas/NumberOption"
+components:
+  schemas:
+    StringOption:
+      type: object
+      properties:
+        common:
+          type: string
+    NumberOption:
+      type: object
+      properties:
+        common:
+          type: number
+```
+
+Request from consumer to stub:
+
+```json
+{"common": true}
+```
+
+The property exists in both options but does not match either type, so validation reports no matching schema option.
+
+**How this can be resolved**
+
+- Provide a value that satisfies one of the schema options.
+- If boolean is valid, update the specification to allow it.
+
+## OAS0001
+
+### Invalid min length
+
+Minimum length must be a positive integer.
+
+**Why this is a problem**
+
+Negative values are meaningless.
+
+Example:
+
+```yaml
+type: string
+minLength: -1
+```
+
+**How this can be resolved**
+
+- Set `minLength` to a positive integer.
+
+## OAS0002
+
+### Invalid max length
+
+Maximum length must be greater than or equal to minimum length.
+
+**Why this is a problem**
+
+Conflicting bounds cannot be satisfied by any value, so validation becomes impossible.
+
+Example:
+
+```yaml
+type: string
+minLength: 10
+maxLength: 5
+```
+
+**How this can be resolved**
+
+- Ensure `maxLength` is greater than or equal to `minLength`.
+
+## OAS0003
+
+### Excessive length
+
+Length should not exceed recommended maximum of 4MB.
+
+**Why this is a problem**
+
+Very large bounds can lead to memory pressure and poor performance in tooling and tests.
+
+Example:
+
+```yaml
+type: string
+maxLength: 2147483647
+```
+
+Just imagine if Specmatic were to generate a 2GB string in a contract test request and send it to your application, or generate a huge randomized value in a mock response!
+
+**How this can be resolved**
+
+- Reduce `maxLength` to 4MB or lower. To ensure that a large string can be safely generated, Specmatic will proactively treat any length above 4MB as 4MB.
+
+## OAS0004
+
+### Pattern length conflict
+
+Pattern must be able to generate values matching the minimum and maximum length.
+
+**Why this is a problem**
+
+If the pattern cannot produce any valid strings within the length bounds, the schema is unsatisfiable.
+
+Example:
+
+```yaml
+type: string
+minLength: 1
+maxLength: 1
+pattern: "^[0-9]{2}$"
+```
+
+**How this can be resolved**
+
+- Update the `pattern` or length constraints so they are compatible.
+
+## OAS0005
+
+### Invalid numeric bounds
+
+Maximum must be greater than or equal to minimum.
+
+**Why this is a problem**
+
+Conflicting numeric bounds cannot be satisfied by any value.
+
+Example:
+
+```yaml
+type: number
+minimum: 10
+maximum: 5
+```
+
+**How this can be resolved**
+
+- Ensure `maximum` is greater than or equal to `minimum`.
+
+## OAS0010
+
+### Invalid parameter definition
+
+Parameters must define required properties such as `name`, `schema`, etc.
+
+**Why this is a problem**
+
+Incomplete parameter definitions prevent tools from understanding how to parse and validate requests.
+
+Example:
+
+```yaml
+parameters:
+  - in: query
+    required: true
+```
+
+**How this can be resolved**
+
+- Define required parameter properties (`name`, `in`, `schema`, and `required` where applicable).
+
+## OAS0011
+
+### Missing path parameter
+
+All path template segments must be defined as parameters.
+
+**Why this is a problem**
+
+Unspecified path parameters make it unclear how to validate or bind the request.
+
+Example:
+
+```yaml
+paths:
+  /orders/{id}:
+    get:
+      responses:
+        "200":
+          description: OK
+```
+
+**How this can be resolved**
+
+- Add parameter definitions for every path template segment.
+
+## OAS0020
+
+### Security property redefined
+
+Security scheme properties should not be redefined in parameters.
+
+**Why this is a problem**
+
+Redefining security details can introduce conflicting requirements and confuse users trying to understand validation errors.
+
+Example:
+
+```yaml
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+paths:
+  /orders:
+    get:
+      parameters:
+        - name: X-API-Key
+          in: header
+          schema:
+            type: string
+```
+
+**How this can be resolved**
+
+- Remove parameter redefinitions and rely on the security scheme.
+
+## OAS0021
+
+### Security scheme missing
+
+Referenced security schemes must be defined and resolve-able.
+
+**Why this is a problem**
+
+If the security scheme in an API is not defined in the specification, the specification is incomplete. Specmatic will not be able to validate or enforce authentication requirements.
+
+
+**How this can be resolved**
+
+- Define the referenced security scheme or update the reference.
+
+## OAS0030
+
+### Media type overridden
+
+Media types should not be overridden by Content-Type parameters.
+
+**Why this is a problem**
+
+Conflicting media type definitions create ambiguity about the actual request or response body format.
+
+In fact, the OpenAPI Specification disallows defining a `Content-Type` parameter alongside a `requestBody` or `responses` content type.
+
+Example:
+
+```yaml
+paths:
+  /orders:
+    post:
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+```
+
+**How this can be resolved**
+
+- Remove the conflicting `Content-Type` parameter.
+
+## OAS0031
+
+### Invalid response status
+
+Response status must be a valid integer or literal default.
+
+**Why this is a problem**
+
+Non-standard status keys cannot be interpreted by tooling and break response matching.
+
+Example:
+
+```yaml
+responses:
+  "2xx":
+    description: OK
+```
+
+**How this can be resolved**
+
+- Use valid numeric status codes or `default` for responses.
+
+## OAS0041
+
+### Unresolved reference
+
+References must resolve to a valid reusable component.
+
+**Why this is a problem**
+
+Broken references make the schema incomplete and unusable for validation.
+
+Example:
+
+```yaml
+schema:
+  $ref: "#/components/schemas/MissingType"
+```
+
+**How this can be resolved**
+
+- Fix the `$ref` to point to an existing component, or add the missing component.
+
+## OAS0042
+
+### Invalid $ref usage
+
+A `$ref` should not define sibling properties as per OAS 3.0 standards.
+
+**Why this is a problem**
+
+Sibling properties are ignored in OAS 3.0, leading to unexpected validation behavior.
+
+Example:
+
+```yaml
+schema:
+  $ref: "#/components/schemas/Order"
+  description: Order response
+```
+
+**How this can be resolved**
+
+- Move sibling properties into the referenced schema or remove them.
+
+## OAS0044
+
+### Invalid additionalProperties usage
+
+additionalProperties should only be used within object schemas.
+
+**Why this is a problem**
+
+Using `additionalProperties` with non-object schemas is meaningless.
+
+Example:
+
+```yaml
+type: string
+additionalProperties: true
+```
+
+**How this can be resolved**
+
+- Use `additionalProperties` only on object schemas, or move it into the appropriate object definition.
+
+## OAS0043
+
+### Unclear schema
+
+The intent of this schema is unclear or may not be supported. Consider reaching out if this is an issue.
+
+**Why this is a problem**
+
+Ambiguous or unsupported schema constructs can cause inconsistent behavior across tools.
+
+Example:
+
+```yaml
+schema:
+  allOf: []
+```
+
+**How this can be resolved**
+
+Please reach out to the Specmatic team for help.
+
+## OAS9999
+
+### Unsupported feature
+
+This feature is currently not yet supported, consider reaching out if you would like us to prioritise the support.
+

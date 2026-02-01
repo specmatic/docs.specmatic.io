@@ -1,0 +1,181 @@
+---
+title: Download
+sidebar_label: Download
+sidebar_position: 2
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CommercialDownload from '@site/src/components/CommercialDownload';
+import MavenCoordinates from '@site/src/components/MavenCoordinates';
+import { VERSIONS } from '@site/src/constants/versions';
+
+## Specmatic Open Source
+
+### Open Source CLI standalone executable
+
+Read the [CLI Quick Start (in 5 min)](/getting_started/cli_quick_start) guide to learn more about using the standalone executable:
+
+<Tabs groupId="install-specmatic">
+  <TabItem value="docker" label="Docker">
+
+To run the latest version:
+
+```bash
+docker run -it --rm specmatic/specmatic --help
+```
+
+For older versions, replace `VERSION` with the desired version number from the Docker Hub tags page:
+
+```bash
+docker run -it --rm specmatic/specmatic:VERSION --help
+```
+
+  </TabItem>
+  <TabItem value="jar" label="JAR">
+
+You can download the standalone JAR from:
+
+- [GitHub](https://github.com/specmatic/specmatic/releases/download/{VERSIONS["specmatic-core-version"]}/specmatic.jar)
+- [Maven Central](https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/{VERSIONS["specmatic-core-version"]}/specmatic-executable-all-{VERSIONS["specmatic-core-version"]}.jar)
+
+To run the JAR:
+
+```bash
+java -jar specmatic.jar --help
+```
+
+  </TabItem>
+  <TabItem value="linux-macos" label="Linux / macOS">
+
+If you have Java 17 or above installed, you can install Specmatic with a shell script:
+
+To install the latest version:
+
+```bash
+curl https://docs.specmatic.io/install-specmatic.sh | bash
+```
+
+To install a specific version, replace `VERSION` with a release number from GitHub:
+
+```bash
+curl https://docs.specmatic.io/install-specmatic.sh | bash -- --version VERSION
+```
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+If you have Java 17 or above installed, you can install Specmatic using PowerShell:
+
+To install the latest version:
+
+```powershell
+irm https://docs.specmatic.io/install-specmatic.ps1 | iex
+```
+
+To install a specific version, replace `VERSION` with a release number from GitHub:
+
+```powershell
+iex "& { $(irm 'https://docs.specmatic.io/install-specmatic.ps1') } --version VERSION"
+```
+
+  </TabItem>
+  <TabItem value="npm" label="NPM">
+
+To run the latest version:
+
+```bash
+npx specmatic
+```
+
+To run a specific version, replace `VERSION` with a version from npm:
+
+```bash
+npx specmatic@VERSION
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python (pip)">
+
+To install Specmatic via `pip`:
+
+```bash
+pip install specmatic
+```
+
+To install a specific version, replace `VERSION` with a version from PyPI:
+
+```bash
+pip install specmatic==VERSION
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Specmatic Commercial Offerings
+
+:::info
+These tools are part of Specmatic's commercial suite.Please visit the [pricing page](https://specmatic.io/pricing/) for more information or visit the product pages for licensing details.
+:::
+
+### Specmatic Enterprise
+
+<CommercialDownload
+  imageName="specmatic/enterprise"
+  toolVersion={VERSIONS["specmatic-enterprise-version"]}
+  jarUrl={`https://repo.specmatic.io/releases/io/specmatic/enterprise/specmatic-enterprise-all/${VERSIONS["specmatic-enterprise-version"]}/specmatic-enterprise-all-${VERSIONS["specmatic-enterprise-version"]}.jar`}
+  repoUrl="https://repo.specmatic.io/#releases/io/specmatic/enterprise/specmatic-enterprise-all/"
+  installScript="install-specmatic-enterprise"
+  mavenGroupId="io.specmatic.enterprise"
+  mavenArtifactId="specmatic-enterprise-all"
+/>
+
+---
+
+### [Specmatic Redis](https://specmatic.io/features/api-resiliency-and-contract-testing-for-resp-redis/)
+
+<CommercialDownload
+  imageName="specmatic/specmatic-redis"
+  toolVersion={VERSIONS["specmatic-redis-version"]}
+  jarUrl={`https://repo.specmatic.io/releases/io/specmatic/redis/specmatic-redis-all/${VERSIONS["specmatic-redis-version"]}/specmatic-redis-all-${VERSIONS["specmatic-redis-version"]}.jar`}
+  repoUrl="https://repo.specmatic.io/#releases/io/specmatic/redis/specmatic-redis-all/"
+  installScript="install-specmatic-redis"
+/>
+
+---
+
+### [Specmatic JDBC](https://specmatic.io/features/jdbc-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
+
+Specmatic JDBC needs to be imported as a dependency in your project:
+
+<MavenCoordinates
+  groupId="io.specmatic.jdbc"
+  artifactId="specmatic-jdbc"
+  version={VERSIONS["specmatic-jdbc-version"]}
+/>
+
+---
+
+### [Specmatic JMS](https://specmatic.io/features/jms-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
+
+Specmatic JMS needs to be imported as a dependency in your project:
+
+<MavenCoordinates
+  groupId="io.specmatic.jms"
+  artifactId="specmatic-jms"
+  version={VERSIONS["specmatic-jms-version"]}
+/>
+
+---
+
+### [Specmatic Google Pub/Sub](https://specmatic.io/features/google-pubsub-contract-driven-development-leverage-asyncapi-specs-as-executable-contracts/)
+
+Specmatic Google Pub/Sub needs to be imported as a dependency in your project:
+
+<MavenCoordinates
+  groupId="io.specmatic.googlepubsub"
+  artifactId="specmatic-google-pubsub"
+  version={VERSIONS["specmatic-google-pubsub-version"]}
+/>

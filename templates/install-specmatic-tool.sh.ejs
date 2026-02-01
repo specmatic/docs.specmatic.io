@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+
+latest_tool_version="<%= toolVersion %>"
+download_target="<%= downloadTarget %>"
+download_urls=(<% downloadUrls.forEach((url, index) => { %>
+    "<%= url %>"<% }); %>
+)
+tool_name="<%= toolName %>"
+main_picocli_command="<%= typeof mainPicocliCommand !== 'undefined' ? mainPicocliCommand : '' %>"
+# usage:
+# curl -s <%= siteUrl %>/<%= pageName %> | bash -s -- [--download-dir=<dir>] [--shell=bash|zsh] [--version=<version>]
+
+info() {
+  echo -e "💡 \033[1;34m[INFO]\033[0m $*"
+}
+warn() {
+  echo -e "⚠️  \033[1;33m[WARN]\033[0m $*"
+}
+error() {
+  echo -e "❌ \033[1;31m[ERROR]\033[0m $*"
+}
+
+DOWNLOAD_DIR="~/.specmatic"
+JAR_PATH="${DOWNLOAD_DIR}/$download_target.jar"
+
+DOWNLOAD_DIR_ACTUAL="${DOWNLOAD_DIR/#\~/$HOME}"
+JAR_PATH_ACTUAL="${DOWNLOAD_DIR_ACTUAL}/$download_target.jar"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      echo "Usage: <%= pageName %> [--download-dir=<dir>] [--shell=bash|zsh] [--version=<version>]"
+      echo "  --download-dir: Directory where $download_target.jar will be downloaded (default: ~/.specmatic/)"
+      exit 0
+      ;;
+    --download-dir=*)
+      DOWNLOAD_DIR="${1#*=}"
+      ;;
+    --download-dir)
+      shift
+      DOWNLOAD_DIR="$1"
+      ;;
+    --version=*)
+      tool_version="${1#*=}"
+      ;;
+    --version)
+      shift
+      tool_version="$1"
+      ;;
+    *)
+      echo "Unknown argument: $1"
+      echo "Usage: <%= pageName %> [--download-dir=<dir>] [--shell=bash|zsh] [--version=<version>]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+if [ -z "$tool_version" ]; then
+  tool_version="$latest_tool_version"
+fi
+
+info "Download directory: $DOWNLOAD_DIR"
+
+if command -v wget >/dev/null 2>&1; then
+  DOWNLOADER="wget"
+  DOWNLOADER_ARGS=( --show-progress -qO )
+elif command -v curl >/dev/null 2>&1; then
+  DOWNLOADER="curl"
+  DOWNLOADER_ARGS=( --progress-bar -fLo )
+else
+  error "Neither curl nor wget is available. Please install one to proceed."
+  exit 1
+fi
+
+info "Using downloader: $DOWNLOADER"
+
+
+mkdir -p ${DOWNLOAD_DIR_ACTUAL}
+
+download_success=0
+for original_url in "${download_urls[@]}"; do
+  # Replace placeholder with actual version
+  url="${original_url//$latest_tool_version/$tool_version}"
+  info "Attempting to download $tool_name from $url"
+  if "$DOWNLOADER" "${DOWNLOADER_ARGS[@]}" "$JAR_PATH_ACTUAL" "$url"; then
+    info "Downloaded $tool_name to $JAR_PATH"
+    download_success=1
+    break
+  else
+    warn "Failed to download from $url"
+  fi
+done
+
+if [ "$download_success" -eq 0 ]; then
+  error "All download attempts failed."
+  exit 1
+fi
+
+info "Generating shell completion script..."
+
+if java -jar "$JAR_PATH_ACTUAL" generate-completion > /dev/null 2>&1; then
+  info "Generating completion script using 'generate-completion' command."
+  java -jar "$JAR_PATH_ACTUAL" generate-completion > "$DOWNLOAD_DIR_ACTUAL/$download_target-completion.sh"
+
+else
+  info "Falling back to picocli AutoComplete for generating completion script."
+  java -cp "$JAR_PATH_ACTUAL" picocli.AutoComplete -n $download_target --force -o "$DOWNLOAD_DIR_ACTUAL/$download_target-completion.sh" "$main_picocli_command"
+fi
+
+case "$SHELL" in
+  */bash)
+    SHELL_PROFILE="~/.bashrc"
+    ;;
+  */zsh)
+    SHELL_PROFILE="~/.zshrc"
+    ;;
+  */fish)
+    SHELL_PROFILE="~/.config/fish/config.fish"
+    ;;
+  *)
+    SHELL_PROFILE="~/.profile"
+    ;;
+esac
+
+if ! command -v java >/dev/null 2>&1; then
+  cat <<EOF
+========================================================================
+⚠️ Java is not installed or not found in your PATH.
+
+💡 You can download and install a JRE from one of the following sources:
+
+  🔗 AdoptOpenJDK (Eclipse Temurin): https://adoptium.net/
+  🔗 Oracle JDK: https://www.oracle.com/java/technologies/downloads/
+  🍎 Homebrew (macOS): brew install openjdk@17
+  📦 SDKMAN: https://sdkman.io/jdks
+  🐧 Linux (Debian/Ubuntu): sudo apt-get install openjdk-17-jre
+  🐧 Linux (Fedora): sudo dnf install java-17-openjdk
+
+After installation, ensure 'java' is available in your PATH.
+EOF
+fi
+
+cat <<EOF
+========================================================================
+✅ $tool_name version $tool_version installed successfully in:
+  $JAR_PATH
+
+🔗 To use $tool_name, add the following to your shell profile ($SHELL_PROFILE):
+
+  echo "alias $download_target='java \\\$JAVA_OPTS -jar $JAR_PATH'" >> $SHELL_PROFILE
+  echo "source $DOWNLOAD_DIR/$download_target-completion.sh" >> $SHELL_PROFILE
+
+🔄 Restart your terminal or run:
+  source $SHELL_PROFILE
+
+🚀 You're ready to use $tool_name!
+========================================================================
+EOF

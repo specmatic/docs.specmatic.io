@@ -1,0 +1,160 @@
+---
+title: AWS SQS
+sidebar_position: 5
+---
+# AWS SQS <span className="badge badge--primary" style={{ fontSize: '0.75rem' }}> Commercial </span>
+
+
+## About AWS SQS
+
+Amazon Simple Queue Service (SQS) is a fully managed message queuing service provided by AWS. It enables decoupling of distributed systems by allowing asynchronous communication through reliable, scalable queues. SQS offers two types of queues: Standard (best-effort ordering, at-least-once delivery) and FIFO (strict ordering, exactly-once processing). It includes built-in features like visibility timeouts, dead-letter queues, and message retention, making it ideal for serverless architectures and cloud-native applications.
+
+## Using SQS in AsyncAPI Specifications
+
+To define SQS-based messaging in your AsyncAPI specification, you need to declare a server with the `sqs` protocol and reference it in your channels.
+
+### Server Definition
+
+```yaml
+servers:
+  sqsServer:
+    host: "http://localhost:4566/000000000000"
+    protocol: "sqs"
+    description: "AWS SQS server"
+```
+
+The `host` should include the SQS endpoint URL. For LocalStack (local development), use `http://localhost:4566/000000000000`. For AWS, use the regional endpoint with your account ID.
+
+### Channel Definition
+
+```yaml
+channels:
+  NewOrderPlaced:
+    address: "new-orders"
+    servers:
+      - $ref: "#/servers/sqsServer"
+    messages:
+      placeOrder.message:
+        $ref: "#/components/messages/OrderRequest"
+```
+
+The `address` field specifies the SQS queue name. Reference the SQS server in the `servers` array to indicate this channel uses SQS as the transport protocol.
+
+### Message Headers
+
+SQS supports message attributes for correlation and metadata:
+
+```yaml
+components:
+  messages:
+    OrderRequest:
+      headers:
+        type: "object"
+        properties:
+          orderCorrelationId:
+            type: "string"
+            description: "Unique identifier for the request"
+      payload:
+        type: "object"
+        # ... payload definition
+```
+
+## Running Contract Tests with Specmatic-Async
+
+Specmatic-async enables you to run contract tests against applications using AWS SQS by validating that your service correctly implements the AsyncAPI specification.
+
+For a complete working example of SQS contract testing with Specmatic-Async, refer to the [specmatic-async-sample](https://github.com/specmatic/specmatic-async-sample) project.
+
+### Step 1: Configure specmatic.yaml
+
+Create or update your `specmatic.yaml` file to include the AsyncAPI specification and SQS server configuration:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/spec.yaml
+        specType: asyncapi
+        config:
+          servers:
+            - host: http://localhost:4566/000000000000
+              protocol: sqs
+              adminCredentials:
+                region: us-east-1
+                aws.access.key.id: test
+                aws.secret.access.key: test
+```
+
+### Step 2: Start SQS Infrastructure
+
+Use Docker Compose to start LocalStack with SQS enabled:
+
+```yaml
+services:
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      SERVICES: sqs
+      DEBUG: 0
+
+  localstack-init:
+    image: localstack/localstack:latest
+    depends_on:
+      - localstack
+    entrypoint: /bin/bash
+    command: >
+      -c "
+      echo 'Waiting for LocalStack...';
+      until awslocal sqs list-queues >/dev/null 2>&1; do sleep 2; done;
+      
+      echo 'Creating SQS queues...';
+      awslocal sqs create-queue --queue-name new-orders;
+      awslocal sqs create-queue --queue-name wip-orders;
+      awslocal sqs create-queue --queue-name to-be-cancelled-orders;
+      awslocal sqs create-queue --queue-name cancelled-orders;
+      
+      echo 'SQS queues created';
+      "
+```
+
+Start the infrastructure:
+
+```bash
+docker compose up -d
+```
+
+### Step 3: Run Your Application
+
+Start your application that implements the AsyncAPI specification. The application should be configured to connect to the SQS service and listen on the queues defined in your contract.
+
+### Step 4: Run Contract Tests
+
+Execute the contract tests using the Specmatic Docker image:
+
+```bash
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/enterprise test
+```
+
+Specmatic-async will:
+1. Read the AsyncAPI specification and identify SQS channels
+2. Connect to the configured SQS endpoint
+3. Send test messages to your application's input queues
+4. Validate that your application sends correct responses to output queues
+5. Verify that message payloads, headers, and correlation IDs conform to the contract
+
+### Step 5: Review Test Results
+
+Check the test output for detailed validation results, including any contract violations or failures.
+
+## Tips for SQS Testing
+
+- **LocalStack for Development**: Use LocalStack to simulate SQS locally without AWS costs
+- **Visibility Timeout**: Configure appropriate visibility timeouts to handle message processing time
+- **Dead Letter Queues**: Set up DLQs for handling failed messages during testing
+- **IAM Credentials**: Never commit AWS credentials to version control; use environment variables or IAM roles
+- **Message Attributes**: Use SQS message attributes for correlation IDs rather than embedding them in the payload
+- **Polling Strategy**: Consider long polling for better efficiency in tests
+- **FIFO Queues**: Use FIFO queues if message ordering or exactly-once processing is required

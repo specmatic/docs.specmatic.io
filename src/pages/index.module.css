@@ -1,0 +1,35 @@
+.home {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.hero h1 {
+  font-size: 2.3rem;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+}
+
+.block {
+  margin-bottom: 3rem;
+}
+
+.block h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.block p {
+  max-width: 700px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+ul {
+  padding-left: 1.2rem;
+}

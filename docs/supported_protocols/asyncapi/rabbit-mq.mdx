@@ -1,0 +1,198 @@
+---
+title: RabbitMQ
+sidebar_position: 3
+---
+# RabbitMQ <span className="badge badge--primary" style={{ fontSize: '0.75rem' }}> Commercial </span>
+
+
+## About RabbitMQ
+
+RabbitMQ is a widely-used open-source message broker that implements the Advanced Message Queuing Protocol (AMQP). It enables applications to communicate through queues, exchanges, and bindings, providing flexible message routing patterns including direct, topic, fanout, and headers exchanges. RabbitMQ offers features like message persistence, clustering, high availability, and a management UI. It's particularly well-suited for enterprise messaging, microservices communication, and distributed system coordination.
+
+## Using RabbitMQ in AsyncAPI Specifications
+
+RabbitMQ uses the AMQP protocol in AsyncAPI specifications. To define RabbitMQ-based messaging, declare a server with the `amqp` protocol and reference it in your channels.
+
+### Server Definition
+
+```yaml
+servers:
+  amqpServer:
+    host: "amqp://localhost:5672"
+    protocol: "amqp"
+    description: "RabbitMQ AMQP server"
+```
+
+The `host` should point to your RabbitMQ broker. Use `amqp://` for standard connections or `amqps://` for TLS-encrypted connections.
+
+### Channel Definition
+
+```yaml
+channels:
+  NewOrderPlaced:
+    address: "new-orders"
+    servers:
+      - $ref: "#/servers/amqpServer"
+    messages:
+      placeOrder.message:
+        $ref: "#/components/messages/OrderRequest"
+```
+
+The `address` field specifies the RabbitMQ queue or exchange name. You can use exchanges with routing keys for advanced routing patterns.
+
+### Message Headers
+
+RabbitMQ supports comprehensive message headers through AMQP:
+
+```yaml
+components:
+  messages:
+    OrderRequest:
+      headers:
+        type: "object"
+        properties:
+          orderCorrelationId:
+            type: "string"
+            description: "Unique identifier for the request"
+        additionalProperties: true
+      payload:
+        type: "object"
+        # ... payload definition
+```
+
+## Running Contract Tests with Specmatic-Async
+
+Specmatic-async enables you to run contract tests against applications using RabbitMQ by validating that your service correctly implements the AsyncAPI specification.
+
+For a complete working example of RabbitMQ contract testing with Specmatic-Async, refer to the [specmatic-async-sample](https://github.com/specmatic/specmatic-async-sample) project.
+
+### Step 1: Configure specmatic.yaml
+
+Create or update your `specmatic.yaml` file to include the AsyncAPI specification:
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - specs:
+          - spec/spec.yaml
+        specType: asyncapi
+```
+
+### Step 2: Start RabbitMQ Infrastructure
+
+Use Docker Compose to start RabbitMQ with management plugin:
+
+```yaml
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"      # AMQP port
+      - "15672:15672"    # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  rabbitmq-init:
+    image: curlimages/curl:latest
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      echo 'Waiting for RabbitMQ Management API...';
+      until curl -s -u guest:guest http://localhost:15672/api/overview >/dev/null 2>&1; do sleep 2; done;
+      
+      echo 'Creating RabbitMQ queues...';
+      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/new-orders 
+           -H 'content-type: application/json' -d '{\"durable\":true}';
+      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/wip-orders 
+           -H 'content-type: application/json' -d '{\"durable\":true}';
+      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/to-be-cancelled-orders 
+           -H 'content-type: application/json' -d '{\"durable\":true}';
+      curl -u guest:guest -X PUT http://localhost:15672/api/queues/%2F/cancelled-orders 
+           -H 'content-type: application/json' -d '{\"durable\":true}';
+      
+      echo 'RabbitMQ queues created successfully!';
+      "
+```
+
+Start the infrastructure:
+
+```bash
+docker compose up -d
+```
+
+### Step 3: Run Your Application
+
+Start your application that implements the AsyncAPI specification. The application should be configured to connect to the RabbitMQ broker and listen on the appropriate queues defined in your contract.
+
+### Step 4: Run Contract Tests
+
+Execute the contract tests using the Specmatic Docker image:
+
+```bash
+docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/enterprise test
+```
+
+Specmatic-async will:
+1. Read the AsyncAPI specification and identify RabbitMQ channels
+2. Connect to the configured RabbitMQ broker
+3. Send test messages to your application's input queues
+4. Validate that your application sends correct responses to output queues
+5. Verify that message payloads, headers, and correlation IDs conform to the contract
+
+### Step 5: Review Test Results
+
+Check the test output for detailed validation results, including any contract violations or failures.
+
+## RabbitMQ-Specific Features
+
+### Exchange Types
+
+RabbitMQ supports multiple exchange types for flexible routing:
+
+- **Direct Exchange**: Routes messages to queues based on exact routing key match
+- **Topic Exchange**: Routes messages using pattern matching on routing keys (e.g., `orders.*`, `orders.#`)
+- **Fanout Exchange**: Broadcasts messages to all bound queues
+- **Headers Exchange**: Routes based on message header attributes
+
+### Advanced Configuration
+
+```yaml
+# Example: Using topic exchange with routing patterns
+services:
+  rabbitmq-init:
+    command: >
+      -c "
+      # Create exchange
+      curl -u guest:guest -X PUT http://localhost:15672/api/exchanges/%2F/orders-exchange 
+           -H 'content-type: application/json' -d '{\"type\":\"topic\",\"durable\":true}';
+      
+      # Create binding with routing key
+      curl -u guest:guest -X POST http://localhost:15672/api/bindings/%2F/e/orders-exchange/q/new-orders 
+           -H 'content-type: application/json' -d '{\"routing_key\":\"orders.new\"}';
+      "
+```
+
+## Tips for RabbitMQ Testing
+
+- **Management UI**: Access the RabbitMQ management console at `http://localhost:15672` (guest/guest) to monitor queues, exchanges, and bindings
+- **Queue Declaration**: Ensure queues are created before starting the application or use auto-declaration features in your client library
+- **Durable Queues**: Use durable queues to persist messages across broker restarts
+- **Message Acknowledgments**: Configure manual acknowledgments for reliable message processing and redelivery
+- **Prefetch Count**: Set consumer prefetch to control how many messages are delivered to consumers at once
+- **Dead Letter Exchanges**: Configure DLX to handle failed or rejected messages
+- **Virtual Hosts**: Use virtual hosts to logically separate environments (dev, test, prod)
+- **Connection Recovery**: Enable automatic connection recovery in your client library for resilient connections
+- **Message Priority**: Use priority queues when message ordering by priority is required
+- **Publisher Confirms**: Enable publisher confirms for guaranteed message delivery to the broker
+- **Clustering**: Use RabbitMQ clustering for high availability in production-like tests
