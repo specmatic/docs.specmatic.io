@@ -64,38 +64,36 @@ jobs:
           exit 1
         fi
 
-    - name: Bump version and commit
-      env:
-        PRODUCT_NAME: ${{ github.event.inputs.product-name }}
-        PRODUCT_VERSION: ${{ github.event.inputs.product-version }}
-      run: |
-        set -euo pipefail
-        CONFIG_KEY="${PRODUCT_NAME}-version"
+    - name: Bump versions.ts and commit
+        env:
+          PRODUCT_NAME: ${{ github.event.inputs.product-name }}
+          PRODUCT_VERSION: ${{ github.event.inputs.product-version }}
+        run: |
+          set -euo pipefail
 
-        echo "Bumping ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
-        awk -v key="$CONFIG_KEY" -v ver="$PRODUCT_VERSION" \
-          '$1 == key ":" { $0 = key ": " ver; found=1 } 1; END { if (!found) exit 1 }' \
-          _config.yml > _config.yml.tmp
+          FILE="src/constants/versions.ts"
 
-        # Check if awk succeeded
-        if [[ $? -ne 0 ]]; then
-          echo "ERROR: Config key '${CONFIG_KEY}' not found in _config.yml" >&2
-          rm -f _config.yml.tmp
-          exit 1
-        fi
+          if [[ ! -f "$FILE" ]]; then
+            echo "ERROR: ${FILE} not found" >&2
+            exit 1
+          fi
 
-        # Move and verify the update
-        mv _config.yml.tmp _config.yml
-        if ! grep -qF "${CONFIG_KEY}: ${PRODUCT_VERSION}" _config.yml; then
-          echo "ERROR: Failed to update version in _config.yml" >&2
-          exit 1
-        fi
+          CONFIG_KEY="${PRODUCT_NAME}-version"
 
-        git add _config.yml
-        if ! git diff --cached --quiet; then
-          git commit -m "Updated ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
-          git push
-          echo "Updated ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
-        else
-          echo "No changes to commit, version is already up to date."
-        fi
+          echo "Bumping ${CONFIG_KEY} version to ${PRODUCT_VERSION} in ${FILE}"
+
+          perl -0777 -pe "s/(\"$CONFIG_KEY\"\\s*:\\s*\")([^\"]+)(\")/\$1$PRODUCT_VERSION\$3/g" "$FILE" > "$FILE.tmp"
+
+          if ! grep -q "\"${CONFIG_KEY}\"" "$FILE.tmp"; then
+            echo "ERROR: Config key '${CONFIG_KEY}' not found in ${FILE}" >&2
+            rm -f "$FILE.tmp"
+            exit 1
+          fi
+
+          if ! grep -q "\"${CONFIG_KEY}\".*\"${PRODUCT_VERSION}\"" "$FILE.tmp"; then
+            echo "ERROR: Failed to update version for '${CONFIG_KEY}' in ${FILE}" >&2
+            rm -f "$FILE.tmp"
+            exit 1
+          fi
+
+          mv "$FILE.tmp" "$FILE"
