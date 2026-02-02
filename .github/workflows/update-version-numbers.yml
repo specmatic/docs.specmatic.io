@@ -97,3 +97,13 @@ jobs:
           fi
 
           mv "$FILE.tmp" "$FILE"
+
+          git add "$FILE"
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Updated ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
+            git push
+            echo "Updated ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
+          else
+            echo "No changes to commit, version is already up to date."
+          fi
