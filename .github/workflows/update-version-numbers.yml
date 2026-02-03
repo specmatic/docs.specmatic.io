@@ -73,31 +73,37 @@ jobs:
           set -euo pipefail
 
           FILE="src/constants/versions.ts"
+          CONFIG_KEY="${PRODUCT_NAME}-version"
 
           if [[ ! -f "$FILE" ]]; then
             echo "ERROR: ${FILE} not found" >&2
             exit 1
           fi
 
-          CONFIG_KEY="${PRODUCT_NAME}-version"
-
           echo "Bumping ${CONFIG_KEY} version to ${PRODUCT_VERSION} in ${FILE}"
 
-          perl -0777 -pe "s/(\"$CONFIG_KEY\"\\s*:\\s*\")([^\"]+)(\")/\$1$PRODUCT_VERSION\$3/g" "$FILE" > "$FILE.tmp"
+          awk -v key="$CONFIG_KEY" -v ver="$PRODUCT_VERSION" '
+            BEGIN { found=0 }
+            $0 ~ "\""key"\"" {
+              sub(/"[0-9A-Za-z\.\-]+"/, "\"" ver "\"")
+              found=1
+            }
+            { print }
+            END { if (!found) exit 1 }
+          ' "$FILE" > "$FILE.tmp"
 
-          if ! grep -q "\"${CONFIG_KEY}\"" "$FILE.tmp"; then
+          if [[ $? -ne 0 ]]; then
             echo "ERROR: Config key '${CONFIG_KEY}' not found in ${FILE}" >&2
             rm -f "$FILE.tmp"
             exit 1
           fi
 
-          if ! grep -q "\"${CONFIG_KEY}\".*\"${PRODUCT_VERSION}\"" "$FILE.tmp"; then
+          mv "$FILE.tmp" "$FILE"
+
+          if ! grep -q "\"${CONFIG_KEY}\".*\"${PRODUCT_VERSION}\"" "$FILE"; then
             echo "ERROR: Failed to update version for '${CONFIG_KEY}' in ${FILE}" >&2
-            rm -f "$FILE.tmp"
             exit 1
           fi
-
-          mv "$FILE.tmp" "$FILE"
 
           git add "$FILE"
 
@@ -108,3 +114,4 @@ jobs:
           else
             echo "No changes to commit, version is already up to date."
           fi
+
