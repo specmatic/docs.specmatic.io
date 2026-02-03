@@ -38,53 +38,53 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout documentation repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          ref: main
-          token: "${{ secrets.SPECMATIC_GITHUB_TOKEN }}"
+    - name: Checkout documentation repository
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+        ref: main
+        token: "${{ secrets.SPECMATIC_GITHUB_TOKEN }}"
 
-      - name: Configure git cli
-        run: |
-          git config --global user.email "github-service-account@specmatic.io"
-          git config --global user.name "Specmatic GitHub Service Account"
+    - name: Configure git cli
+      run: |
+        git config --global user.email "github-service-account@specmatic.io"
+        git config --global user.name "Specmatic GitHub Service Account"
 
-      - name: Validate version format
-        env:
-          PRODUCT_NAME: ${{ github.event.inputs.product-name }}
-          PRODUCT_VERSION: ${{ github.event.inputs.product-version }}
-        run: |
-          if [[ -z "${PRODUCT_NAME}" ]] || [[ -z "${PRODUCT_VERSION}" ]]; then
-            echo "ERROR: Product name or version is empty" >&2
-            exit 1
-          fi
+    - name: Validate version format
+      env:
+        PRODUCT_NAME: ${{ github.event.inputs.product-name }}
+        PRODUCT_VERSION: ${{ github.event.inputs.product-version }}
+      run: |
+        if [[ -z "${PRODUCT_NAME}" ]] || [[ -z "${PRODUCT_VERSION}" ]]; then
+          echo "ERROR: Product name or version is empty" >&2
+          exit 1
+        fi
 
-          if [[ ! "${PRODUCT_VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
-            echo "ERROR: Invalid version format. Expected: X.Y.Z or X.Y.Z-suffix"
-            exit 1
-          fi
+        if [[ ! "${PRODUCT_VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
+          echo "ERROR: Invalid version format. Expected: X.Y.Z or X.Y.Z-suffix"
+          exit 1
+        fi
 
-      - name: Bump versions.ts and commit
-        env:
-          PRODUCT_NAME: ${{ github.event.inputs.product-name }}
-          PRODUCT_VERSION: ${{ github.event.inputs.product-version }}
-        run: |
-          set -euo pipefail
+    - name: Bump versions.ts and commit
+      env:
+        PRODUCT_NAME: ${{ github.event.inputs.product-name }}
+        PRODUCT_VERSION: ${{ github.event.inputs.product-version }}
+      run: |
+        set -euo pipefail
 
-          FILE="src/constants/specmatic-versions.json"
+        FILE="src/constants/specmatic-versions.json"
 
-          echo "Bumping ${PRODUCT_NAME} version to ${PRODUCT_VERSION} in ${FILE}"
+        echo "Bumping ${PRODUCT_NAME} version to ${PRODUCT_VERSION} in ${FILE}"
 
-          node scripts/bump-version.js "$PRODUCT_NAME" "$PRODUCT_VERSION"
+        node scripts/bump-version.js "$PRODUCT_NAME" "$PRODUCT_VERSION"
           
-          git add "$FILE"
+        git add "$FILE"
 
-          if ! git diff --cached --quiet; then
-            git commit -m "Updated ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
-            git push
-            echo "Updated ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
-          else
-            echo "No changes to commit, version is already up to date."
-          fi
+        if ! git diff --cached --quiet; then
+          git commit -m "Updated ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
+          git push
+          echo "Updated ${PRODUCT_NAME} version to ${PRODUCT_VERSION}"
+        else
+          echo "No changes to commit, version is already up to date."
+        fi
 
