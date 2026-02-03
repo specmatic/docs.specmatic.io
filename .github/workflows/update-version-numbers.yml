@@ -72,39 +72,12 @@ jobs:
         run: |
           set -euo pipefail
 
-          FILE="src/constants/versions.ts"
-          CONFIG_KEY="${PRODUCT_NAME}-version"
-
-          if [[ ! -f "$FILE" ]]; then
-            echo "ERROR: ${FILE} not found" >&2
-            exit 1
-          fi
+          FILE="src/constants/specmatic-versions.json"
 
           echo "Bumping ${CONFIG_KEY} version to ${PRODUCT_VERSION} in ${FILE}"
 
-          awk -v key="$CONFIG_KEY" -v ver="$PRODUCT_VERSION" '
-            BEGIN { found=0 }
-            $0 ~ "\""key"\"" {
-              sub(/"[0-9A-Za-z\.\-]+"/, "\"" ver "\"")
-              found=1
-            }
-            { print }
-            END { if (!found) exit 1 }
-          ' "$FILE" > "$FILE.tmp"
-
-          if [[ $? -ne 0 ]]; then
-            echo "ERROR: Config key '${CONFIG_KEY}' not found in ${FILE}" >&2
-            rm -f "$FILE.tmp"
-            exit 1
-          fi
-
-          mv "$FILE.tmp" "$FILE"
-
-          if ! grep -q "\"${CONFIG_KEY}\".*\"${PRODUCT_VERSION}\"" "$FILE"; then
-            echo "ERROR: Failed to update version for '${CONFIG_KEY}' in ${FILE}" >&2
-            exit 1
-          fi
-
+          node scripts/bump-version.js "$PRODUCT_NAME" "$PRODUCT_VERSION"
+          
           git add "$FILE"
 
           if ! git diff --cached --quiet; then
