@@ -74,7 +74,7 @@ jobs:
 
           FILE="src/constants/specmatic-versions.json"
 
-          echo "Bumping ${CONFIG_KEY} version to ${PRODUCT_VERSION} in ${FILE}"
+          echo "Bumping ${PRODUCT_NAME} version to ${PRODUCT_VERSION} in ${FILE}"
 
           node scripts/bump-version.js "$PRODUCT_NAME" "$PRODUCT_VERSION"
           
