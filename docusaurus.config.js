@@ -31,7 +31,7 @@ const specmaticEnterprise = {
   downloadUrls: [
     // this link is disabled until we have a release version
     // `https://central.sonatype.com/repository/maven-snapshots/io/specmatic/enterprise/executable-all/${VERSIONS['specmatic-enterprise-version']}/executable-all-20260204.083203-8.jar`,
-    `https://repo.specmatic.io/snapshots/io/specmatic/enterprise/executable-all/${VERSIONS['specmatic-enterprise-version']}/executable-all-0.99-20260204.083203-8.jar`,
+    `https://repo.specmatic.io/snapshots/io/specmatic/enterprise/executable-all/${VERSIONS['specmatic-enterprise-version']}/executable-all-0.99-20260204.144137-10.jar`,
   ]
 }
 
