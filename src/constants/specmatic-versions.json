@@ -7,7 +7,7 @@
   "specmatic-openapi-version": "1.25.3",
   "specmatic-jdbc-version": "0.12.2",
   "specmatic-redis-version": "0.9.6",
-  "specmatic-grpc-version": "1.3.5",
+  "specmatic-grpc-version": "0.1.29",
   "specmatic-graphql-version": "1.3.5",
   "specmatic-arazzo-version": "1.6.3",
   "specmatic-google-pubsub-version": "0.6.1",
