@@ -29,8 +29,8 @@ const specmaticEnterprise = {
   siteUrl: "https://docs.specmatic.io",
   pageName: "install-specmatic-enterprise.sh",
   downloadUrls: [
-    `https://repo1.maven.org/maven2/io/specmatic/enterprise/specmatic-enterprise-all/${VERSIONS['specmatic-enterprise-version']}/specmatic-enterprise-all-${VERSIONS['specmatic-enterprise-version']}.jar`,
-    `https://repo.specmatic.io/releases/io/specmatic/enterprise/specmatic-enterprise-all/${VERSIONS['specmatic-enterprise-version']}/specmatic-enterprise-all-${VERSIONS['specmatic-enterprise-version']}.jar`,
+    `https://central.sonatype.com/repository/maven-snapshots/io/specmatic/enterprise/specmatic-enterprise-all/${VERSIONS['specmatic-enterprise-version']}/specmatic-enterprise-all-${VERSIONS['specmatic-enterprise-version']}.jar`,
+    `https://repo.specmatic.io/snapshots/io/specmatic/enterprise/specmatic-enterprise-all/${VERSIONS['specmatic-enterprise-version']}/specmatic-enterprise-all-${VERSIONS['specmatic-enterprise-version']}.jar`,
   ]
 }
 
