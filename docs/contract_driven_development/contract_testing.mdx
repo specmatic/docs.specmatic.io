@@ -212,7 +212,7 @@ specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
 Note: Since the folder is named `employees_examples` and colocated with the spec file `employees.yaml`, by convention it is automatically picked up. However, if your folder has different name and / or located in another path, you can explicitly pass that folder as a parameter using the `--examples` CLI Argument (Please run `specmatic test --help` to learn more).
@@ -228,7 +228,7 @@ The complete test data format can be referred to [here](/features/external_examp
 Instead of creating the above example JSONs by hand, you can also generate the example JSONs using the `examples` command:
 
 ```bash
-docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/specmatic-openapi examples generate employees.yaml
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise examples generate employees.yaml
 ```
 
 In the above case, example JSON files will be written into the directory named `employees_examples`. You can then update the files to suit your needs and use them.
@@ -244,7 +244,7 @@ specmatic test --testBaseURL https://my-json-server.typicode.com --strict employ
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com --strict employees.yaml
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com --strict employees.yaml
 ```
 
 ### Boundary Condition Testing
@@ -262,7 +262,7 @@ specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
 ```
 
 Earlier for the same input we saw 4 tests and all of which were successful. This time around you will see a total of 26 tests, of which 21 are failures.
@@ -305,7 +305,7 @@ java -jar /path/to/specmatic.jar --testBaseURL https://my-json-server.typicode.c
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/enterprise examples generate employees.yaml
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise examples generate employees.yaml
 ```
 
 The command will create JUnit test XML output in the specified directory which you can then include as part of CI pipeline results etc.

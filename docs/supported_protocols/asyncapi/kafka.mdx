@@ -83,7 +83,7 @@ Please refer to [Specmatic documentation](/references/configuration) for more de
 Now we can run below command to spin a Kafka mock server. Please note the volume mapping to pass the specmatic.yaml to the Kafka Docker image and also the port mappings.
 
 ```shell
-docker run -p 9092:9092 -p 2181:2181 -p 29092:29092 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic-kafka
+docker run -p 9092:9092 -p 2181:2181 -p 29092:29092 -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/enterprise
 ```
 This should produce logs that shows that Specmatic Kafka server has started and listening on topics.
 
