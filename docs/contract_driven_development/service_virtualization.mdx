@@ -102,7 +102,7 @@ npx specmatic stub
 
   <TabItem value="docker" label="docker">
 ```shell
-docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic stub
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub
 ```
   </TabItem>
 
@@ -203,7 +203,7 @@ Let's see how this is done.
 
 - Run the `examples` command:<br/><br/>
 ```shell
-docker run -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" specmatic/enterprise examples generate employees.yaml
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise examples generate employees.yaml
 ```
 - It generates a request-response mapping JSON file in the `employees_examples` directory containing an example of the API in the spec.
   - The directory name follows the format `<spec file name without extension>_examples`.
@@ -419,7 +419,7 @@ npx specmatic stub --strict
 
   <TabItem value="docker" label="docker">
 ```shell
-docker run -p 9000:9000 -v "${PWD}/employees.yaml:/usr/src/app/employees.yaml" -v "${PWD}/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic stub --strict
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub --strict
 ```
   </TabItem>
 
@@ -2125,7 +2125,7 @@ npx specmatic stub
 
   <TabItem value="docker" label="docker">
 ```shell
-docker run -p 9000:9000 -p 9001:9001 -v "$(pwd)/imported_product:/usr/src/app/imported_product" -v "$(pwd)/exported_product:/usr/src/app/exported_product" -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" specmatic/specmatic stub
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub
 ```
   </TabItem>
 

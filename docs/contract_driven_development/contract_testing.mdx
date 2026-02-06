@@ -159,7 +159,7 @@ specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run specmatic/specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
 ```
 
 The results should end with below text.
@@ -459,7 +459,7 @@ java -jar /path/to/specmatic.jar --testBaseURL https://my-json-server.typicode.c
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run specmatic/specmatic --testBaseURL https://my-json-server.typicode.com
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic --testBaseURL https://my-json-server.typicode.com
 ```
 Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
