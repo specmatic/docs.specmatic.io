@@ -500,7 +500,7 @@ Create a file named `employees_dictionary.yaml` in the same directory as your `e
 
 After setting up, we can execute the `examples dictionary` command using the `specmatic/enterprise` Docker image and provide the path to our `employees.yaml` file as shown below:
 ```shell
-docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_examples:/usr/src/app/employees_examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/enterprise examples dictionary --spec-file employees.yaml
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise examples dictionary --spec-file employees.yaml
 ```
 
 ### Understanding the Dictionary
@@ -547,7 +547,7 @@ the command will include only valid values in the dictionary, allowing it to be 
 If you have examples in some other existing directory, you could provide the path to that directory using the `--examples-dir` option as shown below:
 
 ```shell
-docker run --rm -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/examples:/usr/src/app/examples" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/enterprise examples dictionary --spec-file employees.yaml --examples-dir ./examples
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise examples dictionary --spec-file employees.yaml --examples-dir ./examples
 ```
 
 ## Dictionary with Contract Testing
@@ -576,7 +576,7 @@ npx specmatic stub employees.yaml
 
 <TabItem value="test-docker" label="Docker">
 ```shell
-docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic stub "employees.yaml"
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub "employees.yaml"
 ```
 </TabItem>
 
@@ -600,7 +600,7 @@ npx specmatic test employees.yaml
 
 <TabItem value="test-run-docker" label="Docker">
 ```shell
-docker run --rm --network host -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic test "employees.yaml"
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic test employees.yaml
 ```
 </TabItem>
 
@@ -666,7 +666,7 @@ npx specmatic stub employees.yaml
 
 <TabItem value="stub-docker" label="Docker">
 ```shell
-docker run --rm -p 9000:9000 -v "$(pwd)/employees.yaml:/usr/src/app/employees.yaml" -v "$(pwd)/employees_dictionary.yaml:/usr/src/app/employees_dictionary.yaml" specmatic/specmatic stub "employees.yaml"
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub "employees.yaml"
 ```
 </TabItem>
 

@@ -98,7 +98,7 @@ To start the GUI execute below command,
   <TabItem value="docker" label="docker">
 
 ```shell
-docker run --rm -v "$(pwd):/specs" -p "9001:9001" specmatic/enterprise examples interactive --spec-file /specs/employee_details.yaml
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise examples interactive --spec-file "employee_details.yaml"
 ```
 
   </TabItem>
@@ -191,7 +191,7 @@ While you have done the validation in Interactive Examples GUI, You can also run
   <TabItem value="docker" label="docker">
 
 ```shell
-docker run -v "$(pwd)/:/specs" specmatic/specmatic examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic examples validate --spec-file "employee_details.yaml"
 ```
 
   </TabItem>
@@ -337,7 +337,7 @@ npx specmatic stub employee_details.yaml
   <TabItem value="docker" label="docker">
 
 ```shell
-docker run --rm -p 9000:9000 -v "$(pwd)/employee_details.yaml:/usr/src/app/employee_details.yaml" -v "$(pwd)/employee_details_examples:/usr/src/app/employee_details_examples" -v "$(pwd)/employee_details_dictionary.yaml:/usr/src/app/employee_details_dictionary.yaml" specmatic/specmatic stub "employee_details.yaml"
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub "employee_details.yaml"
 ```
 
   </TabItem>
@@ -495,7 +495,7 @@ Use following command to detect such competing requests in examples.
   <TabItem value="docker" label="docker">
 
 ```shell
-docker run -v "$(pwd)/:/specs" specmatic/enterprise examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise examples validate --spec-file "employee_details.yaml"
 ```
 
   </TabItem>
@@ -661,7 +661,7 @@ Use following command to detect such competing requests in examples.
   <TabItem value="docker" label="docker">
 
 ```shell
-docker run -v "$(pwd)/:/specs" specmatic/enterprise examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise examples validate --spec-file "employee_details.yaml"
 ```
 
   </TabItem>
@@ -862,7 +862,7 @@ Use following command to detect such competing requests in examples.
   <TabItem value="docker" label="docker">
 
 ```shell
-docker run -v "$(pwd)/:/specs" specmatic/enterprise examples validate --spec-file "/specs/employee_details.yaml"
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise examples validate --spec-file "employee_details.yaml"
 ```
 
   </TabItem>

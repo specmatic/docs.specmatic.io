@@ -443,13 +443,13 @@ To spin up a stub server with the service.yaml we authored earlier, run the comm
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd)/:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
+docker run -v "$(pwd):/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%/:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
+docker run -v "%cd%:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
 ```
 
   </TabItem>
@@ -493,13 +493,13 @@ Press Ctrl + C to stop.
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd)/:/specs" -p 9000:9002 specmatic/specmatic stub "/specs/service.yaml" --port 9002
+docker run -v "$(pwd):/specs" -p 9000:9002 specmatic/specmatic stub "/specs/service.yaml" --port 9002
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%/:/specs" -p 9000:9002 specmatic/specmatic stub "/specs/service.yaml" --port 9002
+docker run -v "%cd%:/specs" -p 9000:9002 specmatic/specmatic stub "/specs/service.yaml" --port 9002
 ```
 
 Note that the `-p 9000:9002` tells Docker to map the port `9000` **outside** the container to port `9002` **inside** the container, So the Specmatic stub (running **inside** the container) has to be started on port `9002`, and this is done by passing the parameter `--port 9002` to Specmatic.
@@ -630,13 +630,13 @@ Now let us run the stub command again.
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd)/:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
+docker run -v "$(pwd):/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%/:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
+docker run -v "%cd%:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
 ```
 
   </TabItem>
@@ -696,13 +696,13 @@ Specmatic validates this externalised stub JSON file `togo.json` against the `se
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd)/:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
+docker run -v "$(pwd):/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%/:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
+docker run -v "%cd%:/specs" -p 9000:9000 specmatic/specmatic stub "/specs/service.yaml"
 ```
 
   </TabItem>
