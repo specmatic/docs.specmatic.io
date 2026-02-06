@@ -281,6 +281,38 @@ Proto 3 dropped required fields. Please see [GitHub discussion](https://github.c
 Thereby it is hard to communicate constraints such as `required`, ranges (`gte`, `lte`, etc.).
 So Specmatic gRPC support is designed to use add on validation mechanisms like [protovalidate](https://github.com/bufbuild/protovalidate). Please refer to our sample projects section below for more details on how this is being used.
 
+## Configuring Request Timeout
+By default, Specmatic gRPC uses a request timeout of 5 seconds for contract testing. This means for a given request if it takes longer than 5 seconds to receive a response, Specmatic will consider it as a failure.
+
+You would see a similar error in the logs:
+
+```logs
+[Specmatic gRPC] Received response:
+{"errorCode":4,"errorMessage":"DEADLINE_EXCEEDED: CallOptions deadline exceeded after 2.997609209s. Name resolution delay 0.000000000 seconds. [closed=[], open=[[buffered_nanos=47597125, remote_addr=10.211.55.5/10.211.55.5:9000]]]"}
+
+[Specmatic gRPC] Result: FAILED
+```
+
+In such cases, you should increase the `requestTimeout`. You can specify this in the Specmatic config as follows:
+
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://your-central-contract-repo.com
+    provides:
+      - specs:
+          - path/to/your/grpc/proto/file/spec.proto
+        specType: protobuf
+        config:
+          host: localhost
+          port: 9090
+          importPaths: # List of paths to resolve imports from, for example if your proto file imports other proto files from a different directory then you can specify the path to that directory here
+            - ../
+          protocVersion: 3.23.4
+          requestTimeout: 5000 # Duration in milliseconds to wait for a response before timing out. Default is 5000 ms (5 seconds).
+```
+
 ## Sample Projects
 
 We have created sample projects to demonstrate how to use Specmatic with gRPC in different languages and scenarios, please follow the link for the latest sample projects
