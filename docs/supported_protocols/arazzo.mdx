@@ -182,7 +182,7 @@ In Specmatic Studio, you can start a mock workflow session to simulate end-to-en
 You can also run workflow mocking through the CLI using the mock command from the Specmatic-Arazzo Docker image:
 
 ```shell
-docker run -v "$(pwd):/usr/src/app" specmatic/enterprise mock --spec-file "<workflow.arazzo.yaml>"
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock --spec-file "<workflow.arazzo.yaml>"
 ```
 
 ## Sample Projects

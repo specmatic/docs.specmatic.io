@@ -80,8 +80,7 @@ type Product {
 Run the following command to start the GraphQL stub:
 
 ```bash
-docker run -v "$PWD:/sandbox" -p 9000:9000 \
- specmatic/enterprise virtualize /sandbox/product-api.graphql
+docker run --network host -v "$(pwd):/sandbox" specmatic/enterprise mock /sandbox/product-api.graphql
 ```
 
 That's it! You now have a GraphQL stub server running on `localhost:9000/graphql` serving the schema defined in `product-api.graphql`.
@@ -156,8 +155,7 @@ response: [
 Run the following command to start the GraphQL stub:
 
 ```bash
-docker run -v "$PWD:/spec" -p 9000:9000 \
-  specmatic/enterprise virtualize /spec/product-api.graphql
+docker run --network host -v "$(pwd):/spec" specmatic/enterprise mock /spec/product-api.graphql
 ```
 
 **Step 3: Make a request to the stub server**
@@ -392,10 +390,7 @@ Here are some simple steps to try this out:
 
 **5.** Run the following command to start the GraphQL stub on `localhost:9000/graphql`:
    ```bash
-   docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
-     -v "$PWD/examples:/usr/src/app/examples" \
-     -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-      -p 9000:9000 specmatic/enterprise virtualize --port=9000 --examples=examples
+   docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock --port=9000 --examples=examples
    ```
 
 **6.** Make a request to query all the sub-selected fields specified in the example. You will get the exact response specified in the example. Use the following `curl` command to make this request:
@@ -551,10 +546,7 @@ To showcase this, let's reuse the folder structure established in the previous s
 
 4. **Run the GraphQL Stub**:
    ```bash
-   docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
-     -v "$PWD/examples:/usr/src/app/examples" \
-     -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-      -p 9000:9000 specmatic/enterprise virtualize --port=9000 --examples=examples
+   docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock --port=9000 --examples=examples
    ```
 
 5. **Send a Multi-Query Request**:
@@ -700,10 +692,7 @@ Let's see how it works using the same product-related GraphQL spec and example f
 
 4. **Run the GraphQL Stub**:
    ```bash
-   docker run -v "$PWD/product-api.graphql:/usr/src/app/product-api.graphql" \
-     -v "$PWD/examples:/usr/src/app/examples" \
-     -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-      -p 9000:9000 specmatic/enterprise virtualize --port=9000 --examples=examples
+   docker run -v "$(pwd):/usr/src/app" specmatic/enterprise mock --port=9000 --examples=examples
    ```
 
 5. **Send a Multi-Field Request Using Aliases**:

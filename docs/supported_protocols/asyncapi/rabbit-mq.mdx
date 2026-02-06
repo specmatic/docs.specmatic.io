@@ -140,7 +140,7 @@ Start your application that implements the AsyncAPI specification. The applicati
 Execute the contract tests using the Specmatic Docker image:
 
 ```bash
-docker run --network host -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" -v "$PWD/spec:/usr/src/app/spec" specmatic/enterprise test
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
 ```
 
 Specmatic-async will:

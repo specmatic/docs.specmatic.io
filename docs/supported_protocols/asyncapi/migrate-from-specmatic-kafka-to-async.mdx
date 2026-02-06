@@ -1,12 +1,12 @@
 ---
-title: Migrating to specmatic-async
+title: Migrating to Specmatic Enterprise
 sidebar_position: 11
-sidebar_label: Migrating to specmatic-async
+sidebar_label: Migrating to Specmatic Enterprise
 ---
 
-# Migrating from `specmatic-kafka` to `specmatic-async`
+# Migrating from `specmatic-kafka` to `specmatic enterprise`
 
-Migrating to `specmatic-async` unlocks multi-protocol support, improved configuration, and a unified approach to async contract testing and mocking. This guide walks you through the key steps for a smooth transition.
+Migrating to `specmatic enterprise` unlocks multi-protocol support, improved configuration, and a unified approach to async contract testing and mocking. This guide walks you through the key steps for a smooth transition.
 
 ## Migration Steps
 
@@ -46,7 +46,7 @@ contracts:
 Refer to the [Configuration Reference](./index.mdx#configuration-reference) for all available options.
 
 ### 2. Update Docker Image
-Replace the `specmatic-kafka` image with `specmatic-async` in your Docker commands.
+Replace the `specmatic/specmatic-kafka` image with `specmatic/enterprise` in your Docker commands.
 
 **Before:**
 ```bash
@@ -73,10 +73,9 @@ public class KafkaContractTest implements SpecmaticKafkaContractTest {
 ```
 **After:**
 ```java
-import com.specmatic.async.AsyncMock;
-import com.specmatic.async.SpecmaticAsyncContractTest;
+import io.specmatic.enterprise.SpecmaticContractTest
 
-public class AsyncContractTest implements SpecmaticAsyncContractTest {
+public class AsyncContractTest implements SpecmaticContractTest {
     // ...
 }
 ```
@@ -119,9 +118,9 @@ jobs:
       - name: Run Contract Tests
         run: |
           docker run --rm \
-            -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-            -v "$PWD/spec:/usr/src/app/spec" \
-            -v "$PWD/specmatic-kafka-config.properties:/usr/src/app/specmatic-kafka-config.properties" \
+            -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+            -v "$(pwd)/spec:/usr/src/app/spec" \
+            -v "$(pwd)/specmatic-kafka-config.properties:/usr/src/app/specmatic-kafka-config.properties" \
            specmatic/enterprise test
 ```
 
@@ -169,8 +168,8 @@ jobs:
       - name: Run Contract Tests
         run: |
           docker run --rm \
-            -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-            -v "$PWD/spec:/usr/src/app/spec" \
+            -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+            -v "$(pwd)/spec:/usr/src/app/spec" \
             specmatic/enterprise test
 ```
 
@@ -178,16 +177,16 @@ jobs:
 **Before (specmatic-kafka):**
 ```bash
 docker run --rm \
-  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-  -v "$PWD/spec:/usr/src/app/spec" \
-  -v "$PWD/specmatic-kafka-config.properties:/usr/src/app/specmatic-kafka-config.properties" \
+  -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+  -v "$(pwd)/spec:/usr/src/app/spec" \
+  -v "$(pwd)/specmatic-kafka-config.properties:/usr/src/app/specmatic-kafka-config.properties" \
  specmatic/enterprise test
 ```
 **After (specmatic-async):**
 ```bash
 docker run --rm \
-  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-  -v "$PWD/spec:/usr/src/app/spec" \
+  -v "$(pwd)/specmatic.yaml:/usr/src/app/specmatic.yaml" \
+  -v "$(pwd)/spec:/usr/src/app/spec" \
    specmatic/enterprise test
 ```
 

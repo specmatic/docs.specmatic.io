@@ -37,11 +37,7 @@ To help you verify the above with a No-Code approach, Specmatic will send exampl
 Basic run:
 
 ```bash
-docker run --rm --network host \
-  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-  -v "$PWD/spec:/usr/src/app/spec" \
-  -v "$PWD/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
-   specmatic/enterprise test
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
 ```
 
 ### Key Capabilities
@@ -246,11 +242,7 @@ Replace values in angle brackets (`<...>`) with your actual configuration.
 Start your application with its dependencies (SQS, Kafka, etc.), then run:
 
 ```bash
-docker run --rm --network host \
-  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-  -v "$PWD/spec:/usr/src/app/spec" \
-  -v "$PWD/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
-   specmatic/enterprise test
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
 ```
 
 This generates and executes contract tests based on your AsyncAPI specification.
@@ -346,11 +338,7 @@ contracts:
 **Step 3: Start the Mock**
 
 ```bash
-docker run --rm --network host \
-  -v "$PWD/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-  -v "$PWD/spec:/usr/src/app/spec" \
-  -v "$PWD/build/reports/specmatic:/usr/src/app/build/reports/specmatic" \
- specmatic/enterprise virtualize
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
 ```
 
 **How It Works**:
@@ -370,7 +358,7 @@ For examples in `<SPEC_NAME>_examples/` directory:
 
 ```bash
 docker run --rm \
-  -v "$PWD/spec:/usr/src/app/spec" \
+  -v "$(pwd):/usr/src/app" \
   specmatic/enterprise examples validate \
   --spec-file spec/order-service.yaml
 ```
@@ -379,8 +367,7 @@ docker run --rm \
 
 ```bash
 docker run --rm \
-  -v "$PWD/spec:/usr/src/app/spec" \
-  -v "$PWD/custom-examples:/usr/src/app/custom-examples" \
+  -v "$(pwd):/usr/src/app" \
   specmatic/enterprise examples validate \
   --spec-file spec/order-service.yaml \
   --examples custom-examples
