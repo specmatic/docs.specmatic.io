@@ -187,8 +187,7 @@ const cwd = process.cwd();
 
 execSync(
   `docker run --rm --network host \
-   -v "${cwd}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
-   -v "${cwd}/specification:/usr/src/app/specification" \
+   -v "${cwd}:/usr/src/app" \
    specmatic/enterprise test \
    --overlay=specification/overlay.yaml`,
   { stdio: "inherit" }
@@ -219,8 +218,7 @@ You can also run the application manually and use the docker command as follows:
 
 ```bash
 docker run --rm --network host \
- -v "${cwd}/specmatic.yaml:/usr/src/app/specmatic.yaml" \
- -v "${cwd}/specification:/usr/src/app/specification" \
+ -v "$(pwd):/usr/src/app" \
  specmatic/enterprise test \
  --overlay=specification/overlay.yaml
 ```
