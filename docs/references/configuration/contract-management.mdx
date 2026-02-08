@@ -2,11 +2,22 @@
 title: Contract Management
 sidebar_position: 2
 ---
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-
 # Contract Management
+
+## Versions 3 - systemUnderTest and dependencies
+In v3, we define services under `components.services` and the specifications implemented
+by the service  are defined within the service definition.  
+We define a '**systemUnderTest**' which references the service being tested and its run options.
+We can also define the dependencies of the service under '**dependencies.services**' along with their run options.
+
+## Versions 2 - Provides and Consumes
+
+In v2, a service needs to list the API Specifications it implements under the `provides` attribute and the
+API Specifications of its dependencies under the `consumes` attribute.
 
 ## Contracts from Git Repository
 
@@ -14,7 +25,223 @@ Configure Specmatic to pull contracts from a Git repository:
 
 <Tabs groupId="contracts_configuration">
 
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+    <Tabs groupId="contracts_configuration_v3">
+
+      <TabItem value="specmatic-yaml" label="specmatic.yaml">
+```yaml
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/petStoreService"
+  runOptions:
+    $ref: "#/components/runOptions/petStoreTest"
+
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/paymentService"
+      runOptions:
+        $ref: "#/components/runOptions/paymentMock"
+        
+runOptions:
+  petStoreTest:
+    openapi:
+      type: test
+      baseUrl: "http://localhost:8080"
+  paymentMock:
+    openapi:
+      type: mock
+      baseUrl: "http://localhost:8090"
+        
+components:
+  sources:
+    specmaticOrderContracts:
+      git:
+        url: https://github.com/specmatic/specmatic-order-contracts.git
+  services:
+    petStoreService:
+      description: Pet Store Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/specmaticOrderContracts"
+            specs:
+              - com/petstore/store.yaml
+    paymentService:
+      description: Payment Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/specmaticOrderContracts"
+            specs:
+              - com/petstore/payment.yaml
+```
+
+      </TabItem>
+
+      <TabItem value="specmatic-json" label="specmatic.json">
+```json
+{
+  "version": 3,
+  "systemUnderTest": {
+    "service": {
+      "$ref": "#/components/services/petStoreService"
+    },
+    "runOptions": {
+      "$ref": "#/components/runOptions/petStoreTest"
+    }
+  },
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/paymentService"
+        },
+        "runOptions": {
+          "$ref": "#/components/runOptions/paymentMock"
+        }
+      }
+    ]
+  },
+  "runOptions": {
+    "petStoreTest": {
+      "openapi": {
+        "type": "test",
+        "baseUrl": "http://localhost:8080"
+      }
+    },
+    "paymentMock": {
+      "openapi": {
+        "type": "mock",
+        "baseUrl": "http://localhost:8090"
+      }
+    }
+  },
+  "components": {
+    "sources": {
+      "specmaticOrderContracts": {
+        "git": {
+          "url": "https://github.com/specmatic/specmatic-order-contracts.git"
+        }
+      }
+    },
+    "services": {
+      "petStoreService": {
+        "description": "Pet Store Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "com/petstore/store.yaml"
+              ]
+            }
+          }
+        ]
+      },
+      "paymentService": {
+        "description": "Payment Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "com/petstore/payment.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+```
+      </TabItem>
+    </Tabs>
+  </TabItem>
+
+  <TabItem value="v2-config-git" label="Version 2 (With Config)">
+
+    <Tabs groupId="contracts_configuration_v2_config">
+
+      <TabItem value="specmatic-yaml" label="specmatic.yaml">
+
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
+      branch: main
+    provides:
+      - specs:
+          - com/petstore/store.yaml
+        specType: openapi
+        config:
+          baseUrl: "http://localhost:8080"
+    consumes:
+      - specs:
+          - com/petstore/store.yaml
+        specType: openapi
+        config:
+          baseUrl: "http://localhost:8090"
+```
+
+      </TabItem>
+
+      <TabItem value="specmatic-json" label="specmatic.json">
+
+```json
+{
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git",
+        "branch": "main"
+      },
+      "provides": [
+        {
+          "specs": [
+            "com/petstore/store.yaml"
+          ],
+          "specType": "openapi",
+          "config": {
+            "baseUrl": "http://localhost:8080"
+          }
+        }
+      ],
+      "consumes": [
+        {
+          "specs": [
+            "com/petstore/store.yaml"
+          ],
+          "specType": "openapi",
+          "config": {
+            "baseUrl": "http://localhost:8090"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+      </TabItem>
+
+    </Tabs>
+
+  </TabItem>
+
+  <TabItem value="v2" label="Version 2 (Simple)">
+
+    <Tabs groupId="contracts_configuration_v2">
+
+      <TabItem value="specmatic-yaml" label="specmatic.yaml">
 
 ```yaml
 version: 2
@@ -28,9 +255,9 @@ contracts:
       - com/petstore/payment.yaml
 ```
 
-  </TabItem>
+      </TabItem>
 
-  <TabItem value="specmatic-json" label="specmatic.json">
+      <TabItem value="specmatic-json" label="specmatic.json">
 
 ```json
 {
@@ -52,17 +279,137 @@ contracts:
 }
 ```
 
+      </TabItem>
+
+    </Tabs>
+
   </TabItem>
 
 </Tabs>
 
 ## Contracts from Local Filesystem
 
-If you just need to use specifications from your local file system, specify `filesystem` field within contracts (if not specified, `directory` will default to current directory):
+If you just need to use specifications from your local file system, specify `filesystem` field within contracts (if not
+specified, `directory` will default to current directory):
 
 <Tabs groupId="local_configuration">
 
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+    <Tabs groupId="local_configuration_v3">
+
+      <TabItem value="specmatic-yaml" label="specmatic.yaml">
+```yaml
+      components:
+        sources:
+          specmaticOrderContracts:
+            filesystem:
+              directory: <Path to directory where all the specmatic should look for specifications>
+        services:
+          petStoreService:
+            description: Pet Store Service
+            definitions:
+              - definition:
+                  source:
+                    $ref: "#/components/sources/specmaticOrderContracts"
+                  specs:
+                    - com/petstore/store.yaml
+          paymentService:
+            description: Payment Service
+            definitions:
+              - definition:
+                  source:
+                    $ref: "#/components/sources/specmaticOrderContracts"
+                  specs:
+                    - com/petstore/payment.yaml
+```
+
+      </TabItem>
+
+      <TabItem value="specmatic-json" label="specmatic.json">
+
+      </TabItem>
+
+    </Tabs>
+
+  </TabItem>
+
+  <TabItem value="v2-config-local" label="Version 2 (with config)">
+
+    <Tabs groupId="local_configuration_v2_config">
+
+      <TabItem value="specmatic-yaml" label="specmatic.yaml">
+
+```yaml
+version: 2
+contracts:
+  - filesystem:
+      directory: <Path to directory where all the specmatic should look for specifications>
+    consumes:
+      - specs:
+          - api_order_v1.yaml
+          - api_user_v1.yaml
+        specType: openapi
+        config:
+          baseUrl: "http://localhost:8080"
+    provides:
+      - specs:
+          - api_auth_v1.yaml
+        specType: openapi
+        config:
+          baseUrl: "http://localhost:8090"
+```
+
+      </TabItem>
+
+      <TabItem value="specmatic-json" label="specmatic.json">
+
+```json
+{
+  "contracts": [
+    {
+      "filesystem": {
+        "directory": "<Path to directory where all the specmatic should look for specifications>"
+      },
+      "consumes": [
+        {
+          "specs": [
+            "api_order_v1.yaml",
+            "api_user_v1.yaml"
+          ],
+          "specType": "openapi",
+          "config": {
+            "baseUrl": "http://localhost:8080"
+          }
+        }
+      ],
+      "provides": [
+        {
+          "specs": [
+            "api_auth_v1.yaml"
+          ],
+          "specType": "openapi",
+          "config": {
+            "baseUrl": "http://localhost:8090"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+      </TabItem>
+
+    </Tabs>
+
+  </TabItem>
+
+  <TabItem value="v2" label="Version 2 (simple)">
+
+    <Tabs groupId="local_configuration_v2">
+
+      <TabItem value="specmatic-yaml" label="specmatic.yaml">
 
 ```yaml
 version: 2
@@ -76,9 +423,9 @@ contracts:
       - api_auth_v1.yaml
 ```
 
-  </TabItem>
+      </TabItem>
 
-  <TabItem value="specmatic-json" label="specmatic.json">
+      <TabItem value="specmatic-json" label="specmatic.json">
 
 ```json
 {
@@ -100,58 +447,15 @@ contracts:
 }
 ```
 
+      </TabItem>
+
+    </Tabs>
+
   </TabItem>
 
 </Tabs>
 
-Note that the `consumes` and `provides` specifications are relative paths. This means that they must be in the same directory as the current directory.
+Note that the specification paths are relative paths. This means that they must be in the same
+directory as the current directory.
 
 You can also provide absolute paths in case they are somewhere else on the filesystem.
-
-## Provides and Consumes
-
-A single application may need to list the API Specifications it is implementing under the `provides` attribute and the API Specifications of its dependencies under the `consumes` attribute.
-
-<Tabs groupId="dependencies_configuration">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-contracts:
-  - git:
-      url: <Git URL>
-    consumes:
-      - com/example/api_order_v1.yaml
-      - com/example/api_user_v1.yaml
-    provides:
-      - com/example/api_auth_v1.yaml
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "git": {
-        "url": "<Git URL>"
-      },
-      "consumes": [
-        "com/example/api_order_v1.yaml",
-        "com/example/api_user_v1.yaml"
-      ],
-      "provides": [
-        "com/example/api_auth_v1.yaml"
-      ]
-    }
-  ]
-}
-```
-
-  </TabItem>
-
-</Tabs>
