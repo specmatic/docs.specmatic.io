@@ -1,0 +1,78 @@
+{
+  "version": 3,
+  "systemUnderTest": {
+    "service": {
+      "$ref": "#/components/services/petStoreService",
+      "runOptions": {
+        "$ref": "#/components/runOptions/petStoreTest"
+      }
+    }
+  },
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/paymentService",
+          "runOptions": {
+            "$ref": "#/components/runOptions/paymentMock"
+          }
+        }
+      }
+    ]
+  },
+  "components": {
+    "sources": {
+      "specmaticOrderContracts": {
+        "git": {
+          "url": "https://github.com/specmatic/specmatic-order-contracts.git"
+        }
+      }
+    },
+    "services": {
+      "petStoreService": {
+        "description": "Pet Store Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "com/petstore/store.yaml"
+              ]
+            }
+          }
+        ]
+      },
+      "paymentService": {
+        "description": "Payment Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "com/petstore/payment.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "runOptions": {
+      "petStoreTest": {
+        "openapi": {
+          "type": "test",
+          "baseUrl": "http://localhost:8080"
+        }
+      },
+      "paymentMock": {
+        "openapi": {
+          "type": "mock",
+          "baseUrl": "http://localhost:8090"
+        }
+      }
+    }
+  }
+}

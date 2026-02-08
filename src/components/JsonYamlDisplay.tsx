@@ -24,7 +24,7 @@ export function YamlDisplay({ object, title }: JsonDisplayProps) {
     <div>
       {title && <p>{title}</p>}
       <CodeBlock language="yaml">
-        {yaml.dump(object)}
+        {yaml.dump(object, {quotingType: '"'})}
       </CodeBlock>
     </div>
   );

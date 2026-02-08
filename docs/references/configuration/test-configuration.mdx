@@ -2,8 +2,10 @@
 title: Test Configuration
 sidebar_position: 3
 ---
-import Tabs from '@theme/Tabs';
+
+import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import {JsonDisplay, YamlDisplay} from '@site/src/components/JsonYamlDisplay';
 
 
 # Test Configuration
@@ -12,19 +14,29 @@ import TabItem from '@theme/TabItem';
 
 To enable resiliency tests, add the `resiliencyTests` configuration to your `specmatic.yaml` file as shown below:
 
-```yaml
-version: 2
+<Tabs groupId="resiliency_tests_configuration">
+  <TabItem value="specmatic-v3" label="Version 3">
+    <Tabs groupId="resiliency_tests_configuration_v3">
+      <TabItem value="specmatic-yaml" label="specmatic.yaml">
+        <YamlDisplay object={require('./includes/test-configuration/v3/resiliency/specmatic.json')}/>
+      </TabItem>
+      <TabItem value="specmatic-json" label="specmatic.json">
+        <JsonDisplay object={require('./includes/test-configuration/v3/resiliency/specmatic.json')}/>
+      </TabItem>
+    </Tabs>
+  </TabItem>
+  <TabItem value="specmatic-v2" label="Version 2">
+    <Tabs groupId="resiliency_tests_configuration_v2">
+      <TabItem value="specmatic-yaml" label="specmatic.yaml">
+        <YamlDisplay object={require('./includes/test-configuration/v2/resiliency/specmatic.json')}/>
+      </TabItem>
+      <TabItem value="specmatic-json" label="specmatic.json">
+        <JsonDisplay object={require('./includes/test-configuration/v2/resiliency/specmatic.json')}/>
+      </TabItem>
+    </Tabs>
+  </TabItem>
 
-# Sample contracts configuration for running contract tests
-contracts:
-  - provides:
-    - /path/to/your/spec.yaml
-
-# Switches resiliency tests on (they are off by default)
-test:
-  resiliencyTests:
-    enable: all
-```
+</Tabs>
 
 Note: The value of `enable` can hold the following values:
 - `all`
@@ -37,47 +49,10 @@ The HTTP timeout duration for requests made during contract testing can be confi
 This parameter sets the maximum time Specmatic will wait for a response to each HTTP request before marking it as a failure.
 The default timeout is `6000 milliseconds`.
 
-<Tabs groupId="test_configuration">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://github.com/specmatic/specmatic-order-contracts.git
-    consumes:
-      - io/specmatic/examples/store/openapi/api_order_v3.yaml
-test:
-  timeoutInMilliseconds: 3000
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "git": {
-        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
-      },
-      "consumes": [
-        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
-      ]
-    }
-  ],
-  "test": {
-    "timeoutInMilliseconds": 3000
-  }
-}
-```
-
-  </TabItem>
-
-</Tabs>
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/test-configuration/v3/simple-consumes/specmatic.json')}
+  v2Object={require('./includes/test-configuration/v2/simple-consumes/specmatic.json')}
+/>
 
 ## Strict Mode
 
@@ -85,124 +60,27 @@ Test may run in strict mode. You can read more about [test in strict mode here](
 
 You can configure Specmatic to run test in strict mode using the following configuration:
 
-```yaml
-version: 2
-contracts:
-  - provides:
-    - /path/to/spec.yaml
-test:
-  strictMode: true
-```
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/test-configuration/v3/strict-mode/specmatic.json')}
+  v2Object={require('./includes/test-configuration/v2/strict-mode/specmatic.json')}
+/>
 
-## Configure Contract Test BaseUrls for Different Specs
+## Configure Contract Test Base URLs for Different Specs
 
 Let's say you have a service that two specifications, or even multiple versions of the same specification. You need to run contract tests using that specification against the service. You can customize the base URL in specmatic configuration as shown below.
 
-<Tabs groupId="contract_tests_base_url">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-contracts:
-  - filesystem:
-      directory: <Path to directory where all the specmatic should look for specifications>
-    provides:
-      - specs:
-          - api_order_v1.yaml
-        baseUrl: http://localhost:8080/v1
-      - specs:
-          - api_order_v2.yaml
-        baseUrl: http://localhost:8080/v2
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "filesystem": {
-        "directory": "<Path to directory where all the specmatic should look for specifications>"
-      },
-      "provides": [
-        {
-          "specs": [
-            "api_order_v1.yaml"
-          ],
-          "baseUrl": "http://localhost:8080/v1"
-        },
-        {
-          "specs": [
-            "api_order_v2.yaml"
-          ],
-          "baseUrl": "http://localhost:8080/v2"
-        }
-      ]
-    }
-  ]
-}
-```
-
-  </TabItem>
-
-</Tabs>
-
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/test-configuration/v3/multiple-test-base-url/specmatic.json')}
+  v2Object={require('./includes/test-configuration/v2/multiple-test-base-url/specmatic.json')}
+/>
 
 ## Externalized Examples Directories
 
 By default, Specmatic searches for the directory ending with `_examples` to pickup externalized examples. However, if needed, you can specify a list of directories containing externalized examples under `examples` key in specmatic configuration. Specmatic will retrieve the examples from these directories for use in both contract testing and service virtualization.
 
-<Tabs groupId="stubs_configuration">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://github.com/specmatic/specmatic-order-contracts.git
-    provides:
-      - io/specmatic/examples/store/openapi/product_search_bff_v4.yaml
-    consumes:
-      - io/specmatic/examples/store/openapi/api_order_v3.yaml
-examples:
-  - order_service/examples
-  - product_service/examples
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "git": {
-        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
-      },
-      "provides": [
-        "io/specmatic/examples/store/openapi/product_search_bff_v4.yaml"
-      ],
-      "consumes": [
-        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
-      ]
-    }
-  ],
-  "examples": [
-    "order_service/examples",
-    "product_service/examples"
-    ]
-}
-```
-
-  </TabItem>
-
-</Tabs>
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/test-configuration/v3/externalized-examples/specmatic.json')}
+  v2Object={require('./includes/test-configuration/v2/externalized-examples/specmatic.json')}
+/>
 
 **Note**: if the `_examples` directory is present, it will still be included alongside any additional directories specified under the `examples` key.

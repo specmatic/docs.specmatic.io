@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "provides": [
+        "/path/to/spec.yaml"
+      ]
+    }
+  ],
+  "test": {
+    "strictMode": true
+  }
+}

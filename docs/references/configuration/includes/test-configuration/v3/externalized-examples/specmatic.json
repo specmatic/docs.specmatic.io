@@ -1,0 +1,55 @@
+{
+  "version": 3,
+  "components": {
+    "sources": {
+      "specmaticOrderContracts": {
+        "git": {
+          "url": "https://github.com/specmatic/specmatic-order-contracts.git"
+        }
+      }
+    },
+    "services": {
+      "productSearchBffV4": {
+        "description": "Product Search BFF v4 (provider)",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "io/specmatic/examples/store/openapi/product_search_bff_v4.yaml"
+              ]
+            }
+          }
+        ]
+      },
+      "apiOrderV3": {
+        "description": "API Order V3 (consumer)",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "examples": {
+      "commonExamples": {
+        "directories": [
+
+        ]
+      }
+    }
+  },
+  "examples": [
+    "order_service/examples",
+    "product_service/examples"
+  ]
+}

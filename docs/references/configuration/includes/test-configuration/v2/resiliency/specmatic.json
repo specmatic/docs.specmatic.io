@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "provides": [
+        "/path/to/your/spec.yaml"
+      ]
+    }
+  ],
+  "test": {
+    "resiliencyTests": {
+      "enable": "all"
+    }
+  }
+}
