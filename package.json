@@ -30,7 +30,8 @@
     "@docusaurus/module-type-aliases": "3.9.2",
     "@docusaurus/plugin-client-redirects": "^3.9.2",
     "@docusaurus/theme-mermaid": "^3.9.2",
-    "@docusaurus/types": "3.9.2"
+    "@docusaurus/types": "3.9.2",
+    "js-yaml": "^4.1.1"
   },
   "browserslist": {
     "production": [
