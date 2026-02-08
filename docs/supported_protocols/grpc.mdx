@@ -407,11 +407,38 @@ Alternatively, you can configure the example directories in your configuration f
 <Tabs groupId="config-version">
   <TabItem value="v3" label="Version 3 (Recommended)">
 
-**Config Approach:** Specify example directories in your `specmatic.yaml` configuration file under `exampleDirs`. For example:
+**Config Approach:** Specify example directories in your `specmatic.yaml` configuration file under `data.examples.directories` at the service level. For example:
 
 ```yaml
 version: 3
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/yourService"
+        runOptions:
+          $ref: "#/components/runOptions/yourServiceMock"
+        data:
+          examples:
+            - directories:
+                - path/to/dir1
+                - path/to/dir2
 components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+        branch: main
+  services:
+    yourService:
+      description: Your gRPC Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: yourServiceSpec
+                  path: /path/to/your/service.proto
   runOptions:
     yourServiceMock:
       protobuf:
@@ -421,33 +448,30 @@ components:
               id: yourServiceSpec
               host: localhost
               port: 9000
-              exampleDirs:
-                - path/to/dir1
-                - path/to/dir2
+              importPaths:
+                - ../
               protocVersion: 3.23.4
 ```
 
   </TabItem>
   <TabItem value="v2-with-config" label="Version 2 (With Config)">
 
-**Config Approach:** Specify example directories in your `specmatic.yaml` configuration file under the `config` section. For example:
+**Programmatic Approach:**
 
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://your-central-contract-repo.com
-    consumes:
-      - specs:
-          - /path/to/your/service.proto
-        specType: protobuf
-        config:
-          host: localhost
-          port: 9000
-          exampleDirs:
-            - path/to/dir1
-            - path/to/dir2
-          protocVersion: 3.23.4
+Set the `EXAMPLES_DIR` system property with a comma-separated list of directory paths, where each path points to a directory containing your example files. For example:
+
+```java
+System.setProperty("EXAMPLES_DIR", "path/to/dir1,path/to/dir2");
+```
+
+This will include both `path/to/dir1` and `path/to/dir2` as example sources.
+
+**CLI Approach:**
+
+Specify example directories using the `--examples` argument. You can include multiple directories by repeating the argument:
+
+```bash
+--examples=path/to/dir1 --examples=path/to/dir2
 ```
 
   </TabItem>
