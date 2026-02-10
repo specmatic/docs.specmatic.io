@@ -4,10 +4,9 @@ sidebar_position: 6
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-
+import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 
 # Reports
-
 
 ## Overview
 
@@ -22,59 +21,10 @@ The `report` configuration has two optional properties:
 
 ### Basic Example
 
-<Tabs groupId="report_basic">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-report:
-  formatters:
-    - type: text
-      layout: table
-  types:
-    APICoverage:
-      OpenAPI:
-        successCriteria:
-          minThresholdPercentage: 100
-          maxMissedEndpointsInSpec: 0
-          enforce: true
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "report": {
-    "formatters": [
-      {
-        "type": "text",
-        "layout": "table"
-      }
-    ],
-    "types": {
-      "APICoverage": {
-        "OpenAPI": {
-          "successCriteria": {
-            "minThresholdPercentage": 100,
-            "maxMissedEndpointsInSpec": 0,
-            "enforce": true
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-  </TabItem>
-
-</Tabs>
-
----
+<V2V3SpecmaticConfigTabs
+  v2Object={require('./includes/reports/v2/specmatic.json')}
+  v3Object={require('./includes/reports/v3/specmatic.json')}
+/>
 
 ## Report Types
 
@@ -96,9 +46,10 @@ For detailed information about API Coverage configuration keys and their functio
 ## Report Formats
 
 Specmatic can generate reports in various formats.
+
 ### Text Format
 
-The text format outputs reports directly to your console or terminal, making it ideal for CI/CD pipelines and quick feedback during development.
+The text format (enabled by default) outputs reports directly to your console or terminal, making it ideal for CI/CD pipelines and quick feedback during development.
 
 ### HTML Format
 

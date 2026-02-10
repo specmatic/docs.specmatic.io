@@ -1,0 +1,19 @@
+{
+  "version": 3,
+  "specmatic": {
+    "governance": {
+      "report": {
+        "formats": [
+          "ctrf",
+          "html"
+        ],
+        "outputDirectory": "build/reports/specmatic"
+      },
+      "successCriteria": {
+        "minCoveragePercentage": 100,
+        "maxMissedOperationsInSpec": 0,
+        "enforce": true
+      }
+    }
+  }
+}

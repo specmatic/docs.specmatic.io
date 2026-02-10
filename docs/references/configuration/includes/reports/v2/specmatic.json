@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "report": {
+    "formatters": [
+      {
+        "type": "text",
+        "layout": "table"
+      }
+    ],
+    "types": {
+      "APICoverage": {
+        "OpenAPI": {
+          "successCriteria": {
+            "minThresholdPercentage": 100,
+            "maxMissedEndpointsInSpec": 0,
+            "enforce": true
+          }
+        }
+      }
+    }
+  }
+}
