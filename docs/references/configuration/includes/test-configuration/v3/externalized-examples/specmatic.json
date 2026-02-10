@@ -43,13 +43,10 @@
     "examples": {
       "commonExamples": {
         "directories": [
-
+          "order_service/examples",
+          "product_service/examples"
         ]
       }
     }
-  },
-  "examples": [
-    "order_service/examples",
-    "product_service/examples"
-  ]
+  }
 }

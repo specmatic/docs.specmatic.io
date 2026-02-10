@@ -68,53 +68,9 @@ You can also specify `host`, `basePath`, and even the complete `baseUrl` in the 
 
 By default, Specmatic searches for the directory ending with `_examples` to pickup externalized examples. However, if needed, you can specify a list of directories containing externalized examples under `examples` key in specmatic configuration. Specmatic will retrieve the examples from these directories for use in both contract testing and service virtualization.
 
-<Tabs groupId="stubs_configuration">
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/test-configuration/v3/externalized-examples/specmatic.json')}
+  v2Object={require('./includes/test-configuration/v2/externalized-examples/specmatic.json')}
+/>
 
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-    ```yaml
-    version: 2
-    contracts:
-    - git:
-    url: https://github.com/specmatic/specmatic-order-contracts.git
-    provides:
-    - io/specmatic/examples/store/openapi/product_search_bff_v4.yaml
-    consumes:
-    - io/specmatic/examples/store/openapi/api_order_v3.yaml
-    examples:
-    - order_service/examples
-    - product_service/examples
-    ```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-    ```json
-    {
-      "version": 2,
-      "contracts": [
-    {
-      "git": {
-      "url": "https://github.com/specmatic/specmatic-order-contracts.git"
-    },
-      "provides": [
-      "io/specmatic/examples/store/openapi/product_search_bff_v4.yaml"
-      ],
-      "consumes": [
-      "io/specmatic/examples/store/openapi/api_order_v3.yaml"
-      ]
-    }
-      ],
-      "examples": [
-      "order_service/examples",
-      "product_service/examples"
-      ]
-    }
-    ```
-
-  </TabItem>
-
-</Tabs>
-
-**Note**: if the `_examples` directory is present, it will still be included alongside any additional directories specified under the `examples` key.
+**Note**: When using v2 config, if the `_examples` directory is present, it will still be included alongside any additional directories specified under the `examples` key.
