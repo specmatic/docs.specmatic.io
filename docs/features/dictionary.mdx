@@ -4,6 +4,7 @@ sidebar_position: 2
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Admonition from '@theme/Admonition';
+import {CommercialBadge} from "../../src/components/CommercialBadge";
 
 # Dictionary
 
@@ -318,15 +319,9 @@ Address:
 
 Notice that the keys begin with `Address` instead than `Employee`, because the dictionary accesses the fields from the referenced schema. This makes for convenient dictionary definition without have to nest the values deeply.
 
-## Dictionary Generation <span className="badge badge--primary" style={{ fontSize: '0.75rem' }}> Commercial </span>
-
-
+## Automated Dictionary Generation <CommercialBadge/>
 
 Manually creating a dictionary can be quite an involved process, especially when the schema is complex. This is where, [specmatic/enterprise](https://hub.docker.com/r/specmatic/enterprise) offers a convenient method to generate dictionaries from OpenAPI specifications and existing examples.
-
-<Admonition type="note">
-Automated dictionary generation is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing).
-</Admonition>
 
 Let's take a look at how we can generate a dictionary from an OpenAPI specification along with existing examples
 
