@@ -55,7 +55,7 @@ The text format (enabled by default) outputs reports directly to your console or
 
 The HTML format generates rich, interactive reports with customizable branding and styling. These reports are ideal for sharing with stakeholders and archiving test results.
 
-### CTRF Format
+### CTRF Format <span className="badge badge--primary" style={{ fontSize: '0.75rem' }}> Commercial </span>
 
 The [Common Test Report Format (CTRF)](https://ctrf.io/docs/intro) is a standardized JSON schema for test results that enables seamless integration across different testing tools and CI/CD platforms.
 
@@ -71,105 +71,4 @@ The [Common Test Report Format (CTRF)](https://ctrf.io/docs/intro) is a standard
 :::warning
 **Commercial Feature**: CTRF report generation is only available in the commercial version of Specmatic. Please visit the [pricing page](https://specmatic.io/pricing/) for more information.
 :::
----
 
-## Complete Configuration Example
-
-Here's a comprehensive example showing all report configuration options:
-
-<Tabs groupId="complete_config">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-report:
-  formatters:
-    - type: text
-      layout: table
-    - type: html
-      layout: table
-      lite: false
-      title: "Specmatic API Tests - QA Environment"
-      logo: "assets/qa-logo.svg"
-      logoAltText: "QA Environment"
-      heading: "Contract Test Results - QA"
-      outputDirectory: "./build/reports/specmatic/html"
-    - type: ctrf
-  types:
-    APICoverage:
-      OpenAPI:
-        successCriteria:
-          minThresholdPercentage: 100
-          maxMissedEndpointsInSpec: 0
-          enforce: true
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "report": {
-    "formatters": [
-      {
-        "type": "text",
-        "layout": "table"
-      },
-      {
-        "type": "html",
-        "layout": "table",
-        "lite": false,
-        "title": "Specmatic API Tests - QA Environment",
-        "logo": "assets/qa-logo.svg",
-        "logoAltText": "QA Environment",
-        "heading": "Contract Test Results - QA",
-        "outputDirectory": "./build/reports/specmatic/html"
-      },
-      {
-        "type": "ctrf"
-      }
-    ],
-    "types": {
-      "APICoverage": {
-        "OpenAPI": {
-          "successCriteria": {
-            "minThresholdPercentage": 100,
-            "maxMissedEndpointsInSpec": 0,
-            "enforce": true
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-  </TabItem>
-
-</Tabs>
-
----
-
-## Quick Reference
-
-### Formatter Types
-
-- `text` - Console output (default)
-- `html` - Interactive HTML reports (default)
-- `ctrf` - Common Test Report Format (commercial only)
-
-### Common Properties
-
-| Property | Applies To | Required |
-|----------|------------|----------|
-| `type` | All formatters | Yes |
-| `layout` | text | No |
-| `lite` | html | No |
-| `title` | html | No |
-| `logo` | html | No |
-| `logoAltText` | html | No |
-| `heading` | html | No |
-| `outputDirectory` | html | No |

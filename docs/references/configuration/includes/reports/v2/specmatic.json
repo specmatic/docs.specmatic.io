@@ -3,8 +3,10 @@
   "report": {
     "formatters": [
       {
-        "type": "text",
-        "layout": "table"
+        "type": "ctrf"
+      },
+      {
+        "type": "html"
       }
     ],
     "types": {
