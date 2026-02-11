@@ -8,7 +8,8 @@
       "consumes": [
         {
           "specs": [
-            "io/specmatic/examples/store/openapi/api_order_v1.yaml"
+            "io/specmatic/examples/store/openapi/api_order_v1.yaml",
+            "io/specmatic/examples/store/openapi/api_uuid_v1.yaml"
           ],
           "port": 9000
         },
