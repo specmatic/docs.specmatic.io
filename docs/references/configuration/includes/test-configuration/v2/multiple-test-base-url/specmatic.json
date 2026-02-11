@@ -2,21 +2,21 @@
   "version": 2,
   "contracts": [
     {
-      "filesystem": {
-        "directory": "path/to/spec/directory"
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
       },
-      "provides": [
+      "consumes": [
         {
           "specs": [
-            "api_order_v1.yaml"
+            "io/specmatic/examples/store/openapi/api_order_v3.yaml"
           ],
-          "baseUrl": "http://localhost:8080/v1"
+          "baseUrl": "http://localhost:8080/v3"
         },
         {
           "specs": [
-            "api_order_v2.yaml"
+            "io/specmatic/examples/store/openapi/api_order_v4.yaml"
           ],
-          "baseUrl": "http://localhost:8080/v2"
+          "baseUrl": "http://localhost:8080/v4"
         }
       ]
     }

@@ -9,17 +9,25 @@ import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConf
 
 ## Resiliency Tests
 
-To enable resiliency tests, add the `resiliencyTests` configuration to your `specmatic.yaml` file as shown below:
+To enable [resiliency tests](/contract_driven_development/contract_testing#smart-resiliency-orchestration), add the `resiliencyTests` configuration to your `specmatic.yaml` file as shown below:
 
 <V2V3SpecmaticConfigTabs
   v3Object={require('./includes/test-configuration/v3/resiliency/specmatic.json')}
   v2Object={require('./includes/test-configuration/v2/resiliency/specmatic.json')}
 />
 
-Note: The value of `enable` can hold the following values:
-- `all`
+:::note
+The resiliency test can be configured with the following options:
+- `all` — will run both positive and negative tests
 - `positiveOnly` — will not run negative tests
 - `none` - the default
+:::
+
+:::info
+When using configuration version 3, it is possible to set the `schemaResiliencyTests` option under `dependencies`,
+or `systemUnderTest` or within a specific service. This allows you to enable resiliency tests for specific dependencies
+or the system under test, while keeping it disabled for other services.
+:::
 
 ## Contract Test Timeout
 

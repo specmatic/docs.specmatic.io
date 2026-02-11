@@ -1,16 +1,36 @@
 {
   "version": 3,
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/service-v3",
+          "runOptions": {
+            "$ref": "#/components/runOptions/service-v3"
+          }
+        }
+      },
+      {
+        "service": {
+          "$ref": "#/components/services/service-v4",
+          "runOptions": {
+            "$ref": "#/components/runOptions/service-v4"
+          }
+        }
+      }
+    ]
+  },
   "components": {
     "sources": {
       "specmaticOrderContracts": {
-        "filesystem": {
-          "directory": "path/to/spec/directory"
+        "git": {
+          "url": "https://github.com/specmatic/specmatic-order-contracts.git"
         }
       }
     },
     "services": {
-      "service-v1": {
-        "description": "V1 of the service",
+      "service-v3": {
+        "description": "V3 of the service",
         "definitions": [
           {
             "definition": {
@@ -18,14 +38,14 @@
                 "$ref": "#/components/sources/specmaticOrderContracts"
               },
               "specs": [
-                "api_order_v1.yaml"
+                "io/specmatic/examples/store/openapi/api_order_v3.yaml"
               ]
             }
           }
         ]
       },
-      "service-v2": {
-        "description": "V2 of the service",
+      "service-v4": {
+        "description": "V4 of the service",
         "definitions": [
           {
             "definition": {
@@ -33,20 +53,24 @@
                 "$ref": "#/components/sources/specmaticOrderContracts"
               },
               "specs": [
-                "api_order_v2.yaml"
+                "io/specmatic/examples/store/openapi/api_order_v4.yaml"
               ]
             }
           }
         ]
       }
-    }
-  },
-  "specmatic": {
-    "settings": {
-      "test": {
-        "baseUrls": {
-          "service-v1": "http://localhost:8080/v1",
-          "service-v2": "http://localhost:8080/v2"
+    },
+    "runOptions": {
+      "service-v3": {
+        "openapi": {
+          "type": "mock",
+          "baseUrl": "http://localhost:8080/v3"
+        }
+      },
+      "service-v4": {
+        "openapi": {
+          "type": "mock",
+          "baseUrl": "http://localhost:8080/v4"
         }
       }
     }

@@ -1,9 +1,17 @@
 {
   "version": 3,
+  "systemUnderTest": {
+    "service": {
+      "$ref": "#/components/services/petStore",
+      "runOptions": {
+        "$ref": "#/components/runOptions/petStore"
+      }
+    }
+  },
   "components": {
     "services": {
-      "my-service": {
-        "description": "My Service",
+      "petStore": {
+        "description": "Pet Store Service",
         "definitions": [
           {
             "definition": {
@@ -19,11 +27,18 @@
           }
         ]
       }
-    }
-  },
-  "systemUnderTest": {
+    },
     "settings": {
-      "resiliencyTests": "all"
+      "test": {
+        "schemaResiliencyTests": "all"
+      }
+    },
+    "runOptions": {
+      "petStore": {
+        "openapi": {
+          "type": "test"
+        }
+      }
     }
   }
 }
