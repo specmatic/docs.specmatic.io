@@ -1,5 +1,25 @@
 {
   "version": 3,
+  "systemUnderTest": {
+    "service": {
+      "$ref": "#/components/services/onlineStoreServiceV1",
+      "runOptions": {
+        "$ref": "#/components/runOptions/onlineStoreServiceV1"
+      }
+    }
+  },
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/orderServiceV1",
+          "runOptions": {
+            "$ref": "#/components/runOptions/orderServiceV1"
+          }
+        }
+      }
+    ]
+  },
   "components": {
     "sources": {
       "specmaticOrderContracts": {
@@ -9,8 +29,8 @@
       }
     },
     "services": {
-      "petStoreService": {
-        "description": "Pet Store Service",
+      "onlineStoreServiceV1": {
+        "description": "Online Store Service (V1)",
         "definitions": [
           {
             "definition": {
@@ -18,14 +38,14 @@
                 "$ref": "#/components/sources/specmaticOrderContracts"
               },
               "specs": [
-                "com/petstore/store.yaml"
+                "io/specmatic/examples/store/openapi/online_store_v1.yaml"
               ]
             }
           }
         ]
       },
-      "paymentService": {
-        "description": "Payment Service",
+      "orderServiceV1": {
+        "description": "Payment Service (V1)",
         "definitions": [
           {
             "definition": {
@@ -33,11 +53,25 @@
                 "$ref": "#/components/sources/specmaticOrderContracts"
               },
               "specs": [
-                "com/petstore/payment.yaml"
+                "io/specmatic/examples/store/openapi/api_order_v1.yaml"
               ]
             }
           }
         ]
+      }
+    },
+    "runOptions": {
+      "onlineStoreServiceV1": {
+        "openapi": {
+          "type": "test",
+          "baseUrl": "http://localhost:8080"
+        }
+      },
+      "orderServiceV1": {
+        "openapi": {
+          "type": "mock",
+          "baseUrl": "http://localhost:8090"
+        }
       }
     }
   }

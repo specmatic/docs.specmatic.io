@@ -6,11 +6,10 @@
         "directory": "path/to/spec/directory"
       },
       "consumes": [
-        "api_order_v1.yaml",
-        "api_user_v1.yaml"
+        "io/specmatic/examples/store/openapi/api_order_v1.yaml"
       ],
       "provides": [
-        "api_auth_v1.yaml"
+        "io/specmatic/examples/store/openapi/online_store_v1.yaml"
       ]
     }
   ]

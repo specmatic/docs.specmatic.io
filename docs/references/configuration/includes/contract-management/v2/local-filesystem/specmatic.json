@@ -5,11 +5,10 @@
       "filesystem": {
         "directory": "path/to/spec/directory"
       },
-      "consumes": [
+      "provides": [
         {
           "specs": [
-            "api_order_v1.yaml",
-            "api_user_v1.yaml"
+            "io/specmatic/examples/store/openapi/online_store_v1.yaml"
           ],
           "specType": "openapi",
           "config": {
@@ -17,10 +16,10 @@
           }
         }
       ],
-      "provides": [
+      "consumes": [
         {
           "specs": [
-            "api_auth_v1.yaml"
+            "io/specmatic/examples/store/openapi/api_order_v1.yaml"
           ],
           "specType": "openapi",
           "config": {
