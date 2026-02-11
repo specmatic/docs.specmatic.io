@@ -8,12 +8,298 @@ The Specmatic configuration file provides a centralized way to define how Specma
 
 Using this configuration file helps keep all Specmatic-related settings together so you don’t need to update multiple places when making changes. It simplifies setup, reduces repetition, and makes your Specmatic usage predictable and easy to understand—whether you are working with consumer tests, provider tests, or using Specmatic as a stub.
 
-A Specmatic configuration typically enables you to configure:
+## Specmatic Config v3
 
-* Specifications to be used by Specmatic
-* Test modes such as resiliency testing or only positive testing, etc.
-* Stub ports and related options
-* Directories for examples and other supporting files
-* Flags such as response value validation and more
+Specmatic YAML v3 is **componentized** and **spec-like**.  
+It treats the configuration as a *wiring specification* that describes:
+
+- what service is under test,
+- what its dependencies are,
+- where contracts come from,
+- and how each service should be run (test or mock).
+
+This document explains the **full structure** using a concrete, minimal example.
+
+---
+
+### 1. High-level mental model
+
+Think of a v3 config as answering four questions:
+
+1. **What am I testing?**  
+   → `systemUnderTest`
+
+2. **What does it depend on?**  
+   → `dependencies`
+
+3. **Where do contracts come from and how are services defined?**  
+   → `components.sources` + `components.services`
+
+4. **How should each service run?**  
+   → `components.runOptions`
+
+`components` acts as a **registry** of reusable named definitions, referenced using `$ref`.
+
+---
+
+### 2. Complete example
+
+This example tests a **Pet Store** service while mocking a **Payment** service.
+
+```yaml
+version: 3
+
+systemUnderTest:
+  service:
+    $ref: "#/components/services/petStoreService"
+  runOptions:
+    $ref: "#/components/runOptions/petStoreTest"
+  data:
+    examples:
+      - directories:
+          - ./src/test/resources/petstore
+
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/paymentService"
+      runOptions:
+        $ref: "#/components/runOptions/paymentMock"
+      data:
+        examples:
+          - directories:
+              - ./src/test/resources/payment
+
+specmatic:
+  governance:
+    successCriteria:
+      minCoveragePercentage: 0
+      maxMissedOperationsInSpec: 0
+      enforce: true
+  settings:
+    test:
+      schemaResiliencyTests: all
+
+components:
+  sources:
+    specmaticOrderContracts:
+      git:
+        url: https://github.com/specmatic/specmatic-order-contracts.git
+
+  services:
+    petStoreService:
+      description: Pet Store Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/specmaticOrderContracts"
+            specs:
+              - com/petstore/store.yaml
+
+    paymentService:
+      description: Payment Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/specmaticOrderContracts"
+            specs:
+              - com/petstore/payment.yaml
+
+  runOptions:
+    petStoreTest:
+      openapi:
+        type: test
+        baseUrl: "{PETSTORE_URL:http://localhost:8080}"
+        filter: "PATH!='/health,/swagger'"
+        actuatorUrl: "{PETSTORE_URL:http://localhost:8080}/actuator/mappings"
+
+    paymentMock:
+      openapi:
+        type: mock
+        baseUrl: "http://localhost:8090"
+```
+
+### 3. Top-level sections explained
+
+#### 3.1 `version`
+
+```yaml
+version: 3
+````
+
+Declares the configuration format version.
+All Specmatic YAML v3 features require this to be set to `3`.
+
+---
+
+#### 3.2 `systemUnderTest`
+
+Defines the **primary service being validated**.
+
+```yaml
+systemUnderTest:
+  service:
+    $ref: "#/components/services/petStoreService"
+  runOptions:
+    $ref: "#/components/runOptions/petStoreTest"
+```
+
+* `service` points to a named service definition under `components.services`
+* `runOptions` defines *how* that service is run (test vs mock, base URL, filters)
+
+Optional `data.examples` directories provide example payloads used during testing.
+
+---
+
+#### 3.3 `dependencies`
+
+Declares services that the System Under Test depends on.
+
+```yaml
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/paymentService"
+      runOptions:
+        $ref: "#/components/runOptions/paymentMock"
+```
+
+Key points:
+
+* Dependencies are typically run in **mock** mode
+* Each dependency is configured in the same structure as the SUT
+* Multiple dependencies can be declared
+
+---
+
+#### 3.4 `specmatic`
+
+Defines global behavior and governance rules.
+
+```yaml
+specmatic:
+  governance:
+    successCriteria:
+      minCoveragePercentage: 0
+      maxMissedOperationsInSpec: 0
+      enforce: true
+  settings:
+    test:
+      schemaResiliencyTests: all
+```
+
+* **Governance** controls pass/fail thresholds
+* **Settings** affect test execution behavior across all services
+
+---
+
+### 4. Components (the registry)
+
+The `components` section contains reusable, named definitions that are referenced using `$ref`.
+
+---
+
+#### 4.1 `$ref` usage
+
+```yaml
+$ref: "#/components/services/petStoreService"
+```
+
+This instructs Specmatic to resolve the referenced object from the same file.
+Using `$ref` keeps top-level configuration declarative and uncluttered.
+
+---
+
+#### 4.2 `components.sources`
+
+Defines **where contracts/specifications are loaded from**.
+
+```yaml
+components:
+  sources:
+    specmaticOrderContracts:
+      git:
+        url: https://github.com/specmatic/specmatic-order-contracts.git
+```
+
+A source can be reused by multiple services.
+
+---
+
+#### 4.3 `components.services`
+
+A service definition binds:
+
+* a logical service name,
+* to one or more contract definitions,
+* sourced from a declared source.
+
+```yaml
+components:
+  services:
+    petStoreService:
+      description: Pet Store Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/specmaticOrderContracts"
+            specs:
+              - com/petstore/store.yaml
+```
+
+Notes:
+
+* A service may have multiple definitions
+* Specs are resolved relative to the source
+* The same source can be shared across services
+
+---
+
+#### 4.4 `components.runOptions`
+
+Run options describe **how Specmatic should run a service**.
+
+#### OpenAPI – test mode (System Under Test)
+
+```yaml
+petStoreTest:
+  openapi:
+    type: test
+    baseUrl: "{PETSTORE_URL:http://localhost:8080}"
+    filter: "PATH!='/health,/swagger'"
+    actuatorUrl: "{PETSTORE_URL:http://localhost:8080}/actuator/mappings"
+```
+
+* `type: test` validates a real running service
+* `baseUrl` supports environment variable substitution
+* `filter` restricts the tested surface area
+* `actuatorUrl` enables endpoint discovery for Spring Boot apps
+
+#### OpenAPI – mock mode (Dependency)
+
+```yaml
+paymentMock:
+  openapi:
+    type: mock
+    baseUrl: "http://localhost:8090"
+```
+
+* `type: mock` starts a Specmatic stub server
+* Typically used for dependencies
+
+---
+
+## 5. Minimal checklist
+
+To create a valid Specmatic YAML v3 file:
+
+1. Set `version: 3`
+2. Define at least one `components.sources`
+3. Define one or more `components.services`
+4. Define corresponding `components.runOptions`
+5. Wire the System Under Test under `systemUnderTest`
+6. Add dependencies under `dependencies` (if applicable)
+
+
 
 By consolidating these details into a dedicated configuration file, Specmatic allows your project to remain clean and organized while giving you full control over how contract tests and stubs behave.

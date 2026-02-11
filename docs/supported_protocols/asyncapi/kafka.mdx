@@ -2,6 +2,9 @@
 title: Kafka
 sidebar_position: 1
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Kafka <span className="badge badge--primary" style={{ fontSize: '0.75rem' }}> Commercial </span>
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/QmT1sG6JLGc?si=fwrgyYiVatavUO_4" title="Contract Testing Kafka Data Pipeline" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -64,27 +67,132 @@ components:
 
 ## Starting Kafka Mock Server from Command Line
 
-Create a file named `specmatic.yaml` with below content.
+Create a file named `specmatic.yaml` with the configuration based on your version:
+
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
 
 ```yaml
-#specmatic.yaml
+version: 3
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/kafkaService"
+        runOptions:
+          $ref: "#/components/runOptions/kafkaServiceMock"
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+  services:
+    kafkaService:
+      description: Kafka AsyncAPI Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: kafkaSpec
+                  path: /path/to/your/kafka.yaml
+  runOptions:
+    kafkaServiceMock:
+      asyncapi:
+        type: mock
+        specs:
+          - spec:
+              id: kafkaSpec
+              inMemoryBroker:
+                host: localhost
+                port: 9092
+              servers:
+                - host: "localhost:9092"
+                  protocol: kafka
+```
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+```yaml
 version: 2
 contracts:
   - git:
-      url: https://github.com/specmatic/specmatic-order-contracts.git
+      url: https://your-central-contract-repo.com
     consumes:
-      - io/specmatic/examples/store/asyncapi/kafka.yaml
+      - specs:
+          - /path/to/your/kafka.yaml
+        specType: asyncapi
+        config:
+          inMemoryBroker:
+            host: localhost
+            port: 9092
+          servers:
+            - host: localhost:9092
+              protocol: kafka
 ```
 
-This file instructs Specmatic to pull the [AsyncAPI spec named `kafka.yaml`](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/asyncapi/kafka.yaml) from a Git repo. The AsyncAPI spec itself has the details regarding Kafka topics, schema, etc.
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://your-central-contract-repo.com
+    consumes:
+      - /path/to/your/kafka.yaml
+```
+
+:::info
+When using the simple version 2 configuration, you need to provide additional configuration through CLI arguments:
+
+**CLI Arguments:**
+- `--host` - Kafka broker host and port (e.g., localhost:9092)
+
+:::
+
+  </TabItem>
+</Tabs>
+
+This file instructs Specmatic to pull the AsyncAPI spec from a Git repo. The AsyncAPI spec itself has the details regarding Kafka topics, schema, etc.
 
 Please refer to [Specmatic documentation](/references/configuration) for more details about the above `specmatic.yaml` config file.
 
 Now we can run below command to spin a Kafka mock server. Please note the volume mapping to pass the specmatic.yaml to the Kafka Docker image and also the port mappings.
 
-```shell
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
 ```
+
+All configuration (broker settings, servers, etc.) is read from the YAML file.
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
+```
+
+All configuration (broker settings, servers, etc.) is read from the YAML file.
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" \
+  specmatic/enterprise mock \
+  --host=localhost:9092
+```
+
+This command requires the `--host` CLI argument to specify the Kafka broker connection.
+
+  </TabItem>
+</Tabs>
+
 This should produce logs that shows that Specmatic Kafka server has started and listening on topics.
 
 ```bash
@@ -465,7 +573,7 @@ If the verification fails, the response will include details of the mismatches.
 
 ## Running Contract Tests Against a Kafka-Based Request-Reply Service
 
-Create a service which implements the kafka messaging architecture as per the [order_service_async.yaml](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/asyncapi/order_service_async_v1.yaml) specification.
+Create a service which implements the kafka messaging architecture as per the AsyncAPI specification.
 
 This service will use a Kafka consumer to listen to the `place-order` topic, and upon receiving a message, it will publish one message each to the `process-order` and `notification` topics. This architecture pattern is known as the request-reply pattern.
 
@@ -475,24 +583,121 @@ This service will use a Kafka consumer to listen to the `place-order` topic, and
 
 ### Specmatic Configuration
 Create a specmatic.yaml configuration file to specify the contract for the service:
+
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+```yaml
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/orderAsyncService"
+    runOptions:
+      $ref: "#/components/runOptions/orderAsyncServiceTest"
+components:
+  sources:
+    yourContracts:
+      git:
+        url: "https://your-central-contract-repo.com"
+  services:
+    orderAsyncService:
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: orderAsyncSpec
+                  path: /path/to/your/order_service_async.yaml
+  runOptions:
+    orderAsyncServiceTest:
+      asyncapi:
+        type: test
+        specs:
+          - spec:
+              id: orderAsyncSpec
+              servers:
+                - host: "localhost:9092"
+                  protocol: kafka
+```
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
 ```yaml
 version: 2
 contracts:
   - git:
-      url: https://github.com/specmatic/specmatic-order-contracts.git
+      url: "https://your-central-contract-repo.com"
     provides:
-      - io/specmatic/examples/store/asyncapi/order_service_async_v1.yaml
+      - specs:
+          - /path/to/your/order_service_async.yaml
+        specType: asyncapi
+        config:
+          servers:
+            - host: localhost:9092
+              protocol: kafka
 ```
-This configuration informs Specmatic that the service provides the implementation as per the specification listed under the provides key. This setup allows Specmatic to run tests against the service using the provided spec.
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```yaml
+version: 2
+contracts:
+  - git:
+      url: "https://your-central-contract-repo.com"
+    provides:
+      - /path/to/your/order_service_async.yaml
+```
+
+:::info
+When using the simple version 2 configuration, you need to provide the Kafka broker configuration through CLI arguments when running tests.
+:::
+
+  </TabItem>
+</Tabs>
+
+This configuration informs Specmatic that the service provides the implementation as per the specification listed under the `provides` or `systemUnderTest` key. This setup allows Specmatic to run tests against the service using the provided spec.
 
 ### Testing the Service
 To test this service from the command line, follow the below steps.
 1. **Start Kafka Broker**: Launch a local instance of the Kafka broker on the desired host and port.
 2. **Run the Service**: Start your service locally.
-3. **Run Contract Tests**: Use the following command to run the contract tests against the service by replacing `kafka_broker_host` and `kafka_broker_port` with appropriate values:
-```shell
-docker run --network="host" -v "$(pwd):/usr/src/app" specmatic/enterprise test --host=<kafka_broker_host> --port=<kafka_broker_port>
+3. **Run Contract Tests**: Use the following command to run the contract tests against the service:
+
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+```bash
+docker run --network="host" -v "$(pwd):/usr/src/app" specmatic/enterprise test
 ```
+
+All configuration (Kafka broker host, port, etc.) is read from the YAML file.
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+```bash
+docker run --network="host" -v "$(pwd):/usr/src/app" specmatic/enterprise test
+```
+
+All configuration (Kafka broker host, port, etc.) is read from the YAML file.
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```bash
+docker run --network="host" -v "$(pwd):/usr/src/app" \
+  specmatic/enterprise test \
+  --host=<kafka_broker_host> \
+  --port=<kafka_broker_port>
+```
+
+Replace `kafka_broker_host` and `kafka_broker_port` with appropriate values. This command requires CLI arguments since the Kafka broker configuration is not in the YAML file.
+
+  </TabItem>
+</Tabs>
 
 To get information around all the CLI args of the `test` command, run the following command.
 ```shell
@@ -509,6 +714,46 @@ For a complete working example of Kafka contract testing with Specmatic-Async, r
 
 Create or update your `specmatic.yaml` file to include the AsyncAPI specification and Kafka server configuration:
 
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+```yaml
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/yourAsyncService"
+    runOptions:
+      $ref: "#/components/runOptions/yourAsyncServiceTest"
+components:
+  sources:
+    localContracts:
+      filesystem:
+        path: .
+  services:
+    yourAsyncService:
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/localContracts"
+            specs:
+              - spec:
+                  id: yourAsyncSpec
+                  path: spec/spec.yaml
+  runOptions:
+    yourAsyncServiceTest:
+      asyncapi:
+        type: test
+        specs:
+          - spec:
+              id: yourAsyncSpec
+              servers:
+                - host: localhost:9092
+                  protocol: kafka
+```
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
 ```yaml
 version: 2
 contracts:
@@ -521,6 +766,23 @@ contracts:
             - host: localhost:9092
               protocol: kafka
 ```
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```yaml
+version: 2
+contracts:
+  - provides:
+      - spec/spec.yaml
+```
+
+:::info
+When using the simple version 2 configuration, you need to provide Kafka server configuration through CLI arguments when running tests.
+:::
+
+  </TabItem>
+</Tabs>
 
 ### Step 2: Start Kafka Infrastructure
 
@@ -563,9 +825,37 @@ Start your application that implements the AsyncAPI specification. The applicati
 
 Execute the contract tests using the Specmatic Docker image:
 
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
 ```
+
+All configuration (Kafka server, topics, etc.) is read from the YAML file.
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
+```
+
+All configuration (Kafka server, topics, etc.) is read from the YAML file.
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" \
+  specmatic/enterprise test \
+  --host=localhost:9092
+```
+
+This command requires the `--host` CLI argument to specify the Kafka broker connection.
+
+  </TabItem>
+</Tabs>
 
 Specmatic-async will:
 1. Read the AsyncAPI specification and identify Kafka channels

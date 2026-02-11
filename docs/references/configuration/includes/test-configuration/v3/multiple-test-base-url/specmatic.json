@@ -1,0 +1,54 @@
+{
+  "version": 3,
+  "components": {
+    "sources": {
+      "specmaticOrderContracts": {
+        "filesystem": {
+          "directory": "path/to/spec/directory"
+        }
+      }
+    },
+    "services": {
+      "service-v1": {
+        "description": "V1 of the service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "api_order_v1.yaml"
+              ]
+            }
+          }
+        ]
+      },
+      "service-v2": {
+        "description": "V2 of the service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "api_order_v2.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "specmatic": {
+    "settings": {
+      "test": {
+        "baseUrls": {
+          "service-v1": "http://localhost:8080/v1",
+          "service-v2": "http://localhost:8080/v2"
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,9 @@
 title: gRPC
 sidebar_position: 2
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # gRPC <span className="badge badge--primary" style={{ fontSize: '0.75rem' }}> Commercial </span>
 
 ## Introduction
@@ -36,7 +39,73 @@ Alternatively if you have Java (JDK 17 and above) on your machine, you can [run 
 Before you can use Specmatic with your gRPC services, you need to define your service contracts using Protocol Buffer (.proto) files. Here's how to manage these contracts:
 
 1. Store your .proto files in a central repository for easy access and version control.
-2. Create a `specmatic.yaml` file in the root of your project to reference these contracts. Here's an example:
+2. Create a `specmatic.yaml` file in the root of your project to reference these contracts. Here are examples for different configuration versions:
+
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+```yaml
+version: 3
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/yourService"
+        runOptions:
+          $ref: "#/components/runOptions/yourServiceMock"
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+        branch: main
+  services:
+    yourService:
+      description: Your gRPC Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: yourServiceSpec
+                  path: /path/to/your/service.proto
+  runOptions:
+    yourServiceMock:
+      protobuf:
+        type: mock
+        specs:
+          - spec:
+              id: yourServiceSpec
+              host: localhost
+              port: 9000
+              importPaths:
+                - ../
+              protocVersion: 3.23.4
+```
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+```yaml
+version: 2
+contracts:
+  - git:
+      branch: main
+      url: https://your-central-contract-repo.com
+    consumes:
+      - specs:
+          - /path/to/your/service.proto
+        specType: protobuf
+        config:
+          host: localhost
+          port: 9000
+          importPaths:
+            - ../
+          protocVersion: 3.23.4
+```
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
 
 ```yaml
 version: 2
@@ -47,7 +116,31 @@ contracts:
       - /path/to/your/service.proto
 ```
 
-Make sure to update the `repository` and `consumes` sections to reflect your actual contract repository and .proto file locations.
+:::info
+When using the simple version 2 configuration, you need to provide additional configuration through environment variables, system properties, or CLI arguments:
+
+**Environment Variables:**
+- `SPECMATIC_GRPC_HOST` - gRPC service host (default: localhost)
+- `SPECMATIC_GRPC_PORT` - gRPC service port (default: 9000)
+- `IMPORT_PATHS` - Comma-separated list of import paths for proto files
+- `PROTOC_VERSION` - Protocol buffer compiler version (e.g., 3.23.4)
+
+**CLI Arguments:**
+- `--host` - gRPC service host
+- `--port` - gRPC service port
+- `--import-path` - Import path for proto files (can be repeated)
+- `--protoc-version` - Protocol buffer compiler version
+
+**System Properties (Java):**
+- `IMPORT_PATHS` - Import paths for proto files
+- `PROTOC_VERSION` - Protocol buffer compiler version
+
+:::
+
+  </TabItem>
+</Tabs>
+
+Make sure to update the repository URLs, paths, and configuration to reflect your actual contract repository and .proto file locations.
 
 ### Support for Local Imports in Proto Files
 
@@ -58,16 +151,74 @@ Specmatic gRPC also supports proto files that import other proto files locally. 
 
 2. **Locally imported file in a different folder:**
    - If your proto file imports another proto file from a different directory, Specmatic gRPC will not resolve the import automatically. You need to specify the import path so Specmatic can locate the imported file.
-   - **Programmatic Approach:** Set the `IMPORT_PATHS` system property with the path to the folder containing the imported proto files. For example:
-     ```java
-     System.setProperty("IMPORT_PATHS", "path/to/imported/protos");
-     ```
-   - **CLI Approach:** Use the `--import-path` argument to specify the folder path. For example:
-     ```bash
-     --import-path=path/to/imported/protos
-     ```
 
-You can specify multiple import paths by providing a comma-separated list (for the system property) or by repeating the `--import-path` argument in the CLI. This ensures that all locally imported proto files are correctly resolved during contract testing and service virtualization.
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+**Config Approach:** Specify the import paths in your `specmatic.yaml` configuration file under `importPaths`. For example:
+
+```yaml
+version: 3
+components:
+  runOptions:
+    yourServiceMock:
+      protobuf:
+        type: mock
+        specs:
+          - spec:
+              id: yourServiceSpec
+              host: localhost
+              port: 9000
+              importPaths:
+                - ../external-protos
+                - path/to/imported/protos
+              protocVersion: 3.23.4
+```
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+**Config Approach:** Specify the import paths in your `specmatic.yaml` configuration file under the `config` section. For example:
+
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://your-central-contract-repo.com
+    consumes:
+      - specs:
+          - /path/to/your/service.proto
+        specType: protobuf
+        config:
+          host: localhost
+          port: 9000
+          importPaths:
+            - ../external-protos
+            - path/to/imported/protos
+          protocVersion: 3.23.4
+```
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+**Programmatic Approach:** Set the `IMPORT_PATHS` system property with the path to the folder containing the imported proto files. For example:
+
+```java
+System.setProperty("IMPORT_PATHS", "path/to/imported/protos");
+```
+
+**CLI Approach:** Use the `--import-path` argument to specify the folder path. For example:
+
+```bash
+--import-path=path/to/imported/protos
+```
+
+You can specify multiple import paths by providing a comma-separated list (for the system property) or by repeating the `--import-path` argument in the CLI.
+
+  </TabItem>
+</Tabs>
+
+This ensures that all locally imported proto files are correctly resolved during contract testing and service virtualization.
 
 > **Note:** If you encounter import errors, verify that the import paths are correctly set and that all referenced proto files are accessible in the specified directories.
 
@@ -107,14 +258,67 @@ external-protos/
 
 Then you need to specify the import path:
 
-- **Programmatic Approach:**
-  ```java
-  System.setProperty("IMPORT_PATHS", "../external-protos");
-  ```
-- **CLI Approach:**
-  ```bash
-  --import-path=../external-protos
-  ```
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+**Config Approach:** Add the import path to your `specmatic.yaml`:
+
+```yaml
+version: 3
+components:
+  runOptions:
+    yourServiceMock:
+      protobuf:
+        type: mock
+        specs:
+          - spec:
+              id: yourServiceSpec
+              host: localhost
+              port: 9000
+              importPaths:
+                - ../external-protos
+              protocVersion: 3.23.4
+```
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+**Config Approach:** Add the import path to the `config` section in your `specmatic.yaml`:
+
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://your-central-contract-repo.com
+    consumes:
+      - specs:
+          - /path/to/your/order.proto
+        specType: protobuf
+        config:
+          host: localhost
+          port: 9000
+          importPaths:
+            - ../external-protos
+          protocVersion: 3.23.4
+```
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+**Programmatic Approach:**
+
+```java
+System.setProperty("IMPORT_PATHS", "../external-protos");
+```
+
+**CLI Approach:**
+
+```bash
+--import-path=../external-protos
+```
+
+  </TabItem>
+</Tabs>
 
 This ensures Specmatic gRPC can locate and resolve the imported `types.proto` file during contract testing and service virtualization.
 
@@ -198,25 +402,101 @@ Here, the `errorCode` field should use one of the standard [google.rpc.Code](htt
 
 These example files should be stored in a directory named `<file_name_without_extension>_examples`, located in the same directory as the corresponding `.proto` file. This structure keeps your example data organized and easily discoverable alongside the service definitions.
 
-Alternatively, you can configure the example directories programmatically or via command-line arguments, depending on your setup and deployment needs.
+Alternatively, you can configure the example directories in your configuration file, programmatically, or via command-line arguments, depending on your setup and deployment needs.
 
-* **Programmatic Approach:**
-  Set the `EXAMPLES_DIR` system property with a comma-separated list of directory paths, where each path points to a directory containing your example files. For example:
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
 
-  ```java
-  System.setProperty("EXAMPLES_DIR", "path/to/dir1,path/to/dir2");
-  ```
+**Config Approach:** Specify example directories in your `specmatic.yaml` configuration file under `data.examples.directories` at the service level. For example:
 
-  This will include both `path/to/dir1` and `path/to/dir2` as example sources.
+```yaml
+version: 3
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/yourService"
+        runOptions:
+          $ref: "#/components/runOptions/yourServiceMock"
+        data:
+          examples:
+            - directories:
+                - path/to/dir1
+                - path/to/dir2
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+        branch: main
+  services:
+    yourService:
+      description: Your gRPC Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: yourServiceSpec
+                  path: /path/to/your/service.proto
+  runOptions:
+    yourServiceMock:
+      protobuf:
+        type: mock
+        specs:
+          - spec:
+              id: yourServiceSpec
+              host: localhost
+              port: 9000
+              importPaths:
+                - ../
+              protocVersion: 3.23.4
+```
 
-* **CLI Approach:**
-  Specify example directories using the `--examples` argument. You can include multiple directories by repeating the argument:
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
 
-  ```bash
-  --examples=path/to/dir1 --examples=path/to/dir2
-  ```
+**Programmatic Approach:**
 
-  Both approaches allow flexible configuration of example file locations.
+Set the `EXAMPLES_DIR` system property with a comma-separated list of directory paths, where each path points to a directory containing your example files. For example:
+
+```java
+System.setProperty("EXAMPLES_DIR", "path/to/dir1,path/to/dir2");
+```
+
+This will include both `path/to/dir1` and `path/to/dir2` as example sources.
+
+**CLI Approach:**
+
+Specify example directories using the `--examples` argument. You can include multiple directories by repeating the argument:
+
+```bash
+--examples=path/to/dir1 --examples=path/to/dir2
+```
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+**Programmatic Approach:**
+
+Set the `EXAMPLES_DIR` system property with a comma-separated list of directory paths, where each path points to a directory containing your example files. For example:
+
+```java
+System.setProperty("EXAMPLES_DIR", "path/to/dir1,path/to/dir2");
+```
+
+This will include both `path/to/dir1` and `path/to/dir2` as example sources.
+
+**CLI Approach:**
+
+Specify example directories using the `--examples` argument. You can include multiple directories by repeating the argument:
+
+```bash
+--examples=path/to/dir1 --examples=path/to/dir2
+```
+
+  </TabItem>
+</Tabs>
 
 #### Understanding the Example Format
 
@@ -243,36 +523,212 @@ Also, the Specmatic gRPC Docker image, by nature, is completely language and tec
 
 #### Starting the Stub Service
 
-To start the stub/service virtualization service, use the following command:
+To start the stub/service virtualization service, use the appropriate command based on your configuration version:
+
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
 
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
 ```
 
-This command mounts your local `specmatic.yaml` file into the container and exposes the stub service on port 9000. And uses the proto files listed under `consumes` section for starting up a service virtualization server.
+This command mounts your `specmatic.yaml` file and starts the stub service. All configuration (host, port, import paths, etc.) is read from the `specmatic.yaml` file.
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
+```
+
+This command mounts your `specmatic.yaml` file and starts the stub service. All configuration (host, port, import paths, etc.) is read from the `specmatic.yaml` file.
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" \
+  -e SPECMATIC_GRPC_HOST=localhost \
+  -e SPECMATIC_GRPC_PORT=9000 \
+  -e IMPORT_PATHS=../ \
+  -e PROTOC_VERSION=3.23.4 \
+  specmatic/enterprise mock \
+  --host=localhost \
+  --port=9000 \
+  --import-path=../ \
+  --protoc-version=3.23.4
+```
+
+This command mounts your `specmatic.yaml` file and starts the stub service. Since the simple v2 configuration doesn't include detailed config, you need to provide the necessary configuration through environment variables and CLI arguments.
+
+  </TabItem>
+</Tabs>
 
 #### Running Tests
 
-To run tests, again update your `specmatic.yaml` to include a `provides` section.
+To run tests, update your `specmatic.yaml` to include the system under test configuration:
+
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+```yaml
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/yourService"
+    runOptions:
+      $ref: "#/components/runOptions/yourServiceTest"
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/dependencyService"
+        runOptions:
+          $ref: "#/components/runOptions/dependencyServiceMock"
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+        branch: main
+  services:
+    yourService:
+      description: Your gRPC Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: yourServiceSpec
+                  path: /path/to/your/your_service.proto
+    dependencyService:
+      description: Dependency gRPC Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: dependencySpec
+                  path: /path/to/your/dependency_service.proto
+  runOptions:
+    yourServiceTest:
+      protobuf:
+        type: test
+        specs:
+          - spec:
+              id: yourServiceSpec
+              host: localhost
+              port: 8080
+              importPaths:
+                - ../
+              protocVersion: 3.23.4
+    dependencyServiceMock:
+      protobuf:
+        type: mock
+        specs:
+          - spec:
+              id: dependencySpec
+              host: localhost
+              port: 9000
+              importPaths:
+                - ../
+              protocVersion: 3.23.4
+```
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+```yaml
+version: 2
+contracts:
+  - git:
+      branch: main
+      url: https://your-central-contract-repo.com
+    provides:
+      - specs:
+          - /path/to/your/your_service.proto
+        specType: protobuf
+        config:
+          host: localhost
+          port: 8080
+          importPaths:
+            - ../
+          protocVersion: 3.23.4
+    consumes:
+      - specs:
+          - /path/to/your/dependency_service.proto
+        specType: protobuf
+        config:
+          host: localhost
+          port: 9000
+          importPaths:
+            - ../
+          protocVersion: 3.23.4
+```
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
 
 ```yaml
 version: 2
 contracts:
   - git:
       url: https://your-central-contract-repo.com
-    consumes:
-      - /path/to/your/dependency_service.proto
     provides:
       - /path/to/your/your_service.proto
+    consumes:
+      - /path/to/your/dependency_service.proto
 ```
 
-To run tests against your BFF (Backend for Frontend), use this command:
+:::info
+When using the simple version 2 configuration, provide additional configuration through environment variables or CLI arguments as described in the "Using your proto files as your API Contracts" section above.
+:::
+
+  </TabItem>
+</Tabs>
+
+To run tests against your service, use the appropriate command based on your configuration version:
+
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
 
 ```bash
-docker run --network host -v "$(pwd):/usr/src/app" -e SPECMATIC_GENERATIVE_TESTS=true specmatic/enterprise test --port=8080 --host=host.docker.internal
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
 ```
 
-This command mounts your `specmatic.yaml` file and runs tests against a service running on port 8080 by generating gRPC requests based on the profiles listed under `provides` section.
+This command mounts your `specmatic.yaml` file and runs tests against your service. All configuration (host, port, import paths, etc.) is read from the `specmatic.yaml` file.
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
+```
+
+This command mounts your `specmatic.yaml` file and runs tests against your service. All configuration (host, port, import paths, etc.) is read from the `specmatic.yaml` file.
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" \
+  -e SPECMATIC_GENERATIVE_TESTS=true \
+  -e SPECMATIC_GRPC_HOST=localhost \
+  -e SPECMATIC_GRPC_PORT=8080 \
+  -e IMPORT_PATHS=../ \
+  -e PROTOC_VERSION=3.23.4 \
+  specmatic/enterprise test \
+  --port=8080 \
+  --host=host.docker.internal \
+  --import-path=../ \
+  --protoc-version=3.23.4
+```
+
+This command mounts your `specmatic.yaml` file and runs tests against your service. Since the simple v2 configuration doesn't include detailed config, you need to provide the necessary configuration through environment variables and CLI arguments.
+
+  </TabItem>
+</Tabs>
 
 ### Proto 3 (required, optional) and Proto Validate
 
@@ -295,11 +751,56 @@ You would see a similar error in the logs:
 
 In such cases, you should increase the `requestTimeout`. You can specify this in the Specmatic config as follows:
 
+<Tabs groupId="config-version">
+  <TabItem value="v3" label="Version 3 (Recommended)">
+
+```yaml
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/yourService"
+    runOptions:
+      $ref: "#/components/runOptions/yourServiceTest"
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://github.com/your-org/your-contracts.git
+        branch: main
+  services:
+    yourService:
+      description: Your gRPC Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: yourSpec
+                  path: path/to/your/grpc/proto/file/spec.proto
+  runOptions:
+    yourServiceTest:
+      protobuf:
+        type: test
+        specs:
+          - spec:
+              id: yourSpec
+              host: localhost
+              port: 9090
+              importPaths:
+                - ../
+              protocVersion: 3.23.4
+              requestTimeout: 10000 # Duration in milliseconds to wait for a response before timing out. Default is 5000 ms (5 seconds).
+```
+
+  </TabItem>
+  <TabItem value="v2-with-config" label="Version 2 (With Config)">
+
 ```yaml
 version: 2
 contracts:
   - git:
-      url: https://your-central-contract-repo.com
+      url: https://github.com/your-org/your-contracts.git
     provides:
       - specs:
           - path/to/your/grpc/proto/file/spec.proto
@@ -307,11 +808,30 @@ contracts:
         config:
           host: localhost
           port: 9090
-          importPaths: # List of paths to resolve imports from, for example if your proto file imports other proto files from a different directory then you can specify the path to that directory here
+          importPaths:
             - ../
           protocVersion: 3.23.4
-          requestTimeout: 5000 # Duration in milliseconds to wait for a response before timing out. Default is 5000 ms (5 seconds).
+          requestTimeout: 10000 # Duration in milliseconds to wait for a response before timing out. Default is 5000 ms (5 seconds).
 ```
+
+  </TabItem>
+  <TabItem value="v2-simple" label="Version 2 (Simple)">
+
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://github.com/your-org/your-contracts
+    provides:
+      - path/to/your/grpc/proto/file/spec.proto
+```
+
+:::info
+Request timeout configuration is not available in the simple version 2 configuration. Please use Version 2 (With Config) or Version 3 to configure custom request timeout values.
+:::
+
+  </TabItem>
+</Tabs>
 
 ## Sample Projects
 

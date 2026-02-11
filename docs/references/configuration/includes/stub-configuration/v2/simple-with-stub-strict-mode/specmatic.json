@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "consumes": [
+        "/path/to/spec.yaml"
+      ]
+    }
+  ],
+  "stub": {
+    "strictMode": true
+  }
+}

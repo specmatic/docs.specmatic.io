@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git",
+        "branch": "main"
+      },
+      "provides": [
+        {
+          "specs": [
+            "com/petstore/store.yaml"
+          ],
+          "specType": "openapi",
+          "config": {
+            "baseUrl": "http://localhost:8080"
+          }
+        }
+      ],
+      "consumes": [
+        {
+          "specs": [
+            "com/petstore/store.yaml"
+          ],
+          "specType": "openapi",
+          "config": {
+            "baseUrl": "http://localhost:8090"
+          }
+        }
+      ]
+    }
+  ]
+}

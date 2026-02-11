@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "filesystem": {
+        "directory": "path/to/spec/directory"
+      },
+      "provides": [
+        {
+          "specs": [
+            "api_order_v1.yaml"
+          ],
+          "baseUrl": "http://localhost:8080/v1"
+        },
+        {
+          "specs": [
+            "api_order_v2.yaml"
+          ],
+          "baseUrl": "http://localhost:8080/v2"
+        }
+      ]
+    }
+  ]
+}

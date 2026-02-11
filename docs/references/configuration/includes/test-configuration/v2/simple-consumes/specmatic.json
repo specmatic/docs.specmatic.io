@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
+      },
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+      ]
+    }
+  ],
+  "test": {
+    "timeoutInMilliseconds": 3000
+  }
+}

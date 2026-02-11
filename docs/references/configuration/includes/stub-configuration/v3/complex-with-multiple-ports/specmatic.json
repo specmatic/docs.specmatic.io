@@ -1,0 +1,65 @@
+{
+  "version": 3,
+  "components": {
+    "sources": {
+      "specmaticOrderContracts": {
+        "filesystem": {
+          "directory": "path/to/spec/directory"
+        }
+      }
+    },
+    "runOptions": {
+      "serviceV1Mock": {
+        "openapi": {
+          "type": "test",
+          "port": 9000
+        }
+      },
+      "serviceV2Mock": {
+        "openapi": {
+          "type": "test",
+          "port": 9001
+        }
+      }
+    },
+    "services": {
+      "order-and-user-svc": {
+        "description": "Order and User service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts",
+                "runOptions": {
+                  "$ref": "#/components/runOptions/serviceV1Mock"
+                }
+              },
+              "specs": [
+                "api_order_v1.yaml",
+                "api_user_v1.yaml"
+              ]
+            }
+          }
+        ]
+      },
+      "auth-service": {
+        "description": "Auth Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts",
+                "runOptions": {
+                  "$ref": "#/components/runOptions/serviceV2Mock"
+                }
+              },
+              "specs": [
+                "api_auth_v1.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

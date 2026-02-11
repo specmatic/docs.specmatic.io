@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git",
+        "branch": "main"
+      },
+      "provides": [
+        "com/petstore/store.yaml"
+      ],
+      "consumes": [
+        "com/petstore/payment.yaml"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "filesystem": {
+        "directory": "path/to/spec/directory"
+      },
+      "consumes": [
+        {
+          "specs": [
+            "api_order_v1.yaml",
+            "api_user_v1.yaml"
+          ],
+          "specType": "openapi",
+          "config": {
+            "baseUrl": "http://localhost:8080"
+          }
+        }
+      ],
+      "provides": [
+        {
+          "specs": [
+            "api_auth_v1.yaml"
+          ],
+          "specType": "openapi",
+          "config": {
+            "baseUrl": "http://localhost:8090"
+          }
+        }
+      ]
+    }
+  ]
+}

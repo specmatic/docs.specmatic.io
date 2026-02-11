@@ -1,0 +1,41 @@
+{
+  "version": 3,
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/apiOrderV3"
+        }
+      }
+    ],
+    "settings": {
+      "delayInMilliseconds": 10000
+    }
+  },
+  "components": {
+    "sources": {
+      "specmaticOrderContracts": {
+        "git": {
+          "url": "https://github.com/specmatic/specmatic-order-contracts.git"
+        }
+      }
+    },
+    "services": {
+      "apiOrderV3": {
+        "description": "API Order V3",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "io/specmatic/examples/store/openapi/api_order_v3.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

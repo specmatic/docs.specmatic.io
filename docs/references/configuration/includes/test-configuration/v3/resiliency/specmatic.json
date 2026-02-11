@@ -1,0 +1,29 @@
+{
+  "version": 3,
+  "components": {
+    "services": {
+      "my-service": {
+        "description": "My Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "filesystem": {
+                  "directory": "path/to/spec/directory"
+                }
+              },
+              "specs": [
+                "com/petstore/store.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "systemUnderTest": {
+    "settings": {
+      "resiliencyTests": "all"
+    }
+  }
+}

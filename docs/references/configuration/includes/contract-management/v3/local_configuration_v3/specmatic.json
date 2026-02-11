@@ -1,0 +1,44 @@
+{
+  "version": 3,
+  "components": {
+    "sources": {
+      "specmaticOrderContracts": {
+        "filesystem": {
+          "directory": "path/to/spec/directory"
+        }
+      }
+    },
+    "services": {
+      "petStoreService": {
+        "description": "Pet Store Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "com/petstore/store.yaml"
+              ]
+            }
+          }
+        ]
+      },
+      "paymentService": {
+        "description": "Payment Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "com/petstore/payment.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

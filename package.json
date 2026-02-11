@@ -24,13 +24,16 @@
     "ejs": "^4.0.1",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.9.2",
     "@docusaurus/plugin-client-redirects": "^3.9.2",
     "@docusaurus/theme-mermaid": "^3.9.2",
-    "@docusaurus/types": "3.9.2"
+    "@docusaurus/types": "3.9.2",
+    "@types/js-yaml": "^4.0.9",
+    "js-yaml": "^4.1.1"
   },
   "browserslist": {
     "production": [

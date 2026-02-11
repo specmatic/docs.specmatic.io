@@ -2,44 +2,25 @@
 title: Hooks
 sidebar_position: 8
 ---
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-
+import {V2V3SpecmaticConfigTabs} from "../../../../src/components/V2V3SpecmaticConfigTabs";
 
 # Hooks
 
 ## What are Hooks?
 
-A hook is simply a command that can run on the Terminal or Command Prompt.
+A hook is simply a command that, which can be configured to run at specific stages of the contract testing process.
+Hooks allow you to perform custom actions, such as modifying the contract before it is loaded, or processing test
+results after execution.
 
 ## Configuration
 
-<Tabs groupId="hooks_configuration">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-hooks:
-  stub_load_contract: python load.py
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "hooks": {
-    "stub_load_contract": "python load.py"
-  }
-}
-```
-
-  </TabItem>
-
-</Tabs>
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/hooks/v3/simple/specmatic.json')}
+  v2Object={require('./includes/hooks/v2/simple/specmatic.json')}
+/>
 
 ## How Hooks Work
 

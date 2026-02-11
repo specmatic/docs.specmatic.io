@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "hooks": {
+    "stub_load_contract": "python load.py",
+    "test_load_contract": "python test.py"
+  }
+}
