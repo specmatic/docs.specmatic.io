@@ -4,10 +4,6 @@ sidebar_position: 3
 ---
 
 import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import {JsonDisplay, YamlDisplay} from '@site/src/components/JsonYamlDisplay';
-
 
 # Test Configuration
 
@@ -15,29 +11,10 @@ import {JsonDisplay, YamlDisplay} from '@site/src/components/JsonYamlDisplay';
 
 To enable resiliency tests, add the `resiliencyTests` configuration to your `specmatic.yaml` file as shown below:
 
-<Tabs groupId="resiliency_tests_configuration">
-  <TabItem value="specmatic-v3" label="Version 3">
-    <Tabs groupId="resiliency_tests_configuration_v3">
-      <TabItem value="specmatic-yaml" label="specmatic.yaml">
-        <YamlDisplay object={require('./includes/test-configuration/v3/resiliency/specmatic.json')}/>
-      </TabItem>
-      <TabItem value="specmatic-json" label="specmatic.json">
-        <JsonDisplay object={require('./includes/test-configuration/v3/resiliency/specmatic.json')}/>
-      </TabItem>
-    </Tabs>
-  </TabItem>
-  <TabItem value="specmatic-v2" label="Version 2">
-    <Tabs groupId="resiliency_tests_configuration_v2">
-      <TabItem value="specmatic-yaml" label="specmatic.yaml">
-        <YamlDisplay object={require('./includes/test-configuration/v2/resiliency/specmatic.json')}/>
-      </TabItem>
-      <TabItem value="specmatic-json" label="specmatic.json">
-        <JsonDisplay object={require('./includes/test-configuration/v2/resiliency/specmatic.json')}/>
-      </TabItem>
-    </Tabs>
-  </TabItem>
-
-</Tabs>
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/test-configuration/v3/resiliency/specmatic.json')}
+  v2Object={require('./includes/test-configuration/v2/resiliency/specmatic.json')}
+/>
 
 Note: The value of `enable` can hold the following values:
 - `all`
