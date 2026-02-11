@@ -19,11 +19,14 @@ The same configuration file can be leveraged to define stubs also.
   v2Object={require('./includes/stub-configuration/v2/simple/specmatic.json')}
 />
 
-Please note that now we are now listing the `api_order_v3.yaml` is listed as a stub dependency. You can run the `specmatic mock` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml).
+Please note that now we are now listing the `api_order_v3.yaml` is listed as a dependency. You can run the
+`specmatic mock` command and the Specmatic will clone the API specifications and run it as a mock. Here is an
+[example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml).
 
 ## Stub Start Timeout
 
-The `startTimeoutInMilliseconds` setting in Specmatic ensures that a stub service, whether started via the _stub command_ or programmatically using _createStub_ exits if it doesn't start within the defined time.
+The `startTimeoutInMilliseconds` setting in Specmatic ensures that a mock service, whether started via the
+`stub` command or programmatically using `createStub` method exits if it doesn't start within the defined time.
 
 <V2V3SpecmaticConfigTabs
   v3Object={require('./includes/stub-configuration/v3/simple-with-stub-start-timeout/specmatic.json')}
@@ -60,7 +63,7 @@ If you want to run stubs on different ports for different specifications, you ca
   v2Object={require('./includes/stub-configuration/v2/complex-with-multiple-ports/specmatic.json')}
 />
 
-As per the above configuration, the specs `api_order_v1.yaml` and `api_user_v1.yaml` will run on port 9000 and the spec `api_auth_v1.yaml` will run on port 9001.
+As per the above configuration, the specs `api_order_v1.yaml` and `api_uuid_v1.yaml` will run on port 9000 and the spec `online_store_v1.yaml` will run on port 9001.
 
 You can also specify `host`, `basePath`, and even the complete `baseUrl` in the `consumes` field. For more details, refer to the [Service Virtualization](/contract_driven_development/service_virtualization#specmatic-configuration-with-base-url-host-port-and-path)
 

@@ -2,20 +2,19 @@
   "version": 2,
   "contracts": [
     {
-      "filesystem": {
-        "directory": "path/to/spec/directory"
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts.git"
       },
       "consumes": [
         {
           "specs": [
-            "api_order_v1.yaml",
-            "api_user_v1.yaml"
+            "io/specmatic/examples/store/openapi/api_order_v1.yaml"
           ],
           "port": 9000
         },
         {
           "specs": [
-            "api_auth_v1.yaml"
+            "io/specmatic/examples/store/openapi/online_store_v1.yaml"
           ],
           "port": 9001
         }
