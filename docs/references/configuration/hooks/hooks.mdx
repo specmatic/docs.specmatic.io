@@ -30,10 +30,18 @@ The command can parse the contract file and write it to standard out. Specmatic 
 
 ## Supported Hook Names
 
+To modify specs:
+
 - `stub_load_contract`
 - `test_load_contract`
 
-You can prefer the following to define hooks:
+To modify requests and responses:
+
+- `post_specmatic_response_processor`
+- `pre_specmatic_request_processor`
+- `pre_specmatic_response_processor`
+
+More details about the hooks can be found in the following sections:
 
 - [Request and Response Processing](/features/hooks/processor_hooks)
 - [Hooks to modify specs](/features/hooks/hooks_to_modify_specs)

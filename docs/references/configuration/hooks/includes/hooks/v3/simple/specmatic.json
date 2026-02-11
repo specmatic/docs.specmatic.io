@@ -12,7 +12,9 @@
       "stubHooks": {
         "post_specmatic_response_processor": "python post_specmatic_response_processor.py",
         "pre_specmatic_request_processor": "python pre_specmatic_request_processor.py",
-        "pre_specmatic_response_processor": "python pre_specmatic_response_processor.py"
+        "pre_specmatic_response_processor": "python pre_specmatic_response_processor.py",
+        "test_load_contract": "python test_load_contract.py",
+        "stub_load_contract": "python stub_load_contract.py"
       }
     }
   }
