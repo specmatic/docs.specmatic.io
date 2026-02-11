@@ -69,4 +69,12 @@ By default, Specmatic searches for the directory ending with `_examples` to pick
   v2Object={require('./includes/test-configuration/v2/externalized-examples/specmatic.json')}
 />
 
-**Note**: When using v2 config, if the `_examples` directory is present, it will still be included alongside any additional directories specified under the `examples` key.
+:::note
+When using v2 config, if the `_examples` directory is present, it will still be included alongside any additional
+directories specified under the `examples` key.
+
+When using v3 config, the examples will be loaded from directory with the name `${SPEC_FILE}_examples` if it exists,
+in addition to any directories specified under the `examples` key. For example, if you have a spec file named
+`api_order_v1.yaml`, Specmatic will look for examples in the `api_order_v1_examples`
+directory by default, even if it's not explicitly mentioned in the configuration.
+:::
