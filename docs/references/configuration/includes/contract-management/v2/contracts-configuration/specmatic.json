@@ -9,7 +9,7 @@
       "provides": [
         {
           "specs": [
-            "com/petstore/store.yaml"
+            "io/specmatic/examples/store/openapi/online_store_v1.yaml"
           ],
           "specType": "openapi",
           "config": {
@@ -20,7 +20,7 @@
       "consumes": [
         {
           "specs": [
-            "com/petstore/store.yaml"
+            "io/specmatic/examples/store/openapi/api_order_v1.yaml"
           ],
           "specType": "openapi",
           "config": {

@@ -7,10 +7,10 @@
         "branch": "main"
       },
       "provides": [
-        "com/petstore/store.yaml"
+        "io/specmatic/examples/store/openapi/online_store_v1.yaml"
       ],
       "consumes": [
-        "com/petstore/payment.yaml"
+        "io/specmatic/examples/store/openapi/api_order_v1.yaml"
       ]
     }
   ]
