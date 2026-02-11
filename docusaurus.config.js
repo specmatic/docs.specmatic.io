@@ -183,10 +183,8 @@ const config = {
           {from: '/docs/getting_started/studio_quick_start/', to: '/getting_started/studio_quick_start'},
           // references
           {from: '/docs/references/configuration/', to: '/references/configuration'},
-          {from: '/docs/references/configuration/authentication/', to: '/references/configuration/authentication'},
           { from: '/docs/references/configuration/complete-examples/', to: '/references/configuration/complete-examples' },
           { from: '/docs/references/configuration/contract-management/', to: '/references/configuration/contract-management' },
-          {from: '/docs/references/configuration/environments/', to: '/references/configuration/environments'},
           {from: '/docs/references/configuration/getting-started/', to: '/references/configuration/getting-started'},
           {from: '/docs/references/configuration/hooks/', to: '/references/configuration/hooks'},
           {from: '/docs/references/configuration/reports/', to: '/references/configuration/reports'},
@@ -330,17 +328,6 @@ const config = {
               '/documentation/features/authentication.html'
             ],
             to: '/features/authentication'
-          },
-          {
-            from: [
-              '/documentation/authentication-by-reaching-another-service',
-              '/documentation/authentication-by-reaching-another-service.html',
-              '/features/authentication-by-reaching-another-service',
-              '/features/authentication-by-reaching-another-service.html',
-              '/documentation/features/authentication-by-reaching-another-service',
-              '/documentation/features/authentication-by-reaching-another-service.html'
-            ],
-            to: '/references/configuration/authentication'
           },
           {
             from: [
