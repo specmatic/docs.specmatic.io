@@ -188,7 +188,7 @@ const config = {
           {from: '/docs/references/configuration/getting-started/', to: '/references/configuration/getting-started'},
           {from: '/docs/references/configuration/hooks/', to: '/references/configuration/hooks'},
           {from: '/docs/references/configuration/reports/', to: '/references/configuration/reports'},
-          { from: '/docs/references/configuration/stub-configuration/', to: '/references/configuration/stub-configuration' },
+          { from: '/docs/references/configuration/stub-configuration/', to: '/references/configuration/mock-configuration' },
           {from: '/docs/references/configuration/telemetry/', to: '/references/configuration/telemetry'},
           {from: '/docs/references/configuration/template-values/', to: '/references/configuration/template-values'},
           { from: '/docs/references/configuration/test-configuration/', to: '/references/configuration/test-configuration' },

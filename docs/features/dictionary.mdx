@@ -564,19 +564,19 @@ Now to execute contract tests on the specification using the dictionary a servic
 
 <TabItem value="test-java" label="Java">
 ```shell
-java -jar specmatic.jar stub employees.yaml
+java -jar specmatic.jar mock employees.yaml
 ```
 </TabItem>
 
 <TabItem value="test-npm" label="NPM">
 ```shell
-npx specmatic stub employees.yaml
+npx specmatic mock employees.yaml
 ```
 </TabItem>
 
 <TabItem value="test-docker" label="Docker">
 ```shell
-docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub "employees.yaml"
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic mock "employees.yaml"
 ```
 </TabItem>
 
@@ -654,19 +654,19 @@ To start service virtualization, use the following command:
 
 <TabItem value="stub-java" label="Java">
 ```shell
-java -jar specmatic.jar stub employees.yaml
+java -jar specmatic.jar mock employees.yaml
 ```
 </TabItem>
 
 <TabItem value="stub-npm" label="NPM">
 ```shell
-npx specmatic stub employees.yaml
+npx specmatic mock employees.yaml
 ```
 </TabItem>
 
 <TabItem value="stub-docker" label="Docker">
 ```shell
-docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub "employees.yaml"
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic mock "employees.yaml"
 ```
 </TabItem>
 

@@ -321,7 +321,7 @@ Start the stub server with the following command:
   <TabItem value="java" label="java">
 
 ```shell
-java -jar specmatic.jar stub employee_details.yaml
+java -jar specmatic.jar mock employee_details.yaml
 ```
 
   </TabItem>
@@ -329,7 +329,7 @@ java -jar specmatic.jar stub employee_details.yaml
   <TabItem value="npm" label="npm">
 
 ```shell
-npx specmatic stub employee_details.yaml
+npx specmatic mock employee_details.yaml
 ```
 
   </TabItem>
@@ -337,7 +337,7 @@ npx specmatic stub employee_details.yaml
   <TabItem value="docker" label="docker">
 
 ```shell
-docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub "employee_details.yaml"
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/specmatic mock "employee_details.yaml"
 ```
 
   </TabItem>

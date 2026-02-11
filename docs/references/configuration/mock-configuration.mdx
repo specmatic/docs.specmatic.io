@@ -1,13 +1,13 @@
 ---
 title: Stub Configuration
 sidebar_position: 4
+redirect_from: /references/configuration/stub-configuration
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+
 import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 
 
-# Stub Configuration
+# Mock Configuration
 
 ## Configuring Stubs
 
@@ -19,7 +19,7 @@ The same configuration file can be leveraged to define stubs also.
   v2Object={require('./includes/stub-configuration/v2/simple/specmatic.json')}
 />
 
-Please note that now we are now listing the `api_order_v3.yaml` is listed as a stub dependency. You can run the `specmatic stub` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml).
+Please note that now we are now listing the `api_order_v3.yaml` is listed as a stub dependency. You can run the `specmatic mock` command and the Specmatic will clone the API specifications and run it as a stub. Here is an [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml).
 
 ## Stub Start Timeout
 

@@ -90,19 +90,19 @@ Service Virtualization
 
   <TabItem value="java" label="java">
 ```shell
-java -jar specmatic.jar stub
+java -jar specmatic.jar mock
 ```
   </TabItem>
 
   <TabItem value="npm" label="npm">
 ```shell
-npx specmatic stub
+npx specmatic mock
 ```
   </TabItem>
 
   <TabItem value="docker" label="docker">
 ```shell
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic mock
 ```
   </TabItem>
 
@@ -407,19 +407,19 @@ Let's try this out.
 
   <TabItem value="java" label="java">
 ```shell
-java -jar specmatic.jar stub --strict
+java -jar specmatic.jar mock --strict
 ```
   </TabItem>
 
   <TabItem value="npm" label="npm">
 ```shell
-npx specmatic stub --strict
+npx specmatic mock --strict
 ```
   </TabItem>
 
   <TabItem value="docker" label="docker">
 ```shell
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub --strict
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic mock --strict
 ```
   </TabItem>
 
@@ -435,7 +435,7 @@ docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub --st
 
 To recap, in `strict` mode, Specmatic will only respond to requests that have matching examples, inline or external.
 
-You can enable strict mode using configuration as described [here](/references/configuration/stub-configuration#strict-mode).
+You can enable strict mode using configuration as described [here](/references/configuration/mock-configuration#strict-mode).
 
 ## Data Type-Based Examples
 
@@ -1011,19 +1011,19 @@ This is the quickest approach.
 
   <TabItem value="java" label="java">
 ```shell
-java -jar specmatic.jar stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
+java -jar specmatic.jar mock --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
 ```
   </TabItem>
 
   <TabItem value="npm" label="npm">
 ```shell
-npx specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
+npx specmatic mock --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
 ```
   </TabItem>
 
   <TabItem value="docker" label="docker">
 ```shell
-docker run -p 443:443 -v "${PWD}/product-api.yaml:/usr/src/app/product-api.yaml" -v "${PWD}/<directory to create keystore>:/usr/src/app/<directory to create keystore>" specmatic/specmatic stub --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
+docker run -p 443:443 -v "${PWD}/product-api.yaml:/usr/src/app/product-api.yaml" -v "${PWD}/<directory to create keystore>:/usr/src/app/<directory to create keystore>" specmatic/specmatic mock --httpsKeyStoreDir=<directory to create keystore> --port=443 product-api.yaml
 ```
   </TabItem>
 
@@ -1036,7 +1036,7 @@ This will create a `specmatic.jks` file in the dir that you mentioned above, and
 If you already have a keystore and self-signed certificate you can pass it to Specmatic through below command options.
 
 ```shell
-% specmatic stub --help
+% specmatic mock --help
 ...
       --httpsKeyStore=<keyStoreFile>
                              Run the proxy on https using a key in this store
@@ -2113,19 +2113,19 @@ Once we have this setup, we can run the Specmatic stub server by running the fol
 
   <TabItem value="java" label="java">
 ```shell
-java -jar specmatic.jar stub
+java -jar specmatic.jar mock
 ```
   </TabItem>
 
   <TabItem value="npm" label="npm">
 ```shell
-npx specmatic stub
+npx specmatic mock
 ```
   </TabItem>
 
   <TabItem value="docker" label="docker">
 ```shell
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic stub
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/specmatic mock
 ```
   </TabItem>
 
@@ -2174,7 +2174,7 @@ Specmatic stub server monitors your specification files and examples for changes
 
 However, you may need to switch off this at times. For example, in some higher environment where the stub runs, the number of files being watched may exceed the value of /proc/sys/fs/inotify/max_user_watches, and you may not have access to the environment's config/setup to change this value. In such a case, the ability to disable hot-reload provides a pragmatic path forward.
 
-You can use a command-line switch: `java -jar specmatic.jar stub --hot-reload=disabled <your-spec.yaml>`.
+You can use a command-line switch: `java -jar specmatic.jar mock --hot-reload=disabled <your-spec.yaml>`.
 
 You can also disable it via the following configuration in specmatic.yaml:
 
@@ -2189,7 +2189,7 @@ stub:
 Specmatic can be asked to use a branch of the central repo with the same name as the branch that is locally checked out.
 
 This feature may be switched on in the following ways:
-- On the commandline, use `--match-branch`, e.g. `specmatic test --match-branch`, or `specmatic stub --match-branch`.
+- On the commandline, use `--match-branch`, e.g. `specmatic test --match-branch`, or `specmatic mock --match-branch`.
 - Set an environment variable or system property named `MATCH_BRANCH` to `true`.
 - Set `matchBranch: true` in `specmatic.yaml`
 
@@ -2211,7 +2211,7 @@ To understand where this may be useful, consider the following scenario. Let's s
 
 With this setup, the API developer can run `specmatic test --match-branch` with the 'product-discount' branch checked out in the API repository, and since there is a branch on the central repo with the same name, specifications from the 'product-discount' branch on the central repo will be used to run tests.
 
-The same is true for the consumer of the API, who can run `specmatic stub --match-branch`.
+The same is true for the consumer of the API, who can run `specmatic mock --match-branch`.
 
 Not all features though require specification changes. So if there is no matching branch in the central repository, `specmatic test --match-branch` will simply create a new local branch off the default branch and run tests from it.
 

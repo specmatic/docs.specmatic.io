@@ -124,19 +124,19 @@ Let's start the Specmatic stub server. To spin up a stub server with the `petsto
 
 <TabItem value="stub-java" label="Java">
 ```shell
-java -jar specmatic.jar stub petstore.yaml
+java -jar specmatic.jar mock petstore.yaml
 ```
 </TabItem>
 
 <TabItem value="stub-npm" label="NPM">
 ```shell
-npx specmatic stub petstore.yaml
+npx specmatic mock petstore.yaml
 ```
 </TabItem>
 
 <TabItem value="stub-docker" label="Docker">
 ```shell
-docker run -v "/local-directory/petstore.yaml:/usr/src/app/petstore.yaml" -p 9000:9000 specmatic/specmatic stub "petstore.yaml"
+docker run -v "/local-directory/petstore.yaml:/usr/src/app/petstore.yaml" -p 9000:9000 specmatic/specmatic mock "petstore.yaml"
 ```
 </TabItem>
 

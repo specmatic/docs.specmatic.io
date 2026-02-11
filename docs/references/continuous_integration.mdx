@@ -246,7 +246,7 @@ jobs:
           -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
           -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
           -p 8080:8080 \
-          specmatic/specmatic stub
+          specmatic/specmatic mock
 
         # Wait for the stub to be ready
         sleep 10
@@ -282,7 +282,7 @@ client_component_tests:
 
   script:
     - npm ci
-    - specmatic stub --port=8080 &
+    - specmatic mock --port=8080 &
     - sleep 10
     - STUB_URL=http://localhost:8080 npm run test:component
 ```
@@ -359,7 +359,7 @@ jobs:
             -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
             -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
             -p 9000:9000 \
-            specmatic/specmatic stub
+            specmatic/specmatic mock
 
           # Wait for the stub to be ready
           sleep 10
