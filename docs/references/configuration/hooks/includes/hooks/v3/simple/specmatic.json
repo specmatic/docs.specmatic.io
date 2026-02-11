@@ -1,0 +1,19 @@
+{
+  "version": 3,
+  "dependencies": {
+    "data": {
+      "adapters": {
+        "$ref": "#/components/adapters/stubHooks"
+      }
+    }
+  },
+  "components": {
+    "adapters": {
+      "stubHooks": {
+        "post_specmatic_response_processor": "python post_specmatic_response_processor.py",
+        "pre_specmatic_request_processor": "python pre_specmatic_request_processor.py",
+        "pre_specmatic_response_processor": "python pre_specmatic_response_processor.py"
+      }
+    }
+  }
+}
