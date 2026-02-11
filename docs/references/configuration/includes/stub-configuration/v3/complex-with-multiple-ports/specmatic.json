@@ -32,12 +32,14 @@
       "order-svc-mock": {
         "openapi": {
           "type": "mock",
+          "host": "localhost",
           "port": 9000
         }
       },
       "online-store-svc-mock": {
         "openapi": {
           "type": "mock",
+          "host": "localhost",
           "port": 9001
         }
       }
