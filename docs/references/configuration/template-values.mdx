@@ -2,11 +2,14 @@
 title: Template Values
 sidebar_position: 9
 ---
+
+import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 
-Specmatic configuration can pull in values from environment variables or system properties at runtime, through the use of template values.
+Specmatic configuration can pull in values from environment variables or Java system properties at runtime, through the
+use of template values.
 
 ## Template Syntax
 
@@ -24,42 +27,10 @@ Resolution order:
 
 ## Scalar Examples
 
-<Tabs groupId="template_scalar">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-contracts:
-  - consumes:
-    - spec.yaml
-stub:
-  generative: "{STUB_GENERATIVE:true}"
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "consumes": [
-        "spec.yaml"
-      ]
-    }
-  ],
-  "stub": {
-    "generative": "{STUB_GENERATIVE:true}"
-  }
-}
-```
-
-  </TabItem>
-
-</Tabs>
+<V2V3SpecmaticConfigTabs
+  v2Object={require('./includes/template-values/v2/simple/specmatic.json')}
+  v3Object={require('./includes/template-values/v3/simple/specmatic.json')}
+/>
 
 Set the value in a shell (zsh/bash):
 
@@ -71,87 +42,15 @@ export STUB_GENERATIVE=false
 
 If the resolved value starts with `{` or `[`, it is parsed as JSON and used as an object or array value in the config.
 
-<Tabs groupId="template_structured">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-version: 2
-contracts:
-  - consumes:
-    - spec.yaml
-stub: "{STUB_CONFIG:{\"generative\": true}}"
-examples: "{EXAMPLE_DIRS:[\"examples/one\",\"examples/two\"]}"
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "consumes": [
-        "spec.yaml"
-      ]
-    }
-  ],
-  "stub": "{STUB_CONFIG:{\"generative\": true}}",
-  "examples": "{EXAMPLE_DIRS:[\"examples/one\",\"examples/two\"]}"
-}
-```
-
-  </TabItem>
-
-</Tabs>
+<V2V3SpecmaticConfigTabs
+  v2Object={require('./includes/template-values/v2/structured/specmatic.json')}
+  v3Object={require('./includes/template-values/v3/structured/specmatic.json')}
+/>
 
 Set the value in a shell:
 
 ```
 export STUB_CONFIG='{"generative": false}'
-export EXAMPLE_DIRS='["examples/one","examples/two"]'
-```
-
-## Using a JSON-Looking Value As String
-
-If the resolved value is a JSON string (quoted), Specmatic treats it as a string and removes the outer quotes. This lets you keep a JSON-looking value as plain text.
-
-Example:
-
-<Tabs groupId="force_string">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-
-```yaml
-stub: "{STUB_CONFIG:\"{\\\"generative\\\": true}\"}"
-```
-
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-
-```json
-{
-  "stub": "{STUB_CONFIG:\"{\\\"generative\\\": true}\"}"
-}
-```
-
-  </TabItem>
-
-</Tabs>
-
-Set the value in a shell:
-
-```
-export STUB_CONFIG='"{\"generative\": true}"'
-```
-
-Resulting value:
-
-```
-{"generative": true}
 ```
 
 ## Notes
