@@ -2,6 +2,7 @@
 title: Complete Examples
 sidebar_position: 10
 ---
+import {JsonDisplay, YamlDisplay} from "../../../src/components/JsonYamlDisplay";
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -12,142 +13,69 @@ import TabItem from '@theme/TabItem';
 
 This example shows all available configuration options:
 
-<Tabs groupId="complete_configuration">
 
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
+<Tabs groupId={`tab-complete-examples`}>
+  <TabItem value="v3" label="Version 3 (recommended)">
+    <Tabs groupId="v3-tabs">
+      <TabItem value={`specmatic-yaml-v3-complete-examples`} label="specmatic.yaml">
+        <YamlDisplay object={require('./includes/complete-examples/v3/specmatic.json')}/>
+      </TabItem>
+      <TabItem value={`specmatic-json-v3-complete-examples`} label="specmatic.json">
+        <JsonDisplay object={require('./includes/complete-examples/v3/specmatic.json')}/>
+      </TabItem>
+    </Tabs>
 
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://azure.com/XNSio/XNSIO/_git/petstore-contracts
-      branch: main
-    provides:
-      - com/petstore/store.yaml
-    consumes:
-      - com/petstore/payment.yaml
+    **Configuration Structure Summary (v3)**
 
-auth:
-  bearer-file: central_repo_auth_token.txt
+    The complete configuration file supports the following top-level sections:
 
-pipeline:
-  provider: azure
-  organization: XNSio
-  project: XNSIO
-  definitionId: 4
+    1. **version** - Configuration version number (latest being `3`).
+    2. **components** - Reusable components and definitions. Key sub-sections include:
+        - `components.sources` - Define contract sources (Git repositories or filesystem locations) used to load API specs.
+        - `components.services` - Service definitions referenced by `systemUnderTest` and `dependencies`. Each service
+        typically contains `definitions` which reference a `source` and one or more `specs`.
+        - `components.runOptions` - Named run configurations (for example, `openapi.type` = `test` or `mock`, and `baseUrl`)
+        - `components.adapters` - Adapter definitions for massaging contract specifications, or for mutating request/responses
+        from the proxy and/or stub.
+    3. **systemUnderTest** - Defines the primary system under test. Contains a `components.service` entry and
+    usually an associated `runOptions` profile for executing contract tests.
+    4. **dependencies** - Defines dependent services used for service virtualization. Typically contains a `services`
+    array where each item references a `components.services` entry and optional `runOptions` (often used to point to
+    mock instances).
+    5. **specmatic** - Specmatic-specific configuration:
+        - `specmatic.settings` - Runtime and backward-compatibility settings (mock/test options, strictMode, baseBranch,
+    delays, timeouts, etc.).
+        - `specmatic.governance` - Reporting and success criteria (formats, outputDirectory, enforcement thresholds).
+        - `specmatic.license` - License path or configuration.
 
-environments:
-  staging:
-    baseurls:
-      auth.spec: http://localhost:8080
-    variables:
-      username: jackie
-      password: PaSsWoRd
-
-hooks:
-  hook_name: command
-
-report:
-  formatters:
-    - type: text
-      layout: table
-  types:
-    APICoverage:
-      OpenAPI:
-        successCriteria:
-          minThresholdPercentage: 100
-          maxMissedEndpointsInSpec: 0
-          enforce: true
-```
+    For detailed information on each section, refer to the linked documentation pages.
 
   </TabItem>
+  <TabItem value="v2" label="Version 2">
+    <Tabs groupId="v2-tabs">
+      <TabItem value={`specmatic-yaml-v2-complete-examples`} label="specmatic.yaml">
+        <YamlDisplay object={require('./includes/complete-examples/v2/specmatic.json')}/>
+      </TabItem>
 
-  <TabItem value="specmatic-json" label="specmatic.json">
+      <TabItem value={`specmatic-json-v2-complete-examples`} label="specmatic.json">
+        <JsonDisplay object={require('./includes/complete-examples/v2/specmatic.json')}/>
+      </TabItem>
+    </Tabs>
 
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "git": {
-        "url": "https://azure.com/XNSio/XNSIO/_git/petstore-contracts",
-        "branch": "main"
-      },
-      "provides": [
-        "com/petstore/store.yaml"
-      ],
-      "consumes": [
-        "com/petstore/payment.yaml"
-      ]
-    }
-  ],
+    **Configuration Structure Summary (v2)**
 
-  "auth": {
-    "bearer-file": "central_repo_auth_token.txt"
-  },
+    The complete configuration file supports the following top-level sections:
 
-  "pipeline": {
-    "provider": "azure",
-    "organization": "XNSio",
-    "project": "XNSIO",
-    "definitionId": 4
-  },
+    1. **version** - Configuration version number (latest being `3`)
+    2. [`contracts`](/references/configuration/contract-management) - Define API specifications from Git or filesystem
+    3. [`hooks`](/references/configuration/hooks) - Custom commands for contract processing
+    4. [`test`](/references/configuration/test-configuration) - Contract testing configuration
+    5. [`mock`](/references/configuration/mock-configuration) - Service virtualization configuration
+    6. [`report`](/references/configuration/reports) - Report generation and formatting options
+    7. [`examples`](/references/configuration/mock-configuration#externalized-examples-directories) - Directories for
+    externalized examples
 
-  "environments": {
-    "staging": {
-      "baseurls": {
-        "auth.spec": "http://localhost:8080"
-      },
-      "variables": {
-        "username": "jackie",
-        "password": "PaSsWoRd"
-      }
-    }
-  },
-
-  "hooks": {
-    "hook_name": "command"
-  },
-
-  "report": {
-    "formatters": [
-      {
-        "type": "text",
-        "layout": "table"
-      }
-    ],
-    "types": {
-      "APICoverage": {
-        "OpenAPI": {
-          "successCriteria": {
-            "minThresholdPercentage": 100,
-            "maxMissedEndpointsInSpec": 0,
-            "enforce": true
-          }
-        }
-      }
-    }
-  }
-}
-```
+    For detailed information on each section, refer to the specific documentation pages.
 
   </TabItem>
-
 </Tabs>
-
-## Configuration Structure Summary
-
-The complete configuration file supports the following top-level sections:
-
-1. **version** - Configuration version number (currently 2)
-2. **contracts** - Define API specifications from Git or filesystem
-3. **auth** - Authentication configuration for source control
-4. **pipeline** - CI/CD pipeline integration settings
-5. **environments** - Environment-specific variables and base URLs
-6. **hooks** - Custom commands for contract processing
-7. **test** - Contract testing configuration
-8. **stub** - Service virtualization configuration
-9. **report** - Report generation and formatting options
-10. **examples** - Directories for externalized examples
-
-For detailed information on each section, refer to the specific documentation pages.

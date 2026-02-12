@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "git": {
+        "url": "https://github.com/specmatic/specmatic-order-contracts",
+        "branch": "main"
+      },
+      "provides": [
+        "com/petstore/store.yaml"
+      ],
+      "consumes": [
+        "com/petstore/payment.yaml"
+      ]
+    }
+  ],
+  "hooks": {
+    "hook_name": "command"
+  },
+  "report": {
+    "formatters": [
+      {
+        "type": "text",
+        "layout": "table"
+      },
+      {
+        "type": "html",
+        "layout": "table"
+      },
+      {
+        "type": "ctrf",
+        "layout": "table"
+      }
+    ],
+    "types": {
+      "APICoverage": {
+        "OpenAPI": {
+          "successCriteria": {
+            "minThresholdPercentage": 100,
+            "maxMissedEndpointsInSpec": 0,
+            "enforce": true
+          }
+        }
+      }
+    }
+  }
+}
