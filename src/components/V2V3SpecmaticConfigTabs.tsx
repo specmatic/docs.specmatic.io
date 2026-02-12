@@ -20,7 +20,7 @@ export function V2V3SpecmaticConfigTabs({v2Object, v3Object, v2ObjectWithoutConf
           <TabItem value={`specmatic-yaml-v3-${uuid}`} label="specmatic.yaml">
             <YamlDisplay object={v3Object}/>
           </TabItem>
-          <TabItem value="{`specmatic-json-v3-${uuid}`}" label="specmatic.json">
+          <TabItem value={`specmatic-json-v3-${uuid}`} label="specmatic.json">
             <JsonDisplay object={v3Object}/>
           </TabItem>
         </Tabs>
