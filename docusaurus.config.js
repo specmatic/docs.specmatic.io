@@ -148,6 +148,23 @@ const config = {
     }),
 
   plugins: [
+    function rawTextPlugin() {
+      return {
+        name: 'raw-text-loader',
+        configureWebpack() {
+          return {
+            module: {
+              rules: [
+                {
+                  resourceQuery: /raw/, // *.yml?raw
+                  type: 'asset/source',
+                },
+              ],
+            },
+          };
+        },
+      };
+    },
     [
       '@docusaurus/plugin-client-redirects',
       {

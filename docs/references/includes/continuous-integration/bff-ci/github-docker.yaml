@@ -1,0 +1,44 @@
+name: Provider and Consumer CI Build using Specmatic Contract Test and Service Virtualization
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Run Specmatic stub to virtualize the Order API service
+        run: |
+          docker run -d \
+            -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
+            -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
+            -p 9000:9000 \
+            specmatic/specmatic mock
+
+          # Wait for the stub to be ready
+          sleep 10
+
+      - name: Start Spring Boot application
+        run: ./gradlew bootRun &
+
+      - name: Wait for application to start
+        run: sleep 30
+
+      - name: Contract Test BFF service using Specmatic
+        run: |
+          docker run \
+            -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
+            -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
+            --network=host \
+            specmatic/specmatic test \
+            --port=8080 \
+            --host=localhost

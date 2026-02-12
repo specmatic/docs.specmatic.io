@@ -1,0 +1,6 @@
+version: 3
+components:
+  sources:
+    specmaticOrderContracts:
+      git:
+        url: "https://${CENTRAL_CONTRACT_REPO_ACCESS_TOKEN}@github.com/specmatic/central-contract-repo-private.git"

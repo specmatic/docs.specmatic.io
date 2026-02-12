@@ -1,0 +1,58 @@
+{
+  "version": 3,
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/(name-of-dependency-service)"
+        }
+      }
+    ]
+  },
+  "systemUnderTest": {
+    "service": {
+      "$ref": "#/components/services/(name-of-service-under-test)"
+    }
+  },
+  "components": {
+    "sources": {
+      "gitSource": {
+        "git": {
+          "url": "(your-git-repository)"
+        }
+      }
+    },
+    "services": {
+      "(name-of-dependency-service)": {
+        "description": "(description-of-dependency-service)",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/gitSource"
+              },
+              "specs": [
+                "(path-to-your-spec-in-git/order_api.yaml)"
+              ]
+            }
+          }
+        ]
+      },
+      "(name-of-service-under-test)": {
+        "description": "(description-of-service-under-test)",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/gitSource"
+              },
+              "specs": [
+                "(path-to-your-spec-in-git/order_bff.yaml)"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+client_component_tests:
+  stage: test
+  image:
+    name: specmatic/specmatic:latest
+    entrypoint: [""]
+
+  before_script:
+    - apk add -U nodejs
+    - node --version
+    - npm --version
+
+  script:
+    - npm ci
+    - specmatic mock --port=8080 &
+    - sleep 10
+    - STUB_URL=http://localhost:8080 npm run test:component

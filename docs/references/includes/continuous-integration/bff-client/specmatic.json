@@ -1,0 +1,38 @@
+{
+  "version": 3,
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/(name-of-dependency-service)"
+        }
+      }
+    ]
+  },
+  "components": {
+    "sources": {
+      "gitSource": {
+        "git": {
+          "url": "(your-git-repository)"
+        }
+      }
+    },
+    "services": {
+      "(name-of-dependency-service)": {
+        "description": "(description-of-dependency-service)",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/gitSource"
+              },
+              "specs": [
+                "(path-to-your-spec-in-git/order_bff.yaml)"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}
