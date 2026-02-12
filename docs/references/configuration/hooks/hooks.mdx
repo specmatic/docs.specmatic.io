@@ -11,9 +11,10 @@ import {V2V3SpecmaticConfigTabs} from "../../../../src/components/V2V3SpecmaticC
 
 ## What are Hooks?
 
-A hook is simply a command that, which can be configured to run at specific stages of the contract testing process.
 Hooks allow you to perform custom actions, such as modifying the contract before it is loaded, or processing test
 results after execution.
+
+A hook is simply a command that, which can be configured to run at specific stages of the contract testing process. Additional data may be passed to the hook in the form of environment variables or on standard input, depending on the hook type.
 
 ## Configuration
 
@@ -24,16 +25,11 @@ results after execution.
 
 ## How Hooks Work
 
-In the above snippet, `stub_load_contract` is the hook name. `python load.py` is executed, while the path of the original contract file is present in `CONTRACT_FILE` environment variable.
+As an example, in the above snippet, `stub_load_contract` is the hook name. `python load.py` is executed, while the path of the original contract file is present in `CONTRACT_FILE` environment variable.
 
 The command can parse the contract file and write it to standard out. Specmatic will read it as the new contract.
 
-## Supported Hook Names
+## Documentation On Supported Hooks
 
-- `stub_load_contract`
-- `test_load_contract`
-
-You can prefer the following to define hooks:
-
-- [Request and Response Processing](/features/hooks/processor_hooks)
 - [Hooks to modify specs](/features/hooks/hooks_to_modify_specs)
+- [Request and Response Processing](/features/hooks/processor_hooks)
