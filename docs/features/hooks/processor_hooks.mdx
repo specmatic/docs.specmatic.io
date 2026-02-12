@@ -1,14 +1,10 @@
 ---
 sidebar_label: Request and Response Processing
 ---
-import Admonition from '@theme/Admonition';
-import HeadingWithBadge from '@site/src/components/HeadingWithBadge';
+import {CommercialBadge} from "../../../src/components/CommercialBadge";
 
-# Request and Response Processing <span className="badge badge--primary" style={{ fontSize: '0.75rem' }}> Commercial </span>
+# Request and Response Processing <CommercialBadge/>
 
-:::note
-This feature is only available in the commercial version of Specmatic. For further details, please check the [pricing page](https://specmatic.io/pricing/).
-:::
 Specmatic's processor hooks let you transform traffic that comes to the proxy and the stub. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire.
 
 For example, a consumer may encrypt data `application/json` data in the request sent to the provider. And thus while the data in the request body is JSON (`application/json`), on the wire after encryption it might be a string (`text/plain`). You may want the specification to capture the `application/json` format, rather than `text/plain`. But if you do, the specification no longer describes the actual traffic on the wire. How then might we record a specification that reflects the format of data processed by the application, while still allowing the consumer and provider to exchange data in the expected wire format?
