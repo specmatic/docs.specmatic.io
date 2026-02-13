@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/specmatic/specmatic/employees':
+    post:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            examples:
+              SUCCESS:
+                value:
+                  name: "Heidi"
+                  department: "Engineering"
+                  designation: "Team Lead"
+              INVALID_ID:
+                value:
+                  id: "xyz"
+                  name: "Heidi"
+                  department: "Engineering"
+                  designation: "Team Lead"
+      responses:
+        '201':
+          description: Employee Created Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                SUCCESS:
+                  value:
+                    id: 10
+                    name: "Heidi"
+                    department: "Engineering"
+                    designation: "Team Lead"
+        '400':
+          description: Invalid request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                INVALID_ID:
+                  value: "Invalid ID provided"
+components:
+  schemas:
+    Employee:
+      title: Employee
+      type: object
+      required:
+        - name
+        - department
+        - designation
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string

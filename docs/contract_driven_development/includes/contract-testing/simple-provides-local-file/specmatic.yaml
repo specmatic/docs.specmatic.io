@@ -1,0 +1,16 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/employeeService"
+components:
+  services:
+    employeeService:
+      description: "Employee Service"
+      definitions:
+        - definition:
+            specs:
+              - spec:
+                  path: "./employees.yaml"
+            source:
+              filesystem:
+                directory: "./contracts"

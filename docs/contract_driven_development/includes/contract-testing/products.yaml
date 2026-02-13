@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: Products
+  version: '1.0'
+servers: []
+paths:
+  '/specmatic/specmatic/products':
+    post:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+            examples:
+              SUCCESS:
+                value:
+                  color: green
+                  category: medicals
+      responses:
+        '201':
+          description: Response to successful product creation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: integer
+              examples:
+                SUCCESS:
+                  value:
+                    id: 10
+        '400':
+          description: Response to a bad product creation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    Product:
+      title: Product
+      type: object
+      required:
+        - color
+        - category
+      properties:
+        color:
+          type: string
+        category:
+          type: string

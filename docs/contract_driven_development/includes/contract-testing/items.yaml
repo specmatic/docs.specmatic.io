@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  title: Items API
+  version: '1.0'
+servers: []
+paths:
+  /items/{type}:
+    get:
+      parameters:
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+  /items/free:
+    get:
+      responses:
+        '200':
+          description: A list of free items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string

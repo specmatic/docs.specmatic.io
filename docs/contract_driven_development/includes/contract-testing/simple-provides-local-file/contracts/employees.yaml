@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/specmatic/specmatic/employees':
+    post:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            examples:
+              CREATE_EMPLOYEE_SUCCESS:
+                value:
+                  id: 70
+                  name: Jill Doe
+                  department: Engineering
+                  designation: Director
+      responses:
+        '201':
+          description: Employee Created Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                CREATE_EMPLOYEE_SUCCESS:
+                  value:
+                    id: 70
+                    name: Jill Doe
+                    department: Engineering
+                    designation: Director
+  '/specmatic/specmatic/employees/{id}':
+    parameters:
+      - schema:
+          type: number
+        name: id
+        in: path
+        required: true
+        examples:
+          FETCH_EMPLOYEE_SUCCESS:
+            value: 10
+          FETCH_EMPLOYEE_NOT_FOUND_ERROR:
+            value: 100
+          UPDATE_EMPLOYEE_SUCCESS:
+            value: 10
+    get:
+      summary: Fetch employee details
+      tags: []
+      responses:
+        '200':
+          description: Details for employee id in request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                FETCH_EMPLOYEE_SUCCESS:
+                  value:
+                    id: 10
+                    name: Jane Doe
+                    department: Engineering
+                    designation: Engineering Manager
+        '404':
+          description: Employee with given id not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                FETCH_EMPLOYEE_NOT_FOUND_ERROR:
+                  value: {}
+    put:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+            examples:
+              UPDATE_EMPLOYEE_SUCCESS:
+                value:
+                  id: 10
+                  name: Jill Doe
+                  department: Engineering
+                  designation: Director
+      responses:
+        '200':
+          description: Updated employee details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                UPDATE_EMPLOYEE_SUCCESS:
+                  value:
+                    id: 10
+                    name: Jill Doe
+                    department: Engineering
+                    designation: Director
+components:
+  schemas:
+    Employee:
+      title: Employee
+      type: object
+      required:
+        - id
+        - name
+        - department
+        - designation
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string

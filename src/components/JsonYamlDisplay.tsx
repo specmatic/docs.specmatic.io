@@ -11,8 +11,7 @@ interface JsonDisplayProps {
 export function JsonDisplay({ object, title, language = 'json' }: JsonDisplayProps) {
   return (
     <div>
-      {title && <p>{title}</p>}
-      <CodeBlock language={language}>
+      <CodeBlock language={language} title={title}>
         {JSON.stringify(object, null, 2)}
       </CodeBlock>
     </div>
@@ -22,8 +21,7 @@ export function JsonDisplay({ object, title, language = 'json' }: JsonDisplayPro
 export function YamlDisplay({ object, title }: JsonDisplayProps) {
   return (
     <div>
-      {title && <p>{title}</p>}
-      <CodeBlock language="yaml">
+      <CodeBlock language="yaml" title={title}>
         {yaml.dump(object, {quotingType: '"', noCompatMode: true, lineWidth: 9999})}
       </CodeBlock>
     </div>

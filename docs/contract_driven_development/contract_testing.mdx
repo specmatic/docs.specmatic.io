@@ -2,15 +2,19 @@
 title: Contract Testing
 sidebar_position: 1
 ---
+import {trimHeredoc} from "../../src/helpers/utils";
+import {VERSIONS} from "../../src/constants/versions";
+import CodeBlock from "@theme/CodeBlock";
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import {YamlDisplay} from "../../src/components/JsonYamlDisplay";
+import {V3SpecmaticJsonYamlTabs} from "../../src/components/V2V3SpecmaticConfigTabs";
+import yaml from "js-yaml";
 
 Contract Testing
 ==============
 
 ![Contract Testing](/img/contract-testing.png)
-
-
 
 ### Overview
 
@@ -20,137 +24,13 @@ As seen in "[getting started](/getting_started/cli_quick_start#provider-side---c
 
 Create a file named "employees.yaml" and copy below content into it. This is an API Specification for an employee service which allows fetching and updating employee details.
 
-```yaml
-openapi: 3.0.0
-info:
-  title: Employees
-  version: '1.0'
-servers: []
-paths:
-  '/specmatic/specmatic/employees':
-    post:
-      summary: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-            examples:
-              CREATE_EMPLOYEE_SUCCESS:
-                value:
-                  id: 70
-                  name: Jill Doe
-                  department: Engineering
-                  designation: Director
-      responses:
-        '201':
-          description: Employee Created Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-              examples:
-                CREATE_EMPLOYEE_SUCCESS:
-                  value:
-                    id: 70
-                    name: Jill Doe
-                    department: Engineering
-                    designation: Director
-  '/specmatic/specmatic/employees/{id}':
-    parameters:
-      - schema:
-          type: number
-        name: id
-        in: path
-        required: true
-        examples:
-          FETCH_EMPLOYEE_SUCCESS:
-            value: 10
-          FETCH_EMPLOYEE_NOT_FOUND_ERROR:
-            value: 100
-          UPDATE_EMPLOYEE_SUCCESS:
-            value: 10
-    get:
-      summary: Fetch employee details
-      tags: []
-      responses:
-        '200':
-          description: Details for employee id in request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-              examples:
-                FETCH_EMPLOYEE_SUCCESS:
-                  value:
-                    id: 10
-                    name: Jane Doe
-                    department: Engineering
-                    designation: Engineering Manager
-        '404':
-          description: Employee with given id not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-              examples:
-                FETCH_EMPLOYEE_NOT_FOUND_ERROR:
-                  value: {}
-    put:
-      summary: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-            examples:
-              UPDATE_EMPLOYEE_SUCCESS:
-                value:
-                  id: 10
-                  name: Jill Doe
-                  department: Engineering
-                  designation: Director
-      responses:
-        '200':
-          description: Updated employee details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-              examples:
-                UPDATE_EMPLOYEE_SUCCESS:
-                  value:
-                    id: 10
-                    name: Jill Doe
-                    department: Engineering
-                    designation: Director
-components:
-  schemas:
-    Employee:
-      title: Employee
-      type: object
-      required:
-        - id
-        - name
-        - department
-        - designation
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        department:
-          type: string
-        designation:
-          type: string
-```
+<YamlDisplay object={yaml.load(require('./includes/contract-testing/employees.yaml?raw'))}/>
 
 Here is a sample application that is implementing this specification. You can run a curl command on this URL to see the sample data.
 
 `https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples/employees/`
 
-Let us now run the ```employees.yaml``` as a test against the above sample application.
+Let us now run the `employees.yaml` as a test against the above sample application.
 
 ```bash
 specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
@@ -352,52 +232,7 @@ Given the following example:
 
 And the following OpenAPI specification:
 
-```yaml
-openapi: 3.0.0
-info:
-  title: Items API
-  version: '1.0'
-servers: []
-paths:
-  /items/{type}:
-    get:
-      parameters:
-        - name: type
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: A list of items
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    name:
-                      type: string
-  /items/free:
-    get:
-      responses:
-        '200':
-          description: A list of free items
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    name:
-                      type: string
-```
+<YamlDisplay object={yaml.load(require('./includes/contract-testing/items.yaml?raw'))}/>
 
 The path `/items/free` in the example matches both `/items/&#123;type&#125;` and `/items/free` in the specification. In such cases, Specmatic will prioritize the more specific path, which is `/items/free`, and validate the response against its schema.
 
@@ -407,40 +242,10 @@ In the last example, we ran contract tests by passing the contract path to Specm
 
 So instead:
 
-* Create a file named specmatic.json OR specmatic.yaml OR specmatic.yml which contains the Specmatic configuration.
+* Create a file named `specmatic.json` OR `specmatic.yaml` OR `specmatic.yml` which contains the Specmatic configuration.
 
-<Tabs groupId="config_contractTests">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://github.com/your-username-or-org/your-repo.git
-    provides:
-      - path/to/employees.yaml
-```
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "git": {
-        "url": "https://github.com/your-username-or-org/your-repo.git"
-      },
-      "provides": [
-        "path/to/employees.yaml"
-      ]
-    }
-  ]
-}
-```
-  </TabItem>
-
-</Tabs>
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/contract-testing/simple-provides-git-central-contracts/specmatic.yaml?raw'))}/>
 
 * Create a git repository and push the employees.yaml contract into it.
 * Update the value of "url" inside "git" field to the url of the git repo. This should be a url that could be used by git checkout.
@@ -475,33 +280,8 @@ Note:
 
 If you need to experiment with files on the local filesystem, here's how you can declare specifications locally (no need to specify the `filesystem` field if the config is in the same directory as the relative path of `provides` and if this isn't the case then specify `filesystem` with `directory` field), in the Specmatic configuration file:
 
-<Tabs groupId="config_contractTests">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-```yaml
-version: 2
-contracts:
-  - provides:
-    - path/to/employees.yaml
-```
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "provides": [
-        "path/to/employees.yaml"
-      ]
-    }
-  ]
-}
-```
-  </TabItem>
-
-</Tabs>
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/contract-testing/simple-provides-local-file/specmatic.yaml?raw'))}/>
 
 The filesystem path above is a relative path, but it can also be an absolute path to a file.
 
@@ -509,56 +289,10 @@ The filesystem path above is a relative path, but it can also be an absolute pat
 
 If you need to test multiple services with different baseUrls, you can do so by declaring multiple `provides` entries with different `baseUrl` values.
 
-<Tabs groupId="config_contractTests_customBaseUrl">
+[//]  # (// TODO: figure out how to do one service with multiple baseUrls, one per spec)
 
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-```yaml
-version: 2
-contracts:
-  - git:
-      url: &lt;git-url&gt;
-    provides:
-      - baseUrl: http://product-api:8080
-        specs:
-          - product-api-spec.yaml
-      - baseUrl: http://order-bff:8081
-        specs:
-          - order-api-spec.yaml
-          - cart-api-spec.yaml
-```
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "git": {
-        "url": "&lt;git-url&gt;"
-      },
-      "provides": [
-        {
-          "baseUrl": "http://product-api:8080",
-          "specs": [
-            "product-api-spec.yaml"
-          ]
-        },
-        {
-          "baseUrl": "http://order-bff:8081",
-          "specs": [
-            "order-api-spec.yaml",
-            "cart-api-spec.yaml"
-          ]
-        }
-      ]
-    }
-  ]
-}
-```
-  </TabItem>
-
-</Tabs>
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/contract-testing/provides-with-multiple-base-urls/specmatic.yaml?raw'))}/>
 
 ### Handling multipart form-data and file uploads
 
@@ -566,60 +300,9 @@ Specmatic adheres to [OpenAPI multipart content support](https://spec.openapis.o
 
 Here is a snippet of OpenAPI YAML that demonstrates the same.
 
-```yaml
-"/products/{id}/image":
-    put:
-      summary: Update or upload a product image
-      operationId: updateProductImage
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: ID of the product to update the image for
-      requestBody:
-        description: Image file to be associated with the product
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              required:
-                - image
-              properties:
-                image:
-                  type: string
-                  format: binary
-                  description: The image file to upload
-            encoding:
-              image:
-                contentType: image/png, image/jpeg
-            examples:
-              UPDATE_PRODUCT_IMAGE:
-                value:
-                  image:
-                    externalValue: ".specmatic/repos/specmatic-order-contracts/io/specmatic/examples/store/openapi/box_image.jpg"
-      responses:
-        "200":
-          description: Product image updated successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  productId:
-                    type: integer
-              examples:
-                UPDATE_PRODUCT_IMAGE:
-                  value:
-                    message: "Product image updated successfully"
-                    productId: 10
-```
+<YamlDisplay object={yaml.load(require('./includes/contract-testing/image.yaml?raw'))}/>
 
-Note how we are referencing the image file in the example as `externalValue`. Specmatic will look for this file (box_image.jpg) in project dir and send the contents as part of the multipart HTTP request.
+Note how we are referencing the image file in the example as `externalValue`. Specmatic will look for this file `box_image.jpg` in project dir and send the contents as part of the multipart HTTP request.
 
 Please read through the [complete OpenAPI spec](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v3.yaml) and try out the [sample project which implements this endpoint](https://github.com/specmatic/specmatic-order-api-java). The sample project even dumps the file that it receives as part of the test request to a git ignored folder called `.images` in the project root directory so that you can verify that encoding is also preserved as part of the test.
 
@@ -629,223 +312,147 @@ For Java projects, you can use the Java helper that ships with Specmatic.
 
 Add the following dependencies to your `pom.xml` file:
 
-```xml
-<dependency>
+<Tabs groupId="java-deps">
+  <TabItem value="maven" label="Maven">
+    <CodeBlock language="xml" title='pom.xml'>
+      {trimHeredoc(`
+  <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
-    <version><!-- TODO: Liquid variable removed: {{ site.specmatic-core-version }} --></version>
+    <version>${VERSIONS["specmatic-core-version"]}</version>
     <scope>test</scope>
-</dependency>
-<dependency>
+  </dependency>
+  <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter</artifactId>
     <version>5.8.2</version>
     <scope>test</scope>
-</dependency>
-```
+  </dependency>
+`)}
+    </CodeBlock>
+  </TabItem>
 
-Add a class that implements `SpecmaticContractTest`. See how this is done -
+  <TabItem value="gradle-kotlin" label="Gradle">
+    <CodeBlock language="kotlin" title="build.gradle[.kts]">
+      {trimHeredoc(`
+      dependencies {
+        testImplementation("io.specmatic:junit5-support:${VERSIONS["specmatic-core-version"]}")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+      }
+      `)}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+Add a class that implements `io.specmatic.test.SpecmaticContractTest` (open source) or `io.specmatic.enterprise.SpecmaticContractTest`
+(Specmatic Enterprise). See how this is done -
 [Interface based contract test example](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
-
-In it, set the "host" and "port" properties to tell Specmatic where to find the application. You can also start the application in that class.
 
 Add the Specmatic configuration file at the project root, as described in the previous section.
 
-`SpecmaticJUnitSupport` is a dynamic JUnit5 test. It will read the contracts from the Specmatic configuration file and run them. Alternatively, you can implement `SpecmaticContractTest` interface to customize your contract tests.
-
-Since it is a JUnit5 test, you can run it in all the ways you are used to. If you run it in the IDE, you'll see the results in your IDEs GUI. If you run `mvn test`, Surefire will store the results of the contract tests in the JUnit XML output file alongside any other JUnit tests in your project. The same applies to `./gradlew test`.
+Since this is a JUnit 5 test, you can run it the same way you run any other JUnit test. When you run it in your IDE, results
+will appear in the IDE test runner. When you run `mvn test` or `./gradlew test`, Maven or Gradle will write the contract
+test results to the standard JUnit XML reports alongside your other tests.
 
 ### Handling Application authentication
 
-If the OpenAPI contract defines API authentication using security schemas, these information will be used by Specmatic when running contract tests. Read more about it on the page on [authentication](/features/authentication).
+If the OpenAPI contract defines API authentication using security schemas, these information will be used by Specmatic when
+running contract tests. Read more about it on the page on [authentication](/features/authentication).
 
 ### Authentication In CI For HTTPS Git Source
 
-Specmatic does a checkout of the git repository given in the Specmatic configuration using the git command. On your laptop, the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without no chance for a user to enter credentials, so the git checkout fails when it gets an authentication failure from the repository.
+Specmatic does a checkout of the git repository given in the Specmatic configuration using the git command. On your computer,
+the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without
+no chance for a user to enter credentials, so the git checkout fails when it gets an authentication failure from the repository.
 
 Instead, Specmatic can do the checkout using OAuth2 authentication, which is also supported by most git providers.
 
-Add a key named "auth" to the Specmatic configuration, as seen in the example below.
-
-<Tabs groupId="config_contractTests">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://github.com/your-username-or-org/your-repo.git
-    provides:
-      - path/to/employees.yaml
-
-auth:
-  bearer-file: central_repo_auth_token.txt
-```
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "git": {
-        "url": "https://github.com/your-username-or-org/your-repo.git"
-      },
-      "provides": [
-        "path/to/employees.yaml"
-      ]
-    }
-  ],
-
-  "auth": {
-    "bearer-file": "central_repo_auth_token.txt"
-  }
-}
-```
-  </TabItem>
-
-</Tabs>
-
-In CI, the necessary oauth2 token must be fetched and stored in a file named central_repo_auth_token.txt (as configured) side-by-side with the Specmatic configuration file, before running contract tests.
-
-If you are using Microsoft Azure as both your git provider and for CI, you can use a secret build variable named System.AccessToken, provided by Microsoft Azure, as your OAuth2 bearer token. Before running the tests, use a script to place the value of this variable in a file. For example:
-
-```yaml
-# Sample azure pipeline snippet
-steps:
-  - bash: |
-      echo $(System.AccessToken) > central_repo_auth_token.txt
-    displayName: Create auth token file
-  - bash: |
-      mvn test
-```
-
 You could also use an environment variable to pass the token.
 
-<Tabs groupId="config_contractTests">
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('../references/includes/continuous-integration/authentication/specmatic.yaml?raw'))}/>
 
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://github.com/your-username-or-org/your-repo.git
-    provides:
-      - path/to/employees.yaml
+As long as the env variables are available in the CI build machine (in this example `CENTRAL_CONTRACT_REPO_ACCESS_TOKEN`), Specmatic will evaluate them and execute Git clone on the fully evaluated URL.
 
-auth:
-  bearer-environment-variable: BEARER
-```
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "git": {
-        "url": "https://github.com/your-username-or-org/your-repo.git"
-      },
-      "provides": [
-        "path/to/employees.yaml"
-      ]
-    }
-  ],
-
-  "auth": {
-    "bearer-environment-variable": "BEARER"
-  }
-}
-```
-  </TabItem>
-
-</Tabs>
-
-Again, using an example for Microsoft Azure:
-
-```yaml
-# Sample azure pipeline snippet
-steps:
-  - bash: |
-      mvn test
-    env:
-      BEARER: $(System.AccessToken)
-```
-
-We have provided samples for Azure, but the same can be done easily in any build system.
-
- Note that if you are using different systems for git and CI, the two will not be integrated. The first step is to fetch the OAuth2 token from the git repo. The second step is to create the file or environment variable as described above, and finally, you may run the contract tests.
+A quick test to see if your Git Repo URI is correct will be to run a command line Git clone in your CI pipeline with it. If it works with command line Specmatic will also be able to use the same to clone your central contract repo to the CI build machine. Here are detailed examples.
 
 ### Authentication In CI For SSH Git Source
 
-You can also use an ssh url as your git source. Take the help of your DevOps team to generate SSH keys locally and on your CI server, and place the local and CI public keys in .ssh/authorized_keys your git server. This will enable the git command to handle authentication seamlessly via SSH authentication.
+You can also use an ssh url as your git source. Take the help of your DevOps team to generate SSH keys locally and on your CI server, and place the local and CI public keys in `.ssh/authorized_keys` your git server. This will enable the git command to handle authentication seamlessly via SSH authentication.
 
 ### Programmatically executing Specmatic Contract Tests
 
 <Tabs groupId="programmatically">
 
-  <TabItem value="java" label="java">
-If you're building your application in a JVM-based language, you can run Specmatic Contract Tests programmatically, either by extending `SpecmaticJUnitSupport` or implementing `SpecmaticContractTest`. Here's how:
+  <TabItem value="java" label="Java/Kotlin">
 
-**1. Add Specmatic JUnit Support Jar Dependency:**
+    If you're building your application in a JVM-based language, you can run Specmatic Contract Tests programmatically, either by
+    implementing `io.specmatic.test.SpecmaticContractTest` (open source) or `io.specmatic.enterprise.SpecmaticContractTest`
+    (Specmatic Enterprise) Here's how:
 
-```xml
-<dependency>
+    <Tabs groupId="java-deps">
+      <TabItem value="maven" label="Maven">
+        <CodeBlock language="xml" title='pom.xml'>
+          {trimHeredoc(`
+  <dependency>
     <groupId>io.specmatic</groupId>
     <artifactId>junit5-support</artifactId>
-    <version><!-- TODO: Liquid variable removed: {{ site.specmatic-core-version }} --></version>
+    <version>${VERSIONS["specmatic-core-version"]}</version>
     <scope>test</scope>
-</dependency>
-```
-
-**2. Add JUnit 5 Dependency:**
-
-```xml
-<dependency>
+  </dependency>
+  <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter</artifactId>
     <version>5.8.2</version>
     <scope>test</scope>
-</dependency>
-```
+  </dependency>
+`)}
+        </CodeBlock>
+      </TabItem>
 
-**3. Implement SpecmaticContractTest (Interface-based approach) [Recommended]:**
+      <TabItem value="gradle-kotlin" label="Gradle">
+        <CodeBlock language="kotlin" title="build.gradle[.kts]">
+          {trimHeredoc(`
+      dependencies {
+        testImplementation("io.specmatic:junit5-support:${VERSIONS["specmatic-core-version"]}")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+      }
+      `)}
+        </CodeBlock>
+      </TabItem>
+    </Tabs>
 
-```java
-import io.specmatic.core.SpecmaticContractTest;
 
-public class ContractTests implements SpecmaticContractTest {
-    @Override
-    public void configureTest() {
-        System.setProperty("host", "localhost");
-        System.setProperty("port", "8080");
+**3. Implement SpecmaticContractTest (Interface-based approach):**
+<Tabs groupId="java-kotlin-interface-example">
+  <TabItem value="java" label="Java">
+    ```java title="com/your/company/tests/ContractTests.java"
+    package com.your.company.tests;
+    import io.specmatic.test.SpecmaticContractTest;
+
+    public class ContractTests implements SpecmaticContractTest {
+      // empty implementation, you can add setup and teardown methods if needed
     }
-}
-```
-**OR**
+    ```
+  </TabItem>
 
-**4. Extend SpecmaticJUnitSupport (Class-based approach):**
+  <TabItem value="kotlin" label="Kotlin">
+    ```kotlin title="com/your/company/tests/ContractTests.kt"
+    package com.your.company.tests
 
-```java
-import io.specmatic.core.SpecmaticJUnitSupport;
-import org.junit.jupiter.api.BeforeAll;
+    import io.specmatic.test.SpecmaticContractTest
 
-public class ContractTests extends SpecmaticJUnitSupport {
-    @BeforeAll
-    public static void setUp() {
-        System.setProperty("host", "localhost");
-        System.setProperty("port", "8080");
+    class ContractTests : SpecmaticContractTest {
+      // empty implementation, you can add setup and teardown methods if needed
     }
-}
-```
+    ```
+  </TabItem>
+</Tabs>
 
 **4. Example for a Spring Boot Application:**
 [Interface based contract test example](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
   </TabItem>
 
-  <TabItem value="python" label="python">
+  <TabItem value="python" label="Python">
 1. **Install the Specmatic Python library**: Use pip, a package installer for Python, to install the Specmatic library.
 
    ```bash
@@ -930,20 +537,6 @@ Remarks are displayed for each row in table and act as a summary of the tests ex
 
 **Note**: The remarks `Missing In Spec` and `Not Implemented` are contingent upon the actuator being enabled. Please refer to [API Coverage](#api-coverage) for further details.
 
-### Referring to local specifications
-
-If you want to temporarily refer to API specifications on your local machine please use system property ```contractPaths```.
-
-```java
-@BeforeAll
-public static void setUp() {
-    File apiContract = new File("<path to API specification>/orders-api-v1.yaml");
-    System.setProperty("contractPaths", apiContract.getAbsolutePath());
-    System.setProperty("host", "localhost");
-    System.setProperty("port", "8080");
-}
-```
-
 ### Examples that are not passing yet
 
 The contract is used as a collaboration tool. Sometimes, a contract violation may take time to fix. It may be useful to add examples that demonstrate the problem to the contract without breaking the build.
@@ -958,6 +551,7 @@ For example, an example of a failing contract tests for a 200 response could loo
     id: 10
     name: "Herbie"
 ```
+
 Note the quotes around the name, which are necessary because of the space required between `[WIP]` and `SUCCESS`.
 
 When the test for this example runs, it will log the run details and failures without breaking the build. In the test report, it shows up as `WIP`. However, the use of `WIP` does not bypass the contract validation, the contract itself should be in valid state.
@@ -970,75 +564,7 @@ To trigger a 400 response, you may need a contract-invalid example. Specmatic wi
 
 For example:
 
-```yaml
-openapi: 3.0.0
-info:
-  title: Employees
-  version: '1.0'
-servers: []
-paths:
-  '/specmatic/specmatic/employees':
-    post:
-      summary: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-            examples:
-              SUCCESS:
-                value:
-                  name: "Heidi"
-                  department: "Engineering"
-                  designation: "Team Lead"
-              INVALID_ID:
-                value:
-                  id: "xyz"
-                  name: "Heidi"
-                  department: "Engineering"
-                  designation: "Team Lead"
-      responses:
-        '201':
-          description: Employee Created Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Employee'
-              examples: 
-                SUCCESS:
-                  value:
-                    id: 10
-                    name: "Heidi"
-                    department: "Engineering"
-                    designation: "Team Lead"
-        '400':
-          description: Invalid request
-          content:
-            text/plain:
-              schema:
-                type: string
-              examples:
-                INVALID_ID:
-                  value: "Invalid ID provided"
-components:
-  schemas:
-    Employee:
-      title: Employee
-      type: object
-      required:
-        - name
-        - department
-        - designation
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        department:
-          type: string
-        designation:
-          type: string
-```
+<YamlDisplay object={yaml.load(require('./includes/contract-testing/employees-with-400-status.yaml?raw'))} title='employees.yaml'/>
 
 Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accepts it and sends it to the system under test, expecting a 400 response.
 
@@ -1075,20 +601,20 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 | `DESCRIPTION`               |  ✅   |  ✅   | Filter by description                                                                                    |
 
 
-| Operator  | Description                                                |
-|-----------|------------------------------------------------------------|
-| `&&`      | Represents a logical AND operator.                         |
-| <code>\|\|</code>      | Represents a logical OR operator.                          |
-| `!`       | Negates the applied condition.                             |
-| `=`, `!=` | Comparison operators for comparing a key with its value.   |
-| `(`, `)`  | Parentheses are used to group multiple filter expressions. |
+| Operator          | Description                                                |
+|-------------------|------------------------------------------------------------|
+| `&&`              | Represents a logical AND operator.                         |
+| <code>\|\|</code> | Represents a logical OR operator.                          |
+| `!`               | Negates the applied condition.                             |
+| `=`, `!=`         | Comparison operators for comparing a key with its value.   |
+| `(`, `)`          | Parentheses are used to group multiple filter expressions. |
 
 
 ### Filter Examples
 
-| Filter                      | Examples                                                                                                                                                |
-|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `STATUS`                    | • `STATUS='200'` (only 200 responses)<br />• `STATUS>='400'` (all errors)<br />• `STATUS<'500'` (exclude 5xx errors)                                        |
+| Filter                      | Examples                                                                                                                                                  |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `STATUS`                    | • `STATUS='200'` (only 200 responses)<br />• `STATUS>='400'` (all errors)<br />• `STATUS<'500'` (exclude 5xx errors)                                      |
 | `PATH`                      | • `PATH='/users'` (exact match)<br />• `PATH='/products/*'` (matches all subpaths under /products)                                                        |
 | `METHOD`                    | • `METHOD='GET'` (GET requests)<br />• `METHOD='POST'` (POST requests)                                                                                    |
 | `PARAMETERS.QUERY`          | • `PARAMETERS.QUERY.byName='John'` (query param `byName` equals `'John'`)<br />• `PARAMETERS.QUERY='byName'` (key present)                                |
@@ -1106,56 +632,44 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 ### CLI Usage
 
 1. Run only successful response tests:
-```bash
-specmatic test --filter="STATUS>='200' && STATUS<'300'"
-```
+    ```bash
+    specmatic test --filter="STATUS>='200' && STATUS<'300'"
+    ```
 
 2. Skip 4xx error tests:
-```bash
-specmatic test --filter="STATUS<'400' && STATUS>'499'"
-```
+    ```bash
+    specmatic test --filter="STATUS<'400' && STATUS>'499'"
+    ```
 
 3. Skip specific status codes:
-```bash
-specmatic test --filter="STATUS!='401,403'"
-```
+    ```bash
+    specmatic test --filter="STATUS!='401,403'"
+    ```
 
 4. Test specific API endpoints:
-```bash
-specmatic test --filter="PATH='/users,/products'"
-```
+    ```bash
+    specmatic test --filter="PATH='/users,/products'"
+    ```
 
 5. Test API endpoints with wildcard(`*`) for `PATH`:
-```bash
-specmatic test --filter="PATH='/users/*'"
-```
+    ```bash
+    specmatic test --filter="PATH='/users/*'"
+    ```
 
 6. Test all paths that begin with /products/, followed by any pattern, and end with /v1.
-```bash
-specmatic test --filter="PATH='/products/*/v1'"
-```
+    ```bash
+    specmatic test --filter="PATH='/products/*/v1'"
+    ```
 
 7. Combine multiple filters:
-```bash
-specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' && METHOD='POST')"
-```
+    ```bash
+    specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' && METHOD='POST')"
+    ```
 
 8. Exclude specified filters:
-```bash
-specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
-```
-
-### Programmatic Usage
-
-Set environment properties in your test setup:
-
-```java
-// Include specific tests
-System.setProperty("filter", "METHOD='POST' && PATH='/users'");
-
-// Exclude tests
-System.setProperty("filter", "STATUS!='400,401'");
-```
+    ```bash
+    specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
+    ```
 
 ### Additional Tips
 
@@ -1169,7 +683,6 @@ System.setProperty("filter", "STATUS!='400,401'");
 
 > **Note:** Endpoints that are filtered out as a result of this expression are also excluded from the reports generated by Specmatic and from the coverage calculation.
 
-
 ---
 ## API Coverage
 
@@ -1179,17 +692,26 @@ There are two methods to enable this feature:
 
 #### Enable the Actuator Mapping Endpoint
 
-Activate the actuator mapping endpoint in your backend framework. Specify the URL of this endpoint as a system property using `endpointsAPI`. Specmatic will use this endpoint to retrieve and analyze the available paths and methods exposed by your backend server.
+Activate the actuator mapping endpoint in your backend framework. Specify the URL of this endpoint via the `actuatorUrl` configuration in your specmatic config file. Specmatic will use this endpoint to retrieve and analyze the available paths and methods exposed by your backend server.
 
-Refer to the sample project below to observe this in action. Pay attention to the system property set in the [ContractTest](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java) class, as well as the actuator-related dependency included in `pom.xml`.
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/contract-testing/actuator-endpoint/specmatic.yaml?raw'))} />
+
+Refer to the [sample project](https://github.com/specmatic/specmatic-order-api-java) to observe this in action.
 
 #### Use Swagger UI
 
-Various programming languages and frameworks offer support for Swagger UI. For example, in .NET, Swashbuckle automatically generates an OpenAPI specification from controllers and models, making it easier to document, visualize, and interact with APIs directly from a web interface.
+Various programming languages and frameworks offer support for Swagger UI. For example, in .NET, Swashbuckle automatically
+generates an OpenAPI specification from controllers and models, making it easier to document, visualize, and interact
+with APIs directly from a web interface.
 
-Specmatic will automatically detect and utilize Swagger UI if it is available. By default, Specmatic sends a request to `/swagger/v1/swagger.yaml`. You can customize the base URL for Swagger UI by configuring the `SWAGGER_UI_BASEURL` system property. If this property is not defined, Specmatic will default to using the URL of the System Under Test (SUT) as the base URL.
+Specmatic will automatically detect and utilize Swagger UI if it is available. By default, Specmatic sends a request
+to `/swagger/v1/swagger.yaml`. You can customize the base URL for Swagger UI by configuring the
+`swaggerUrl` property on the `runOptions` object. If this property is not defined, Specmatic will default to using
+the URL of the System Under Test (SUT) as the base URL.
 
-The data from the coverage report is saved to a file located at `build/reports/specmatic/coverage_report.json`, relative to the directory from which Specmatic was executed. It is also accessible in the HTML report generated at `build/reports/specmatic/html/index.html`.
+The data from the coverage report is saved to a file located at `build/reports/specmatic/coverage_report.json`,
+relative to the directory from which Specmatic was executed. It is also accessible in the HTML report generated at
+`build/reports/specmatic/html/index.html`.
 
 ---
 
@@ -1231,86 +753,16 @@ Without test hooks, Specmatic tests would fail because:
 ### Implementation Example
 
 #### Initial Client API Specification
-<br />
+
 Here's a typical client-side API specification:
 
-```yaml
-openapi: 3.0.0
-info:
-  title: Sample Product API
-  version: 0.0.1
-servers:
-  - url: http://localhost:8080
-    description: Local
-paths:
-  /products:
-    get:
-      summary: Get Products
-      description: Get Products
-      parameters:
-        - in: header
-          name: X-auth-token
-          schema:
-            type: string
-          required: true
-          description: Authentication token
-      responses:
-        '200':
-          description: Returns Product With Id
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  required:
-                    - name
-                    - sku
-                  properties:
-                    name:
-                      type: string
-                    sku:
-                      type: string
-```
+<YamlDisplay object={yaml.load(require('./includes/contract-testing/product-api.yaml?raw'))} title='products.yaml'/>
 
 ### Setting Up Test Hooks
 
-Step 1: **Create specmatic.yaml configuration file:**
+**Step 1**: Create a specmatic configuration file
 
-<Tabs groupId="config_contractTests">
-
-  <TabItem value="specmatic-yaml" label="specmatic.yaml">
-```yaml
-version: 2
-contracts:
-  - provides:
-      - products_client.yaml
-hooks:
-  test_load_contract: python3 modify_test_headers.py
-```
-  </TabItem>
-
-  <TabItem value="specmatic-json" label="specmatic.json">
-```json
-{
-  "version": 2,
-  "contracts": [
-    {
-      "provides": [
-        "products_client.yaml"
-      ]
-    }
-  ],
-  "hooks": {
-    "test_load_contract": "python3 modify_test_headers.py"
-  }
-}
-```
-  </TabItem>
-
-</Tabs>
-
-Both configurations are equivalent and can be used interchangeably in your Specmatic setup.
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/contract-testing/test-hooks/specmatic.yaml?raw'))} />
 
 Step 2: **Create the hook script:**
 
@@ -1322,7 +774,7 @@ Please note:
 <Tabs groupId="hook_script">
 
   <TabItem value="python" label="Python">
-```python
+```python title="modify_headers.py"
 import os
 import sys
 import yaml
@@ -1394,27 +846,18 @@ if __name__ == "__main__":
 Following is an example using Java that can be compiled into a standalone JAR file.
 
 ### Sample Project Access
+
 * Reference Java based hook script implementation available at: [specmatic-hooks-java-sample](https://github.com/specmatic/specmatic-hooks-java-sample)
 * Clone the repository to get started
 
 #### Creating the JAR File
-* Follow instructions in the project's README.md
-* Build will generate a standalone executable JAR, named "specmatic-hooks-sample.jar"
+
+* Follow instructions in the project's [README.md](https://github.com/specmatic/specmatic-hooks-java-sample/blob/main/README.md)
+* Build will generate a standalone executable JAR, named `specmatic-hooks-sample.jar`
 * JAR will contain all necessary dependencies
-* Add the JAR file to your Specmatic configuration as shown below.
+* Update the `test_load_contract` hook command in your Specmatic configuration to point to this JAR file `java -jar specmatic-hooks-sample.jar`
 
-The test hook configuration in Specmatic will look as follows: :
-
-```yaml
-version: 2
-contracts:
-  - test:
-      - products_client.yaml
-hooks:
-  test_load_contract: java -jar specmatic-hooks-sample.jar
-```
-
-Following is the link to Java hook file from the sample project : [Java hook script](https://github.com/specmatic/specmatic-hooks-java-sample/blob/main/src/main/java/Main.java)
+Following is the link to Java hook file from the sample project: [Java hook script](https://github.com/specmatic/specmatic-hooks-java-sample/blob/main/src/main/java/Main.java)
   </TabItem>
 
 </Tabs>
@@ -1447,87 +890,26 @@ Test hooks provide a powerful way to bridge the gap between client specification
 
 ### Generative Tests
 
-Contract testing within the bounds of the contract is not enough. HTTP prescribes what should happen when contract-invalid requests are sent. To ensure that the application operates as required by HTTP, we need to test it with contract-invalid requests.
+Contract testing within the bounds of the contract is not enough. HTTP prescribes what should happen when contract-invalid requests are sent.
+To ensure that the application operates as required by HTTP, we need to test it with contract-invalid requests.
 
 Given an API specification, we know what an API's request should look like, and hence we can come up with a number of counter examples.
 
 Let's use this specification as an example.
 
-```yaml
-openapi: 3.0.0
-info:
-  title: Products
-  version: '1.0'
-servers: []
-paths:
-  '/specmatic/specmatic/products':
-    post:
-      summary: ''
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Product'
-            examples:
-              SUCCESS:
-                value:
-                  color: green
-                  category: medicals
-      responses:
-        '201':
-          description: Response to successful product creation
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - id
-                properties:
-                  id:
-                    type: integer
-              examples:
-                SUCCESS:
-                  value:
-                    id: 10
-        '400':
-          description: Response to a bad product creation
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-components:
-  schemas:
-    Product:
-      title: Product
-      type: object
-      required:
-        - color
-        - category
-      properties:
-        color:
-          type: string
-        category:
-          type: string
-```
+<YamlDisplay object={yaml.load(require('./includes/contract-testing/products.yaml?raw'))} title='products.yaml'/>
 
-A contract-valid test is found in the examples named SUCCESS.
+A contract-valid test is found in the examples named `SUCCESS`.
 
-If we send a request containing the body `&#123;"color": null, "category": "medicals"&#125;`, the application should respond with a 400, because according to the specification, the value of `color` cannot be null.
+If we send a request containing the body `{"color": null, "category": "medicals"}`, the application should respond with a HTTP `400 Bad Request`
+status, because according to the specification, the value of `color` cannot be null.
 
-Specmatic can generate this test and more to ensure that validations for `color` are in place, and will do the same for `category.
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/contract-testing/generative-tests/specmatic.yaml?raw'))}/>
 
-Just set a property or environment variable named `SPECMATIC_GENERATIVE_TESTS` to 'true'.
 
-In Java, you could use this:
-
-```java
-System.setProperty("SPECMATIC_GENERATIVE_TESTS", "true")
-```
+Specmatic can generate this test (`color` cannot be `null`) and many more to ensure the required validations are in place, and it will do the same for `category`.
+With the Specmatic configuration shown above, generative tests are enabled by default. To disable them, set the environment variable `DISABLE_GENERATIVE_TESTS=true`.
 
 The best way to see it in action is to try it out with one of your microservices and its API specifications.
 
@@ -1621,9 +1003,7 @@ HeaderItem:
       type: string
 ```
 
-> Specmatic will extract request and response from the `MonitorResponse` to reconstruct the original request and response for validation and further processing.
-> - **Explicit Case**: The extracted request and response must align with any non-202 2xx scenarios defined in the specification
-> - **Implicit Case**: The extracted request and response must conform to the scenario that was being tested, such as `201 Created`
+> Specmatic will extract request and response from the `MonitorResponse` to reconstruct the original request and response for validation and further processing.- **Explicit Case**: The extracted request and response must align with any non-202 2xx scenarios defined in the specification- **Implicit Case**: The extracted request and response must conform to the scenario that was being tested, such as `201 Created`
 &#123;: .note&#125;
 
 #### Too Many Requests Handling

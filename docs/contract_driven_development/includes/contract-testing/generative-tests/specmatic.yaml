@@ -1,0 +1,21 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/productsService"
+components:
+  sources:
+    centralContractRepo:
+      git:
+        url: "https://github.com/your-org/central-contract-repo.git"
+  services:
+    productsService:
+      description: "Products Service"
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContractRepo"
+            specs:
+              - "products.yaml"
+  settings:
+    test:
+      generative: "${DISABLE_GENERATIVE_TESTS:-true}"
