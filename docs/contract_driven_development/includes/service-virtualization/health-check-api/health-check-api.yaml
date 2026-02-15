@@ -1,0 +1,22 @@
+openapi: 3.0.3
+info:
+  title: Health Check API
+  description: API for checking the health status of the mock server.
+  version: 1.0.0
+paths:
+  /actuator/health:
+    get:
+      description: Returns the health status of the mock server.
+      responses:
+        '200':
+          description: Health status of the mock server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - UP
+                    example: UP

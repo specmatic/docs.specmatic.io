@@ -1,0 +1,24 @@
+version: 3
+components:
+  sources:
+    contractRepository:
+      filesystem:
+        directory: "."
+  adapters:
+    productsApiAdapter:
+      stub_load_contract: 'python modify_stub_header.py'
+
+dependencies:
+  services:
+    - service:
+        description: Employee Service
+        definitions:
+          - definition:
+              source:
+                $ref: "#/components/sources/contractRepository"
+              specs:
+                - spec:
+                    path: products.yaml
+  data:
+    adapters:
+      $ref: "#/components/adapters/productsApiAdapter"

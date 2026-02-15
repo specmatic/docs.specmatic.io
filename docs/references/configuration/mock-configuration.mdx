@@ -15,8 +15,8 @@ The same configuration file can be leveraged to define stubs also.
 
 
 <V2V3SpecmaticConfigTabs
-  v3Object={require('./includes/stub-configuration/v3/simple/specmatic.json')}
-  v2Object={require('./includes/stub-configuration/v2/simple/specmatic.json')}
+  v3Object={require('./includes/mock-configuration/v3/simple/specmatic.json')}
+  v2Object={require('./includes/mock-configuration/v2/simple/specmatic.json')}
 />
 
 Please note that now we are now listing the `api_order_v3.yaml` is listed as a dependency. You can run the
@@ -29,8 +29,8 @@ The `startTimeoutInMilliseconds` setting in Specmatic ensures that a mock servic
 `stub` command or programmatically using `createStub` method exits if it doesn't start within the defined time.
 
 <V2V3SpecmaticConfigTabs
-  v3Object={require('./includes/stub-configuration/v3/simple-with-stub-start-timeout/specmatic.json')}
-  v2Object={require('./includes/stub-configuration/v2/simple-with-stub-start-timeout/specmatic.json')}
+  v3Object={require('./includes/mock-configuration/v3/simple-with-mock-start-timeout/specmatic.json')}
+  v2Object={require('./includes/mock-configuration/v2/simple-with-mock-start-timeout/specmatic.json')}
 />
 
 ## Service Virtualization Delay
@@ -39,8 +39,8 @@ A delay can be applied to all requests handled by service virtualization. By con
 you can simulate response times with the specified delay in milliseconds, as mentioned in [Delay Simulation](/contract_driven_development/service_virtualization#delay-simulation)
 
 <V2V3SpecmaticConfigTabs
-  v3Object={require('./includes/stub-configuration/v3/simple-with-stub-virtualization-delay/specmatic.json')}
-  v2Object={require('./includes/stub-configuration/v2/simple-with-stub-virtualization-delay/specmatic.json')}
+  v3Object={require('./includes/mock-configuration/v3/simple-with-mock-virtualization-delay/specmatic.json')}
+  v2Object={require('./includes/mock-configuration/v2/simple-with-mock-virtualization-delay/specmatic.json')}
 />
 
 ## Strict Mode
@@ -50,8 +50,8 @@ Stub may run in strict mode. You can read more about [stub in strict mode here](
 You can configure Specmatic to run stub in strict mode using the following configuration:
 
 <V2V3SpecmaticConfigTabs
-  v3Object={require('./includes/stub-configuration/v3/simple-with-stub-strict-mode/specmatic.json')}
-  v2Object={require('./includes/stub-configuration/v2/simple-with-stub-strict-mode/specmatic.json')}
+  v3Object={require('./includes/mock-configuration/v3/simple-with-mock-strict-mode/specmatic.json')}
+  v2Object={require('./includes/mock-configuration/v2/simple-with-mock-strict-mode/specmatic.json')}
 />
 
 ## Run Stub on Different Ports for Different Specifications
@@ -59,8 +59,8 @@ You can configure Specmatic to run stub in strict mode using the following confi
 If you want to run stubs on different ports for different specifications, you can specify the port number in the `port` field under `consumes` key and assign the list of `specs` to it.
 
 <V2V3SpecmaticConfigTabs
-  v3Object={require('./includes/stub-configuration/v3/complex-with-multiple-ports/specmatic.json')}
-  v2Object={require('./includes/stub-configuration/v2/complex-with-multiple-ports/specmatic.json')}
+  v3Object={require('./includes/mock-configuration/v3/complex-with-multiple-ports/specmatic.json')}
+  v2Object={require('./includes/mock-configuration/v2/complex-with-multiple-ports/specmatic.json')}
 />
 
 As per the above configuration, the specs `api_order_v1.yaml` and `api_uuid_v1.yaml` will run on port 9000 and the spec `online_store_v1.yaml` will run on port 9001.

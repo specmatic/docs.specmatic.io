@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: Employees
+  version: '1.0'
+servers: []
+paths:
+  '/employees':
+    delete:
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+            examples:
+              DELETE_EMPLOYEE_SUCCESS:
+                value:
+                  id: 10
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - name
+        - department
+        - designation
+      properties:
+        name:
+          type: string
+        department:
+          type: string
+        designation:
+          type: string

@@ -1,0 +1,13 @@
+version: 3
+dependencies:
+  services:
+    - service:
+        description: "Employee Service"
+        definitions:
+          - definition:
+              source:
+                filesystem:
+                  directory: "."
+              specs:
+                - spec:
+                    path: "./employees.yaml"
