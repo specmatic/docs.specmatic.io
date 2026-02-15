@@ -19,9 +19,6 @@ Currently, specmatic-async supports the following protocols inside the AsyncAPI 
 - [JMS](/supported_protocols/asyncapi/jms)
 - [Google Pub/Sub](/supported_protocols/asyncapi/google-pub-sub)
 
-## Table of Contents
-
-* TOC
 ## Typical Use-case
 You want to drop a message on a specific topic/queue in a messaging platform (let's say Amazon SQS), then your application picks up the message, processes it and then then emits a updated message on another topic/queue in the same or different messaging platform (let's say Kafka). You want to verify if this flow is working correctly, the messages are adhering to your defined schemas, the correct integration/messaging pattern (fire-and-forget, request-reply, pub-sub, event-stream, etc.) is being followed and so on.
 
