@@ -10,7 +10,9 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { VERSIONS } from '../../../src/constants/versions';
 import CodeBlock from '@theme/CodeBlock';
+import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
+import yaml from "js-yaml";
 
 # JMS <CommercialBadge/>
 
@@ -250,21 +252,7 @@ For a complete working example of JMS contract testing with Specmatic-Async, ref
 
 Create or update your `specmatic.yaml` file to include the AsyncAPI specification and JMS server configuration:
 
-```yaml
-version: 2
-contracts:
-  - provides:
-      - specs:
-          - spec/spec.yaml
-        specType: asyncapi
-        config:
-          servers:
-            - host: tcp://localhost:61616
-              protocol: jms
-              adminCredentials:
-                username: admin
-                password: admin
-```
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/jms/basic-config/specmatic.yaml?raw'))} />
 
 ### Step 2: Start JMS Infrastructure
 

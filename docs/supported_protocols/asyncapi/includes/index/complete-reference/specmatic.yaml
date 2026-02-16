@@ -50,30 +50,3 @@ components:
                 $ref: "#/components/certificates/clientCertificate"
               consumer:
                 $ref: "#/components/certificates/clientCertificate"
-
-
-
-#contracts:
-#  - provides:  # or consumes:
-#      - specs:
-#          - spec/your-service.yaml
-#        specType: asyncapi
-#        config:
-#          # Schema Registry Configuration (optional)
-#          schemaRegistry:
-#            kind: CONFLUENT
-#            url: http://localhost:8085
-#            username: admin
-#            password: admin-secret
-#
-#          # Server Configurations
-#          servers:
-#            - host: <HOST_URL>
-#              protocol: <PROTOCOL>
-#              adminCredentials:
-#              # Protocol-specific admin properties
-#              client:
-#                producer:
-#                # Protocol-specific producer properties
-#                consumer:
-#                # Protocol-specific consumer properties

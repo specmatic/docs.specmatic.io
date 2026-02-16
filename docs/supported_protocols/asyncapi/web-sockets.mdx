@@ -2,7 +2,9 @@
 title: WebSockets
 sidebar_position: 8
 ---
+import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
+import yaml from "js-yaml";
 
 # WebSockets <CommercialBadge/>
 
@@ -153,12 +155,7 @@ For a complete working example of Websocket contract testing with Specmatic-Asyn
 
 Create a `specmatic.yaml` file in your project root:
 
-```yaml
-version: 2
-contracts:
-  - provides:
-      - specification/spec.yaml
-```
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/web-socket/basic-config/specmatic.yaml?raw'))} />
 
 This configuration tells Specmatic where to find your AsyncAPI specification file.
 

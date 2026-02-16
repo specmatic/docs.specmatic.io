@@ -1,0 +1,32 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/asyncService"
+    runOptions:
+      "$ref": "#/components/runOptions/asyncServiceRunOptions"
+
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+  services:
+    asyncService:
+      description: AsyncAPI Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  path: spec/async-api-spec.yaml
+  runOptions:
+    asyncServiceRunOptions:
+      asyncapi:
+        type: mock
+        servers:
+          - host: tcp://localhost:61616
+            protocol: jms
+            adminCredentials:
+              username: admin
+              password: admin
