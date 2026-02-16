@@ -2,9 +2,13 @@
 title: JDBC
 sidebar_position: 6
 ---
+
+import CodeBlock from "@theme/CodeBlock";
+import {VERSIONS} from "../../src/constants/versions";
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import {CommercialBadge} from "../../src/components/CommercialBadge";
+import {trimHeredoc} from "../../src/helpers/utils";
 
 # JDBC <CommercialBadge/>
 
@@ -21,55 +25,49 @@ By defining stubs for different SQL operations such as `SELECT`, `INSERT`, `UPDA
 The below-mentioned dependency needs to be in your application's `build.gradle` or `pom.xml`
 
 <Tabs groupId="dependencies">
-
   <TabItem value="maven" label="maven">
-
-```xml
-<dependency>
-   <artifactId>specmatic-jdbc</artifactId>
-   <groupId>io.specmatic.jdbc</groupId>
-   <scope>test</scope>
-   <version><!-- TODO: Liquid variable removed: {{ site.specmatic-jdbc-version }} --></version>
-</dependency>
-```
-
+    <CodeBlock language="xml" title='pom.xml'>
+      {trimHeredoc(`
+        <dependency>
+            <groupId>io.specmatic</groupId>
+            <artifactId>junit5-support</artifactId>
+            <version>${VERSIONS["specmatic-jdbc-version"]}</version>
+            <scope>test</scope>
+        </dependency>
+    `)}
+    </CodeBlock>
   </TabItem>
 
   <TabItem value="gradle" label="gradle">
-
-```shell
-testImplementation("io.specmatic.jdbc:specmatic-jdbc:<!-- TODO: Liquid variable removed: {{ site.specmatic-jdbc-version }} -->")
-```
-
+    <CodeBlock language="kotlin" title="build.gradle[.kts]">
+      {trimHeredoc(`
+        dependencies {
+          testImplementation("io.specmatic.jdbc:specmatic-jdbc:${VERSIONS["specmatic-jdbc-version"]}")
+        }
+      `)}
+    </CodeBlock>
   </TabItem>
-
 </Tabs>
 
 Sometimes there is a Xerces library version conflict. Find out the version of Xerces used by Specmatic, and pin it in your `build.gradle` or `pom.xml`, for example:
 
 <Tabs groupId="XercesConflict">
-
   <TabItem value="maven" label="maven">
-
-```xml
-<dependency>
-  <groupId>xerces</groupId>
-  <artifactId>xercesImpl</artifactId>
-  <version>2.12.0</version>
-  <scope>test</scope>
-</dependency>
-```
-
+    ```xml
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.12.0</version>
+      <scope>test</scope>
+    </dependency>
+    ```
   </TabItem>
 
   <TabItem value="gradle" label="gradle">
-
-```shell
-testImplementation("xerces:xercesImpl:2.12.0")
-```
-
+    ```shell
+    testImplementation("xerces:xercesImpl:2.12.0")
+    ```
   </TabItem>
-
 </Tabs>
 
 ### Set up The Stub Server
@@ -98,6 +96,7 @@ When writing integration or contract tests involving database stubs, you need to
 ```java
 jdbcMockFactory.createDataSource(DATABASE_STUB_PORT, DATABASE_EXPECTATIONS_DIRECTORY);
 ```
+
 * `DATABASE_STUB_PORT`: The port on which the Specmatic database stub runs (e.g., `9090`).
 * `DATABASE_EXPECTATIONS_DIRECTORY`: The path to your expectations folder (e.g., `src/test/resources/db_stub_expectations`).
 
