@@ -2,8 +2,6 @@
 title: Kafka
 sidebar_position: 1
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
 import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import yaml from "js-yaml";
@@ -527,38 +525,12 @@ To test this service from the command line, follow the below steps.
 2. **Run the Service**: Start your service locally.
 3. **Run Contract Tests**: Use the following command to run the contract tests against the service:
 
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
-
 ```bash
 docker run --network="host" -v "$(pwd):/usr/src/app" specmatic/enterprise test
 ```
 
 All configuration (Kafka broker host, port, etc.) is read from the YAML file.
 
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```bash
-docker run --network="host" -v "$(pwd):/usr/src/app" specmatic/enterprise test
-```
-
-All configuration (Kafka broker host, port, etc.) is read from the YAML file.
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```bash
-docker run --network="host" -v "$(pwd):/usr/src/app" \
-  specmatic/enterprise test \
-  --host=<kafka_broker_host> \
-  --port=<kafka_broker_port>
-```
-
-Replace `kafka_broker_host` and `kafka_broker_port` with appropriate values. This command requires CLI arguments since the Kafka broker configuration is not in the YAML file.
-
-  </TabItem>
-</Tabs>
 
 To get information around all the CLI args of the `test` command, run the following command.
 ```shell
@@ -650,37 +622,12 @@ Start your application that implements the AsyncAPI specification. The applicati
 
 Execute the contract tests using the Specmatic Docker image:
 
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
-
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
 ```
 
 All configuration (Kafka server, topics, etc.) is read from the YAML file.
 
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
-```
-
-All configuration (Kafka server, topics, etc.) is read from the YAML file.
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" \
-  specmatic/enterprise test \
-  --host=localhost:9092
-```
-
-This command requires the `--host` CLI argument to specify the Kafka broker connection.
-
-  </TabItem>
-</Tabs>
 
 Specmatic-async will:
 1. Read the AsyncAPI specification and identify Kafka channels
