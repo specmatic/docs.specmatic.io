@@ -18,4 +18,4 @@ components:
               - "products.yaml"
   settings:
     test:
-      generative: "${DISABLE_GENERATIVE_TESTS:-true}"
+      schemaResiliencyTests: "${DISABLE_GENERATIVE_TESTS:-true}"

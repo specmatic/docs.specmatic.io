@@ -1,13 +1,4 @@
 version: 3
-components:
-  sources:
-    contractRepository:
-      filesystem:
-        directory: "."
-  adapters:
-    productsApiAdapter:
-      stub_load_contract: 'python modify_stub_header.py'
-
 dependencies:
   services:
     - service:
@@ -22,3 +13,12 @@ dependencies:
   data:
     adapters:
       $ref: "#/components/adapters/productsApiAdapter"
+
+components:
+  sources:
+    contractRepository:
+      filesystem:
+        directory: "."
+  adapters:
+    productsApiAdapter:
+      stub_load_contract: 'python modify_stub_header.py'
