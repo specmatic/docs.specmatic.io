@@ -1,0 +1,79 @@
+version: 3
+
+systemUnderTest:
+  service:
+    $ref: "#/components/services/orderService"
+    runOptions:
+      "$ref": "#/components/runOptions/orderServiceRunOptions"
+
+
+components:
+  sources:
+    centralContractRepo:
+      filesystem:
+        directory: "."
+  services:
+    orderService:
+      description: "Order Service"
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContractRepo"
+            specs:
+              - spec:
+                  path: 'spec/order-service.yaml'
+  certificates:
+    clientCertificate:
+      keyStore:
+        file: "path/to/keystore.jks"
+        password: "keystore-password"
+
+  runOptions:
+    orderServiceRunOptions:
+      asyncapi:
+        type: test
+        servers:
+          - host: "<SQS_QUEUE_URL>"
+            protocol: sqs
+            adminCredentials:
+              region: "<REGION>"
+              aws.access.key.id: "<AWS_ACCESS_KEY_ID>"
+              aws.secret.access.key: "<AWS_SECRET_ACCESS_KEY>"
+          - host: "<KAFKA_BROKER_URL>"
+            protocol: kafka
+            adminCredentials:
+              security.protocol: SASL_PLAINTEXT
+              sasl.mechanism: PLAIN
+              sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin-secret";
+            client:
+              producer:
+                $ref: "#/components/certificates/clientCertificate"
+              consumer:
+                $ref: "#/components/certificates/clientCertificate"
+
+
+
+#contracts:
+#  - provides:  # or consumes:
+#      - specs:
+#          - spec/your-service.yaml
+#        specType: asyncapi
+#        config:
+#          # Schema Registry Configuration (optional)
+#          schemaRegistry:
+#            kind: CONFLUENT
+#            url: http://localhost:8085
+#            username: admin
+#            password: admin-secret
+#
+#          # Server Configurations
+#          servers:
+#            - host: <HOST_URL>
+#              protocol: <PROTOCOL>
+#              adminCredentials:
+#              # Protocol-specific admin properties
+#              client:
+#                producer:
+#                # Protocol-specific producer properties
+#                consumer:
+#                # Protocol-specific consumer properties

@@ -1,0 +1,38 @@
+version: 3
+
+systemUnderTest:
+  service:
+    $ref: "#/components/services/orderService"
+    runOptions:
+      "$ref": "#/components/runOptions/orderServiceRunOptions"
+
+
+components:
+  sources:
+    centralContractRepo:
+      filesystem:
+        directory: "."
+  services:
+    orderService:
+      description: "Order Service"
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContractRepo"
+            specs:
+              - spec:
+                  path: 'spec/order-service.yaml'
+  runOptions:
+    orderServiceRunOptions:
+      asyncapi:
+        type: test
+        servers:
+          - host: "<SQS_QUEUE_URL>"
+            protocol: sqs
+            adminCredentials:
+              region: "<REGION>"
+              aws.access.key.id: "<AWS_ACCESS_KEY_ID>"
+              aws.secret.access.key: "<AWS_SECRET_ACCESS_KEY>"
+          - host: "<KAFKA_BROKER_URL>"
+            protocol: kafka
+
