@@ -1,0 +1,21 @@
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+domain_api_contract_tests:
+  stage: test
+  image:
+    name: specmatic/specmatic:latest
+    entrypoint: [""]
+
+  before_script:
+    - apk add -U openjdk-17-jdk maven
+
+  script:
+    - ./mvnw spring-boot:run &
+    - sleep 30
+    - specmatic test --port=9000 --host=localhost

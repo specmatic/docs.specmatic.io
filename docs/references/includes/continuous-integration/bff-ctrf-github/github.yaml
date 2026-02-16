@@ -1,0 +1,30 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CTRF_REPORT_PATH: './build/reports/specmatic/test/ctrf/*.json'
+    steps:
+      - name: Save Specmatic license
+        run: |
+          mkdir -p ~/.specmatic
+          echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+
+      - name: Upload CTRF Report
+        uses: actions/upload-artifact@v6
+        if: always() # Run even if tests fail
+        with:
+          name: ctrf-report
+          path: ${{ env.CTRF_REPORT_PATH }}
+          retention-days: 5
+
+      - name: Publish Test Results in CTRF format
+        uses: ctrf-io/github-test-reporter@v1
+        if: always()
+        with:
+          report-path: ${{ env.CTRF_REPORT_PATH }}
+
+      - name: Upload HTML Test Report
+        uses: actions/upload-artifact@v6
+        with:
+          name: specmatic-html-report
+          path: ./build/reports/specmatic/html

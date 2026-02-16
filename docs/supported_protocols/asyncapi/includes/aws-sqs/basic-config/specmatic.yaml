@@ -1,0 +1,34 @@
+version: 3
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/asyncService"
+        runOptions:
+          $ref: "#/components/runOptions/asyncServiceMock"
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+  services:
+    asyncService:
+      description: AsyncAPI Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: asyncSpec
+                  path: spec/async-api-spec.yaml
+  runOptions:
+    asyncServiceMock:
+      asyncapi:
+        type: mock
+        servers:
+          - host: http://localhost:4566/000000000000
+            protocol: sqs
+            adminCredentials:
+              region: us-east-1
+              aws.access.key.id: test
+              aws.secret.access.key: test

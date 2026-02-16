@@ -1,0 +1,38 @@
+name: Client CI Build using Specmatic Serivce Virtualization
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'lts'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Specmatic stub to virtualize the BFF service
+        run: |
+          docker run -d \
+            -v ${{ github.workspace }}/specmatic.yaml:/usr/src/app/specmatic.yaml \
+            -v ${{ github.workspace }}/build/reports/specmatic:/usr/src/app/build/reports/specmatic \
+            -p 8080:8080 \
+            specmatic/specmatic mock
+          
+          # Wait for the stub to be ready
+          sleep 10
+
+      - name: Run component test against the Specmatic stub
+        run: npm run test:component
+        env:
+          STUB_URL: http://localhost:8080

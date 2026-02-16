@@ -1,0 +1,13 @@
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+provider_contract_tests:
+  stage: test
+  image: eclipse-temurin:17-jdk gradle
+  script:
+    - ./gradlew test

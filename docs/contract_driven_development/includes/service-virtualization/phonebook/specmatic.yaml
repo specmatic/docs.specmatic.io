@@ -1,0 +1,21 @@
+version: 3
+components:
+  sources:
+    contractRepository:
+      filesystem:
+        directory: "."
+
+dependencies:
+  services:
+    - service:
+        description: Phone book
+        definitions:
+          - definition:
+              source:
+                $ref: "#/components/sources/contractRepository"
+              specs:
+                - spec:
+                    path: phonebook.yaml
+                - spec:
+                    path: employees.yaml
+

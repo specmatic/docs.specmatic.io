@@ -1,0 +1,136 @@
+asyncapi: 3.0.0
+info:
+  title: Order Service SNS-SQS API
+  version: 1.0.0
+  description: |
+    Receives order placement messages on SQS, replies on Kafka
+
+servers:
+  sqsServer:
+    host: 'http://localhost:4566/000000000000'
+    protocol: sqs
+    description: AWS SQS server for receiving messages
+  kafkaServer:
+    host: 'localhost:8092'
+    protocol: kafka
+    description: Kafka broker for reply messages
+
+channels:
+  placeOrder:
+    address: place-order-queue
+    servers:
+      - $ref: '#/servers/sqsServer'
+    messages:
+      placeOrderMessage:
+        $ref: '#/components/messages/PlaceOrderMessage'
+
+  wipOrder:
+    address: place-order-topic
+    servers:
+      - $ref: '#/servers/kafkaServer'
+    messages:
+      wipOrderMessage:
+        $ref: '#/components/messages/WipOrderMessage'
+
+operations:
+  sendOrder:
+    description: Receive order on SQS, reply with WIP status on Kafka
+    action: receive
+    channel:
+      $ref: '#/channels/placeOrder'
+    messages:
+      - $ref: '#/channels/placeOrder/messages/placeOrderMessage'
+    reply:
+      channel:
+        $ref: '#/channels/wipOrder'
+      messages:
+        - $ref: '#/channels/wipOrder/messages/wipOrderMessage'
+
+components:
+  messages:
+    PlaceOrderMessage:
+      name: PlaceOrderMessage
+      title: Order Created Event
+      contentType: application/json
+      headers:
+        type: object
+        properties:
+          MessageGroupId:
+            type: string
+            examples:
+              - order-group-1
+          Subject:
+            type: string
+            examples:
+              - Order Placed
+      payload:
+        type: object
+        properties:
+          orderType:
+            type: string
+            enum:
+              - STANDARD
+            examples:
+              - STANDARD
+          orderId:
+            type: string
+            examples:
+              - ORD-12345
+          customerId:
+            type: string
+            examples:
+              - CUST-67890
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                productId:
+                  type: string
+                quantity:
+                  type: integer
+                price:
+                  type: number
+                  format: float
+          totalAmount:
+            type: number
+            format: float
+          orderDate:
+            type: string
+            format: date-time
+        required:
+          - orderType
+          - orderId
+          - customerId
+          - items
+          - totalAmount
+          - orderDate
+
+    WipOrderMessage:
+      name: WipOrderMessage
+      title: Work In Progress Order Event
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          orderId:
+            type: string
+            examples:
+              - ORD-12345
+          itemsCount:
+            type: integer
+            examples:
+              - 2
+          status:
+            type: string
+            enum:
+              - WIP
+            examples:
+              - WIP
+          processingStartedAt:
+            type: string
+            format: date-time
+        required:
+          - orderId
+          - itemsCount
+          - status

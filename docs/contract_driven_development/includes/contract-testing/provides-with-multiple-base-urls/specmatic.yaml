@@ -1,0 +1,36 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/employeeService"
+    runOptions:
+      "$ref": "#/components/runOptions/providerApis"
+components:
+  sources:
+    centralContractRepo:
+      git:
+        url: https://github.com/your-username-or-org/your-repo.git
+  services:
+    employeeService:
+      description: "Employee Service"
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContractRepo"
+            specs:
+              - spec:
+                  id: employeeSpec
+                  path: "path/to/employees.yaml"
+              - spec:
+                  id: payrollSpec
+                  path: "path/to/payroll.yaml"
+  runOptions:
+    providerApis:
+      openapi:
+        type: mock
+        specs:
+          - spec:
+              id: employeeSpec
+              baseUrl: "http://localhost:8080"
+          - spec:
+              id: payrollSpec
+              baseUrl: "http://localhost:8081"

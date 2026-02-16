@@ -1,0 +1,47 @@
+asyncapi: 3.0.0
+info:
+  title: Order Service SNS-SQS API
+  version: 1.0.0
+  description: |
+    Receives order placement messages on SQS, replies on Kafka
+
+servers:
+  sqsServer:
+    host: 'http://localhost:4566/000000000000'
+    protocol: sqs
+    description: AWS SQS server for receiving messages
+  kafkaServer:
+    host: 'localhost:9092'
+    protocol: kafka
+    description: Kafka broker for reply messages
+
+channels:
+  placeOrder:
+    address: place-order-queue
+    servers:
+      - $ref: '#/servers/sqsServer'
+    messages:
+      placeOrderMessage:
+        $ref: '#/components/messages/PlaceOrderMessage'
+
+  wipOrder:
+    address: place-order-topic
+    servers:
+      - $ref: '#/servers/kafkaServer'
+    messages:
+      wipOrderMessage:
+        $ref: '#/components/messages/WipOrderMessage'
+
+operations:
+  sendOrder:
+    description: Receive order on SQS, reply with WIP status on Kafka
+    action: receive
+    channel:
+      $ref: '#/channels/placeOrder'
+    messages:
+      - $ref: '#/channels/placeOrder/messages/placeOrderMessage'
+    reply:
+      channel:
+        $ref: '#/channels/wipOrder'
+      messages:
+        - $ref: '#/channels/wipOrder/messages/wipOrderMessage'

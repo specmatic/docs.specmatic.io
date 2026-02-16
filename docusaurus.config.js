@@ -143,11 +143,28 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
-        additionalLanguages: ['groovy', 'kotlin']
+        additionalLanguages: ['groovy', 'kotlin', 'java', 'yaml', 'json', 'properties', 'bash', 'powershell'],
       },
     }),
 
   plugins: [
+    function rawTextPlugin() {
+      return {
+        name: 'raw-text-loader',
+        configureWebpack() {
+          return {
+            module: {
+              rules: [
+                {
+                  resourceQuery: /raw/, // *.yml?raw
+                  type: 'asset/source',
+                },
+              ],
+            },
+          };
+        },
+      };
+    },
     [
       '@docusaurus/plugin-client-redirects',
       {

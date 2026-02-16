@@ -1,0 +1,20 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/employeeService"
+components:
+  sources:
+    centralContractRepo:
+      git:
+        url: https://github.com/your-username-or-org/your-repo.git
+  services:
+    employeeService:
+      description: "Employee Service"
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContractRepo"
+            specs:
+              - spec:
+                  path: "path/to/employees.yaml"
+

@@ -1,0 +1,38 @@
+stages:
+  - lint
+  - example_validation
+  - compatibility
+
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+lint_openapi_files:
+  stage: lint
+  image: node:lts
+  script:
+    - npm install -g @stoplight/spectral-cli
+    - spectral lint "**/*.yaml"
+
+validate_openapi_examples:
+  stage: example_validation
+  image:
+    name: specmatic/specmatic:latest
+    entrypoint: [""]
+  script:
+    - specmatic examples validate --specs-dir=io/specmatic/examples/store
+
+compatibility:
+  stage: compatibility
+  image:
+    name: specmatic/specmatic:latest
+    entrypoint: [""]
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - when: never
+  before_script:
+    - git fetch --unshallow || true
+    - git fetch origin main
+  script:
+    - specmatic backward-compatibility-check --base-branch=origin/main

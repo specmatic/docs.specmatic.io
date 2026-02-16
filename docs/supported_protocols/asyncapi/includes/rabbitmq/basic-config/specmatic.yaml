@@ -1,0 +1,33 @@
+version: 3
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/asyncService"
+        runOptions:
+          $ref: "#/components/runOptions/asyncServiceMock"
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+  services:
+    asyncService:
+      description: AsyncAPI Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: asyncSpec
+                  path: spec/async-api-spec.yaml
+  runOptions:
+    asyncServiceMock:
+      asyncapi:
+        type: mock
+        inMemoryBroker:
+          host: 0.0.0.0
+          port: 9127
+        servers:
+          - host: tcp://0.0.0.0:9127
+            protocol: jms

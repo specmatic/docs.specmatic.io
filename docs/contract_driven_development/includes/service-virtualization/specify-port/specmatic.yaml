@@ -1,0 +1,23 @@
+version: 3
+components:
+  sources:
+    contractRepository:
+      git:
+        url: "https://github.com/your-username/your-repo.git"
+  runOptions:
+    productsMock:
+      openapi:
+        type: mock
+        port: 5000
+
+dependencies:
+  services:
+    - service:
+        description: Employee Service
+        definitions:
+          - definition:
+              source:
+                $ref: "#/components/sources/contractRepository"
+              specs:
+                - spec:
+                    path: products.yaml

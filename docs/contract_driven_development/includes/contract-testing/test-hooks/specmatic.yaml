@@ -1,0 +1,23 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/employeeService"
+components:
+  sources:
+    centralContractRepo:
+      git:
+        url: "https://github.com/your-org/central-contract-repo.git"
+  services:
+    employeeService:
+      description: "Employee Service"
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContractRepo"
+            specs:
+              - spec:
+                  path: "employees.yaml"
+
+  adapters:
+    employeeServiceAdapter:
+      test_load_contract: "python3 modify_headers.py (can be any script or command that modifies the contract before loading)"

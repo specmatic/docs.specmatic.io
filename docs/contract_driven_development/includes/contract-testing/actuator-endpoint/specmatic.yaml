@@ -1,0 +1,30 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/employeeService"
+    runOptions:
+      "$ref": "#/components/runOptions/employeeService"
+components:
+  sources:
+    centralContractRepo:
+      git:
+        url: https://github.com/your-username-or-org/your-repo.git
+  services:
+    employeeService:
+      description: "Employee Service"
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContractRepo"
+            specs:
+              - spec:
+                  id: employeeSpec
+                  path: "path/to/employees.yaml"
+  runOptions:
+    employeeService:
+      openapi:
+        type: mock
+        specs:
+          - spec:
+              id: employeeSpec
+              actuatorUrl: "http://localhost:8080/actuator"

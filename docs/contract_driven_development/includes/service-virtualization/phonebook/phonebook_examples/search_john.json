@@ -1,0 +1,32 @@
+{
+  "http-request": {
+    "path": "/search",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "text/plain"
+    },
+    "body": "(string)",
+    "bodyRegex": "^[Jj][Oo][Hh][Nn].*$"
+  },
+  "http-response": {
+    "status": 200,
+    "body": [
+      {
+        "name": "John Doe",
+        "number": "123-456-7890"
+      },
+      {
+        "name": "John Smith",
+        "number": "987-654-3210"
+      },
+      {
+        "name": "John Johnson",
+        "number": "555-555-5555"
+      }
+    ],
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "status-text": "OK"
+  }
+}

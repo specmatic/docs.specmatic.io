@@ -1,0 +1,20 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/asyncService"
+
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+  services:
+    asyncService:
+      description: AsyncAPI Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  path: spec/async-api-spec.yaml
