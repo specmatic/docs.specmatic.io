@@ -2,31 +2,32 @@ version: 3
 dependencies:
   services:
     - service:
-        $ref: "#/components/services/kafkaService"
+        $ref: "#/components/services/asyncService"
         runOptions:
-          $ref: "#/components/runOptions/kafkaServiceMock"
+          $ref: "#/components/runOptions/asyncServiceMock"
 components:
   sources:
     yourContracts:
       git:
         url: https://your-central-contract-repo.com
   services:
-    kafkaService:
-      description: Kafka AsyncAPI Service
+    asyncService:
+      description: AsyncAPI Service
       definitions:
         - definition:
             source:
               $ref: "#/components/sources/yourContracts"
             specs:
               - spec:
-                  path: /path/to/your/kafka.yaml
+                  id: asyncSpec
+                  path: spec/async-api-spec.yaml
   runOptions:
-    kafkaServiceMock:
+    asyncServiceMock:
       asyncapi:
         type: mock
         inMemoryBroker:
-          host: localhost
-          port: 9092
+          host: 0.0.0.0
+          port: 9127
         servers:
-          - host: "localhost:9092"
-            protocol: kafka
+          - host: tcp://0.0.0.0:9127
+            protocol: jms

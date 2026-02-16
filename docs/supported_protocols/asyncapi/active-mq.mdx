@@ -3,7 +3,9 @@ title: ActiveMQ
 sidebar_position: 2
 ---
 
+import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
+import yaml from "js-yaml";
 
 # ActiveMQ <CommercialBadge/>
 
@@ -83,21 +85,7 @@ For a complete working example of ActiveMQ contract testing with Specmatic-Async
 
 Create or update your `specmatic.yaml` file to include the AsyncAPI specification and ActiveMQ server configuration:
 
-```yaml
-version: 2
-contracts:
-  - provides:
-      - specs:
-          - spec/spec.yaml
-        specType: asyncapi
-        config:
-          servers:
-            - host: tcp://localhost:61616
-              protocol: jms
-              adminCredentials:
-                username: admin
-                password: admin
-```
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/activemq/basic-config/specmatic.yaml?raw'))} />
 
 ### Step 2: Start ActiveMQ Infrastructure
 
