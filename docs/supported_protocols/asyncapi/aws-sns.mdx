@@ -2,10 +2,12 @@
 title: AWS SNS
 sidebar_position: 4
 ---
+
+import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
+import yaml from "js-yaml";
 
 # AWS SNS <CommercialBadge/>
-
 
 Specmatic-async provides first-class support for contract testing applications that use AWS SNS, enabling you to validate pub/sub messaging patterns with confidence.
 
@@ -140,22 +142,7 @@ Create your AsyncAPI specification file (e.g., `spec/order-notifications-async-a
 
 Create a `specmatic.yaml` file to configure Specmatic-async:
 
-```yaml
-version: 2
-contracts:
-  - provides:
-      - specs:
-          - spec/order-notifications-async-api.yaml
-        specType: asyncapi
-        config:
-          servers:
-            - host: http://localhost:4566
-              protocol: sns
-              adminCredentials:
-                region: us-east-1
-                aws.access.key.id: test
-                aws.secret.access.key: test
-```
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/aws-sns/basic-config/specmatic.yaml?raw'))} />
 
 The `adminCredentials` section provides AWS credentials needed to interact with SNS (use test credentials for LocalStack).
 

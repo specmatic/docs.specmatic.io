@@ -2,7 +2,9 @@
 title: AWS EventBridge
 sidebar_position: 6
 ---
+import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
+import yaml from "js-yaml";
 
 # AWS EventBridge <CommercialBadge/>
 
@@ -145,24 +147,7 @@ Create your AsyncAPI specification file (e.g., `spec/order-events-async-api.yaml
 
 Create a `specmatic.yaml` file to configure Specmatic-async:
 
-```yaml
-version: 2
-contracts:
-  - provides:
-      - specs:
-          - spec/order-events-async-api.yaml
-        specType: asyncapi
-        config:
-          servers:
-            - host: http://localhost:4566
-              protocol: eventbridge
-              adminCredentials:
-                region: us-east-1
-                aws.access.key.id: test
-                aws.secret.access.key: test
-            - host: localhost:9092
-              protocol: kafka
-```
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/aws-event-bridge/basic-config/specmatic.yaml?raw'))} />
 
 The `adminCredentials` section provides AWS credentials needed to interact with EventBridge (use test credentials for LocalStack).
 
