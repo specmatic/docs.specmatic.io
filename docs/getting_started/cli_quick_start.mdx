@@ -197,14 +197,15 @@ Your output will appear as shown below (a few lines have been deleted in the int
 
 ```
 ...
+Specmatic Version: vx.y.z
+
 API Specification Summary: service.yaml
   OpenAPI Version: 3.0.1
   API Paths: 1, API Operations: 1
 
-
 Endpoints API and SwaggerUI URL were not exposed by the application, so cannot calculate actual coverage
 
-Using Specmatic Enterprise license initialized from /Users/ketan/.specmatic/license.json
+Using Specmatic Enterprise license initialized from jar:file:/usr/local/share/specmatic/specmatic.jar!/default-oss-license.txt
 
 --------------------
   Request to https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples at 2026-2-17 7:5:51.253
@@ -214,8 +215,6 @@ Using Specmatic Enterprise license initialized from /Users/ketan/.specmatic/lice
     Accept-Charset: UTF-8
     Accept: */*
     Content-Type: NOT SENT
-
-
 
   Response at 2026-2-17 7:5:52.170
     200 OK
@@ -244,18 +243,13 @@ Could not load report configuration, coverage will be calculated but no coverage
 | 100% API Coverage reported from 1 Paths                             |
 |---------------------------------------------------------------------|
 
-
-
 Generating HTML report...
 Saving Coverage Report json to ./build/reports/specmatic ...
 Generating report for 1 tests...
 Generating CTRF report in build/reports/specmatic/test/ctrf/ctrf-report.json
 Generating HTML report in build/reports/specmatic/test/html/index.html
 
-
 Tests run: 1, Successes: 1, Failures: 0, Errors: 0
-
-Executed at 2026-02-17T19:05:52.489073
 ```
 
 ### Understanding the output
@@ -353,7 +347,6 @@ This is because we removed the named example `SCOOBY_200_OK`, Specmatic generate
   Request to https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples at 2026-2-17 7:7:35.685
     GET /specmatic/specmatic-documentation-examples/pets/227.0
     ...
-
 
   Response at 2026-2-17 7:7:36.616
     404 Not Found
@@ -821,4 +814,4 @@ To know more about **Intelligent Service Virtualization** please refer to below 
 * [Video: Intelligent Service Virtualization](https://youtu.be/U5Agz-mvYIU?t=750)
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
-[**Learn more about Mockbing / Smart Mocks here.**](/contract_driven_development/service_virtualization)
+[**Learn more about Mocking / Smart Mocks here.**](/contract_driven_development/service_virtualization)
