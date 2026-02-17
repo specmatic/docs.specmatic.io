@@ -459,19 +459,19 @@ Please refer to below videos for extensive demos on Contract Tests.
 
 [**Learn more about Contract Testing here.**](/contract_driven_development/contract_testing)
 
-## Consumer Side - Contract As A Stub / Intelligent Service Virtualization
+## Consumer Side - Contract As A Mock / Intelligent Service Virtualization
 
-We have so far established that Specmatic will keep OpenAPI spec and the API implementation in sync. This gives us the confidence to use the same OpenAPI spec `service.yaml` on the Consumer side for **Intelligent Service Virtualization** with Specmatic. This will help us isolate our UI development and make progress independent of the Provider / API. Here is a sequence diagram illustrating the same where UI no longer has to interact with the real backend for testing purposes. UI can instead rely on Specmatic Stub which is emulating the Provider / API.
+We have so far established that Specmatic will keep OpenAPI spec and the API implementation in sync. This gives us the confidence to use the same OpenAPI spec `service.yaml` on the Consumer side for **Intelligent Service Virtualization** with Specmatic. This will help us isolate our UI development and make progress independent of the Provider / API. Here is a sequence diagram illustrating the same where UI no longer has to interact with the real backend for testing purposes. UI can instead rely on Specmatic Mock which is emulating the Provider / API.
 
 ```
-    UI (Consumer)         Specmatic Stub <- service.yaml
+    UI (Consumer)         Specmatic Mock <- service.yaml
           | --- getPetById ---> |
           | <-- {Pet JSON} ---- |
 ```
 
 Before we begin, please make sure that your `service.yaml` file is restored to its [original state](#petstore-api-specification).
 
-To spin up a stub server with the service.yaml we authored earlier, run the command below.
+To spin up a mock server with the service.yaml we authored earlier, run the command below.
 
 <Tabs groupId="start-stub">
   <TabItem value="docker" label="Docker">
@@ -505,7 +505,7 @@ npx specmatic mock service.yaml
   </TabItem>
 </Tabs>
 
-This should start your stub server on port 9000 by default as below.
+This should start your mock server on port 9000 by default as below.
 
 ```
 Loading the spec file: service.yaml
@@ -538,7 +538,7 @@ docker run -v "$(pwd):/specs" -p 9000:9002 specmatic/specmatic mock "/specs/serv
 docker run -v "%cd%:/specs" -p 9000:9002 specmatic/specmatic mock "/specs/service.yaml" --port 9002
 ```
 
-Note that the `-p 9000:9002` tells Docker to map the port `9000` **outside** the container to port `9002` **inside** the container, So the Specmatic stub (running **inside** the container) has to be started on port `9002`, and this is done by passing the parameter `--port 9002` to Specmatic.
+Note that the `-p 9000:9002` tells Docker to map the port `9000` **outside** the container to port `9002` **inside** the container, So the Specmatic mock (running **inside** the container) has to be started on port `9002`, and this is done by passing the parameter `--port 9002` to Specmatic.
 
   </TabItem>
   <TabItem value="java" label="Java">
@@ -557,7 +557,7 @@ npx specmatic mock service.yaml --port 9002
   </TabItem>
 </Tabs>
 
-Once the stub server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
+Once the mock server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
 
 ```shell
 curl http://localhost:9000/pets/123
@@ -587,17 +587,17 @@ However for petId 1, it will always return below values.
 }
 ```
 
-This is because the example `SCOOBY_200_OK` in the `service.yaml` spec file, which we earlier saw being used while running contract test, also serves a stub data when we run Specmatic stub.
+This is because the example `SCOOBY_200_OK` in the `service.yaml` spec file, which we earlier saw being used while running contract test, also serves a mock data when we run Specmatic mock.
 
 With this we have effectively achieved three goals in one go.
 
 * Examples serve as sample data for people referring to the API specification as documentation
 * The same examples are used in contract tests to create the HTTP request
-* And these examples also serve as stub data when we run Specmatic stub command
+* And these examples also serve as mock data when we run Specmatic mock command
 
 ### Intelligent Service Virtualization
 
-Let us try a few experiments. Remove the `status` field in the `200_OKAY` response example in `service.yaml` (the very last line in that file) and run the stub command again.
+Let us try a few experiments. Remove the `status` field in the `200_OKAY` response example in `service.yaml` (the very last line in that file) and run the mock command again.
 
 ```yaml
 examples:
@@ -609,7 +609,7 @@ examples:
       status: "Adopted" # Remove this line
 ```
 
-The stub server will auto reload your `service.yaml` file as soon as you save it. And you should see an output as shown below.
+The mock server will auto reload your `service.yaml` file as soon as you save it. And you should see an output as shown below.
 
 ```
 Loading the spec file: service.yaml
@@ -642,11 +642,11 @@ Press Ctrl + C to stop.
 
 Specmatic rejects the expectation / canned response since it is not in line with the OpenAPI Specification.
 
-### Externalising stub responses
+### Externalising mock responses
 
 Please restore `service.yaml` to its [original state](#petstore-api-specification) (by adding back the `status` field in the `SCOOBY_200_OK` example) before proceeding with this section.
 
-If you would like to add more stub responses, however you do not wish to bloat your specification with a lot of examples, we can also externalise the stub / canned responses to json files also.
+If you would like to add more mock responses, however you do not wish to bloat your specification with a lot of examples, we can also externalise the mock / canned responses to json files also.
 
 * Create a folder named `service_examples` in the same folder as your `service.yaml` file (`_examples` suffix is a naming convention that tell Specmatic to look for canned responses in that directory)
 * Create a json file with the name `togo.json` and add below contents to it
@@ -670,7 +670,7 @@ If you would like to add more stub responses, however you do not wish to bloat y
 }
 ```
 
-Now let us run the stub command again.
+Now let us run the mock command again.
 
 <Tabs groupId="stub2">
   <TabItem value="docker" label="Docker">
@@ -724,9 +724,9 @@ Mock server is running on the following URLs:
 Press Ctrl + C to stop
 ```
 
-Note that when the stub starts, it will log the count of examples loaded for a spec and any errors found. If you want to see the actual paths of the example files that were loaded, use the `--debug` flag.
+Note that when the mock starts, it will log the count of examples loaded for a spec and any errors found. If you want to see the actual paths of the example files that were loaded, use the `--debug` flag.
 
-Once the stub server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
+Once the mockmockmockMock server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
 
 ```shell
 curl http://localhost:9000/pets/2
@@ -743,7 +743,7 @@ You should now be able to see the data pertaining to the `togo.json` file that y
 }
 ```
 
-Specmatic validates this externalised stub JSON file `togo.json` against the `service.yaml`. Let us try this by removing the `status` field within http-response body in `togo.json` and run the stub command again.
+Specmatic validates this externalised mock JSON file `togo.json` against the `service.yaml`. Let us try this by removing the `status` field within http-response body in `togo.json` and run the mock command again.
 
 <Tabs groupId="stub3">
   <TabItem value="docker" label="Docker">
@@ -814,11 +814,11 @@ Press Ctrl + C to stop.
 
 Specmatic again rejects the expectation / canned response since it is not in line with the OpenAPI Specification.
 
-We can now start consumer development against this stub without any dependency on the real API.
+We can now start consumer development against this mock without any dependency on the real API.
 
 To know more about **Intelligent Service Virtualization** please refer to below video demos
 
 * [Video: Intelligent Service Virtualization](https://youtu.be/U5Agz-mvYIU?t=750)
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
-[**Learn more about Stubbing / Smart Mocks here.**](/contract_driven_development/service_virtualization)
+[**Learn more about Mockbing / Smart Mocks here.**](/contract_driven_development/service_virtualization)
