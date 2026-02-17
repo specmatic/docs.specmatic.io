@@ -1,0 +1,23 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/petstore"
+    runOptions:
+      $ref: "#/components/runOptions/petStoreTest"
+components:
+  services:
+    petstore:
+      description: "PetStore API"
+      definitions:
+        - definition:
+            specs:
+              - spec:
+                  path: "./service.yaml"
+            source:
+              filesystem:
+                directory: "."
+  runOptions:
+    petStoreTest:
+      openapi:
+        type: test
+        baseUrl: "https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples"

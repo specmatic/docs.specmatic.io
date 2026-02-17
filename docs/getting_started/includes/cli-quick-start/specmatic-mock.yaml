@@ -1,0 +1,19 @@
+version: 3
+systemUnderTest:
+dependencies:
+  services:
+    - service:
+        description: "PetStore API"
+        definitions:
+          - definition:
+              specs:
+                - spec:
+                    path: "./service.yaml"
+              source:
+                filesystem:
+                  directory: "."
+        runOptions:
+          openapi:
+            type: "mock"
+            port: 9000
+

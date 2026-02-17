@@ -8,6 +8,9 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
 import { VERSIONS } from '@site/src/constants/versions';
+import { V3SpecmaticJsonYamlTabs } from '../../src/components/V2V3SpecmaticConfigTabs';
+import { YamlDisplay } from '../../src/components/JsonYamlDisplay';
+import yaml from 'js-yaml';
 
 # CLI Quick Start
 
@@ -30,39 +33,16 @@ The Specmatic standalone executable is accessible through various prominent dist
 
   </TabItem>
   <TabItem value="java" label="Java">
-    Download the standalone jar from our <a href={`https://github.com/specmatic/specmatic/releases/download/${VERSIONS['specmatic-core-version']}/specmatic.jar`}>GitHub releases</a> or <a href={`https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/${VERSIONS['specmatic-core-version']}/specmatic-executable-all-${VERSIONS['specmatic-core-version']}.jar`}>Maven Central</a>.
+    Download the standalone JAR from:
 
-    If you have downloaded the standalone jar from Maven Central, you may want to rename it as shown below for convenience.
+    - <a href={`https://github.com/specmatic/specmatic/releases/download/${VERSIONS['specmatic-core-version']}/specmatic.jar`}>GitHub</a>
+    - <a href={`https://repo1.maven.org/maven2/io/specmatic/specmatic-executable-all/${VERSIONS['specmatic-core-version']}/specmatic-executable-all-${VERSIONS['specmatic-core-version']}.jar`}>Maven Central</a>
 
-    <CodeBlock language="bash">
-    {`mv specmatic-executable-all-${VERSIONS['specmatic-core-version']}.jar specmatic.jar`}
-    </CodeBlock>
+    To run the JAR:
 
-    Run specmatic as below to list all the options available
-    <CodeBlock language="bash">java -jar specmatic.jar</CodeBlock>
+    <CodeBlock language="bash">java -jar specmatic.jar --help</CodeBlock>
 
-    Follow the quick tips below to set up commands for easily running `java -jar specmatic.jar`.
-
-    #### Command-line alias on MacOS / Linux
-
-    Add this to the startup script of your shell like `~/.bashrc` or `~/.zshrc`
-
-    <CodeBlock language="bash">{"alias specmatic='java -jar <path-to-jar>/specmatic.jar'"}</CodeBlock>
-
-    You can now run specmatic using:
-
-    <CodeBlock language="bash">{"$ specmatic <options>"}</CodeBlock>
-
-    #### Batch script on Windows
-
-    Create a batch file (`specmatic.bat`) with below content and add it your system path.
-
-    <CodeBlock language="bash">{"java -jar <path-to-jar>/specmatic.jar %*"}</CodeBlock>
-    The %* portion at the end tells the batch script to pass all of the parameters it receives to the new command.
-
-    You can now run specmatic using:
-
-    <CodeBlock language="bash">{`C:\\> specmatic.bat <options>`}</CodeBlock>
+    For convenience methods (aliases and install scripts), see the [Download page](/download).
 
   </TabItem>
   <TabItem value="npm" label="NPM">
@@ -102,52 +82,16 @@ Before we get started, here is a quick refresher on the terminology used in the 
 
 Below is the OpenAPI specification that represents the communication between UI and Backend in the above example application. Please save this to a file called `service.yaml`.
 
-```yaml
-openapi: 3.0.1
-info:
-  title: Contract for the petstore service
-  version: '1'
-paths:
-  /pets/{petid}:
-    get:
-      summary: Should be able to get a pet by petId
-      parameters:
-        - name: petid
-          in: path
-          required: true
-          schema:
-            type: number
-          examples:
-            SCOOBY_200_OK:
-              value: 1
-      responses:
-        '200':
-          description: Should be able to get a pet by petId
-          content:
-            application/json:
-              schema:
-                required:
-                  - id
-                  - name
-                  - status
-                  - type
-                properties:
-                  id:
-                    type: number
-                  name:
-                    type: string
-                  type:
-                    type: string
-                  status:
-                    type: string
-              examples:
-                SCOOBY_200_OK:
-                  value:
-                    id: 1
-                    name: Scooby
-                    type: Golden Retriever
-                    status: Adopted
-```
+<YamlDisplay object={yaml.load(require('./includes/cli-quick-start/service.yaml?raw'))}/>
+
+---
+
+## Create a Specmatic configuration (v3)
+
+Create a file named `specmatic.yaml` next to `service.yaml`. This is the v3 configuration format defined in `specmatic-schema.json` (repo root).
+
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/cli-quick-start/specmatic.yaml?raw'))}/>
 
 ---
 
@@ -167,27 +111,27 @@ Now lets use Specmatic to run the above **API specification as a contract test**
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd)/service.yaml:/service.yaml" specmatic/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%/service.yaml:/service.yaml" specmatic/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+docker run -v "%cd%:/usr/src/app" specmatic/specmatic test
 ```
 
   </TabItem>
   <TabItem value="java" label="Java">
 
 ```shell
-specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+specmatic test
 ```
 
   </TabItem>
   <TabItem value="npm" label="NPM">
 
 ```shell
-npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+npx specmatic test
 ```
 
   </TabItem>
@@ -300,27 +244,27 @@ And try running the specmatic test command again.
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd)/service.yaml:/service.yaml" specmatic/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%/service.yaml:/service.yaml" specmatic/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+docker run -v "%cd%:/usr/src/app" specmatic/specmatic test
 ```
 
   </TabItem>
   <TabItem value="java" label="Java">
 
 ```shell
-specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+specmatic test
 ```
 
   </TabItem>
   <TabItem value="npm" label="NPM">
 
 ```shell
-npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+npx specmatic test
 ```
 
   </TabItem>
@@ -405,27 +349,27 @@ Let us run the specmatic test command again.
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd)/service.yaml:/service.yaml" specmatic/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%/service.yaml:/service.yaml" specmatic/specmatic test "/service.yaml" --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+docker run -v "%cd%:/usr/src/app" specmatic/specmatic test
 ```
 
   </TabItem>
   <TabItem value="java" label="Java">
 
 ```shell
-specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+specmatic test
 ```
 
   </TabItem>
   <TabItem value="npm" label="NPM">
 
 ```shell
-npx specmatic test service.yaml --testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples
+npx specmatic test
 ```
 
   </TabItem>
@@ -471,7 +415,13 @@ We have so far established that Specmatic will keep OpenAPI spec and the API imp
 
 Before we begin, please make sure that your `service.yaml` file is restored to its [original state](#petstore-api-specification).
 
-To spin up a mock server with the service.yaml we authored earlier, run the command below.
+To spin up a mock server with the `service.yaml` we authored earlier, update `specmatic.yaml` to include the `mock` command (shown below). The default port is `9000`.
+
+**Tip:** You can switch the port number by updating the port field in the `runOptions` configuration in `specmatic.yaml` file as shown below.
+
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/cli-quick-start/specmatic-mock.yaml?raw'))}/>
+
 
 <Tabs groupId="start-stub">
   <TabItem value="docker" label="Docker">
@@ -479,27 +429,27 @@ To spin up a mock server with the service.yaml we authored earlier, run the comm
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd):/specs" -p 9000:9000 specmatic/specmatic mock "/specs/service.yaml"
+docker run -v "$(pwd):/usr/src/app" --network host specmatic/specmatic mock
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%:/specs" -p 9000:9000 specmatic/specmatic mock "/specs/service.yaml"
+docker run -v "%cd%:/usr/src/app" --network host specmatic/specmatic mock
 ```
 
   </TabItem>
   <TabItem value="java" label="Java">
 
 ```shell
-specmatic mock service.yaml
+specmatic mock
 ```
 
   </TabItem>
   <TabItem value="npm" label="NPM">
 
 ```shell
-npx specmatic mock service.yaml
+npx specmatic mock
 ```
 
   </TabItem>
@@ -521,46 +471,10 @@ Mock server is running on the following URLs:
 Press Ctrl + C to stop.
 ```
 
-**Tip:** You can switch the port number by adding `--port <port of your choice>` in the command.
-
-<Tabs groupId="stub-custom-port">
-  <TabItem value="docker" label="Docker">
-
-**macOS / Linux / PowerShell**
-
-```shell
-docker run -v "$(pwd):/specs" -p 9000:9002 specmatic/specmatic mock "/specs/service.yaml" --port 9002
-```
-
-**Windows Command Prompt**
-
-```shell
-docker run -v "%cd%:/specs" -p 9000:9002 specmatic/specmatic mock "/specs/service.yaml" --port 9002
-```
-
-Note that the `-p 9000:9002` tells Docker to map the port `9000` **outside** the container to port `9002` **inside** the container, So the Specmatic mock (running **inside** the container) has to be started on port `9002`, and this is done by passing the parameter `--port 9002` to Specmatic.
-
-  </TabItem>
-  <TabItem value="java" label="Java">
-
-```shell
-specmatic mock service.yaml --port 9002
-```
-
-  </TabItem>
-  <TabItem value="npm" label="NPM">
-
-```shell
-npx specmatic mock service.yaml --port 9002
-```
-
-  </TabItem>
-</Tabs>
-
 Once the mock server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
 
 ```shell
-curl http://localhost:9000/pets/123
+curl http://localhost:9002/pets/123
 ```
 
 You should now be able to see the response that matches the schema defined in your OpenAPI spec.
@@ -593,7 +507,7 @@ With this we have effectively achieved three goals in one go.
 
 * Examples serve as sample data for people referring to the API specification as documentation
 * The same examples are used in contract tests to create the HTTP request
-* And these examples also serve as mock data when we run Specmatic mock command
+* And these examples also serve as mock data when we run Specmatic `mock` command
 
 ### Intelligent Service Virtualization
 
@@ -678,13 +592,13 @@ Now let us run the mock command again.
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd):/specs" -p 9000:9000 specmatic/specmatic mock "/specs/service.yaml"
+docker run -v "$(pwd):/usr/src/app" --network=host specmatic/specmatic mock
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%:/specs" -p 9000:9000 specmatic/specmatic mock "/specs/service.yaml"
+docker run -v "%cd%:/usr/src/app" --network=host specmatic/specmatic mock
 ```
 
   </TabItem>
@@ -726,7 +640,7 @@ Press Ctrl + C to stop
 
 Note that when the mock starts, it will log the count of examples loaded for a spec and any errors found. If you want to see the actual paths of the example files that were loaded, use the `--debug` flag.
 
-Once the mockmockmockMock server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
+Once the mock server is running you can verify the API by accessing it through Postman, Chrome, Curl etc.
 
 ```shell
 curl http://localhost:9000/pets/2
@@ -751,27 +665,27 @@ Specmatic validates this externalised mock JSON file `togo.json` against the `se
 **macOS / Linux / PowerShell**
 
 ```shell
-docker run -v "$(pwd):/specs" -p 9000:9000 specmatic/specmatic mock "/specs/service.yaml"
+docker run -v "$(pwd):/usr/src/app" --network host specmatic/specmatic mock
 ```
 
 **Windows Command Prompt**
 
 ```shell
-docker run -v "%cd%:/specs" -p 9000:9000 specmatic/specmatic mock "/specs/service.yaml"
+docker run -v "%cd%:/usr/src/app" --network host specmatic/specmatic mock
 ```
 
   </TabItem>
   <TabItem value="java" label="Java">
 
 ```shell
-specmatic mock service.yaml
+specmatic mock
 ```
 
   </TabItem>
   <TabItem value="npm" label="NPM">
 
 ```shell
-npx specmatic mock service.yaml
+npx specmatic mock
 ```
 
   </TabItem>
@@ -780,7 +694,7 @@ npx specmatic mock service.yaml
 You should see output as follows.
 
 ```
-API Specification Summary: service.yaml
+API Specification Summary: ./service.yaml
   OpenAPI Version: 3.0.1
   API Paths: 1, API Operations: 1
 
@@ -788,8 +702,8 @@ API Specification Summary: service.yaml
   1 examples(s) found in ./service_examples
 
 
-  >> Error loading stub expectation file '/private/tmp/service_examples/togo.json':
-   /private/tmp/service_examples/togo.json didn't match service.yaml
+  >> Error loading stub expectation file './service_examples/togo.json':
+   ./service_examples/togo.json didn't match service.yaml
     Error from contract service.yaml
 
       In scenario "Should be able to get a pet by petId. Response: Should be able to get a pet by petId"
@@ -821,4 +735,4 @@ To know more about **Intelligent Service Virtualization** please refer to below 
 * [Video: Intelligent Service Virtualization](https://youtu.be/U5Agz-mvYIU?t=750)
 * [Video: Dynamic Mocking](https://youtu.be/U5Agz-mvYIU?t=908)
 
-[**Learn more about Mockbing / Smart Mocks here.**](/contract_driven_development/service_virtualization)
+[**Learn more about Mocking / Smart Mocks here.**](/contract_driven_development/service_virtualization)
