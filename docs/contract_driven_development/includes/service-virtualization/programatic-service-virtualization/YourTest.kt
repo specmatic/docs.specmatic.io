@@ -1,5 +1,5 @@
 import io.specmatic.stub.ContractStub
-import io.specmatic.enterprise.SpecmaticContractTest
+import io.specmatic.test.SpecmaticContractTest
 import org.junit.jupiter.api.BeforeAll
 
 class YourTest: SpecmaticContractTest
