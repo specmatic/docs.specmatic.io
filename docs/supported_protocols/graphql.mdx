@@ -472,9 +472,6 @@ Here are some simple steps to try this out:
 
 **4.** Create a `specmatic.yaml` file with the following content in the root folder where `product-api.graphql` file is present:
 
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
-
 ```yaml
 version: 3
 dependencies:
@@ -514,62 +511,13 @@ components:
               port: 9000
 ```
 
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```yaml
-version: 2
-contracts:
-  - consumes:
-      - specs:
-          - product-api.graphql
-        specType: graphqlsdl
-        config:
-          host: localhost
-          port: 9000
-```
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```yaml
-version: 2
-contracts:
-  - consumes:
-      - product-api.graphql
-```
-
-  </TabItem>
-</Tabs>
 
 **5.** Run the following command to start the GraphQL stub on `localhost:9000/graphql`:
 
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
 
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
 ```
-
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock --examples=examples
-```
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" \
-  specmatic/enterprise mock \
-  --port=9000 \
-  --examples=examples
-```
-
-  </TabItem>
-</Tabs>
 
 **6.** Make a request to query all the sub-selected fields specified in the example. You will get the exact response specified in the example. Use the following `curl` command to make this request:
    ```bash
@@ -715,9 +663,6 @@ To showcase this, let's reuse the folder structure established in the previous s
 
 3. **Create `specmatic.yaml` File**: Add the following `specmatic.yaml` file to the root folder:
 
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
-
 ```yaml
 version: 3
 dependencies:
@@ -757,62 +702,11 @@ components:
               port: 9000
 ```
 
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```yaml
-version: 2
-contracts:
-  - consumes:
-      - specs:
-          - product-api.graphql
-        specType: graphqlsdl
-        config:
-          host: localhost
-          port: 9000
-```
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```yaml
-version: 2
-contracts:
-  - consumes:
-      - product-api.graphql
-```
-
-  </TabItem>
-</Tabs>
-
 4. **Run the GraphQL Stub**:
-
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
 
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
 ```
-
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock --examples=examples
-```
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" \
-  specmatic/enterprise mock \
-  --port=9000 \
-  --examples=examples
-```
-
-  </TabItem>
-</Tabs>
 
 5. **Send a Multi-Query Request**:
    Use the following `curl` command to make a multi-query request:
@@ -948,9 +842,6 @@ Let's see how it works using the same product-related GraphQL spec and example f
 
 3. **Create `specmatic.yaml` File**: Use the same configuration as before:
 
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
-
 ```yaml
 version: 3
 dependencies:
@@ -990,62 +881,11 @@ components:
               port: 9000
 ```
 
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```yaml
-version: 2
-contracts:
-  - consumes:
-      - specs:
-          - product-api.graphql
-        specType: graphqlsdl
-        config:
-          host: localhost
-          port: 9000
-```
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```yaml
-version: 2
-contracts:
-  - consumes:
-      - product-api.graphql
-```
-
-  </TabItem>
-</Tabs>
-
 4. **Run the GraphQL Stub**:
-
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
 
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
 ```
-
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock --examples=examples
-```
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" \
-  specmatic/enterprise mock \
-  --port=9000 \
-  --examples=examples
-```
-
-  </TabItem>
-</Tabs>
 
 5. **Send a Multi-Field Request Using Aliases**:
    You can use aliases to fetch the same field multiple times with different arguments. For example:
@@ -1171,9 +1011,6 @@ For other data types, you can provide externalized examples that specify valid i
 
 To run contract tests, you need to configure your `specmatic.yaml` file to include the system under test:
 
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
-
 ```yaml
 version: 3
 systemUnderTest:
@@ -1245,86 +1082,12 @@ docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
 
 This command mounts your `specmatic.yaml` file and runs tests against your service. All configuration (host, port, generative tests, etc.) is read from the YAML file.
 
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```yaml
-version: 2
-contracts:
-  - git:
-      branch: main
-      url: https://your-central-contract-repo.com
-    provides:
-      - specs:
-          - /path/to/your/products_bff.graphqls
-        specType: graphqlsdl
-        config:
-          host: localhost
-          port: 8080
-    consumes:
-      - specs:
-          - /path/to/your/api_order.yaml
-        specType: openapi
-        config:
-          baseUrl: http://localhost:8090
-
-test:
-  generativeTests: true
-  resiliencyTests:
-    enable: all
-```
-
-Run the contract tests with:
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
-```
-
-This command mounts your `specmatic.yaml` file and runs tests against your service. All configuration (host, port, generative tests, etc.) is read from the YAML file.
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```yaml
-version: 2
-contracts:
-  - git:
-      branch: main
-      url: https://your-central-contract-repo.com
-    provides:
-      - /path/to/your/products_bff.graphqls
-    consumes:
-      - /path/to/your/api_order.yaml
-
-test:
-  resiliencyTests:
-    enable: all
-```
-
-Run the contract tests with:
-
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" \
-  -e SPECMATIC_GENERATIVE_TESTS=true \
-  specmatic/enterprise test \
-  --port=8080 \
-  --host=host.docker.internal
-```
-
-This command requires the `SPECMATIC_GENERATIVE_TESTS` environment variable and additional CLI arguments (`--port` and `--host`) to specify where the GraphQL service under test is running, since this configuration is not in the YAML file.
-
-  </TabItem>
-</Tabs>
-
 This command mounts your `specmatic.yaml` file and runs tests against your service by generating GraphQL requests based on the GraphQL SDL files listed under `provides` or `systemUnderTest` section.
 
 ## Using your GraphQL files as your API Contracts from Central Contract Repository
 
 1. Store your GraphQL SDL files in a central repository for easy access and version control.
 2. Create a `specmatic.yaml` file in the root of your project to reference these contracts. Here are examples for different configuration versions:
-
-<Tabs groupId="config-version">
-  <TabItem value="v3" label="Version 3 (Recommended)">
 
 ```yaml
 version: 3
@@ -1383,57 +1146,6 @@ components:
           - spec:
               id: orderApiSpec
 ```
-
-  </TabItem>
-  <TabItem value="v2-with-config" label="Version 2 (With Config)">
-
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://your-central-contract-repo.com
-      branch: main
-    provides:
-      - specs:
-          - /path/to/your/products_bff.graphqls
-        specType: graphqlsdl
-        config:
-          host: localhost
-          port: 8080
-    consumes:
-      - specs:
-          - /path/to/your/api_order.yaml
-        specType: openapi
-        config:
-          baseUrl: http://localhost:8090
-```
-
-  </TabItem>
-  <TabItem value="v2-simple" label="Version 2 (Simple)">
-
-```yaml
-version: 2
-contracts:
-  - git:
-      url: https://your-central-contract-repo.com
-    provides:
-      - /path/to/your/products_bff.graphqls
-    consumes:
-      - /path/to/your/api_order.yaml
-```
-
-:::info
-When using the simple version 2 configuration, you need to provide additional configuration through CLI arguments:
-
-**CLI Arguments:**
-- `--host` - GraphQL service host
-- `--port` - GraphQL service port
-
-
-:::
-
-  </TabItem>
-</Tabs>
 
 Make sure to update the repository URLs, paths, and configuration to reflect your actual contract repository and .graphqls file locations.
 
