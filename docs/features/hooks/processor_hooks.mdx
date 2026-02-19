@@ -2,40 +2,41 @@
 sidebar_label: Request and Response Processing
 ---
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 
 # Request and Response Processing <CommercialBadge/>
 
-Specmatic's processor hooks let you transform traffic that comes to the proxy and the stub. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire.
+Specmatic's data adapters let you transform traffic that comes to the mock or proxy server. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire.
 
-For example, a consumer may encrypt data `application/json` data in the request sent to the provider. And thus while the data in the request body is JSON (`application/json`), on the wire after encryption it might be a string (`text/plain`). You may want the specification to capture the `application/json` format, rather than `text/plain`. But if you do, the specification no longer describes the actual traffic on the wire. How then might we record a specification that reflects the format of data processed by the application, while still allowing the consumer and provider to exchange data in the expected wire format?
+For example, a consumer may encrypt `application/json` data in the request sent to the provider. And thus while the data in the request body is JSON (`application/json`), on the wire after encryption it might be a string (`text/plain`). You may want the specification to capture the `application/json` format, rather than `text/plain`. But if you do, the specification no longer describes the actual traffic on the wire. How then might we record a specification that reflects the format of data processed by the application, while still allowing the consumer and provider to exchange data in the expected wire format?
 
-## Hooks
+## Adapters
 
-Hooks can bridge that gap between the wire format of the HTTP message and the format of the data as processed by the application. They can act as a translation layer between the wire format and the application format.
+Adapters can bridge that gap between the wire format of the HTTP message and the format of the data as processed by the application. They can act as a translation layer between the wire format and the application format.
 
-Specmatic exposes three hook entry points that run at different stages of request or response handling. They give you precise control over how traffic is translated between the consumer, Specmatic, and the provider.
+Specmatic exposes three adapters that run at different stages of request or response handling. They give you precise control over how traffic is translated between the consumer, Specmatic, and the provider.
 
 They may be registered in `specmatic.yaml` as shown below:
 
-```yaml
-hooks:
-  pre_specmatic_request_processor: ./hooks/decode_request_from_consumer.sh
-  post_specmatic_response_processor: ./hooks/encode_response_to_consumer.sh
-  pre_specmatic_response_processor: ./hooks/decode_response_from_provider.sh
-```
+<V2V3SpecmaticConfigTabs
+  v3Object={require('../../references/configuration/hooks/includes/hooks/v3/simple/specmatic.json')}
+  v2Object={require('../../references/configuration/hooks/includes/hooks/v2/simple/specmatic.json')}
+/>
 
-In each case, the value of the hook entry is the path to an executable file (script or binary) that Specmatic will invoke at the appropriate time.
+In each case, the value of the adapter entry is the path to an executable file (script or binary) that Specmatic will invoke at the appropriate time.
 
 ### pre_specmatic_request_processor
 
-- Runs in both proxy and stub modes.
-- Receives the incoming request before Specmatic validates it (stub) or forwards it to the provider (proxy).
+- Runs in both proxy and mock modes.
+- Receives the incoming request before Specmatic validates it (mock) or forwards it to the provider (proxy).
 
-Use this hook when the consumer sends payloads in a shape that Specmatic should process as-is.
+Use this adapter when the consumer sends payloads in a shape that Specmatic should process as-is.
 
-The hook should read the request in the Specmatic example format from the stdin, modify it as needed, and write the transformed request back to stdout.
+The adapter should read the request in the Specmatic example format from the stdin, modify it as needed, and write the transformed request back to stdout.
 
-Sample input to the hook (STDIN):
+Sample input to the adapter (STDIN):
 
 ```json
 {
@@ -52,7 +53,7 @@ Sample input to the hook (STDIN):
 }
 ```
 
-Sample output from the hook (STDOUT):
+Sample output from the adapter (STDOUT):
 
 ```json
 {
@@ -76,7 +77,7 @@ Sample output from the hook (STDOUT):
 - Runs in proxy mode as responses come back from the real provider.
 - Gives you the combined request/response document so you can adjust what Specmatic records.
 
-Sample input to the hook (STDIN):
+Sample input to the adapter (STDIN):
 
 ```json
 {
@@ -96,7 +97,7 @@ Sample input to the hook (STDIN):
 }
 ```
 
-Sample output from the hook (STDOUT):
+Sample output from the adapter (STDOUT):
 
 ```json
 {
@@ -120,12 +121,12 @@ Sample output from the hook (STDOUT):
 
 ### post_specmatic_response_processor
 
-- Runs only in stub mode, after Specmatic has generated a response for the consumer.
-- Lets you re-encode payloads, set protocol-specific headers, or add late-stage metadata before the stub returns control to the caller.
+- Runs only in mock mode, after Specmatic has generated a response for the consumer.
+- Lets you re-encode payloads, set protocol-specific headers, or add late-stage metadata before the mock server returns control to the caller.
 
-Use this hook when the consumer expects something different on the wire (for example base64 or plain text) from what's in the specification.
+Use this adapter when the consumer expects something different on the wire (for example base64 or plain text) from what's in the specification.
 
-Sample input to the hook (STDIN):
+Sample input to the adapter (STDIN):
 
 ```json
 {
@@ -153,7 +154,7 @@ Sample input to the hook (STDIN):
 }
 ```
 
-Sample output from the hook (STDOUT):
+Sample output from the adapter (STDOUT):
 
 ```json
 {
@@ -169,27 +170,16 @@ Sample output from the hook (STDOUT):
 }
 ```
 
-## Configuring Processor Hooks
-
-Processor Hooks are configured in `specmatic.yaml`. Each hook entry should point to an executable file (script or binary) that will be run by Specmatic.
-
-```yaml
-hooks:
-  pre_specmatic_request_processor: ./hooks/decode_request_from_consumer.sh
-  post_specmatic_response_processor: ./hooks/encode_response_to_consumer.sh
-  pre_specmatic_response_processor: ./hooks/decode_response_from_provider.sh
-```
-
 The configuration is evaluated relative to the directory in which Specmatic is launched. You can point at shell scripts, compiled binaries, or even Node/Python entry points... anything executable on your platform.
 
 ## Notes On Writing Hook Scripts
 
 - The script must print the transformed JSON document to STDOUT.
 - The script may need to change the `Content-Type` of the request or response if the transformation alters the payload format.
-- Exit with status `0` to let Specmatic continue. Any non-zero status will be detected by Specmatic. The script's output will be printed to the console, and the hook unprocessed request will be used instead.
-- Make sure dependencies, language runtimes, etc required by the hook are available in the environment where Specmatic runs.
-- If the hooks are executable scripts, remember to grant execute permissions (`chmod +x hooks/*.sh`) so Specmatic can invoke the hook scripts.
+- Exit with status `0` to let Specmatic continue. Any non-zero status will be detected by Specmatic. The script's output will be printed to the console, and the adapter unprocessed request will be used instead.
+- Make sure dependencies, language runtimes, etc required by the adapters are available in the environment where Specmatic runs.
+- If the adapters are executable scripts, remember to grant execute permissions (`chmod +x adapters/*.sh`) so Specmatic can invoke the adapter scripts.
 
 ## Sample Project
 
-See [`hooks-demo`](https://github.com/specmatic/hooks-demo) for a complete, runnable example.
+See [`adapters-demo`](https://github.com/specmatic/hooks-demo) for a complete, runnable example.
