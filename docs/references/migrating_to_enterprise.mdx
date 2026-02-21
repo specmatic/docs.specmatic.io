@@ -1,0 +1,127 @@
+import {VERSIONS} from "../../src/constants/versions";
+import {trimHeredoc} from "../../src/helpers/utils";
+import CodeBlock from "@theme/CodeBlock";
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
+# Migrating to Specmatic Enterprise
+
+This guide helps you migrate from legacy commercial Specmatic artifacts
+(viz. openapi, asyncapi, studio, grpc and graphql) to the unified Specmatic
+Enterprise artifact.
+
+## What changed
+
+All legacy artifacts have moved into a single artifact and image:
+
+- New Maven/Gradle coordinates: [`io.specmatic.enterprise:executable`](https://mvnrepository.com/artifact/io.specmatic.enterprise/executable)
+- New Docker image: [`specmatic/enterprise`](https://hub.docker.com/r/specmatic/enterprise)
+
+## Quick before/after
+
+**Docker (example):**
+
+```sh
+docker run --rm specmatic/specmatic-openapi test contract.yaml
+```
+
+```sh
+docker run --rm specmatic/enterprise test contract.yaml
+```
+
+**Maven/Gradle (example):** replace any legacy coordinates with `io.specmatic.enterprise:executable`.
+
+## Artifact mapping
+
+Replace each legacy artifact with the new unified artifact:
+
+**Maven/Gradle coordinates**
+
+| Module             | Legacy coordinates                       | New coordinates                                                                                               |
+|--------------------|------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| Specmatic OpenAPI  | `io.specmatic.openapi:specmatic-openapi` | [`io.specmatic.enterprise:executable`](https://mvnrepository.com/artifact/io.specmatic.enterprise/executable) |
+| Specmatic AsyncAPI | `io.specmatic.async:specmatic-async`     | [`io.specmatic.enterprise:executable`](https://mvnrepository.com/artifact/io.specmatic.enterprise/executable) |
+| Specmatic Studio   | -                                        | [`io.specmatic.enterprise:executable`](https://mvnrepository.com/artifact/io.specmatic.enterprise/executable) |
+| Specmatic gRPC     | `io.specmatic.grpc:specmatic-grpc`       | [`io.specmatic.enterprise:executable`](https://mvnrepository.com/artifact/io.specmatic.enterprise/executable) |
+| Specmatic GraphQL  | `io.specmatic.graphql:specmatic-graphql` | [`io.specmatic.enterprise:executable`](https://mvnrepository.com/artifact/io.specmatic.enterprise/executable) |
+
+**Docker images**
+
+| Module             | Legacy image                  | New image                                                               |
+|--------------------|-------------------------------|-------------------------------------------------------------------------|
+| Specmatic OpenAPI  | `specmatic/specmatic-openapi` | [`specmatic/enterprise`](https://hub.docker.com/r/specmatic/enterprise) |
+| Specmatic AsyncAPI | `specmatic/specmatic-async`   | [`specmatic/enterprise`](https://hub.docker.com/r/specmatic/enterprise) |
+| Specmatic Studio   | `specmatic/studio`            | [`specmatic/enterprise`](https://hub.docker.com/r/specmatic/enterprise) |
+| Specmatic gRPC     | `specmatic/specmatic-grpc`    | [`specmatic/enterprise`](https://hub.docker.com/r/specmatic/enterprise) |
+| Specmatic GraphQL  | `specmatic/specmatic-graphql` | [`specmatic/enterprise`](https://hub.docker.com/r/specmatic/enterprise) |
+
+## JUnit runner update
+
+If your tests used Junit integration, your "ContractTest" implemented a JUnit Runner interface from the legacy artifact. Replace it with the simplified interface:
+
+**Interface mapping**
+
+| Module             | Old interface(s)                                                                       | New interface                                   |
+|--------------------|----------------------------------------------------------------------------------------|-------------------------------------------------|
+| Specmatic OpenAPI  | `io.specmatic.test.SpecmaticJUnitSupport` or `io.specmatic.test.SpecmaticContractTest` | `io.specmatic.enterprise.SpecmaticContractTest` |
+| Specmatic AsyncAPI | `io.specmatic.async.test.SpecmaticAsyncContractTest`                                   | `io.specmatic.enterprise.SpecmaticContractTest` |
+| Specmatic gRPC     | `io.specmatic.grpc.junit.SpecmaticGrpcContractTest`                                    | `io.specmatic.enterprise.SpecmaticContractTest` |
+| Specmatic GraphQL  | `io.specmatic.graphql.test.SpecmaticGraphQLContractTest`                               | `io.specmatic.enterprise.SpecmaticContractTest` |
+
+`SpecmaticContractTest` is a marker interface (no methods to implement). Your existing JUnit annotations continue to work:
+
+<Tabs groupId="java-deps">
+  <TabItem value="maven" label="Maven">
+    <CodeBlock language="xml" title='pom.xml'>
+      {trimHeredoc(`
+  <dependency>
+    <groupId>io.specmatic.enterprise</groupId>
+    <artifactId>executable</artifactId>
+    <version>${VERSIONS["specmatic-enterprise-version"]}</version>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.8.2</version>
+    <scope>test</scope>
+  </dependency>
+`)}
+    </CodeBlock>
+  </TabItem>
+
+  <TabItem value="gradle-kotlin" label="Gradle">
+    <CodeBlock language="kotlin" title="build.gradle[.kts]">
+      {trimHeredoc(`
+      dependencies {
+        testImplementation("io.specmatic.enterprise:executable:${VERSIONS["specmatic-enterprise-version"]}")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+      }
+      `)}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+
+<Tabs groupId="junit-annotations">
+  <TabItem value="java" label="Java">
+    ```java
+    import io.specmatic.enterprise.SpecmaticContractTest;
+    public class ContractTest implements SpecmaticContractTest {
+    // Leave the class body empty - no methods to implement.
+    // You may add setup/teardown methods if needed by your application setup, but they are not required.
+  }
+    ```
+  </TabItem>
+
+  <TabItem value="kotlin" label="Kotlin">
+    ```kotlin
+    import io.specmatic.enterprise.SpecmaticContractTest
+    class ContractTest : SpecmaticContractTest {
+    // Leave the class body empty - no methods to implement.
+    // You may add setup/teardown methods if needed by your application setup, but they are not required.
+    }
+    ```
+  </TabItem>
+</Tabs>
+
