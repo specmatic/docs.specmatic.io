@@ -1,0 +1,65 @@
+---
+title: Workflow
+sidebar_position: 5
+---
+
+# Workflow
+
+Workflow lets Specmatic carry data from one API test to another in the same test run.
+
+A common case is:
+- extract an id from a create response (`POST /orders -> 201`)
+- use that id in a later path parameter (`GET /orders/{orderId} -> 200`)
+
+## Configuration
+
+Define workflow rules in `specmatic.yaml`. For a complete configuration including version 2 format, see [Test Configuration](/references/configuration/test-configuration#workflow).
+
+### Version 3 style
+
+```yaml
+version: 3
+
+components:
+  runOptions:
+    orderApiTest:
+      openapi:
+        type: test
+        baseUrl: http://localhost:8080
+        workflow:
+          ids:
+            # Get the id from the test for the POST operation on /orders that expects a 201
+            "POST /orders -> 201":
+              extract: "BODY.id" # extract the id from this path in the response payload
+            # Use the id in other APIs where the `use` clause finds something
+            "*":
+              use: "PATH.orderId" # use the id at this point in the request for all operations
+
+systemUnderTest:
+  service:
+    $ref: "#/components/services/orderApiService"
+    runOptions:
+      $ref: "#/components/runOptions/orderApiTest"
+```
+
+## How It Works
+
+1. When a scenario configured with `extract` runs, Specmatic reads a value from the response body path.
+2. If there are multiple tests, the data extracted from the last test is used.
+3. When a later scenario configured with `use` runs, Specmatic substitutes that value into the configured path parameter.
+4. Specmatic validates the updated path against the contract. If the value type is wrong, the test fails.
+
+## Notes
+
+- `extract` does not support the wildcard fallback.
+- If you wish to use the id in only one API you can do so by using a specific workflow API selector such as "POST /orders/(id:string)", for example:
+    ```
+    workflow:
+      ids:
+        # Get the id from the test for the POST operation on /orders that expects a 201
+        "POST /orders -> 201":
+          extract: "BODY.id" # extract the id from this path in the response payload
+        # Use the id in other APIs where the `use` clause finds something
+        "*":
+          use: "PATH.orderId" # use the id at this point in the request for all operations
+    ```

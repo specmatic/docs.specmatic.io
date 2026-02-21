@@ -60,6 +60,15 @@ Let's say you have a service that two specifications, or even multiple versions 
   v2Object={require('./includes/test-configuration/v2/multiple-test-base-url/specmatic.json')}
 />
 
+## Workflow
+
+You can configure workflow rules to extract data from one API response and use it in subsequent requests during contract testing.
+
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/test-configuration/v3/workflow/specmatic.json')}
+  v2Object={require('./includes/test-configuration/v2/workflow/specmatic.json')}
+/>
+
 ## Externalized Examples Directories
 
 By default, Specmatic searches for the directory ending with `_examples` to pickup externalized examples. However, if needed, you can specify a list of directories containing externalized examples under `examples` key in specmatic configuration. Specmatic will retrieve the examples from these directories for use in both contract testing and service virtualization.
