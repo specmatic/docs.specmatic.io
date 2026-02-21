@@ -1,9 +1,9 @@
 ---
-title: Workflow
-sidebar_position: 5
+title: Workflow Within A Specification
+sidebar_position: 1
 ---
 
-# Workflow
+# Workflow Within A Specification
 
 Workflow lets Specmatic carry data from one API test to another in the same test run.
 
@@ -58,6 +58,6 @@ systemUnderTest:
         "POST /orders -> 201":
           extract: "BODY.id" # extract the id from this path in the response payload
         # Use the id in other APIs where the `use` clause finds something
-        "*":
-          use: "PATH.orderId" # use the id at this point in the request for all operations
+        "GET /orders/(orderId:string) -> 200":
+          use: "PATH.orderId" # use the id as the path parameter the request for tests that fetch the details for an order
     ```
