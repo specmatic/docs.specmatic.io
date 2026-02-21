@@ -1,0 +1,55 @@
+{
+  "version": 3,
+  "systemUnderTest": {
+    "service": {
+      "$ref": "#/components/services/orderApiService",
+      "runOptions": {
+        "$ref": "#/components/runOptions/orderApiTest"
+      }
+    }
+  },
+  "components": {
+    "sources": {
+      "localSpecs": {
+        "filesystem": {
+          "directory": "."
+        }
+      }
+    },
+    "services": {
+      "orderApiService": {
+        "description": "Order API Service",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/localSpecs"
+              },
+              "specs": [
+                "./openapi/order.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "runOptions": {
+      "orderApiTest": {
+        "openapi": {
+          "type": "test",
+          "baseUrl": "http://localhost:8080",
+          "workflow": {
+            "ids": {
+              "POST /orders -> 201": {
+                "extract": "BODY.id"
+              },
+              "*": {
+                "use": "PATH.orderId"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "provides": [
+        "./openapi/order.yaml"
+      ]
+    }
+  ],
+  "workflow": {
+    "ids": {
+      "POST /orders -> 201": {
+        "extract": "BODY.id"
+      },
+      "*": {
+        "use": "PATH.orderId"
+      }
+    }
+  }
+}
