@@ -9,7 +9,7 @@
   "specmatic-redis-version": "0.9.6",
   "specmatic-grpc-version": "0.1.31",
   "specmatic-graphql-version": "1.5.10",
-  "specmatic-arazzo-version": "1.6.4",
+  "specmatic-arazzo-version": "1.6.5",
   "specmatic-google-pubsub-version": "0.6.1",
   "specmatic-release-test-version": "0.0.2",
   "specmatic-enterprise-version": "1.2.2"
