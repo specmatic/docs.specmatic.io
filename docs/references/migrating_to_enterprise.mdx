@@ -17,6 +17,16 @@ All legacy artifacts have moved into a single artifact and image:
 - New Maven/Gradle coordinates: [`io.specmatic.enterprise:executable`](https://mvnrepository.com/artifact/io.specmatic.enterprise/executable)
 - New Docker image: [`specmatic/enterprise`](https://hub.docker.com/r/specmatic/enterprise)
 
+## Why change
+
+Moving to the unified enterprise artifact helps you by:
+
+- Reducing dependency and image sprawl across OpenAPI/AsyncAPI/Studio/gRPC/GraphQL.
+- Simplifying upgrades and governance with a single version, artifact, and image to track.
+- Standardizing tooling and behavior across protocol-specific workflows.
+- Simplifying onboarding and licensing with one artifact and image to learn and manage.
+- Letting multi-protocol applications use a single artifact and image, and receive new features across protocols at once.
+
 ## Quick before/after
 
 **Docker (example):**
@@ -68,7 +78,12 @@ If your tests used Junit integration, your "ContractTest" implemented a JUnit Ru
 | Specmatic gRPC     | `io.specmatic.grpc.junit.SpecmaticGrpcContractTest`                                    | `io.specmatic.enterprise.SpecmaticContractTest` |
 | Specmatic GraphQL  | `io.specmatic.graphql.test.SpecmaticGraphQLContractTest`                               | `io.specmatic.enterprise.SpecmaticContractTest` |
 
-`SpecmaticContractTest` is a marker interface (no methods to implement). Your existing JUnit annotations continue to work:
+:::note
+`SpecmaticContractTest` is a marker interface (no methods to implement). It automatically starts Specmatic mocks and runs your contract tests,
+so no extra Specmatic configuration is required. If your test class manually sets up mocks/stubs, remove that code when migrating.
+In some environments, mocks may bind to random ports (when depending on multiple specs);
+use Specmatic configuration version 3 to improve per-mock port binding. Your existing JUnit annotations will continue to work:
+:::
 
 <Tabs groupId="java-deps">
   <TabItem value="maven" label="Maven">
@@ -108,9 +123,9 @@ If your tests used Junit integration, your "ContractTest" implemented a JUnit Ru
     ```java
     import io.specmatic.enterprise.SpecmaticContractTest;
     public class ContractTest implements SpecmaticContractTest {
-    // Leave the class body empty - no methods to implement.
-    // You may add setup/teardown methods if needed by your application setup, but they are not required.
-  }
+      // Leave the class body empty - no methods to implement.
+      // You may add setup/teardown methods if needed by your application setup, but they are not required.
+    }
     ```
   </TabItem>
 
@@ -118,8 +133,8 @@ If your tests used Junit integration, your "ContractTest" implemented a JUnit Ru
     ```kotlin
     import io.specmatic.enterprise.SpecmaticContractTest
     class ContractTest : SpecmaticContractTest {
-    // Leave the class body empty - no methods to implement.
-    // You may add setup/teardown methods if needed by your application setup, but they are not required.
+      // Leave the class body empty - no methods to implement.
+      // You may add setup/teardown methods if needed by your application setup, but they are not required.
     }
     ```
   </TabItem>
