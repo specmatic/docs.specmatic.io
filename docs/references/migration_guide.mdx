@@ -1,0 +1,128 @@
+---
+title: Migration Guide
+sidebar_position: 10
+---
+
+# Migration Guide
+
+Use this guide to migrate from older Specmatic setup patterns to the current recommended approach.
+
+## 1. Migrate to the unified enterprise artifact
+
+Move from protocol-specific legacy artifacts/images to the unified [Specmatic Enterprise](/references/migrating_to_enterprise) artifact and image.
+
+This covers:
+
+1. Legacy-to-new artifact mapping
+2. Docker image migration to `specmatic/enterprise`
+3. JUnit interface migration to `io.specmatic.enterprise.SpecmaticContractTest`
+
+## 2. Migrate from legacy Insights reporter to `specmatic send-report`
+
+The following legacy integrations are deprecated:
+
+1. [`specmatic-insights-build-reporter-github-action`](https://github.com/specmatic/specmatic-insights-build-reporter-github-action)
+2. [`specmatic-insights-github-build-reporter`](https://github.com/specmatic/specmatic-insights-github-build-reporter)
+
+The GitHub Action above internally invoked the GitHub build reporter. Migrate both to the built-in `specmatic send-report` command in your CI pipeline.
+
+Why this is better:
+
+1. One native Specmatic command instead of a separate reporter integration.
+2. CTRF-friendly workflows for standardized test result publishing.
+3. Better looking and more detailed Insights visualization with richer report context.
+
+Recommended sequence:
+
+1. Start with [Central Contract Repository CI setup](/references/continuous_integration#ci-pipeline-setup).
+2. Migrate central contract repo reporting (see subsection below).
+3. Migrate each service build to `send-report` with CTRF reporting (see subsection below).
+
+### Migrate central contract repo reporting
+
+Use this when your central contract repository has a dedicated reporting step:
+
+1. Keep pre-merge checks: `spectral lint`, `specmatic examples validate`, and `specmatic backward-compatibility-check`.
+2. Add `specmatic central-contract-repo-report` on the `main` branch pipeline to generate the central contract report.
+3. Add `specmatic send-report` as a post-build step on `main` to publish to Insights.
+4. Keep `send-report` out of PR/MR validation jobs so non-main runs are not published to Insights.
+5. Start from [Central Contract Repository CI setup](/references/continuous_integration#ci-pipeline-setup), then append report generation and publish steps.
+
+### Migrate each service build to `send-report` and CTRF reporting
+
+Apply this to every service repository (consumer, BFF/provider, domain service):
+
+1. Remove deprecated reporter steps/actions from the CI workflow.
+2. Keep existing Specmatic test/mock steps as-is.
+3. Add a post-build `specmatic send-report` step for the `main` branch only.
+4. Pass repository metadata (`branch-name`, `repo-name`, `repo-id`, `repo-url`) from CI environment variables.
+5. Ensure license key setup is present before running `send-report`.
+6. Enable CTRF output in your Specmatic reporting configuration.
+7. Publish CTRF artifacts/results in CI as part of the same workflow.
+
+Example migration (GitHub Actions):
+
+```yaml
+# Before (deprecated GitHub Action)
+- name: Publish to Insights (deprecated action)
+  uses: specmatic/specmatic-insights-build-reporter-github-action@v1
+  with:
+    org-id: ${{ secrets.SPECMATIC_ORG_ID }}
+    branch-name: ${{ github.ref_name }}
+    repo-name: ${{ github.event.repository.name }}
+    repo-id: ${{ github.repository_id }}
+    repo-url: ${{ github.event.repository.html_url }}
+
+# Before (deprecated direct reporter)
+- name: Publish to Insights (deprecated reporter)
+  run: |
+    docker run \
+      -v ${{ github.workspace }}:/workspace \
+      specmatic/specmatic-insights-github-build-reporter:latest \
+        --org-id ${{ secrets.SPECMATIC_ORG_ID }} \
+        --branch-name ${{ github.ref_name }} \
+        --repo-name ${{ github.event.repository.name }} \
+        --repo-id ${{ github.repository_id }} \
+        --repo-url ${{ github.event.repository.html_url }}
+
+# After (recommended)
+- name: Write specmatic license key to file
+  run: |
+    mkdir -p ~/.specmatic
+    echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+
+- name: Publish Build Reports to Specmatic Insights
+  if: github.ref == 'refs/heads/main'
+  run: |
+    # You can use specmatic/enterprise instead of specmatic/specmatic.
+    docker run --rm \
+      -v ~/.specmatic:/root/.specmatic \
+      -v ${{ github.workspace }}:/usr/src/app \
+      specmatic/specmatic \
+      send-report \
+      --branch-name ${{ github.ref_name }} \
+      --repo-name ${{ github.event.repository.name }} \
+      --repo-id ${{ github.repository_id }} \
+      --repo-url ${{ github.event.repository.html_url }}
+```
+
+Reference examples:
+
+1. [Insights CI/CD integration examples](/enterprise_onboarding/insights#integrating-with-cicd-pipelines)
+2. [Continuous Integration walkthrough for service projects](/references/continuous_integration)
+3. [BFF CTRF workflow examples](/references/continuous_integration#step-22-setting-up-ci-pipeline-for-bff-service)
+4. [CTRF report configuration](/references/configuration/reports#ctrf-format-commercialbadge)
+
+## 3. Migrate configuration from v2 to v3
+
+Move from `provides`/`consumes`-centric configuration to the v3 model with explicit:
+
+1. `systemUnderTest`
+2. `dependencies.services`
+3. Reusable `components` (`sources`, `services`, `runOptions`)
+
+Reference:
+
+- [Migrating Config v2 to v3](/references/configuration/migrating-config-v2-to-v3)
+- [Upgrade Configuration](/references/configuration/upgrade-specmatic-config)
+- [Configuration Reference](/references/configuration)
