@@ -12,11 +12,11 @@ import {trimHeredoc} from "../../src/helpers/utils";
 
 # JDBC <CommercialBadge/>
 
-The `specmatic-jdbc` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
+The capability is available in `specmatic-enterprise` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
 
 ### Introduction to JDBC Stubbing
 
-Database stubbing allows you to simulate database behavior without connecting to a real database. It’s useful for testing application logic, verifying SQL queries, and controlling predictable responses during development. 
+Database stubbing allows you to simulate database behavior without connecting to a real database. It’s useful for testing application logic, verifying SQL queries, and controlling predictable responses during development.
 
 By defining stubs for different SQL operations such as `SELECT`, `INSERT`, `UPDATE`, and `DELETE` you can emulate how your application interacts with the database while keeping tests fast, isolated, and reproducible.
 
@@ -29,12 +29,12 @@ The below-mentioned dependency needs to be in your application's `build.gradle` 
     <CodeBlock language="xml" title='pom.xml'>
       {trimHeredoc(`
         <dependency>
-            <groupId>io.specmatic</groupId>
-            <artifactId>junit5-support</artifactId>
-            <version>${VERSIONS["specmatic-jdbc-version"]}</version>
-            <scope>test</scope>
-        </dependency>
-    `)}
+          <groupId>io.specmatic.enterprise</groupId>
+          <artifactId>executable</artifactId>
+          <scope>test</scope>
+          <version>${VERSIONS["specmatic-enterprise-version"]}</version>
+      </dependency>
+      `)}
     </CodeBlock>
   </TabItem>
 
@@ -42,7 +42,7 @@ The below-mentioned dependency needs to be in your application's `build.gradle` 
     <CodeBlock language="kotlin" title="build.gradle[.kts]">
       {trimHeredoc(`
         dependencies {
-          testImplementation("io.specmatic.jdbc:specmatic-jdbc:${VERSIONS["specmatic-jdbc-version"]}")
+          testImplementation("io.specmatic.enterprise:executable:${VERSIONS["specmatic-enterprise-version"]}")
         }
       `)}
     </CodeBlock>
@@ -126,12 +126,12 @@ Here’s an example showing how to mock a `SELECT` query for a column called nam
 
 #### DML Statements (INSERT, UPDATE, DELETE)
 
-`INSERT`, `UPDATE`, and `DELETE` statements affect table data but typically don’t return rows. 
+`INSERT`, `UPDATE`, and `DELETE` statements affect table data but typically don’t return rows.
 Instead, they return metadata such as how many rows were modified or what new keys were generated.
 
 ##### INSERT statements
 
-This stub represents an INSERT operation into the STUDENTS table, creating a new student named Charles and returning a generated key, 
+This stub represents an INSERT operation into the STUDENTS table, creating a new student named Charles and returning a generated key,
 It communicates that one row was inserted and assigns the auto-generated ID 10 to the new record.
 
 ```json
@@ -223,7 +223,7 @@ For example this stub matches any `UPDATE` statement that changes the language c
 }
 ```
 
-It acts like a flexible template that matches multiple similar update statements with different values, You can also use regex for `SELECT` statements. 
+It acts like a flexible template that matches multiple similar update statements with different values, You can also use regex for `SELECT` statements.
 
 For example this captures any vaguely similar SELECT statement and returns a mock record:
 
