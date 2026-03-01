@@ -1,16 +1,16 @@
 {
-  "specmatic-core-version": "2.39.7",
+  "specmatic-core-version": "2.40.1",
   "specmatic-jms-version": "0.6.1",
-  "specmatic-async-version": "2.2.6",
+  "specmatic-async-version": "2.2.7",
   "specmatic-kafka-version": "1.7.7",
-  "specmatic-studio-version": "1.17.4",
+  "specmatic-studio-version": "1.17.5",
   "specmatic-openapi-version": "1.25.4",
   "specmatic-jdbc-version": "0.12.2",
   "specmatic-redis-version": "0.9.6",
-  "specmatic-grpc-version": "0.1.30",
+  "specmatic-grpc-version": "0.1.31",
   "specmatic-graphql-version": "1.5.10",
-  "specmatic-arazzo-version": "1.6.4",
+  "specmatic-arazzo-version": "1.6.5",
   "specmatic-google-pubsub-version": "0.6.1",
   "specmatic-release-test-version": "0.0.2",
-  "specmatic-enterprise-version": "1.2.1"
+  "specmatic-enterprise-version": "1.4.0"
 }

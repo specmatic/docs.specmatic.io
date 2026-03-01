@@ -1,0 +1,153 @@
+---
+title: Migrating Config v2 to v3
+sidebar_position: 11
+---
+
+# Migrating from Specmatic Config v2 to v3
+
+This guide explains why you should migrate from config `version: 2` to `version: 3`, how `v3` makes System Under Test and dependency configuration clearer, and what additional benefits you get from the v3 model.
+
+## Why move to v3
+
+`v3` is now the recommended format and provides a more explicit, service-centric model.
+
+Main advantages:
+
+1. Clear separation of intent:
+`systemUnderTest` defines what you are validating, and `dependencies.services` defines what you virtualize.
+2. Less duplication:
+`components` lets you define reusable sources, services, and run options once, then reference them via `$ref`.
+3. Better readability at scale:
+Instead of large `provides` and `consumes` lists, each service has a named definition and run profile.
+4. More structured runtime behavior:
+Global controls are grouped under `specmatic.settings` and governance/reporting under `specmatic.governance`.
+5. Better extensibility:
+`components.adapters` and service-level run profiles make it easier to evolve usage across protocols and environments.
+
+## The key mindset shift
+
+In `v2`, the model is contract-list-centric (`provides`/`consumes`).
+In `v3`, the model is service-wiring-centric:
+
+- Define reusable contract sources in `components.sources`
+- Define named services in `components.services`
+- Define how each service runs in `components.runOptions`
+- Wire them into `systemUnderTest` and `dependencies`
+
+This makes configuration closer to your actual architecture.
+
+## SUT and dependency configuration is much clearer in v3
+
+### v2 (implicit role through `provides`/`consumes`)
+
+```yaml
+version: 2
+contracts:
+  - git:
+      url: https://github.com/specmatic/specmatic-order-contracts.git
+    provides:
+      - com/petstore/store.yaml
+    consumes:
+      - com/petstore/payment.yaml
+```
+
+### v3 (explicit service wiring)
+
+```yaml
+version: 3
+
+systemUnderTest:
+  service:
+    $ref: "#/components/services/petStoreService"
+  runOptions:
+    $ref: "#/components/runOptions/petStoreTest"
+
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/paymentService"
+      runOptions:
+        $ref: "#/components/runOptions/paymentMock"
+
+components:
+  sources:
+    centralContracts:
+      git:
+        url: https://github.com/specmatic/specmatic-order-contracts.git
+  services:
+    petStoreService:
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContracts"
+            specs:
+              - com/petstore/store.yaml
+    paymentService:
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/centralContracts"
+            specs:
+              - com/petstore/payment.yaml
+  runOptions:
+    petStoreTest:
+      openapi:
+        type: test
+        baseUrl: http://localhost:8080
+    paymentMock:
+      openapi:
+        type: mock
+        baseUrl: http://localhost:8090
+```
+
+What is clearer now:
+
+1. SUT is explicit (`systemUnderTest`) rather than inferred.
+2. Dependencies are explicit (`dependencies.services`) and can each carry their own run behavior.
+3. Test vs mock mode is explicit per service in `runOptions` (`type: test` or `type: mock`).
+4. The same contract source can be reused across many services without repeating source details.
+
+## Field mapping cheat sheet (v2 -> v3)
+
+1. `contracts[*].git` -> `components.sources.<name>.git`
+2. `contracts[*].provides` -> `components.services.<sut>.definitions` + `systemUnderTest.service`
+3. `contracts[*].consumes` -> `components.services.<dependency>.definitions` + `dependencies.services[*].service`
+4. `provides[*].config` / `consumes[*].config` -> `components.runOptions.<name>`
+5. `report` -> `specmatic.governance.report` and `specmatic.governance.successCriteria`
+6. `test`/`mock` settings -> `specmatic.settings` and/or service-specific `runOptions`
+7. `hooks` -> `components.adapters` (where applicable)
+
+## Additional inferred benefits from the docs
+
+1. Better multi-protocol support:
+`runOptions` can be protocol-specific (OpenAPI, GraphQL, gRPC, AsyncAPI), while preserving one consistent top-level model.
+2. Easier environment variation:
+Named run profiles can be switched without rewriting contract definitions.
+3. Cleaner governance and CI:
+Coverage thresholds and report formats are centralized under `specmatic.governance`.
+4. Stronger long-term maintainability:
+`components` + `$ref` encourage modular configuration as service count grows.
+
+## Migration approach
+
+1. Run automatic upgrade:
+`specmatic config upgrade --input specmatic_old.yaml --output specmatic.yaml`
+2. Verify service intent:
+Ensure exactly one primary `systemUnderTest` is wired correctly.
+3. Verify dependency wiring:
+Each consumed contract should appear under `dependencies.services` with appropriate mock run options.
+4. Consolidate repeated source/run settings:
+Move duplicates into `components` and reference them via `$ref`.
+5. Run your normal test and mock flows:
+Confirm base URLs, protocol-specific options, and governance behavior are unchanged.
+
+For command variants (Docker/Java/npm), see [Upgrade Configuration](/references/configuration/upgrade-specmatic-config).
+
+## Further reference
+
+For deeper details on each section, see:
+
+- [Configuration Reference](/references/configuration)
+- [Getting Started (v3 structure)](/references/configuration/getting-started)
+- [Contract Management (v2 vs v3)](/references/configuration/contract-management)
+- [Complete Examples](/references/configuration/complete-examples)

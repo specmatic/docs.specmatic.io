@@ -1,0 +1,48 @@
+version: 3
+systemUnderTest:
+  service:
+    $ref: "#/components/services/asyncService"
+    runOptions:
+      $ref: "#/components/runOptions/asyncServiceTest"
+components:
+  sources:
+    yourContracts:
+      git:
+        url: https://your-central-contract-repo.com
+  services:
+    asyncService:
+      description: IBM MQ AsyncAPI Service
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/yourContracts"
+            specs:
+              - spec:
+                  id: asyncSpec
+                  path: spec/async-api-spec.yaml
+  runOptions:
+    asyncServiceTest:
+      asyncapi:
+        type: test
+        servers:
+          - host: tcp://localhost:1415
+            protocol: ibmmq
+            adminCredentials:
+              queueManager: QM1
+              channel: DEV.ADMIN.SVRCONN
+              connName: localhost(1415)
+              username: admin
+              password: adminpassw0rd
+            client:
+              producer:
+                queueManager: QM1
+                channel: DEV.APP.SVRCONN
+                destination.type: queue
+                username: app
+                password: passw0rd
+              consumer:
+                queueManager: QM1
+                channel: DEV.APP.SVRCONN
+                destination.type: queue
+                username: app
+                password: passw0rd

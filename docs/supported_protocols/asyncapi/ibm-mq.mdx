@@ -1,0 +1,161 @@
+---
+title: IBM MQ
+sidebar_position: 10
+---
+import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
+import {CommercialBadge} from "../../../src/components/CommercialBadge";
+import yaml from "js-yaml";
+
+# IBM MQ <CommercialBadge/>
+
+## About IBM MQ
+
+IBM MQ is an enterprise-grade messaging middleware that provides reliable, secure, and transactional messaging across distributed systems. It uses queue managers, channels, and destinations (queues/topics) to move messages between applications. IBM MQ supports JMS and other APIs, and is widely used in enterprise integrations.
+
+## Using IBM MQ in AsyncAPI Specifications
+
+Specmatic uses the `ibmmq` protocol in AsyncAPI to talk to IBM MQ. Define an IBM MQ server and reference it in your channels.
+
+:::note
+Your application does not need to be a JMS client. Specmatic connects to IBM MQ using IBM MQ client libraries, while your app can be any language or runtime that publishes/consumes the queues or topics defined in the contract.
+:::
+
+### Server Definition
+
+```yaml
+servers:
+  ibmmqServer:
+    host: "tcp://localhost:1415"
+    protocol: "ibmmq"
+    description: "IBM MQ server"
+```
+
+The `host` should point to your IBM MQ listener. If you also configure `connName` in `specmatic.yaml`, it will be used directly for IBM MQ connection-name-list.
+
+### Channel Definition
+
+```yaml
+channels:
+  NewOrderPlaced:
+    address: "new.orders"
+    servers:
+      - $ref: "#/servers/ibmmqServer"
+    messages:
+      placeOrder.message:
+        $ref: "#/components/messages/OrderRequest"
+```
+
+The `address` field specifies the IBM MQ queue or topic name.
+
+### Message Headers
+
+IBM MQ supports standard message headers and properties:
+
+```yaml
+components:
+  messages:
+    OrderRequest:
+      headers:
+        type: "object"
+        properties:
+          orderCorrelationId:
+            type: "string"
+            description: "Unique identifier for the request"
+      payload:
+        type: "object"
+        # ... payload definition
+```
+
+Specmatic recognizes these optional headers when sending messages:
+
+- `messageType`: `text` or `bytes` (defaults to `bytes`)
+- `JMSCorrelationID`: Sets the JMS correlation ID
+- `JMSType`: Sets the JMS message type
+
+All other headers are mapped to JMS message properties.
+
+## Running Contract Tests with Specmatic-Async
+
+Specmatic-async enables contract tests against IBM MQ by validating that your service implements the AsyncAPI specification correctly.
+
+### Step 1: Configure specmatic.yaml
+
+Create or update your `specmatic.yaml` file to include the AsyncAPI specification and IBM MQ server configuration:
+
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/ibm-mq/basic-config/specmatic.yaml?raw'))} />
+
+### Step 2: Start IBM MQ Infrastructure
+
+Use Docker Compose to start IBM MQ:
+
+```yaml
+services:
+  ibm-mq:
+    image: icr.io/ibm-messaging/mq:latest
+    platform: ${IBM_MQ_PLATFORM:-linux/amd64}
+    container_name: specmatic-ibm-mq
+    ports:
+      - "1415:1414"
+      - "9444:9443"
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+      MQ_APP_PASSWORD: passw0rd
+      MQ_ADMIN_PASSWORD: adminpassw0rd
+    volumes:
+      - ./docker/mq/20-queues.mqsc:/etc/mqm/20-queues.mqsc:ro
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo 'display qmgr' | runmqsc QM1 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+```
+
+Start the infrastructure:
+
+```bash
+docker compose up -d
+```
+
+### Step 3: Run Your Application
+
+Start your application that implements the AsyncAPI specification. The application should be configured to connect to the IBM MQ broker and listen on the appropriate queues/topics defined in your contract.
+
+### Step 4: Run Contract Tests
+
+Execute the contract tests using the Specmatic Docker image:
+
+```bash
+docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
+```
+
+Specmatic-async will:
+1. Read the AsyncAPI specification and identify IBM MQ channels
+2. Connect to the configured IBM MQ broker
+3. Send test messages to your application's input queues/topics
+4. Validate that your application sends correct responses to output queues/topics
+5. Verify that message payloads, headers, and correlation IDs conform to the contract
+
+### Step 5: Review Test Results
+
+Check the test output for detailed validation results, including any contract violations or failures.
+
+## IBM MQ-Specific Configuration
+
+IBM MQ needs a queue manager, channel, and connection name. In `specmatic.yaml`, configure these under `adminCredentials` and `client` sections:
+
+- `queueManager`: Queue manager name (e.g., `QM1`)
+- `channel`: Server-connection channel (e.g., `DEV.APP.SVRCONN`)
+- `connName`: `host(port)` format (e.g., `localhost(1415)`)
+- `username`, `password`: IBM MQ credentials
+- `destination.type`: `queue` or `topic` (defaults to `queue`)
+- `message.selector`: Optional selector for consumers
+- `persistent`, `priority`, `time.to.live`: Optional producer settings
+
+Admin helpers do not provision broker objects, so ensure all queues/topics exist in IBM MQ before running tests.
+
+## Sample Application
+
+Please have a look at the following sample project to understand how to utilize `Specmatic-Async` with IBM MQ:
+
+- [specmatic-ibm-mq-sample](https://github.com/specmatic/specmatic-ibm-mq-sample)
