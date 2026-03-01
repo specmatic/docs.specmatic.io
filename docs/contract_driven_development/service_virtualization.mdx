@@ -1438,83 +1438,11 @@ EOF
 
 The above shell script is just an example, the external command can be any executable / script / program which can read an environment variable. The example shell script here is reading the path parameter and multiplying it by three. The response of this script / command is returned as the response to the request.
 
-## Hooks
+## Adapters
 
-### Overview
+Sometimes the consumer sends a few parameters extra that the API doesn't handle directly, for example due to an API gateway. In such cases, the consumer's view of the API is slightly but meaningfully different from the actual API implementation. Hence the consumer needs to apply minor adaptations to the API specification at runtime, to be able to mock it out. This can be done using Overlays, an OpenAPI standard format for declaring modifications to other specifications. Read more about [Specmatic's support for Overlays here](/features/overlays).
 
-Specmatic can modify specifications before loading them using hooks. This feature is particularly useful when there's a need to transform or adapt specifications to match different environments or requirements.
-
-### Use Case: API Gateway Header Transformation
-
-Let's see a practical example of a frontend that connects to a backend API through an API gateway.
-
-Here is an API specification for a products API (backend):
-
-  <YamlDisplay object={yaml.load(require('./includes/service-virtualization/product-api/product.yaml?raw'))} />
-
-Now let's look at the consumer's (client's) expectation when interacting with the Products API looks like this:
-
-```json
-{
-  "http-request": {
-    "headers": {
-      "X-auth-token": "abc 123"
-    },
-    "method": "GET",
-    "path": "/products"
-  },
-  "http-response": {
-    "status": 200,
-    "body": [
-      {
-        "name": "Rice",
-        "sku": "sku123"
-      }
-    ]
-  }
-}
-```
-
-Note that:
-1. The consumer sends the header `X-auth-token` in the request
-2. The API gateway will replace it at runtime with `X-internal-id`
-3. The backend specification declares `X-internal-id`, not `X-auth-token`
-
-The Product API specification as-is will not accept the frontend expectation without modification. We can achieve this using Specmatic's `stub_load_contract` hook.
-
-### Implementation Steps
-
-- Create a specmatic configuration file:
-
-  <V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/service-virtualization/product-api/specmatic.yaml?raw'))}/>
-
-- Create the hook script (`modify_stub_header.py`):
-
-  <CodeBlock title='modify_stub_header.py' language='python'>
-  {require('./includes/service-virtualization/product-api/modify_stub_header.py?raw')}
-  </CodeBlock>
-
-### How It Works
-
-When Specmatic runs in _mock_ mode:
-1. Specmatic invokes the hook script specified in the `specmatic.yaml` configuration for the `stub_load_contract`
-   event and passes the specification file path via the `CONTRACT_FILE` environment variable.
-2. The hook script must then read the specification file as specified by the `CONTRACT_FILE` environment variable,
-   modify it, and output the updated specification to standard output
-3. Specmatic loads the modified specification to run the mock server
-
-The hook script modifies the OpenAPI specification by:
-- Reading the specification file
-- Replacing the `X-internal-id` header parameter with `X-auth-token`
-- Outputting the transformed specification for the mock server to use
-
-This allows the mock to accept requests with the `X-auth-token` header that the frontend uses, while maintaining
-the original specification for the backend API.
-
-:::note
-If you're looking to modify headers during test using Specmatic's `test` command, then please refer to test-specific header modifications documentation: [Using Hooks during Tests](/contract_driven_development/contract_testing#hooks)
-:::
-
+Specmatic also supports adapters for runtime request/response transformation. Read more about them [here](/features/adapters/request_response_adapters).
 ---
 
 ## Precedence Across Types Of Examples

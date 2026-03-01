@@ -1,14 +1,14 @@
 ---
-sidebar_label: Request and Response Processing
+sidebar_label: Request and Response Adapters
 ---
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 
-# Request and Response Processing <CommercialBadge/>
+# Request and Response Adapters <CommercialBadge/>
 
-Specmatic's data adapters let you transform traffic that comes to the mock or proxy server. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire.
+Specmatic's adapters let you transform traffic that comes to the mock or proxy server. They are useful when the provider and consumer speak a wire format that differs in some way from the actual data that traverses the wire.
 
 For example, a consumer may encrypt `application/json` data in the request sent to the provider. And thus while the data in the request body is JSON (`application/json`), on the wire after encryption it might be a string (`text/plain`). You may want the specification to capture the `application/json` format, rather than `text/plain`. But if you do, the specification no longer describes the actual traffic on the wire. How then might we record a specification that reflects the format of data processed by the application, while still allowing the consumer and provider to exchange data in the expected wire format?
 
@@ -21,8 +21,8 @@ Specmatic exposes three adapters that run at different stages of request or resp
 They may be registered in `specmatic.yaml` as shown below:
 
 <V2V3SpecmaticConfigTabs
-  v3Object={require('../../references/configuration/hooks/includes/hooks/v3/simple/specmatic.json')}
-  v2Object={require('../../references/configuration/hooks/includes/hooks/v2/simple/specmatic.json')}
+  v3Object={require('../../references/configuration/includes/adapters/v3/simple/specmatic.json')}
+  v2Object={require('../../references/configuration/includes/adapters/v2/simple/specmatic.json')}
 />
 
 In each case, the value of the adapter entry is the path to an executable file (script or binary) that Specmatic will invoke at the appropriate time.
@@ -172,7 +172,7 @@ Sample output from the adapter (STDOUT):
 
 The configuration is evaluated relative to the directory in which Specmatic is launched. You can point at shell scripts, compiled binaries, or even Node/Python entry points... anything executable on your platform.
 
-## Notes On Writing Hook Scripts
+## Notes On Writing Adapter Scripts
 
 - The script must print the transformed JSON document to STDOUT.
 - The script may need to change the `Content-Type` of the request or response if the transformation alters the payload format.

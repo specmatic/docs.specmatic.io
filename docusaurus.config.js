@@ -190,8 +190,10 @@ const config = {
           {from: '/docs/features/external_examples/', to: '/features/external_examples'},
           {from: '/docs/features/stubbing_featurehub/', to: '/features/stubbing_featurehub'},
           {from: '/docs/features/overlays/', to: '/features/overlays'},
-          {from: '/docs/features/hooks/hooks_to_modify_specs/', to: '/features/hooks/hooks_to_modify_specs'},
-          {from: '/docs/features/hooks/processor_hooks/', to: '/features/hooks/processor_hooks'},
+          {from: '/docs/features/hooks', to: '/features/adapters/'},
+          {from: '/docs/features/hooks/hooks_to_modify_specs', to: '/features/adapters/adapters_to_modify_specs'},
+          {from: '/docs/features/hooks/processor_hooks', to: '/features/adapters/request_response_adapters'},
+          {from: '/docs/features/adapters/processor_adapters/', to: '/features/adapters/request_response_adapters'},
           {from: '/docs/features/json_schema/anyOf-support/', to: '/features/json_schema/anyOf-support'},
           {from: '/docs/features/json_schema/discriminator/', to: '/features/json_schema/discriminator'},
           // getting_started
@@ -203,7 +205,9 @@ const config = {
           { from: '/docs/references/configuration/complete-examples/', to: '/references/configuration/complete-examples' },
           { from: '/docs/references/configuration/contract-management/', to: '/references/configuration/contract-management' },
           {from: '/docs/references/configuration/getting-started/', to: '/references/configuration/getting-started'},
-          {from: '/docs/references/configuration/hooks/', to: '/references/configuration/hooks'},
+          {from: '/docs/references/configuration/hooks/', to: '/references/configuration/adapters'},
+          {from: '/references/configuration/hooks/', to: '/references/configuration/adapters'},
+          {from: '/docs/references/configuration/adapters/', to: '/references/configuration/adapters'},
           {from: '/docs/references/configuration/reports/', to: '/references/configuration/reports'},
           { from: '/docs/references/configuration/stub-configuration/', to: '/references/configuration/mock-configuration' },
           {from: '/docs/references/configuration/telemetry/', to: '/references/configuration/telemetry'},
@@ -380,16 +384,26 @@ const config = {
               '/documentation/features/hooks_to_modify_specs',
               '/documentation/features/hooks_to_modify_specs.html',
               '/features/hooks_to_modify_specs',
-              '/features/hooks_to_modify_specs.html'
+              '/features/hooks_to_modify_specs.html',
+              '/features/hooks/hooks_to_modify_specs',
+              '/features/hooks/hooks_to_modify_specs.html',
+              '/documentation/features/adapters_to_modify_specs',
+              '/documentation/features/adapters_to_modify_specs.html',
+              '/features/adapters_to_modify_specs',
+              '/features/adapters_to_modify_specs.html'
             ],
-            to: '/features/hooks/hooks_to_modify_specs'
+            to: '/features/overlays'
           },
           {
             from: [
               '/features/processor_hooks',
-              '/features/processor_hooks.html'
+              '/features/processor_hooks.html',
+              '/features/hooks/processor_hooks',
+              '/features/hooks/processor_hooks.html',
+              '/features/processor_adapters',
+              '/features/processor_adapters.html'
             ],
-            to: '/features/hooks/processor_hooks'
+            to: '/features/adapters/request_response_adapters'
           },
           {
             from: [
