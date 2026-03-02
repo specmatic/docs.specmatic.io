@@ -1,0 +1,68 @@
+---
+title: Adapters
+sidebar_position: 8
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
+
+# Adapters
+
+## What are Adapters?
+
+Adapters let you perform custom modifications to a request or response during execution.
+
+An adapter takes the form of a command that can be configured to run at specific stages.
+
+## Configuration
+
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/adapters/v3/simple/specmatic.json')}
+  v2Object={require('./includes/adapters/v2/simple/specmatic.json')}
+/>
+
+## How Adapters Work
+
+As an example, in the above snippet, `pre_specmatic_request_processor` is an adapter name.
+Specmatic executes the configured command and passes request data through STDIN.
+
+Sample input to the adapter (STDIN):
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/api/data",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "data": "eyJrZXkiOiAidmFsdWUifQ=="
+    }
+  }
+}
+```
+
+Sample output from the adapter (STDOUT):
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/api/data",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "data": {
+        "key": "value"
+      }
+    }
+  }
+}
+```
+
+Read more about adapters [here](/features/adapters/request_response_adapters).
+
+Note: Specmatic also supports specification adaptors via Overlays. Read more about [Specmatic's support for Overlays here](/features/overlays).
