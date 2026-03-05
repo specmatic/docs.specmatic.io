@@ -1,0 +1,88 @@
+openapi: 3.0.3
+
+info:
+  title: Messages Retrieve API
+  description: API to retrieve messages served by the mock server
+  version: 1.0.0
+
+paths:
+  /_specmatic/messages:
+    get:
+      summary: Retrieve served messages
+      description: >
+        Returns the list of messages served by the mock server.
+        You can optionally pass one or more query parameters as filters in the form `key=value`,
+        where each filter is an equality check (`key == value`) against message
+      parameters:
+      - in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        description: >
+          Any query parameter can be used as a filter.
+          The parameter name represents a request/response pointers
+          Example:
+            /_specmatic/messages?REQUEST.METHOD=GET
+            /_specmatic/messages?RESPONSE.STATUS=200
+            /_specmatic/messages?REQUEST.PARAMETERS.HEADER.Content-Type=application/json
+        explode: true
+        allowReserved: true
+      responses:
+        "200":
+          description: Retrieved list of served messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessagesResponse"
+
+components:
+  schemas:
+    AnyValue: {}
+
+    MessagesResponse:
+      description: List of served message
+      type: array
+      items:
+        $ref: "#/components/schemas/RequestResponseSchema"
+
+    RequestResponseSchema:
+      type: object
+      properties:
+        http-request:
+          $ref: "#/components/schemas/RequestSchema"
+        http-response:
+          $ref: "#/components/schemas/ResponseSchema"
+      required:
+        - http-request
+        - http-response
+
+    RequestSchema:
+      type: object
+      properties:
+        path:
+          type: string
+        method:
+          type: string
+        query:
+          type: object
+          additionalProperties: true
+        headers:
+          type: object
+          additionalProperties: true
+        body:
+          nullable: true
+          $ref: "#/components/schemas/AnyValue"
+
+    ResponseSchema:
+      type: object
+      properties:
+        status:
+          type: integer
+          minimum: 0
+        headers:
+          type: object
+          additionalProperties: true
+        body:
+          nullable: true
+          $ref: "#/components/schemas/AnyValue"
