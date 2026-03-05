@@ -1,0 +1,21 @@
+version: 3
+dependencies:
+  services:
+    - service:
+        definitions:
+          - definition:
+              source:
+                filesystem:
+                  directory: ./specs
+              specs:
+                - <path-to-openapi-or-wsdl-file>
+        runOptions:
+          openapi:
+            baseUrl: https://<mock-host>:<mock-port>
+            cert:
+              mtlsEnabled: true
+              keyStore:
+                file: <path-to-jks-file>
+                alias: <keystore-alias>
+                password: <key-password>
+              keyStorePassword: <keystore-password>

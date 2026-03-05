@@ -292,6 +292,24 @@ If you need to test multiple services with different baseUrls, you can do so by 
 <V3SpecmaticJsonYamlTabs
   v3Object={yaml.load(require('./includes/contract-testing/provides-with-multiple-base-urls/specmatic.yaml?raw'))}/>
 
+### mTLS for Contract Testing
+
+Use this when the service under test requires a client certificate.
+
+#### How it works
+
+- Specmatic uses the configured client certificate for the initial reachability check and for all test requests.
+- Configure a certificate for contract testing under the test run options (`systemUnderTest`).
+- If the contract test receives an mTLS challenge, it will respond using this certificate.
+- In logs, Specmatic marks requests as `(mTLS)` only when a client certificate was actually presented during TLS negotiation.
+
+#### Configuration example
+
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/contract-testing/mtls-contract-testing/v3/specmatic.yaml?raw'))}
+/>
+
+
 ### Handling multipart form-data and file uploads
 
 Specmatic adheres to [OpenAPI multipart content support](https://spec.openapis.org/oas/latest.html#special-considerations-for-multipart-content).

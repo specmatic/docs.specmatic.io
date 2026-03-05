@@ -1,0 +1,8 @@
+version: 2
+test:
+  https:
+    keyStore:
+      file: <path-to-jks-file>
+      alias: <keystore-alias>
+      password: <key-password>
+    keyStorePassword: <keystore-password>
