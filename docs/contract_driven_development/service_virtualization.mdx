@@ -1480,11 +1480,12 @@ Here's the OpenAPI specification describing the `/actuator/health` endpoint.
 
 ## Retrieving Messages Served By The Mock Server
 
-You can use the `/_specmatic/messages` endpoint to retrieve the list of all messages served by the mock server, This is useful for debugging, verifying interactions, and asserting that specific traffic actually hit the mock
+You can use the `/_specmatic/messages` endpoint to retrieve the list of all messages served by the mock server. This is useful for debugging, verifying interactions, and asserting that specific traffic actually hit the mock.
 
 ### What can be filtered
 
-If you call the endpoint without any query parameters, it will return everything that the mock server has served so far.<br/>
+If you call the endpoint without any query parameters, it will return everything that the mock server has served so far.
+
 You can also apply one or more filters by passing query parameters in the form `key=value`, Each query parameter acts as an equality check, 
 A filter key is a path-like selector that points to a value inside the each message.
 
@@ -1542,10 +1543,6 @@ curl -G -X GET "http://<stub_server_url>/_specmatic/messages" \
   --data-urlencode "REQUEST.METHOD=POST" \
   --data-urlencode "RESPONSE.STATUS=201"
 ```
-
-Here's the OpenAPI specification describing the `/_specmatic/messages` endpoint.
-
-  <V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/service-virtualization/messages-retrieve-api/messages-retrieve-api.yaml?raw'))}/>
 
 ## Specmatic Configuration with Base URL, Host, Port, and Path
 
