@@ -5,6 +5,8 @@ sidebar_position: 8
 import {JsonDisplay, YamlDisplay} from "../../../src/components/JsonYamlDisplay";
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
+import yaml from "js-yaml";
 
 
 # Complete Configuration Examples
@@ -79,3 +81,27 @@ This example shows all available configuration options:
 
   </TabItem>
 </Tabs>
+
+## HTTPS and mTLS Configuration Snippets
+
+Use these snippets alongside the complete examples above when configuring certificates.
+
+### Contract testing against an mTLS service (outgoing client cert)
+
+<V2V3SpecmaticConfigTabs
+  v3Object={yaml.load(require('./includes/complete-examples/mtls-test/v3/specmatic.yaml?raw'))}
+  v2Object={yaml.load(require('./includes/complete-examples/mtls-test/v2/specmatic.yaml?raw'))}
+/>
+
+### Mock with incoming mTLS enabled (client cert required)
+
+<V2V3SpecmaticConfigTabs
+  v3Object={yaml.load(require('./includes/complete-examples/mtls-mock/v3/specmatic.yaml?raw'))}
+  v2Object={yaml.load(require('./includes/complete-examples/mtls-mock/v2/specmatic.yaml?raw'))}
+/>
+
+### Notes
+
+- Use `mtlsEnabled` to enable incoming mTLS for mocks.
+- `incomingMtlsEnabled` is not a supported configuration key.
+

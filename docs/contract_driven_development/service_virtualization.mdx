@@ -859,6 +859,25 @@ If you already have a keystore and self-signed certificate you can pass it to Sp
                                Key password if any
   ```
 
+### Incoming mTLS (client certificate required by mock)
+
+Use this when your consumer should call the Specmatic mock with a client certificate.
+
+#### How it works
+
+- Configure HTTPS key material for the mock and set `mtlsEnabled: true` in the same certificate block.
+- Requests without a client certificate are rejected.
+- Requests with a client certificate are accepted and logged as `(mTLS)`.
+- `mtlsEnabled` is applied per mock host/port configuration.
+
+#### Configuration example
+
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/service-virtualization/incoming-mtls/v3/specmatic.yaml?raw'))}
+/>
+
+Note: Incoming mTLS requires HTTPS key material. If `mtlsEnabled: true` is set without a keystore, mock startup fails.
+
 ## Dynamic Expectations (a.k.a. Dynamic Mocking Or Mocking) - Setting Expectations Over Specmatic Http Api
 
 ### Context

@@ -1,0 +1,19 @@
+version: 3
+systemUnderTest:
+  service:
+    definitions:
+      - definition:
+          source:
+            filesystem:
+              directory: ./specs
+          specs:
+            - employee-api.yaml
+    runOptions:
+      openapi:
+        baseUrl: https://<sut-host>:<sut-port>
+        cert:
+          keyStore:
+            file: <path-to-jks-file>
+            alias: <keystore-alias>
+            password: <key-password>
+          keyStorePassword: <keystore-password>

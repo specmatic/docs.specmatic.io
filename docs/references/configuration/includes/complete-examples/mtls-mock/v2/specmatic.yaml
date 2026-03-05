@@ -1,0 +1,9 @@
+version: 2
+stub:
+  https:
+    mtlsEnabled: true
+    keyStore:
+      file: <path-to-jks-file>
+      alias: <keystore-alias>
+      password: <key-password>
+    keyStorePassword: <keystore-password>
