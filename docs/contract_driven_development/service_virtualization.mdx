@@ -1497,6 +1497,72 @@ Here's the OpenAPI specification describing the `/actuator/health` endpoint.
 
   <V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/service-virtualization/health-check-api/health-check-api.yaml?raw'))}/>
 
+## Retrieving Messages Served By The Mock Server
+
+You can use the `/_specmatic/messages` endpoint to retrieve the list of all messages served by the mock server. This is useful for debugging, verifying interactions, and asserting that specific traffic actually hit the mock.
+
+### What can be filtered
+
+If you call the endpoint without any query parameters, it will return everything that the mock server has served so far.
+
+You can also apply one or more filters by passing query parameters in the form `key=value`, Each query parameter acts as an equality check, 
+A filter key is a path-like selector that points to a value inside the each message.
+
+#### REQUEST
+- `REQUEST.PATH` (URL path)
+- `REQUEST.METHOD`
+- `REQUEST.PARAMETERS.PATH.<paramName>`
+- `REQUEST.PARAMETERS.QUERY.<paramName>`
+- `REQUEST.PARAMETERS.HEADER.<paramName>`
+- `REQUEST.BODY.<pointerToField>`
+
+#### RESPONSE
+- `RESPONSE.STATUS`
+- `RESPONSE.HEADER.<paramName>`
+- `RESPONSE.BODY.<pointerToField>`
+
+> Note: When the target is inside an array, use `[index]` Example: `RESPONSE.BODY[1].details[0][1].name`
+
+### Example `curl` Requests
+
+Fetch **ALL** served messages:
+
+```shell
+curl -X GET http://<stub_server_url>/_specmatic/messages
+```
+
+Fetch only messages where the request method is `GET`:
+
+```shell
+curl -G -X GET "http://<stub_server_url>/_specmatic/messages" --data-urlencode "REQUEST.METHOD=GET"
+```
+
+Fetch only messages where response status is `200`:
+
+```shell
+curl -G -X GET "http://<stub_server_url>/_specmatic/messages" --data-urlencode "RESPONSE.STATUS=200"
+```
+
+Fetch only messages where a request header matches:
+
+```shell
+curl -G -X GET "http://<stub_server_url>/_specmatic/messages" --data-urlencode "REQUEST.HEADER.Accept=application/json"
+```
+
+Fetch only messages where a nested response body field matches:
+
+```shell
+curl -G -X GET "http://<stub_server_url>/_specmatic/messages" --data-urlencode "RESPONSE.BODY[1].details[0][1].name=John"
+```
+
+Provide multiple filters `(N query params)`. All filters apply together:
+
+```shell
+curl -G -X GET "http://<stub_server_url>/_specmatic/messages" \
+  --data-urlencode "REQUEST.METHOD=POST" \
+  --data-urlencode "RESPONSE.STATUS=201"
+```
+
 ## Specmatic Configuration with Base URL, Host, Port, and Path
 
 By default, Specmatic mock servers run on `http://0.0.0.0:9000`
