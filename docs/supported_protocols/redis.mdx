@@ -10,7 +10,7 @@ import {CommercialBadge} from "../../src/components/CommercialBadge";
 
 # Redis Stubbing <CommercialBadge/>
 
-The `specmatic-redis` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
+This capability is available in `specmatic-enterprise` module described in this document is available in the [Pro plan](https://specmatic.io/pricing/) or higher. Please get in touch with us through the `Contact Us` form at [specmatic.io](https://specmatic.io) if you'd like to try it out.
 
 ### Introduction to Redis Stubbing
 
@@ -26,10 +26,10 @@ The following dependency needs to be added to your application's `build.gradle` 
 
 <CodeBlock language="xml">
 {`<dependency>
-    <groupId>io.specmatic</groupId>
-    <artifactId>specmatic-redis</artifactId>
+    <groupId>io.specmatic.enterprise</groupId>
+    <artifactId>executable</artifactId>
     <scope>test</scope>
-    <version>${VERSIONS["specmatic-redis-version"]}</version>
+    <version>${VERSIONS["specmatic-enterprise-version"]}</version>
 </dependency>`}
 </CodeBlock>
 
@@ -38,14 +38,14 @@ The following dependency needs to be added to your application's `build.gradle` 
   <TabItem value="gradle" label="gradle">
 
 <CodeBlock language="shell">
-{`testImplementation("io.specmatic:specmatic-redis:${VERSIONS["specmatic-redis-version"]}")`}
+{`testImplementation("io.specmatic.enterprise:executable:${VERSIONS["specmatic-enterprise-version"]}")`}
 </CodeBlock>
 
   </TabItem>
 
 </Tabs>
 
-`Specmatic-Redis` can be used not only in JVM environments but also via Docker images, making it possible to use it with other languages like Python through Redis clients.
+This capability can be used not only in JVM environments but also via Docker images, making it possible to use it with other languages like Python through Redis clients.
 For more information, please refer to [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample/tree/main/tests/redis)
 
 ### Managing Redis Server
@@ -95,6 +95,6 @@ redisStub.when("lrange")
 
 ### Sample Applications
 
-Please have a look at one of the below-mentioned sample applications to understand how to utilize `Specmatic-Redis` in your application:
+Please have a look at one of the below-mentioned sample applications to understand how to utilize Specmatic's redis features in your application:
 - [specmatic-redis-sample](https://github.com/specmatic/specmatic-redis-sample/tree/main/src/test/java/io/specmatic/redis/example)
 - [specmatic-redis-python-sample](https://github.com/specmatic/specmatic-redis-python-sample/tree/main/tests/redis)
