@@ -941,7 +941,7 @@ Now you can import the utility to create the mock server. Below code snippets ar
 This utility can now be used in your test `setup` / `beforeAll` method to start the mock server. Specmatic automatically looks for your [Specmatic configuration](/references/configuration) file in project root directory / classpath to locate your API Specification files that need to run as part of the mock server.
 
     <CodeBlock title='com/example/YourTest.kt' language='kotlin'>
-      {require('./includes/service-virtualization/programatic-service-virtualization/YourTest.kt?raw')}
+      {require('./includes/service-virtualization/programmatic-service-virtualization/YourTest.kt?raw')}
     </CodeBlock>
 
 We can now programmatically set [dynamic expectations](#dynamic-expectations) on the `mock` with the `setExpectation(expectedJson)` method where `expecationJson` is in the same format as [seen here](#externalizing-example-data)
