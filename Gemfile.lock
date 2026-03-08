@@ -37,7 +37,7 @@ GEM
       yell (~> 2.0)
       zeitwerk (~> 2.5)
     io-event (1.14.3)
-    json (2.18.1)
+    json (2.19.0)
     metrics (0.15.0)
     nokogiri (1.19.1-x64-mingw-ucrt)
       racc (~> 1.4)
