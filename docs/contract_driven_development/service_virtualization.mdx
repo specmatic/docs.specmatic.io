@@ -105,7 +105,7 @@ If there are multiple such examples defined for a particular path, all of them w
 
 This capability enhances the flexibility and coverage of contract testing by ensuring that even scenarios involving responses with no body are thoroughly validated.
 
-## Externalizing Example Data [Deprecated]
+## Externalizing Example Data
 
 :::info
 This feature is deprecated, it is recommended that you use Specmatic Studio to manage and generate examples instead.
@@ -878,7 +878,9 @@ Use this when your consumer should call the Specmatic mock with a client certifi
 
 Note: Incoming mTLS requires HTTPS key material. If `mtlsEnabled: true` is set without a keystore, mock startup fails.
 
-## Dynamic Expectations (a.k.a. Dynamic Mocking Or Mocking) - Setting Expectations Over Specmatic Http Api
+## Dynamic Expectations
+
+(a.k.a. Dynamic Mocking) - Setting Expectations Over Specmatic Http API
 
 ### Context
 
@@ -942,7 +944,7 @@ This utility can now be used in your test `setup` / `beforeAll` method to start 
       {require('./includes/service-virtualization/programatic-service-virtualization/YourTest.kt?raw')}
     </CodeBlock>
 
-We can now programmatically set [dynamic expectations](#dynamic-expectations-aka-dynamic-stubbing-or-mocking---setting-expectations-over-specmatic-http-api) on the `mock` with the `setExpectation(expectedJson)` method where `expecationJson` is in the same format as [seen here](#externalizing-example-data)
+We can now programmatically set [dynamic expectations](#dynamic-expectations) on the `mock` with the `setExpectation(expectedJson)` method where `expecationJson` is in the same format as [seen here](#externalizing-example-data)
 
 ```java
 mock.setExpectation(expectationJson);
