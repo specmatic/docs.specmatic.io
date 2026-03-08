@@ -1067,7 +1067,7 @@ Requests are validated against the specification first, before any matchers in e
 :::
 ### Matcher: `$neq`
 
-**Syntax:** `$neq(&lt;exact-value&gt;)`
+**Syntax:** `$neq(<exact-value>)`
 
 Use this matcher to ensure that a field value in incoming requests is **not equal** to a specific value.
 
@@ -1091,7 +1091,7 @@ For example, the following example matches only requests where `status` is not e
 
 ### Matcher: `$match`
 
-**Syntax:** `$match(exact: &lt;exact-value&gt;, dataType: &lt;specmatic-datatype&gt;, times: <number>, value: each|any)`
+**Syntax:** `$match(exact: <exact-value>, dataType: <specmatic-datatype>, times: <number>, value: each|any)`
 
 This matcher provides flexible options to control how request fields match example data and how many times a particular example can be used.
 
