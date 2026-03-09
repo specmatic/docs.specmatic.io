@@ -263,6 +263,31 @@ Examples can be externalized to `json` files as seen in the above section, You w
 
 1. In contract tests, only the `status` field is required. Other fields will be ignored if provided such as headers, body etc.
 
+## Datatypes In Examples
+
+You can use a datatype in an example if you just need the key but can match any value.
+
+You've seen (string) and (number) in other examples, and these are the most common datatypes. Here is the complete set of datatypes supported by Specmatic, along with the OpenAPI datatypes that they map to.
+
+| Specmatic type       | OpenAPI type       | OpenAPI format / note                            |
+|----------------------|--------------------|--------------------------------------------------|
+| (number)             | number             | double or float                                  |
+| (integer)            | integer            |                                                  |
+| (boolean)            | boolean            |                                                  |
+| (null)               | null               | Only valid in OAS 3.1                            |
+| (string)             | string             |                                                  |
+| (email)              | string             | email                                            |
+| (date)               | string             | date                                             |
+| (datetime)           | string             | date-time                                        |
+| (time)               | string             | time                                             |
+| (uuid)               | string             | uuid                                             |
+| (url)                | string             | uri                                              |
+| (url-http)           | string             | uri (used by Specmatic to match HTTP urls only)  |
+| (url-https)          | string             | uri (used by Specmatic to match HTTPS urls only) |
+| (url-path)           | string             | path-style URL constraint                        |
+| (anything)           | any                | unconstrained schema ({}-like)                   |
+| (anyvalue)           | any non-null value | unconstrained-ish, but intended as "any value"   |
+
 
 ## Using Dictionary Values In Examples
 
