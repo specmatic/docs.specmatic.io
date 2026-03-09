@@ -67,7 +67,9 @@ Next, when the application sends back a response, Specmatic must validate it aga
 
 Thus, the request and response examples named `FETCH_EMPLOYEE_SUCCESS` taken together comprise a contract test named `FETCH_EMPLOYEE_SUCCESS`.
 
-Note that the response example named `FETCH_EMPLOYEE_SUCCESS` is not compared with values returned by the application. This is what sets a Contract Test apart from an API Test. A Contract Test is concerned with checking the APIs signature, while API tests are concerned with checking the APIs logic.
+Note that the response example named `FETCH_EMPLOYEE_SUCCESS` is not compared with values returned by the application by default. This is what sets a Contract Test apart from an API Test. A Contract Test is concerned with checking the APIs signature, while API tests are concerned with checking the APIs logic.
+
+If you want Specmatic to validate response payload values from the application, use [Matchers](/features/matchers) in the response example. In contract testing, matchers are evaluated against the application's response, whereas in service virtualization they are evaluated against the incoming request.
 
 However, the response example named `FETCH_EMPLOYEE_SUCCESS` is verified and used in [service virtualization](/contract_driven_development/service_virtualization#inline-examples).
 

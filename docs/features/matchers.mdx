@@ -1,0 +1,309 @@
+---
+title: Matchers
+sidebar_position: 4
+---
+
+Matchers
+========
+
+Specmatic matchers let an example accept more than one concrete value while still staying within the contract.
+
+## How matchers work in test and mock
+
+### Contract testing
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/verifyUser",
+    "body": {
+      "userId": 10
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "$match(pattern: approved|verified)"
+    }
+  }
+}
+```
+
+In contract testing, Specmatic sends the request POST `{"userId": 10}` to /verifyUser and then evaluates the matcher against the response returned by the application.
+
+By default, contract testing validates only the response status code, and checks that the payload matches the specification. Response validation using matchers is a subsequent step performed if the response is found to match the specification.
+
+In this example, the test passes when the application returns `200` and a response body whose `status` matches the regex `approved|verified`.
+
+### Service virtualization
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/verifyUser",
+    "body": {
+      "status": "$match(pattern: approved|verified)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "result": "verified"
+    }
+  }
+}
+```
+
+In service virtualization, Specmatic first validates the incoming request against the specification and then evaluates the matcher against the request value.
+
+In this example, the mock responds with the `200` response in the example only when the incoming request contains a `status` value that matches the regex `approved|verified`.
+
+## Full list of matcher parameters
+
+**Syntax:** `$match(exact: <exact-value>, regex: <regular-expression>, dataType: <specmatic-datatype>, times: <number>, value: each|any)`
+
+The following parameters are supported in both test and mock:
+
+* `exact`: require one exact value (e.g. `{"message": "$match(exact: hello)}"`)
+* `pattern`: require a value that matches the given regular expression (e.g. `{"status": "$match(pattern: approved|verified)"}`)
+* `dataType`: accept values matching a Specmatic datatype such as `string` or `integer` (e.g. `{"id": "$match(dataType: integer)"}`)
+
+The following parameters are supported for transient examples used for mocking, and are explained in the following section:
+* `times`: limit successful matches before exhaustion
+* `value: each`: maintain an exhaustion counter per unique value
+* `value: any`: maintain one exhaustion counter across all values
+
+## Transient examples
+
+The `times` option is available only in **transient mock examples**. It controls how many times a matcher can succeed before it is exhausted.
+
+### `value: each`
+
+`value: each` tracks usage separately for each unique matched value.
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "POST",
+    "path": "/echo",
+    "body": {
+      "text": "$match(dataType: string, value: each, times: 2)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "echoedText": "$(text)"
+    }
+  }
+}
+```
+
+* `"hello"` can match twice.
+* `"world"` can also match twice.
+* Each value is counted independently.
+
+#### Step-by-step example for `value: each`
+
+The following transient example shows matcher exhaustion works with `value: each` and `times: 2`.
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "PATCH",
+    "path": "/order/10",
+    "body": {
+      "id": "$match(dataType: integer, value: each, times: 1)",
+      "details": "$match(dataType: string, value: each, times: 2)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "Order updated"
+    }
+  }
+}
+```
+
+Now let's run through a scenario in which the above example is loaded by Specmatic mock, and a series of requests is sent to the mock.
+
+Let's say the mock we're running the mock on port 9000, and the mock receives the following request payload first.
+
+Request 1 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "packed"}'
+```
+
+This matches the example. Specmatic will now return the response defined in the example for this request, which is `200` with body `{"status": "Order updated"}`. Once the match is done and the response returned, the `id` matcher is now exhausted because its `times` value is `1`. The `details` matcher is still operational for the same value `packed` because its `times` value is `2`.
+
+Request 2 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "packed"}'
+```
+
+This request still matches the example. Even though the `id` matcher is already exhausted for the value `10`, the example can still match because the `details` matcher remains operational.
+
+After Request 2, the `details` matcher is exhausted for `details: "packed"`.
+
+Request 3 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "packed"}'
+```
+
+This request does not match the example. Both matchers are now exhausted for their respective values. Specmatic will not return the response defined in the example for this request, and instead will return a default response from the specification.
+
+Request 4 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "shipped"}'
+```
+
+This request does not match the example. Both matchers are now exhausted for their respective values. Specmatic will not return the response defined in the example for this request, and instead will return a default response from the specification.
+
+Request 4 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "shipped"}'
+```
+
+This request matches the example again because `details: "shipped"` was not previously seen by the matcher at `details`.
+
+So in summary,
+- `each` means that each unique value can be matched twice.
+- An example can be considered a match for a request as long as at least one matcher in the example is still operational for the values in the request.
+- An example won't be considered a match even if all the matchers are exhausted.
+
+### `value: any`
+
+`value: any` uses one shared counter regardless of the actual value.
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "POST",
+    "path": "/echo",
+    "body": {
+      "text": "$match(dataType: string, value: any, times: 2)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "echoedText": "$(text)"
+    }
+  }
+}
+```
+
+After any two matches, the example is exhausted.
+
+#### Step-by-step example for `value: any`
+
+The following transient example shows matcher exhaustion works with `value: any` and `times: 2`.
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "PATCH",
+    "path": "/order/10",
+    "body": {
+      "id": "$match(dataType: integer, value: any, times: 1)",
+      "details": "$match(dataType: string, value: any, times: 2)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "Order updated"
+    }
+  }
+}
+```
+
+Now let's run through a scenario in which the above example is loaded by Specmatic mock, and a series of requests is sent to the mock.
+
+Let's say the mock we're running the mock on port 9000, and the mock receives the following request payload first.
+
+Request 1 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "packed"}'
+```
+
+This matches the example. Specmatic will now return the response defined in the example for this request, which is `200` with body `{"status": "Order updated"}`. Once the match is done and the response returned, the `id` matcher is now exhausted because its `times` value is `1`. The `details` matcher is still operational because its `times` value is `2`. The specific value does not matter.
+
+Request 2 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "packed"}'
+```
+
+This request still matches the example. Even though the `id` matcher is already exhausted, the example can still match because the `details` matcher remains operational.
+
+After Request 2, the `details` matcher is exhausted.
+
+Request 3 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "packed"}'
+```
+
+This request does not match the example. Both matchers are now exhausted. Specmatic will not return the response defined in the example for this request, and instead will return a default response from the specification.
+
+Request 4 payload:
+
+```
+curl -X PATCH http://localhost:9000/order/10 --json '{"id": 10, "details": "shipped"}'
+```
+
+This request does not match the example. Both matchers are now exhausted. Specmatic will not return the response defined in the example for this request, and instead will return a default response from the specification.
+
+So in summary,
+- `$match(dataType: string, value: any, times: 2)` means that this matcher can match any string twice. The specific value is of no consequence (unlike in the case of `value:each`).
+- An example can be considered a match for a request as long as at least one matcher in the example is still operational for the values in the request.
+- An example won't be considered a match even if all the matchers are exhausted.
+
+### Summary of how matcher exhaustion works
+
+- Matchers with `times` are only supported in transient mock examples.
+- An example is considered a match for a request as long as at least one matcher in the example is still operational.
+- Exhaustion does not mean match failure; it simply means that the matcher has reached its defined limit.
+- Once all matchers in an example are exhausted, the example will no longer be considered a match for incoming requests, and Specmatic will look for other examples to match against, or return a default response from the specification instead of the response defined in the example.
+- Matchers only get evaluated after the request matches the specification. So if a request doesn't match the specification, the matchers won't be evaluated and won't be exhausted.
+
+### Combining `value` with `pattern` or `exact`
+
+The `value` parameter can be used in conjunction with `pattern` or `exact` to control matcher exhaustion while still enforcing specific value constraints.
+
+For example:
+
+```json
+{
+  "transient": true,
+  "http-request": {
+    "method": "POST",
+    "path": "/echo",
+    "body": {
+      "text": "$match(pattern: hello|world, value: each, times: 2)"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "echoedText": "$(text)"
+    }
+  }
+}
+```
+
+In this example, the matcher will only match values that are either "hello" or "world". Each of these values can be matched twice before exhaustion occurs. So "hello" can be matched twice and "world" can also be matched twice, but after that, the example will no longer match incoming requests with those values.
