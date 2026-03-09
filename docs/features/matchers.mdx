@@ -2,13 +2,13 @@
 title: Matchers
 sidebar_position: 4
 ---
+import {CommercialBadge} from "../../src/components/CommercialBadge";
 
-Matchers
-========
+# Matchers <CommercialBadge/>
 
 Specmatic matchers let an example accept more than one concrete value while still staying within the contract.
 
-## How matchers work in test and mock
+## Matchers in test and mock
 
 ### Contract testing
 
@@ -30,7 +30,7 @@ Specmatic matchers let an example accept more than one concrete value while stil
 }
 ```
 
-In contract testing, Specmatic sends the request POST `{"userId": 10}` to /verifyUser and then evaluates the matcher against the response returned by the application.
+When using the above example as a contract test, Specmatic sends the request POST `{"userId": 10}` to /verifyUser and then evaluates the matcher against the response returned by the application.
 
 By default, contract testing validates only the response status code, and checks that the payload matches the specification. Response validation using matchers is a subsequent step performed if the response is found to match the specification.
 
