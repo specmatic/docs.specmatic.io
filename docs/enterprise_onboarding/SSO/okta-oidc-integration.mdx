@@ -1,0 +1,96 @@
+---
+title: Configuring OIDC SSO with Okta
+sidebar_label: Configuring OIDC SSO with Okta
+sidebar_position: 3
+---
+
+# Configuring OIDC SSO with Okta
+
+This guide explains how to configure **OIDC SSO** for **Specmatic Insights** using **Okta**.
+
+## Prerequisites
+
+- Administrative access to Okta
+- Administrative access to your Specmatic Insights instance
+- OIDC support enabled in your Insights version
+
+## Step 1: Get OIDC Configuration Values from Specmatic Insights
+
+1. In your Specmatic Insights instance, navigate to **Settings** -> **SSO Configuration**.
+2. Select **OIDC - 2** as the protocol.
+3. Copy the read-only values shown in the OIDC section:
+   - **Sign-in Redirect URI**: `https://<INSIGHTS_BASE_URL>/login/oauth2/code/<ORG_ID>`
+   - **App Login URL (optional)**: `https://<INSIGHTS_BASE_URL>/oauth2/authorization/<ORG_ID>`
+
+> **Note:** Insights supports **Discovery URL mode only** for OIDC configuration.
+
+## Step 2: Create or Reuse Authorization Server in Okta
+
+You can reuse Okta's `default` authorization server if policy/rules are configured correctly.
+
+1. In Okta Admin, navigate to **Security** -> **API** -> **Authorization Servers**.
+2. Select `default` (or create a dedicated server if required by your org policy).
+3. Verify these scopes are available:
+   - `openid`
+   - `profile`
+   - `email`
+4. Configure Access Policies / Rules to allow your Insights app to use `authorization_code` flow.
+
+> **Least privilege recommendation:** For the Insights policy/rule, allow only `openid profile email`.
+
+## Step 3: Create OIDC App Integration in Okta
+
+1. Navigate to **Applications** -> **Applications**.
+2. Click **Create App Integration**.
+3. Choose:
+   - **Sign-in method**: `OIDC - OpenID Connect`
+   - **Application type**: `Web Application`
+4. Configure:
+   - **Grant type**: `Authorization Code`
+   - **Sign-in redirect URI**: the value copied from Insights in Step 1
+5. Save the app.
+6. Assign users/groups under the **Assignments** tab.
+
+## Step 4: Copy Okta Values into Specmatic Insights
+
+From the Okta app and authorization server, copy:
+
+- **Client ID**
+- **Client Secret**
+- **Discovery URL** (for example: `https://<OKTA_DOMAIN>/oauth2/default/.well-known/openid-configuration`)
+
+In Insights OIDC SSO form, set:
+
+- **Discovery URL** = Okta discovery URL
+- **Client ID** = Okta client ID
+- **Client Secret** = Okta client secret
+- **Scopes** = `openid profile email`
+
+Save and then enable OIDC SSO.
+
+## Step 5: Test OIDC SSO
+
+1. Open the Insights login page.
+2. Enter a user email that matches your org domain mapping.
+3. Confirm redirect to Okta.
+4. Authenticate and confirm redirect back to Insights.
+
+## Troubleshooting
+
+### `access_denied` / `Policy evaluation failed`
+
+- Ensure the selected authorization server has an access policy/rule for your app.
+- Ensure rule allows `authorization_code` and includes `openid profile email`.
+- Ensure the user is assigned to the Okta app.
+
+### Redirect URI mismatch
+
+- Confirm exact match between Okta app redirect URI and Insights callback URL.
+- Match scheme, host, port, path, and trailing slash exactly.
+
+### Missing email / login fails after callback
+
+- Ensure `email` scope is requested.
+- Ensure email claim is available to the OIDC app based on your authorization server claims/policy.
+
+For additional help, consult the [Specmatic Insights documentation](/enterprise_onboarding/insights) or contact [Specmatic support](https://support.specmatic.io).

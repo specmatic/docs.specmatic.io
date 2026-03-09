@@ -1,0 +1,88 @@
+---
+title: Configuring OIDC SSO with Microsoft Entra
+sidebar_label: Configuring OIDC SSO with Microsoft Entra
+sidebar_position: 4
+---
+
+# Configuring OIDC SSO with Microsoft Entra
+
+This guide explains how to configure **OIDC SSO** for **Specmatic Insights** using **Microsoft Entra ID**.
+
+## Prerequisites
+
+- Administrative access to Microsoft Entra ID
+- Administrative access to your Specmatic Insights instance
+- OIDC support enabled in your Insights version
+
+## Step 1: Get OIDC Configuration Values from Specmatic Insights
+
+1. In your Specmatic Insights instance, navigate to **Settings** -> **SSO Configuration**.
+2. Select **OIDC - 2** as the protocol.
+3. Copy the read-only values shown in the OIDC section:
+   - **Sign-in Redirect URI**: `https://<INSIGHTS_BASE_URL>/login/oauth2/code/<ORG_ID>`
+   - **App Login URL (optional)**: `https://<INSIGHTS_BASE_URL>/oauth2/authorization/<ORG_ID>`
+
+> **Note:** Insights supports **Discovery URL mode only** for OIDC configuration.
+
+## Step 2: Register an Application in Microsoft Entra
+
+1. Open [Microsoft Entra admin center](https://entra.microsoft.com/).
+2. Go to **Microsoft Entra ID** -> **App registrations** -> **New registration**.
+3. Enter app name (for example, `Specmatic Insights OIDC`).
+4. Under **Redirect URI**, choose **Web** and enter the Insights Sign-in Redirect URI from Step 1.
+5. Create the app registration.
+
+## Step 3: Configure App Authentication and Permissions
+
+1. In the app registration, go to **Authentication**.
+2. Verify the redirect URI is present.
+3. In **Certificates & secrets**, create a **Client secret**.
+4. In **API permissions**, ensure OpenID Connect permissions include:
+   - `openid`
+   - `profile`
+   - `email`
+5. Grant admin consent if your tenant policy requires it.
+
+## Step 4: Copy Entra Values into Specmatic Insights
+
+From Entra app registration, copy:
+
+- **Application (client) ID**
+- **Client secret value**
+- **Discovery URL** for your tenant:
+  - `https://login.microsoftonline.com/<TENANT_ID>/v2.0/.well-known/openid-configuration`
+
+In Insights OIDC SSO form, set:
+
+- **Discovery URL** = Entra discovery URL
+- **Client ID** = Application (client) ID
+- **Client Secret** = client secret value
+- **Scopes** = `openid profile email`
+
+Save and then enable OIDC SSO.
+
+## Step 5: Assign Users and Test
+
+1. Assign users/groups to the Entra application as required by your tenant setup.
+2. Open the Insights login page.
+3. Enter a user email that matches your org domain mapping.
+4. Confirm redirect to Entra and successful return to Insights.
+
+## Troubleshooting
+
+### Redirect URI mismatch
+
+- Ensure Entra redirect URI exactly matches the Insights callback URL.
+- Match scheme, host, port, path, and trailing slash exactly.
+
+### Login fails due missing claim
+
+- Ensure `email` scope is included.
+- Ensure Entra sends an email-like identifier claim for the user.
+
+### Authorization errors
+
+- Check tenant admin consent and app assignment policy.
+- Verify the app registration is enabled for users attempting login.
+
+For additional help, consult the [Specmatic Insights documentation](/enterprise_onboarding/insights) or contact [Specmatic support](https://support.specmatic.io).
