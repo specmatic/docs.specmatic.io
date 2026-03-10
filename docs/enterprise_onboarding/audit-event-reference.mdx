@@ -1,0 +1,430 @@
+---
+title: Audit Event Reference
+sidebar_label: Audit Event Reference
+sidebar_position: 5
+---
+
+# Audit Event Reference
+
+This is a reference for audit events emitted by Specmatic Insights.
+
+For UI navigation and export setup workflows, see [Audit Trail](/enterprise_onboarding/audit_trail).
+
+## Reading Guide
+
+- `type` is the stable contract key for programmatic handling.
+- `details` is event-specific; fields may be absent unless explicitly documented for that `type`.
+- `summary` is human-readable and non-contractual; do not parse it for automation.
+
+## Event Format
+
+Top-level fields:
+
+| field name     | data type                        | description                                             |
+|----------------|----------------------------------|---------------------------------------------------------|
+| `id`           | `uuid`                           | Unique audit event ID.                                  |
+| `type`         | `string (enum)`                  | Audit event type (for example `AUTH_LOGIN_SUCCESS`).    |
+| `timestamp`    | `string (ISO-8601 UTC datetime)` | Event timestamp in UTC.                                 |
+| `severity`     | `string (enum)`                  | One of `INFO`, `WARN`, `ERROR`.                         |
+| `summary`      | `string`                         | Human-readable event summary.                           |
+| `actorType`    | `string (enum)`                  | One of `SYSTEM`, `USER`, `LICENSE`.                     |
+| `actorId`      | `string \| null`                 | Actor identifier when available.                        |
+| `actorDisplay` | `string \| null`                 | Actor display value (for example email) when available. |
+| `sourceIp`     | `string \| null`                 | Source IP when available.                               |
+| `targetType`   | `string \| null`                 | Target entity type when applicable.                     |
+| `targetId`     | `string \| null`                 | Target entity identifier when applicable.               |
+| `details`      | `object \| null`                 | Event-specific payload. Shape depends on `type`.        |
+
+Request context fields:
+
+| field name            | data type        | description                                                    |
+|-----------------------|------------------|----------------------------------------------------------------|
+| `destinationHostname` | `string`         | Destination hostname recorded for the request context. Always present. |
+| `httpUserAgent`       | `string \| null` | HTTP user agent when available.                                |
+| `httpReferer`         | `string \| null` | HTTP referer when available.                                   |
+| `httpMethod`          | `string \| null` | HTTP method when available.                                    |
+| `httpProtocol`        | `string \| null` | Request protocol (typically `http` or `https`) when available. |
+| `httpPort`            | `number \| null` | Request port when available (for example `80`, `443`).         |
+| `httpUrl`             | `string \| null` | Request path with query string (no scheme, host, or port).     |
+
+Default severity behavior:
+
+| field name                           | data type | description         |
+|--------------------------------------|-----------|---------------------|
+| `severity` for `AUTH_LOGIN_FAILED`   | `string`  | Always `WARN`.      |
+| `severity` for `AUDIT_EXPORT_FAILED` | `string`  | Always `ERROR`.     |
+| `severity` for all other event types | `string`  | Defaults to `INFO`. |
+
+`details.error` and `details.exception` are operational diagnostics. Treat these as non-contractual and potentially sensitive in downstream systems.
+
+## Event Categories and Details
+
+### Authentication
+
+#### `AUTH_LOGIN_SUCCESS`
+
+Emitted when authentication succeeds (password login or SSO). Use `details.authMethod` when present to identify SSO provider type.
+
+Allowed values:
+- `details.authMethod`: `SAML`, `OIDC`
+
+| field name           | data type | description                                                                           |
+|----------------------|-----------|---------------------------------------------------------------------------------------|
+| `details.authMethod` | `string`  | Present for SSO login flows (`SAML` or `OIDC`). May be absent in non-SSO login flows. |
+
+Example event:
+
+```json
+{
+  "id": "315f3f7f-59d5-43dd-b8b8-6f3f043ac2a5",
+  "type": "AUTH_LOGIN_SUCCESS",
+  "timestamp": "2026-03-10T10:15:30Z",
+  "severity": "INFO",
+  "actorType": "USER",
+  "actorId": "u_123",
+  "actorDisplay": "user@example.com",
+  "details": {
+    "authMethod": "OIDC"
+  }
+}
+```
+
+#### `AUTH_LOGIN_FAILED`
+
+Emitted when authentication fails. `details` may vary by auth flow and failure point.
+
+| field name                   | data type | description                                                                  |
+|------------------------------|-----------|------------------------------------------------------------------------------|
+| `details.error`              | `string`  | Error message for login failure.                                             |
+| `details.authMethod`         | `string`  | Present for SSO login failures (for example `SAML`, `OIDC`).                 |
+| `details.registrationId`     | `string`  | Present for SSO login failures when registration/org identifier is resolved. |
+| `details.exception`          | `string`  | Present for onboarding/internal failure variants to indicate exception type. |
+| `details.authenticationType` | `string`  | Present for unexpected authentication type variants.                         |
+
+#### `AUTH_LOGOUT`
+
+Emitted when a logged-in user signs out successfully.
+
+| field name | data type        | description                                      |
+|------------|------------------|--------------------------------------------------|
+| `details`  | `null \| object` | No fixed `details` fields are currently defined. |
+
+### User Lifecycle
+
+#### `USER_CREATED`
+
+Emitted when a new user account is created during invite/onboarding flows.
+
+| field name      | data type | description                |
+|-----------------|-----------|----------------------------|
+| `details.email` | `string`  | Email of the created user. |
+
+#### `USER_ADDED_TO_ORG`
+
+Emitted when a user is associated to an organization.
+
+| field name      | data type | description                                  |
+|-----------------|-----------|----------------------------------------------|
+| `details.email` | `string`  | Email of the user added to the organization. |
+
+#### `USER_REMOVED_FROM_ORG`
+
+Emitted once per requested user ID during bulk removal requests, with outcome per user.
+
+| field name                | data type | description                                           |
+|---------------------------|-----------|-------------------------------------------------------|
+| `targetType`              | `string`  | `USER`.                                               |
+| `targetId`                | `string`  | Requested user ID for this event.                     |
+| `details.requestedUserId` | `string`  | Requested user ID for this event.                     |
+| `details.removed`         | `boolean` | `true` when removed; `false` when request is ignored. |
+| `details.result`          | `string`  | `REMOVED` or `IGNORED_NOT_IN_ORG`.                    |
+
+#### `USER_PASSWORD_CHANGED`
+
+Emitted when an authenticated user changes password via the settings flow.
+
+| field name | data type        | description                                      |
+|------------|------------------|--------------------------------------------------|
+| `details`  | `null \| object` | No fixed `details` fields are currently defined. |
+
+#### `USER_PASSWORD_RESET_REQUESTED`
+
+Emitted when a password reset request is accepted for a user. This applies only to organizations that do not use SSO integration.
+
+| field name | data type        | description                                      |
+|------------|------------------|--------------------------------------------------|
+| `details`  | `null \| object` | No fixed `details` fields are currently defined. |
+
+#### `USER_PASSWORD_RESET`
+
+Emitted when a password reset is completed (including invite acceptance password set). This applies only to organizations that do not use SSO integration.
+
+| field name | data type        | description                                      |
+|------------|------------------|--------------------------------------------------|
+| `details`  | `null \| object` | No fixed `details` fields are currently defined. |
+
+### Organization Lifecycle and Configuration updates
+
+#### `ORG_CREATED`
+
+Emitted when a new organization is created.
+
+| field name     | data type | description                       |
+|----------------|-----------|-----------------------------------|
+| `details.name` | `string`  | Name of the created organization. |
+
+#### `ORG_CONFIG_CHANGED`
+
+Emitted for organization-level configuration changes across audit export, license, and organization settings.
+
+Allowed values:
+- `details.configType`: `auditExport`, `license`, `organization`
+
+Common fields:
+
+| field name           | data type        | description                                                    |
+|----------------------|------------------|----------------------------------------------------------------|
+| `details.configType` | `string`         | Configuration scope changed.                                   |
+| `details.before`     | `object \| null` | Previous configuration snapshot for the selected `configType`. |
+| `details.after`      | `object \| null` | New configuration snapshot for the selected `configType`.      |
+
+When `details.configType = auditExport`:
+
+| field name | data type        | description                                  |
+|------------|------------------|----------------------------------------------|
+| `details.before` | `object \| null` | Previous audit export configuration snapshot. |
+| `details.after`  | `object \| null` | New audit export configuration snapshot.      |
+
+When `details.configType = license`:
+
+| field name                          | data type | description                              |
+|-------------------------------------|-----------|------------------------------------------|
+| `details.before.seatCount`          | `number`  | Previous configured seat count.          |
+| `details.before.individualRateLimit`| `number`  | Previous individual rate limit.          |
+| `details.before.ciDailyRunLimit`    | `number`  | Previous CI daily run limit.             |
+| `details.before.endDate`            | `string`  | Previous license end date.               |
+| `details.before.licenseType`        | `string`  | Previous license type.                   |
+| `details.after.seatCount`           | `number`  | New configured seat count.               |
+| `details.after.individualRateLimit` | `number`  | New individual rate limit.               |
+| `details.after.ciDailyRunLimit`     | `number`  | New CI daily run limit.                  |
+| `details.after.endDate`             | `string`  | New license end date.                    |
+| `details.after.licenseType`         | `string`  | New license type.                        |
+
+When `details.configType = organization`:
+
+| field name                                          | data type  | description                                |
+|-----------------------------------------------------|------------|--------------------------------------------|
+| `details.before.name`                               | `string`   | Previous organization name.                |
+| `details.before.minCoverageThreshold`               | `number`   | Previous minimum coverage threshold.       |
+| `details.before.maxMissedEndpointsThreshold`        | `number`   | Previous maximum missed endpoints threshold. |
+| `details.before.seatCountUsageThresholdPercentages` | `number[]` | Previous seat usage alert thresholds.      |
+| `details.after.name`                                | `string`   | New organization name.                     |
+| `details.after.minCoverageThreshold`                | `number`   | New minimum coverage threshold.            |
+| `details.after.maxMissedEndpointsThreshold`         | `number`   | New maximum missed endpoints threshold.    |
+| `details.after.seatCountUsageThresholdPercentages`  | `number[]` | New seat usage alert thresholds.           |
+
+Example event:
+
+```json
+{
+  "id": "9c94fcf4-1830-4a0e-8a35-0f8e35f0a8fe",
+  "type": "ORG_CONFIG_CHANGED",
+  "timestamp": "2026-03-10T11:00:00Z",
+  "severity": "INFO",
+  "actorType": "USER",
+  "actorId": "u_admin",
+  "details": {
+    "configType": "license",
+    "before": {
+      "seatCount": 50,
+      "licenseType": "TEAM"
+    },
+    "after": {
+      "seatCount": 75,
+      "licenseType": "TEAM"
+    }
+  }
+}
+```
+
+#### `SSO_CONFIG_CHANGED`
+
+Emitted when SSO configuration for an organization is created, updated, or disabled.
+
+| field name            | data type        | description                                                             |
+|-----------------------|------------------|-------------------------------------------------------------------------|
+| `details.before`      | `object \| null` | Previous SSO configuration state.                                       |
+| `details.after`       | `object`         | New SSO configuration state. Can be `{ "type": "NONE" }` when disabled. |
+| `details.before.type` | `string`         | Previous SSO type when present.                                         |
+| `details.after.type`  | `string`         | New SSO type.                                                           |
+
+### Build Ingestion
+
+#### `BUILD_SUBMITTED_SERVICE`
+
+Emitted when a service build report is submitted and accepted.
+
+| field name | data type | description |
+|----------------------|-----------|----------------------------------|
+| `targetType`         | `string`  | `BUILD`. |
+| `targetId`           | `string`  | Persisted build identifier. |
+| `details.repo`       | `string`  | Repository name. |
+| `details.repoId`     | `string`  | Repository identifier. |
+| `details.branchName` | `string`  | Branch name for submitted build. |
+
+Example event:
+
+```json
+{
+  "id": "a7bf7cf3-567b-46f4-bfcd-e4f4fdde8b3a",
+  "type": "BUILD_SUBMITTED_SERVICE",
+  "timestamp": "2026-03-10T11:40:00Z",
+  "severity": "INFO",
+  "actorType": "SYSTEM",
+  "targetType": "BUILD",
+  "targetId": "build_456",
+  "details": {
+    "repo": "payments-service",
+    "repoId": "repo_42",
+    "branchName": "main"
+  }
+}
+```
+
+#### `BUILD_SUBMITTED_CENTRAL_REPO`
+
+Emitted when a central-repository build report is submitted and accepted.
+
+| field name           | data type | description                      |
+|----------------------|-----------|----------------------------------|
+| `targetType`         | `string`  | `BUILD`.                         |
+| `targetId`           | `string`  | Persisted build identifier.      |
+| `details.repo`       | `string`  | Repository name.                 |
+| `details.repoId`     | `string`  | Repository identifier.           |
+| `details.branchName` | `string`  | Branch name for submitted build. |
+
+### License and Code Lifecycle
+
+#### `LICENSE_CODE_APPROVED`
+
+Emitted when a license code is approved for later exchange.
+
+| field name       | data type  | description                      |
+|------------------|------------|----------------------------------|
+| `details.code`   | `string`   | Approved code value.             |
+| `details.labels` | `string[]` | Labels associated with the code. |
+
+#### `LICENSE_ISSUED_FROM_CODE`
+
+Emitted when an approved code is exchanged and a license is issued.
+
+| field name              | data type               | description                                 |
+|-------------------------|-------------------------|---------------------------------------------|
+| `details.code`          | `string`                | Consumed code value.                        |
+| `details.licenseId`     | `string`                | Issued license ID.                          |
+| `details.licensee`      | `string`                | Licensee field of the generated license.    |
+| `details.generatedBy`   | `string`                | Identity that generated the license.        |
+| `details.licenseExpiry` | `string (ISO-8601 UTC datetime)` | License expiry timestamp.         |
+| `details.labels`        | `string[]`              | Labels attached to the issued license/code. |
+
+Example event:
+
+```json
+{
+  "id": "f8f8e5a2-cbd8-4fe5-a4d8-0bbfd82d2991",
+  "type": "LICENSE_ISSUED_FROM_CODE",
+  "timestamp": "2026-03-10T12:10:00Z",
+  "severity": "INFO",
+  "actorType": "LICENSE",
+  "details": {
+    "code": "ABC-123",
+    "licenseId": "lic_789",
+    "licensee": "org:acme",
+    "generatedBy": "license-service",
+    "licenseExpiry": "2027-03-10T00:00:00Z",
+    "labels": [
+      "enterprise"
+    ]
+  }
+}
+```
+
+#### `LICENSE_REFRESH`
+
+Emitted when license validation results in issuing a refreshed license.
+
+| field name             | data type | description                |
+|------------------------|-----------|----------------------------|
+| `details.oldLicenseId` | `string`  | License ID before refresh. |
+| `details.newLicenseId` | `string`  | License ID after refresh.  |
+
+#### `LICENSE_SERVICE_ACCOUNT_CREATED`
+
+Emitted when a new service-account license is created.
+
+| field name          | data type  | description                                     |
+|---------------------|------------|-------------------------------------------------|
+| `details.licenseId` | `string`   | Created service account license ID.             |
+| `details.licensee`  | `string`   | Service account licensee identifier.            |
+| `details.labels`    | `string[]` | Labels attached to the service account license. |
+
+#### `LICENSE_REVOKED`
+
+Emitted when one or more licenses are revoked in a bulk revoke operation.
+
+| field name                    | data type  | description                              |
+|-------------------------------|------------|------------------------------------------|
+| `details.requestedLicenseIds` | `string[]` | License IDs requested for revocation.    |
+| `details.requestedCount`      | `number`   | Number of license IDs requested.         |
+| `details.revokedCount`        | `number`   | Number of licenses successfully revoked. |
+
+### Audit Export Lifecycle
+
+For where organization admins configure audit export in the product UI, see [Audit Trail](/enterprise_onboarding/audit_trail#configuring-audit-export).
+
+#### `AUDIT_EXPORT_STARTED`
+
+Emitted when an audit export run starts for an organization.
+
+| field name      | data type       | description                  |
+|-----------------|-----------------|------------------------------|
+| `details.runId` | `string (uuid)` | Audit export run identifier. |
+
+#### `AUDIT_EXPORT_COMPLETED`
+
+Emitted when an audit export run completes successfully.
+
+| field name               | data type       | description                            |
+|--------------------------|-----------------|----------------------------------------|
+| `details.runId`          | `string (uuid)` | Audit export run identifier.           |
+| `details.eventsExported` | `number`        | Number of events exported in the run.  |
+| `details.batches`        | `number`        | Number of batches exported in the run. |
+
+#### `AUDIT_EXPORT_FAILED`
+
+Emitted when an audit export run fails after starting.
+
+| field name               | data type       | description                                |
+|--------------------------|-----------------|--------------------------------------------|
+| `details.runId`          | `string (uuid)` | Audit export run identifier.               |
+| `details.eventsExported` | `number`        | Number of events exported before failure.  |
+| `details.batches`        | `number`        | Number of batches exported before failure. |
+| `details.error`          | `string`        | Failure message captured for the run.      |
+
+Example event:
+
+```json
+{
+  "id": "3d47fe12-bec1-4e36-9f15-f0e2ac9e95ed",
+  "type": "AUDIT_EXPORT_FAILED",
+  "timestamp": "2026-03-10T13:05:00Z",
+  "severity": "ERROR",
+  "actorType": "SYSTEM",
+  "details": {
+    "runId": "b7ebeb4f-7b63-4bb4-a6c3-8fb8ca565f34",
+    "eventsExported": 320,
+    "batches": 4,
+    "error": "Connection timed out while publishing batch 5"
+  }
+}
+```
