@@ -1,0 +1,42 @@
+---
+title: Audit Trail
+sidebar_position: 4
+---
+
+# Audit Trail
+
+Specmatic Insights provides an audit trail for organization-level administrative and security activity. Organization admins can review recent audit activity in the product UI and manage export-related settings for their organization.
+
+## What gets audited
+
+Audit events capture important changes and access activity. A typical set of audited actions includes:
+
+- Login success, login failure, and logout
+- User creation and users being added to an organization
+- Password changes and password reset activity
+- Organization configuration changes, including license and audit configuration updates
+- Build submissions from central repositories and service repositories
+- License lifecycle actions such as issuing, refreshing, and revoking licenses
+- Audit export lifecycle events such as export started, completed, or failed
+
+## Where admins can find audit information
+
+Organization admins can view audit records in `Settings` -> `Audit Events`.
+
+The `Audit Events` tab provides a paginated list of recent audit activity for the selected organization, including event type, actor, source IP, timestamp, and a summary of what happened.
+
+## Configuring audit export
+
+Organization admins can configure audit export behavior in `Settings` -> `Audit`.
+
+The `Audit` tab allows admins to:
+
+- Enable or disable audit exports
+- Adjust the export batch size
+- View the configured S3 destination used for audit exports
+
+## Accessing exported audit logs
+
+Audit logs are exported to an S3 destination associated with your organization. If your team needs access to the relevant S3 bucket or prefix, contact Specmatic support so the required access can be provisioned and coordinated correctly.
+
+For additional help with audit trail setup or access, contact [Specmatic support](https://support.specmatic.io).
