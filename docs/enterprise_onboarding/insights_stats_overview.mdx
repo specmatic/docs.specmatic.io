@@ -177,41 +177,49 @@ For more on Specmatic telemetry and feature usage reporting, see [Telemetry Conf
 
 ## Example
 
-Assume the central contract repository contains these 6 operations:
+Assume the central contract repository contains these 3 OpenAPI specs:
 
-- `order_service`
-  - `GET /orders`
-  - `POST /orders`
-- `payment_service`
-  - `GET /payments`
-  - `POST /payments`
-- `product_service`
-  - `GET /products`
-  - `POST /products`
+- `order_service.yaml`
+  - `/orders` | `GET` | `200`
+  - `/orders` | `POST` | `application/json` | `201`
+- `payment_service.yaml`
+  - `/payments` | `GET` | `200`
+  - `/payments` | `POST` | `application/json` | `201`
+- `product_service.yaml`
+  - `/products` | `GET` | `200`
+  - `/products` | `POST` | `application/json` | `201`
 
 Now consider three services:
 
 - `Order Service`
-  - tests/provides `GET /orders`, `POST /orders`
-  - mocks `GET /products` as a mock
+  - tests `order_service.yaml`
+    - `/orders` | `GET` | `200`
+    - `/orders` | `POST` | `application/json` | `201`
+  - mocks `product_service.yaml`
+    - `/products` | `GET` | `200`
 - `Payment Service`
-  - tests/provides `GET /payments`, `POST /payments`
-  - mocks `POST /products` as a mock
+  - tests `payment_service.yaml`
+    - `/payments` | `GET` | `200`
+    - `/payments` | `POST` | `application/json` | `201`
+  - mocks `product_service.yaml`
+    - `/products` | `POST` | `application/json` | `201`
 - `Product Service`
-  - tests/provides `GET /products`, `POST /products`
+  - tests `product_service.yaml`
+    - `/products` | `GET` | `200`
+    - `/products` | `POST` | `application/json` | `201`
 
 At this point:
 
-- provider-covered operations = `6`
-- consumer-used operations = `2`
+- provider-covered/tested operations = `6`
+- consumer-used/mocked operations = `2`
 - operations used by both providers and consumers = `2`
-  - `GET /products`
-  - `POST /products`
+  - `/products` | `GET` | `200`
+  - `/products` | `POST` | `application/json` | `201`
 - operations used by providers only = `4`
-  - `GET /orders`
-  - `POST /orders`
-  - `GET /payments`
-  - `POST /payments`
+  - `/orders` | `GET` | `200`
+  - `/orders` | `POST` | `application/json` | `201`
+  - `/payments` | `GET` | `200`
+  - `/payments` | `POST` | `application/json` | `201`
 - operations used by consumers only = `0`
 
 So the cards would read:
@@ -310,8 +318,16 @@ If a parent folder contains multiple specs, the folder-level values are calculat
 
 In the service panel below the tree, Insights then shows:
 
-- Center Service: the provider service that implements the selected specification
-- LHS Services: the consumer services which mock that specification
-- RHS Services: Dependencies of the center service
+![Insights Service Block](/img/enterprise_onboarding/service-block.png)
+
+- `Center Service`: the provider service that implements the selected specification
+- `LHS Services`: the consumer services that mock the selected specification
+- `RHS Services`: the downstream dependencies of the center service
+
+This panel helps you understand a spec from three perspectives at once:
+
+- who provides it
+- which services consume it through mocks
+- what other services the provider itself depends on
 
 This lets you move from contract-level reporting to service-level relationships without leaving the same view.
