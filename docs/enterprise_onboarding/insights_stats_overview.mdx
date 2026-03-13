@@ -1,0 +1,324 @@
+---
+title: Insights Stats Overview
+sidebar_position: 3
+---
+
+# Insights Stats Overview
+
+This page explains the summary cards at the top of the Insights stats page and how to interpret them.
+
+The first four cards are contract stats. They are calculated against the latest central contract repository snapshot and are shown as a rolling 3-month view aggregated week by week.
+
+In other words:
+
+- the central repo provides the contract baseline
+- service builds are interpreted against that baseline
+- the trend lines on these cards represent weekly points across the last 12 weeks
+
+The `Specmatic Usage` card is separate. It shows overall Specmatic feature invocations for the selected time period.
+
+![Insights Stats Overview](/img/enterprise_onboarding/insights-stats-overview.png)
+
+## How Insights Understands Builds
+
+Specmatic Insights accepts two kinds of builds:
+
+- `Central Repo Builds`
+- `Service Builds`
+
+These two build types serve different purposes.
+
+### Central Repo Builds
+
+A central repo build describes the contract surface of your organization.
+
+It contains:
+
+- the set of specifications present in the central contract repository
+- metadata for each specification, such as its path and type
+- the set of operations defined in each specification
+
+When Insights receives a central repo build, it stores it as:
+
+- a build
+- containing a set of specs
+- where each spec contains a set of operations
+
+This becomes the reference contract snapshot against which service builds are interpreted.
+
+### Service Builds
+
+A service build describes how a particular service is interacting with those specifications.
+
+Like a central repo build, a service build also contains a set of specs. However, for each spec in a service build, Insights also records how that service is using the spec.
+
+A spec in a service build is typically one of:
+
+- `tested`
+- `mocked`
+
+Each such spec contains a set of operations:
+
+- tested operations for provider-side contract verification
+- mocked operations for consumer-side mock usage
+
+So while a central repo build tells Insights what contract operations exist, a service build tells Insights which of those operations are currently being exercised by providers and consumers.
+
+## What Is An Operation?
+
+The meaning of an operation depends on the type of specification.
+
+Insights identifies operations differently for each protocol so that the same logical contract interaction is counted consistently across central repo builds and service builds.
+
+### OpenAPI
+
+For an OpenAPI specification, an operation is identified by the combination of:
+
+- `Path`
+- `Method`
+- `Request Content Type`
+- `Response Code`
+
+For example:
+
+- `GET /orders -> 200`
+- `POST /orders (application/json) -> 201`
+
+These are treated as two distinct operations.
+
+### AsyncAPI
+
+For an AsyncAPI specification, an operation is identified by the combination of:
+
+- `Operation Name`
+- `Channel Name`
+- `Action`
+
+For example:
+
+- `placeOrder` on channel `new-orders` with action `receive`
+- `placeOrder` on channel `wip-orders` with action `send`
+
+These are treated as separate operations.
+
+### GraphQL
+
+For a GraphQL specification, an operation is identified by the combination of:
+
+- `Operation Type`
+- `Operation Name`
+
+For example:
+
+- `query getOrders`
+- `mutation saveOrder`
+
+These are treated as distinct operations.
+
+### gRPC
+
+For a gRPC specification, an operation is identified by the combination of:
+
+- `Package Name`
+- `Service Name`
+- `RPC Name`
+
+For example:
+
+- package `com.orders`, service `OrderService`, RPC `GetOrder`
+- package `com.orders`, service `OrderService`, RPC `SaveOrder`
+
+These are treated as separate operations.
+
+## Why This Matters
+
+All contract stats in Insights are ultimately based on these operations.
+
+For example:
+
+- contract test coverage measures how many unique central repo operations are currently covered by provider tests
+- consumer usage measures how many unique central repo operations are currently used through mocks
+- provider-only and consumer-only metrics compare those operation sets
+- service listing rolls those same operation counts up by spec and folder
+
+Insights does not count services first. It counts contract operations first, and then aggregates them into higher-level views.
+
+## What These Numbers Mean
+
+The four contract-related cards are all calculated against the latest central contract snapshot.
+
+### Contract Test coverage
+
+This shows how many unique contract operations are currently validated by provider-side contract tests, expressed as a percentage of all operations in the central contract repository.
+
+For example, if the central contract repository currently contains `6` operations and provider builds cover `3` of them, the card shows `50%`.
+
+### Operations used by both providers and consumers
+
+This shows the percentage of unique contract operations that are:
+
+- validated by provider-side contract tests, and
+- used by consumers through mocks
+
+This is the overlap between provider coverage and consumer usage.
+
+### Operations used by providers only
+
+This shows the percentage of unique contract operations that are covered by providers, but are not currently used by any consumers.
+
+This is useful for identifying operations that are tested by providers but are not yet exercised by consumers in their mocking workflows.
+
+### Operations used by consumers only
+
+This shows the percentage of unique contract operations that are used by consumers through mocks, but are not validated by any provider contract tests.
+This is useful for identifying consumer dependencies that are not yet backed by provider-side verification.
+
+### Specmatic Usage
+
+This card is separate from the contract stats above.
+
+It shows the total number of Specmatic feature invocations across the selected time period.
+
+## Example
+
+Assume the central contract repository contains these 6 operations:
+
+- `order_service`
+  - `GET /orders`
+  - `POST /orders`
+- `payment_service`
+  - `GET /payments`
+  - `POST /payments`
+- `product_service`
+  - `GET /products`
+  - `POST /products`
+
+Now consider three services:
+
+- `Order Service`
+  - provides `GET /orders`, `POST /orders`
+  - uses `GET /products` as a mock
+- `Payment Service`
+  - provides `GET /payments`, `POST /payments`
+  - uses `POST /products` as a mock
+- `Product Service`
+  - provides `GET /products`, `POST /products`
+
+At this point:
+
+- provider-covered operations = `6`
+- consumer-used operations = `2`
+- operations used by both providers and consumers = `2`
+  - `GET /products`
+  - `POST /products`
+- operations used by providers only = `4`
+  - `GET /orders`
+  - `POST /orders`
+  - `GET /payments`
+  - `POST /payments`
+- operations used by consumers only = `0`
+
+So the cards would read:
+
+- Contract Test coverage = `6 / 6 = 100%`
+- Operations used by both providers and consumers = `2 / 6 = 33%`
+- Operations used by providers only = `4 / 6 = 67%`
+- Operations used by consumers only = `0 / 6 = 0%`
+
+## Understanding The Contract Listing
+
+The contract listing view expands your central contract repository into its folder structure and shows how much of that contract surface is currently covered and used at every level.
+
+![Insights Contract Listing](/img/enterprise_onboarding/service-listing-overview.png)
+
+In this view:
+
+- `Contract Test Coverage` means the percentage of operations in that repository, folder, or spec that are currently validated by provider-side contract tests
+- `Total Operations` means the total number of contract operations in that repository, folder, or spec
+- `Usage Coverage` means mock usage, that is, the percentage of operations currently used by consuming services through mocks
+- the tree on the left represents the central repository folder structure
+- the service panel below shows the provider service that implements the selected spec, along with the consuming services that depend on it
+- the dependency lines show which consumers are using that provider through the selected specification
+
+The tree is built from the contract repository structure:
+
+- central repository
+- folders
+- sub-folders
+- individual spec files
+
+Each row in the tree shows three key values:
+
+- `Contract Test Coverage`
+- `Total Operations`
+- `Usage Coverage`
+
+As you expand the tree:
+
+- each folder shows aggregated contract test coverage for all specs beneath it
+- each folder shows aggregated mock usage for all specs beneath it
+- each spec file shows the exact values for that specification
+
+Below the tree, Insights also shows the services that implement the selected spec, along with their consumers and dependencies.
+
+### Contract Test Coverage
+
+This is the percentage of operations in that row that are currently validated by provider-side contract tests.
+
+At the spec-file level:
+
+- `Contract Test Coverage = tested operations / total operations in that spec`
+
+At folder and repository levels:
+
+- tested operations are summed across the specs inside that subtree
+- total operations are summed across the same subtree
+- the percentage is then calculated from those totals
+
+### Total Operations
+
+This is the total number of contract operations present in that row.
+
+For a spec file, this is simply the number of operations defined in that specification.
+
+For a folder or repository node, this is the sum of all operations contained in the specs below that node.
+
+### Usage Coverage
+
+This is the percentage of operations in that row that are currently used by consumers through mocks.
+
+At the spec-file level:
+
+- `Usage Coverage = mocked operations / total operations in that spec`
+
+At folder and repository levels:
+
+- mocked operations are summed across the specs inside that subtree
+- total operations are summed across the same subtree
+- the percentage is then calculated from those totals
+
+## Contract Listing Example
+
+Suppose a spec file `openapi.yaml` contains `7` operations.
+
+If providers are testing `4` of those operations and consumers are mocking `2` of them, the row for that spec would show:
+
+- Contract Test Coverage = `4 / 7 = 57%`
+- Total Operations = `7`
+- Usage Coverage = `2 / 7 = 29%`
+
+If that spec sits under a folder called `catalog-service`, and there are no other spec files in that folder, the `catalog-service` folder will show the same values:
+
+- Contract Test Coverage = `57%`
+- Total Operations = `7`
+- Usage Coverage = `29%`
+
+If a parent folder contains multiple specs, the folder-level values are calculated by aggregating all operations and all covered or mocked operations beneath that folder.
+
+In the service panel below the tree, Insights then shows:
+
+- the provider service that implements the selected specification
+- the consumer services that depend on it
+- the dependency lines between those services
+
+This lets you move from contract-level reporting to service-level relationships without leaving the same view.
