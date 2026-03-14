@@ -20,32 +20,32 @@ For UI navigation and export setup workflows, see [Audit Trail](/enterprise_onbo
 
 Top-level fields:
 
-| field name     | data type                        | description                                             |
-|----------------|----------------------------------|---------------------------------------------------------|
-| `id`           | `uuid`                           | Unique audit event ID.                                  |
-| `type`         | `string (enum)`                  | Audit event type (for example `AUTH_LOGIN_SUCCESS`).    |
-| `timestamp`    | `string (ISO-8601 UTC datetime)` | Event timestamp in UTC.                                 |
-| `severity`     | `string (enum)`                  | One of `INFO`, `WARN`, `ERROR`.                         |
-| `summary`      | `string`                         | Human-readable event summary.                           |
-| `actorType`    | `string (enum)`                  | One of `SYSTEM`, `USER`, `LICENSE`.                     |
-| `actorId`      | `string \| null`                 | Actor identifier when available.                        |
-| `actorDisplay` | `string \| null`                 | Actor display value (for example email) when available. |
-| `sourceIp`     | `string \| null`                 | Source IP when available.                               |
-| `targetType`   | `string \| null`                 | Target entity type when applicable.                     |
-| `targetId`     | `string \| null`                 | Target entity identifier when applicable.               |
-| `details`      | `object \| null`                 | Event-specific payload. Shape depends on `type`.        |
+| field name     | data type                        | description                                                                                                                                                      |
+|----------------|----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`           | `uuid`                           | Unique audit event ID.                                                                                                                                           |
+| `type`         | `string (enum)`                  | Audit event type (for example `AUTH_LOGIN_SUCCESS`).                                                                                                             |
+| `timestamp`    | `string (ISO-8601 UTC datetime)` | Event timestamp in UTC.                                                                                                                                          |
+| `severity`     | `string (enum)`                  | One of `INFO`, `WARN`, `ERROR`.                                                                                                                                  |
+| `summary`      | `string`                         | Human-readable event summary.                                                                                                                                    |
+| `actorType`    | `string (enum)`                  | One of `SYSTEM`, `USER`, `LICENSE`, `LEGACY_INSIGHTS_BUILD_REPORTER`.                                                                                            |
+| `actorId`      | `string \| null`                 | Actor identifier when available. Typically a UUID string; for unauthenticated-user flows this is the literal `"(unauthenticated)"`.                              |
+| `actorDisplay` | `string \| null`                 | Actor display value (for example email) when available.                                                                                                          |
+| `sourceIp`     | `string \| null`                 | Source IP when available.                                                                                                                                        |
+| `targetType`   | `string \| null`                 | Target entity type when applicable. One of `USER`, `ORGANIZATION`, `BUILD`, `LICENSE`.                                                                           |
+| `targetId`     | `string \| null`                 | Target entity identifier when applicable. For `USER`, `ORGANIZATION`, and `LICENSE`, this is a UUID string. For `BUILD`, this is a stringified numeric build ID. |
+| `details`      | `object`                         | Event-specific payload. Shape depends on `type`. Present as `{}` when no event-specific keys are defined.                                                        |
 
 Request context fields:
 
-| field name            | data type        | description                                                    |
-|-----------------------|------------------|----------------------------------------------------------------|
-| `destinationHostname` | `string`         | Destination hostname recorded for the request context. Always present. |
-| `httpUserAgent`       | `string \| null` | HTTP user agent when available.                                |
-| `httpReferer`         | `string \| null` | HTTP referer when available.                                   |
-| `httpMethod`          | `string \| null` | HTTP method when available.                                    |
-| `httpProtocol`        | `string \| null` | Request protocol (typically `http` or `https`) when available. |
-| `httpPort`            | `number \| null` | Request port when available (for example `80`, `443`).         |
-| `httpUrl`             | `string \| null` | Request path with query string (no scheme, host, or port).     |
+| field name            | data type        | description                                                                                                                                      |
+|-----------------------|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| `destinationHostname` | `string`         | Destination hostname recorded for the request context. Always present.                                                                           |
+| `httpUserAgent`       | `string \| null` | HTTP user agent when available. For build submissions and license refresh/poll requests, this contains the version of Specmatic making the call. |
+| `httpReferer`         | `string \| null` | HTTP referer when available.                                                                                                                     |
+| `httpMethod`          | `string \| null` | HTTP method when available.                                                                                                                      |
+| `httpProtocol`        | `string \| null` | Request protocol (typically `http` or `https`) when available.                                                                                   |
+| `httpPort`            | `number \| null` | Request port when available (for example `80`, `443`).                                                                                           |
+| `httpUrl`             | `string \| null` | Request path with query string (no scheme, host, or port).                                                                                       |
 
 Default severity behavior:
 
@@ -63,14 +63,14 @@ Default severity behavior:
 
 #### `AUTH_LOGIN_SUCCESS`
 
-Emitted when authentication succeeds (password login or SSO). Use `details.authMethod` when present to identify SSO provider type.
+Emitted when authentication succeeds (password login or SSO).
 
 Allowed values:
-- `details.authMethod`: `SAML`, `OIDC`
+- `details.authMethod`: `password`, `SAML`, `OIDC`
 
-| field name           | data type | description                                                                           |
-|----------------------|-----------|---------------------------------------------------------------------------------------|
-| `details.authMethod` | `string`  | Present for SSO login flows (`SAML` or `OIDC`). May be absent in non-SSO login flows. |
+| field name           | data type | description                                                                     |
+|----------------------|-----------|---------------------------------------------------------------------------------|
+| `details.authMethod` | `string`  | Authentication method for the successful login (`password`, `SAML`, or `OIDC`). |
 
 Example event:
 
@@ -80,9 +80,20 @@ Example event:
   "type": "AUTH_LOGIN_SUCCESS",
   "timestamp": "2026-03-10T10:15:30Z",
   "severity": "INFO",
+  "summary": "User user@example.com logged in via OIDC.",
   "actorType": "USER",
-  "actorId": "u_123",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
   "actorDisplay": "user@example.com",
+  "sourceIp": "203.0.113.10",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/login",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/auth/login",
   "details": {
     "authMethod": "OIDC"
   }
@@ -93,75 +104,292 @@ Example event:
 
 Emitted when authentication fails. `details` may vary by auth flow and failure point.
 
-| field name                   | data type | description                                                                  |
-|------------------------------|-----------|------------------------------------------------------------------------------|
-| `details.error`              | `string`  | Error message for login failure.                                             |
-| `details.authMethod`         | `string`  | Present for SSO login failures (for example `SAML`, `OIDC`).                 |
-| `details.registrationId`     | `string`  | Present for SSO login failures when registration/org identifier is resolved. |
-| `details.exception`          | `string`  | Present for onboarding/internal failure variants to indicate exception type. |
-| `details.authenticationType` | `string`  | Present for unexpected authentication type variants.                         |
+| field name               | data type | description                                                                              |
+|--------------------------|-----------|------------------------------------------------------------------------------------------|
+| `details.error`          | `string`  | Error message for login failure.                                                         |
+| `details.authMethod`     | `string`  | Authentication method for the failed login (`password`, `SAML`, or `OIDC`).              |
+| `details.registrationId` | `string`  | Present when the organization is resolved (for password failures and most SSO failures). |
+| `details.exception`      | `string`  | Present for onboarding/internal failure variants to indicate exception type.             |
+
+Example event:
+
+```json
+{
+  "id": "d0ce4f17-b6d0-40cb-a3c7-5d6eaf279bac",
+  "type": "AUTH_LOGIN_FAILED",
+  "timestamp": "2026-03-10T10:16:10Z",
+  "severity": "WARN",
+  "summary": "Login failed for user@example.com",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "user@example.com",
+  "sourceIp": "203.0.113.11",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/login",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/auth/login",
+  "details": {
+    "error": "Bad credentials",
+    "authMethod": "password"
+  }
+}
+```
 
 #### `AUTH_LOGOUT`
 
 Emitted when a logged-in user signs out successfully.
 
-| field name | data type        | description                                      |
-|------------|------------------|--------------------------------------------------|
-| `details`  | `null \| object` | No fixed `details` fields are currently defined. |
+| field name | data type | description                                                                 |
+|------------|-----------|-----------------------------------------------------------------------------|
+| `details`  | `object`  | No fixed `details` fields are currently defined; currently emitted as `{}`. |
+
+Example event:
+
+```json
+{
+  "id": "521f870f-15ee-4195-a203-63d7c9521db2",
+  "type": "AUTH_LOGOUT",
+  "timestamp": "2026-03-10T10:20:00Z",
+  "severity": "INFO",
+  "summary": "User user@example.com logged out",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "user@example.com",
+  "sourceIp": "203.0.113.10",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/profile",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/auth/logout",
+  "details": {
+  }
+}
+```
 
 ### User Lifecycle
 
 #### `USER_CREATED`
 
-Emitted when a new user account is created during invite/onboarding flows.
+Emitted when a new user account is created (for example invite flow or first-time SSO onboarding).
 
-| field name      | data type | description                |
-|-----------------|-----------|----------------------------|
-| `details.email` | `string`  | Email of the created user. |
+| field name           | data type | description                                                                                      |
+|----------------------|-----------|--------------------------------------------------------------------------------------------------|
+| `details`            | `object`  | Usually `{}` for invite flow.                                                                    |
+| `details.authMethod` | `string`  | Present for SSO-created users (`SAML` or `OIDC`) to indicate which auth method created the user. |
+
+Example event:
+
+```json
+{
+  "id": "fd499cb3-2f7d-43f7-a99b-a7d8678e0f80",
+  "type": "USER_CREATED",
+  "timestamp": "2026-03-10T10:25:00Z",
+  "severity": "INFO",
+  "summary": "User invitee@example.com created",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "USER",
+  "targetId": "9e531045-84b7-46cc-9318-0905c40c122f",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/users",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/invite",
+  "details": {
+  }
+}
+```
 
 #### `USER_ADDED_TO_ORG`
 
-Emitted when a user is associated to an organization.
+Emitted when a user is added to an organization.
 
-| field name      | data type | description                                  |
-|-----------------|-----------|----------------------------------------------|
-| `details.email` | `string`  | Email of the user added to the organization. |
+| field name           | data type | description                                                                                         |
+|----------------------|-----------|-----------------------------------------------------------------------------------------------------|
+| `targetType`         | `string`  | `ORGANIZATION`.                                                                                     |
+| `targetId`           | `string`  | Organization ID where the user was added.                                                           |
+| `details`            | `object`  | Usually `{}` for org-create/invite paths.                                                           |
+| `details.authMethod` | `string`  | Present for SSO onboarding-created additions (`SAML` or `OIDC`) to indicate which auth method path. |
+
+Example event:
+
+```json
+{
+  "id": "75f496fc-9ca2-4f8a-af59-f4fdbe7d5f73",
+  "type": "USER_ADDED_TO_ORG",
+  "timestamp": "2026-03-10T10:26:00Z",
+  "severity": "INFO",
+  "summary": "User invitee@example.com added to Acme Corp",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/users",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/invite",
+  "details": {
+  }
+}
+```
 
 #### `USER_REMOVED_FROM_ORG`
 
-Emitted once per requested user ID during bulk removal requests, with outcome per user.
+Emitted when a user is removed from the organization. For bulk remove requests, events are emitted only for entries with a successful `REMOVED` outcome.
 
-| field name                | data type | description                                           |
-|---------------------------|-----------|-------------------------------------------------------|
-| `targetType`              | `string`  | `USER`.                                               |
-| `targetId`                | `string`  | Requested user ID for this event.                     |
-| `details.requestedUserId` | `string`  | Requested user ID for this event.                     |
-| `details.removed`         | `boolean` | `true` when removed; `false` when request is ignored. |
-| `details.result`          | `string`  | `REMOVED` or `IGNORED_NOT_IN_ORG`.                    |
+| field name      | data type | description                          |
+|-----------------|-----------|--------------------------------------|
+| `details.id`    | `string`  | Requested user ID for this event.    |
+| `details.email` | `string`  | Requested user email for this event. |
+
+Example event:
+
+```json
+{
+  "id": "a5db1f1b-a2ff-41d0-b0d3-8a12ea40dc06",
+  "type": "USER_REMOVED_FROM_ORG",
+  "timestamp": "2026-03-10T10:27:00Z",
+  "severity": "INFO",
+  "summary": "User user@example.com removed from organization by admin@example.com",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/users",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/users/remove/bulk",
+  "details": {
+    "id": "9e531045-84b7-46cc-9318-0905c40c122f",
+    "email": "user@example.com"
+  }
+}
+```
 
 #### `USER_PASSWORD_CHANGED`
 
 Emitted when an authenticated user changes password via the settings flow.
 
-| field name | data type        | description                                      |
-|------------|------------------|--------------------------------------------------|
-| `details`  | `null \| object` | No fixed `details` fields are currently defined. |
+| field name | data type | description                                                                 |
+|------------|-----------|-----------------------------------------------------------------------------|
+| `details`  | `object`  | No fixed `details` fields are currently defined; currently emitted as `{}`. |
+
+Example event:
+
+```json
+{
+  "id": "f2ce92b1-ddd6-463f-a61e-8d98a77111c4",
+  "type": "USER_PASSWORD_CHANGED",
+  "timestamp": "2026-03-10T10:28:00Z",
+  "severity": "INFO",
+  "summary": "User user@example.com changed their password.",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "user@example.com",
+  "sourceIp": "203.0.113.10",
+  "targetType": "USER",
+  "targetId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/security",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/users/password",
+  "details": {}
+}
+```
 
 #### `USER_PASSWORD_RESET_REQUESTED`
 
 Emitted when a password reset request is accepted for a user. This applies only to organizations that do not use SSO integration.
 
-| field name | data type        | description                                      |
-|------------|------------------|--------------------------------------------------|
-| `details`  | `null \| object` | No fixed `details` fields are currently defined. |
+| field name | data type | description                                                                 |
+|------------|-----------|-----------------------------------------------------------------------------|
+| `details`  | `object`  | No fixed `details` fields are currently defined; currently emitted as `{}`. |
+
+Example event:
+
+```json
+{
+  "id": "d3fd691f-a052-48c4-ad36-2ab572e4f0ac",
+  "type": "USER_PASSWORD_RESET_REQUESTED",
+  "timestamp": "2026-03-10T10:29:00Z",
+  "severity": "INFO",
+  "summary": "User requested password reset",
+  "actorType": "USER",
+  "actorId": "(unauthenticated)",
+  "actorDisplay": "user@example.com",
+  "sourceIp": "203.0.113.12",
+  "targetType": "USER",
+  "targetId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/forgot-password",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/auth/send-password-reset-email",
+  "details": {}
+}
+```
 
 #### `USER_PASSWORD_RESET`
 
 Emitted when a password reset is completed (including invite acceptance password set). This applies only to organizations that do not use SSO integration.
 
-| field name | data type        | description                                      |
-|------------|------------------|--------------------------------------------------|
-| `details`  | `null \| object` | No fixed `details` fields are currently defined. |
+| field name | data type | description                                                                 |
+|------------|-----------|-----------------------------------------------------------------------------|
+| `details`  | `object`  | No fixed `details` fields are currently defined; currently emitted as `{}`. |
+
+Example event:
+
+```json
+{
+  "id": "bbca84ed-7231-4b9d-8caa-177f2ca2e61a",
+  "type": "USER_PASSWORD_RESET",
+  "timestamp": "2026-03-10T10:31:00Z",
+  "severity": "INFO",
+  "summary": "Password for user@example.com was reset using a password reset token.",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "user@example.com",
+  "sourceIp": "203.0.113.12",
+  "targetType": "USER",
+  "targetId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/reset-password",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/auth/password-reset",
+  "details": {}
+}
+```
 
 ### Organization Lifecycle and Configuration updates
 
@@ -169,9 +397,36 @@ Emitted when a password reset is completed (including invite acceptance password
 
 Emitted when a new organization is created.
 
-| field name     | data type | description                       |
-|----------------|-----------|-----------------------------------|
-| `details.name` | `string`  | Name of the created organization. |
+| field name | data type | description                                                                 |
+|------------|-----------|-----------------------------------------------------------------------------|
+| `details`  | `object`  | No fixed `details` fields are currently defined; currently emitted as `{}`. |
+
+Example event:
+
+```json
+{
+  "id": "2202299a-98b2-4f8c-b5b6-72ab8ff86d90",
+  "type": "ORG_CREATED",
+  "timestamp": "2026-03-10T10:40:00Z",
+  "severity": "INFO",
+  "summary": "Organization Acme Corp created by admin@example.com",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/onboarding",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/organizations",
+  "details": {
+  }
+}
+```
 
 #### `ORG_CONFIG_CHANGED`
 
@@ -190,38 +445,40 @@ Common fields:
 
 When `details.configType = auditExport`:
 
-| field name | data type        | description                                  |
-|------------|------------------|----------------------------------------------|
-| `details.before` | `object \| null` | Previous audit export configuration snapshot. |
-| `details.after`  | `object \| null` | New audit export configuration snapshot.      |
+| field name                 | data type | description                          |
+|----------------------------|-----------|--------------------------------------|
+| `details.before.enabled`   | `boolean` | Previous audit export enabled state. |
+| `details.before.batchSize` | `number`  | Previous audit export batch size.    |
+| `details.after.enabled`    | `boolean` | New audit export enabled state.      |
+| `details.after.batchSize`  | `number`  | New audit export batch size.         |
 
 When `details.configType = license`:
 
-| field name                          | data type | description                              |
-|-------------------------------------|-----------|------------------------------------------|
-| `details.before.seatCount`          | `number`  | Previous configured seat count.          |
-| `details.before.individualRateLimit`| `number`  | Previous individual rate limit.          |
-| `details.before.ciDailyRunLimit`    | `number`  | Previous CI daily run limit.             |
-| `details.before.endDate`            | `string`  | Previous license end date.               |
-| `details.before.licenseType`        | `string`  | Previous license type.                   |
-| `details.after.seatCount`           | `number`  | New configured seat count.               |
-| `details.after.individualRateLimit` | `number`  | New individual rate limit.               |
-| `details.after.ciDailyRunLimit`     | `number`  | New CI daily run limit.                  |
-| `details.after.endDate`             | `string`  | New license end date.                    |
-| `details.after.licenseType`         | `string`  | New license type.                        |
+| field name                           | data type | description                     |
+|--------------------------------------|-----------|---------------------------------|
+| `details.before.seatCount`           | `number`  | Previous configured seat count. |
+| `details.before.individualRateLimit` | `number`  | Previous individual rate limit. |
+| `details.before.ciDailyRunLimit`     | `number`  | Previous CI daily run limit.    |
+| `details.before.endDate`             | `string`  | Previous license end date.      |
+| `details.before.licenseType`         | `string`  | Previous license type.          |
+| `details.after.seatCount`            | `number`  | New configured seat count.      |
+| `details.after.individualRateLimit`  | `number`  | New individual rate limit.      |
+| `details.after.ciDailyRunLimit`      | `number`  | New CI daily run limit.         |
+| `details.after.endDate`              | `string`  | New license end date.           |
+| `details.after.licenseType`          | `string`  | New license type.               |
 
 When `details.configType = organization`:
 
-| field name                                          | data type  | description                                |
-|-----------------------------------------------------|------------|--------------------------------------------|
-| `details.before.name`                               | `string`   | Previous organization name.                |
-| `details.before.minCoverageThreshold`               | `number`   | Previous minimum coverage threshold.       |
+| field name                                          | data type  | description                                  |
+|-----------------------------------------------------|------------|----------------------------------------------|
+| `details.before.name`                               | `string`   | Previous organization name.                  |
+| `details.before.minCoverageThreshold`               | `number`   | Previous minimum coverage threshold.         |
 | `details.before.maxMissedEndpointsThreshold`        | `number`   | Previous maximum missed endpoints threshold. |
-| `details.before.seatCountUsageThresholdPercentages` | `number[]` | Previous seat usage alert thresholds.      |
-| `details.after.name`                                | `string`   | New organization name.                     |
-| `details.after.minCoverageThreshold`                | `number`   | New minimum coverage threshold.            |
-| `details.after.maxMissedEndpointsThreshold`         | `number`   | New maximum missed endpoints threshold.    |
-| `details.after.seatCountUsageThresholdPercentages`  | `number[]` | New seat usage alert thresholds.           |
+| `details.before.seatCountUsageThresholdPercentages` | `number[]` | Previous seat usage alert thresholds.        |
+| `details.after.name`                                | `string`   | New organization name.                       |
+| `details.after.minCoverageThreshold`                | `number`   | New minimum coverage threshold.              |
+| `details.after.maxMissedEndpointsThreshold`         | `number`   | New maximum missed endpoints threshold.      |
+| `details.after.seatCountUsageThresholdPercentages`  | `number[]` | New seat usage alert thresholds.             |
 
 Example event:
 
@@ -231,8 +488,20 @@ Example event:
   "type": "ORG_CONFIG_CHANGED",
   "timestamp": "2026-03-10T11:00:00Z",
   "severity": "INFO",
+  "summary": "Organization license config updated",
   "actorType": "USER",
-  "actorId": "u_admin",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/audit",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/license-config",
   "details": {
     "configType": "license",
     "before": {
@@ -251,12 +520,69 @@ Example event:
 
 Emitted when SSO configuration for an organization is created, updated, or disabled.
 
-| field name            | data type        | description                                                             |
-|-----------------------|------------------|-------------------------------------------------------------------------|
-| `details.before`      | `object \| null` | Previous SSO configuration state.                                       |
-| `details.after`       | `object`         | New SSO configuration state. Can be `{ "type": "NONE" }` when disabled. |
-| `details.before.type` | `string`         | Previous SSO type when present.                                         |
-| `details.after.type`  | `string`         | New SSO type.                                                           |
+| field name                    | data type        | description                                              |
+|-------------------------------|------------------|----------------------------------------------------------|
+| `details.before`              | `object \| null` | Previous SSO configuration state.                        |
+| `details.after`               | `object`         | New SSO configuration state.                             |
+| `details.before.type`         | `string`         | Previous SSO type when present (`SAML`, `OIDC`, `NONE`). |
+| `details.after.type`          | `string`         | New SSO type (`SAML`, `OIDC`, `NONE`).                   |
+| `details.before.enabled`      | `boolean`        | Previous SSO enabled state when present.                 |
+| `details.after.enabled`       | `boolean`        | New SSO enabled state.                                   |
+| `details.before.spEntityId`   | `string \| null` | Previous SAML SP entity ID.                              |
+| `details.after.spEntityId`    | `string \| null` | New SAML SP entity ID.                                   |
+| `details.before.idpEntityId`  | `string \| null` | Previous SAML IdP entity ID.                             |
+| `details.after.idpEntityId`   | `string \| null` | New SAML IdP entity ID.                                  |
+| `details.before.metadataUrl`  | `string \| null` | Previous SAML metadata URL.                              |
+| `details.after.metadataUrl`   | `string \| null` | New SAML metadata URL.                                   |
+| `details.before.certificate`  | `string \| null` | Previous SAML certificate.                               |
+| `details.after.certificate`   | `string \| null` | New SAML certificate.                                    |
+| `details.before.discoveryUrl` | `string \| null` | Previous OIDC discovery URL.                             |
+| `details.after.discoveryUrl`  | `string \| null` | New OIDC discovery URL.                                  |
+| `details.before.clientId`     | `string \| null` | Previous OIDC client ID.                                 |
+| `details.after.clientId`      | `string \| null` | New OIDC client ID.                                      |
+| `details.before.scopes`       | `string \| null` | Previous OIDC scopes string.                             |
+| `details.after.scopes`        | `string \| null` | New OIDC scopes string.                                  |
+
+`clientSecret` is intentionally never included in audit event details.
+
+Example event:
+
+```json
+{
+  "id": "680f7a95-f357-4f1d-bfdc-b7f4dc39a9b0",
+  "type": "SSO_CONFIG_CHANGED",
+  "timestamp": "2026-03-10T11:10:00Z",
+  "severity": "INFO",
+  "summary": "Organization SSO config updated",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/sso",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/sso-config",
+  "details": {
+    "before": null,
+    "after": {
+      "type": "OIDC",
+      "enabled": true,
+      "spEntityId": null,
+      "idpEntityId": null,
+      "metadataUrl": null,
+      "certificate": null,
+      "discoveryUrl": "https://example.okta.com",
+      "clientId": "oidc-client-id",
+      "scopes": "openid profile email"
+    }
+  }
+}
+```
 
 ### Build Ingestion
 
@@ -264,13 +590,14 @@ Emitted when SSO configuration for an organization is created, updated, or disab
 
 Emitted when a service build report is submitted and accepted.
 
-| field name | data type | description |
-|----------------------|-----------|----------------------------------|
-| `targetType`         | `string`  | `BUILD`. |
-| `targetId`           | `string`  | Persisted build identifier. |
-| `details.repo`       | `string`  | Repository name. |
-| `details.repoId`     | `string`  | Repository identifier. |
-| `details.branchName` | `string`  | Branch name for submitted build. |
+For this event, `httpUserAgent` records the version of Specmatic used to post the build.
+
+| field name           | data type        | description                                           |
+|----------------------|------------------|-------------------------------------------------------|
+| `details.repo`       | `string \| null` | Repository name.                                      |
+| `details.repoId`     | `string \| null` | Repository identifier.                                |
+| `details.branchName` | `string \| null` | Branch name for submitted build.                      |
+| `details.reportType` | `string`         | Build report type. Value is `SERVICE` for this event. |
 
 Example event:
 
@@ -280,13 +607,25 @@ Example event:
   "type": "BUILD_SUBMITTED_SERVICE",
   "timestamp": "2026-03-10T11:40:00Z",
   "severity": "INFO",
-  "actorType": "SYSTEM",
+  "summary": "Build submitted",
+  "actorType": "LICENSE",
+  "actorId": "f8e6d960-9816-4215-ad2e-07356da7c11e",
+  "actorDisplay": "f8e6d960-9816-4215-ad2e-07356da7c11e",
+  "sourceIp": "198.51.100.30",
   "targetType": "BUILD",
-  "targetId": "build_456",
+  "targetId": "456",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "specmatic/2.3.1",
+  "httpReferer": null,
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/builds/reports",
   "details": {
     "repo": "payments-service",
     "repoId": "repo_42",
-    "branchName": "main"
+    "branchName": "main",
+    "reportType": "SERVICE"
   }
 }
 ```
@@ -295,13 +634,45 @@ Example event:
 
 Emitted when a central-repository build report is submitted and accepted.
 
-| field name           | data type | description                      |
-|----------------------|-----------|----------------------------------|
-| `targetType`         | `string`  | `BUILD`.                         |
-| `targetId`           | `string`  | Persisted build identifier.      |
-| `details.repo`       | `string`  | Repository name.                 |
-| `details.repoId`     | `string`  | Repository identifier.           |
-| `details.branchName` | `string`  | Branch name for submitted build. |
+For this event, `httpUserAgent` records the version of Specmatic used to post the build.
+
+| field name           | data type       | description                                                |
+|----------------------|-----------------|------------------------------------------------------------|
+| `details.repo`       | `string \| null`| Repository name.                                           |
+| `details.repoId`     | `string \| null`| Repository identifier.                                     |
+| `details.branchName` | `string \| null`| Branch name for submitted build.                           |
+| `details.reportType` | `string`        | Build report type. Value is `CENTRAL_REPO` for this event. |
+
+Example event:
+
+```json
+{
+  "id": "966ecb7b-282f-4140-a91b-2f58bd93b59c",
+  "type": "BUILD_SUBMITTED_CENTRAL_REPO",
+  "timestamp": "2026-03-10T11:45:00Z",
+  "severity": "INFO",
+  "summary": "Build submitted",
+  "actorType": "LICENSE",
+  "actorId": "f8e6d960-9816-4215-ad2e-07356da7c11e",
+  "actorDisplay": "f8e6d960-9816-4215-ad2e-07356da7c11e",
+  "sourceIp": "198.51.100.31",
+  "targetType": "BUILD",
+  "targetId": "457",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "specmatic/2.3.1",
+  "httpReferer": null,
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/builds/reports",
+  "details": {
+    "repo": "contracts-central",
+    "repoId": "repo_87",
+    "branchName": "main",
+    "reportType": "CENTRAL_REPO"
+  }
+}
+```
 
 ### License and Code Lifecycle
 
@@ -314,18 +685,49 @@ Emitted when a license code is approved for later exchange.
 | `details.code`   | `string`   | Approved code value.             |
 | `details.labels` | `string[]` | Labels associated with the code. |
 
+Example event:
+
+```json
+{
+  "id": "ef98680d-dd8d-45a8-9802-63dd96bcf51d",
+  "type": "LICENSE_CODE_APPROVED",
+  "timestamp": "2026-03-10T12:00:00Z",
+  "severity": "INFO",
+  "summary": "License code approved by user@example.org",
+  "actorType": "USER",
+  "actorId": "3b86d32b-0caa-44a2-9ab6-60f58ed719d7",
+  "actorDisplay": "user@example.org",
+  "sourceIp": "198.51.100.40",
+  "targetType": "ORGANIZATION",
+  "targetId": "004a2af5-b572-4e23-9ec6-7e6bc1a6957d",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/dashboard/validate-license?code=ABC-123",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/orgs/004a2af5-b572-4e23-9ec6-7e6bc1a6957d/licenses/approve-request",
+  "details": {
+    "code": "ABC-123",
+    "labels": [
+      "enterprise"
+    ]
+  }
+}
+```
+
 #### `LICENSE_ISSUED_FROM_CODE`
 
 Emitted when an approved code is exchanged and a license is issued.
 
-| field name              | data type               | description                                 |
-|-------------------------|-------------------------|---------------------------------------------|
-| `details.code`          | `string`                | Consumed code value.                        |
-| `details.licenseId`     | `string`                | Issued license ID.                          |
-| `details.licensee`      | `string`                | Licensee field of the generated license.    |
-| `details.generatedBy`   | `string`                | Identity that generated the license.        |
-| `details.licenseExpiry` | `string (ISO-8601 UTC datetime)` | License expiry timestamp.         |
-| `details.labels`        | `string[]`              | Labels attached to the issued license/code. |
+| field name              | data type                    | description                                 |
+|-------------------------|------------------------------|---------------------------------------------|
+| `details.code`          | `string`                     | Consumed code value.                        |
+| `details.licenseId`     | `string`                     | Issued license ID.                          |
+| `details.licensee`      | `string`                     | Licensee field of the generated license.    |
+| `details.generatedBy`   | `string`                     | Identity that generated the license.        |
+| `details.licenseExpiry` | `string (ISO-8601 datetime)` | License expiry timestamp.                   |
+| `details.labels`        | `string[]`                   | Labels attached to the issued license/code. |
 
 Example event:
 
@@ -335,12 +737,25 @@ Example event:
   "type": "LICENSE_ISSUED_FROM_CODE",
   "timestamp": "2026-03-10T12:10:00Z",
   "severity": "INFO",
-  "actorType": "LICENSE",
+  "summary": "License issued to user@example.org from approved code",
+  "actorType": "USER",
+  "actorId": "7775ef9b-cca6-4118-86f1-5116cddfcf59",
+  "actorDisplay": "user@example.org",
+  "sourceIp": "198.51.100.40",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "specmatic-enterprise/2.3.1",
+  "httpReferer": null,
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/license/poll?code=ABC-123",
   "details": {
     "code": "ABC-123",
-    "licenseId": "lic_789",
-    "licensee": "org:acme",
-    "generatedBy": "license-service",
+    "licenseId": "153ad73c-d7ee-4cfd-8edb-4c48a9579d08",
+    "licensee": "user@example.org",
+    "generatedBy": "user@example.org",
     "licenseExpiry": "2027-03-10T00:00:00Z",
     "labels": [
       "enterprise"
@@ -353,10 +768,41 @@ Example event:
 
 Emitted when license validation results in issuing a refreshed license.
 
+For license refresh/poll requests, `httpUserAgent` records the version of Specmatic that performed the call.
+
 | field name             | data type | description                |
 |------------------------|-----------|----------------------------|
 | `details.oldLicenseId` | `string`  | License ID before refresh. |
 | `details.newLicenseId` | `string`  | License ID after refresh.  |
+
+Example event:
+
+```json
+{
+  "id": "6b981ec3-5b74-4afa-a180-67f8e37717e7",
+  "type": "LICENSE_REFRESH",
+  "timestamp": "2026-03-10T12:20:00Z",
+  "severity": "INFO",
+  "summary": "License refreshed for status-check-ci",
+  "actorType": "LICENSE",
+  "actorId": "153ad73c-d7ee-4cfd-8edb-4c48a9579d08",
+  "actorDisplay": "status-check-ci",
+  "sourceIp": "198.51.100.41",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "specmatic/2.3.1",
+  "httpReferer": null,
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/orgs/970ce194-6039-413a-9c6f-b514cee9cdff/licenses/status/153ad73c-d7ee-4cfd-8edb-4c48a9579d08",
+  "details": {
+    "oldLicenseId": "153ad73c-d7ee-4cfd-8edb-4c48a9579d08",
+    "newLicenseId": "6f03bc44-7f8c-4eeb-9ba4-5a3f57fd10aa"
+  }
+}
+```
 
 #### `LICENSE_SERVICE_ACCOUNT_CREATED`
 
@@ -368,15 +814,71 @@ Emitted when a new service-account license is created.
 | `details.licensee`  | `string`   | Service account licensee identifier.            |
 | `details.labels`    | `string[]` | Labels attached to the service account license. |
 
+Example event:
+
+```json
+{
+  "id": "0c47db5a-f318-40f2-8f68-6401885ec11f",
+  "type": "LICENSE_SERVICE_ACCOUNT_CREATED",
+  "timestamp": "2026-03-10T12:25:00Z",
+  "severity": "INFO",
+  "summary": "Service account license created by admin@example.org for svc:ci-bot",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.org",
+  "sourceIp": "198.51.100.42",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": null,
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/orgs/970ce194-6039-413a-9c6f-b514cee9cdff/license",
+  "details": {
+    "licenseId": "153ad73c-d7ee-4cfd-8edb-4c48a9579d08",
+    "licensee": "svc:ci-bot",
+    "labels": [
+      "service-account"
+    ]
+  }
+}
+```
+
 #### `LICENSE_REVOKED`
 
-Emitted when one or more licenses are revoked in a bulk revoke operation.
+Emitted once per revoked license in bulk revoke operations.
 
-| field name                    | data type  | description                              |
-|-------------------------------|------------|------------------------------------------|
-| `details.requestedLicenseIds` | `string[]` | License IDs requested for revocation.    |
-| `details.requestedCount`      | `number`   | Number of license IDs requested.         |
-| `details.revokedCount`        | `number`   | Number of licenses successfully revoked. |
+| field name | data type | description                                                                 |
+|------------|-----------|-----------------------------------------------------------------------------|
+| `details`  | `object`  | No fixed `details` fields are currently defined; currently emitted as `{}`. |
+
+Example event:
+
+```json
+{
+  "id": "86bc0fd2-d96f-44f5-9f0e-9dcb916019a0",
+  "type": "LICENSE_REVOKED",
+  "timestamp": "2026-03-10T12:30:00Z",
+  "severity": "INFO",
+  "summary": "License for svc:ci-bot revoked by admin@example.org",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.org",
+  "sourceIp": "198.51.100.43",
+  "targetType": "LICENSE",
+  "targetId": "153ad73c-d7ee-4cfd-8edb-4c48a9579d08",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": null,
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/orgs/970ce194-6039-413a-9c6f-b514cee9cdff/users/licenses/revoke/bulk",
+  "details": {}
+}
+```
 
 ### Audit Export Lifecycle
 
@@ -390,6 +892,34 @@ Emitted when an audit export run starts for an organization.
 |-----------------|-----------------|------------------------------|
 | `details.runId` | `string (uuid)` | Audit export run identifier. |
 
+Example event:
+
+```json
+{
+  "id": "6f22797f-d99a-40ff-9d0d-cf51e26e2183",
+  "type": "AUDIT_EXPORT_STARTED",
+  "timestamp": "2026-03-10T13:00:00Z",
+  "severity": "INFO",
+  "summary": "Audit export started",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": null,
+  "httpReferer": null,
+  "httpMethod": null,
+  "httpProtocol": null,
+  "httpPort": null,
+  "httpUrl": null,
+  "details": {
+    "runId": "b7ebeb4f-7b63-4bb4-a6c3-8fb8ca565f34"
+  }
+}
+```
+
 #### `AUDIT_EXPORT_COMPLETED`
 
 Emitted when an audit export run completes successfully.
@@ -399,6 +929,36 @@ Emitted when an audit export run completes successfully.
 | `details.runId`          | `string (uuid)` | Audit export run identifier.           |
 | `details.eventsExported` | `number`        | Number of events exported in the run.  |
 | `details.batches`        | `number`        | Number of batches exported in the run. |
+
+Example event:
+
+```json
+{
+  "id": "f8c13ebf-e272-4edc-9dc8-c28d30f7c19b",
+  "type": "AUDIT_EXPORT_COMPLETED",
+  "timestamp": "2026-03-10T13:04:00Z",
+  "severity": "INFO",
+  "summary": "Audit export completed - exported 500 event(s) in 5 batch(es).",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": null,
+  "httpReferer": null,
+  "httpMethod": null,
+  "httpProtocol": null,
+  "httpPort": null,
+  "httpUrl": null,
+  "details": {
+    "runId": "b7ebeb4f-7b63-4bb4-a6c3-8fb8ca565f34",
+    "eventsExported": 500,
+    "batches": 5
+  }
+}
+```
 
 #### `AUDIT_EXPORT_FAILED`
 
@@ -419,7 +979,20 @@ Example event:
   "type": "AUDIT_EXPORT_FAILED",
   "timestamp": "2026-03-10T13:05:00Z",
   "severity": "ERROR",
+  "summary": "Audit export failed. Exported 320 event(s) in 4 batch(es) before failure. Error: Connection timed out while publishing batch 5",
   "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": null,
+  "httpReferer": null,
+  "httpMethod": null,
+  "httpProtocol": null,
+  "httpPort": null,
+  "httpUrl": null,
   "details": {
     "runId": "b7ebeb4f-7b63-4bb4-a6c3-8fb8ca565f34",
     "eventsExported": 320,
