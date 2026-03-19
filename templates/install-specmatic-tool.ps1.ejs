@@ -101,7 +101,7 @@ After installation, ensure 'java' is available in your PATH.
 }
 
 $sanitizedToolName = $toolName -replace '\s', ''
-$funcDef = "function $sanitizedToolName { java -jar `"$jarPath`" `$args }"
+$funcDef = "function $sanitizedToolName { java -Djava.awt.headless=true -jar `"$jarPath`" `$args }"
 Write-Host @"
 ==================================================================
 👍 $toolName $toolVersion installed successfully!
@@ -116,10 +116,10 @@ Run the tool with:
 To use $toolName conveniently:
 
 1. Add alias for the current session:
-    function $sanitizedToolName { java -jar `"$jarPath`" `$args }
+    function $sanitizedToolName { java -Djava.awt.headless=true -jar `"$jarPath`" `$args }
 
 2. To persist alias add to your PowerShell profile file ($PROFILE):
-    Add-Content -Path $PROFILE -Value 'function $sanitizedToolName { java -jar `"$jarPath`" `$args }'
+    Add-Content -Path $PROFILE -Value 'function $sanitizedToolName { java -Djava.awt.headless=true -jar `"$jarPath`" `$args }'
 
 3. Restart PowerShell or run:
     . $PROFILE
