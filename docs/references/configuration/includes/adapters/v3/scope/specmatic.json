@@ -1,0 +1,24 @@
+{
+  "version": 3,
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/myService",
+          "data": {
+            "adapters": {
+              "post_specmatic_response_processor": "python myService_post_specmatic_response_processor.py",
+              "pre_specmatic_request_processor": "python myService_pre_specmatic_request_processor.py"
+            }
+          }
+        }
+      }
+    ],
+    "data": {
+      "adapters": {
+        "post_specmatic_response_processor": "python global_post_specmatic_response_processor.py",
+        "pre_specmatic_request_processor": "python global_pre_specmatic_request_processor.py"
+      }
+    }
+  }
+}

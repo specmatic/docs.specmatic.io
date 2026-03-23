@@ -4,7 +4,7 @@ sidebar_label: Request and Response Adapters
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
+import { V2V3SpecmaticConfigTabs, V3SpecmaticJsonYamlTabs } from "../../../src/components/V2V3SpecmaticConfigTabs";
 
 # Request and Response Adapters <CommercialBadge/>
 
@@ -171,6 +171,74 @@ Sample output from the adapter (STDOUT):
 ```
 
 The configuration is evaluated relative to the directory in which Specmatic is launched. You can point at shell scripts, compiled binaries, or even Node/Python entry points... anything executable on your platform.
+
+## Adapter Scope and Execution Order
+> This feature is supported only in **V3 Config**, It is **not available via V2 Config**
+
+In V3 Config, adapters can be configured at two levels:
+
+* **Dependencies Level** — applicable to all services
+* **Service Level** — applicable solely to a specific service and its specifications
+
+Both levels are optional and can be utilized independently or in conjunction.
+
+---
+### Request Processing Sequence
+
+Upon receiving an incoming request, Specmatic follows this sequence:
+
+1. The **global request adapter** (`pre_specmatic_request_processor`) is executed initially
+2. Specmatic tries to match the (potentially transformed) request with a service
+3. f a match is found and a service adapter is configured, the **service-level request adapter** is executed next
+
+---
+
+### Response Processing Sequence
+
+When dispatching a response:
+
+1. The **service-level response adapter** is executed initially.
+2. Following that, the **global response adapter** (`post_specmatic_response_processor`) is executed
+
+---
+### Important Behavior
+
+If a request requires preprocessing before it can be matched to a specification,  
+that logic **must be implemented at the global level**.
+
+For example:
+
+* Modifying `Content-Type`
+* Modifying `path` or `method` in any capacity, etc.
+
+Service-level adapters are applied **only after service matching**.  
+If the request does not align with any service, the service-level adapter will not be invoked.
+
+---
+### Flow
+
+```
+Incoming Request
+  ↓
+[Global pre_specmatic_request_processor]
+  ↓
+[Service pre_specmatic_request_processor]
+  ↓
+[Execution]
+  ↓
+[Service post_specmatic_response_processor]
+  ↓
+[Global post_specmatic_response_processor]
+  ↓
+Final Response
+```
+
+---
+### Example Configuration
+
+<V3SpecmaticJsonYamlTabs
+  v3Object={require('../../references/configuration/includes/adapters/v3/scope/specmatic.json')}
+/>
 
 ## Notes On Writing Adapter Scripts
 
