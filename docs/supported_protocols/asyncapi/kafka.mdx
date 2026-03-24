@@ -127,6 +127,7 @@ The `--network host` flag is important when using `localhost` for the broker add
 The API server provides endpoints to interact with the kafka mock server, allowing you to perform the following actions:
 1. Set Expectations: Configure the Kafka mock server with specific expectations.
 2. Verify Expectations: Check if the expectations set for the Kafka mock server have been met.
+3. Verify a Topic: Check the expectation for a single topic.
 
 Here is the OpenAPI specification for these endpoints. Please refer to it for comprehensive information on how to utilize these endpoints.
 ```yaml
@@ -135,11 +136,11 @@ info:
   title: Specmatic Kafka Mock Server API
   version: 1.0.0
 servers:
-  - url: http://localhost:29092
+  - url: http://localhost:9999
 paths:
-  /_expectations:
+  /_specmatic/expectations:
     post:
-      summary: This endpoint allows you to set expectations for the Kafka mock server.
+      summary: Sets or replaces expectations for only the topics present in the request payload.
       requestBody:
         description: Expectations payload
         required: true
@@ -154,9 +155,9 @@ paths:
             text/plain:
               schema:
                 type: string
-  /_expectations/verification_status:
+  /_specmatic/expectations/verification_status:
     get:
-      summary: This endpoint checks if the expectations set for the Kafka mock server have been met.
+      summary: Verifies all currently active topic expectations.
       responses:
         '200':
           description: Verification result
@@ -164,6 +165,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VerificationResult'
+  /_specmatic/expectations/{topic}/verification_status:
+    get:
+      summary: Verifies the currently active expectation for the given topic.
+      parameters:
+        - in: path
+          name: topic
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResult'
+        '404':
+          description: No active expectation exists for the topic
 components:
   schemas:
     ExpectationRequest:
@@ -222,6 +241,7 @@ The mock server provides endpoints to interact with and validate Kafka message f
 
 1. **Set Expectations**: Configure the server to expect specific messages on defined topics.
 2. **Verify Expectations**: Validate whether the expected messages were received.
+3. **Verify a Topic**: Validate a single topic in isolation.
 
 ---
 
@@ -392,12 +412,12 @@ docker run --rm --name specmatic-kafka-mock \
 
 #### 📝 Step 3: Set Expectations
 
-Once the mock server is running, configure the expectations using a `POST` request to the API server (running at `localhost:9999`):
+Once the mock server is running, configure expectations using a `POST` request to the API server (running at `localhost:9999`):
 
 ##### Request
 
 ```bash
-curl -X POST http://localhost:9999/_expectations \
+curl -X POST http://localhost:9999/_specmatic/expectations \
   -H 'Content-Type: application/json' \
   -d '{
     "expectations": [
@@ -411,6 +431,8 @@ curl -X POST http://localhost:9999/_expectations \
 ```
 
 This tells the mock server to expect **1 message** on the `place-order` topic and ignore the `__consumer_offsets` topic.
+
+If you set an expectation again for the same topic, Specmatic replaces the existing expectation for that topic. Expectations for other topics are left unchanged.
 
 ###### When to use topicsToIgnore?
 
@@ -446,7 +468,13 @@ Check whether the expected messages were received, and they were **schema valid*
 ##### Request
 
 ```bash
-curl http://localhost:9999/_expectations/verification_status
+curl http://localhost:9999/_specmatic/expectations/verification_status
+```
+
+To verify only one topic:
+
+```bash
+curl http://localhost:9999/_specmatic/expectations/place-order/verification_status
 ```
 
 ##### Successful Response
@@ -466,6 +494,7 @@ If the verification fails, the response will include details of the mismatches.
 
 - You can mount a different `spec.yaml` anytime to simulate different message contracts.
 - Use the `topicsToIgnore` field to exclude system/internal topics.
+- Reposting an expectation replaces it only for the topics present in the request.
 - Ensure all published messages adhere to the schema defined in the spec.
 
 ## Running Contract Tests Against a Kafka-Based Request-Reply Service
