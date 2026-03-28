@@ -20,8 +20,8 @@ GEM
     ethon (0.18.0)
       ffi (>= 1.15.0)
       logger
-    ffi (1.17.3-x64-mingw-ucrt)
-    ffi (1.17.3-x86_64-linux-gnu)
+    ffi (1.17.4-x64-mingw-ucrt)
+    ffi (1.17.4-x86_64-linux-gnu)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
