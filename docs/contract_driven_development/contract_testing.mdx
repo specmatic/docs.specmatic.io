@@ -602,21 +602,21 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 
 ### Supported Filters & Operators
 
-| Available Filters           | Test | Stub | Description                                                                                              |
-|-----------------------------|:----:|:----:|----------------------------------------------------------------------------------------------------------|
-| `STATUS`                    |  ✅   |  ✅   | Filter by status (`200`, `500`)                                                                          |
-| `PATH`                      |  ✅   |  ✅   | Filter by request paths (`/users`, `/products`), supports wildcard using `*` (`/users/*`, `/products/*`) |
-| `METHOD`                    |  ✅   |  ✅   | Filter by HTTP methods (`GET`, `POST`, etc.)                                                             |
-| `PARAMETERS.QUERY`          |  ✅   |  ✅   | Filter by query parameters, supports key-value match (`PARAMETERS.QUERY.byName='John'`)                  |
-| `PARAMETERS.HEADER`         |  ✅   |  ✅   | Filter by header parameters, supports key-value match (`PARAMETERS.HEADER.X-REQUEST-ID='Hello1234'`)     |
-| `PARAMETERS.PATH`           |  ✅   |  ✅   | Filter by path parameters, supports key-value match (`PARAMETERS.PATH.id='99'`)                          |
-| `REQUEST-BODY.CONTENT-TYPE` |  ✅   |  ✅   | Filter by request body media type (MIME type) (`application/json`, `text/plain`, `application/*`)        |
-| `RESPONSE.CONTENT-TYPE`     |  ✅   |  ✅   | Filter by response content type (`application/json`, `text/plain`, `application/*`)                      |
-| `EXAMPLE-NAME`              |  ✅   |  ✅   | Filter by example name (`SUCCESS_200_OK`, `PETS_200_OK`)                                                 |
-| `TAGS`                      |  ✅   |  ✅   | Filter by tags                                                                                           |
-| `SUMMARY`                   |  ✅   |  ✅   | Filter by summary                                                                                        |
-| `OPERATION-ID`              |  ✅   |  ✅   | Filter by operation ID                                                                                   |
-| `DESCRIPTION`               |  ✅   |  ✅   | Filter by description                                                                                    |
+| Available Filters           | Description                                                                                              |
+|:---------------------------:|:--------------------------------------------------------------------------------------------------------:|
+| `STATUS`                    | Filter by status (`200`, `500`)                                                                          |
+| `PATH`                      | Filter by request paths (`/users`, `/products`), supports wildcard using `*` (`/users/*`, `/products/*`) |
+| `METHOD`                    | Filter by HTTP methods (`GET`, `POST`, etc.)                                                             |
+| `PARAMETERS.QUERY`          | Filter by query parameters, supports key-value match (`PARAMETERS.QUERY.byName='John'`)                  |
+| `PARAMETERS.HEADER`         | Filter by header parameters, supports key-value match (`PARAMETERS.HEADER.X-REQUEST-ID='Hello1234'`)     |
+| `PARAMETERS.PATH`           | Filter by path parameters, supports key-value match (`PARAMETERS.PATH.id='99'`)                          |
+| `REQUEST-BODY.CONTENT-TYPE` | Filter by request body media type (MIME type) (`application/json`, `text/plain`, `application/*`)        |
+| `RESPONSE.CONTENT-TYPE`     | Filter by response content type (`application/json`, `text/plain`, `application/*`)                      |
+| `EXAMPLE-NAME`              | Filter by example name (`SUCCESS_200_OK`, `PETS_200_OK`)                                                 |
+| `TAGS`                      | Filter by tags                                                                                           |
+| `SUMMARY`                   | Filter by summary                                                                                        |
+| `OPERATION-ID`              | Filter by operation ID                                                                                   |
+| `DESCRIPTION`               | Filter by description                                                                                    |
 
 
 | Operator          | Description                                                |
@@ -928,7 +928,7 @@ paths:
           description: Too many requests
           headers:
             Retry-After:
-              schema: 
+              schema:
                 type: integer
 
   /order:
