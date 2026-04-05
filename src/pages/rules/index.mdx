@@ -995,3 +995,145 @@ Please reach out to the Specmatic team for help.
 ### Unsupported feature
 
 This feature is currently not yet supported, consider reaching out if you would like us to prioritise the support.
+
+## T00001
+
+### Excluded from Run
+
+This operation was skipped because it did not satisfy the specified [**filter**](./contract_driven_development/contract_testing#running-specific-tests)
+
+**Why this is a problem**
+
+This is an issue if you anticipated the operation to execute, but it did not.
+
+**How this can be resolved**
+
+Verify that the operation meets the specified filter criteria.
+
+## T00002
+
+### Examples Required in Strict Mode
+
+[Strict mode](./contract_driven_development/contract_testing/#strict-mode) requires at least one example, but none were found for this operation
+
+**Why this is a problem**
+- This is an issue if you anticipated the operation to execute, but it did not.
+- When strict mode is **enabled**, only operations with valid examples will be executed.
+
+**How this can be resolved**
+
+Please provide examples for the operation.
+
+## T00003
+
+### Examples Required
+
+This operation requires examples to run, but none were provided
+
+**Why this is a problem**
+
+- This is an issue if you anticipated the operation to execute, but it did not.
+- By default, only operations with a `2xx` status are generated automatically.
+- Operations that do not return a `2xx` status require explicit examples to be provided.
+
+**How this can be resolved**
+
+Please provide examples for the operation.
+
+## T00004
+
+### Accept Mismatch
+
+The request [Accept header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept) does not match the response content type of the operation
+
+**Why this is a problem**
+- This is an issue if you anticipated the operation to *execute,* but it did not.
+- The **Accept header** informs the server about the media types that the client can handle.
+- If the operation is specified to return a particular content type, but the request specifies an incompatible **Accept header**, the interaction becomes invalid.
+
+**How this can be resolved**
+- Modify the request **Accept header** to include the media type specified for the operation's response, such as application/json when the operation returns JSON.
+- If your API supports various response media types, ensure that the content section of the OpenAPI responses is accurately defined and that the example/request headers are properly aligned.
+
+## T00005
+
+### Generation Disabled
+
+This operation was skipped because it required generation to be enabled
+
+**Why this is a problem**
+- This is an issue if you anticipated the operation to *execute,* but it did not.
+- When examples are absent, Specmatic can generate test inputs from the contract schema. Resiliency testing is also what enables broader positive and negative combinations beyond explicit examples. 
+
+**How this can be resolved**
+Enable generation in your [Specmatic Configuration](./references/configuration/test-configuration#resiliency-tests).
+
+## T00006
+
+### Maximum Test Count Exceeded
+
+This operation was skipped because it exceeded the maximum test count
+
+**Why this is a problem**
+- This issue should be restricted to [Studio SaaS](https://studio.specmatic.io) and should not arise in other contexts.
+- The SaaS imposes a limit on the number of tests that can be executed in a single test run.
+
+**How this can be resolved**
+If this issue arises outside of Studio SaaS, please contact the Specmatic team for assistance.
+
+## T10001
+
+### Executed Using Example
+
+This operation was executed using an an available example, the example could've been inline or external
+
+**Why this is a problem**
+
+This is an issue if you didn't anticipate the operation to be *executed,* but it was.
+
+**How this can be resolved**
+
+Please remove or delete the relevant example.
+
+## T1002
+
+### Executed Using Generation
+
+This operation was executed by generating payloads, due to the absence of an example
+
+**Why this is a problem**
+
+This is an issue if you *didn't* anticipate the operation to be *executed,* but it was.
+
+**How this can be resolved**
+- Provide an example for the operation.
+- If an example already exists, confirm that it is valid and has been loaded by Specmatic.
+
+## T10003
+
+### Executed Using Positive Generation
+
+This operation was executed by generating +ve payloads, due to positive generation being enabled
+
+**Why This Is a Problem**
+
+- This is an issue if you *didn't* anticipate the operation to be *executed,* but it was.
+- This issue can arise even when a valid example is provided for the operation.
+
+**How This Can Be Resolved**
+
+To resolve this, disable positive generation in the [Specmatic Configuration](/references/configuration/test-configuration#resiliency-tests).
+
+## T10004
+
+### Executed Using Negative Generation
+
+This operation was executed by generating -ve payloads, due to negative generation being enabled
+
+**Why This Is a Problem**
+- This is an issue if you *didn't* anticipate the operation to be *executed,* but it was.
+- This issue can arise even when a valid example is provided for the operation.
+
+**How This Can Be Resolved**
+
+Disable negative generation in the [Specmatic Configuration](/references/configuration/test-configuration#resiliency-tests).
