@@ -14,7 +14,9 @@ For the complete event schema and per-event `details` fields, see the [Audit Eve
 Audit events capture important changes and access activity. A typical set of audited actions includes:
 
 - Login success, login failure, and logout
-- User creation and users being added to an organization
+- User creation, invitation events, and membership changes when users are added to an organization
+- Membership removals when users are removed from an organization
+- Membership role changes when a user's role is updated within an organization
 - Password changes and password reset activity (password reset applies only to organizations that do not use SSO integration)
 - Organization configuration changes, including license and audit configuration updates
 - Build submissions from central repositories and service repositories

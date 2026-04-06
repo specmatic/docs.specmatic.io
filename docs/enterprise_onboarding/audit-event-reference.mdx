@@ -213,9 +213,45 @@ Example event:
 }
 ```
 
+#### `USER_INVITED_TO_ORG`
+
+Emitted when a user is invited to join an organization through the invite flow. This event captures the invitation action itself, before the invited user actually joins the organization.
+
+| field name   | data type | description                                                                       |
+|--------------|-----------|-----------------------------------------------------------------------------------|
+| `targetType` | `string`  | `ORGANIZATION`.                                                                   |
+| `targetId`   | `string`  | Organization ID where the invitation was initiated.                               |
+| `details`    | `object`  | No fixed `details` fields are currently defined; currently emitted as `{}`.       |
+
+Example event:
+
+```json
+{
+  "id": "75f496fc-9ca2-4f8a-af59-f4fdbe7d5f73",
+  "type": "USER_INVITED_TO_ORG",
+  "timestamp": "2026-03-10T10:26:00Z",
+  "severity": "INFO",
+  "summary": "User invitee@example.com invited to Acme Corp by admin@example.com",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/users",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/invite",
+  "details": {}
+}
+```
+
 #### `USER_ADDED_TO_ORG`
 
-Emitted when a user is added to an organization.
+Emitted when a user is added to an organization. This includes organization creation flows and SSO onboarding flows that add the user to the organization on first login.
 
 | field name           | data type | description                                                                                         |
 |----------------------|-----------|-----------------------------------------------------------------------------------------------------|
@@ -291,7 +327,7 @@ Example event:
 
 #### `USER_ROLE_CHANGED`
 
-Emitted when a user's role is changed (for example via bulk role update in collaborators settings).
+Emitted when a user's role is changed (for example via bulk role update in collaborators settings). For bulk role updates, one event is emitted for each successful role change.
 
 | field name        | data type | description                                            |
 |-------------------|-----------|--------------------------------------------------------|
