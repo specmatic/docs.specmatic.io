@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "contracts": [
+    {
+      "web": {
+        "url": "https://contracts.example.com/specifications"
+      },
+      "provides": [
+        "io/specmatic/examples/store/openapi/online_store_v1.yaml"
+      ],
+      "consumes": [
+        "io/specmatic/examples/store/openapi/api_order_v1.yaml"
+      ]
+    }
+  ]
+}

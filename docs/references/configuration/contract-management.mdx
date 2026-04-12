@@ -32,6 +32,7 @@ Configure Specmatic to pull contracts from a Git repository:
 />
 
 
+
 ## Contracts from Local Filesystem
 
 If you just need to use specifications from your local file system, specify `filesystem` field within contracts (if not
@@ -47,3 +48,15 @@ Note that the specification paths are relative paths. This means that they must 
 directory as the current directory.
 
 You can also provide absolute paths in case they are somewhere else on the filesystem.
+
+## Contracts from Web Source
+
+If your specifications are hosted over HTTP(S), specify `web` field within contracts and set the source `url`:
+
+<V2V3SpecmaticConfigTabs
+  v3Object={require('./includes/contract-management/v3/web-configuration/specmatic.json')}
+  v2Object={require('./includes/contract-management/v2/web-configuration/specmatic.json')}
+  v2ObjectWithoutConfig={require('./includes/contract-management/v2/without-config/web-configuration/specmatic.json')}
+/>
+
+Specmatic resolves each specification path in `specs` relative to the configured web `url`.

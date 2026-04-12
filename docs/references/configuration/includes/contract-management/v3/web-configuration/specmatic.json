@@ -1,0 +1,78 @@
+{
+  "version": 3,
+  "systemUnderTest": {
+    "service": {
+      "$ref": "#/components/services/onlineStoreServiceV1",
+      "runOptions": {
+        "$ref": "#/components/runOptions/onlineStoreServiceV1"
+      }
+    }
+  },
+  "dependencies": {
+    "services": [
+      {
+        "service": {
+          "$ref": "#/components/services/orderServiceV1",
+          "runOptions": {
+            "$ref": "#/components/runOptions/orderServiceV1"
+          }
+        }
+      }
+    ]
+  },
+  "components": {
+    "sources": {
+      "specmaticOrderContracts": {
+        "web": {
+          "url": "https://contracts.example.com/specifications"
+        }
+      }
+    },
+    "services": {
+      "onlineStoreServiceV1": {
+        "description": "Online Store Service (V1)",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "io/specmatic/examples/store/openapi/online_store_v1.yaml"
+              ]
+            }
+          }
+        ]
+      },
+      "orderServiceV1": {
+        "description": "Payment Service (V1)",
+        "definitions": [
+          {
+            "definition": {
+              "source": {
+                "$ref": "#/components/sources/specmaticOrderContracts"
+              },
+              "specs": [
+                "io/specmatic/examples/store/openapi/api_order_v1.yaml"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "runOptions": {
+      "onlineStoreServiceV1": {
+        "openapi": {
+          "type": "test",
+          "baseUrl": "http://localhost:8080"
+        }
+      },
+      "orderServiceV1": {
+        "openapi": {
+          "type": "mock",
+          "baseUrl": "http://localhost:8090"
+        }
+      }
+    }
+  }
+}
