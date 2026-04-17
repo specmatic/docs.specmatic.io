@@ -94,11 +94,10 @@ Example migration (GitHub Actions):
 - name: Publish Build Reports to Specmatic Insights
   if: github.ref == 'refs/heads/main'
   run: |
-    # You can use specmatic/enterprise instead of specmatic/specmatic.
     docker run --rm \
       -v ~/.specmatic:/root/.specmatic \
       -v ${{ github.workspace }}:/usr/src/app \
-      specmatic/specmatic \
+      specmatic/enterprise \
       send-report \
       --branch-name ${{ github.ref_name }} \
       --repo-name ${{ github.event.repository.name }} \
