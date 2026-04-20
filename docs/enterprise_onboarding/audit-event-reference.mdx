@@ -714,12 +714,12 @@ Emitted when a central-repository build report is submitted and accepted.
 
 For this event, `httpUserAgent` records the version of Specmatic used to post the build.
 
-| field name           | data type       | description                                                |
-|----------------------|-----------------|------------------------------------------------------------|
-| `details.repo`       | `string \| null`| Repository name.                                           |
-| `details.repoId`     | `string \| null`| Repository identifier.                                     |
-| `details.branchName` | `string \| null`| Branch name for submitted build.                           |
-| `details.reportType` | `string`        | Build report type. Value is `CENTRAL_REPO` for this event. |
+| field name           | data type        | description                                                |
+|----------------------|------------------|------------------------------------------------------------|
+| `details.repo`       | `string \| null` | Repository name.                                           |
+| `details.repoId`     | `string \| null` | Repository identifier.                                     |
+| `details.branchName` | `string \| null` | Branch name for submitted build.                           |
+| `details.reportType` | `string`         | Build report type. Value is `CENTRAL_REPO` for this event. |
 
 Example event:
 
@@ -1090,11 +1090,11 @@ The following three event types share the same `details` contract shape.
 
 Emitted when SCIM enablement state changes for an organization.
 
-| field name                 | data type | description                                                        |
-|---------------------------|-----------|--------------------------------------------------------------------|
-| `details.enabled`         | `boolean` | Final persisted SCIM enablement state for the organization after the update request is applied. |
+| field name                | data type | description                                                                                      |
+|---------------------------|-----------|--------------------------------------------------------------------------------------------------|
+| `details.enabled`         | `boolean` | Final persisted SCIM enablement state for the organization after the update request is applied.  |
 | `details.tokenConfigured` | `boolean` | Indicates whether a valid SCIM bearer token is configured and usable after the update completes. |
-| `details.tokenId`         | `string`  | Current SCIM token identifier associated with the org; omitted when no token is configured. |
+| `details.tokenId`         | `string`  | Current SCIM token identifier associated with the org; omitted when no token is configured.      |
 
 Example event:
 
@@ -1125,10 +1125,10 @@ Example event:
 
 Emitted when an organization’s SCIM bearer token is rotated.
 
-| field name                 | data type | description                                                                 |
-|---------------------------|-----------|-----------------------------------------------------------------------------|
-| `details.enabled`         | `boolean` | SCIM enablement state at the time rotation succeeds (typically unchanged by rotate itself). |
-| `details.tokenConfigured` | `boolean` | Always `true` for a successful token rotation because a new token is issued and stored. |
+| field name                | data type | description                                                                                              |
+|---------------------------|-----------|----------------------------------------------------------------------------------------------------------|
+| `details.enabled`         | `boolean` | SCIM enablement state at the time rotation succeeds (typically unchanged by rotate itself).              |
+| `details.tokenConfigured` | `boolean` | Always `true` for a successful token rotation because a new token is issued and stored.                  |
 | `details.tokenId`         | `string`  | Identifier of the newly issued token; this is the value used to correlate subsequent SCIM auth attempts. |
 
 Example event:
@@ -1161,10 +1161,10 @@ Example event:
 
 Emitted when an organization’s SCIM bearer token is revoked.
 
-| field name                 | data type | description                                                                 |
-|---------------------------|-----------|-----------------------------------------------------------------------------|
-| `details.enabled`         | `boolean` | SCIM enablement state after revoke completes (current flow sets this to `false`). |
-| `details.tokenConfigured` | `boolean` | Always `false` because token credentials are cleared as part of revoke processing. |
+| field name                | data type | description                                                                                 |
+|---------------------------|-----------|---------------------------------------------------------------------------------------------|
+| `details.enabled`         | `boolean` | SCIM enablement state after revoke completes (current flow sets this to `false`).           |
+| `details.tokenConfigured` | `boolean` | Always `false` because token credentials are cleared as part of revoke processing.          |
 | `details.tokenId`         | `string`  | Omitted after revoke because no active token identifier remains on the organization config. |
 
 Example event:
@@ -1200,17 +1200,32 @@ Target behavior:
 - User provisioning events (`SCIM_USER_*`) target `USER` when a projected local user exists; otherwise target `ORGANIZATION`.
 - Group provisioning events (`SCIM_GROUP_*`) target `ORGANIZATION`.
 
+Common `details` fields for all SCIM provisioning events:
+
+| field name               | data type | description                                                                                                  |
+|--------------------------|-----------|--------------------------------------------------------------------------------------------------------------|
+| `details.resourceType`   | `string`  | SCIM resource category (`USER` or `GROUP`).                                                                  |
+| `details.resourceScimId` | `string`  | SCIM resource identifier for the mutated user/group.                                                         |
+| `details.operation`      | `string`  | Provisioning operation for the mutation (`CREATE`, `UPDATE`, `PATCH`, `DEACTIVATE`, `REACTIVATE`, `DELETE`). |
+| `details.status`         | `string`  | Provisioning outcome status; currently `SUCCESS`.                                                            |
+| `details.idempotencyKey` | `string`  | Request key recorded with the audit event for traceability across retries/call chains.                       |
+
+Optional `details` fields by resource type:
+
+| field name                   | data type | emitted for    | description                                                        |
+|------------------------------|-----------|----------------|--------------------------------------------------------------------|
+| `details.userName`           | `string`  | `SCIM_USER_*`  | Canonical SCIM `userName` value persisted for the user link.       |
+| `details.projectedUserEmail` | `string`  | `SCIM_USER_*`  | Email on projected local user when user projection/linkage exists. |
+| `details.displayName`        | `string`  | `SCIM_GROUP_*` | Canonical SCIM group display name at mutation time.                |
+| `details.externalId`         | `string`  | both           | Optional IdP-provided external correlation id.                     |
+
 #### `SCIM_USER_CREATED`
 
 Emitted when a SCIM user is provisioned (created).
 
-| field name                    | data type | description                                                                 |
-|------------------------------|-----------|-----------------------------------------------------------------------------|
-| `details.resourceType`       | `string`  | SCIM resource category for this event; user lifecycle events emit `USER`.   |
-| `details.operation`          | `string`  | Provisioning operation recorded for the mutation; this event always emits `CREATE`. |
-| `details.userName`           | `string`  | Canonical SCIM `userName` persisted for the created user link.              |
-| `details.projectedUserEmail` | `string`  | Email on the projected local user record when linkage/projection is present. |
-| `details.externalId`         | `string`  | Optional IdP-provided `externalId` stored with the SCIM user link.          |
+| field name          | data type | description                                                                 |
+|---------------------|-----------|-----------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for created user events; this event emits `CREATE`. |
 
 Example event:
 
@@ -1247,9 +1262,9 @@ Example event:
 
 Emitted when a SCIM user is updated via replace semantics (`PUT`).
 
-| field name | data type | description             |
-|------------|-----------|-------------------------|
-| `details.operation` | `string` | Operation discriminator for full replacement mutations; this event emits `UPDATE`. |
+| field name          | data type | description                                                                        |
+|---------------------|-----------|------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for full replacement mutations; this event emits `UPDATE`. |
 
 Example event:
 
@@ -1286,9 +1301,9 @@ Example event:
 
 Emitted when a SCIM user is updated via patch semantics (`PATCH`).
 
-| field name | data type | description            |
-|------------|-----------|------------------------|
-| `details.operation` | `string` | Operation discriminator for partial user mutations; this event emits `PATCH`. |
+| field name          | data type | description                                                                   |
+|---------------------|-----------|-------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for partial user mutations; this event emits `PATCH`. |
 
 Example event:
 
@@ -1325,9 +1340,9 @@ Example event:
 
 Emitted when a SCIM user is deprovisioned with `active=false`.
 
-| field name | data type | description                 |
-|------------|-----------|-----------------------------|
-| `details.operation` | `string` | Operation discriminator for user deprovision events; this event emits `DEACTIVATE`. |
+| field name          | data type | description                                                                         |
+|---------------------|-----------|-------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for user deprovision events; this event emits `DEACTIVATE`. |
 
 Example event:
 
@@ -1364,9 +1379,9 @@ Example event:
 
 Emitted when a previously deactivated SCIM user is reactivated (`active=true`).
 
-| field name | data type | description                 |
-|------------|-----------|-----------------------------|
-| `details.operation` | `string` | Operation discriminator for restoring a previously deactivated user; this event emits `REACTIVATE`. |
+| field name          | data type | description                                                                                         |
+|---------------------|-----------|-----------------------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for restoring a previously deactivated user; this event emits `REACTIVATE`. |
 
 Example event:
 
@@ -1403,9 +1418,9 @@ Example event:
 
 Emitted when a SCIM user is deleted via SCIM `DELETE`.
 
-| field name | data type | description          |
-|------------|-----------|----------------------|
-| `details.operation` | `string` | Operation discriminator for hard-delete mutations; this event emits `DELETE`. |
+| field name          | data type | description                                                                   |
+|---------------------|-----------|-------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for hard-delete mutations; this event emits `DELETE`. |
 
 Example event:
 
@@ -1442,12 +1457,9 @@ Example event:
 
 Emitted when a SCIM group is created.
 
-| field name               | data type | description                              |
-|-------------------------|-----------|------------------------------------------|
-| `details.resourceType`  | `string`  | SCIM resource category for this event; group lifecycle events emit `GROUP`. |
-| `details.operation`     | `string`  | Provisioning operation recorded for the mutation; this event always emits `CREATE`. |
-| `details.displayName`   | `string`  | Group display name value persisted on the SCIM group resource. |
-| `details.externalId`    | `string`  | Optional IdP-provided `externalId` associated with the SCIM group. |
+| field name          | data type | description                                                                  |
+|---------------------|-----------|------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for created group events; this event emits `CREATE`. |
 
 Example event:
 
@@ -1483,9 +1495,9 @@ Example event:
 
 Emitted when a SCIM group is updated via replace semantics (`PUT`).
 
-| field name | data type | description             |
-|------------|-----------|-------------------------|
-| `details.operation` | `string` | Operation discriminator for full group replacement mutations; this event emits `UPDATE`. |
+| field name          | data type | description                                                                              |
+|---------------------|-----------|------------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for full group replacement mutations; this event emits `UPDATE`. |
 
 Example event:
 
@@ -1521,9 +1533,9 @@ Example event:
 
 Emitted when a SCIM group is updated via patch semantics (`PATCH`), including membership mutations.
 
-| field name | data type | description            |
-|------------|-----------|------------------------|
-| `details.operation` | `string` | Operation discriminator for partial group/membership mutations; this event emits `PATCH`. |
+| field name          | data type | description                                                                               |
+|---------------------|-----------|-------------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for partial group/membership mutations; this event emits `PATCH`. |
 
 Example event:
 
@@ -1559,9 +1571,9 @@ Example event:
 
 Emitted when a SCIM group is deleted via SCIM `DELETE`.
 
-| field name | data type | description          |
-|------------|-----------|----------------------|
-| `details.operation` | `string` | Operation discriminator for group deletion mutations; this event emits `DELETE`. |
+| field name          | data type | description                                                                      |
+|---------------------|-----------|----------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for group deletion mutations; this event emits `DELETE`. |
 
 Example event:
 
