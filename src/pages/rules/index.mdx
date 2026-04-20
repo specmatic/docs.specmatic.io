@@ -69,6 +69,26 @@ search_exclude: true
     * [Unclear schema](#unclear-schema)
   * [OAS9999](#oas9999)
     * [Unsupported feature](#unsupported-feature)
+  * [T00001](#t00001)
+    * [Excluded by Filter](#excluded-by-filter)
+  * [T00002](#t00002)
+    * [Examples Required](#examples-required)
+  * [T00003](#t00003)
+    * [Examples Required in Strict Mode](#examples-required-in-strict-mode)
+  * [T00004](#t00004)
+    * [Generative Disabled](#generative-disabled)
+  * [T00005](#t00005)
+    * [Maximum Test Count Exceeded](#maximum-test-count-exceeded)
+  * [T00006](#t00006)
+    * [Accept Mismatch](#accept-mismatch)
+  * [T10001](#t10001)
+    * [Executed Using Example](#executed-using-example)
+  * [T10002](#t10002)
+    * [Executed Using Generation](#executed-using-generation)
+  * [T10003](#t10003)
+    * [Executed Using Positive Generation](#executed-using-positive-generation)
+  * [T10004](#t10004)
+    * [Executed Using Negative Generation](#executed-using-negative-generation)
 <!-- TOC -->
 
 ## R0001
@@ -995,3 +1015,175 @@ Please reach out to the Specmatic team for help.
 ### Unsupported feature
 
 This feature is currently not yet supported, consider reaching out if you would like us to prioritise the support.
+
+## T00001
+
+### Excluded by Filter
+
+**What happened**
+
+This operation was skipped because it did not match the specified [**filter**](./contract_driven_development/contract_testing#running-specific-tests)
+
+**Why you might see this**
+
+The filter expression specified in the [Specmatic Config](./contract_driven_development/contract_testing#specmatic-config) does not allow this operation to be executed.
+
+**What you can do**
+
+Please revise the [**filter**](./contract_driven_development/contract_testing#running-specific-tests) to ensure it allows the operation by either broadening or narrowing the expression.
+
+## T00002
+
+### Examples Required
+
+**What happened**
+
+This operation was skipped because it requires examples, but none were provided.
+
+**Why you might see this**
+
+- By default, only operations that return a `2xx` status are generated automatically.
+- Operations returning a status other than `2xx` require explicit examples to be provided.
+- Operations with a `400` status may be auto-generated if [**Schema Resiliency**](./references/configuration/test-configuration#resiliency-tests) is activated.
+
+**What you can do**
+
+- To execute this operation, please provide at least one example.
+- For `400` operations, consider activating [**Schema Resiliency**](./references/configuration/test-configuration#resiliency-tests) if applicable
+
+## T00003
+
+### Examples Required in Strict Mode
+
+**What happened**
+
+This operation was skipped because [strict mode](./contract_driven_development/contract_testing/#strict-mode) is enabled and no valid example was found.
+
+**Why you might see this**
+
+When strict mode is **enabled**, only operations with valid examples will be executed, irrespective of schema resiliency.
+
+**What you can do**
+
+Provide at least one valid example for this operation, or disable strict mode.
+
+## T00004
+
+### Generative Disabled
+
+**What happened**
+
+This operation was skipped because it requires schema resiliency to be enabled.
+
+**Why you might see this**
+
+This issue occurs exclusively for bad request responses that lack examples.
+
+**What you can do**
+
+- Provide at least one valid example for this operation.
+- Enable schema resiliency in your [Specmatic Configuration](./references/configuration/test-configuration#resiliency-tests).
+
+## T00005
+
+### Maximum Test Count Exceeded
+
+**What happened**
+
+This operation was skipped because the execution reached the maximum permitted test count.
+
+**Why you might see this**
+
+Studio SaaS restricts the number of tests that can be executed in a single test run.
+
+**What you can do**
+
+Studio SaaS is designed as a playground for exploration.
+If you'd like to run unrestricted test suites or experience the full power of Specmatic, please reach out to the Specmatic team.
+
+## T00006
+
+### Accept Mismatch
+
+**What happened**
+
+The request [Accept header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept) does not match the response content type defined for this operation.
+
+**Why you might see this**
+
+- The **Accept header** informs the server about the media types that the client can handle.
+- If the operation is specified to return a particular content type, but the request specifies an incompatible **Accept header**, the interaction becomes invalid.
+
+**What you can do**
+
+- Modify the request **Accept header** to include the media type specified for the operation's response, such as application/json when the operation returns JSON.
+- If your API supports various response media types, ensure that the content section of the OpenAPI responses is accurately defined and that the example/request headers are properly aligned.
+
+## T10001
+
+### Executed Using Example
+
+**What happened**
+
+This operation was executed utilizing an available example (either inline or external).
+
+**Why you might see this**
+
+Specmatic identified a suitable example and executed the operation accordingly.
+
+**What you can do**
+
+- Retain the example if this execution was intended.
+- Remove the example if this execution was not intended.
+
+## T10002
+
+### Executed Using Generation
+
+**What happened**
+
+This operation was executed using generated payloads due to the absence of a usable example.
+
+**Why you might see this**
+
+No valid example was found for this operation.
+
+**What you can do**
+
+- Provide an example for the operation.
+- Enable strict mode to ensure that only operations with at least one valid example are executed.
+- If an example already exists, verify that it is valid and has been successfully loaded by Specmatic.
+
+## T10003
+
+### Executed Using Positive Generation
+
+**What happened**
+
+This operation was executed using positive payload generation.
+
+**Why you might see this**
+
+- This can occur when positive generation is enabled in [Schema Resiliency](./references/configuration/test-configuration#resiliency-tests).
+- This can occur even when a valid example is present, as Specmatic will generate payloads with positive mutations based on the provided example.
+
+**What you can do**
+
+If you prefer to avoid this behavior, disable positive generation in the [Specmatic Configuration](/references/configuration/test-configuration#resiliency-tests).
+
+## T10004
+
+### Executed Using Negative Generation
+
+**What happened**
+
+This operation was executed using negative payload generation.
+
+**Why you might see this**
+
+- This can occur when negative generation is enabled in [Schema Resiliency](./references/configuration/test-configuration#resiliency-tests).
+- This can occur even when a valid example is present, as Specmatic will generate payloads with negative mutations based on the provided example.
+
+**What you can do**
+
+If you prefer to avoid this behavior, disable negative generation in the [Specmatic Configuration](/references/configuration/test-configuration#resiliency-tests).
