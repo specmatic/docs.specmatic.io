@@ -998,9 +998,9 @@ This feature is currently not yet supported, consider reaching out if you would 
 
 ## T00001
 
-### Excluded from Run
+### Excluded by Filter
 
-This operation was skipped because it did not satisfy the specified [**filter**](./contract_driven_development/contract_testing#running-specific-tests)
+This operation was skipped because it did not match the [**filter**](./contract_driven_development/contract_testing#running-specific-tests)
 
 **Why this is a problem**
 
@@ -1008,9 +1008,26 @@ This is an issue if you anticipated the operation to execute, but it did not.
 
 **How this can be resolved**
 
-Verify that the operation meets the specified filter criteria.
+Verify that the operation meets the filter criteria.
 
 ## T00002
+
+### Examples Required
+
+This operation requires examples to run, but none were provided
+
+**Why this is a problem**
+
+- This is an issue if you anticipated the operation to execute, but it did not.
+- By default, only operations with a `2xx` status are generated automatically.
+- Operations that do not return a `2xx` status require explicit examples to be provided.
+- Except `400` operations, which can be auto-generated if [**Schema Resiliency**](./references/configuration/test-configuration#resiliency-tests) is enabled.
+
+**How this can be resolved**
+
+Please provide examples for the operation.
+
+## T00003
 
 ### Examples Required in Strict Mode
 
@@ -1024,23 +1041,35 @@ Verify that the operation meets the specified filter criteria.
 
 Please provide examples for the operation.
 
-## T00003
+## T00004
 
-### Examples Required
+### Generative Disabled
 
-This operation requires examples to run, but none were provided
+This operation was skipped because it required generation to be enabled
 
 **Why this is a problem**
-
-- This is an issue if you anticipated the operation to execute, but it did not.
-- By default, only operations with a `2xx` status are generated automatically.
-- Operations that do not return a `2xx` status require explicit examples to be provided.
+- This only happens for the bad request responses.
+- This is an issue if you anticipated the operation to *execute,* but it did not.
 
 **How this can be resolved**
 
-Please provide examples for the operation.
+Enable schema resiliency in your [Specmatic Configuration](./references/configuration/test-configuration#resiliency-tests).
 
-## T00004
+## T00005
+
+### Maximum Test Count Exceeded
+
+This operation was skipped because it exceeded the maximum test count
+
+**Why this is a problem**
+- This is expected only in [Studio SaaS](https://studio.specmatic.io).
+- Studio SaaS limits how many tests can run in a single test run.
+
+**How this can be resolved**
+
+If this issue arises outside of Studio SaaS, please contact the Specmatic team for assistance.
+
+## T00006
 
 ### Accept Mismatch
 
@@ -1055,57 +1084,31 @@ The request [Accept header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Re
 - Modify the request **Accept header** to include the media type specified for the operation's response, such as application/json when the operation returns JSON.
 - If your API supports various response media types, ensure that the content section of the OpenAPI responses is accurately defined and that the example/request headers are properly aligned.
 
-## T00005
-
-### Generation Disabled
-
-This operation was skipped because it required generation to be enabled
-
-**Why this is a problem**
-- This is an issue if you anticipated the operation to *execute,* but it did not.
-- When examples are absent, Specmatic can generate test inputs from the contract schema. Resiliency testing is also what enables broader positive and negative combinations beyond explicit examples. 
-
-**How this can be resolved**
-Enable generation in your [Specmatic Configuration](./references/configuration/test-configuration#resiliency-tests).
-
-## T00006
-
-### Maximum Test Count Exceeded
-
-This operation was skipped because it exceeded the maximum test count
-
-**Why this is a problem**
-- This issue should be restricted to [Studio SaaS](https://studio.specmatic.io) and should not arise in other contexts.
-- The SaaS imposes a limit on the number of tests that can be executed in a single test run.
-
-**How this can be resolved**
-If this issue arises outside of Studio SaaS, please contact the Specmatic team for assistance.
-
 ## T10001
 
 ### Executed Using Example
 
-This operation was executed using an an available example, the example could've been inline or external
+This operation was executed using an available example, the example could've been inline or external
 
-**Why this is a problem**
+**What this means**
 
 This is an issue if you didn't anticipate the operation to be *executed,* but it was.
 
-**How this can be resolved**
+**How to control this behavior**
 
 Please remove or delete the relevant example.
 
-## T1002
+## T10002
 
 ### Executed Using Generation
 
 This operation was executed by generating payloads, due to the absence of an example
 
-**Why this is a problem**
+**What this means**
 
-This is an issue if you *didn't* anticipate the operation to be *executed,* but it was.
+This is an issue if you *didn't* anticipate the operation to be executed using generation.
 
-**How this can be resolved**
+**How to control this behavior**
 - Provide an example for the operation.
 - If an example already exists, confirm that it is valid and has been loaded by Specmatic.
 
@@ -1115,12 +1118,12 @@ This is an issue if you *didn't* anticipate the operation to be *executed,* but 
 
 This operation was executed by generating +ve payloads, due to positive generation being enabled
 
-**Why This Is a Problem**
+**What this means**
 
-- This is an issue if you *didn't* anticipate the operation to be *executed,* but it was.
+- This is an issue if you *didn't* anticipate the operation to be *executed* using positive generation.
 - This issue can arise even when a valid example is provided for the operation.
 
-**How This Can Be Resolved**
+**How to control this behavior**
 
 To resolve this, disable positive generation in the [Specmatic Configuration](/references/configuration/test-configuration#resiliency-tests).
 
@@ -1130,10 +1133,10 @@ To resolve this, disable positive generation in the [Specmatic Configuration](/r
 
 This operation was executed by generating -ve payloads, due to negative generation being enabled
 
-**Why This Is a Problem**
-- This is an issue if you *didn't* anticipate the operation to be *executed,* but it was.
+**What this means**
+- This is an issue if you *didn't* anticipate the operation to be *executed* using negative generation.
 - This issue can arise even when a valid example is provided for the operation.
 
-**How This Can Be Resolved**
+**How to control this behavior**
 
 Disable negative generation in the [Specmatic Configuration](/references/configuration/test-configuration#resiliency-tests).
