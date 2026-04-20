@@ -1,0 +1,184 @@
+---
+title: SCIM Reference
+sidebar_label: SCIM Reference
+sidebar_position: 6
+---
+
+# SCIM Reference
+
+This page documents the SCIM 2.0 behavior currently supported by Specmatic Insights for org admins and IdP administrators.
+
+For SCIM standards background:
+- [SCIM](https://scim.cloud/) - System for Cross-domain Identity Management
+- [IETF RFC 7643 (Core Schema)](https://www.rfc-editor.org/rfc/rfc7643)
+- [IETF RFC 7644 (Protocol)](https://www.rfc-editor.org/rfc/rfc7644)
+
+
+## Base URL and Endpoints
+
+SCIM base URL is tenant-scoped:
+
+```text
+https://insights.specmatic.io/<orgId>/scim/v2
+```
+
+Core resource endpoints:
+
+- `GET|POST /<orgId>/scim/v2/Users`
+- `GET|PUT|PATCH|DELETE /<orgId>/scim/v2/Users/{id}`
+- `GET|POST /<orgId>/scim/v2/Groups`
+- `GET|PUT|PATCH|DELETE /<orgId>/scim/v2/Groups/{id}`
+
+Metadata/discovery endpoints:
+
+- `GET /<orgId>/scim/v2/ServiceProviderConfig`
+- `GET /<orgId>/scim/v2/ResourceTypes`
+- `GET /<orgId>/scim/v2/ResourceTypes/{id}`
+- `GET /<orgId>/scim/v2/Schemas`
+- `GET /<orgId>/scim/v2/Schemas/{id}`
+
+Not supported:
+
+- `/<orgId>/scim/v2/Me` returns `501 Not Implemented`.
+- Bulk operations are not supported.
+- Sort is not supported.
+
+## Authentication
+
+Supported auth type:
+
+- `Authorization: Bearer <SCIM token>`
+
+Where to get the token in Insights:
+
+1. Sign in as an org admin.
+2. Open **Settings** → **Identity Access**.
+3. Enable SCIM (if needed) and use **Rotate Token** to issue a token.
+4. Copy and store the one-time raw token securely.
+
+## Capabilities
+
+Insights SCIM endpoint advertises and supports:
+
+- PATCH: supported
+- ETag/versioning: supported
+- Filtering: supported (`maxResults = 100`)
+- Change password: not supported
+- Sort: not supported
+- Bulk: not supported
+
+Notes:
+
+- ETag is returned on User and Group resources.
+- Conditional update semantics (`If-Match`) are enforced by the SCIM integration path.
+
+## Pagination
+
+Pagination uses standard SCIM parameters:
+
+- `startIndex` (1-based)
+- `count`
+
+Current behavior:
+
+- `startIndex < 1` is normalized to `1`.
+- `count < 1` is normalized to `1`.
+- Service provider config advertises filtered max results of `100`.
+
+Recommended client behavior:
+
+- Send `count <= 100` for predictable interoperability with IdPs and validators.
+
+## Supported User Attributes
+
+### Returned on `GET`/`LIST`
+
+- `id`
+- `externalId` (when set)
+- `userName`
+- `active`
+- `groups` (direct memberships, including `value`, `display`, `type`, `$ref`)
+- `meta.resourceType`
+- `meta.created`
+- `meta.lastModified`
+- `meta.version` (ETag)
+
+### Accepted on `POST`/`PUT`
+
+- `id`:
+  - ignored/rejected on `POST` (client must not supply create id)
+  - must match path id on `PUT` when supplied
+- `externalId`
+- `userName` (required)
+- `active` (defaults to `true` on create when omitted)
+
+### PATCH support for User
+
+Supported operations:
+
+- `add`, `replace`, `remove`
+
+Supported paths:
+
+- `active`
+- `userName`
+- `externalId`
+- `null` path with object payload containing the above keys
+
+Filter support for User list:
+
+- Attributes: `id`, `externalId`, `userName`, `active`
+- Comparator: `eq`
+- Logical nesting (`and`, `or`, `not`) is supported for supported attributes/operators.
+- Unsupported operators/attributes return `400` with SCIM `invalidFilter`.
+
+## Supported Group Attributes
+
+### Returned on `GET`/`LIST`
+
+- `id`
+- `externalId` (when set)
+- `displayName`
+- `members` (unless excluded via `excludedAttributes=members` on list)
+- `meta.resourceType`
+- `meta.created`
+- `meta.lastModified`
+- `meta.version` (ETag)
+
+### Accepted on `POST`/`PUT`
+
+- `id`:
+  - ignored/rejected on `POST` (client must not supply create id)
+  - must match path id on `PUT` when supplied
+- `externalId`
+- `displayName` (required)
+- `members` (`value` references)
+
+### PATCH support for Group
+
+Supported operations:
+
+- `add`, `replace`, `remove`
+
+Supported paths:
+
+- `displayName`
+- `externalId`
+- `members`
+- `members[value eq "<memberId>"]` (for targeted member remove)
+- `null` path with object payload containing supported keys
+
+Filter support for Group list:
+
+- Attribute: `displayName`
+- Comparator: `eq`
+- Logical nesting (`and`, `or`, `not`) is supported for supported attributes/operators.
+- Unsupported operators/attributes return `400` with SCIM `invalidFilter`.
+
+## Practical Interoperability Notes
+
+- Prefer SCIM-compliant clients that use discovery endpoints (`ServiceProviderConfig`, `ResourceTypes`, `Schemas`) before provisioning.
+- If your IdP supports both disable and delete semantics, Insights supports both:
+  - deactivate via User `PATCH active=false`
+  - hard delete via User `DELETE`
+- For duplicate create attempts (`POST /Users` with conflicting unique identifiers), Insights returns conflict semantics (`409`).
