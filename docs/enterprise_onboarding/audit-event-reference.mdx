@@ -213,9 +213,45 @@ Example event:
 }
 ```
 
+#### `USER_INVITED_TO_ORG`
+
+Emitted when a user is invited to join an organization through the invite flow. This event captures the invitation action itself, before the invited user actually joins the organization.
+
+| field name   | data type | description                                                                       |
+|--------------|-----------|-----------------------------------------------------------------------------------|
+| `targetType` | `string`  | `ORGANIZATION`.                                                                   |
+| `targetId`   | `string`  | Organization ID where the invitation was initiated.                               |
+| `details`    | `object`  | No fixed `details` fields are currently defined; currently emitted as `{}`.       |
+
+Example event:
+
+```json
+{
+  "id": "75f496fc-9ca2-4f8a-af59-f4fdbe7d5f73",
+  "type": "USER_INVITED_TO_ORG",
+  "timestamp": "2026-03-10T10:26:00Z",
+  "severity": "INFO",
+  "summary": "User invitee@example.com invited to Acme Corp by admin@example.com",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "Mozilla/5.0",
+  "httpReferer": "https://insights.specmatic.io/settings/users",
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/invite",
+  "details": {}
+}
+```
+
 #### `USER_ADDED_TO_ORG`
 
-Emitted when a user is added to an organization.
+Emitted when a user is added to an organization. This includes organization creation flows and SSO onboarding flows that add the user to the organization on first login.
 
 | field name           | data type | description                                                                                         |
 |----------------------|-----------|-----------------------------------------------------------------------------------------------------|
@@ -291,7 +327,7 @@ Example event:
 
 #### `USER_ROLE_CHANGED`
 
-Emitted when a user's role is changed (for example via bulk role update in collaborators settings).
+Emitted when a user's role is changed (for example via bulk role update in collaborators settings). For bulk role updates, one event is emitted for each successful role change.
 
 | field name        | data type | description                                            |
 |-------------------|-----------|--------------------------------------------------------|
@@ -678,12 +714,12 @@ Emitted when a central-repository build report is submitted and accepted.
 
 For this event, `httpUserAgent` records the version of Specmatic used to post the build.
 
-| field name           | data type       | description                                                |
-|----------------------|-----------------|------------------------------------------------------------|
-| `details.repo`       | `string \| null`| Repository name.                                           |
-| `details.repoId`     | `string \| null`| Repository identifier.                                     |
-| `details.branchName` | `string \| null`| Branch name for submitted build.                           |
-| `details.reportType` | `string`        | Build report type. Value is `CENTRAL_REPO` for this event. |
+| field name           | data type        | description                                                |
+|----------------------|------------------|------------------------------------------------------------|
+| `details.repo`       | `string \| null` | Repository name.                                           |
+| `details.repoId`     | `string \| null` | Repository identifier.                                     |
+| `details.branchName` | `string \| null` | Branch name for submitted build.                           |
+| `details.reportType` | `string`         | Build report type. Value is `CENTRAL_REPO` for this event. |
 
 Example event:
 
@@ -1040,6 +1076,531 @@ Example event:
     "eventsExported": 320,
     "batches": 4,
     "error": "Connection timed out while publishing batch 5"
+  }
+}
+```
+
+### SCIM Config and Token Lifecycle
+
+These events are emitted for organization-level SCIM configuration and token lifecycle changes.
+
+The following three event types share the same `details` contract shape.
+
+#### `SCIM_CONFIG_CHANGED`
+
+Emitted when SCIM enablement state changes for an organization.
+
+| field name                | data type | description                                                                                      |
+|---------------------------|-----------|--------------------------------------------------------------------------------------------------|
+| `details.enabled`         | `boolean` | Final persisted SCIM enablement state for the organization after the update request is applied.  |
+| `details.tokenConfigured` | `boolean` | Indicates whether a valid SCIM bearer token is configured and usable after the update completes. |
+| `details.tokenId`         | `string`  | Current SCIM token identifier associated with the org; omitted when no token is configured.      |
+
+Example event:
+
+```json
+{
+  "id": "a3216ef8-6168-4c4f-8b16-09e8e7d3225f",
+  "type": "SCIM_CONFIG_CHANGED",
+  "timestamp": "2026-04-17T05:40:00Z",
+  "severity": "INFO",
+  "summary": "SCIM config updated for organization acme",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.121",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "POST",
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/org-identity",
+  "details": {
+    "enabled": true,
+    "tokenConfigured": false
+  }
+}
+```
+
+#### `SCIM_TOKEN_ROTATED`
+
+Emitted when an organization’s SCIM bearer token is rotated.
+
+| field name                | data type | description                                                                                              |
+|---------------------------|-----------|----------------------------------------------------------------------------------------------------------|
+| `details.enabled`         | `boolean` | SCIM enablement state at the time rotation succeeds (typically unchanged by rotate itself).              |
+| `details.tokenConfigured` | `boolean` | Always `true` for a successful token rotation because a new token is issued and stored.                  |
+| `details.tokenId`         | `string`  | Identifier of the newly issued token; this is the value used to correlate subsequent SCIM auth attempts. |
+
+Example event:
+
+```json
+{
+  "id": "bb77b5fb-c88e-4ab2-a00c-c2d3bc31ae7c",
+  "type": "SCIM_TOKEN_ROTATED",
+  "timestamp": "2026-04-17T05:41:00Z",
+  "severity": "INFO",
+  "summary": "SCIM token rotated for organization acme",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.122",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "POST",
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/org-identity/token/rotate",
+  "details": {
+    "enabled": true,
+    "tokenConfigured": true,
+    "tokenId": "b9e87456-cdf5-4efa-a4f7-5374b4fd3f2e"
+  }
+}
+```
+
+#### `SCIM_TOKEN_REVOKED`
+
+Emitted when an organization’s SCIM bearer token is revoked.
+
+| field name                | data type | description                                                                                 |
+|---------------------------|-----------|---------------------------------------------------------------------------------------------|
+| `details.enabled`         | `boolean` | SCIM enablement state after revoke completes (current flow sets this to `false`).           |
+| `details.tokenConfigured` | `boolean` | Always `false` because token credentials are cleared as part of revoke processing.          |
+| `details.tokenId`         | `string`  | Omitted after revoke because no active token identifier remains on the organization config. |
+
+Example event:
+
+```json
+{
+  "id": "f14fa00d-ed43-46ee-8de9-ed4ca6f03785",
+  "type": "SCIM_TOKEN_REVOKED",
+  "timestamp": "2026-04-17T05:42:00Z",
+  "severity": "INFO",
+  "summary": "SCIM token revoked for organization acme",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.123",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "POST",
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/org-identity/token/revoke",
+  "details": {
+    "enabled": false,
+    "tokenConfigured": false
+  }
+}
+```
+
+### SCIM Provisioning Events
+
+These events are emitted for SCIM `User` and `Group` provisioning mutations.
+
+Target behavior:
+- User provisioning events (`SCIM_USER_*`) target `USER` when a projected local user exists; otherwise target `ORGANIZATION`.
+- Group provisioning events (`SCIM_GROUP_*`) target `ORGANIZATION`.
+
+Common `details` fields for all SCIM provisioning events:
+
+| field name               | data type | description                                                                                                  |
+|--------------------------|-----------|--------------------------------------------------------------------------------------------------------------|
+| `details.resourceType`   | `string`  | SCIM resource category (`USER` or `GROUP`).                                                                  |
+| `details.resourceScimId` | `string`  | SCIM resource identifier for the mutated user/group.                                                         |
+| `details.operation`      | `string`  | Provisioning operation for the mutation (`CREATE`, `UPDATE`, `PATCH`, `DEACTIVATE`, `REACTIVATE`, `DELETE`). |
+| `details.status`         | `string`  | Provisioning outcome status; currently `SUCCESS`.                                                            |
+| `details.idempotencyKey` | `string`  | Request key recorded with the audit event for traceability across retries/call chains.                       |
+
+Optional `details` fields by resource type:
+
+| field name                   | data type | emitted for    | description                                                        |
+|------------------------------|-----------|----------------|--------------------------------------------------------------------|
+| `details.userName`           | `string`  | `SCIM_USER_*`  | Canonical SCIM `userName` value persisted for the user link.       |
+| `details.projectedUserEmail` | `string`  | `SCIM_USER_*`  | Email on projected local user when user projection/linkage exists. |
+| `details.displayName`        | `string`  | `SCIM_GROUP_*` | Canonical SCIM group display name at mutation time.                |
+| `details.externalId`         | `string`  | both           | Optional IdP-provided external correlation id.                     |
+
+#### `SCIM_USER_CREATED`
+
+Emitted when a SCIM user is provisioned (created).
+
+| field name          | data type | description                                                                 |
+|---------------------|-----------|-----------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for created user events; this event emits `CREATE`. |
+
+Example event:
+
+```json
+{
+  "id": "868311d7-cf2f-4372-9f5a-1f220cd0d9f5",
+  "type": "SCIM_USER_CREATED",
+  "timestamp": "2026-04-17T05:43:00Z",
+  "severity": "INFO",
+  "summary": "SCIM user user@example.com provisioned",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "USER",
+  "targetId": "9e531045-84b7-46cc-9318-0905c40c122f",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "POST",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Users",
+  "details": {
+    "resourceType": "USER",
+    "resourceScimId": "4b56c08a-8565-47cb-af3d-76260da123fe",
+    "operation": "CREATE",
+    "status": "SUCCESS",
+    "idempotencyKey": "b48607d6-f5eb-4851-9252-f8f179583303",
+    "userName": "user@example.com",
+    "projectedUserEmail": "user@example.com",
+    "externalId": "ext-user"
+  }
+}
+```
+
+#### `SCIM_USER_UPDATED`
+
+Emitted when a SCIM user is updated via replace semantics (`PUT`).
+
+| field name          | data type | description                                                                        |
+|---------------------|-----------|------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for full replacement mutations; this event emits `UPDATE`. |
+
+Example event:
+
+```json
+{
+  "id": "df0df66f-8cb2-43ca-88b9-1724e466f009",
+  "type": "SCIM_USER_UPDATED",
+  "timestamp": "2026-04-17T05:44:00Z",
+  "severity": "INFO",
+  "summary": "SCIM user user.updated@example.com updated",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "USER",
+  "targetId": "9e531045-84b7-46cc-9318-0905c40c122f",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "PUT",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Users/4b56c08a-8565-47cb-af3d-76260da123fe",
+  "details": {
+    "resourceType": "USER",
+    "resourceScimId": "4b56c08a-8565-47cb-af3d-76260da123fe",
+    "operation": "UPDATE",
+    "status": "SUCCESS",
+    "idempotencyKey": "43af4f5d-a347-4665-b8fb-3d807b315603",
+    "userName": "user.updated@example.com",
+    "projectedUserEmail": "user.updated@example.com",
+    "externalId": "ext-user-updated"
+  }
+}
+```
+
+#### `SCIM_USER_PATCHED`
+
+Emitted when a SCIM user is updated via patch semantics (`PATCH`).
+
+| field name          | data type | description                                                                   |
+|---------------------|-----------|-------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for partial user mutations; this event emits `PATCH`. |
+
+Example event:
+
+```json
+{
+  "id": "4a00e7fb-7f85-4b8c-834a-0419917ab12a",
+  "type": "SCIM_USER_PATCHED",
+  "timestamp": "2026-04-17T05:44:30Z",
+  "severity": "INFO",
+  "summary": "SCIM user user.updated@example.com patched",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "USER",
+  "targetId": "9e531045-84b7-46cc-9318-0905c40c122f",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "PATCH",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Users/4b56c08a-8565-47cb-af3d-76260da123fe",
+  "details": {
+    "resourceType": "USER",
+    "resourceScimId": "4b56c08a-8565-47cb-af3d-76260da123fe",
+    "operation": "PATCH",
+    "status": "SUCCESS",
+    "idempotencyKey": "e9972cf7-b6f7-4704-8f88-ee61c766f2fb",
+    "userName": "user.updated@example.com",
+    "projectedUserEmail": "user.updated@example.com",
+    "externalId": "ext-user-patched"
+  }
+}
+```
+
+#### `SCIM_USER_DEACTIVATED`
+
+Emitted when a SCIM user is deprovisioned with `active=false`.
+
+| field name          | data type | description                                                                         |
+|---------------------|-----------|-------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for user deprovision events; this event emits `DEACTIVATE`. |
+
+Example event:
+
+```json
+{
+  "id": "2bf8cc9b-258b-466d-8da4-5a06dd261f06",
+  "type": "SCIM_USER_DEACTIVATED",
+  "timestamp": "2026-04-17T05:45:30Z",
+  "severity": "INFO",
+  "summary": "SCIM user user.updated@example.com deactivated",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "USER",
+  "targetId": "9e531045-84b7-46cc-9318-0905c40c122f",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "PATCH",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Users/4b56c08a-8565-47cb-af3d-76260da123fe",
+  "details": {
+    "resourceType": "USER",
+    "resourceScimId": "4b56c08a-8565-47cb-af3d-76260da123fe",
+    "operation": "DEACTIVATE",
+    "status": "SUCCESS",
+    "idempotencyKey": "03e04af8-7259-4ab3-ac4b-bfd7b82a9e80",
+    "userName": "user.updated@example.com",
+    "projectedUserEmail": "user.updated@example.com",
+    "externalId": "ext-user-patched"
+  }
+}
+```
+
+#### `SCIM_USER_REACTIVATED`
+
+Emitted when a previously deactivated SCIM user is reactivated (`active=true`).
+
+| field name          | data type | description                                                                                         |
+|---------------------|-----------|-----------------------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for restoring a previously deactivated user; this event emits `REACTIVATE`. |
+
+Example event:
+
+```json
+{
+  "id": "4afb4455-47c0-4462-abf3-a7d0bb12ac93",
+  "type": "SCIM_USER_REACTIVATED",
+  "timestamp": "2026-04-17T05:46:00Z",
+  "severity": "INFO",
+  "summary": "SCIM user user.updated@example.com reactivated",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "USER",
+  "targetId": "9e531045-84b7-46cc-9318-0905c40c122f",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "PUT",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Users/4b56c08a-8565-47cb-af3d-76260da123fe",
+  "details": {
+    "resourceType": "USER",
+    "resourceScimId": "4b56c08a-8565-47cb-af3d-76260da123fe",
+    "operation": "REACTIVATE",
+    "status": "SUCCESS",
+    "idempotencyKey": "cf08be29-f9f1-4967-a77a-18926ec191f5",
+    "userName": "user.updated@example.com",
+    "projectedUserEmail": "user.updated@example.com",
+    "externalId": "ext-user-patched"
+  }
+}
+```
+
+#### `SCIM_USER_DELETED`
+
+Emitted when a SCIM user is deleted via SCIM `DELETE`.
+
+| field name          | data type | description                                                                   |
+|---------------------|-----------|-------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for hard-delete mutations; this event emits `DELETE`. |
+
+Example event:
+
+```json
+{
+  "id": "2cbf7f3f-b6a4-49d9-ac2e-f6f9c7707f95",
+  "type": "SCIM_USER_DELETED",
+  "timestamp": "2026-04-17T05:45:00Z",
+  "severity": "INFO",
+  "summary": "SCIM user user@example.com deleted",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "USER",
+  "targetId": "9e531045-84b7-46cc-9318-0905c40c122f",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "DELETE",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Users/4b56c08a-8565-47cb-af3d-76260da123fe",
+  "details": {
+    "resourceType": "USER",
+    "resourceScimId": "4b56c08a-8565-47cb-af3d-76260da123fe",
+    "operation": "DELETE",
+    "status": "SUCCESS",
+    "idempotencyKey": "user:delete:4b56c08a-8565-47cb-af3d-76260da123fe:7df77c20-2d76-490a-8f14-f04288076926",
+    "userName": "user@example.com",
+    "projectedUserEmail": "user@example.com",
+    "externalId": "ext-user"
+  }
+}
+```
+
+#### `SCIM_GROUP_CREATED`
+
+Emitted when a SCIM group is created.
+
+| field name          | data type | description                                                                  |
+|---------------------|-----------|------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for created group events; this event emits `CREATE`. |
+
+Example event:
+
+```json
+{
+  "id": "f0979664-04e4-40a8-a4c3-f4688d6f72c8",
+  "type": "SCIM_GROUP_CREATED",
+  "timestamp": "2026-04-17T05:47:00Z",
+  "severity": "INFO",
+  "summary": "SCIM group Platform Team provisioned",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "POST",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Groups",
+  "details": {
+    "resourceType": "GROUP",
+    "resourceScimId": "d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "operation": "CREATE",
+    "status": "SUCCESS",
+    "idempotencyKey": "group:create:d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "displayName": "Platform Team",
+    "externalId": "ext-platform-team"
+  }
+}
+```
+
+#### `SCIM_GROUP_UPDATED`
+
+Emitted when a SCIM group is updated via replace semantics (`PUT`).
+
+| field name          | data type | description                                                                              |
+|---------------------|-----------|------------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for full group replacement mutations; this event emits `UPDATE`. |
+
+Example event:
+
+```json
+{
+  "id": "728f7e2c-7396-4d73-8dbf-7d995fdf3341",
+  "type": "SCIM_GROUP_UPDATED",
+  "timestamp": "2026-04-17T05:47:30Z",
+  "severity": "INFO",
+  "summary": "SCIM group Platform Team Updated updated",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "PUT",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Groups/d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+  "details": {
+    "resourceType": "GROUP",
+    "resourceScimId": "d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "operation": "UPDATE",
+    "status": "SUCCESS",
+    "idempotencyKey": "group:update:d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "displayName": "Platform Team Updated",
+    "externalId": "ext-platform-team-updated"
+  }
+}
+```
+
+#### `SCIM_GROUP_PATCHED`
+
+Emitted when a SCIM group is updated via patch semantics (`PATCH`), including membership mutations.
+
+| field name          | data type | description                                                                               |
+|---------------------|-----------|-------------------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for partial group/membership mutations; this event emits `PATCH`. |
+
+Example event:
+
+```json
+{
+  "id": "6f5be68e-e2f0-4f6c-9f87-91db995f5b70",
+  "type": "SCIM_GROUP_PATCHED",
+  "timestamp": "2026-04-17T05:48:00Z",
+  "severity": "INFO",
+  "summary": "SCIM group Platform Team patched",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "PATCH",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Groups/d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+  "details": {
+    "resourceType": "GROUP",
+    "resourceScimId": "d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "operation": "PATCH",
+    "status": "SUCCESS",
+    "idempotencyKey": "group:patch:d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "displayName": "Platform Team",
+    "externalId": "ext-platform-team"
+  }
+}
+```
+
+#### `SCIM_GROUP_DELETED`
+
+Emitted when a SCIM group is deleted via SCIM `DELETE`.
+
+| field name          | data type | description                                                                      |
+|---------------------|-----------|----------------------------------------------------------------------------------|
+| `details.operation` | `string`  | Operation discriminator for group deletion mutations; this event emits `DELETE`. |
+
+Example event:
+
+```json
+{
+  "id": "77a8b8be-ac99-4d6d-a6aa-6e62a3e2c1d8",
+  "type": "SCIM_GROUP_DELETED",
+  "timestamp": "2026-04-17T05:48:30Z",
+  "severity": "INFO",
+  "summary": "SCIM group Platform Team deleted",
+  "actorType": "SYSTEM",
+  "actorId": null,
+  "actorDisplay": null,
+  "sourceIp": null,
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "DELETE",
+  "httpUrl": "/66fe6c555e232d36a28fef94/scim/v2/Groups/d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+  "details": {
+    "resourceType": "GROUP",
+    "resourceScimId": "d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "operation": "DELETE",
+    "status": "SUCCESS",
+    "idempotencyKey": "group:delete:d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "displayName": "Platform Team",
+    "externalId": "ext-platform-team"
   }
 }
 ```
