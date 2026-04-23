@@ -1,0 +1,131 @@
+---
+title: Microsoft Entra SCIM Integration
+sidebar_label: Microsoft Entra SCIM Integration
+sidebar_position: 2
+---
+
+# Microsoft Entra SCIM Integration
+
+This guide explains how to configure Microsoft Entra provisioning for Specmatic Insights SCIM.
+
+It uses the required mapping:
+- Provision `userName` (email) and `active`.
+- Groups are supported by Insights, but not required for this setup.
+
+## Current Limitations
+
+- Current scope is user provisioning and deprovisioning.
+- SCIM role provisioning support is planned for a future release.
+
+For SCIM protocol details, see [SCIM Reference](/enterprise_onboarding/scim).
+
+## Prerequisites
+
+- Org admin access to Specmatic Insights
+- Admin access to [Microsoft Entra admin center](https://entra.microsoft.com/)
+- A SCIM token from Insights:
+  1. Go to **Settings** -> **Identity Access**
+  2. Enable SCIM
+  3. Select **Rotate Token**
+  4. Copy the one-time token value
+
+## Step 1: Create a non-gallery enterprise app
+
+Use a **non-gallery** app. This is required for custom SCIM endpoint configuration and custom attribute mappings.
+
+1. In Entra admin center, go to **Identity** -> **Applications** -> **Enterprise applications**.
+2. Select **New application**.
+3. Select **Create your own application**.
+4. Enter an app name (for example, `Specmatic Insights SCIM`).
+5. Choose **Integrate any other application you don't find in the gallery (Non-gallery)**.
+
+After creation, Entra opens a **Get started with application provisioning** wizard. Continue from that wizard.
+
+## Step 2: Configure provisioning endpoint
+
+1. In the **Get started with application provisioning** wizard, select **Get started** (or open **Provisioning** from the app menu).
+2. Set **Provisioning Mode** to **Automatic**.
+3. Set **Tenant URL** to:
+
+```text
+https://insights.specmatic.io/<orgId>/scim/v2
+```
+
+4. Set **Secret Token** to the SCIM token from Insights.
+5. Select **Test Connection** and save.
+
+## Step 3: Configure user provisioning mappings (required)
+
+1. In **Provisioning** -> **Mappings**, open **Provision Microsoft Entra ID Users**.
+2. Keep **Target Object Actions** enabled for create, update, and delete (default).
+3. Remove default mappings you do not want to send.
+4. Keep only these target attributes:
+   - `userName`
+   - `active`
+5. Configure `userName` source to an Entra email identity:
+   - Recommended: `userPrincipalName`
+6. Keep `active` mapped from Entra account state.
+7. Save mappings.
+
+> **Required:** Do not send any user attribute mappings other than `userName` and `active`. Remove all other mappings in Entra for this integration.
+
+### Mapping guidance
+
+- `userName` **must be an email address** for Insights.
+- Insights currently supports only this required mapping for this flow; extra profile attributes must not be sent.
+- `active` controls user lifecycle (provision/deprovision state).
+
+### Example required mapping
+
+| Source attribute (Entra)                                                                  | Target attribute (SCIM) |
+|-------------------------------------------------------------------------------------------|-------------------------|
+| `userPrincipalName`                                                                       | `userName`              |
+| `Switch([IsSoftDeleted], , "False", "True", "True", "False")` (default active expression) | `active`                |
+
+## Step 4: Configure scope and assignments
+
+1. In **Provisioning** settings, set **Scope** to:
+   - **Sync only assigned users and groups** (recommended)
+2. Go to **Users and groups** in the enterprise application.
+3. Assign only the users (and optionally groups) that should be provisioned.
+
+## Step 5: Group provisioning (optional)
+
+If you only want group lifecycle provisioning:
+
+1. In **Provisioning** -> **Mappings**, open **Provision Microsoft Entra ID Groups**.
+2. Disable group provisioning or remove group mappings.
+3. Save.
+
+If you want SCIM groups as well, keep group provisioning enabled and follow group schema/behavior from [SCIM Reference](/enterprise_onboarding/scim).
+
+## Step 6: Start provisioning
+
+1. Return to **Provisioning**.
+2. Select **Start provisioning**.
+3. Monitor **View provisioning logs** for create/update/deprovision operations.
+
+## Validate behavior
+
+Expected behavior with this required mapping:
+- Entra creates/updates users with `userName` and `active`.
+- Deprovisioning is reflected through `active=false` (or delete based on Entra policy).
+- Group sync is optional.
+
+## Troubleshooting
+
+- `401/403` from SCIM endpoint:
+  - Verify bearer token from Insights and re-test connection.
+- `400` on create/update:
+  - Verify `userName` resolves to a non-empty email-like value.
+  - Verify `active` mapping is present.
+- Users not syncing:
+  - Ensure scope is **assigned users and groups** and assignments exist.
+  - Check **Provisioning logs** in Entra for mapping errors.
+
+## References
+
+- [IETF RFC 7643 (SCIM Core Schema)](https://www.rfc-editor.org/rfc/rfc7643)
+- [IETF RFC 7644 (SCIM Protocol)](https://www.rfc-editor.org/rfc/rfc7644)
+- [Microsoft Entra provisioning overview](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/how-provisioning-works)
+- [Microsoft Entra SCIM tutorial for app developers](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/use-scim-to-provision-users-and-groups)
