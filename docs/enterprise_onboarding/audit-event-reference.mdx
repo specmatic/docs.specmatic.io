@@ -20,20 +20,20 @@ For UI navigation and export setup workflows, see [Audit Trail](/enterprise_onbo
 
 Top-level fields:
 
-| field name     | data type                        | description                                                                                                                                                      |
-|----------------|----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`           | `uuid`                           | Unique audit event ID.                                                                                                                                           |
-| `type`         | `string (enum)`                  | Audit event type (for example `AUTH_LOGIN_SUCCESS`).                                                                                                             |
-| `timestamp`    | `string (ISO-8601 UTC datetime)` | Event timestamp in UTC.                                                                                                                                          |
-| `severity`     | `string (enum)`                  | One of `INFO`, `WARN`, `ERROR`.                                                                                                                                  |
-| `summary`      | `string`                         | Human-readable event summary.                                                                                                                                    |
-| `actorType`    | `string (enum)`                  | One of `SYSTEM`, `USER`, `LICENSE`, `LEGACY_INSIGHTS_BUILD_REPORTER`.                                                                                            |
-| `actorId`      | `string \| null`                 | Actor identifier when available. Typically a UUID string; for unauthenticated-user flows this is the literal `"(unauthenticated)"`.                              |
-| `actorDisplay` | `string \| null`                 | Actor display value (for example email) when available.                                                                                                          |
-| `sourceIp`     | `string \| null`                 | Source IP when available.                                                                                                                                        |
-| `targetType`   | `string \| null`                 | Target entity type when applicable. One of `USER`, `ORGANIZATION`, `BUILD`, `LICENSE`.                                                                           |
-| `targetId`     | `string \| null`                 | Target entity identifier when applicable. For `USER`, `ORGANIZATION`, and `LICENSE`, this is a UUID string. For `BUILD`, this is a stringified numeric build ID. |
-| `details`      | `object`                         | Event-specific payload. Shape depends on `type`. Present as `{}` when no event-specific keys are defined.                                                        |
+| field name     | data type                        | description                                                                                                                         |
+|----------------|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| `id`           | `uuid`                           | Unique audit event ID.                                                                                                              |
+| `type`         | `string (enum)`                  | Audit event type (for example `AUTH_LOGIN_SUCCESS`).                                                                                |
+| `timestamp`    | `string (ISO-8601 UTC datetime)` | Event timestamp in UTC.                                                                                                             |
+| `severity`     | `string (enum)`                  | One of `INFO`, `WARN`, `ERROR`.                                                                                                     |
+| `summary`      | `string`                         | Human-readable event summary.                                                                                                       |
+| `actorType`    | `string (enum)`                  | One of `SYSTEM`, `USER`, `LICENSE`, `LEGACY_INSIGHTS_BUILD_REPORTER`.                                                               |
+| `actorId`      | `string \| null`                 | Actor identifier when available. Typically a UUID string; for unauthenticated-user flows this is the literal `"(unauthenticated)"`. |
+| `actorDisplay` | `string \| null`                 | Actor display value (for example email) when available.                                                                             |
+| `sourceIp`     | `string \| null`                 | Source IP when available.                                                                                                           |
+| `targetType`   | `string \| null`                 | Target entity type when applicable. One of `USER`, `ORGANIZATION`, `SCIM_GROUP`, `BUILD`, `LICENSE`.                                |
+| `targetId`     | `string \| null`                 | Target entity identifier when applicable. Treat this as an opaque string in downstream processing.                                  |
+| `details`      | `object`                         | Event-specific payload. Shape depends on `type`. Present as `{}` when no event-specific keys are defined.                           |
 
 Request context fields:
 
@@ -1601,6 +1601,60 @@ Example event:
     "idempotencyKey": "group:delete:d8d7cf67-3d25-4cde-a3be-4798ba45b742",
     "displayName": "Platform Team",
     "externalId": "ext-platform-team"
+  }
+}
+```
+
+### SCIM Group Mapping Events
+
+These events are emitted for Insights-side SCIM group mapping changes (role/identity mapping), separate from SCIM provisioning events.
+
+#### `SCIM_GROUP_MAPPING_CHANGED`
+
+Emitted when an org admin updates the Insights role/identity mapping for one or more SCIM groups. One event is emitted per changed group.
+
+| field name                            | data type | description                                                           |
+|---------------------------------------|-----------|-----------------------------------------------------------------------|
+| `targetType`                          | `string`  | Always `SCIM_GROUP`.                                                  |
+| `targetId`                            | `string`  | SCIM group ID whose mapping changed.                                  |
+| `details.resourceScimId`              | `string`  | SCIM group ID (same value as `targetId`).                             |
+| `details.displayName`                 | `string`  | SCIM group display name at the time of update.                        |
+| `details.externalId`                  | `string`  | Optional SCIM group external ID when present.                         |
+| `details.before.insightsRole`         | `string`  | Previous Insights role mapping (`USER` or `ORG_ADMIN`).               |
+| `details.before.insightsIdentityType` | `string`  | Previous identity mapping (`HUMAN_IDENTITY` or `NON_HUMAN_IDENTITY`). |
+| `details.after.insightsRole`          | `string`  | New Insights role mapping (`USER` or `ORG_ADMIN`).                    |
+| `details.after.insightsIdentityType`  | `string`  | New identity mapping (`HUMAN_IDENTITY` or `NON_HUMAN_IDENTITY`).      |
+
+Example event:
+
+```json
+{
+  "id": "6fa7583a-777d-4633-8ecf-4cdb60dd7b82",
+  "type": "SCIM_GROUP_MAPPING_CHANGED",
+  "timestamp": "2026-04-26T06:48:10Z",
+  "severity": "INFO",
+  "summary": "SCIM group mapping changed for Platform Team",
+  "actorType": "USER",
+  "actorId": "600a88a8-b41b-403c-8e0c-f462cfd94288",
+  "actorDisplay": "admin@example.com",
+  "sourceIp": "203.0.113.20",
+  "targetType": "SCIM_GROUP",
+  "targetId": "d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+  "destinationHostname": "insights.specmatic.io",
+  "httpMethod": "POST",
+  "httpUrl": "/api/organizations/970ce194-6039-413a-9c6f-b514cee9cdff/scim-groups/mapping",
+  "details": {
+    "resourceScimId": "d8d7cf67-3d25-4cde-a3be-4798ba45b742",
+    "displayName": "Platform Team",
+    "externalId": "ext-platform-team",
+    "before": {
+      "insightsRole": "USER",
+      "insightsIdentityType": "HUMAN_IDENTITY"
+    },
+    "after": {
+      "insightsRole": "ORG_ADMIN",
+      "insightsIdentityType": "NON_HUMAN_IDENTITY"
+    }
   }
 }
 ```
