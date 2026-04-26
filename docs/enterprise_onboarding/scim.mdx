@@ -64,6 +64,28 @@ Where to get the token in Insights:
 3. Enable SCIM (if needed) and use **Rotate Token** to issue a token.
 4. Copy and store the one-time raw token securely.
 
+## Operator Notes: Enabling SCIM per Org
+
+Use this checklist when turning on SCIM for an organization:
+
+1. Open **Settings** → **Identity Access**.
+2. Set your identity provider protocol (SAML or OIDC) and **Save Configuration**.
+3. Enable **SCIM provisioning** and **Save Configuration**.
+4. Rotate the SCIM token and configure your IdP with:
+   - Base URL: `https://insights.specmatic.io/<orgId>/scim/v2`
+   - Header: `Authorization: Bearer <SCIM token>`
+5. Start provisioning from the IdP and verify user creation/update in Insights.
+
+### Expected Login Behavior When SCIM Is Enabled
+
+When SCIM is enabled for an org, Insights treats the org as SCIM-managed for user lifecycle:
+
+- SSO login is allowed only for users already provisioned in that org through SCIM.
+- SSO Just-in-Time (JIT) user creation is blocked for users not provisioned via SCIM.
+- Non-provisioned SSO sign-ins are denied with an authorization failure.
+
+Operationally, provision users first (or provision and assign in scope), then ask users to sign in.
+
 ## Capabilities
 
 Insights SCIM endpoint advertises and supports:
