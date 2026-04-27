@@ -4,6 +4,7 @@ sidebar_position: 3
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import {CommercialBadge} from "../../src/components/CommercialBadge";
 
 Backward Compatibility
 ==========
@@ -25,7 +26,7 @@ In the following sections, we'll show you how to use Specmatic to maintain backw
 
 # What's New
 The new command has been overhauled to be more intuitive and supports a wider range of specifications. It now includes:
-- Comprehensive support for OpenAPI, gRPC, and GraphQL.
+- Comprehensive support for OpenAPI, gRPC, GraphQL and AsyncAPI.
 - Simplified usage with smarter messages to help.
 
 > **Note:** Older commands for backward compatibility will be deprecated soon. We recommend switching to the new command to make the most of its improved capabilities.
@@ -280,6 +281,196 @@ specmatic backward-compatibility-check --target-path ./api_products_v1.yaml
 Specmatic will flag this as incompatible, protecting your API consumers from unexpected changes. Following is the output of the command.
 
 ![Specmatic, backward compatibility breaking changes](/img/bcc_incompatible.png)
+
+### Orders AsyncAPI Evolution <CommercialBadge />
+
+Consider this initial Orders AsyncAPI specification:
+
+```yaml
+# filename: async_orders_v1.yaml
+asyncapi: 3.0.0
+info:
+  title: Order API
+  version: 1.0.0
+servers:
+  kafka-server:
+    host: 'kafka:9092'
+    protocol: kafka
+channels:
+  NewOrderPlaced:
+    address: new-orders
+    messages:
+      placeOrder.message:
+        $ref: '#/components/messages/OrderRequest'
+  OrderInitiated:
+    address: wip-orders
+    messages:
+      processOrder.message:
+        $ref: '#/components/messages/Order'
+
+operations:
+  placeOrder:
+    action: receive
+    channel:
+      $ref: '#/channels/NewOrderPlaced'
+    messages:
+      - $ref: '#/channels/NewOrderPlaced/messages/placeOrder.message'
+    reply:
+      channel:
+        $ref: '#/channels/OrderInitiated'
+      messages:
+        - $ref: '#/channels/OrderInitiated/messages/processOrder.message'
+components:
+  messages:
+    OrderRequest:
+      name: OrderRequest
+      title: An order request
+      contentType: application/json
+      headers:
+        type: object
+        properties:
+          orderCorrelationId:
+            type: string
+            description: Unique identifier for the request
+      correlationId:
+        $ref: "#/components/correlationIds/orderCorrelationId"
+      payload:
+        type: object
+        required:
+          - id
+          - orderItems
+        properties:
+          id:
+            type: integer
+          orderItems:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                quantity:
+                  type: integer
+                price:
+                  type: number
+              required:
+                - id
+                - name
+                - quantity
+                - price
+    Order:
+      name: OrderToProcess
+      title: An order that needs to be processed
+      contentType: application/json
+      headers:
+        type: object
+        properties:
+          orderCorrelationId:
+            type: string
+            description: Unique identifier for the request
+      correlationId:
+        $ref: "#/components/correlationIds/orderCorrelationId"
+      payload:
+        type: object
+        required:
+          - id
+          - totalAmount
+          - status
+        properties:
+          id:
+            type: integer
+          totalAmount:
+            type: number
+          status:
+            $ref: '#/components/messages/OrderStatus'
+    OrderStatus:
+      name: OrderStatus
+      title: Order status
+      payload:
+        type: string
+        enum:
+          - PENDING
+          - INITIATED
+          - ACCEPTED
+          - SHIPPED
+          - DELIVERED
+          - CANCELLED
+
+  correlationIds:
+    orderCorrelationId:
+      location: '$message.header#/orderCorrelationId'
+```
+
+Now, let's evolve this API by adding a new `sku` field in `OrderRequest`:
+
+```yaml
+# added 'messages.OrderRequest.payload.orderItems[].sku`
+orderItems:
+type: array
+items:
+  type: object
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    quantity:
+      type: integer
+    price:
+      type: number
+    sku:
+      type: string
+  required:
+    - id
+    - name
+    - quantity
+    - price
+```
+
+Run the backward compatibility check:
+
+```bash
+specmatic backward-compatibility-check --target-path ./async_orders_v1.yaml
+```
+
+Specmatic will approve this change, as adding an optional field maintains backward compatibility. Here is the sample output of the command:
+
+![specmatic asyncapi backwards compatible change](/img/asyncapi_bcc_compatible.png)
+
+### Breaking Change
+
+Now let's mark the `sku` field as required:
+
+```yaml
+# marking 'messages.OrderRequest.payload.orderItems[].sku` as required
+orderItems:
+type: array
+items:
+  type: object
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    quantity:
+      type: integer
+    price:
+      type: number
+    sku:
+      type: string
+  required:
+    - id
+    - name
+    - quantity
+    - price
+    - sku
+```
+
+Specmatic will flag this as incompatible because existing producers will be unable to send new OrderRequests. Following is the output of the command:
+
+![specmatic asyncapi backwards incompatible change](/img/asyncapi_bcc_incompatible.png)
 
 ## Handling Changes In Progress
 
