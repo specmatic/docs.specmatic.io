@@ -5,6 +5,7 @@ Backward Compatibility Rules
 ============================
 
 
+## OpenAPI
 
 There are a few simple rules, and a couple of exceptions.
 
@@ -12,7 +13,7 @@ There are a few simple rules, and a couple of exceptions.
 - Responses: do not remove mandatories (e.g. remove a mandatory field, make a mandatory field optional)
 - Do not change value types (e.g. int to string)
 
-## Requests
+### Requests
 
 Do not add mandatory keys and / or make values non-nullable for existing keys.
 
@@ -25,7 +26,7 @@ Do not add mandatory keys and / or make values non-nullable for existing keys.
 | Optional key becomes mandatory | **incompatible** | Consumers who were not sending this key before will now be expected to send it.               |
 | Mandatory key becomes optional | compatible       | Consumers who were sending this key before can either continue sending it or stop sending it. |
 
-## Responses
+### Responses
 
 Do not remove mandatory keys and / or make values nullable for existing keys.
 
