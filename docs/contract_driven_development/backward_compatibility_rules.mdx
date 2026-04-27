@@ -37,3 +37,32 @@ Do not remove mandatory keys and / or make values nullable for existing keys.
 | Remove an optional key         | compatible       | In some cases, the server used to send this in the response. Henceforth it never will.                                                                                                                              |
 | Optional key becomes mandatory | compatible       | Sometimes the server didn't send this key. But henceforth, the server will always send this key. Consumers who ignored it before can continue doing so. Consumers who checked for it before have code to handle it. |
 | Mandatory key becomes optional | **incompatible** | It's possible that the server will not send this key. Some consumers may be expecting it, but will not be receiving it henceforth.                                                                                  |
+
+
+## AsyncAPI
+
+For AsyncAPI all of the above rules apply based on this mapping:
+
+- Requests map to received messages handled by an `action: receive` type operation.
+- Responses map to messages sent by a `reply`, `x-specmatic-retry`, `x-specmatic-dlq`, or an `action: send` operation.
+
+In addition, the following rules apply:
+
+| Operation                                                                                             | Verdict           | Reason                                                                         |
+|-------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------------------------------------------------|
+| Remove an existing operation                                                                          | **incompatible**  | Existing clients or services still depend on that operation.                   |
+| Change an operation's `action`                                                                        | **incompatible**  | The interaction changes from receive to send, or vice versa.                   |
+| Change an operation's channel `address`                                                               | **incompatible**  | Existing producers or consumers will continue using the old topic.             |
+| Remove a `reply` from a request-reply operation                                                       | **incompatible**  | Existing callers still expect the reply message.                               |
+| Change the `reply` channel `address`                                                                  | **incompatible**  | Existing callers will continue listening on the old reply topic.               |
+| Remove `x-specmatic-retry`                                                                            | **incompatible**  | Existing retry behavior is broken.                                             |
+| Change the `x-specmatic-retry` channel `address`                                                      | **incompatible**  | Existing retry consumers will continue using the old retry topic.              |
+| Remove `x-specmatic-dlq`                                                                              | **incompatible**  | Existing dead-letter behavior is broken.                                       |
+| Change the `x-specmatic-dlq` channel `address`                                                        | **incompatible**  | Existing DLQ consumers will continue using the old DLQ topic.                  |
+| Change a message `correlationId.location`                                                             | **incompatible**  | Existing correlation logic will read the correlation ID from the old location. |
+| Remove a `correlationId` from a sent message                                                          | **incompatible**  | Existing consumers need it to correlate replies, retries, or DLQ messages.     |
+| Add a new operation                                                                                   | compatible        | Existing clients and services can ignore it.                                   |
+| Rename an operation                                                                                   | compatible        | The action, topic, reply topic, and message contract are unchanged.            |
+| Rename a message reference without changing the resolved message schema                               | compatible        | The message contract seen on the wire is unchanged.                            |
+| Rename a `correlationId` reference without changing its resolved `location`                           | compatible        | Correlation still uses the same message location.                              |
+| Remove a `correlationId` from a received message                                                      | compatible        | The receiver no longer requires that correlation ID and will ignore it         |
