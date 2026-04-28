@@ -14,8 +14,8 @@ It uses the required mapping:
 
 ## Current Limitations
 
-- Current scope is user provisioning and deprovisioning.
-- SCIM role provisioning support is planned for a future release.
+- Insights roles and identity types are not provisioned directly through Entra SCIM user/group attributes.
+- After group sync, role and identity type mapping is configured in Insights from the Collaborators page.
 
 For SCIM protocol details, see [SCIM Reference](/enterprise_onboarding/scim).
 
@@ -99,7 +99,21 @@ If you only want group lifecycle provisioning:
 
 If you want SCIM groups as well, keep group provisioning enabled and follow group schema/behavior from [SCIM Reference](/enterprise_onboarding/scim).
 
-## Step 6: Start provisioning
+## Step 6: Map synced SCIM groups to Insights role and identity type
+
+After Entra sync starts and groups appear in Insights:
+
+1. In Insights, open **Settings** -> **Collaborators** -> **SCIM Groups**.
+2. Select one or more synced groups.
+3. Apply one of these mappings:
+   - **Mark as User (Human)**
+   - **Mark as Admin (Human)**
+   - **Mark as User (Service account)**
+   - **Mark as Admin (Service account)**
+
+This mapping controls the effective org membership role and identity type for users hydrated from those groups.
+
+## Step 7: Start provisioning
 
 1. Return to **Provisioning**.
 2. Select **Start provisioning**.
@@ -110,7 +124,8 @@ If you want SCIM groups as well, keep group provisioning enabled and follow grou
 Expected behavior with this required mapping:
 - Entra creates/updates users with `userName` and `active`.
 - Deprovisioning is reflected through `active=false` (or delete based on Entra policy).
-- Group sync is optional.
+- Group sync is optional, but required if you want role/identity assignment through group mapping.
+- Once groups are synced, admins complete role/identity mapping in Insights from **Collaborators** -> **SCIM Groups**.
 
 ## Troubleshooting
 

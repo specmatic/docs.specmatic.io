@@ -11,11 +11,6 @@ This page documents the SCIM 2.0 behavior currently supported by Specmatic Insig
 If you are integrating from Microsoft Entra, use the step-by-step guide:
 - [Microsoft Entra SCIM Integration](/enterprise_onboarding/SCIM/entra-scim-integration)
 
-## Current Limitations
-
-- Current scope is user provisioning and deprovisioning.
-- SCIM role provisioning support is planned for a future release.
-
 For SCIM standards background:
 - [SCIM](https://scim.cloud/) - System for Cross-domain Identity Management
 - [IETF RFC 7643 (Core Schema)](https://www.rfc-editor.org/rfc/rfc7643)
@@ -75,6 +70,25 @@ Use this checklist when turning on SCIM for an organization:
    - Base URL: `https://insights.specmatic.io/<orgId>/scim/v2`
    - Header: `Authorization: Bearer <SCIM token>`
 5. Start provisioning from the IdP and verify user creation/update in Insights.
+
+## Recommended Admin Setup Sequence
+
+For predictable onboarding, set up identity in this order:
+
+1. Configure and validate SSO in **Settings** -> **Identity Access**.
+2. Enable SCIM and configure your IdP provisioning endpoint/token.
+3. Ensure relevant users and groups are syncing from IdP to Insights.
+4. Open **Settings** -> **Collaborators** -> **SCIM Groups**.
+5. Select synced groups and map them to an Insights role and identity type.
+
+Mapping is applied per SCIM group in Collaborators using four actions:
+
+- **Mark as User (Human)**
+- **Mark as Admin (Human)**
+- **Mark as User (Service account)**
+- **Mark as Admin (Service account)**
+
+These mappings determine the effective `role` and `identity type` hydrated into org memberships.
 
 ### Expected Login Behavior When SCIM Is Enabled
 
@@ -204,6 +218,20 @@ Filter support for Group list:
 - Comparator: `eq`
 - Logical nesting (`and`, `or`, `not`) is supported for supported attributes/operators.
 - Unsupported operators/attributes return `400` with SCIM `invalidFilter`.
+
+## Group Mapping in Insights
+
+After groups are synced over SCIM, org admins can map each group to:
+
+- Insights role: User or Admin
+- Identity type: Human or Service account
+
+Defaults for newly synced groups:
+
+- Role defaults to User.
+- Identity type defaults to Human.
+
+These mappings are managed in **Settings** -> **Collaborators** -> **SCIM Groups**, not in IdP attribute mappings.
 
 ## Practical Interoperability Notes
 
