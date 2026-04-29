@@ -1,0 +1,37 @@
+version: 3
+dependencies:
+  services:
+    - service:
+        definitions:
+          - definition:
+              source:
+                filesystem:
+                  directory: api-specs
+              specs:
+                - order-service-async-avro-v3_0_0.yaml
+        runOptions:
+          asyncapi:
+            type: mock
+            inMemoryBroker:
+              host: localhost
+              port: 9092
+              logDir: ./kafka-logs
+            schemaRegistry:
+              kind: CONFLUENT
+              url: ${SCHEMA_REGISTRY_URL:http://localhost:8085}
+              username: admin
+              password: admin-secret
+            servers:
+              - host: localhost:9092
+                protocol: kafka
+                adminCredentials:
+                  security.protocol: SASL_PLAINTEXT
+                  sasl.mechanism: PLAIN
+                  sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="test" password="test-secret";
+                client:
+                  producer:
+                    basic.auth.credentials.source: USER_INFO
+                    basic.auth.user.info: admin:admin-secret
+                  consumer:
+                    basic.auth.credentials.source: USER_INFO
+                    basic.auth.user.info: admin:admin-secret

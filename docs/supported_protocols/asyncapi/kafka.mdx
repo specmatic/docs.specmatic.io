@@ -75,6 +75,8 @@ Create `specmatic.yaml`:
 
 This config tells Specmatic where to load the AsyncAPI contract from and how to run the async mock.
 
+For the full AsyncAPI configuration fields used here, see [Test Configuration](/references/configuration/test-configuration#asyncapi-test-configuration) and [Mock Configuration](/references/configuration/mock-configuration#asyncapi-mock-configuration).
+
 Start the mock with the embedded in-memory Kafka broker:
 
 ```bash
@@ -105,6 +107,26 @@ docker run --network host \
 ```
 
 `--network host` is important when using `localhost` for the broker address because it allows the container to reach services on the host directly.
+
+## Kafka Configuration In `specmatic.yaml`
+
+For Kafka, the `servers` entries in `runOptions.asyncapi` map directly to the async config classes:
+
+- `servers[].host` and `servers[].protocol` select the broker
+- `servers[].adminCredentials` carries Kafka admin client properties
+- `servers[].client.producer` and `servers[].client.consumer` carry Kafka client properties
+- `schemaRegistry` is used when your AsyncAPI payloads reference Avro schemas from a registry
+
+Example:
+
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/kafka/advanced-config/specmatic.yaml?raw'))} />
+
+Notes:
+
+- Use `adminCredentials` for broker-level settings such as `security.protocol`, `sasl.mechanism`, and `sasl.jaas.config`.
+- Use `client.producer` and `client.consumer` for producer-specific and consumer-specific properties.
+- Add `schemaRegistry` only when the AsyncAPI contract uses registry-backed schemas such as Avro.
+- `replyTimeout` and `subscriberReadinessWaitTime` belong in async test configuration, not mock-only configuration.
 
 ## API Server
 

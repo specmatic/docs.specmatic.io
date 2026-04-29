@@ -4,6 +4,8 @@ sidebar_position: 3
 ---
 
 import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
+import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
+import yaml from "js-yaml";
 
 # Test Configuration
 
@@ -39,6 +41,40 @@ The default timeout is `6000 milliseconds`.
   v3Object={require('./includes/test-configuration/v3/simple-consumes/specmatic.json')}
   v2Object={require('./includes/test-configuration/v2/simple-consumes/specmatic.json')}
 />
+
+## AsyncAPI Test Configuration
+
+AsyncAPI contract tests use `runOptions.asyncapi` in `specmatic.yaml`. This is where Specmatic reads the async test settings represented by `AsyncTestConfig`.
+
+<V3SpecmaticJsonYamlTabs
+  v3Object={yaml.load(require('./includes/test-configuration/v3/asyncapi/specmatic.yaml?raw'))}
+/>
+
+### AsyncAPI Test Options
+
+| Property | Description |
+|----------|-------------|
+| `type` | Must be `test` for AsyncAPI contract tests. |
+| `replyTimeout` | Maximum time in milliseconds to wait for a reply message. Default: `10000`. |
+| `subscriberReadinessWaitTime` | Additional wait time in milliseconds before tests begin verifying messages. Use this when consumers or subscriptions need time to become ready. Default: `0`. |
+| `servers` | List of broker endpoints Specmatic can use while running the test. Specmatic matches entries by `protocol`. |
+| `servers[].host` | Broker host or endpoint. For Kafka, this is typically `host:port`. |
+| `servers[].protocol` | Messaging protocol such as `kafka`, `sqs`, `sns`, `jms`, or `rabbitmq`. |
+| `servers[].adminCredentials` | Protocol-specific admin properties used to provision or inspect broker resources. |
+| `servers[].client.producer` | Producer client properties passed through to the protocol client. |
+| `servers[].client.consumer` | Consumer client properties passed through to the protocol client. |
+| `schemaRegistry` | Optional schema registry settings for Avro-based AsyncAPI contracts. |
+| `schemaRegistry.kind` | Schema registry type. Currently `CONFLUENT` is supported. |
+| `schemaRegistry.url` | Schema registry endpoint URL. |
+| `schemaRegistry.username` | Optional username for the schema registry. |
+| `schemaRegistry.password` | Optional password for the schema registry. |
+
+### Notes
+
+- Add `replyTimeout` and `subscriberReadinessWaitTime` only when the defaults are not enough for your environment.
+- `adminCredentials`, `client.producer`, and `client.consumer` are protocol-specific maps. For Kafka, use standard Kafka client properties such as `security.protocol`, `sasl.mechanism`, and serializer or auth settings.
+- `schemaRegistry` is only needed when your AsyncAPI payloads reference schemas from a registry, such as the Kafka Avro sample.
+- For Kafka-specific examples, see [Kafka](/supported_protocols/asyncapi/kafka).
 
 ## Strict Mode
 

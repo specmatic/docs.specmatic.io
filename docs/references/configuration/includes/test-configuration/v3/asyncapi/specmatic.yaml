@@ -1,0 +1,34 @@
+version: 3
+systemUnderTest:
+  service:
+    definitions:
+      - definition:
+          source:
+            filesystem:
+              directory: api-specs
+          specs:
+            - order-service-async-avro-v3_0_0.yaml
+    runOptions:
+      asyncapi:
+        type: test
+        replyTimeout: 15000
+        subscriberReadinessWaitTime: 3000
+        schemaRegistry:
+          kind: CONFLUENT
+          url: ${SCHEMA_REGISTRY_URL:http://localhost:8085}
+          username: admin
+          password: admin-secret
+        servers:
+          - host: ${KAFKA_BROKER:localhost:9092}
+            protocol: kafka
+            adminCredentials:
+              security.protocol: SASL_PLAINTEXT
+              sasl.mechanism: PLAIN
+              sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="test" password="test-secret";
+            client:
+              producer:
+                basic.auth.credentials.source: USER_INFO
+                basic.auth.user.info: admin:admin-secret
+              consumer:
+                basic.auth.credentials.source: USER_INFO
+                basic.auth.user.info: admin:admin-secret
