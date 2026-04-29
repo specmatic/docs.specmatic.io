@@ -48,10 +48,10 @@ For details on acquiring and managing your license, refer to the [License Key Gu
 
 ## Step 1: Setting up CI/CD Pipelines with Specmatic
 
-Please go through the detailed [Continuous Integration](/references/continuous_integration) guide to set up Specmatic in your CI/CD pipelines for: 
+Please go through the detailed [Continuous Integration](/references/continuous_integration) guide to set up Specmatic in your CI/CD pipelines for:
 - Central Contract Repo
-- API Consumers 
-- API Providers 
+- API Consumers
+- API Providers
 
 ## Step 2: Configuring Specmatic Insights
 
@@ -76,7 +76,7 @@ Please add the following 2 steps to your CI/CD pipeline configuration:
     docker run --rm \
       -v ~/.specmatic:/root/.specmatic \
       -v ${{ github.workspace }}:/usr/src/app \
-      specmatic/specmatic \
+      specmatic/enterprise \
       send-report \
       --branch-name ${{ github.ref_name }} \
       --repo-name ${{ github.event.repository.name }} \
@@ -112,7 +112,7 @@ publish_specmatic_insights:
         --branch-name "$CI_COMMIT_BRANCH" \
         --repo-name "$CI_PROJECT_NAME" \
         --repo-id "$CI_PROJECT_ID" \
-        --repo-url "$CI_PROJECT_URL"  
+        --repo-url "$CI_PROJECT_URL"
 
 ```
 
