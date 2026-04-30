@@ -1,5 +1,5 @@
 {
-  "specmatic-core-version": "2.44.2",
+  "specmatic-core-version": "0.99.3",
   "specmatic-jms-version": "0.6.1",
   "specmatic-async-version": "2.2.7",
   "specmatic-kafka-version": "1.7.7",
