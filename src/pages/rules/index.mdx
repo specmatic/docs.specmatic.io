@@ -50,6 +50,8 @@ search_exclude: true
     * [Invalid parameter definition](#invalid-parameter-definition)
   * [OAS0011](#oas0011)
     * [Missing path parameter](#missing-path-parameter)
+  * [OAS0012](#oas0012)
+    * [Required query object conflict](#required-query-object-conflict)
   * [OAS0020](#oas0020)
     * [Security property redefined](#security-property-redefined)
   * [OAS0021](#oas0021)
@@ -819,6 +821,41 @@ paths:
 **How this can be resolved**
 
 - Add parameter definitions for every path template segment.
+
+## OAS0012
+
+### Required query object conflict
+
+A required form-exploded object query parameter must have at least one required schema property to make a concrete query parameter mandatory.
+
+**Why this is a problem**
+
+OpenAPI serializes `style: form` and `explode: true` object query parameters as individual query parameters. There is no wrapper query parameter for the object itself.
+
+Example:
+
+```yaml
+parameters:
+  - in: query
+    name: info
+    required: true
+    style: form
+    explode: true
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+```
+
+The query object is marked as required, but neither `name` nor `description` is marked as required in the object schema. Since the object is represented by its properties, Specmatic has no concrete query parameter to require.
+
+**How this can be resolved**
+
+- Add at least one property to the object's `required` list.
+- If none of the object properties must be present, set the query parameter `required` value to `false` or remove it.
 
 ## OAS0020
 
