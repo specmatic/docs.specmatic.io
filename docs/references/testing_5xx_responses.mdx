@@ -1,0 +1,19 @@
+---
+title: Testing 5xx Responses
+sidebar_label: Testing 5xx Responses
+sidebar_position: 6
+---
+
+# Testing 5xx Responses
+
+| Status Code | Meaning | When to Use It | Should be Contract Tested? | How to Test |
+|-------------|---------|----------------|----------------------------|-------------|
+| `500 Internal Server Error` | "Something is wrong with my code or my local infrastructure." | Use this when your service faces an unexpected runtime error, such as a bug, null pointer, or out-of-memory error. | No | Do not intentionally encode an unhandled crash as contract behaviour. Schema resiliency testing may reveal unexpected `500` responses, which indicates gaps in validation or error handling that should be fixed. |
+| `501 Not Implemented` | "I lack the functionality to fulfil your request." | Use this when your service does not implement certain operations and you want to clearly communicate that to the caller. | No | If the service does not handle the operation and you do not plan to implement it, remove it from the spec. If there is a specific HTTP method you do not want to support, use `405 Method Not Allowed` in your spec to communicate that clearly. |
+| `502 Bad Gateway` | "I am healthy, but the upstream service I called returned an unusable response." | Use this when an upstream service returns an invalid response, a `5xx` error of its own, or unparseable data. | Yes | Mock the dependency and provide an example on the dependent mock that returns the relevant upstream failure, such as a specific HTTP status code or invalid response. |
+| `503 Service Unavailable` | "I am too overwhelmed or my critical dependencies are down." | Use this if a core, non-negotiable dependency is completely offline, or if a circuit breaker has tripped to protect your system. | Yes | Mock the dependency and provide an example on the dependent mock that times out or represents the unavailable dependency condition. |
+| `504 Gateway Timeout` | "I tried to call the upstream service, but it took too long to answer." | Use this when an upstream dependency times out and you cannot fulfil the request without it. | Yes | Mock the dependency and provide an example on the dependent mock that times out. |
+
+Contract tests should validate expected API behaviour, including expected failure modes (502/503/504), while unexpected implementation failures (500) should emerge from schema resiliency testing rather than be intentionally encoded as contract behaviour.
+
+Note: For 502, 503 and 504 you would need to provide examples which map to the examples on the dependent mock's side.
