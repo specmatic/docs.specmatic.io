@@ -62,18 +62,20 @@ https://insights.specmatic.io/<orgId>/scim/v2
 4. Keep only these target attributes:
    - `userName`
    - `active`
+   - `externalId` (recommended)
 5. Configure `userName` source to an Entra email identity:
    - Recommended: `userPrincipalName`
 6. Keep `active` mapped from Entra account state.
 7. Save mappings.
 
-> **Required:** Do not send any user attribute mappings other than `userName` and `active`. Remove all other mappings in Entra for this integration.
+> **Required:** Keep `userName` and `active` mappings. `externalId` is optional but recommended. Remove all other user attribute mappings in Entra for this integration.
 
 ### Mapping guidance
 
 - `userName` **must be an email address** for Insights.
 - Insights currently supports only this required mapping for this flow; extra profile attributes must not be sent.
 - `active` controls user lifecycle (provision/deprovision state).
+- `externalId` is also supported. If you choose to map it, use an immutable Entra identifier that does not change over time (recommended: `objectId`).
 
 ### Example required mapping
 
@@ -81,6 +83,7 @@ https://insights.specmatic.io/<orgId>/scim/v2
 |-------------------------------------------------------------------------------------------|-------------------------|
 | `userPrincipalName`                                                                       | `userName`              |
 | `Switch([IsSoftDeleted], , "False", "True", "True", "False")` (default active expression) | `active`                |
+| `objectId`                                                                                | `externalId` (recommended) |
 
 ## Step 4: Configure scope and assignments
 
@@ -123,6 +126,7 @@ This mapping controls the effective org membership role and identity type for us
 
 Expected behavior with this required mapping:
 - Entra creates/updates users with `userName` and `active`.
+- If mapped, `externalId` is synced and should remain stable for identity correlation.
 - Deprovisioning is reflected through `active=false` (or delete based on Entra policy).
 - Group sync is optional, but required if you want role/identity assignment through group mapping.
 - Once groups are synced, admins complete role/identity mapping in Insights from **Collaborators** -> **SCIM Groups**.
@@ -134,6 +138,7 @@ Expected behavior with this required mapping:
 - `400` on create/update:
   - Verify `userName` resolves to a non-empty email-like value.
   - Verify `active` mapping is present.
+  - If `externalId` is mapped, verify it resolves to a non-empty immutable identifier (recommended: `objectId`).
 - Users not syncing:
   - Ensure scope is **assigned users and groups** and assignments exist.
   - Check **Provisioning logs** in Entra for mapping errors.
