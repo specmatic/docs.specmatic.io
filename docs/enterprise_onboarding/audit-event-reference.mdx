@@ -1210,14 +1210,41 @@ Common `details` fields for all SCIM provisioning events:
 | `details.status`         | `string`  | Provisioning outcome status; currently `SUCCESS`.                                                            |
 | `details.idempotencyKey` | `string`  | Request key recorded with the audit event for traceability across retries/call chains.                       |
 
-Optional `details` fields by resource type:
+User-specific `details` fields (`SCIM_USER_*`):
 
-| field name                   | data type | emitted for    | description                                                        |
-|------------------------------|-----------|----------------|--------------------------------------------------------------------|
-| `details.userName`           | `string`  | `SCIM_USER_*`  | Canonical SCIM `userName` value persisted for the user link.       |
-| `details.projectedUserEmail` | `string`  | `SCIM_USER_*`  | Email on projected local user when user projection/linkage exists. |
-| `details.displayName`        | `string`  | `SCIM_GROUP_*` | Canonical SCIM group display name at mutation time.                |
-| `details.externalId`         | `string`  | both           | Optional IdP-provided external correlation id.                     |
+| field name                   | data type | description                                                                          |
+|------------------------------|-----------|--------------------------------------------------------------------------------------|
+| `details.userName`           | `string`  | Canonical SCIM `userName` value persisted for the user link.                         |
+| `details.projectedUserEmail` | `string`  | Email on projected local user when user projection/linkage exists.                   |
+| `details.externalId`         | `string`  | Optional IdP-provided external correlation id.                                       |
+| `details.active`             | `boolean` | Current SCIM active state captured on the audit event (present for all user events). |
+| `details.before`             | `object`  | Snapshot before mutation for `UPDATE`/`PATCH`/`DEACTIVATE`/`REACTIVATE` operations.  |
+| `details.after`              | `object`  | Snapshot after mutation for `UPDATE`/`PATCH`/`DEACTIVATE`/`REACTIVATE` operations.   |
+
+User snapshot shape (`details.before` / `details.after`):
+
+| field name             | data type | description                                  |
+|------------------------|-----------|----------------------------------------------|
+| `*.userName`           | `string`  | User name at that point in time.             |
+| `*.projectedUserEmail` | `string`  | Projected local email at that point in time. |
+| `*.externalId`         | `string`  | External id at that point in time.           |
+| `*.active`             | `boolean` | Active flag at that point in time.           |
+
+Group-specific `details` fields (`SCIM_GROUP_*`):
+
+| field name            | data type | description                                                              |
+|-----------------------|-----------|--------------------------------------------------------------------------|
+| `details.displayName` | `string`  | Canonical SCIM group display name at mutation time.                      |
+| `details.externalId`  | `string`  | Optional IdP-provided external correlation id.                           |
+| `details.before`      | `object`  | Snapshot before mutation for `UPDATE` and `PATCH` group operations only. |
+| `details.after`       | `object`  | Snapshot after mutation for `UPDATE` and `PATCH` group operations only.  |
+
+Group snapshot shape (`details.before` / `details.after`):
+
+| field name            | data type | description                           |
+|-----------------------|-----------|---------------------------------------|
+| `*.displayName`       | `string`  | Display name at that point in time.   |
+| `*.externalId`        | `string`  | External id at that point in time.    |
 
 #### `SCIM_USER_CREATED`
 
@@ -1253,7 +1280,8 @@ Example event:
     "idempotencyKey": "b48607d6-f5eb-4851-9252-f8f179583303",
     "userName": "user@example.com",
     "projectedUserEmail": "user@example.com",
-    "externalId": "ext-user"
+    "externalId": "ext-user",
+    "active": true
   }
 }
 ```
@@ -1292,7 +1320,20 @@ Example event:
     "idempotencyKey": "43af4f5d-a347-4665-b8fb-3d807b315603",
     "userName": "user.updated@example.com",
     "projectedUserEmail": "user.updated@example.com",
-    "externalId": "ext-user-updated"
+    "externalId": "ext-user-updated",
+    "active": true,
+    "before": {
+      "userName": "user@example.com",
+      "projectedUserEmail": "user@example.com",
+      "externalId": "ext-user",
+      "active": true
+    },
+    "after": {
+      "userName": "user.updated@example.com",
+      "projectedUserEmail": "user.updated@example.com",
+      "externalId": "ext-user-updated",
+      "active": true
+    }
   }
 }
 ```
@@ -1331,7 +1372,20 @@ Example event:
     "idempotencyKey": "e9972cf7-b6f7-4704-8f88-ee61c766f2fb",
     "userName": "user.updated@example.com",
     "projectedUserEmail": "user.updated@example.com",
-    "externalId": "ext-user-patched"
+    "externalId": "ext-user-patched",
+    "active": true,
+    "before": {
+      "userName": "user.updated@example.com",
+      "projectedUserEmail": "user.updated@example.com",
+      "externalId": "ext-user-updated",
+      "active": true
+    },
+    "after": {
+      "userName": "user.updated@example.com",
+      "projectedUserEmail": "user.updated@example.com",
+      "externalId": "ext-user-patched",
+      "active": true
+    }
   }
 }
 ```
@@ -1370,7 +1424,8 @@ Example event:
     "idempotencyKey": "03e04af8-7259-4ab3-ac4b-bfd7b82a9e80",
     "userName": "user.updated@example.com",
     "projectedUserEmail": "user.updated@example.com",
-    "externalId": "ext-user-patched"
+    "externalId": "ext-user-patched",
+    "active": false
   }
 }
 ```
@@ -1409,7 +1464,8 @@ Example event:
     "idempotencyKey": "cf08be29-f9f1-4967-a77a-18926ec191f5",
     "userName": "user.updated@example.com",
     "projectedUserEmail": "user.updated@example.com",
-    "externalId": "ext-user-patched"
+    "externalId": "ext-user-patched",
+    "active": true
   }
 }
 ```
@@ -1448,7 +1504,8 @@ Example event:
     "idempotencyKey": "user:delete:4b56c08a-8565-47cb-af3d-76260da123fe:7df77c20-2d76-490a-8f14-f04288076926",
     "userName": "user@example.com",
     "projectedUserEmail": "user@example.com",
-    "externalId": "ext-user"
+    "externalId": "ext-user",
+    "active": false
   }
 }
 ```
@@ -1524,7 +1581,15 @@ Example event:
     "status": "SUCCESS",
     "idempotencyKey": "group:update:d8d7cf67-3d25-4cde-a3be-4798ba45b742",
     "displayName": "Platform Team Updated",
-    "externalId": "ext-platform-team-updated"
+    "externalId": "ext-platform-team-updated",
+    "before": {
+      "displayName": "Platform Team",
+      "externalId": "ext-platform-team"
+    },
+    "after": {
+      "displayName": "Platform Team Updated",
+      "externalId": "ext-platform-team-updated"
+    }
   }
 }
 ```
@@ -1562,7 +1627,15 @@ Example event:
     "status": "SUCCESS",
     "idempotencyKey": "group:patch:d8d7cf67-3d25-4cde-a3be-4798ba45b742",
     "displayName": "Platform Team",
-    "externalId": "ext-platform-team"
+    "externalId": "ext-platform-team",
+    "before": {
+      "displayName": "Platform Team Updated",
+      "externalId": "ext-platform-team-updated"
+    },
+    "after": {
+      "displayName": "Platform Team",
+      "externalId": "ext-platform-team"
+    }
   }
 }
 ```
