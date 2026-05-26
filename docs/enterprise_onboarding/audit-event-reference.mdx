@@ -1210,42 +1210,6 @@ Common `details` fields for all SCIM provisioning events:
 | `details.status`         | `string`  | Provisioning outcome status; currently `SUCCESS`.                                                            |
 | `details.idempotencyKey` | `string`  | Request key recorded with the audit event for traceability across retries/call chains.                       |
 
-User-specific `details` fields (`SCIM_USER_*`):
-
-| field name                   | data type | description                                                                          |
-|------------------------------|-----------|--------------------------------------------------------------------------------------|
-| `details.userName`           | `string`  | Canonical SCIM `userName` value persisted for the user link.                         |
-| `details.projectedUserEmail` | `string`  | Email on projected local user when user projection/linkage exists.                   |
-| `details.externalId`         | `string`  | Optional IdP-provided external correlation id.                                       |
-| `details.active`             | `boolean` | Current SCIM active state captured on the audit event (present for all user events). |
-| `details.before`             | `object`  | Snapshot before mutation for `UPDATE`/`PATCH`/`DEACTIVATE`/`REACTIVATE` operations.  |
-| `details.after`              | `object`  | Snapshot after mutation for `UPDATE`/`PATCH`/`DEACTIVATE`/`REACTIVATE` operations.   |
-
-User snapshot shape (`details.before` / `details.after`):
-
-| field name             | data type | description                                  |
-|------------------------|-----------|----------------------------------------------|
-| `*.userName`           | `string`  | User name at that point in time.             |
-| `*.projectedUserEmail` | `string`  | Projected local email at that point in time. |
-| `*.externalId`         | `string`  | External id at that point in time.           |
-| `*.active`             | `boolean` | Active flag at that point in time.           |
-
-Group-specific `details` fields (`SCIM_GROUP_*`):
-
-| field name            | data type | description                                                              |
-|-----------------------|-----------|--------------------------------------------------------------------------|
-| `details.displayName` | `string`  | Canonical SCIM group display name at mutation time.                      |
-| `details.externalId`  | `string`  | Optional IdP-provided external correlation id.                           |
-| `details.before`      | `object`  | Snapshot before mutation for `UPDATE` and `PATCH` group operations only. |
-| `details.after`       | `object`  | Snapshot after mutation for `UPDATE` and `PATCH` group operations only.  |
-
-Group snapshot shape (`details.before` / `details.after`):
-
-| field name            | data type | description                           |
-|-----------------------|-----------|---------------------------------------|
-| `*.displayName`       | `string`  | Display name at that point in time.   |
-| `*.externalId`        | `string`  | External id at that point in time.    |
-
 #### `SCIM_USER_CREATED`
 
 Emitted when a SCIM user is provisioned (created).
@@ -1253,6 +1217,8 @@ Emitted when a SCIM user is provisioned (created).
 | field name          | data type | description                                                                 |
 |---------------------|-----------|-----------------------------------------------------------------------------|
 | `details.operation` | `string`  | Operation discriminator for created user events; this event emits `CREATE`. |
+| `details.userName`  | `string`  | Canonical SCIM `userName` value.                                            |
+| `details.active`    | `boolean` | Current SCIM active state for the created user.                             |
 
 Example event:
 
@@ -1290,9 +1256,21 @@ Example event:
 
 Emitted when a SCIM user is updated via replace semantics (`PUT`).
 
-| field name          | data type | description                                                                        |
-|---------------------|-----------|------------------------------------------------------------------------------------|
-| `details.operation` | `string`  | Operation discriminator for full replacement mutations; this event emits `UPDATE`. |
+| field name                          | data type        | description                                                                        |
+|-------------------------------------|------------------|------------------------------------------------------------------------------------|
+| `details.operation`                 | `string`         | Operation discriminator for full replacement mutations; this event emits `UPDATE`. |
+| `details.userName`                  | `string`         | Canonical SCIM `userName` value after update.                                      |
+| `details.active`                    | `boolean`        | Current SCIM active state after update.                                            |
+| `details.before`                    | `object`         | Snapshot before mutation.                                                          |
+| `details.before.userName`           | `string`         | `userName` before update.                                                          |
+| `details.before.projectedUserEmail` | `string \| null` | Projected local email before update.                                               |
+| `details.before.externalId`         | `string \| null` | External id before update.                                                         |
+| `details.before.active`             | `boolean`        | Active state before update.                                                        |
+| `details.after`                     | `object`         | Snapshot after mutation.                                                           |
+| `details.after.userName`            | `string`         | `userName` after update.                                                           |
+| `details.after.projectedUserEmail`  | `string \| null` | Projected local email after update.                                                |
+| `details.after.externalId`          | `string \| null` | External id after update.                                                          |
+| `details.after.active`              | `boolean`        | Active state after update.                                                         |
 
 Example event:
 
@@ -1342,9 +1320,21 @@ Example event:
 
 Emitted when a SCIM user is updated via patch semantics (`PATCH`).
 
-| field name          | data type | description                                                                   |
-|---------------------|-----------|-------------------------------------------------------------------------------|
-| `details.operation` | `string`  | Operation discriminator for partial user mutations; this event emits `PATCH`. |
+| field name                          | data type        | description                                                                   |
+|-------------------------------------|------------------|-------------------------------------------------------------------------------|
+| `details.operation`                 | `string`         | Operation discriminator for partial user mutations; this event emits `PATCH`. |
+| `details.userName`                  | `string`         | Canonical SCIM `userName` value after patch.                                  |
+| `details.active`                    | `boolean`        | Current SCIM active state after patch.                                        |
+| `details.before`                    | `object`         | Snapshot before mutation.                                                     |
+| `details.before.userName`           | `string`         | `userName` before patch.                                                      |
+| `details.before.projectedUserEmail` | `string \| null` | Projected local email before patch.                                           |
+| `details.before.externalId`         | `string \| null` | External id before patch.                                                     |
+| `details.before.active`             | `boolean`        | Active state before patch.                                                    |
+| `details.after`                     | `object`         | Snapshot after mutation.                                                      |
+| `details.after.userName`            | `string`         | `userName` after patch.                                                       |
+| `details.after.projectedUserEmail`  | `string \| null` | Projected local email after patch.                                            |
+| `details.after.externalId`          | `string \| null` | External id after patch.                                                      |
+| `details.after.active`              | `boolean`        | Active state after patch.                                                     |
 
 Example event:
 
@@ -1397,6 +1387,8 @@ Emitted when a SCIM user is deprovisioned with `active=false`.
 | field name          | data type | description                                                                         |
 |---------------------|-----------|-------------------------------------------------------------------------------------|
 | `details.operation` | `string`  | Operation discriminator for user deprovision events; this event emits `DEACTIVATE`. |
+| `details.userName`  | `string`  | Canonical SCIM `userName` value for the affected user.                              |
+| `details.active`    | `boolean` | Current SCIM active state (`false`).                                                |
 
 Example event:
 
@@ -1437,6 +1429,8 @@ Emitted when a previously deactivated SCIM user is reactivated (`active=true`).
 | field name          | data type | description                                                                                         |
 |---------------------|-----------|-----------------------------------------------------------------------------------------------------|
 | `details.operation` | `string`  | Operation discriminator for restoring a previously deactivated user; this event emits `REACTIVATE`. |
+| `details.userName`  | `string`  | Canonical SCIM `userName` value for the affected user.                                              |
+| `details.active`    | `boolean` | Current SCIM active state (`true`).                                                                 |
 
 Example event:
 
@@ -1477,6 +1471,8 @@ Emitted when a SCIM user is deleted via SCIM `DELETE`.
 | field name          | data type | description                                                                   |
 |---------------------|-----------|-------------------------------------------------------------------------------|
 | `details.operation` | `string`  | Operation discriminator for hard-delete mutations; this event emits `DELETE`. |
+| `details.userName`  | `string`  | Canonical SCIM `userName` value at delete time.                               |
+| `details.active`    | `boolean` | Final SCIM active state at delete time (`false`).                             |
 
 Example event:
 
@@ -1514,9 +1510,10 @@ Example event:
 
 Emitted when a SCIM group is created.
 
-| field name          | data type | description                                                                  |
-|---------------------|-----------|------------------------------------------------------------------------------|
-| `details.operation` | `string`  | Operation discriminator for created group events; this event emits `CREATE`. |
+| field name            | data type | description                                                                  |
+|-----------------------|-----------|------------------------------------------------------------------------------|
+| `details.operation`   | `string`  | Operation discriminator for created group events; this event emits `CREATE`. |
+| `details.displayName` | `string`  | Canonical SCIM group display name at creation time.                          |
 
 Example event:
 
@@ -1552,9 +1549,16 @@ Example event:
 
 Emitted when a SCIM group is updated via replace semantics (`PUT`).
 
-| field name          | data type | description                                                                              |
-|---------------------|-----------|------------------------------------------------------------------------------------------|
-| `details.operation` | `string`  | Operation discriminator for full group replacement mutations; this event emits `UPDATE`. |
+| field name                   | data type        | description                                                                              |
+|------------------------------|------------------|------------------------------------------------------------------------------------------|
+| `details.operation`          | `string`         | Operation discriminator for full group replacement mutations; this event emits `UPDATE`. |
+| `details.displayName`        | `string`         | Canonical SCIM group display name after update.                                          |
+| `details.before`             | `object`         | Snapshot before mutation (`displayName`, `externalId`).                                  |
+| `details.before.displayName` | `string`         | Group display name before update.                                                        |
+| `details.before.externalId`  | `string \| null` | Group external id before update.                                                         |
+| `details.after`              | `object`         | Snapshot after mutation (`displayName`, `externalId`).                                   |
+| `details.after.displayName`  | `string`         | Group display name after update.                                                         |
+| `details.after.externalId`   | `string \| null` | Group external id after update.                                                          |
 
 Example event:
 
@@ -1598,9 +1602,16 @@ Example event:
 
 Emitted when a SCIM group is updated via patch semantics (`PATCH`), including membership mutations.
 
-| field name          | data type | description                                                                               |
-|---------------------|-----------|-------------------------------------------------------------------------------------------|
-| `details.operation` | `string`  | Operation discriminator for partial group/membership mutations; this event emits `PATCH`. |
+| field name                   | data type        | description                                                                               |
+|------------------------------|------------------|-------------------------------------------------------------------------------------------|
+| `details.operation`          | `string`         | Operation discriminator for partial group/membership mutations; this event emits `PATCH`. |
+| `details.displayName`        | `string`         | Canonical SCIM group display name after patch.                                            |
+| `details.before`             | `object`         | Snapshot before mutation (`displayName`, `externalId`).                                   |
+| `details.before.displayName` | `string`         | Group display name before patch.                                                          |
+| `details.before.externalId`  | `string \| null` | Group external id before patch.                                                           |
+| `details.after`              | `object`         | Snapshot after mutation (`displayName`, `externalId`).                                    |
+| `details.after.displayName`  | `string`         | Group display name after patch.                                                           |
+| `details.after.externalId`   | `string \| null` | Group external id after patch.                                                            |
 
 Example event:
 
@@ -1644,9 +1655,10 @@ Example event:
 
 Emitted when a SCIM group is deleted via SCIM `DELETE`.
 
-| field name          | data type | description                                                                      |
-|---------------------|-----------|----------------------------------------------------------------------------------|
-| `details.operation` | `string`  | Operation discriminator for group deletion mutations; this event emits `DELETE`. |
+| field name            | data type | description                                                                      |
+|-----------------------|-----------|----------------------------------------------------------------------------------|
+| `details.operation`   | `string`  | Operation discriminator for group deletion mutations; this event emits `DELETE`. |
+| `details.displayName` | `string`  | Canonical SCIM group display name at delete time.                                |
 
 Example event:
 
