@@ -38,7 +38,7 @@ GEM
       yell (~> 2.0)
       zeitwerk (~> 2.5)
     io-event (1.14.3)
-    json (2.19.4)
+    json (2.19.5)
     logger (1.7.0)
     metrics (0.15.0)
     nokogiri (1.19.3-x64-mingw-ucrt)
@@ -61,7 +61,7 @@ GEM
     typhoeus (1.6.0)
       ethon (>= 0.18.0)
     yell (2.2.2)
-    zeitwerk (2.7.5)
+    zeitwerk (2.8.2)
 
 PLATFORMS
   x64-mingw-ucrt
