@@ -550,7 +550,7 @@ Remarks are displayed for each row in table and act as a summary of the tests ex
 | **Missing In Spec** | The endpoint is implemented on the service but isn't documented in the OpenAPI Specification                                   |
 | **Not Implemented** | The endpoint is documented in the OpenAPI Specification but isn't implemented by the service                                   |
 | **Not Covered**     | Tests for this group were not executed or were skipped                                                                         |
-| **WIP**             | This endpoint is marked WIP in the OpenAPI Specification, Any failures in this grouped are indicated by yellow and disregarded |
+| **WIP**             | This endpoint is marked WIP in the OpenAPI Specification. Any failures in this group are indicated by yellow and disregarded   |
 | **Invalid**         | The endpoint doesn't conform to REST standards                                                                                 |
 
 **Note**: The remarks `Missing In Spec` and `Not Implemented` are contingent upon the actuator being enabled. Please refer to [API Coverage](#api-coverage) for further details.
@@ -784,7 +784,7 @@ A **202 Accepted** HTTP status code indicates that a request has been accepted f
 
 
 - The specification must define a **202 Accepted** response for the specific path and HTTP method
-- The response must include a [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link) with an `title` parameter set to `"monitor"`
+- The response must include a [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link) with a `title` parameter set to `"monitor"`
 - The specification must also include an operation that corresponds to the URL provided in the [Link Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Link), on which Specmatic can **poll** for the completion of the operation
 - The response from the polled endpoint must conform to a standard schema
 - By default, a maximum of **3** monitoring attempts will be executed before the test fail, with delay resulting from the [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After) Header if present, or exponential backoff otherwise
