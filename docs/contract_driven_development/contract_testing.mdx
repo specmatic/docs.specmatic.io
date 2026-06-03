@@ -610,6 +610,23 @@ Remarks are displayed for each operation and act as a summary of the tests execu
 > Note: The remarks **Missing In Spec** is contingent upon the actuator being enabled and only applicable for OpenAPI<br/>
 > Please refer to [API Coverage](#api-coverage) for further details.
 
+#### Operation Qualifiers
+
+Operation qualifiers are displayed for each operation and provide additional context about how it is treated during test execution.
+
+| Qualifier | Definition                                                                                                                                                       |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **WIP**   | The operation is marked as work-in-progress in the specification, Failures caused by this operation will be ignored and will not affect the final outcome.       |
+
+#### Test Qualifiers
+
+Test qualifiers are displayed for each test and provide additional context about the result of that specific test.
+
+| Qualifier               | Definition                                                                                                                                                                               |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Undeclared Response** | The test received a response that was not declared in the specification. This means the observed response identifiers did not match any expected response identifiers.                   |
+
+
 ### Examples that are not passing yet
 
 The contract is used as a collaboration tool. Sometimes, a contract violation may take time to fix. It may be useful to add examples that demonstrate the problem to the contract without breaking the build.
