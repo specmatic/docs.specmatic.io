@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 import {YamlDisplay} from "../../src/components/JsonYamlDisplay";
 import {V3SpecmaticJsonYamlTabs} from "../../src/components/V2V3SpecmaticConfigTabs";
 import yaml from "js-yaml";
+import { CommercialBadge } from "../../src/components/CommercialBadge";
+import { ReportMediaCarousel } from "../../src/components/ReportMediaCarousel";
 
 Contract Testing
 ==============
@@ -521,39 +523,109 @@ Here is a complete [Specmatic Contract Test example](https://github.com/specmati
 
 Note: Declare your specifications in the Specmatic configuration file as described above in the section on [declaring contracts in configuration](#declaring-contracts-in-configuration). The Specmatic configuration file should be created at the root of your project.
 
-### HTML Report
+{/* Preserve existing anchors for backwards compatibility with older documentation links. */}
+<span id="html-report" />
+### Contract Test Reports
 
-Upon completion of the contract tests, Specmatic will produce an HTML report for viewing and analyzing the results. You can locate this report in the `build/reports/specmatic/html` directory of your project; simply open the `index.html` file in the browser of your choice to view the report. The results are presented in a tabular format, similar to the API coverage report displayed on the console.
+<span id="summary" />
+After the contract tests are completed, Specmatic generates HTML and CTRF reports. 
+These reports provide insights into which operations were executed, which operations aligned with the specifications, and where discrepancies or missing specification entries were identified. 
+**HTML** reports are intended for human-readable analysis, while **CTRF** reports are tailored for CI/CD integrations and downstream tooling.
 
-#### Summary
+<span id="coverage-table" />
+#### HTML Artifacts
 
-The key metrics are presented in the top header, which includes overall coverage percentage, total number of tests passed, failed, errors, and skipped. You can filter the table by clicking on one of the count buttons.
+<Tabs groupId='report-group'>
+    <TabItem value="OpenAPI" label="OpenAPI">
+        For OpenAPI the report can be found at `./build/reports/specmatic/test/html/index.html`
+        <ReportMediaCarousel
+          items={[
+            { src: '/img/reports/openapi/test/table.png', alt: 'OpenAPI table' },
+            { src: '/img/reports/openapi/test/drilldown.png', alt: 'OpenAPI drilldown' },
+            { src: '/img/reports/openapi/test/details.png', alt: 'OpenAPI details' },
+          ]}
+        />
+    </TabItem>
+    <TabItem value="AsyncAPI" label="AsyncAPI">
+        For AsyncAPI the report can be found at `./build/reports/specmatic/async/test/html/index.html`
+        <ReportMediaCarousel
+          items={[
+            { src: '/img/reports/asyncapi/test/table.png', alt: 'AsyncAPI table' },
+            { src: '/img/reports/asyncapi/test/drilldown.png', alt: 'AsyncAPI drilldown' },
+            { src: '/img/reports/asyncapi/test/details.png', alt: 'AsyncAPI details' },
+          ]}
+        />
+    </TabItem>
+    <TabItem value="gRPC" label="gRPC">
+        For gRPC the report can be found at `./build/reports/specmatic/grpc/test/html/index.html`
+        <ReportMediaCarousel
+          items={[
+            { src: '/img/reports/grpc/test/table.png', alt: 'gRPC table' },
+            { src: '/img/reports/grpc/test/drilldown.png', alt: 'gRPC drilldown' },
+            { src: '/img/reports/grpc/test/details.png', alt: 'gRPC details' },
+          ]}
+        />
+    </TabItem>
+    <TabItem value="GraphQL" label="GraphQL">
+        For GraphQL the report can be found at `./build/reports/specmatic/graphql/test/html/index.html`
+        <ReportMediaCarousel
+          items={[
+            { src: '/img/reports/graphql/test/table.png', alt: 'GraphQL table' },
+            { src: '/img/reports/graphql/test/drilldown.png', alt: 'GraphQL drilldown' },
+            { src: '/img/reports/graphql/test/details.png', alt: 'GraphQL details' },
+          ]}
+        />
+    </TabItem>
+</Tabs>
 
-#### Coverage Table
+#### CTRF Artifacts
 
-The table is organized by path, method, request content type, and response status code, with each row representing the number of tests executed for that specific group and the final remark. Additionally, coverage is calculated for each path and is included as one of the columns in the table.
-
-To view the actual tests along with the associated request and response for each test and other relevant information, click on one of the table rows. This action will slide in the details section, which contains all the tests executed for that specific group, if applicable. You can then click on an individual test to see the request, response, and additional details such as the URL, request and response time, and any error message in case of a failure.
-
-![Html Report](/img/html_report.gif)
-
-Similar to table filtering, clicking the header buttons filters the tests, which dynamically update counts and coverage as you switch between details and the main screen.
-<br/>**Note**: The `content-type` is of the request and is displayed below the response status code when the endpoint includes a request body.
+Similar to the HTML report, Specmatic also generates a [CTRF](https://ctrf.io/) report for the contract tests.
+<Tabs groupId='report-group'>
+    <TabItem value="OpenAPI" label="OpenAPI">
+        For OpenAPI the report can be found at `./build/reports/specmatic/test/ctrf/ctrf-report.json`
+    </TabItem>
+    <TabItem value="AsyncAPI" label="AsyncAPI">
+        For AsyncAPI the report can be found at `./build/reports/specmatic/async/test/ctrf/ctrf-report.json`
+    </TabItem>
+    <TabItem value="gRPC" label="gRPC">
+        For gRPC the report can be found at `./build/reports/specmatic/grpc/test/ctrf/ctrf-report.json`
+    </TabItem>
+    <TabItem value="GraphQL" label="GraphQL">
+        For GraphQL the report can be found at `./build/reports/specmatic/graphql/test/ctrf/ctrf-report.json`
+    </TabItem>
+</Tabs>
 
 #### Remarks
 
-Remarks are displayed for each row in table and act as a summary of the tests executed for that specific group. The remarks are as follows:
+Remarks are displayed for each operation and act as a summary of the tests executed for that specific operation.
 
-| Remark              | Definition                                                                                                                     |
-|---------------------|--------------------------------------------------------------------------------------------------------------------------------|
-| **Covered**         | Tests were run for this group. Red indicates a failure in one or more tests, while green means all tests passed                |
-| **Missing In Spec** | The endpoint is implemented on the service but isn't documented in the OpenAPI Specification                                   |
-| **Not Implemented** | The endpoint is documented in the OpenAPI Specification but isn't implemented by the service                                   |
-| **Not Covered**     | Tests for this group were not executed or were skipped                                                                         |
-| **WIP**             | This endpoint is marked WIP in the OpenAPI Specification, Any failures in this grouped are indicated by yellow and disregarded |
-| **Invalid**         | The endpoint doesn't conform to REST standards                                                                                 |
+| Remark              | Definition                                                                                    |
+|---------------------|-----------------------------------------------------------------------------------------------|
+| **Covered**         | Tests were executed, and at least one observed interaction matched the expected identifiers.  |
+| **Not Implemented** | The operation is defined in the specification but was not implemented as expected by the SUT. |
+| **Missing In Spec** | The operation was observed in the SUT but is not defined in the specification.                |
+| **Not Tested**      | The operation was not tested. A reason is provided wherever applicable.                       |
 
-**Note**: The remarks `Missing In Spec` and `Not Implemented` are contingent upon the actuator being enabled. Please refer to [API Coverage](#api-coverage) for further details.
+> Note: The remarks **Missing In Spec** is contingent upon the actuator being enabled and only applicable for OpenAPI<br/>
+> Please refer to [API Coverage](#api-coverage) for further details.
+
+#### Operation Qualifiers
+
+Operation qualifiers are displayed for each operation and provide additional context about how it is treated during test execution.
+
+| Qualifier | Definition                                                                                                                                                       |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **WIP**   | The operation is marked as work-in-progress in the specification, Failures caused by this operation will be ignored and will not affect the final outcome.       |
+
+#### Test Qualifiers
+
+Test qualifiers are displayed for each test and provide additional context about the result of that specific test.
+
+| Qualifier               | Definition                                                                                                                                                                               |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Undeclared Response** | The test received a response that was not declared in the specification. This means the observed response identifiers did not match any expected response identifiers.                   |
+
 
 ### Examples that are not passing yet
 
@@ -727,9 +799,8 @@ to `/swagger/v1/swagger.yaml`. You can customize the base URL for Swagger UI by 
 `swaggerUrl` property on the `runOptions` object. If this property is not defined, Specmatic will default to using
 the URL of the System Under Test (SUT) as the base URL.
 
-The data from the coverage report is saved to a file located at `build/reports/specmatic/coverage_report.json`,
-relative to the directory from which Specmatic was executed. It is also accessible in the HTML report generated at
-`build/reports/specmatic/html/index.html`.
+The test results, including coverage, can be accessed in the HTML and CTRF (Commercial Only) reports generated at 
+`./build/reports/specmatic/test/html/index.html` and `./build/reports/specmatic/test/ctrf/ctrf-report.json`, respectively.
 
 ---
 
