@@ -9,6 +9,8 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
 import { VERSIONS } from '@site/src/constants/versions';
+import { CommercialBadge } from "../../src/components/CommercialBadge";
+import { ReportMediaCarousel } from "../../src/components/ReportMediaCarousel";
 
 Service Virtualization
 ======================
@@ -1307,6 +1309,88 @@ With this setup, the API developer can run `specmatic test --match-branch` with 
 The same is true for the consumer of the API, who can run `specmatic mock --match-branch`.
 
 Not all features though require specification changes. So if there is no matching branch in the central repository, `specmatic test --match-branch` will simply create a new local branch off the default branch and run tests from it.
+
+## Mock Usage Reports
+
+When the mock is terminated, Specmatic generates HTML and CTRF reports. 
+These reports provide insights into which operations were executed, which operations aligned with the specifications, and where discrepancies or missing specification entries were identified. 
+**HTML** reports are intended for human-readable analysis, while **CTRF** reports are tailored for CI/CD integrations and downstream tooling.
+
+#### HTML Artifacts
+
+<Tabs groupId='report-group'>
+    <TabItem value="OpenAPI" label="OpenAPI">
+        For OpenAPI the report can be found at `./build/reports/specmatic/stub/html/index.html`
+        <ReportMediaCarousel
+          items={[
+            { src: '/img/reports/openapi/mock/table.png', alt: 'OpenAPI mock table' },
+            { src: '/img/reports/openapi/mock/drilldown.png', alt: 'OpenAPI mock drilldown' },
+            { src: '/img/reports/openapi/mock/details.png', alt: 'OpenAPI mock details' },
+          ]}
+        />
+    </TabItem>
+    <TabItem value="AsyncAPI" label="AsyncAPI">
+        For AsyncAPI the report can be found at `./build/reports/specmatic/async/stub/html/index.html`
+        <ReportMediaCarousel
+          items={[
+            { src: '/img/reports/asyncapi/mock/table.png', alt: 'AsyncAPI mock table' },
+            { src: '/img/reports/asyncapi/mock/drilldown.png', alt: 'AsyncAPI mock drilldown' },
+            { src: '/img/reports/asyncapi/mock/details.png', alt: 'AsyncAPI mock details' },
+          ]}
+        />
+    </TabItem>
+    <TabItem value="gRPC" label="gRPC">
+        For gRPC the report can be found at `./build/reports/specmatic/grpc/stub/html/index.html`
+        <ReportMediaCarousel
+          items={[
+            { src: '/img/reports/grpc/mock/table.png', alt: 'gRPC mock table' },
+            { src: '/img/reports/grpc/mock/drilldown.png', alt: 'gRPC mock drilldown' },
+            { src: '/img/reports/grpc/mock/details.png', alt: 'gRPC mock details' },
+          ]}
+        />
+    </TabItem>
+    <TabItem value="GraphQL" label="GraphQL">
+        For GraphQL the report can be found at `./build/reports/specmatic/graphql/stub/html/index.html`
+        <ReportMediaCarousel
+          items={[
+            { src: '/img/reports/graphql/mock/table.png', alt: 'GraphQL mock table' },
+            { src: '/img/reports/graphql/mock/drilldown.png', alt: 'GraphQL mock drilldown' },
+            { src: '/img/reports/graphql/mock/details.png', alt: 'GraphQL mock details' },
+          ]}
+        />
+    </TabItem>
+</Tabs>
+
+#### CTRF Artifacts
+
+Similar to the HTML report, Specmatic also generates a [CTRF](https://ctrf.io/) report for the mock usage.
+<Tabs groupId='report-group'>
+    <TabItem value="OpenAPI" label="OpenAPI">
+        For OpenAPI the report can be found at `./build/reports/specmatic/stub/ctrf/ctrf-report.json`
+            </TabItem>
+    <TabItem value="AsyncAPI" label="AsyncAPI">
+        For AsyncAPI the report can be found at `./build/reports/specmatic/async/stub/ctrf/ctrf-report.json`
+    </TabItem>
+    <TabItem value="gRPC" label="gRPC">
+        For gRPC the report can be found at `./build/reports/specmatic/grpc/stub/ctrf/ctrf-report.json`
+    </TabItem>
+    <TabItem value="GraphQL" label="GraphQL">
+        For GraphQL the report can be found at `./build/reports/specmatic/graphql/stub/ctrf/ctrf-report.json`
+    </TabItem>
+</Tabs>
+
+
+#### Remarks
+
+Remarks are displayed for each operation and act as a summary of the tests executed for that specific operation.
+
+| Remark              | Definition                                                                                         |
+|---------------------|----------------------------------------------------------------------------------------------------|
+| **Covered**         | Interactions were observed, and at least one matched the expected identifiers.                     |
+| **Not Used**        | The operation is defined in the specification but was not used.                                    |
+| **Missing In Spec** | The interaction was observed but is not defined in the specification.                              |
+| **Mismatch**        | The interaction was observed, but one or more identifiers did not match the specification.         |
+
 
 ## Sample Java Project
 
