@@ -1391,6 +1391,14 @@ Remarks are displayed for each operation and act as a summary of the tests execu
 | **Missing In Spec** | The interaction was observed but is not defined in the specification.                              |
 | **Mismatch**        | The interaction was observed, but one or more identifiers did not match the specification.         |
 
+#### Deprecated Mock Usage Reports
+
+The legacy mock usage report artifacts have been deprecated and removed. This includes:
+* The legacy OpenAPI report at `./build/reports/specmatic/stub_usage_report.json`.
+* The legacy AsyncAPI report at `./build/reports/specmatic/async/stub_usage_report.json`.
+* The legacy gRPC report at `./build/reports/specmatic/grpc/stub-usage-report.json`.
+
+Please use the HTML and CTRF reports described above.
 
 ## Sample Java Project
 

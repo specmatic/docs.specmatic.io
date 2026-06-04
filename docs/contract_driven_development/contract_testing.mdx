@@ -626,6 +626,15 @@ Test qualifiers are displayed for each test and provide additional context about
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Undeclared Response** | The test received a response that was not declared in the specification. This means the observed response identifiers did not match any expected response identifiers.                   |
 
+#### Deprecated Contract Test Reports
+
+The legacy contract test report artifacts have been deprecated and removed. This includes:
+* The legacy HTML report at `./build/reports/specmatic/html/index.html`.
+* The legacy OpenAPI coverage report at `./build/reports/specmatic/coverage_report.json`.
+* The legacy AsyncAPI coverage report at `./build/reports/specmatic/async/coverage-report.json`.
+* The legacy gRPC coverage report at `./build/reports/specmatic/grpc/coverage-report.json`.
+
+Please use the HTML and CTRF reports described above.
 
 ### Examples that are not passing yet
 
