@@ -242,6 +242,7 @@ const config = {
           {from: '/docs/sample_projects/', to: '/sample_projects'},
           {from: '/docs/security-disclosure/', to: '/security-disclosure'},
           {from: '/docs/vulnerability-remediation-sla/', to: '/vulnerability-remediation-sla'},
+          {from: '/references/specmatic-oss-vs-enterprise-comparison', to: '/references/open-source-vs-enterprise'},
 
           // === Legacy redirects (from old documentation paths) ===
           {
