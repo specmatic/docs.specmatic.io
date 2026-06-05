@@ -38,7 +38,8 @@ The Specmatic standalone executable is accessible through various prominent dist
     {`mv specmatic-executable-all-${VERSIONS['specmatic-core-version']}.jar specmatic.jar`}
     </CodeBlock>
 
-    Run specmatic as below to list all the options available
+    Run specmatic as below to list all the options available.
+
     <CodeBlock language="bash">java -jar specmatic.jar</CodeBlock>
 
     Follow the quick tips below to set up commands for easily running `java -jar specmatic.jar`.
@@ -58,6 +59,7 @@ The Specmatic standalone executable is accessible through various prominent dist
     Create a batch file (`specmatic.bat`) with below content and add it your system path.
 
     <CodeBlock language="bash">{"java -jar <path-to-jar>/specmatic.jar %*"}</CodeBlock>
+
     The %* portion at the end tells the batch script to pass all of the parameters it receives to the new command.
 
     You can now run specmatic using:

@@ -1060,7 +1060,7 @@ If the test fails and you need to start a new run of the test, you may need to c
 
 To do that, send a `DELETE` request to `/_specmatic/http-stub/${http-stub-token}`.
 
-To clear the transient mock in the above example, you would call http://localhost:9000/_specmatic/http-stub/123 with the DELETE verb.
+To clear the transient mock in the above example, you would call `http://localhost:9000/_specmatic/http-stub/123` with the DELETE verb.
 
 ## Request Matchers
 
@@ -1268,7 +1268,7 @@ This allows serving different APIs on their respective baseURLs while keeping th
 <V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/service-virtualization/specify-multiple-host-port-combinations/specmatic.yaml?raw'))}/>
 
 The above configuration sets up two stubs:
-1. The first stub serves the `employeeSpec` specification on port `5000` (final endpoint: http://0.0.0.0:5000)
+1. The first stub serves the `employeeSpec` specification on port `5000` (final endpoint: `http://0.0.0.0:5000`)
 2. The second stub serves the `payrollSpec` specification with the complete `baseUrl` `http://localhost:8081/payroll`
 
 ### Benefits
