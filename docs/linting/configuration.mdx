@@ -1,0 +1,291 @@
+---
+title: Configuration
+sidebar_position: 3
+---
+
+# Configuration
+
+Specmatic Linter uses a profile-first YAML configuration file, usually named `specmatic-linter.yaml`.
+
+## Mental model
+
+The config is split into two layers:
+
+- a **root inventory** for plugins and user-defined rules
+- one or more **profiles** that decide which rules are actually active for a run
+
+That separation is deliberate:
+
+- the root `rules` section is where you define reusable configurable rules and plugin rule metadata
+- profiles are where you decide what policy to apply to a given API context
+
+## Canonical structure
+
+```yaml
+plugins:
+  - ./js-plugin/index.js
+
+rules:
+  rule/parameter-description-required:
+    severity: error
+    type: parameters
+    subject:
+      type: Parameter
+    assertions:
+      required:
+        - description
+    message: Every parameter must declare a description.
+
+  corp-standards/pagination-range:
+    severity: error
+    type: parameters
+
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+
+  public-api:
+    extends:
+      - default
+    types:
+      - operations
+      - parameters
+      - security
+    rules:
+      include:
+        - rule/parameter-description-required
+        - corp-standards/pagination-range
+      exclude:
+        - info-contact
+      override:
+        operation-summary: error
+        info-license:
+          severity: error
+          maturity: silver
+```
+
+## Top-level keys
+
+### `plugins`
+
+List of JavaScript plugin references. Paths are resolved relative to the config file directory.
+
+### `rules`
+
+Root inventory of user-defined rules and plugin rule settings.
+
+Use this section for:
+
+- configurable YAML rules such as `rule/...`
+- severity, type, and maturity settings for plugin rules such as `corp-standards/...`
+
+Do **not** use root `rules` to redeclare built-in rules as if they were custom rules. Built-in rule IDs are owned by the linter runtime and may be overridden from profiles, but they must not be introduced as new root inventory entries.
+
+### `profiles`
+
+Named policy entry points. A profile is the unit selected by `--profile`.
+
+The config must define at least one profile.
+
+## Profile keys
+
+### `extends`
+
+Profile inheritance. Use this to build one profile from another.
+
+### `types`
+
+Optional rule-type filtering. When set, only rules of the selected types run.
+
+### `rules.extends`
+
+Built-in or plugin-provided preset rulesets. Built-in presets are:
+
+- `minimal`
+- `recommended`
+- `recommended-strict`
+- `all`
+
+Plugin-provided presets can also appear here, using the format:
+
+```text
+<plugin-id>/<preset-name>
+```
+
+### `rules.include`
+
+Additional explicit rules to activate. This is typically used for:
+
+- configurable YAML rules such as `rule/parameter-description-required`
+- plugin rules such as `corp-standards/operation-id-naming`
+
+Built-in rules can also appear in `include`.
+
+### `rules.exclude`
+
+Rules to turn off for that profile.
+
+### `rules.override`
+
+Per-rule overrides for severity, maturity, type, and other rule fields.
+
+Use `override` for:
+
+- built-in rules
+- configurable rules
+- plugin rules
+
+## Rule object fields
+
+Rules can be written either as a simple severity:
+
+```yaml
+operation-summary: error
+```
+
+or as a structured object:
+
+```yaml
+operation-summary:
+  severity: error
+  maturity: bronze
+```
+
+Supported fields are:
+
+- `severity`: `error`, `warn`, or `off`
+- `message`: custom problem message
+- `maturity`: `baseline`, `bronze`, `silver`, `gold`, or `platinum`
+- `type`: one of the documented rule types, or a custom type for filtering
+- `reference`: link shown with the violation
+- `suggest`: suggested replacements or fixes
+- `subject`: target node selector for configurable rules
+- `where`: context chain for configurable rules
+- `assertions`: built-in or plugin-backed assertions for configurable rules
+
+Additional keys inside a structured configurable rule are treated as rule options and are available to the configurable-rule runtime.
+
+## Config validation rules
+
+The config loader validates several structural constraints:
+
+- `profiles` must be a map
+- every profile body must be a map
+- unknown top-level keys are rejected
+- unknown keys inside profiles are rejected
+- unknown keys inside `profile.rules` are rejected
+- profile `extends` may only reference existing profiles
+- `profile.rules.extends` may reference built-in presets or plugin presets, but must not reference profile names
+- `include` may only reference built-in rules or rules present in the root inventory
+- plugin references must not be blank
+- circular profile inheritance is rejected
+
+Use `--lint-config warn` or `--lint-config error` while authoring large configs.
+
+## Rule ID conventions
+
+Built-in rule IDs come from the linter itself. User-defined rule IDs should follow one of these patterns:
+
+- `rule/<name>` for configurable YAML rules
+- `<plugin-id>/<name>` for plugin rules or plugin assertions
+
+Examples:
+
+- `rule/parameter-description-required`
+- `corp-standards/pagination-range`
+
+## Precedence
+
+At runtime, the effective config for a profile is assembled from:
+
+1. inherited parent profiles
+2. preset rulesets from `rules.extends`
+3. explicit `include`
+4. explicit `exclude`
+5. explicit `override`
+6. type filtering from `types`
+
+This means a profile can inherit a broad baseline, then narrow it with a small number of local choices.
+
+## Minimal config
+
+```yaml
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+```
+
+## Multi-profile config
+
+```yaml
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+
+  internal:
+    extends:
+      - default
+    rules:
+      override:
+        info-contact: off
+        info-license: off
+
+  public-api:
+    extends:
+      - default
+    rules:
+      override:
+        info-contact: error
+        info-license: error
+        operation-summary: error
+```
+
+## Mixed built-in, configurable, and plugin config
+
+```yaml
+plugins:
+  - ./js-plugin/index.js
+
+rules:
+  rule/security-scheme-modern:
+    severity: error
+    type: security
+    subject:
+      type: SecurityScheme
+      property: type
+    assertions:
+      enum:
+        - oauth2
+        - openIdConnect
+    message: Only OAuth2 or OpenID Connect schemes are allowed.
+
+  corp-standards/pagination-range:
+    severity: error
+    type: parameters
+
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+      include:
+        - rule/security-scheme-modern
+        - corp-standards/pagination-range
+```
+
+## File discovery
+
+If `--config` is omitted, the CLI looks for:
+
+- `specmatic-linter.yaml`
+- `specmatic-linter.yml`
+
+in the current working directory.
+
+If `--config-repo-url` is also provided and `--config` is omitted, the linter looks for `specmatic-linter.yaml` at the root of the fetched config repo.

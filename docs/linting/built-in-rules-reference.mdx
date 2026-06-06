@@ -1,0 +1,173 @@
+---
+title: Built-in Rules Reference
+sidebar_position: 6
+---
+
+# Built-in Rules Reference
+
+This page documents the built-in rules that ship with Specmatic Linter.
+
+Each entry gives you:
+
+- what the rule checks
+- where it applies
+- the built-in preset severity as `minimal / recommended / recommended-strict`
+- a small example of what usually fails
+- the practical fix
+
+Severity notes:
+
+- `off` means the rule ships in the preset but does not run there
+- `warn` means it reports but does not fail the run by itself
+- `error` means it contributes to a failing run
+- when a rule behaves differently across OpenAPI versions, that is called out in the `Applies to` column
+
+## Metadata Rules
+
+| Rule | What it checks | Applies to | Preset severity | Example failure | How to fix |
+| --- | --- | --- | --- | --- | --- |
+| `struct` | Core OpenAPI structure is present and placed correctly. | OAS2, OAS3.x | `error / error / error` | Missing `info`, `paths`, or required nested fields. | Add the missing required fields at the correct level. |
+| `no-unresolved-refs` | Every `$ref` resolves to a real target. | OAS2, OAS3.x | `error / error / error` | `$ref: '#/components/schemas/User'` but `User` is missing. | Fix the pointer or add the referenced object. |
+| `info-contact` | `info.contact` is present. | OAS2, OAS3.x | `off / warn / warn` | `info` has title/version but no `contact`. | Add owner or support contact details under `info.contact`. |
+| `info-license` | `info.license` is present. | OAS2, OAS3.x | `off / warn / warn` | `info` block has no `license`. | Add a `license` object with at least a name. |
+| `info-license-strict` | `license` also contains the required URL or identifier fields. | OAS2, OAS3.x | `off / warn / warn` | `license: { name: MIT }` only. | Add `url` for OAS2/OAS3.0 or `url` or `identifier` for OAS3.1/3.2. |
+| `component-name-unique` | Component names are unique when normalized by the parser/runtime. | OAS3.x | `off / warn / warn` | Two near-identical schema names collide after normalization. | Rename components so each logical name is unique. |
+| `no-duplicated-tag-names` | Top-level tag names are unique. | OAS2, OAS3.x | `off / warn / warn` | `tags` contains `Orders` twice. | Keep one tag entry per tag name. |
+| `no-empty-servers` | `servers` exists and is non-empty. | OAS3.x | `warn / error / error` | `servers: []` or no `servers` at all. | Define at least one real server URL. |
+| `no-server-example.com` | Server URLs do not point at `example.com` or `localhost`. | OAS3.x | `warn / warn / warn` | `url: https://api.example.com` | Replace placeholder hosts with real deployable endpoints. |
+| `no-server-trailing-slash` | Server URLs do not end with `/`. | OAS3.x | `error / error / error` | `url: https://api.acme.com/` | Remove the trailing slash from the server URL. |
+| `no-server-variables-empty-enum` | Server variable enums are non-empty and include the default value. | OAS3.x | `error / error / error` | `enum: []` or `default` not included in `enum`. | Make `enum` non-empty and include the configured default. |
+| `no-undefined-server-variable` | Every `{var}` in the server URL is defined in `servers[].variables`. | OAS3.x | `warn / warn / warn` | URL uses `{region}` but only `env` is defined. | Add the missing variable definition or remove it from the URL. |
+| `no-unused-components` | Components are not declared and then never referenced. | OAS3.x | `warn / warn / warn` | `components.schemas.DebugResponse` is never used. | Delete unused components or start referencing them. |
+| `spec-components-invalid-map-name` | OAS 3 component map names are valid for the specific component type. | OAS3.x | `warn / warn / warn` | Invalid or misplaced component map naming. | Use the standard component map names defined by OAS. |
+| `spec-no-invalid-tag-parents` | Parent tags referenced by child tags exist. | OAS3.2 only | `warn / error / error` | A tag declares a parent that is not defined. | Define the parent tag or remove the parent reference. |
+| `spec-strict-refs` | Strict `$ref` usage rules are followed. | OAS2, OAS3.x | `off / warn / warn` | A `$ref` is used in a place or shape that OAS does not allow cleanly. | Keep `$ref` usage spec-compliant and avoid ambiguous sibling structure. |
+| `specmatic/ref-has-siblings` | A schema `$ref` is not mixed with sibling schema keywords. | OAS3.x | `off / warn / warn` | `$ref` and `type: object` appear together. | Move extra constraints into the referenced schema or wrap with composition like `allOf`. |
+| `tag-description` | Each top-level tag has a description. | OAS2, OAS3.x | `warn / warn / error` | `- name: Orders` with no `description`. | Add a short purpose statement for every tag. |
+| `tags-alphabetical` | Top-level tags are sorted alphabetically. | OAS2, OAS3.x | `off / warn / warn` | `Users`, then `Accounts`, then `Orders`. | Sort the `tags` array alphabetically. |
+
+## Operations Rules
+
+| Rule | What it checks | Applies to | Preset severity | Example failure | How to fix |
+| --- | --- | --- | --- | --- | --- |
+| `no-ambiguous-paths` | Paths resolve unambiguously. | OAS2, OAS3.x | `warn / warn / warn` | `/{id}` and `/{name}` create routing ambiguity. | Make one path more specific or consolidate the route design. |
+| `no-http-verbs-in-paths` | Path segments do not embed verbs like `get`, `create`, `delete`. | OAS2, OAS3.x | `off / warn / warn` | `/users/create` | Use nouns in the path and let the HTTP method express the action. |
+| `no-identical-paths` | Duplicate effective path declarations are not repeated. | OAS2, OAS3.x | `warn / warn / warn` | The same path is declared twice in equivalent form. | Merge the path definitions into one canonical entry. |
+| `no-path-trailing-slash` | Path templates do not end in `/`. | OAS2, OAS3.x | `warn / warn / warn` | `/users/` | Remove the trailing slash from the path key. |
+| `operation-2xx-response` | Every operation defines at least one success response. | OAS2, OAS3.x | `warn / warn / warn` | Operation only has `400` and `500`. | Add an appropriate `2xx` response. |
+| `operation-4xx-problem-details-rfc7807` | `4xx` responses follow the `application/problem+json` pattern. | OAS3.x | `off / warn / warn` | Error response uses a custom shape with no problem schema. | Return `application/problem+json` and define `type` and `title` properties at minimum. |
+| `operation-4xx-response` | Every operation defines at least one client-error response. | OAS2, OAS3.x | `off / warn / warn` | No `4xx` response at all. | Add the relevant client-error responses such as `400`, `401`, or `404`. |
+| `operation-description` | Each operation has a `description`. | OAS2, OAS3.x | `off / warn / warn` | `get:` block has summary but no description. | Add a fuller explanation of the operation behavior. |
+| `operation-operationId` | Each operation has an `operationId`. | OAS2, OAS3.x | `warn / warn / error` | No `operationId` field. | Add a stable, unique `operationId`. |
+| `operation-operationId-unique` | `operationId` values are unique. | OAS2, OAS3.x | `warn / warn / warn` | Both `GET /users` and `GET /admins` use `listUsers`. | Rename one operation so every `operationId` is unique. |
+| `operation-operationId-url-safe` | `operationId` contains URL-safe characters only. | OAS2, OAS3.x | `warn / warn / warn` | `operationId: get user` | Use letters, digits, and safe separators only. |
+| `operation-singular-tag` | Operation tags use singular naming. | OAS2, OAS3.x | `off / warn / warn` | `tags: [Users]` | Rename the tag to a singular form such as `User`. |
+| `operation-summary` | Each operation has a `summary`. | OAS2, OAS3.x | `warn / warn or error / error` | No `summary` field. | Add a short one-line summary for the operation. |
+| `operation-tag-defined` | Operation tags exist in the top-level `tags` list. | OAS2, OAS3.x | `off / warn / warn or error` | Operation uses `Billing` but top-level tags omit it. | Add the missing tag definition or reuse an existing tag. |
+| `path-declaration-must-exist` | Path parameter declarations are not empty `{}` stubs. | OAS2, OAS3.x | `warn / warn / warn` | `/users/{}` | Replace the empty declaration with a real parameter name. |
+| `path-http-verbs-order` | Operations under a path appear in the canonical HTTP verb order. | OAS2, OAS3.x | `off / warn / warn` | `post` listed before `get` under the same path. | Reorder the operations consistently. |
+| `path-not-include-query` | Query string syntax is not embedded in the path key. | OAS2, OAS3.x | `warn / warn / warn` | `/users?active=true` | Keep the path clean and define query params with `in: query`. |
+| `path-segment-plural` | Resource collection segments use plural form. | OAS2, OAS3.x | `off / warn / warn` | `/user/{id}` | Use plural collection names like `/users/{id}` when modeling resources. |
+| `paths-kebab-case` | Path segments use kebab-case. | OAS2, OAS3.x | `off / warn / warn` | `/userProfiles/{id}` | Rename segments to kebab-case such as `/user-profiles/{id}`. |
+| `request-mime-type` | Request body media types are present and well formed. | OAS2, OAS3.x | `off / warn / warn` | Request body omits a meaningful content type. | Declare the intended request media type explicitly. |
+| `response-contains-header` | Configured response headers exist where required. | OAS2, OAS3.x | `off / warn / warn` | Required header like `X-Request-Id` is absent. | Add the required header under the response definition. |
+| `response-contains-property` | Configured top-level response body properties exist where required. | OAS2, OAS3.x | `off / warn / warn` | Response object is expected to include `id` but does not. | Add the required top-level property to the response schema. |
+| `response-mime-type` | Response media types are present and well formed. | OAS2, OAS3.x | `off / warn / warn` | Response content type is missing or malformed. | Declare the correct response media type under `content` or `produces`. |
+| `spec-no-invalid-encoding-combinations` | OAS 3.2 encoding keywords are not combined illegally. | OAS3.2 only | `warn / warn / warn` | `encoding` used together with `prefixEncoding`. | Keep only the encoding keywords allowed together by OAS 3.2. |
+| `specmatic/invalid-operation-status` | Response status keys are valid HTTP status codes or `default`. | OAS3.x | `off / error / error` | `responses: { ok: ... }` | Use numeric status codes like `200`, `404`, or `default`. |
+| `specmatic/accept-response-content-type-conflict` | A declared `Accept` header allows the response content type. | OAS3.x | `off / warn / warn` | `Accept: application/xml` but response is JSON only. | Align the `Accept` examples/constraints with the response media types. |
+| `specmatic/content-type-header-declared` | `Content-Type` is not redundantly declared as a normal header. | OAS3.x | `off / warn / warn` | `headers: { Content-Type: ... }` inside a response or request. | Remove `Content-Type` from explicit header declarations and rely on media types. |
+| `specmatic/content-type-header-overrides-media-type` | Explicit `Content-Type` header values do not conflict with media types. | OAS3.x | `off / warn / warn` | Header says XML while the content block says JSON. | Make the header and the media type declaration consistent. |
+| `specmatic/get-request-body-disallowed` | `GET` operations do not define `requestBody`. | OAS3.x | `off / error / error` | `get:` contains `requestBody:` | Remove the request body or redesign the operation. |
+
+## Parameters Rules
+
+| Rule | What it checks | Applies to | Preset severity | Example failure | How to fix |
+| --- | --- | --- | --- | --- | --- |
+| `array-parameter-serialization` | Array parameters define explicit serialization fields such as `style` and `explode`. | OAS3.x | `off / warn / warn` | Array query param omits serialization details. | Add the appropriate `style` and `explode` values. |
+| `boolean-parameter-prefixes` | Boolean parameters use allowed naming prefixes. | OAS3.x | `off / warn / warn` | `enabled` instead of `isEnabled` or another approved prefix. | Rename boolean parameters to the expected naming pattern. |
+| `operation-parameters-unique` | Parameter identity is unique by `name` + `in`. | OAS2, OAS3.x | `warn / warn / warn` | Two `query` parameters both named `page`. | Remove duplicates or consolidate them into one parameter. |
+| `parameter-description` | Every parameter has a non-empty description. | OAS2, OAS3.x | `off / warn / warn` | `parameters[].description` missing or blank. | Add a clear description for each parameter. |
+| `path-parameters-defined` | Path placeholders are defined as path parameters. | OAS2, OAS3.x | `warn / warn / warn` | `/users/{id}` but no `id` path parameter exists. | Define the missing path parameter on the path item or operation. |
+| `path-params-defined` | Legacy equivalent path-parameter completeness rule. | OAS2, OAS3.x | `off / warn / warn` | Declared placeholder does not match defined parameters. | Make the placeholders and parameter definitions match exactly. |
+| `spec-querystring-parameters` | OAS 3.2 `querystring` parameters are used consistently and not mixed with normal query params incorrectly. | OAS3.2 only | `error / error / error` | `in: querystring` appears twice or alongside conflicting `in: query`. | Use a single consistent querystring representation per operation/path parameter set. |
+| `specmatic/invalid-parameter-shape` | Parameter schemas are structurally usable, especially arrays and nested shapes. | OAS3.x | `off / error / error` | Array parameter has no `items` schema. | Add the missing `items` definition or correct the parameter schema. |
+| `specmatic/query-param-collision` | Scalar query params do not collide with exploded object query params. | OAS3.x | `off / error / error` | `name` exists both directly and as part of exploded object `filter.name`. | Rename or redesign the parameters so the generated query keys do not collide. |
+| `specmatic/required-query-object-conflict` | Required exploded object query params also mark required properties inside the schema. | OAS3.x | `off / warn / warn` | Object query param is required, but none of its properties are required. | Mark the intended required properties inside the object schema. |
+
+## Schema Rules
+
+| Rule | What it checks | Applies to | Preset severity | Example failure | How to fix |
+| --- | --- | --- | --- | --- | --- |
+| `no-enum-type-mismatch` | Enum values match the declared schema type. | OAS2, OAS3.x | `warn / warn / warn` | `type: integer` with `enum: ['one', 'two']` | Make enum values use the declared type or change the schema type. |
+| `no-mixed-number-range-constraints` | Numeric range keywords are not mixed in invalid combinations. | OAS3.1, OAS3.2 | `off / warn / warn` | Both `maximum` and `exclusiveMaximum` used together. | Keep only the appropriate range keyword pair. |
+| `no-required-schema-properties-undefined` | Names listed in `required` are actually defined in `properties`. | OAS2, OAS3.x | `warn / warn / warn` | `required: [id]` but `properties.id` is missing. | Define the property or remove it from `required`. |
+| `no-schema-type-mismatch` | Schema keywords match the declared type. | OAS2, OAS3.x | `warn / warn / warn` | `type: object` with `items`, or `type: array` with `properties`. | Align the keywords with the real schema type. |
+| `nullable-type-sibling` | `nullable` is not used without `type`. | OAS3.0 only | `error / error / error` | `nullable: true` but no `type`. | Add the missing `type` field. |
+| `required-string-property-missing-min-length` | Required string properties define `minLength`. | OAS2, OAS3.x | `off / warn / warn` | Required property `name` has `type: string` but no `minLength`. | Add a meaningful `minLength` constraint. |
+| `spec-discriminator-defaultMapping` | Discriminator default mapping is valid in OAS 3.2. | OAS3.2 only | `off / warn / warn` | Invalid `defaultMapping` shape or target. | Make discriminator mappings explicit and valid. |
+| `specmatic/invalid-additional-properties-usage` | `additionalProperties` is only used on object schemas. | OAS3.x | `off / warn / warn` | `type: string` plus `additionalProperties: true` | Remove `additionalProperties` or change the schema to `object`. |
+| `specmatic/invalid-min-length` | `minLength` is not below the supported lower bound. | OAS3.x | `off / error / error` | Negative or invalid `minLength`. | Use a valid non-negative `minLength`. |
+| `specmatic/invalid-max-length` | `maxLength` is not smaller than `minLength`. | OAS3.x | `off / error / error` | `minLength: 10`, `maxLength: 5` | Make `maxLength` greater than or equal to `minLength`. |
+| `specmatic/invalid-numeric-bounds` | Upper numeric bounds are not below lower bounds. | OAS3.x | `off / error / error` | `minimum: 100`, `maximum: 10` | Correct the bound ordering. |
+| `specmatic/invalid-regex-format` | Regex patterns are syntactically valid. | OAS3.x | `off / error / error` | `pattern: '['` | Fix the regular expression syntax. |
+| `specmatic/length-exceeds-limit` | Very large length constraints are flagged as suspicious. | OAS3.x | `off / warn / warn` | `maxLength: 1000000000` | Reduce unrealistic limits or document why they are required. |
+| `specmatic/missing-schema-fallback` | Places that need a schema do not silently fall back to an empty schema. | OAS3.x | `off / error / error` | Media type entry has no `schema`. | Define the missing schema explicitly. |
+| `specmatic/pattern-length-incompatible` | `pattern` does not contradict `minLength` or `maxLength`. | OAS3.x | `off / error / error` | Regex can only match 2 chars but `minLength: 5`. | Align the regex with the length constraints. |
+| `specmatic/schema-unclear` | The schema is too ambiguous for reliable interpretation. | OAS3.x | `off / warn / warn` | Incomplete mixed keywords create an unclear shape. | Simplify the schema and state the intended type and constraints clearly. |
+| `specmatic/enum-nullability-coercion` | Nullable enums and null enum values are internally consistent. | OAS3.x | `off / error / error` | Enum contains `null` but schema is not nullable, or vice versa. | Make nullable status and enum values agree. |
+| `specmatic/enum-value-schema-mismatch` | Enum values conform to the declared schema. | OAS3.x | `off / error / error` | Enum values violate the underlying type/format. | Correct the enum values or the schema definition. |
+| `specmatic/enum-no-matching-values` | At least one enum value matches the declared schema. | OAS3.x | `off / error / error` | Every enum value violates the schema. | Fix the enum so it contains valid values. |
+| `specmatic/oas30-enum-null-coercion` | OAS 3.0 enum/null behavior is expressed safely. | OAS3.0 only | `off / error / error` | OAS 3.0 enum and null handling conflict. | Model nullability in the OAS 3.0-compatible way the runtime expects. |
+
+## Examples Rules
+
+| Rule | What it checks | Applies to | Preset severity | Example failure | How to fix |
+| --- | --- | --- | --- | --- | --- |
+| `no-example-value-and-externalValue` | Example objects do not set both `value` and `externalValue`. | OAS3.x | `warn / warn / warn` | One example object has both fields. | Keep exactly one of `value` or `externalValue`. |
+| `no-invalid-media-type-examples` | Media-type examples conform to the media-type schema. | OAS3.x | `warn / warn / warn` | Response example sends a string where schema expects an object. | Update the example or the schema so they match. |
+| `no-invalid-parameter-examples` | Parameter examples conform to the parameter schema. | OAS2, OAS3.x | `off / warn / warn` | Query param example uses `"abc"` for an integer param. | Fix the example value or correct the parameter schema. |
+| `no-invalid-schema-examples` | Schema examples conform to the schema. | OAS2, OAS3.x | `off / warn / warn` | `example: 12` on `type: string` | Make the example valid for the schema. |
+| `scalar-property-missing-example` | Scalar properties define examples. | OAS2, OAS3.x | `off / warn / warn` | `type: string` property has no example. | Add representative examples for scalar properties. |
+| `spec-example-values` | OAS example value fields are used consistently. | OAS3.x | `off / warn / warn` | `value` appears together with `dataValue` or `serializedValue`. | Keep only the value field combination allowed by the spec. |
+
+## Security Rules
+
+| Rule | What it checks | Applies to | Preset severity | Example failure | How to fix |
+| --- | --- | --- | --- | --- | --- |
+| `security-defined` | Referenced security schemes exist and each operation has security defined directly or at root. | OAS2, OAS3.x | `error / error / error` for OAS2/OAS3.0/OAS3.1, `warn` for OAS3.2 | Operation has no security requirement, or references `oauth2` that is not defined. | Define the scheme in `securitySchemes` and attach security at root or operation level. |
+| `specmatic/security-property-redefined` | Security-related names do not collide with other shapes. | OAS3.x | `off / warn / warn` | A schema or parameter reuses the same name as a security property in a conflicting way. | Rename the conflicting shape so security metadata is unambiguous. |
+| `specmatic/security-scheme-missing` | Referenced security schemes are actually present and usable. | OAS3.x | `off / error / error` | Requirement references `bearerAuth`, but `components.securitySchemes.bearerAuth` is missing. | Add the missing security scheme definition or fix the reference name. |
+
+## Reading the severity column correctly
+
+The severity shown here is the built-in preset severity, not a permanent property of the rule.
+
+You can always change it in your own profile:
+
+```yaml
+profiles:
+  public-api:
+    rules:
+      extends:
+        - recommended
+      override:
+        operation-description: error
+        tags-alphabetical: off
+```
+
+That means this reference answers two different questions:
+
+- what the built-in preset does out of the box
+- what the rule is for, so you can decide whether to harden, soften, or disable it
+
+## Finding the exact effective rule catalog for your config
+
+If your config adds profiles, plugins, custom rules, or type filtering, generate the catalog from your config instead of relying only on this page:
+
+```bash
+docker run --rm -v "$PWD:$PWD" -w "$PWD" specmatic/enterprise \
+  lint get-rules --config specmatic-linter.yaml --format=json
+```
+
+Use this page as the explanation layer and `get-rules` as the runtime source of truth.

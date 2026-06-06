@@ -1,0 +1,77 @@
+---
+title: Maturity
+sidebar_position: 5
+---
+
+# Maturity
+
+Specmatic Linter can report both rule violations and an overall API maturity assessment.
+
+## Maturity levels
+
+The supported tiers are:
+
+- `Non compliant`
+- `Baseline`
+- `Bronze`
+- `Silver`
+- `Gold`
+- `Platinum`
+
+## How maturity is computed
+
+Maturity is based on **enabled error-level rules only**.
+
+Key rules:
+
+- warning-level failures do not reduce maturity
+- disabled rules do not participate
+- built-in rules have default maturity assignments
+- configurable and plugin rules default to `Baseline` when they are enabled at `error` severity, unless you override their maturity
+
+Maturity works like a ladder:
+
+- if an error-level `Baseline` rule fails, the overall result is `Non compliant`
+- if all `Baseline` rules pass but a `Bronze` rule fails, the result is `Baseline`
+- if all `Bronze` rules pass but a `Silver` rule fails, the result is `Bronze`
+- and so on until `Platinum`
+
+Example override:
+
+```yaml
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+      override:
+        operation-summary:
+          severity: error
+          maturity: bronze
+```
+
+## Why this matters
+
+This model supports progressive rollout:
+
+- start with a small baseline
+- raise selected rules to `error`
+- assign maturity gates that reflect your actual quality bar
+
+This lets you use maturity as a rollout measure, not just as a reporting ornament.
+
+## Built-in defaults vs overrides
+
+Built-in rules already have default maturity assignments. You only need to override maturity when:
+
+- your organization wants a stricter or looser interpretation of a specific rule
+- a configurable rule should count at a higher tier than `Baseline`
+- a plugin rule should participate at a tier above `Baseline`
+
+## Recommended rollout pattern
+
+For an existing API estate:
+
+1. run the chosen profile
+2. fix the highest-signal issues first
+3. raise more rules to `error` only after the current baseline is under control

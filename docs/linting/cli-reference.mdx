@@ -1,0 +1,133 @@
+---
+title: CLI Reference
+sidebar_position: 9
+---
+
+# CLI Reference
+
+## Main command
+
+```bash
+specmatic/enterprise lint
+```
+
+The linter accepts one or more targets:
+
+- OpenAPI file paths
+- `get-rules` to generate a rules catalog instead of linting
+
+Targets may also be shell-expanded globs, depending on how you invoke the command.
+
+## Common examples
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml --config specmatic-linter.yaml
+```
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml --config specmatic-linter.yaml --profile public-api --format summary
+```
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint specs/*.yaml --config specmatic-linter.yaml --time
+```
+
+## Options
+
+### `--config`
+
+Path to the config file.
+
+### `--config-repo-url`
+
+Git URL of a central config repo.
+
+### `--profile`
+
+Profile name to select from the config.
+
+### `--lint-config`
+
+Validate the config before linting:
+
+- `warn`
+- `error`
+- `off`
+
+### `--max-problems`
+
+Maximum number of non-ignored problems to print.
+
+This affects display only. The linter still evaluates the whole document.
+
+### `--format`
+
+Supported output formats:
+
+- `json`
+- `stylish`
+- `codeframe`
+- `summary`
+- `checkstyle`
+- `codeclimate`
+- `markdown`
+- `github-actions`
+
+Notes:
+
+- default format is `json`
+- `github-actions` emits GitHub Actions workflow annotations
+- `summary` is useful for quick local runs or simple CI logs
+- `codeframe` is useful for local developer feedback
+
+### `--time`
+
+Print elapsed time per target and total run time.
+
+## `get-rules`
+
+Use `get-rules` as the target to emit a resolved rules catalog instead of linting:
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint get-rules --config specmatic-linter.yaml
+```
+
+Behavior:
+
+- default output format: HTML
+- supported explicit format: JSON
+- output path:
+
+```text
+build/reports/specmatic/lint/openapi/rules-report.html
+build/reports/specmatic/lint/openapi/rules-report.json
+```
+
+Use `get-rules` when you want to inspect the **resolved** rule inventory for a config, including:
+
+- built-in rules enabled by presets
+- explicit configurable YAML rules
+- loaded plugin rules
+- severities
+- rule types
+- maturity participation
+
+## Exit codes
+
+- `0`: no lint errors
+- `1`: lint errors found
+- `2`: invalid config or invalid command usage
+
+## Useful command combinations
+
+### Fail on config problems
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml --config specmatic-linter.yaml --lint-config error
+```
+
+### Generate a rules catalog for a central config repo
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint get-rules --config-repo-url=https://github.com/specmatic/central-linter-config.git --format json
+```

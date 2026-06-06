@@ -1,0 +1,151 @@
+---
+title: Quick Start
+sidebar_position: 2
+---
+
+# Quick Start
+
+This quick start shows the shortest path to running Specmatic Linter against an OpenAPI file with a real profile-based configuration.
+
+## What Specmatic Linter brings
+
+* **Semantic intelligence**: Understands the intent of your API, not just its syntax.
+* **Executable contracts**: Lints specifications and validates examples so they can serve as enforceable contracts.
+* **High performance**: Uses a concurrent engine designed for enterprise-scale workloads.
+* **Precision-engineered**: Delivers high-confidence validation with deterministic rules and low-noise results.
+* **Mission-critical reliability**: Supports large-scale systems and CI/CD-driven governance workflows.
+* **Extensibility**: Provides an approachable DSL for custom rules and organization-specific policies.
+* **Flexible integration**: Supports shift-left feedback in local development environments and enforcement in CI/CD pipelines.
+* **Auto-fix**: Establishes the foundation for automated remediation of semantic and syntax issues.
+* **Best-of-breed architecture**: Built on proven patterns to address the practical limitations of conventional linting approaches.
+
+## 1. Create a spec file
+
+Create `openapi.yaml`:
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Pets
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      responses:
+        "200":
+          description: ok
+servers:
+  - url: https://api.example.com
+```
+
+This spec is intentionally incomplete. It is missing fields that the recommended ruleset expects, such as `operationId`, `summary`, and security definitions.
+
+## 2. Create a linter config
+
+Create `specmatic-linter.yaml`:
+
+```yaml
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+```
+
+This is the canonical config shape:
+
+- root `profiles`
+- a `default` profile
+- built-in ruleset selection through `rules.extends`
+
+## 3. Run the linter
+
+**macOS / Linux / PowerShell**
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml --config specmatic-linter.yaml
+```
+
+**Windows Command Prompt**
+
+```bash
+docker run --rm -v "%cd%:/usr/src/app" specmatic/enterprise lint openapi.yaml --config specmatic-linter.yaml
+```
+
+## 4. Interpret the result
+
+By default, lint results are emitted as JSON. A typical response contains:
+
+- `problems`: rule violations
+- `totals`: error and warning counts
+- `maturity`: the highest maturity tier the spec currently satisfies
+- `notes`: run-level notes such as rule-selection messages
+
+For this intentionally incomplete example, expect failures such as:
+
+- `operation-summary`
+- `operation-operationId`
+- `security-defined`
+
+depending on the selected ruleset and OpenAPI version.
+
+Example shape:
+
+```json
+{
+  "problems": [
+    {
+      "ruleId": "operation-summary",
+      "severity": "error",
+      "message": "Operation object should contain `summary` field."
+    }
+  ],
+  "totals": {
+    "errors": 1,
+    "warnings": 0
+  },
+  "maturity": {
+    "level": "Baseline"
+  }
+}
+```
+
+For local use, many teams prefer a shorter format:
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml --config specmatic-linter.yaml --format summary
+```
+
+## 5. Select a profile explicitly
+
+If your config contains multiple profiles, choose one with `--profile`:
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml --config specmatic-linter.yaml --profile public-api
+```
+
+If a config defines exactly one profile, it is selected automatically. If it defines multiple profiles, the linter uses `default` when present, otherwise you must pass `--profile`.
+
+## 6. Validate the config itself
+
+The linter can validate the config before linting specs:
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml --config specmatic-linter.yaml --lint-config error
+```
+
+Use:
+
+- `warn` to print config problems but continue
+- `error` to fail the command on config problems
+- `off` to skip config validation
+
+This is useful while building out new profiles or custom rules.
+
+## Next Steps
+
+- [Understand the config structure](/linting/configuration)
+- [Learn how presets, types, and profiles compose](/linting/rulesets-types-and-profiles)
+- [Write custom YAML rules](/linting/configurable-rules)
+- [Use JavaScript plugins](/linting/custom-js-plugins)
+- Explore the sample project: [specmatic-linter-sample](https://github.com/specmatic/specmatic-linter/tree/main/sample_projects/specmatic-linter-sample)
