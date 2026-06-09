@@ -230,9 +230,16 @@ Run the backward compatibility check:
 specmatic backward-compatibility-check --target-path ./api_products_v1.yaml
 ```
 
-Specmatic will approve this change, as adding an optional field maintains backward compatibility. Here is the sample output of the command
+Adding an optional field is a safe, additive change, so the check passes and writes an HTML report. `GET /products/{id}` is flagged **Compatible**:
 
-![specmatic backward compatibility - compatible](/img/bcc_compatible.png)
+![Backward compatibility report - compatible](/img/bcc_compatible.png)
+
+The same verdict is printed to the terminal:
+
+```terminaloutput
+Verdict for spec api_products_v1.yaml:
+  (COMPATIBLE) The spec is backward compatible with the corresponding spec from main
+```
 
 ### Breaking Change
 
@@ -278,9 +285,24 @@ Running the check now:
 specmatic backward-compatibility-check --target-path ./api_products_v1.yaml
 ```
 
-Specmatic will flag this as incompatible, protecting your API consumers from unexpected changes. Following is the output of the command.
+The check fails and the HTML report flags `GET /products/{id}` as **Incompatible**. The breaking change is an `R1001` type mismatch on `RESPONSE.BODY.name`, pinned to its exact location in the spec:
 
-![Specmatic, backward compatibility breaking changes](/img/bcc_incompatible.png)
+![Backward compatibility report - breaking change](/img/bcc_incompatible.png)
+
+The terminal reports the same incompatibility:
+
+```terminaloutput
+The Incompatibility Report:
+
+  In scenario "Get Products. Response: Returns product details"
+  API: GET /products/(id:number) -> 200
+
+    >> RESPONSE.BODY.name (api_products_v1.yaml:24:19)
+
+        This is number in the new specification response but string in the old specification
+
+(INCOMPATIBLE) This spec contains breaking changes to the API
+```
 
 ### Orders AsyncAPI Evolution <CommercialBadge />
 
