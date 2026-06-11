@@ -1,0 +1,74 @@
+---
+title: Specmatic Enterprise Release Notes
+slug: /release-notes/enterprise
+sidebar_position: 2
+description: Placeholder page for Specmatic enterprise release notes.
+---
+
+## 1.16.1 (2026-06-11)
+
+### Added
+
+- Added bundled MCP server support for contract tests, mock servers, and backward-compatibility execution flows.
+
+### Changed
+
+- Reduced delays and timeout risk during DNS resolution when enterprise reporting flows connect to Specmatic Insights.
+- Improved federated and filesystem-based CTRF metadata handling so spec-path reporting is more reliable in enterprise report flows.
+- Restored AsyncAPI v2 operation-exchange handling after a regression.
+- Improved Arazzo schema validation, drilldown scoping, and Studio mock event rendering.
+- Bundled linter updates now add HTML lint reports with line numbers, improve missing-field diagnostics, clarify built-in ruleset naming, and improve OpenAPI 3.0 rule behavior.
+
+### Dependency and Platform Updates
+
+- Updated the bundled Specmatic runtime to `2.46.5`.
+- Updated the bundled linter to `0.1.6`.
+
+## 1.16.0 (2026-06-03)
+
+### Changed
+
+- Removed legacy async coverage, stub-usage, and test-data report generation in favor of the newer CTRF plus HTML reporting flow.
+- Simplified async and gRPC reporting paths to align the enterprise distribution with the newer reporting model.
+- Improved Arazzo HTML report coverage and report-generation verification.
+- Bundled linter capabilities now include profiles, rule categorization, maturity display values in reports, and better local config handling for `--config`.
+
+## 1.15.0 (2026-06-01)
+
+### Added
+
+- Added test-executor/orchestrator configuration support to the enterprise distribution.
+- Bundled linter capabilities now include maturity levels and rule-catalog reporting.
+
+### Changed
+
+- Bundled the newer Specmatic runtime that removes legacy coverage and usage report outputs in favor of CTRF plus HTML reporting.
+- Improved backward-compatibility report path handling and source-location accuracy through the bundled runtime update.
+
+### Dependency and Platform Updates
+
+- Updated the bundled linter to `0.1.2`.
+
+## 1.14.3 (2026-05-28)
+
+### Added
+
+- Added the enterprise `lint` command.
+- Added command-level backward-compatibility coverage for GraphQL and gRPC flows.
+- Introduced the bundled Specmatic linter into the enterprise distribution.
+
+### Changed
+
+- Bundled the newer Specmatic runtime with richer backward-compatibility CTRF reporting, including improved multi-spec support and WIP-aware reporting behavior.
+- Updated the enterprise build/runtime image setup to support extra APK dependencies such as Node.js, npm, and `wget` where needed.
+
+## 1.14.2 (2026-05-21)
+
+### Added
+
+- Added support for GraphQL `oneOf` directive handling in the enterprise distribution.
+
+### Changed
+
+- Improved GraphQL schema resolution, argument matching, and request generation, especially for bare enum values and nested JSON structures in responses.
+- Temporarily pinned `wire-schema` for Java subprojects as part of the release packaging adjustments.
