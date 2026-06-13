@@ -11,17 +11,16 @@ exclude_nav: true
 
 Testing event-driven systems is fundamentally harder than testing REST APIs. Validating schemas is straightforward, but validating behavior in terms of what the system actually does when it receives or produces an event is still a major challenge. Teams often struggle to trigger their systems reliably, observe side effects, and automate end-to-end event flow testing without custom scripts or brittle harnesses.
 
-Specmatic help you leverage [OpenAPI Overlays](https://spec.openapis.org/overlay/) feature to bring executable behavior into the AsyncAPI ecosystem. Using a simple Overlay file, engineers can define:
+Specmatic helps you leverage **Before and After Fixtures** in example files to bring executable behavior into the AsyncAPI ecosystem. Using simple JSON example files, engineers can define:
 
-- Triggers that stimulate the system (for example, an HTTP call that causes an event to be published), and
-- Side effects that must occur when the system consumes an event (such as an emitted message, state change, or downstream API call).
+- **Before Fixtures** that stimulate the system (for example, an HTTP call that causes an event to be published), and
+- **After Fixtures** that must occur when the system consumes an event (such as an emitted message, state change, or downstream API call).
 
 This approach turns an [AsyncAPI specification](https://www.asyncapi.com/) into a fully executable contract test that verifies real event flows, not just schemas. 
 
-We will walk through a practical example of how overlays allow teams to test end-to-end asynchronous workflows in a declarative, CI-friendly manner, without relying on mocks, glue code, or environment-specific hacks.
+We will walk through a practical example of how these fixtures allow teams to test end-to-end asynchronous workflows in a declarative, CI-friendly manner, without relying on mocks, glue code, or environment-specific hacks.
 
 By end of this tutorial, you will gain a clear understanding of how AsyncAPI and Specmatic can work together to close a long-standing gap in event-driven testing, making it possible to ship reliable, behaviourally correct event-based systems with confidence.
-
 
 ## Business Workflow
 
@@ -33,15 +32,15 @@ By end of this tutorial, you will gain a clear understanding of how AsyncAPI and
 
 In the above workflow, when the `Warehouse Service` receives an inventory availability confirmation, it makes an HTTP PUT request on the `Order Service` to inform that the items are available in stock and the order can be accepted. Then the `Order Service` will publish a `OrderAccepted` event on the `accepted-orders` topic.
 
-Now image you want to test if the `Order Service` correctly publishes the `OrderAccepted` event when it receives the HTTP PUT request, but you don't have or don't want to depend on the `Warehouse Service`.
+Now imagine you want to test if the `Order Service` correctly publishes the `OrderAccepted` event when it receives the HTTP PUT request, but you don't have or don't want to depend on the `Warehouse Service`.
 
 In such cases, we refer to this action of stimulating the `Order Service` without using its dependencies as a "trigger". 
 
-Hence, the expected behavior we are interested in testing is: when we trigger the `Order Service` by invoking the HTTP PUT request it should result in an `OrderAccepted` event being published on the `accepted-orders` topic.
+Hence, the expected behavior we are interested in testing is: when we trigger the `Order Service` by invoking the HTTP PUT request, it should result in an `OrderAccepted` event being published on the `accepted-orders` topic.
 
 ### Side Effects of Event Consumption
 
-Similarly, when the `Shipping App` publishes an `OutForDelivery` event on the `out-for-delivery-orders` topic, the `Order Service` is expected to consume this event and update the order status to "OutForDelivery" in the database.
+Similarly, when the `Shipping App` publishes an `OutForDelivery` event on the `out-for-delivery-orders` topic, the `Order Service` is expected to consume this event and update the order status to "OutForDelivery" (or "SHIPPED") in the database.
 
 Here, the database update is referred to as a "side effect" of consuming the `OutForDelivery` event.
 
@@ -49,14 +48,11 @@ Hence, the expected behavior we are interested in testing is: when the `OutForDe
 
 ## Testing Triggers and Side Effects with Specmatic
 
-### OpenAPI Overlays
-[OpenAPI Overlays](/features/overlays) provides a powerful mechanism to modify OpenAPI specifications without altering the base specification.
-
-Even though Overlays were designed to work with OpenAPI, Specmatic can leverage Overlays with AsyncAPI specifications as well to define triggers and side effects for testing event-driven systems.
+Specmatic uses **Example Files** to define concrete scenarios for AsyncAPI operations. These example files can contain `before` and `after` blocks to handle triggers and side-effect verifications.
 
 ### AsyncAPI Specification
 
-Here is a simplified AsyncAPI specification for the `Order Service` that defines the relevant channels and messages.
+Here is a simplified AsyncAPI specification for the `Order Service` that defines the relevant channels and operations.
 
 ```yaml
 asyncapi: 3.0.0
@@ -137,120 +133,143 @@ components:
           - DELIVERED
           - CANCELLED
 ```
-### Overlay File
-The following Overlay file defines the triggers and side effects for testing the `Order Service`.
 
-```yaml
-overlay: 1.0.0
-actions:
-  - target: $.operations.orderAccepted
-    update:
-      x-specmatic-trigger:
-        type: http
-        method: PUT
-        url: http://localhost:9000/orders
-        expectedStatus: 200
-        timeoutInSeconds: 5
-        headers:
-          Content-Type: application/json
-        requestBody: '{"id":123,"status":"ACCEPTED","timestamp":"2025-04-12T14:30:00Z"}'
+### Example Files with Before and After Fixtures
 
-  - target: $.operations.initiateOrderDelivery
-    update:
-      x-specmatic-side-effect:
-        type: http
-        method: GET
-        url: http://localhost:9000/orders/123?status=SHIPPED
-        expectedStatus: 200
-        timeoutInSeconds: 5
+Specmatic supports defining triggers and side effects using **Before and After Fixtures** directly within example files associated with the AsyncAPI operations.
+
+#### Triggering an Event (Before Fixture)
+
+The following example file (`acceptOrder.json`) triggers the `orderAccepted` operation by making an HTTP PUT request.
+
+```json
+{
+  "id": "accept-order",
+  "name": "ACCEPT_ORDER",
+  "before": [
+    {
+      "type": "http",
+      "http-request": {
+        "baseUrl": "http://localhost:8080",
+        "path": "/orders",
+        "method": "PUT",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": 123,
+          "status": "ACCEPTED",
+          "timestamp": "2025-04-12T14:30:00Z"
+        }
+      },
+      "http-response": {
+        "status": 200
+      },
+      "timeout": "PT30S"
+    }
+  ],
+  "send": {
+    "topic": "accepted-orders",
+    "payload": {
+      "id": 123,
+      "status": "ACCEPTED",
+      "timestamp": "2025-04-12T14:30:00Z"
+    }
+  }
+}
 ```
+
+#### Verifying Side Effects (After Fixture)
+
+The following example file (`outForDeliveryOrder.json`) verifies that after an `OutForDelivery` event is received, the order status is updated to `SHIPPED` in the application.
+
+```json
+{
+  "id": "order-out-for-delivery",
+  "name": "ORDER_OUT_FOR_DELIVERY",
+  "receive": {
+    "topic": "out-for-delivery-orders",
+    "payload": {
+      "orderId": 456,
+      "deliveryAddress": "1234 Elm Street, Springfield",
+      "deliveryDate": "2025-04-14"
+    }
+  },
+  "after": [
+    {
+      "type": "http",
+      "http-request": {
+        "baseUrl": "http://localhost:8080",
+        "path": "/orders/456?status=SHIPPED",
+        "method": "GET"
+      },
+      "http-response": {
+        "status": 200,
+        "body": {
+          "id": "$match(exact: 456)",
+          "status": "SHIPPED"
+        }
+      },
+      "timeout": "PT10S"
+    }
+  ]
+}
+```
+
 ### Specmatic Configuration
 
-By setting a system property called `SPECMATIC_OVERLAY_FILE` and pointing it to the overlay file path (Ex: "src/test/resources/spec_overlay.yaml") we can let Specmatic know that it needs to apply the above Overlay to our AsyncAPI specification.
+Specmatic automatically looks for example files in a directory structure that matches your specifications. For an AsyncAPI spec named `async-order-service.yaml`, place the examples in a folder named `async-order-service` (relative to your examples directory).
 
-On Command Line, this can be done as follows:
+In your `specmatic.yaml` (or `specmatic.json`), ensure the spec is listed:
 
-```shell
--DSPECMATIC_OVERLAY_FILE=src/test/resources/spec_overlay.yaml
-```
-
-In Java, this can be done as follows:
-
-```java
-System.setProperty("SPECMATIC_OVERLAY_FILE", "src/test/resources/spec_overlay.yaml");
+```yaml
+config:
+  test:
+    async:
+      specs:
+        - specs/async-order-service.yaml
 ```
 
 ### Running the Tests
 
-Now when you run Specmatic tests using the AsyncAPI spec against the `Order Service`, it will automatically apply the triggers and side effects defined in the Overlay file. You can see the following in the test output:
+When you run Specmatic tests, it will automatically apply the triggers and verify side effects defined in the example files.
 
 ```terminaloutput
 [Specmatic::Test] Starting test >> Should send a message on 'accepted-orders' channel.
 
-[Specmatic::Test] Subscribing to the topics: 'accepted-orders'...
-[Specmatic::Test] Subscriber started listening to 'accepted-orders'
+[Specmatic::Test] Executing 'before' fixture: type=http, method=PUT, path=/orders
+[Specmatic::Test] HTTP response received: status=200
+[Specmatic::Test] 'before' fixture execution succeeded.
+
 [Specmatic::Test] Waiting for a message on topic 'accepted-orders'...
-[Specmatic::Test] Attempting to trigger event using 'x-specmatic-trigger'
-[Specmatic::Test] Executing HTTP hook: method=PUT, url=http://localhost:9000/orders, expectedStatus=200, expectedBody=null, headers={Content-Type=application/json}, body={"id":123,"status":"ACCEPTED","timestamp":"2025-04-12T14:30:00Z"}
-
-[OrderController] Received update request: OrderUpdateRequest(id=123, status=ACCEPTED, timestamp=2025-04-12T14:30:00Z)
-[OrderAcceptanceService] Publishing the acceptance message on topic 'accepted-orders'..
-
-[Specmatic::Test] HTTP response received: status=200, body='Notification triggered.'
-[Specmatic::Test] HTTP hook execution succeeded.
-[Specmatic::Test] Successfully triggered the event using 'x-specmatic-trigger'.
-
 [Specmatic::Test] Received a message on topic 'accepted-orders' (match=true):
-Timestamp: 2025-04-24T03:30:46.301961Z
 Payload: {
     "id": 123,
     "status": "ACCEPTED",
     "timestamp": "2025-04-12T14:30:00Z"
 }
-Headers: {}
 
 [Specmatic::Test] Result: PASSED
-[Specmatic::Test] << Test finished
 ```
 
-and
+And for side effects:
 
 ```terminaloutput
 [Specmatic::Test] Starting test >> Should receive a message on 'out-for-delivery-orders' channel.
 
-[Specmatic::Test] Sending a message on topic 'out-for-delivery-orders':
-Timestamp: 2025-04-24T03:30:46.328835Z
-Payload: {
-    "orderId": 123,
-    "deliveryAddress": "1234 Elm Street, Springfield",
-    "deliveryDate": "2025-04-14"
-}
-Headers: {}
+[Specmatic::Test] Sending a message on topic 'out-for-delivery-orders'...
+[Specmatic::Test] Message published successfully.
 
-[Specmatic::Test] Message published successfully on topic 'out-for-delivery-orders'
-
-[OrderDeliveryService] Received message on topic out-for-delivery-orders - {
-    "orderId": 123,
-    "deliveryAddress": "1234 Elm Street, Springfield",
-    "deliveryDate": "2025-04-14"
-}
-[OrderDeliveryService] Order with orderId '123' is SHIPPED
-
-[Specmatic] Checking side effect using the hook specified at 'x-specmatic-side-effect'
-[Specmatic::Test] Executing HTTP hook: method=GET, url=http://localhost:9000/orders/123?status=SHIPPED, expectedStatus=200, expectedBody=null, headers=null, body=null
-
-[OrderController] Received request to find Order with id '123' and status 'SHIPPED'
-
-[Specmatic::Test] HTTP response received: status=200, body='{"id":123,"orderItems":[],"lastUpdatedDate":"2025-12-24T09:00:34.151505","status":"SHIPPED"}'
-[Specmatic::Test] HTTP hook execution succeeded.
-[Specmatic::Test] The intended side effect is successful.
+[Specmatic::Test] Executing 'after' fixture: type=http, method=GET, path=/orders/456
+[Specmatic::Test] HTTP response received: status=200, body={"id":456, "status":"SHIPPED", ...}
+[Specmatic::Test] 'after' fixture execution succeeded.
 
 [Specmatic::Test] Result: PASSED
-[Specmatic::Test] << Test finished
 ```
+
 ### Sample Project
 Please have a look at the following sample project to understand how to utilize `Specmatic` for testing event flows and behaviors in your application:
 - [specmatic-kafka-sample-asyncapi3](https://github.com/specmatic/specmatic-kafka-sample-asyncapi3)
 
 ## Conclusion
-By leveraging OpenAPI Overlays with AsyncAPI specifications, Specmatic empowers teams to define and test triggers and side effects in event-driven systems. This approach enables comprehensive end-to-end testing of event flows and behaviors without relying on mocks or brittle test harnesses.
+By leveraging **Before and After Fixtures** in example files, Specmatic empowers teams to define and test triggers and side effects in event-driven systems. This approach enables comprehensive end-to-end testing of event flows and behaviors without relying on mocks or brittle test harnesses.
