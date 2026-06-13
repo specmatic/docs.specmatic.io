@@ -13,26 +13,78 @@ Backward Compatibility
 
 
 
-# Why Backward Compatibility Matters
-Backward compatibility ensures that updates to your API specifications don't accidentally break compatibility and prevents rework. Perform automated backward compatibility checks to ensure we are not accidentally breaking compatibility.
+## Why Backward Compatibility Matters
+Backward compatibility ensures that updates to your API specifications don't accidentally break your consumers to prevent rework. Perform automated backward compatibility checks to ensure we are not accidentally breaking compatibility.
 
 Specmatic offers this powerful feature to check for backward compatibility between different versions of your API specifications.
 
 - **Catch issues early:** Detect compatibility problems before any code is written
-- **Specification-Based Analysis:** By comparing the old and new versions of your API specification, Specmatic provides instant feedback on potential breaking changes.
+- **Specification-Based Analysis:** By validating the old and new versions of your API specification, Specmatic provides instant feedback on potential breaking changes.
 - **Shift-Left Testing:** Detect breaking changes during API design phase, reduce costly downstream fixes and client disruptions.
 
 In the following sections, we'll show you how to use Specmatic to maintain backward compatibility in your microservices & microfrontend development process.
 
-# What's New
+## What's New
 The new command has been overhauled to be more intuitive and supports a wider range of specifications. It now includes:
 - Comprehensive support for OpenAPI, gRPC, GraphQL and AsyncAPI.
 - Simplified usage with smarter messages to help.
 
 > **Note:** Older commands for backward compatibility will be deprecated soon. We recommend switching to the new command to make the most of its improved capabilities.
 
-# How it works
+## How it works
 
+Backward compatibility needs to be ensured at 3 levels:
+
+### Level 1: Interface Compatibility Check
+
+The backward-compatibility-check command validates compatibility at the API contract interface level. Think wire-compatibility.
+
+It starts a mock server using the new version of the specification, generates tests from the previous version of the specification, and executes those newly generated tests against the mock server. If all the tests pass, we know the new version of the spec honours the existing contract established by the current version of the spec across the entire interface surface, including:
+
+- protocol semantics
+- operations, endpoints, message channels
+- request/response and payload schemas
+- path, query, and header parameters
+- status codes
+- content/media types
+- authentication and security schemes
+
+Execute it via the following command:
+```shell
+specmatic backward-compatibility-check [options]
+```
+
+#### Key Options
+
+- `--target-path`: Focus your analysis on specific file or folder. Default is all files and folder.
+- `--base-branch`: Select your comparison base. This defaults to head of the current branch.
+- `--repo-dir`: Specify the directory where the repository is located. Default is the current directory.
+
+### Level 2: Example Validation
+
+Existing examples (both provider and consumer examples) are validated against the updated specification to ensure they continue to remain valid and executable.
+
+This helps detect compatibility gaps that may not be immediately visible through structural contract validation alone.
+
+Execute it via the following command:
+```shell
+specmatic validate [options]
+```
+For more details please refer to [Validating Example](/features/external_examples#using-cli-to-validate-examples)
+
+### Level 3: Contract and API Testing
+
+Finally, [Contract Tests](/contract_driven_development/contract_testing) and API Tests are executed against the updated service implementation using the validated examples.
+
+This ensures that the actual implementation continues to honor the updated contract and remains behaviorally compatible with existing consumers.
+
+Execute it via the following command:
+```shell
+specmatic test [options]
+```
+For more details please refer to [Contract Testing](/contract_driven_development/contract_testing)
+
+## Backward Compatibility Workflow
 Specmatic integrates backward compatibility checks into both:
 - **Local changes**, to catch issues as you update the specifications.
 - **CI pipelines**, ensuring every change is validated before it reaches production.
@@ -48,23 +100,7 @@ graph TD;
     D -->|Iterative Improvement| A
 ```
 
-# Using Backward Compatibility
-
-## Command Essentials
-
-To check for backward compatibility of your API specifications, use:
-
-```shell
-specmatic backward-compatibility-check [options]
-```
-
-### Key Options
-
-- `--target-path`: Focus your analysis on specific file or folder. Default is all files and folder.
-- `--base-branch`: Select your comparison base. This defaults to head of the current branch.
-- `--repo-dir`: Specify the directory where the repository is located. Default is the current directory.
-
-## Common Use Cases
+## Using Backward Compatibility
 
 ### 1. Validating Work in Progress (local development)
 
@@ -103,7 +139,6 @@ graph TD
     E -->|Developer notified| F[Changes reviewed]
     F --> A
 ```
-
 
 ### 3. Pre-Merge Validation (in your CI pipeline)
 
@@ -185,7 +220,6 @@ paths:
                     type: string
                   sku:
                     type: string
-
 ```
 
 Now, let's evolve this API by adding a new `category` field:
@@ -221,7 +255,6 @@ paths:
                     type: string
                   category:
                     type: string
-
 ```
 
 Run the backward compatibility check:
@@ -232,6 +265,8 @@ specmatic backward-compatibility-check --target-path ./api_products_v1.yaml
 
 Adding an optional field is a safe, additive change, so the check passes and writes an HTML report. `GET /products/{id}` is flagged **Compatible**:
 
+### Backward Compatibility HTML Report
+
 ![Backward compatibility report - compatible](/img/bcc_compatible.png)
 
 The same verdict is printed to the terminal:
@@ -240,6 +275,10 @@ The same verdict is printed to the terminal:
 Verdict for spec api_products_v1.yaml:
   (COMPATIBLE) The spec is backward compatible with the corresponding spec from main
 ```
+
+:::info
+Backward compatibility HTML report is already produced by the open source version. However, for governance and deeper integration with other tools in your ecosystem, the Enterprise version also produces a json CTRF report.
+:::
 
 ### Breaking Change
 
@@ -276,7 +315,6 @@ paths:
                     type: string
                   category:
                     type: string
-
 ```
 
 Running the check now:
@@ -710,6 +748,12 @@ Run the specmatic compare command to confirm this, and see the result:
 
 <Tabs groupId="compare">
 
+  <TabItem value="docker" label="docker">
+```bash
+docker run -v "/local-directory:/specs" specmatic/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
+```
+  </TabItem>
+
   <TabItem value="java" label="java">
 ```bash
 java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
@@ -719,12 +763,6 @@ java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
   <TabItem value="npm" label="npm">
 ```bash
 npx specmatic compare api_products_v1.yaml api_products_v2.yaml
-```
-  </TabItem>
-
-  <TabItem value="docker" label="docker">
-```bash
-docker run -v "/local-directory:/specs" specmatic/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
 ```
   </TabItem>
 
@@ -781,6 +819,12 @@ Now try it again:
 
 <Tabs groupId="compare2">
 
+  <TabItem value="docker" label="docker">
+```bash
+docker run -v "/local-directory:/specs" specmatic/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
+```
+  </TabItem>
+
   <TabItem value="java" label="java">
 ```bash
 java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
@@ -789,13 +833,7 @@ java -jar specmatic.jar compare api_products_v1.yaml api_products_v2.yaml
 
   <TabItem value="npm" label="npm">
 ```bash
-npx specmaitc compare api_products_v1.yaml api_products_v2.yaml
-```
-  </TabItem>
-
-  <TabItem value="docker" label="docker">
-```bash
-docker run -v "/local-directory:/specs" specmatic/specmatic compare "/specs/api_products_v1.yaml" "/specs/api_products_v2.yaml"
+npx specmatic compare api_products_v1.yaml api_products_v2.yaml
 ```
   </TabItem>
 
@@ -816,6 +854,12 @@ The newer contract is not backward compatible.
 
 If the change is not backward compatible, the compare command exits with exit code 1. You can use this in a script.
 
+## FAQs
+
+### Are examples used as part of the backward compatibility checks?
+    
+Yes, they are an integral part of the overall process. If you think about it, examples go beyond purely defining the interface, they start getting a bit into the behavioural territory. As described above, [step 2 and 3](#level-2-example-validation) does rely on provided examples to ensure behavioural compatibility.
+
 ## Validating Changes In Git On Your Laptop (Deprecated)
 
 > **Note:** The following command will be deprecated soon. We recommend switching to the new command to make the most of its improved capabilities.
@@ -826,6 +870,12 @@ Then to confirm that it is a backward compatible change, before committing the c
 
 <Tabs groupId="git-compare">
 
+  <TabItem value="docker" label="docker">
+```bash
+docker run -v "/git-repo:/git-repo" specmatic/specmatic compatible git file "/git-repo/api_products_v1.yaml"
+```
+  </TabItem>
+
   <TabItem value="java" label="java">
 ```bash
 java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_products_v1.yaml
@@ -835,12 +885,6 @@ java -jar specmatic.jar compatible git file ./run/specmatic/examples/api_product
   <TabItem value="npm" label="npm">
 ```bash
 npx specmatic compatible git file api_products_v1.yaml
-```
-  </TabItem>
-
-  <TabItem value="docker" label="docker">
-```bash
-docker run -v "/git-repo:/git-repo" specmatic/specmatic compatible git file "/git-repo/api_products_v1.yaml"
 ```
   </TabItem>
 
@@ -862,6 +906,12 @@ You can do this with the following command:
 
 <Tabs groupId="ci-compare">
 
+  <TabItem value="docker" label="docker">
+```bash
+docker run -v "/git-repo:/git-repo" specmatic/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
+```
+  </TabItem>
+
   <TabItem value="java" label="java">
 ```bash
 java -jar specmatic.jar compatible git commits api_products_v1.yaml HEAD HEAD^1
@@ -871,12 +921,6 @@ java -jar specmatic.jar compatible git commits api_products_v1.yaml HEAD HEAD^1
   <TabItem value="npm" label="npm">
 ```bash
 npx specmatic compatible git commits api_products_v1.yaml HEAD HEAD^1
-```
-  </TabItem>
-
-  <TabItem value="docker" label="docker">
-```bash
-docker run -v "/git-repo:/git-repo" specmatic/specmatic compatible git commits "/git-repo/api_products_v1.yaml" HEAD HEAD^1
 ```
   </TabItem>
 
