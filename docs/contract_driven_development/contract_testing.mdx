@@ -133,9 +133,44 @@ docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test --testBaseURL https
 
 In the above example, we only ran the happy path test cases. What if we send a number to a boolean parameter? What if we send a null to a non-nullable parameter? What if we do not send a mandatory parameter? How does the application handle these errors? Input validation is an important aspect of your api security strategy ([OWASP reference](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)).
 
-Specmatic can help you verify / assess such boundary condition behavior and the associated error handling in your application. Let us run the Specmatic tests with the ```SPECMATIC_GENERATIVE_TESTS``` environment variable set to true.
+Specmatic can help you verify / assess such boundary condition behavior and the associated error handling in your application by executing schema resiliency tests against your application.
 
-```export SPECMATIC_GENERATIVE_TESTS=true```
+Make sure that your configuration contains this property:
+
+<Tabs groupId="schemaResiliencyTests">
+
+  <TabItem value="schemaResiliencyTests_yaml" label="YAML">
+```yaml
+version: 3
+specmatic:
+  settings:
+    test:
+      schemaResiliencyTests: all # add this to your test settings in config
+```
+  </TabItem>
+
+  <TabItem value="schemaResiliencyTests_json" label="JSON">
+```json
+{
+  "version": 3,
+  "specmatic": {
+    "settings": {
+      "test": {
+        "schemaResiliencyTests": "all"
+      }
+    }
+  }
+}
+```
+  </TabItem>
+
+</Tabs>
+
+:::note
+Note: The use of the SPECMATIC_GENERATIVE_TESTS environment variable or system property has been deprecated in favour of configuration.
+:::
+
+Then run the following command:
 
 ```bash
 specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
