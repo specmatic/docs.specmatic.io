@@ -1,0 +1,83 @@
+---
+layout: default
+title: anyOf Support
+parent: JSON Schema
+nav_order: 2
+redirect_from:
+  - /documentation/anyOf-support.html
+  - /documentation/features/json_schema/anyOf-support.html
+---
+
+# oneOf Support
+
+`oneOf`  contains a list of schemas. A value may match one of the items in this list, and each item will be tested as described below.
+
+## Test generation
+
+When generating tests for `oneOf`, one test is generated per schema.
+
+For example, consider the following schema:
+
+```yaml
+paths:
+  /example:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  oneOf:
+                    - type: object
+                      properties:
+                        name:
+                          type: string
+                    - type: object
+                      properties:
+                        age:
+                          type: integer
+```
+
+The following test requests would be generated:
+1. a test with `data` containing a `name` property of type string
+2. a test with `data` containing an `age` property of type integer
+
+## Object generation
+
+When generating a JSON object from a schema that contains `oneOf`, one schema is selected at random and an object is generated from it based on that schema. This applies to example generation as well as response generation during mocking.
+
+## Validation
+
+Consider the same schema as above.
+
+The following values would match the oneOf, because they conform to at one of the schemas in the oneOf list:
+
+```json
+{
+  "data": {
+    "name": "Alice"
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "age": 30
+  }
+}
+```
+
+However, the following value would not match the oneOf, because it contains an undeclared key `gender`:
+
+```json
+{
+  "data": {
+    "name": "Alice",
+    "gender": "female" 
+  }
+}
+```
+
