@@ -40,7 +40,7 @@ paths:
                           type: integer
 ```
 
-The following test requests would be generated:
+If there are no examples of this, or if the specmatic config contains `schemaResiliencyTests: all` (read more about [boundary condition testing](/contract_driven_development/contract_testing#boundary-condition-testing)), the following test requests would be generated:
 1. a test with `data` containing a `name` property of type string
 2. a test with `data` containing an `age` property of type integer
 
