@@ -5,6 +5,24 @@ sidebar_position: 2
 description: Specmatic Enterprise release notes.
 ---
 
+##  1.17.0 (2026-06-15)
+
+### Added
+
+- Added support for nested objects and arrays in query-parameter objects across bundled OpenAPI validation and example flows.
+
+### Changed
+
+- Made handling of collisions between scalar query parameters and object query parameter properties of the same name more lenient (collisions where the type is identical will be ignored), while ensuring that if there are type differences, the last query param/property declared with that name is used by Specmatic.
+- Enterprise now loads and validates OpenAPI examples for `422` responses in the bundled runtime.
+- Improved OpenAPI source-location tracking so bundled validation and backward-compatibility failures can retain the original schema source pointer, including referenced schemas.
+- Improved `specmatic config upgrade` handling for legacy configurations so global mock and test settings stay under top-level `specmatic.settings`.
+- Updated bundled reporting and licensing flows so license-aware CLI operations support `--debug` trace logging while retaining backward-compatible `--log-level` support.
+- Improved bundled license CLI output with clearer success, warning, and error cues, including colorized log levels on ANSI-capable terminals.
+- Studio now renders the OpenAPI examples workspace natively instead of inside an iframe, with smoother generate, validate, bulk-fix, and drilldown flows.
+- Studio now shows backward-compatibility issues as structured editor diagnostics with direct jumps to the affected source locations, including flattened query-parameter paths.
+- Studio now detects older Specmatic config files during export - and offers an in-place V2 to V3 upgrade before writing the workflow.
+
 ## 1.16.1 (2026-06-11)
 
 ### Added
