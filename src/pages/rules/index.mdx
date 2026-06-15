@@ -52,6 +52,8 @@ search_exclude: true
     * [Missing path parameter](#missing-path-parameter)
   * [OAS0012](#oas0012)
     * [Required query object conflict](#required-query-object-conflict)
+  * [OAS0013](#oas0013)
+    * [Query parameter type collision](#query-parameter-type-collision)
   * [OAS0020](#oas0020)
     * [Security property redefined](#security-property-redefined)
   * [OAS0021](#oas0021)
@@ -856,6 +858,49 @@ The query object is marked as required, but neither `name` nor `description` is 
 
 - Add at least one property to the object's `required` list.
 - If none of the object properties must be present, set the query parameter `required` value to `false` or remove it.
+
+## OAS0013
+
+### Query parameter type collision
+
+Multiple query parameter declarations serialize to the same query-string key, but they do not resolve to the same schema. This is reported as a warning.
+
+**Why this is a problem**
+
+When two query parameters produce the same wire key with different types or constraints, Specmatic cannot apply both definitions at runtime. Same-schema collisions are accepted, but different-schema collisions produce a warning. If parsing continues, Specmatic uses the last declared query parameter schema for that serialized key as authoritative for the rest of the run.
+
+Example:
+
+```yaml
+paths:
+  /data:
+    get:
+      parameters:
+        - in: query
+          name: info
+          style: form
+          explode: true
+          schema:
+            type: object
+            properties:
+              age:
+                type: integer
+        - in: query
+          name: age
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+```
+
+In this example, the form-exploded `info` object contributes the wire key `age` through `info.age`, while the second parameter also declares `age` directly. Because `info.age` is an integer and `age` is a string, Specmatic warns that the query parameter wire key `age` has conflicting schemas and continues with the last declaration, `age`, as the authoritative schema for `age`.
+
+**How this can be resolved**
+
+- Keep both declarations only if they resolve to the same schema for the same wire key.
+- Rename or restructure one of the parameters so they no longer serialize to the same query-string key.
+- If the wire key must stay the same, align the schemas so Specmatic does not have to choose between conflicting definitions.
 
 ## OAS0020
 
