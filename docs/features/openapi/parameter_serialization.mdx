@@ -1,0 +1,156 @@
+---
+title: Parameter Serialization
+sidebar_position: 1
+---
+
+# Parameter Serialization
+
+Specmatic supports OpenAPI query parameter objects serialized with `style: form` and `explode: true`.
+This is also the OpenAPI default for query parameters when `style` and `explode` are omitted.
+
+## Form exploded object query parameters
+
+For an object query parameter with scalar properties, the wire representation uses the property names directly.
+
+```yaml
+parameters:
+  - in: query
+    name: details
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+        age:
+          type: integer
+```
+
+The `details` object above can be sent as:
+
+```http
+GET /employees?name=Jack&age=30
+```
+
+Specmatic uses this representation in contract tests, mocks, examples validation and fixing, and when generating query parameters.
+
+## Nested objects and arrays
+
+OpenAPI 3.0 parameter serialization does not define a standard wire format for nested object or array properties inside an object query parameter declared with `style: form` and `explode: true`. Different HTTP frameworks use different conventions.
+
+Specmatic supports nested object and array query parameters.
+
+Specmatic uses inline OpenAPI parameter examples as syntax hints while parsing the specification. These examples tell Specmatic which query key notation your API expects.
+
+So if you have an API with nested objects or arrays, provide an example.
+
+### Properties
+
+Nested object properties can be serialized using dot notation or bracket notation.
+Dot notation is the default when examples do not provide any other property notation guidance.
+
+#### Dot properties
+
+```yaml
+examples:
+  dotProperties:
+    value: "price.min=10&price.max=100"
+```
+
+This represents query keys such as:
+
+```http
+GET /products?price.min=10&price.max=100
+```
+
+#### Bracket properties
+
+```yaml
+examples:
+  bracketProperties:
+    value: "price[min]=10&price[max]=100"
+```
+
+This represents query keys such as:
+
+```http
+GET /products?price[min]=10&price[max]=100
+```
+
+### Arrays
+
+Arrays currently use `[index]` notation.
+
+```yaml
+examples:
+  indexedArray:
+    value: "errors[0].code=invalid_name&errors[0].message=Name%20is%20required"
+```
+
+This represents query keys such as:
+
+```http
+GET /reports?errors[0].code=invalid_name&errors[0].message=Name%20is%20required
+```
+
+### Wrapped root
+
+For `style: form` and `explode: true`, OpenAPI serializes object properties directly as query keys. Some HTTP frameworks instead expect the query parameter name to wrap the serialized object. Use inline examples to show Specmatic when your API expects this wrapper.
+
+#### Wrapped root with brackets
+
+Some frameworks include the parameter name as a wrapper around the query object.
+
+```yaml
+parameters:
+  - in: query
+    name: details
+    schema:
+      type: object
+    examples:
+      wrappedBrackets:
+        value: "details[name]=Jack&details[address][0].street=Main%20Street"
+```
+
+This represents query keys such as:
+
+```http
+GET /employees?details[name]=Jack&details[address][0].street=Main%20Street
+```
+
+#### Wrapped root with dot
+
+```yaml
+parameters:
+  - in: query
+    name: details
+    schema:
+      type: object
+    examples:
+      wrappedDot:
+        value: "details.name=Jack&details.address[0].street=Main%20Street"
+```
+
+This represents query keys such as:
+
+```http
+GET /employees?details.name=Jack&details.address[0].street=Main%20Street
+```
+
+## How Specmatic uses examples
+
+Specmatic looks at inline parameter `example` and `examples` values when parsing the OpenAPI specification.
+The hints may be split across multiple inline parameter examples. As long as there are samples of the query parameter syntax for nested arrays or objects across inline examples of that API in the spec, Specmatic will pick it up and use it for running tests, validating examples, and serving mocks.
+
+## Conflicting syntax
+
+Specmatic rejects conflicting syntax in the same example.
+For example, the following example mixes dot property notation and bracket property notation:
+
+```yaml
+examples:
+  conflicting:
+    value: "errors[0].code=invalid_name&method[status]=failed"
+```
+
+`errors[0].code` uses dot property notation, while `method[status]` uses bracket property notation.
+Use one property notation consistently in a single example.

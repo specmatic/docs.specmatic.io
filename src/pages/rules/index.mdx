@@ -54,6 +54,10 @@ search_exclude: true
     * [Required query object conflict](#required-query-object-conflict)
   * [OAS0013](#oas0013)
     * [Query parameter type collision](#query-parameter-type-collision)
+  * [OAS0014](#oas0014)
+    * [Invalid nested query parameter example](#invalid-nested-query-parameter-example)
+  * [OAS0015](#oas0015)
+    * [Unsupported nested query parameter schema](#unsupported-nested-query-parameter-schema)
   * [OAS0020](#oas0020)
     * [Security property redefined](#security-property-redefined)
   * [OAS0021](#oas0021)
@@ -901,6 +905,118 @@ In this example, the form-exploded `info` object contributes the wire key `age` 
 - Keep both declarations only if they resolve to the same schema for the same wire key.
 - Rename or restructure one of the parameters so they no longer serialize to the same query-string key.
 - If the wire key must stay the same, align the schemas so Specmatic does not have to choose between conflicting definitions.
+
+## OAS0014
+
+### Invalid nested query parameter example
+
+Nested query parameter examples must use valid keys that match the parameter schema and the nested query syntax inferred by Specmatic.
+
+**Why this is a problem**
+
+Specmatic expands nested object query parameters from the example keys. Malformed keys, unknown properties, scalar fields followed by nested tokens, array indexes expressed as property names, or mixed nested property styles make the intended query shape ambiguous.
+
+Example:
+
+```yaml
+parameters:
+  - in: query
+    name: filter
+    style: form
+    explode: true
+    schema:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+        method:
+          type: object
+          properties:
+            status:
+              type: string
+        profile:
+          type: object
+          properties:
+            name:
+              type: string
+    examples:
+      invalid:
+        value: "errors[0].code=E001&method[status]=failed&profile[[name=alice"
+```
+
+The example mixes `errors[0].code` with `method[status]`, which uses conflicting nested property serialization styles in the same example. The `profile[[name` key is malformed and cannot be parsed as a valid nested query key.
+
+**How this can be resolved**
+
+- Use one supported nested query key style consistently within the example.
+- Fix malformed keys and ensure every nested key maps to a property declared in the query parameter schema.
+- Rewrite invalid scalar or array paths so scalar properties are not followed by nested tokens, and arrays use numeric indexes where indexes are expected.
+
+## OAS0015
+
+### Unsupported nested query parameter schema
+
+Nested query parameter schemas must be concrete enough for Specmatic to derive a safe nested query shape.
+
+**Why this is a problem**
+
+Specmatic cannot safely infer nested query keys from ambiguous or unsupported schema shapes. Composed schemas such as `oneOf`, `anyOf`, or `allOf` under nested query object properties are not supported for this feature. Array query schemas must also declare `items`.
+
+Example:
+
+```yaml
+parameters:
+  - in: query
+    name: filter
+    style: form
+    explode: true
+    schema:
+      type: object
+      properties:
+        criteria:
+          oneOf:
+            - type: object
+              properties:
+                status:
+                  type: string
+            - type: object
+              properties:
+                code:
+                  type: string
+```
+
+Specmatic cannot determine a single nested query shape for `criteria` because it can match more than one composed schema branch.
+
+**How this can be resolved**
+
+- Replace composed nested query schemas with a concrete object schema for query parameters.
+- Move ambiguous alternatives into separate query parameters when they represent different request shapes.
+- Add `items` to array query schemas so Specmatic can derive the nested array element shape.
+
+For example:
+
+```yaml
+parameters:
+  - in: query
+    name: filter
+    style: form
+    explode: true
+    schema:
+      type: object
+      properties:
+        criteria:
+          type: object
+          properties:
+            status:
+              type: string
+            code:
+              type: string
+```
 
 ## OAS0020
 
