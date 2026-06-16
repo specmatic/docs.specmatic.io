@@ -15,26 +15,46 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 'lts'
+      - name: Save Specmatic license
+        run: |
+          mkdir -p ~/.specmatic
+          echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
-      - name: Install Spectral Linter
-        run: npm install -g @stoplight/spectral-cli
-
-      - name: Run Spectral linter
-        run: spectral lint **/*.yaml
+      - name: Run Specmatic linter on OpenAPI specs
+        run: |
+          docker run --rm \
+            -v "$(pwd):/usr/src/app" \
+            -v "$HOME/.specmatic:/root/.specmatic:ro" \
+            -w /usr/src/app \
+            specmatic/enterprise \
+            lint 'io/specmatic/examples/store/openapi/*.yaml'
 
       - name: Validate OpenAPI examples
         run: |
           docker run -v "$(pwd):/usr/src/app" \
-            specmatic/specmatic \
+            -v "$HOME/.specmatic:/root/.specmatic:ro" \
+            specmatic/enterprise \
             examples validate --specs-dir=io/specmatic/examples/store/openapi
 
-      - name: Run OpenAPI backward compatibility check
+      - name: Run backward compatibility check
+        env:
+          SPECMATIC_LICENSE_CONTENT: ${{ secrets.SPECMATIC_LICENSE_KEY }}
         run: |
           docker run -v "$(pwd):/usr/src/app" \
             --user $(id -u):$(id -g) \
-            specmatic/specmatic \
+            -e SPECMATIC_LICENSE_CONTENT \
+            specmatic/enterprise \
             backward-compatibility-check --base-branch=origin/main
+
+      - name: Upload backward compatibility CTRF report
+        uses: actions/upload-artifact@v6
+        if: always() # Run even if the backward compatibility check fails
+        with:
+          name: backward-compatibility-ctrf-report
+          path: build/reports/specmatic/backward_compatibility/ctrf/*.json
+
+      - name: Render backward compatibility CTRF report
+        uses: ctrf-io/github-test-reporter@v1
+        if: always() # Run even if the backward compatibility check fails
+        with:
+          report-path: build/reports/specmatic/backward_compatibility/ctrf/*.json

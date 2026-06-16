@@ -10,24 +10,31 @@ workflow:
 
 lint_openapi_files:
   stage: lint
-  image: node:lts
+  image:
+    name: specmatic/enterprise
+    entrypoint: [""]
+  before_script:
+    - mkdir -p ~/.specmatic && echo "$SPECMATIC_LICENSE_KEY" > ~/.specmatic/specmatic-license.txt
   script:
-    - npm install -g @stoplight/spectral-cli
-    - spectral lint "**/*.yaml"
+    - specmatic lint 'io/specmatic/examples/store/openapi/*.yaml'
 
 validate_openapi_examples:
   stage: example_validation
   image:
-    name: specmatic/specmatic:latest
+    name: specmatic/enterprise
     entrypoint: [""]
+  before_script:
+    - mkdir -p ~/.specmatic && echo "$SPECMATIC_LICENSE_KEY" > ~/.specmatic/specmatic-license.txt
   script:
-    - specmatic examples validate --specs-dir=io/specmatic/examples/store
+    - specmatic examples validate --specs-dir=io/specmatic/examples/store/openapi
 
 compatibility:
   stage: compatibility
   image:
-    name: specmatic/specmatic:latest
+    name: specmatic/enterprise
     entrypoint: [""]
+  variables:
+    SPECMATIC_LICENSE_CONTENT: $SPECMATIC_LICENSE_KEY
   rules:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
     - when: never
@@ -36,3 +43,7 @@ compatibility:
     - git fetch origin main
   script:
     - specmatic backward-compatibility-check --base-branch=origin/main
+  artifacts:
+    when: always # Upload even if the backward compatibility check fails
+    paths:
+      - build/reports/specmatic/backward_compatibility/ctrf/*.json

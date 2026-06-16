@@ -47,13 +47,13 @@ A [central contract repository](../contract_driven_development/central_contract_
 
 If you already have a central contract repository, you can use that instead and skip to the [next section](#ci-pipeline-setup).
 
-Else you can follow the [setup up instructions](../contract_driven_development/central_contract_repository.mdx#setting-up-a-sample-central-contract-repository) to create one a sample central contact repo.
+Else you can follow the [setup instructions](../contract_driven_development/central_contract_repository.mdx#setting-up-a-sample-central-contract-repository) to create a sample central contract repo.
 
 ### CI Pipeline Setup
 
 Whenever any API specs or their examples are updated, the author should open a Pull Request (PR) or Merge Request (MR).
 When a PR/MR is raised, we need to set up a simple CI pipeline to perform the following actions:
-* lint the specifications using [Spectral](https://github.com/stoplightio/spectral)/[Vacuum](https://quobix.com/vacuum/)
+* lint the specifications using the Specmatic linter
 * validate if the inline and external examples are still valid according to the updated specification
 * check backward compatibility of your contracts using Specmatic
 
@@ -72,10 +72,10 @@ After successfully setting up your central contract repository and running the C
 
 #### Sample Central Contract Repository with Pre-merge checks
 
-Here are some sample pre-merge pipelines to disallow merges when specification changes have linter errors or backward breaking changes.
+Here are some sample pre-merge pipelines to disallow merges when specification changes have linter errors or backward incompatible (breaking) changes.
 
-- [GitHub Action](https://github.com/specmatic/specmatic-order-contracts/actions/workflows/central-contract-repo-report.yaml)
-- [GitLab CI](https://gitlab.com/znsio/contract_driven_development/central-contract-repository/-/pipelines)
+- [GitHub Action](https://github.com/specmatic/specmatic-order-contracts/actions/workflows/pull_request_merge_checks.yaml)
+- [GitLab CI](https://gitlab.com/znsio/contract-driven-development/central-contract-repository/-/pipelines)
 
 ## Step 2: Setting up Client, Provider and Domain services
 
