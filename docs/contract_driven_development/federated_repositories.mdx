@@ -1,40 +1,21 @@
 ---
 title: Federated Repositories
-sidebar_position: 3
+sidebar_position: 5
 ---
 
 # Federated Repositories
 
 This page explains how to work with provider-owned contract repositories in Specmatic, and how to publish both central contract reports and service build reports to Specmatic Insights.
 
-There are two common ways to organize contracts in Specmatic.
+In a federated setup, contracts are owned by the provider repository rather than being stored in one shared central location.
 
-### 1. Central contract repository
+Each provider stores its own contracts/specifications in its own repository, and consumers point directly to the provider repository.
 
-This is the recommended starting point for most teams.
+In other words, instead of one [central contract repository](/contract_driven_development/central_contract_repository) containing every provider contract, the contracts are distributed across multiple provider repositories. That is why this model is called **federated**.
 
-In this model:
+This page focuses on the federated model.
 
-- all contracts/specifications are stored in one central contract repository
-- provider repositories refer to the specs they implement from that central repo
-- consumer repositories refer to the same specs from that central repo
-
-So both providers and consumers use the same shared source of truth in their `specmatic.yaml`.
-
-### 2. Federated repositories
-
-In a federated setup, a provider stores its contracts/specifications in its own repository instead of using central contract repository.
-
-This changes two things:
-
-1. The provider contract now lives with the provider service.
-2. Consumer repositories point to the provider repository and the spec path inside it.
-
-So instead of one central repository containing every provider contract, the contracts are distributed across multiple provider repositories.
-
-That is why this model is called **federated**.
-
-The central contract repository can still be used as the baseline for Insights, but the central-style report for a federated provider is generated from the provider repository itself.
+To learn more about the central repo model, see [Central Contract Repository](/contract_driven_development/central_contract_repository).
 
 ## Example setup
 

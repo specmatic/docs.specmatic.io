@@ -15,6 +15,8 @@ Here are **5 key practices of CDD**:
 
 2. **[Central Contract Repo](/contract_driven_development/central_contract_repository)**: Treat the API specs as code and store it in a central Git repository. This central Git repo should be the single source of truth referenced by both providers and consumers.
 
+   Teams that want providers to own their contracts in their own repositories can instead use **[Federated Repositories](/contract_driven_development/federated_repositories)**.
+
 3. **[Backward Compatibility Checks](/contract_driven_development/backward_compatibility)** and **Linting**: Perform automated backward compatibility checks to ensure we are not accidentally breaking compatibility. Also performing #linting to ensure the #APIDesign meets the agreed-upon specification standards.
 
 4. **[Contract Testing](/contract_driven_development/contract_testing)**: Convert API specifications like OpenAPI, AsyncAPI, gRPC proto files, GraphQLs or WSDL into executable contracts without writing any code. Run these tests in the CI/CD pipeline to shift-left and detect integration issues early.
