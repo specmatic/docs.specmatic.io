@@ -304,20 +304,22 @@ For more on how Insights interprets these builds, see:
 
 ## Troubleshooting
 
-### The provider report is missing in Insights
+### The provider service is missing in Insights
 
 Check that:
 
-- `central-contract-repo-report` was run from `specs/`
-- the central report was sent before the service report
-- the Docker run mounted the repository root
+1. the `central-contract-repo-report` was generated from the provider repository and posted to Insights
+2. the provider contract tests were run and the service test report was posted to Insights
+3. when running provider contract tests, the repository Git root was mounted into the container
 
 ### The consumer build is visible but the provider contract is not
 
 Check that:
 
-- the consumer points to the provider repo and the correct spec path
-- the federated central contract report for the provider was already processed
+1. the consumer points to the provider repository and the correct spec path
+2. the provider's `central-contract-repo-report` was generated and posted to Insights
+3. the consumer tests were run and the consumer service build report was posted to Insights
+4. when running consumer tests, the repository Git root was mounted into the container
 
 ### `send-report` does not find any reports
 
