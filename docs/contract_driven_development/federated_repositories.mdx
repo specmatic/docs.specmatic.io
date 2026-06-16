@@ -36,7 +36,7 @@ graph LR
 
 ### catalog-service
 
-`catalog-service` is the provider. It owns the contract locally in its own repository, and its `specmatic.yaml` uses a filesystem source that points to the `specs/` directory.
+`catalog-service` is the provider. It owns the contract locally in its own repository, and its `specmatic.yaml` uses a filesystem source that points to the `specs/` directory. To learn more about `specmatic.yaml`, see [Specmatic configuration](/references/configuration).
 
 That is why the service definition refers to `openapi.yaml` directly.
 
@@ -137,6 +137,14 @@ docker run --rm -it \
 
 ## Provider service tests
 
+### Start the provider service
+
+Start the provider service using Docker or your usual startup method:
+
+```bash
+docker compose up --build
+```
+
 ### Run provider contract tests
 
 :::important
@@ -158,6 +166,8 @@ As our example provider service (`catalog-service`) provides an OpenAPI spec, yo
 
 - `build/reports/specmatic/test/html/index.html`
 - `build/reports/specmatic/test/ctrf/ctrf-report.json`
+
+To learn more about contract testing, see [Contract Testing](/contract_driven_development/contract_testing).
 
 ### Post the provider service build report to Insights
 
@@ -206,7 +216,7 @@ docker run --rm -it \
 
 ### Start the consumer service
 
-Ideally, start the consumer service using Docker Compose:
+Start the consumer service using Docker or your usual startup method:
 
 ```bash
 docker compose up --build
@@ -233,6 +243,8 @@ As our example consumer service (`web-bff`) implements a GraphQL spec and consum
 - `build/reports/specmatic/graphql/test/ctrf/ctrf-report.json`
 - `build/reports/specmatic/stub/html/index.html`
 - `build/reports/specmatic/stub/ctrf/ctrf-report.json`
+
+To learn more about dependency mocks and stubs, see [Service Virtualization](/contract_driven_development/service_virtualization).
 
 ### Post the consumer service build report to Insights
 
@@ -278,10 +290,7 @@ For the `catalog-service` and `web-bff` example in this page, this is how the fe
 
 ![Federated repositories in Insights](/img/enterprise_onboarding/federated-repositories-insights.png)
 
-For more on how Insights interprets these builds, see:
-
-- [Insights Set Up Guide](/enterprise_onboarding/insights)
-- [Insights Stats Overview](/enterprise_onboarding/insights_stats_overview)
+To learn more about Insights stats, see [Insights Stats Overview](/enterprise_onboarding/insights_stats_overview).
 
 ## Troubleshooting
 
@@ -293,7 +302,7 @@ Check that:
 2. the provider contract tests were run and the service test report was posted to Insights
 3. when running provider contract tests, the repository Git root was mounted into the container
 
-### The consumer build is visible but the provider contract is not
+### The consumer service is missing in Insights
 
 Check that:
 
@@ -301,13 +310,3 @@ Check that:
 2. the provider's `central-contract-repo-report` was generated and posted to Insights
 3. the consumer tests were run and the consumer service build report was posted to Insights
 4. when running consumer tests, the repository Git root was mounted into the container
-
-### `send-report` does not find any reports
-
-Check that:
-
-- the repository root is mounted into `/usr/src/app`
-- the working directory matches the report location
-- reports were generated under:
-  - `build/reports/specmatic`, or
-  - `specs/build/reports/specmatic`
