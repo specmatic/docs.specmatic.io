@@ -171,7 +171,7 @@ const config = {
           // contract_driven_development
           { from: '/docs/contract_driven_development/backward_compatibility/', to: '/contract_driven_development/backward_compatibility' },
           { from: '/docs/contract_driven_development/backward_compatibility_rules/', to: '/contract_driven_development/backward_compatibility_rules' },
-          { from: '/docs/contract_driven_development/central_contract_repository/', to: '/contract_driven_development/central_contract_repository' },
+          { from: '/docs/contract_driven_development/central_contract_repository/', to: '/contract_driven_development/contract_repositories/central_contract_repository' },
           { from: '/docs/contract_driven_development/contract_testing/', to: '/contract_driven_development/contract_testing' },
           { from: '/docs/contract_driven_development/generating_api_specifications/', to: '/contract_driven_development/generating_api_specifications' },
           { from: '/docs/contract_driven_development/service_virtualization/', to: '/contract_driven_development/service_virtualization' },
@@ -274,7 +274,7 @@ const config = {
               '/documentation/tutorials/central_contract_repository',
               '/documentation/tutorials/central_contract_repository.html'
             ],
-            to: '/contract_driven_development/central_contract_repository'
+            to: '/contract_driven_development/contract_repositories/central_contract_repository'
           },
           {
             from: [
