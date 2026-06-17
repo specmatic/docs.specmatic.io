@@ -6,7 +6,7 @@ title: Contract Repositories
 
 **Contract Driven Development** leverages API Specifications as Executable Contracts to keep both consumers and providers working well with each other. If consumers and providers are referring to different versions of the API Specifications then it is not possible to guarantee this. This sort of deviation can happen when API Specifications are shared over documentation sites, email, or other non-standard mechanisms.
 
-It is critical to have a **Single Source of Truth** to store the API Specifications for all stakeholders.
+It is critical to have a clear **Source of Truth** for every contract/specification that all stakeholders can refer to consistently.
 
 Here is a **[video](https://youtu.be/U5Agz-mvYIU?t=1827)** on this.
 
@@ -55,6 +55,62 @@ Typical pre-merge checks include:
 - backward compatibility checks
 
 These checks help teams catch problems early, before contract changes are merged and consumed more widely.
+
+### CI workflow for pull requests
+
+Add these steps to your pull request workflow so that contract/specification changes are linted, validated, and checked for backward compatibility before they are merged. For example:
+
+```yaml
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Save Specmatic license
+        run: |
+          mkdir -p ~/.specmatic
+          echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+
+      - name: Run Specmatic Linter
+        run: |
+          docker run --rm \
+            -v "$(pwd):/usr/src/app" \
+            -v "$HOME/.specmatic:/root/.specmatic:ro" \
+            -w /usr/src/app \
+            specmatic/enterprise \
+            lint 'path/to/your/specs/*'
+
+      - name: Validate Examples
+        run: |
+          docker run --rm \
+            -v "$(pwd):/usr/src/app" \
+            -v "$HOME/.specmatic:/root/.specmatic:ro" \
+            specmatic/enterprise \
+            examples validate --specs-dir=path/to/your/specs
+
+      - name: Run Backward Compatibility Check
+        env:
+          SPECMATIC_LICENSE_CONTENT: ${{ secrets.SPECMATIC_LICENSE_KEY }}
+        run: |
+          docker run --rm \
+            -v "$(pwd):/usr/src/app" \
+            --user $(id -u):$(id -g) \
+            -e SPECMATIC_LICENSE_CONTENT \
+            specmatic/enterprise \
+            backward-compatibility-check --base-branch=origin/main
+```
+
+The exact file globs and spec directories will depend on your repository layout, but the workflow shape remains the same.
 
 ### Collaborating over API Design
 

@@ -5,13 +5,7 @@ sidebar_position: 2
 
 # Provider Repositories
 
-In a provider repository setup, each provider stores the contracts/specifications that it provides or implements in its own repository. Consumers then point directly to the provider repository.
-
-So, instead of one [central contract repository](/contract_driven_development/contract_repositories/central_contract_repository) containing all the contracts, the contracts are stored in the provider repositories themselves.
-
-This page focuses on the provider repository model.
-
-To learn more about the central repo model, see [Central Contract Repository](/contract_driven_development/contract_repositories/central_contract_repository).
+In a provider repository setup, each provider stores the contracts/specifications that it provides in its own repository. Consumers then point directly to that provider repository.
 
 ## Provider Repository Example
 
@@ -97,16 +91,16 @@ components:
                   path: "specs/openapi.yaml"
 ```
 
-## Provider flow
+## Repository flow
 
-The provider repository produces two different report types:
+Both provider and consumer repositories in this model produce two different report types:
 
 1. a central contract report
 2. a service build report
 
-### Central repo report
+### Central contract report
 
-#### Generate the provider central contract report
+#### Generate the central contract report
 
 :::important
 Please ensure the repository Git root is mounted into the container.
@@ -123,21 +117,21 @@ docker run --rm -it \
   central-contract-repo-report
 ```
 
-This generates the central contract repo report at:
+This generates the central contract report at:
 
 - `build/reports/specmatic/central_contract_repo_report.json`
 
-### Provider service tests
+### Service build report
 
-#### Start the provider service
+#### Start the service
 
-Start the provider service using Docker or your usual startup method:
+Start the service using Docker or your usual startup method:
 
 ```bash
 docker compose up --build
 ```
 
-#### Run provider contract tests
+#### Run the contract test suite
 
 :::important
 Please ensure the repository Git root is mounted into the container.
@@ -151,160 +145,127 @@ docker run --rm -it \
   -v ~/.specmatic:/root/.specmatic \
   -w /usr/src/app \
   specmatic/enterprise \
-  test
+  run-suite
 ```
 
-As our example provider service (`catalog-service`) provides an OpenAPI spec, you should see the build reports in:
+For repositories such as `web-bff` that both own a local contract and consume provider-owned contracts, `run-suite` will start the dependency mocks and then run the contract tests.
 
-- `build/reports/specmatic/test/html/index.html`
-- `build/reports/specmatic/test/ctrf/ctrf-report.json`
+In this example:
+
+- `catalog-service` produces:
+  - `build/reports/specmatic/test/html/index.html`
+  - `build/reports/specmatic/test/ctrf/ctrf-report.json`
+
+- `web-bff` produces:
+  - `build/reports/specmatic/graphql/test/html/index.html`
+  - `build/reports/specmatic/graphql/test/ctrf/ctrf-report.json`
+  - `build/reports/specmatic/stub/html/index.html`
+  - `build/reports/specmatic/stub/ctrf/ctrf-report.json`
 
 To learn more about contract testing, see [Contract Testing](/contract_driven_development/contract_testing).
 
-## Consumer flow
+## CI Workflows
 
-For this consumer example:
+### PR Process
 
-- `web-bff` uses the federated `catalog-service` contract
-- `web-bff` itself implements a GraphQL spec at `specs/schema.graphql`
+Pull requests should run the usual pre-merge checks for contracts/specifications before they are merged.
 
-### Dependency mocks
+To learn more about the shared PR process for contract repositories, see [PR Process](/contract_driven_development/contract_repositories#pull-request--merge-request-process).
 
-#### Start dependency mocks
+### Posting reports to Insights
 
-For this example, this will include the `catalog-service` dependency mock.
+Publish reports to Insights only from workflows that run on push or merge to `main`.
 
-:::important
-Please ensure the repository Git root is mounted into the container.
-:::
+### Repository workflow
 
-```bash
-docker run --rm -it \
-  -v "$(pwd):/usr/src/app" \
-  -v ~/.specmatic:/root/.specmatic \
-  -w /usr/src/app \
-  specmatic/enterprise \
-  mock
-```
+For a repository that owns a contract/specification:
 
-### Consumer service tests
+1. Generate the central contract report
+2. Publish the central contract report to Insights
+3. Start the service
+4. Run the contract test suite
+5. Publish the service build report to Insights
 
-#### Start the consumer service
+For example:
 
-Start the consumer service using Docker or your usual startup method:
+```yaml
+name: Repository Reports
 
-```bash
-docker compose up --build
-```
+on:
+  push:
+    branches:
+      - main
 
-#### Run consumer tests
+jobs:
+  publish-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
 
-:::important
-Please ensure the repository Git root is mounted into the container.
-:::
+      - name: Save Specmatic license
+        run: |
+          mkdir -p ~/.specmatic
+          echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
-```bash
-docker run --rm -it \
-  -v "$(pwd):/usr/src/app" \
-  -v ~/.specmatic:/root/.specmatic \
-  -w /usr/src/app \
-  specmatic/enterprise \
-  test
-```
+      - name: Generate Central Contract Report
+        run: |
+          # Ensure the repository Git root is mounted into the container.
+          docker run --rm -it \
+            -v "$(pwd):/usr/src/app" \
+            -v ~/.specmatic:/root/.specmatic \
+            -w /usr/src/app/specs \
+            specmatic/enterprise \
+            central-contract-repo-report
 
-As our example consumer service (`web-bff`) implements a GraphQL spec and consumes the federated `catalog-service` contract, you should now see build reports in:
+      - name: Publish Central Contract Report to Insights
+        run: |
+          # Ensure the repository Git root is mounted into the container.
+          docker run --rm -it \
+            -v "$(pwd):/usr/src/app" \
+            -v ~/.specmatic:/root/.specmatic \
+            -w /usr/src/app/specs \
+            specmatic/enterprise \
+            send-report \
+            --branch-name=main \
+            --repo-name="$(gh repo view --json name -q .name)" \
+            --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
+            --repo-url="$(gh repo view --json url --jq .url)"
 
-- `build/reports/specmatic/graphql/test/html/index.html`
-- `build/reports/specmatic/graphql/test/ctrf/ctrf-report.json`
-- `build/reports/specmatic/stub/html/index.html`
-- `build/reports/specmatic/stub/ctrf/ctrf-report.json`
+      - name: Start Service
+        run: docker compose up --build -d
 
-To learn more about dependency mocks and stubs, see [Service Virtualization](/contract_driven_development/service_virtualization).
+      - name: Run Contract Test Suite
+        run: |
+          # Ensure the repository Git root is mounted into the container.
+          docker run --rm -it \
+            -v "$(pwd):/usr/src/app" \
+            -v ~/.specmatic:/root/.specmatic \
+            -w /usr/src/app \
+            specmatic/enterprise \
+            run-suite
 
-## Posting to Insights in CI
-
-In your CI workflow, after the relevant reports have been generated, run `send-report`.
-
-### Provider CI steps
-
-For a provider repository:
-
-1. generate the provider central contract repo report
-2. send the central contract repo report to Insights
-3. run the provider contract tests
-4. send the provider service build report to Insights
-
-#### Send the central contract repo report to Insights
-
-:::important
-Please ensure the repository Git root is mounted into the container.
-:::
-
-After the central contract repo report has been generated, run:
-
-```bash
-docker run --rm -it \
-  -v "$(pwd):/usr/src/app" \
-  -v ~/.specmatic:/root/.specmatic \
-  -w /usr/src/app/specs \
-  specmatic/enterprise \
-  send-report \
-  --branch-name=main \
-  --repo-name="$(gh repo view --json name -q .name)" \
-  --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
-  --repo-url="$(gh repo view --json url --jq .url)"
-```
-
-#### Send the provider service build report to Insights
-
-:::important
-Please ensure the repository Git root is mounted into the container.
-:::
-
-After the provider contract tests have completed, run:
-
-```bash
-docker run --rm -it \
-  -v "$(pwd):/usr/src/app" \
-  -v ~/.specmatic:/root/.specmatic \
-  -w /usr/src/app \
-  specmatic/enterprise \
-  send-report \
-  --branch-name=main \
-  --repo-name="$(gh repo view --json name -q .name)" \
-  --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
-  --repo-url="$(gh repo view --json url --jq .url)"
-```
-
-### Consumer CI steps
-
-For a consumer repository:
-
-1. run the consumer tests
-2. send the consumer service build report to Insights
-
-#### Send the consumer service build report to Insights
-
-:::important
-Please ensure the repository Git root is mounted into the container.
-:::
-
-After the consumer tests have completed, run:
-
-```bash
-docker run --rm -it \
-  -v "$(pwd):/usr/src/app" \
-  -v ~/.specmatic:/root/.specmatic \
-  -w /usr/src/app \
-  specmatic/enterprise \
-  send-report \
-  --branch-name=main \
-  --repo-name="$(gh repo view --json name -q .name)" \
-  --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
-  --repo-url="$(gh repo view --json url --jq .url)"
+      - name: Publish Service Build Report to Insights
+        run: |
+          # Ensure the repository Git root is mounted into the container.
+          docker run --rm -it \
+            -v "$(pwd):/usr/src/app" \
+            -v ~/.specmatic:/root/.specmatic \
+            -w /usr/src/app \
+            specmatic/enterprise \
+            send-report \
+            --branch-name=main \
+            --repo-name="$(gh repo view --json name -q .name)" \
+            --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
+            --repo-url="$(gh repo view --json url --jq .url)"
 ```
 
 ## How this will look in Insights
+
+In the provider repository model, Insights first stores the central contract report for the contract/specification that a repository owns locally. This gives Insights the contract baseline for that repository.
+
+After that, Insights processes the service build reports that are published from different repositories. Provider service build reports show how the repository is testing the contract/specification that it owns. Consumer service build reports show how other repositories are using that same contract/specification.
+
+Taken together, these reports help Insights show the contract/specification, the repository that owns it, and the repositories that test against it or consume it.
 
 For the `catalog-service` and `web-bff` example in this page, this is how the provider-owned contract shows up in Insights:
 
