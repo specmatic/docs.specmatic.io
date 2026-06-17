@@ -261,15 +261,42 @@ jobs:
 
 ## How this will look in Insights
 
-In the provider repository model, Insights first stores the central contract report for the contract/specification that a repository owns locally. This gives Insights the contract baseline for that repository.
+### How are Central Repo Reports processed in Insights?
 
-After that, Insights processes the service build reports that are published from different repositories. Provider service build reports show how the repository is testing the contract/specification that it owns. Consumer service build reports show how other repositories are using that same contract/specification.
+Every central repo report pushed to Insights results in a `Spec Repository` block being rendered on the dashboard.
 
-Taken together, these reports help Insights show the contract/specification, the repository that owns it, and the repositories that test against it or consume it.
+The `Spec Repository` block lists all the specs that were present in the central repo report in a directory structure.
 
-For the `catalog-service` and `web-bff` example in this page, this is how the provider-owned contract shows up in Insights:
+### How are Service Build Reports processed in Insights?
+For each spec, Insights will check if there exists a service build in which this specification is provided/implemented.
+If found, Insights will display the service repo name as the center block.
+
+Then Insights will check if there exists a service build in which this specification is mocked/consumed.
+If found, Insights will display the service repo name as the left-hand-side block and link it to the provider service in the center block.
+
+If the center service/provider service also consumes other specifications, Insights will display those provider services on the right-hand side and link them to the center block as dependencies.
+
+### Catalog Service Spec Repository Block
+
+Since `catalog-service` has the `openapi.yaml` spec in its `specs/` folder, Insights shows one row for that spec inside the `Spec Repository` block.
+
+Once the `catalog-service` service build report is processed, Insights identifies `catalog-service` as the provider for that spec and displays it as the center block.
+
+Once a consumer build such as `web-bff` is processed, Insights links that consumer to the same spec and displays it on the left-hand side.
 
 ![Provider repositories in Insights](/img/enterprise_onboarding/federated-repositories-insights.png)
+
+### Web Bff Spec Repository Block
+
+Since `web-bff` has the `schema.graphql` spec in its own `specs/` folder, its central repo report creates a separate `Spec Repository` block for that GraphQL spec.
+
+When the `web-bff` service build report is processed, Insights identifies `web-bff` as the provider for `schema.graphql` and displays it as the center block.
+
+When a consumer build such as `web-frontend` is processed, Insights links that consumer to the `web-bff` contract and shows it on the left-hand side.
+
+At the same time, because `web-bff` also consumes the `catalog-service` contract, the view shows `catalog-service` on the right-hand side as a dependency that `web-bff` is using.
+
+![web-bff in Insights](/img/enterprise_onboarding/provider-repositories-insights-web-bff.png)
 
 To learn more about Insights stats, see [Insights Stats Overview](/enterprise_onboarding/insights_stats_overview).
 
