@@ -5,7 +5,7 @@ sidebar_position: 5
 
 # Federated Repositories
 
-In a federated setup, each provider stores the contracts that it implements in its own repository. Consumers then point directly to the provider repository.
+In a federated setup, each provider stores the contracts/specifications that it provides or implements in its own repository. Consumers then point directly to the provider repository.
 
 So, instead of one [central contract repository](/contract_driven_development/central_contract_repository) containing all the contracts, the contracts are distributed across multiple provider repositories. Hence, this model is called **federated**.
 
@@ -13,30 +13,28 @@ This page focuses on the federated model.
 
 To learn more about the central repo model, see [Central Contract Repository](/contract_driven_development/central_contract_repository).
 
-## Example setup
+## Federated Repository Example
 
-In the demo organization, we will use:
-
-- provider repo: `catalog-service`
-- consumer repo: `web-bff`
-
-In this example:
-
-- `catalog-service` implements the contract at `specs/openapi.yaml`
-- `web-bff` consumes that contract from the `catalog-service` repository
+- `catalog-service` provides the contract at `specs/openapi.yaml`
+- `web-bff` provides `specs/schema.graphql` and consumes the `catalog-service` contract from the `catalog-service` repository
 
 ```mermaid
 graph LR
-  A["catalog-service<br/>implements specs/openapi.yaml"] --> B["web-bff<br/>consumes specs/openapi.yaml"]
+  A["<span style='font-size:20px'><b>web-bff</b></span><br/><br/><b>provides</b><br/>specs/schema.graphql<br/><br/><b>consumes</b><br/>specs/openapi.yaml<br/>(from catalog-service repo)"] ----> B["<span style='font-size:20px'><b>catalog-service</b></span><br/><br/><b>provides</b><br/>specs/openapi.yaml"]
 ```
 
 ### catalog-service
 
-`catalog-service` is the provider. It owns the contract locally in its own repository, and its `specmatic.yaml` uses a filesystem source that points to the `specs/` directory. To learn more about `specmatic.yaml`, see [Specmatic configuration](/references/configuration).
+`catalog-service` is the provider.
 
-That is why the service definition refers to `openapi.yaml` directly.
+It owns the contract locally in its own repository, and its `specmatic.yaml` uses a filesystem source that points to the `specs/` directory.
+
+This is how the `specmatic.yaml` looks:
 
 ```yaml title="catalog-service/specmatic.yaml"
+systemUnderTest:
+  service:
+    $ref: "#/components/services/catalogService"
 components:
   sources:
     localSpecs:
@@ -53,21 +51,42 @@ components:
                   path: "openapi.yaml"
 ```
 
+To learn more about `specmatic.yaml`, see [Specmatic configuration](/references/configuration).
+
 ### web-bff
 
 `web-bff` is the consumer for this example. It implements its own GraphQL contract at `specs/schema.graphql`.
 
-In its `specmatic.yaml`, it points to the `catalog-service` Git repository and refers to the provider-owned spec using the path `specs/openapi.yaml`.
+In its `specmatic.yaml`, it:
 
-This is the key difference in a federated setup: the consumer points directly to the provider repository that owns the contract.
+- uses a local filesystem source for its own GraphQL contract
+- points to the `catalog-service` Git repository for the provider-owned OpenAPI contract
 
 ```yaml title="web-bff/specmatic.yaml"
+systemUnderTest:
+  service:
+    $ref: "#/components/services/webBff"
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/catalogService"
 components:
   sources:
+    localSpecs:
+      filesystem:
+        directory: specs
     catalogServiceRepo:
       git:
         url: https://github.com/specmatic-demo/catalog-service
   services:
+    webBff:
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/localSpecs"
+            specs:
+              - spec:
+                  path: "schema.graphql"
     catalogService:
       definitions:
         - definition:
@@ -85,14 +104,12 @@ The provider repository produces two different report types:
 1. a central contract report
 2. a service build report
 
-These serve different purposes in Insights, so they should be generated and sent separately.
+### Central repo report
 
-## Central repo report
-
-### Generate the federated central contract report
+#### Generate the federated central contract report
 
 :::important
-Mount the repository Git root into the container.
+Please ensure the repository Git root is mounted into the container.
 :::
 
 Run this from the provider repository root, while setting the container working directory to the `specs/` folder:
@@ -110,30 +127,9 @@ This generates the central contract repo report at:
 
 - `build/reports/specmatic/central_contract_repo_report.json`
 
-### Post the central contract repo report to Insights
+### Provider service tests
 
-:::important
-Mount the repository Git root into the container.
-:::
-
-Run this from the provider repository root:
-
-```bash
-docker run --rm -it \
-  -v "$(pwd):/usr/src/app" \
-  -v ~/.specmatic:/root/.specmatic \
-  -w /usr/src/app/specs \
-  specmatic/enterprise \
-  send-report \
-  --branch-name=main \
-  --repo-name="$(gh repo view --json name -q .name)" \
-  --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
-  --repo-url="$(gh repo view --json url --jq .url)"
-```
-
-## Provider service tests
-
-### Start the provider service
+#### Start the provider service
 
 Start the provider service using Docker or your usual startup method:
 
@@ -141,10 +137,10 @@ Start the provider service using Docker or your usual startup method:
 docker compose up --build
 ```
 
-### Run provider contract tests
+#### Run provider contract tests
 
 :::important
-Mount the repository Git root into the container.
+Please ensure the repository Git root is mounted into the container.
 :::
 
 In another terminal:
@@ -165,40 +161,21 @@ As our example provider service (`catalog-service`) provides an OpenAPI spec, yo
 
 To learn more about contract testing, see [Contract Testing](/contract_driven_development/contract_testing).
 
-### Post the provider service build report to Insights
-
-:::important
-Mount the repository Git root into the container.
-:::
-
-After the provider test run completes, send the service build report from the repository root:
-
-```bash
-docker run --rm -it \
-  -v "$(pwd):/usr/src/app" \
-  -v ~/.specmatic:/root/.specmatic \
-  -w /usr/src/app \
-  specmatic/enterprise \
-  send-report \
-  --branch-name=main \
-  --repo-name="$(gh repo view --json name -q .name)" \
-  --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
-  --repo-url="$(gh repo view --json url --jq .url)"
-```
-
 ## Consumer flow
 
-For the demo consumer:
+For this consumer example:
 
 - `web-bff` uses the federated `catalog-service` contract
 - `web-bff` itself implements a GraphQL spec at `specs/schema.graphql`
 
-### Start dependency mocks
+### Dependency mocks
+
+#### Start dependency mocks
 
 For this example, this will include the `catalog-service` dependency mock.
 
 :::important
-Mount the repository Git root into the container.
+Please ensure the repository Git root is mounted into the container.
 :::
 
 ```bash
@@ -210,7 +187,9 @@ docker run --rm -it \
   mock
 ```
 
-### Start the consumer service
+### Consumer service tests
+
+#### Start the consumer service
 
 Start the consumer service using Docker or your usual startup method:
 
@@ -218,10 +197,10 @@ Start the consumer service using Docker or your usual startup method:
 docker compose up --build
 ```
 
-### Run consumer tests
+#### Run consumer tests
 
 :::important
-Mount the repository Git root into the container.
+Please ensure the repository Git root is mounted into the container.
 :::
 
 ```bash
@@ -242,13 +221,47 @@ As our example consumer service (`web-bff`) implements a GraphQL spec and consum
 
 To learn more about dependency mocks and stubs, see [Service Virtualization](/contract_driven_development/service_virtualization).
 
-### Post the consumer service build report to Insights
+## Posting to Insights in CI
+
+In your CI workflow, after the relevant reports have been generated, run `send-report`.
+
+### Provider CI steps
+
+For a provider repository:
+
+1. generate the federated central contract repo report
+2. send the central contract repo report to Insights
+3. run the provider contract tests
+4. send the provider service build report to Insights
+
+#### Send the central contract repo report to Insights
 
 :::important
-Mount the repository Git root into the container.
+Please ensure the repository Git root is mounted into the container.
 :::
 
-After the consumer test run completes, send the service build report from the consumer repository root:
+After the central contract repo report has been generated, run:
+
+```bash
+docker run --rm -it \
+  -v "$(pwd):/usr/src/app" \
+  -v ~/.specmatic:/root/.specmatic \
+  -w /usr/src/app/specs \
+  specmatic/enterprise \
+  send-report \
+  --branch-name=main \
+  --repo-name="$(gh repo view --json name -q .name)" \
+  --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
+  --repo-url="$(gh repo view --json url --jq .url)"
+```
+
+#### Send the provider service build report to Insights
+
+:::important
+Please ensure the repository Git root is mounted into the container.
+:::
+
+After the provider contract tests have completed, run:
 
 ```bash
 docker run --rm -it \
@@ -263,22 +276,33 @@ docker run --rm -it \
   --repo-url="$(gh repo view --json url --jq .url)"
 ```
 
-## Recommended CI/CD sequence
+### Consumer CI steps
 
-For a federated provider:
+For a consumer repository:
 
-1. generate the federated central contract report from `specs/`
-2. send the federated central contract report
-3. wait before sending service reports so Insights can process the contract baseline
-4. run provider tests
-5. send the provider service report
+1. run the consumer tests
+2. send the consumer service build report to Insights
 
-For a consumer:
+#### Send the consumer service build report to Insights
 
-1. run mocks and tests as usual
-2. send the consumer service report from the repository root
+:::important
+Please ensure the repository Git root is mounted into the container.
+:::
 
-This ordering avoids a race where service builds arrive before the federated central contract baseline is processed.
+After the consumer tests have completed, run:
+
+```bash
+docker run --rm -it \
+  -v "$(pwd):/usr/src/app" \
+  -v ~/.specmatic:/root/.specmatic \
+  -w /usr/src/app \
+  specmatic/enterprise \
+  send-report \
+  --branch-name=main \
+  --repo-name="$(gh repo view --json name -q .name)" \
+  --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
+  --repo-url="$(gh repo view --json url --jq .url)"
+```
 
 ## How this will look in Insights
 
