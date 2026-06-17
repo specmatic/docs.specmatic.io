@@ -49,7 +49,7 @@ To learn more about `specmatic.yaml`, see [Specmatic configuration](/references/
 
 ### web-bff
 
-`web-bff` is the consumer for this example. It implements its own GraphQL contract at `specs/schema.graphql`.
+`web-bff` is also a provider repository, but in this example we are looking at it as a consumer of `catalog-service`.
 
 In its `specmatic.yaml`, it:
 
@@ -93,14 +93,14 @@ components:
 
 ## Repository flow
 
-Both provider and consumer repositories in this model produce two different report types:
+Both repositories in this example produce two different report types:
 
-1. a central contract report
+1. a central contract repo report
 2. a service build report
 
-### Central contract report
+### Central contract repo report
 
-#### Generate the central contract report
+#### Generate the central contract repo report
 
 :::important
 Please ensure the repository Git root is mounted into the container.
@@ -117,7 +117,7 @@ docker run --rm -it \
   central-contract-repo-report
 ```
 
-This generates the central contract report at:
+This generates the central contract repo report at:
 
 - `build/reports/specmatic/central_contract_repo_report.json`
 
@@ -180,8 +180,8 @@ Publish reports to Insights only from workflows that run on push or merge to `ma
 
 For a repository that owns a contract/specification:
 
-1. Generate the central contract report
-2. Publish the central contract report to Insights
+1. Generate the central contract repo report
+2. Publish the central contract repo report to Insights
 3. Start the service
 4. Run the contract test suite
 5. Publish the service build report to Insights
@@ -261,20 +261,21 @@ jobs:
 
 ## How this will look in Insights
 
-### How are Central Repo Reports processed in Insights?
+### How are Central Contract Repo Reports processed in Insights?
 
-Every central repo report pushed to Insights results in a `Spec Repository` block being rendered on the dashboard.
+Every central contract repo report pushed to Insights results in a `Spec Repository` block being rendered on the dashboard.
 
-The `Spec Repository` block lists all the specs that were present in the central repo report in a directory structure.
+The `Spec Repository` block lists all the specs that were present in the central contract repo report in a directory structure.
 
 ### How are Service Build Reports processed in Insights?
+
 For each spec, Insights will check if there exists a service build in which this specification is provided/implemented.
 If found, Insights will display the service repo name as the center block.
 
 Then Insights will check if there exists a service build in which this specification is mocked/consumed.
-If found, Insights will display the service repo name as the left-hand-side block and link it to the provider service in the center block.
+If found, Insights will display the service repo name on the left-hand side and link it to the provider service in the center block.
 
-If the center service/provider service also consumes other specifications, Insights will display those provider services on the right-hand side and link them to the center block as dependencies.
+If the provider service in the center block also consumes other specifications, Insights will display those provider services on the right-hand side and link them to the center block as dependencies.
 
 ### Catalog Service Spec Repository Block
 
@@ -288,7 +289,7 @@ Once a consumer build such as `web-bff` is processed, Insights links that consum
 
 ### Web Bff Spec Repository Block
 
-Since `web-bff` has the `schema.graphql` spec in its own `specs/` folder, its central repo report creates a separate `Spec Repository` block for that GraphQL spec.
+Since `web-bff` has the `schema.graphql` spec in its own `specs/` folder, its central contract repo report creates a separate `Spec Repository` block for that GraphQL spec.
 
 When the `web-bff` service build report is processed, Insights identifies `web-bff` as the provider for `schema.graphql` and displays it as the center block.
 
@@ -307,8 +308,8 @@ To learn more about Insights stats, see [Insights Stats Overview](/enterprise_on
 Check that:
 
 1. the `central-contract-repo-report` was generated from the provider repository and posted to Insights
-2. the provider contract tests were run and the service test report was posted to Insights
-3. when running provider contract tests, the repository Git root was mounted into the container
+2. the provider contract test suite was run and the service build report was posted to Insights
+3. when running the provider contract test suite, the repository Git root was mounted into the container
 
 ### The consumer service is missing in Insights
 
@@ -316,5 +317,5 @@ Check that:
 
 1. the consumer points to the provider repository and the correct spec path
 2. the provider's `central-contract-repo-report` was generated and posted to Insights
-3. the consumer tests were run and the consumer service build report was posted to Insights
-4. when running consumer tests, the repository Git root was mounted into the container
+3. the consumer contract test suite was run and the consumer service build report was posted to Insights
+4. when running the consumer contract test suite, the repository Git root was mounted into the container
