@@ -40,6 +40,20 @@ Consumers point directly to provider repositories instead of a separate contract
 
 To learn more, see [Provider Repositories](/contract_driven_development/contract_repositories/provider_repositories).
 
+## External Examples
+
+If you want to keep examples outside the specification file, add them in a directory named `{specification-name}_examples` at the same level as the specification file.
+
+For example, if the specification file is named `employee_details.yaml`, Specmatic will look for examples in:
+
+```text
+employee_details_examples/
+```
+
+These examples can then be validated as part of your pull request workflow.
+
+To learn more, see [External Examples](/features/external_examples).
+
 ## Pull Request / Merge Request Process
 
 Regardless of how contracts/specifications are organized, teams typically use a pull-request based workflow to review, validate, and evolve them.
