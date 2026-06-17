@@ -4,7 +4,17 @@ title: Contract Repositories
 
 # Contract Repositories
 
-Specmatic supports multiple ways of organizing contracts/specifications in repositories.
+**Contract Driven Development** leverages API Specifications as Executable Contracts to keep both consumers and providers working well with each other. If consumers and providers are referring to different versions of the API Specifications then it is not possible to guarantee this. This sort of deviation can happen when API Specifications are shared over documentation sites, email, or other non-standard mechanisms.
+
+It is critical to have a **Single Source of Truth** to store the API Specifications for all stakeholders.
+
+Here is a **[video](https://youtu.be/U5Agz-mvYIU?t=1827)** on this.
+
+## Treat Contract as Code
+
+API Specifications are code, and they are best stored in a version control system such as Git. This way we can leverage the version control system as a way to collaborate between all stakeholders through mechanisms such as Pull Requests, Merge Requests, etc.
+
+There are three common repository models:
 
 ## Central Contract Repository
 
@@ -14,7 +24,7 @@ Providers and consumers both point to that shared repository.
 
 To learn more, see [Central Contract Repository](/contract_driven_development/contract_repositories/central_contract_repository).
 
-## Federated Contract Repositories
+## Federated Repositories
 
 In this model, contracts/specifications are distributed across multiple contract repositories instead of one central contract repository.
 
@@ -27,3 +37,25 @@ In this model, contracts/specifications are stored directly in the provider serv
 Consumers point directly to provider repositories instead of a separate contract-only repository.
 
 To learn more, see [Provider Repositories](/contract_driven_development/contract_repositories/provider_repositories).
+
+## Pull Request / Merge Request Process
+
+Regardless of how contracts/specifications are organized, teams typically use a pull-request based workflow to review, validate, and evolve them.
+
+![Contract Repositories](/img/Central-Contract-Repo.png)
+
+For all three repository models, it is a good idea to prevent direct commits to the default branch and require all changes to go through a pull request or merge request.
+
+### Pre-merge checks
+
+Typical pre-merge checks include:
+
+- linting
+- example validation
+- backward compatibility checks
+
+These checks help teams catch problems early, before contract changes are merged and consumed more widely.
+
+### Collaborating over API Design
+
+Contract repositories help all stakeholders collaborate over API design. A pull request or merge request gives teams a place to propose, discuss, validate, and review contract changes before they become part of the shared contract surface.
