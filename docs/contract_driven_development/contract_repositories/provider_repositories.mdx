@@ -1,19 +1,19 @@
 ---
-title: Federated Repositories
-sidebar_position: 5
+title: Provider Repositories
+sidebar_position: 2
 ---
 
-# Federated Repositories
+# Provider Repositories
 
-In a federated setup, each provider stores the contracts/specifications that it provides or implements in its own repository. Consumers then point directly to the provider repository.
+In a provider repository setup, each provider stores the contracts/specifications that it provides or implements in its own repository. Consumers then point directly to the provider repository.
 
-So, instead of one [central contract repository](/contract_driven_development/central_contract_repository) containing all the contracts, the contracts are distributed across multiple provider repositories. Hence, this model is called **federated**.
+So, instead of one [central contract repository](/contract_driven_development/contract_repositories/central_contract_repository) containing all the contracts, the contracts are stored in the provider repositories themselves.
 
-This page focuses on the federated model.
+This page focuses on the provider repository model.
 
-To learn more about the central repo model, see [Central Contract Repository](/contract_driven_development/central_contract_repository).
+To learn more about the central repo model, see [Central Contract Repository](/contract_driven_development/contract_repositories/central_contract_repository).
 
-## Federated Repository Example
+## Provider Repository Example
 
 - `catalog-service` provides the contract at `specs/openapi.yaml`
 - `web-bff` provides `specs/schema.graphql` and consumes the `catalog-service` contract from the `catalog-service` repository
@@ -106,7 +106,7 @@ The provider repository produces two different report types:
 
 ### Central repo report
 
-#### Generate the federated central contract report
+#### Generate the provider central contract report
 
 :::important
 Please ensure the repository Git root is mounted into the container.
@@ -229,7 +229,7 @@ In your CI workflow, after the relevant reports have been generated, run `send-r
 
 For a provider repository:
 
-1. generate the federated central contract repo report
+1. generate the provider central contract repo report
 2. send the central contract repo report to Insights
 3. run the provider contract tests
 4. send the provider service build report to Insights
@@ -306,9 +306,9 @@ docker run --rm -it \
 
 ## How this will look in Insights
 
-For the `catalog-service` and `web-bff` example in this page, this is how the federated provider contract shows up in Insights:
+For the `catalog-service` and `web-bff` example in this page, this is how the provider-owned contract shows up in Insights:
 
-![Federated repositories in Insights](/img/enterprise_onboarding/federated-repositories-insights.png)
+![Provider repositories in Insights](/img/enterprise_onboarding/federated-repositories-insights.png)
 
 To learn more about Insights stats, see [Insights Stats Overview](/enterprise_onboarding/insights_stats_overview).
 
