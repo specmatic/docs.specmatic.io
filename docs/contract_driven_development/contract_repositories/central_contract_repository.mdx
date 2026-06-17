@@ -5,9 +5,7 @@ sidebar_position: 1
 
 # Central Contract Repository
 
-In a central contract repository setup, all contracts/specifications are stored in one shared repository. Providers and consumers both point to that same repository.
-
-In a central contract repository setup, all stakeholders refer to the same shared source of truth for contracts/specifications.
+In a central contract repository setup, all contracts/specifications are stored in one shared repository that acts as the common source of truth for providers and consumers.
 
 Here is a **[video](https://youtu.be/U5Agz-mvYIU?t=1827)** on this.
 
@@ -25,9 +23,9 @@ Here is a **[video](https://youtu.be/U5Agz-mvYIU?t=1827)** on this.
 
 In this example, we will use:
 
-- `central-contract-repository` stores the `payment-service` contract at `contracts/services/payment-service/http/openapi.yaml`
-- `payment-service` provides that contract from the central contract repository
-- `order-service` consumes that same contract from the central contract repository
+- `central-contract-repository` stores contracts for both `payment-service` and `order-service`
+- `payment-service` provides its own contract from the central contract repository
+- `order-service` also provides its own contract from the central contract repository, and in this example it consumes the shared `payment-service` contract from the same repository
 
 ```mermaid
 graph LR
@@ -38,9 +36,10 @@ graph LR
 
 The central contract repository stores the shared contracts/specifications that providers and consumers both refer to.
 
-For this example, the relevant contract is:
+For this example, the relevant contracts are:
 
 ```text
+contracts/services/order-service/http/openapi.yaml
 contracts/services/payment-service/http/openapi.yaml
 ```
 
@@ -72,7 +71,7 @@ components:
 
 ### order-service
 
-`order-service` is the consumer in this example.
+`order-service` is also a provider, but in this example we are looking at it as a consumer of the shared `payment-service` contract from the central contract repository.
 
 It uses the following shared contract from the central contract repository:
 
