@@ -66,6 +66,10 @@ search_exclude: true
     * [Media type overridden](#media-type-overridden)
   * [OAS0031](#oas0031)
     * [Invalid response status](#invalid-response-status)
+  * [OAS0032](#oas0032)
+    * [Undeclared request variant response requires external example](#undeclared-request-variant-response-requires-external-example)
+  * [OAS0033](#oas0033)
+    * [Method Not Allowed response has no disallowed method](#method-not-allowed-response-has-no-disallowed-method)
   * [OAS0041](#oas0041)
     * [Unresolved reference](#unresolved-reference)
   * [OAS0042](#oas0042)
@@ -1121,6 +1125,89 @@ responses:
 **How this can be resolved**
 
 - Use valid numeric status codes or `default` for responses.
+
+## OAS0032
+
+### Undeclared request variant response requires external example
+
+`405` and `415` responses describe requests outside the declared operation shape. Specmatic does not generate tests or inline mock data for them from the response definition alone, so the response may never be exercised.
+
+Example:
+
+```yaml
+paths:
+  /orders:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "405":
+          description: Method not allowed
+        "415":
+          description: Unsupported media type
+```
+
+**How this can be resolved**
+
+- Provide external examples for the `405` or `415` responses that you want Specmatic to test or mock.
+- Remove the undeclared request variant response if it is not intended to be exercised.
+
+## OAS0033
+
+### Method Not Allowed response has no disallowed method
+
+405 response may never occur as all HTTP methods have been declared in the spec.
+
+**Why this is a problem**
+
+A `405` response represents a method that is not allowed for a path. If every HTTP method is already declared, there is no remaining method for Specmatic to use when creating a Method Not Allowed variant.
+
+Example:
+
+```yaml
+paths:
+  /orders:
+    get:
+      responses:
+        "405":
+          description: Method not allowed
+    post:
+      responses:
+        "200":
+          description: OK
+    put:
+      responses:
+        "200":
+          description: OK
+    delete:
+      responses:
+        "200":
+          description: OK
+    patch:
+      responses:
+        "200":
+          description: OK
+    options:
+      responses:
+        "200":
+          description: OK
+    head:
+      responses:
+        "200":
+          description: OK
+    trace:
+      responses:
+        "200":
+          description: OK
+```
+
+**How this can be resolved**
+
+- Remove the `405` response when all HTTP methods are valid for the path.
+- If a method should be disallowed, do not declare that method as an operation for the path, and provide an external example for the intended `405` variant.
 
 ## OAS0041
 
