@@ -178,6 +178,93 @@ By default, Specmatic looks for examples in a directory named `{specification-na
 
 For complete example format, please refer to [Example Format](#example-format).
 
+## External Examples With 405 Or 415 Status
+
+You can you declare complete `405 Method Not Allowed` and `415 Unsupported Media Type` responses in external examples. You could put a response example for a 405 or 415 status response inline. But the request? Can you declare an example with the "wrong" method in the spec? Not really.
+
+For `405` and `415`:
+
+- Contract tests will be run from examples if provided, one for each example.
+- Mock `405` or `415` responses will only be served if examples are provided and the incoming request matches the relevant example.
+
+### 405 Method Not Allowed
+
+In a `405` external example, the request path, Content-Type and request payload schema should come from an operation in the specification, but the request method is not one of the methods declared for that path.
+
+For example, if the OpenAPI specification declares `GET /orders` and `PUT /orders`, this is a valid `405` example because `PATCH /orders` is not allowed by the specification:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/orders"
+  },
+  "http-response": {
+    "status": 405
+  }
+}
+```
+
+This example is invalid if the same specification declares `PUT /orders`, because the method is already allowed:
+
+```json
+{
+  "http-request": {
+    "method": "PUT",
+    "path": "/orders"
+  },
+  "http-response": {
+    "status": 405
+  }
+}
+```
+
+The request method must be present. A blank method cannot identify a valid `405` rejection case.
+
+### 415 Unsupported Media Type
+
+In a `415` external example, the request path and method come from an operation in the spec, but the request `Content-Type` is not one of the request body content types declared by that operation.
+
+For example, if `POST /orders` accepts only `application/json`, the following is a valid `415` example because the request uses `text/plain`:
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/orders",
+    "headers": {
+      "Content-Type": "text/plain"
+    },
+    "body": "not json"
+  },
+  "http-response": {
+    "status": 415
+  }
+}
+```
+
+This example is invalid for the same operation because `application/json` is supported by the specification:
+
+```json
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/orders",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "id": 123
+    }
+  },
+  "http-response": {
+    "status": 415
+  }
+}
+```
+
+If the request includes a body, keep the body compatible with the `Content-Type`: use a string body for `text/plain` and `application/octet-stream`, XML for `application/xml`, and so on.
+
 ## Using CLI to Validate Examples
 
 While you have done the validation in Interactive Examples GUI, You can also run it in a non-interactive manner which is useful for e.g. CI Pipelines, [PR Pre-Merge Checks](https://github.com/specmatic/specmatic-order-contracts/blob/abb92cc3e9acabeb420abc7ca233492e2581cc18/.github/workflows/pull_request_merge_checks.yaml#L66C1-L70C100) etc. In a non-interactive manner Specmatic will exit with a `non-zero` exit-code in case of validation failure, and `0` in case of successful validation.
