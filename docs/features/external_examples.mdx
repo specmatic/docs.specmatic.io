@@ -180,9 +180,11 @@ For complete example format, please refer to [Example Format](#example-format).
 
 ## External Examples With 405 Or 415 Status
 
-You can you declare complete `405 Method Not Allowed` and `415 Unsupported Media Type` responses in external examples. You could put a response example for a 405 or 415 status response inline. But the request? Can you declare an example with the "wrong" method in the spec? Not really.
+You can you declare complete `405 Method Not Allowed` and `415 Unsupported Media Type` responses in external examples.
 
-For `405` and `415`:
+This won't work as an inline example. Even if you put an example for a 405 or 415 status response inline, the request needs to include an invalid method or Content-Type. OpenAPI does not have a place for these examples, and hence we full examples (including a request that triggers a 405 or 415 response) can't be put inline.
+
+For `405` and `415` examples:
 
 - Contract tests will be run from examples if provided, one for each example.
 - Mock `405` or `415` responses will only be served if examples are provided and the incoming request matches the relevant example.
@@ -191,30 +193,108 @@ For `405` and `415`:
 
 In a `405` external example, the request path, Content-Type and request payload schema should come from an operation in the specification, but the request method is not one of the methods declared for that path.
 
-For example, if the OpenAPI specification declares `GET /orders` and `PUT /orders`, this is a valid `405` example because `PATCH /orders` is not allowed by the specification:
+Take the following OpenAPI spec:
+
+```yaml
+openapi: 3.0.3
+paths:
+  /orders:
+    get:
+      responses:
+        "200":
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                quantity:
+                  type: integer
+                productid:
+                  type: integer
+        "405":
+          application/json:
+            schema:
+              type: object
+    post:
+      requestBody:
+        application/json:
+          schema:
+            type: object
+            properties:
+              quantity:
+                type: integer
+              productid:
+                type: integer
+      responses:
+        "200":
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+        "405":
+          application/json:
+            schema:
+              type: object
+              properties:
+                errorMessage:
+                  type: string
+```
+
+For example, if the OpenAPI specification declares `GET /orders` and `POST /orders`, this is a valid `405` example because `PATCH /orders` is not allowed by the specification:
 
 ```json
 {
   "http-request": {
     "method": "PATCH",
-    "path": "/orders"
+    "path": "/orders",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "quantity": 10,
+      "productid": 123
+    }
   },
   "http-response": {
-    "status": 405
+    "status": 405,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "errorMessage": "method not allowed"
+    }
   }
 }
 ```
 
-This example is invalid if the same specification declares `PUT /orders`, because the method is already allowed:
+The request body still matches the POST though, so that we know whether the application would have missed the invalid method and handled the body anyway.
+
+This example is invalid if the same specification declares `POST /orders`, because the method is already allowed:
 
 ```json
 {
   "http-request": {
-    "method": "PUT",
-    "path": "/orders"
+    "method": "POST",
+    "path": "/orders",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "quantity": 10,
+      "productid": 123
+    }
   },
   "http-response": {
-    "status": 405
+    "status": 405,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "errorMessage": "method not allowed"
+    }
   }
 }
 ```
@@ -224,6 +304,39 @@ The request method must be present. A blank method cannot identify a valid `405`
 ### 415 Unsupported Media Type
 
 In a `415` external example, the request path and method come from an operation in the spec, but the request `Content-Type` is not one of the request body content types declared by that operation.
+
+Consider the following specification:
+
+```yaml
+openapi: 3.0.3
+paths:
+  /orders:
+    post:
+      requestBody:
+        application/json:
+          schema:
+            type: object
+            properties:
+              quantity:
+                type: integer
+              productid:
+                type: integer
+      responses:
+        "200":
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+        "415":
+          application/json:
+            schema:
+              type: object
+              properties:
+                errorMessage:
+                  type: string
+```
 
 For example, if `POST /orders` accepts only `application/json`, the following is a valid `415` example because the request uses `text/plain`:
 
