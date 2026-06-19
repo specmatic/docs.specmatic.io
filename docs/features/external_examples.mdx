@@ -182,7 +182,7 @@ For complete example format, please refer to [Example Format](#example-format).
 
 You can you declare complete `405 Method Not Allowed` and `415 Unsupported Media Type` responses in external examples.
 
-This won't work as an inline example. Even if you put an example for a 405 or 415 status response inline, the request needs to include an invalid method or Content-Type. OpenAPI does not have a place for these examples, and hence we full examples (including a request that triggers a 405 or 415 response) can't be put inline.
+Note: this currently requires the use of external examples and can't be done with inline examples. The reason is that the example of a method or content type has nowhere to go. The request in a full 405 example needs to include an invalid method (a method not in the spec for that path), and one for 415 needs an invalid Content-Type (any Content-Type other than what's in the spec for that method and path). The OpenAPI specification format does not have a place for these examples, and hence full examples cannot go inline.
 
 For `405` and `415` examples:
 
