@@ -610,6 +610,201 @@ For a single specification, you can specify a custom examples directory:
 specmatic examples validate --spec-file employee_details.yaml --examples-dir ./custom-examples
 ```
 
+## Template Values <CommercialBadge/>
+
+External examples can use template values for fields that must change between environments or runs, such as tokens, IDs, etc.
+Instead of hardcoding those values in the example, you can write a template expression with a default value. Specmatic resolves these expressions before using the example.
+
+### Simple Lookup
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/employees",
+    "headers": {
+      "Authorization": "Bearer ${API_TOKEN:test-token}"
+    }
+  },
+  "http-response": {
+    "status": 200
+  }
+}
+```
+
+In this example, `API_TOKEN` is looked up at runtime, which can provided it in any of these ways:
+<Tabs groupId="example-template-values">
+  <TabItem value="cli" label="CLI">
+```shell
+API_TOKEN=secret-token enterprise validate --spec-file employee_details.yaml
+```
+  </TabItem>
+  <TabItem value="java" label="Java">
+```shell
+java -DAPI_TOKEN=secret-token -jar enterprise.jar validate --spec-file employee_details.yaml
+```
+  </TabItem>
+  <TabItem value="docker" label="Docker">
+```shell
+docker run --rm \
+  -v "$(pwd):/usr/src/app" \
+  -e API_TOKEN=secret-token \
+  specmatic/enterprise validate --spec-file "employee_details.yaml"
+```
+  </TabItem>
+</Tabs>
+
+With `API_TOKEN=secret-token`, the example resolves as follows:
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/employees",
+    "headers": {
+      "Authorization": "Bearer secret-token"
+    }
+  },
+  "http-response": {
+    "status": 200
+  }
+}
+```
+
+> If `API_TOKEN` is not provided, Specmatic uses the default value `test-token`
+
+### Multiple lookup names
+
+A template can provide more than one lookup name:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/employees/${EMPLOYEE_CODE|FALLBACK_EMPLOYEE_CODE:EMP123}"
+  },
+  "http-response": {
+    "status": 200
+  }
+}
+```
+
+Specmatic tries lookup names from left to right, allowing the same example to work across environments with different lookups.<br/>
+If `EMPLOYEE_CODE` is not set and `FALLBACK_EMPLOYEE_CODE` is set to `EMP999`, then the example resolves to:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/employees/EMP999"
+  },
+  "http-response": {
+    "status": 200
+  }
+}
+```
+
+> If neither value is provided, Specmatic uses the default value `EMP123`.
+
+### Full example
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/employees",
+    "headers": {
+      "Authorization": "Bearer ${API_TOKEN:test-token}"
+    },
+    "body": {
+      "employeeCode": "${EMPLOYEE_CODE|FALLBACK_EMPLOYEE_CODE:EMP123}",
+      "name": "Hello ${USER_NAME:Jamie}",
+      "active": "${EMPLOYEE_ACTIVE:true}",
+      "tags": "${EMPLOYEE_TAGS:[\"internal\",\"test\"]}",
+      "metadata": "${EMPLOYEE_METADATA:{\"source\":\"default\"}}"
+    }
+  },
+  "http-response": {
+    "status": 200
+  }
+}
+```
+
+Assume these runtime values are provided:
+
+```text
+EMPLOYEE_ACTIVE=false
+API_TOKEN=secret-token
+FALLBACK_EMPLOYEE_CODE=EMP999
+EMPLOYEE_METADATA={"source":"runtime"}
+```
+
+And these values are not provided:
+
+```text
+USER_NAME
+EMPLOYEE_CODE
+EMPLOYEE_TAGS
+```
+
+Specmatic resolves the example as follows:
+
+```json
+{
+  "http-request": {
+    "method": "PATCH",
+    "path": "/employees",
+    "headers": {
+      "Authorization": "Bearer secret-token"
+    },
+    "body": {
+      "employeeCode": "EMP999",
+      "name": "Hello Jamie",
+      "active": false,
+      "tags": ["internal", "test"],
+      "metadata": {
+        "source": "runtime"
+      }
+    }
+  },
+  "http-response": {
+    "status": 200
+  }
+}
+```
+
+Here is what happened:
+
+* `API_TOKEN` was set, so `Authorization` used `secret-token`.
+* `EMPLOYEE_CODE` was not set, so Specmatic tried `FALLBACK_EMPLOYEE_CODE` and used `EMP999`.
+* `USER_NAME` was not set, so `name` used the default value `Jamie`.
+* `EMPLOYEE_ACTIVE` was set to `false`, so `active` resolved to the boolean value `false`.
+* `EMPLOYEE_TAGS` was not set, so `tags` used the default array `["internal", "test"]`.
+* `EMPLOYEE_METADATA` was set, so `metadata` used the runtime object `{"source":"runtime"}`.
+
+### Template format
+
+```text
+${<lookup-name>[|<lookup-name>...]:<default-value>}
+```
+
+Where:
+* `<lookup-name>` is the runtime value name to look up. It must match `[A-Za-z_][A-Za-z0-9_.-]*`.
+* `[|<lookup-name>...]` means one or more additional lookup names can be provided, each separated by `|`.
+* `<default-value>` is mandatory and is used when none of the lookup names can be resolved.
+> `<`, `>`, `[`, `]`, and `...` are only part of the notation. They are not written in the actual expression.
+
+### Resolution order
+
+For each template, Specmatic resolves values in this order:
+
+1. Try the lookup names from left to right.
+2. For each lookup name, check the system property with that name.
+3. If the system property is not set, check the environment variable with that name.
+4. Use the first value that is found.
+5. If none of the lookup names are found, use the default value.
+
+> If both a system property and an environment variable are set for the same lookup name, the system property takes precedence.
+
 ## Identifying Examples with Competing Requests <CommercialBadge/>
 
 When using multiple examples, it's important to ensure each request is unique. 
