@@ -5,7 +5,21 @@ sidebar_position: 2
 description: Specmatic Enterprise release notes.
 ---
 
-##  1.17.0 (2026-06-15)
+## 1.18.0 (2026-06-18)
+
+### Added
+
+- Added support for generating, validating, and using OpenAPI examples for `405` and `415` request-rejection responses across enterprise test, mock, and Studio example flows.
+- Improved rejection-example handling so repaired and generated `405` and `415` examples preserve the failing HTTP method or unsupported content type that triggered the response.
+- Improved example-validation breadcrumbs so `405` and `415` failures point back to the original external-example JSON paths for method and content-type fixes.
+- Studio now surfaces `405` example-generation failures more clearly and avoids stale editor diagnostics during teardown.
+
+### Changed
+
+- **Breaking:** Removed the deprecated interactive examples server. Mitigation: use Studio for example generation, validation, and other operations.
+
+
+## 1.17.0 (2026-06-15)
 
 ### Added
 
@@ -13,7 +27,7 @@ description: Specmatic Enterprise release notes.
 
 ### Changed
 
-- Made handling of collisions between scalar query parameters and object query parameter properties of the same name more lenient (collisions where the type is identical will be ignored), while ensuring that if there are type differences, the last query param/property declared with that name is used by Specmatic.
+- Improved query-parameter diagnostics so nested object and array failures point to the actual serialized keys, and collisions between scalar and object-style query params are handled more pragmatically.
 - Enterprise now loads and validates OpenAPI examples for `422` responses in the bundled runtime.
 - Improved OpenAPI source-location tracking so bundled validation and backward-compatibility failures can retain the original schema source pointer, including referenced schemas.
 - Improved `specmatic config upgrade` handling for legacy configurations so global mock and test settings stay under top-level `specmatic.settings`.
@@ -21,17 +35,19 @@ description: Specmatic Enterprise release notes.
 - Improved bundled license CLI output with clearer success, warning, and error cues, including colorized log levels on ANSI-capable terminals.
 - Studio now renders the OpenAPI examples workspace natively instead of inside an iframe, with smoother generate, validate, bulk-fix, and drilldown flows.
 - Studio now shows backward-compatibility issues as structured editor diagnostics with direct jumps to the affected source locations, including flattened query-parameter paths.
-- Studio now detects older Specmatic config files during export - and offers an in-place V2 to V3 upgrade before writing the workflow.
+- Studio now detects older Specmatic config files during export and offers an in-place V2 to V3 upgrade before writing the workflow.
 
 ## 1.16.1 (2026-06-11)
 
 ### Added
 
 - Added bundled MCP server support for contract tests, mock servers, and backward-compatibility execution flows.
+- Backward-compatibility CTRF reports now include structured metadata for each breaking change, including `specFile:lineNumber:columnNumber` and rule-violation information.
 
 ### Changed
 
 - Reduced delays and timeout risk during DNS resolution when enterprise reporting flows connect to Specmatic Insights.
+- HttpStub can now load `badRequest` examples that include extra out-of-spec query parameters and respond with the example's provided response data.
 - Improved federated and filesystem-based CTRF metadata handling so spec-path reporting is more reliable in enterprise report flows.
 - Restored AsyncAPI v2 operation-exchange handling after a regression.
 - Improved Arazzo schema validation, drilldown scoping, and Studio mock event rendering.
@@ -46,9 +62,10 @@ description: Specmatic Enterprise release notes.
 
 ### Changed
 
-- Removed legacy async coverage, stub-usage, and test-data report generation in favor of the newer CTRF plus HTML reporting flow.
+- **Breaking:** Removed legacy async coverage, stub-usage, and test-data report generation in favor of the newer CTRF plus HTML reporting flow. Mitigation: use the CTRF report instead.
 - Simplified async and gRPC reporting paths to align the enterprise distribution with the newer reporting model.
 - Improved Arazzo HTML report coverage and report-generation verification.
+- Fixed example loading across multiple directories (central repository and local filesystem) so examples are no longer incorrectly overridden.
 - Bundled linter capabilities now include profiles, rule categorization, maturity display values in reports, and better local config handling for `--config`.
 
 ## 1.15.0 (2026-06-01)
@@ -57,11 +74,14 @@ description: Specmatic Enterprise release notes.
 
 - Added test-executor/orchestrator configuration support to the enterprise distribution.
 - Bundled linter capabilities now include maturity levels and rule-catalog reporting.
+- Added support for `oneOf` in an OpenAPI XML schema.
 
 ### Changed
 
 - Bundled the newer Specmatic runtime that removes legacy coverage and usage report outputs in favor of CTRF plus HTML reporting.
 - Improved backward-compatibility report path handling and source-location accuracy through the bundled runtime update.
+- Improved the diagnostic shown when a required form field is missing in a request payload.
+- External examples whose `Content-Type` carries a charset parameter are now matched to their API even when the spec's `Content-Type` omits the charset.
 
 ### Dependency and Platform Updates
 
@@ -90,3 +110,379 @@ description: Specmatic Enterprise release notes.
 
 - Improved GraphQL schema resolution, argument matching, and request generation, especially for bare enum values and nested JSON structures in responses.
 - Temporarily pinned `wire-schema` for Java subprojects as part of the release packaging adjustments.
+
+## 1.14.1 (2026-05-13)
+
+### Added
+
+- HTML report now shows WIP as an explicit status with an hourglass icon.
+- Coverage console report now shows a WIP remark when there are WIP tests.
+- WIP counts now appear under a WIP label instead of the errors label.
+- `config upgrade` can now auto-upgrade V2 Specmatic configs to V3.
+- Host and port no longer need to be configured; both are now optional.
+
+### Changed
+
+- Fixed WIP-test filtering so successful WIP tests are handled correctly in the HTML report.
+- GraphQL tests now generate scenarios where the request body is omitted.
+
+## 1.14.0 (2026-05-11)
+
+### Added
+
+- Use the base URL as the SOAP URL for abstract WSDLs that provide no port.
+- Added WSDL `attributeGroup` support.
+- Added SOAP response header support for WSDL.
+- HTML reporter now renders before and after fixture details.
+- Added WSDL support for wildcards, inherited attributes, and `simpleContent` extensions.
+- Added support for `style: form, explode: true` when a query parameter is defined as an object.
+
+## 1.13.1 (2026-05-05)
+
+### Added
+
+- Improved backward-compatibility check (BCC) performance.
+
+## 1.13.0 (2026-05-04)
+
+### Added
+
+- Backward-compatibility check progress can now be viewed in real time; previously nothing was printed for long-running checks.
+- Backward-compatibility checks now render an operation-level verdict.
+- Running contract tests can now be halted from the Studio UI.
+
+### Changed
+
+- All enterprise commands now render usage help.
+
+## 1.12.0 (2026-04-27)
+
+### Added
+
+- Studio can now enhance an existing OAS from the UI: when a test fails with an unexpected out-of-spec response, that response can be auto-added to the specification.
+- Upgraded Bouncy Castle dependencies to patch a CVE.
+
+### Changed
+
+- Fixed generative stub handling under Accept negotiation.
+- Fixed the selected/total counts in table headers when filters are applied.
+- Fixed "select to run" on OpenAPI Studio contract tests when the table has been filtered by filters or test statuses.
+- Editors now validate syntax before saving content to the filesystem.
+
+## 1.11.1 (2026-04-23)
+
+### Changed
+
+- Filters can now be applied to schema resiliency tests, with corrected response status and content-type evaluation.
+- Fixed a regression resolving external discriminator refs.
+- Fixed Accept-header negotiation in mock response selection.
+
+## 1.11.0 (2026-04-20)
+
+### Added
+
+- Improved the accuracy, consistency, and explainability of OpenAPI coverage, contract-testing, and stub-usage reporting, with richer metrics and reasoning data for test-execution decisions, skipped scenarios, and mock usage.
+- OpenAPI UI tables are now grouped on the five primary identifiers — path, method, request content-type, status, and response content-type — rather than just path, method, and status.
+
+### Changed
+
+- **Breaking:** Content-Type is now determined based on the SOAP version; previously any content-type was allowed. Mitigation: update your examples to specify the expected Content-Type, and ensure the backend follows SOAP standards for content-types.
+
+## 1.10.1 (2026-04-15)
+
+### Added
+
+- Added backward-compatibility check (BCC) support for AsyncAPI.
+- Upgraded Kafka clients to patch a CVE.
+
+### Changed
+
+- Fixed an Avro bug serializing and deserializing union types containing null.
+
+## 1.10.0 (2026-04-13)
+
+### Added
+
+- Added support for SOAP `choice` and `simpleType`.
+- A connectivity failure in any contract test is now handled explicitly and aborts the remainder of the suite.
+- HTML reporter now renders the appropriate test-detail message in the test details "detail" section.
+- Added support for "web" sources in V3 config (previously available in V1 but never added in V2).
+
+### Changed
+
+- **Breaking:** Request bodies are no longer marked optional unless explicitly specified; previously an unspecified request body defaulted to required. Mitigation: explicitly mark request bodies as required where needed.
+- Fixed a serialization exception when `mtlsEnabled` was set in a reffed-out `runOptions`.
+- `--spec-file` and `--dir` paths are now resolved against the command's working directory before validation, avoiding a spurious validation failure.
+- Fixed a typo in the BCC console output.
+- Fixed an Avro bug where integers could fall outside the applied min/max bounds.
+- Malformed GraphQL queries no longer throw an NPE during parsing.
+
+## 1.9.3 (2026-04-02)
+
+### Added
+
+- Specs from `specmatic.yaml` are now loaded just before Studio starts, so they are available within the Studio session.
+
+## 1.9.1 (2026-03-27)
+
+### Added
+
+- Improved the error message when a git clone fails due to authentication or permission issues.
+- `validate` now also checks specs registered in `specmatic.yaml` (e.g. in the central repo), in addition to those in the current directory.
+- Studio can now see `.specmatic` in the file tree.
+- `validate` now skips async specs that reference an Avro schema registry, since reaching the registry is not always possible.
+
+### Changed
+
+- Preserved the "partial failure" state when adding a breadcrumb or message to a failure.
+
+## 1.9.0 (2026-03-24)
+
+### Added
+
+- New `run-suite` enterprise command that manages the full lifecycle of mocks and contract tests.
+- Studio now reports governance-criteria results, such as whether a minimum example-coverage percentage is met.
+- Async HTML report now shows retry and DLQ messages by retaining that information in the CTRF report under the `outputs` key.
+
+### Changed
+
+- **Breaking:** The CTRF report `output` field is now `outputs` and is an array of outputs instead of a single object. Mitigation: read `outputs` if you parse the CTRF report for internal usage.
+- Fixed Studio disabling interactions after `run-suite` execution, and improved performance for large drilldowns.
+
+## 1.8.0 (2026-03-22)
+
+### Added
+
+- Added support for interpolated OAS paths, such as `/order/{orderId}-${userId}`.
+- With V3, adapters can now be specified per specification as well as globally; previously only global adapters and hooks were supported.
+- Unnecessary transport headers are now dropped when recording a spec via proxy.
+- Browser metadata is now dropped from proxy header recordings.
+- Dictionaries can now be generated from within Studio, with or without examples.
+- Studio can now bind to a specific host/port combination.
+- Studio now has a button to convert example data into a partial example.
+
+### Changed
+
+- Fixed regex matcher support on the mock side.
+- Fixed a matcher-token parsing issue where a regex matcher containing a comma would fail.
+- `missedOperations` and `notImplementedOperations` are now both derived from coverage status.
+- Studio mock server now loads the dictionary.
+
+## 1.7.1 (2026-03-11)
+
+### Changed
+
+- Examples associated with a filtered-out API are now filtered out too, instead of appearing orphaned.
+- The "Bearer" prefix in bearer tokens is now treated case-insensitively.
+- Filtering now behaves consistently between test and mock.
+
+## 1.7.0 (2026-03-09)
+
+### Added
+
+- Studio editors now support common cross-platform keybindings, mirroring shortcuts from editors like VS Code.
+- Async: added the ability to specify data constraints in the Avro schema and use them during contract testing and mocking.
+
+### Changed
+
+- Fixed resolution of reffed-out parameters from `components/parameters` in OAS 3.1.x.
+- Examples for a filtered-out operation are now ignored, fixing the unused-examples issue typically seen with `--strictMode`.
+- Fixed example import to handle no-body operations and to enable parameter importing for OAS.
+
+## 1.6.0 (2026-03-05)
+
+### Added
+
+- Added support for mTLS in test and mock.
+- Added the ability to retrieve interactions recorded by the OAS HTTP stub.
+
+### Changed
+
+- Fixed mock logs broken by a recent change.
+- Fixed scrolling on the file tree in the left sidebar.
+
+## 1.5.1 (2026-03-05)
+
+### Added
+
+- Studio now shows an alert when a failure is caused by hitting the license threshold, so the cause is clear.
+- Async: added support for key bindings.
+
+### Changed
+
+- HttpStub now uses the provided config file and generates the legacy stub-usage report correctly.
+
+## 1.5.0 (2026-03-02)
+
+### Added
+
+- Studio mocks now auto-reload when a Specmatic config change is detected.
+- Enterprise now supports a Redis mock.
+- Studio can now auto-reload drill-down details for an operation, letting users view request and response details in real time.
+
+### Changed
+
+- **Breaking:** Fixed a loop-test failure caused by security-scheme overrides in the spec.
+- CLI arguments for `test` now consistently override config values.
+- HttpStub now responds with the spec-defined bad-request format for invalid incoming requests.
+- Filters now work for paths with a leading and trailing `/` in the OAS.
+- Fixed filtering of test operations in the Studio UI for shadowed paths.
+- Fixed array-of-objects support in GraphQL.
+
+## 1.4.0 (2026-02-25)
+
+### Changed
+
+- Invalid dictionary-file references are now reported clearly instead of failing silently.
+- Fixed a regression where HttpStub did not log example directories on load.
+- HttpStub now renders inline example information when responding to a matching request, similar to external examples.
+- Fixed resolution of templated values in V3 config.
+- Fixed resolution of path-level parameters when parsing OAS 3.1.x.
+
+## 1.3.1 (2026-02-24)
+
+### Changed
+
+- The CTRF report is now generated even when there is no mock interaction and no tests are run.
+
+## 1.3.0 (2026-02-24)
+
+### Added
+
+- Specmatic mock now returns a Swagger URL when asked for the typical Swagger URL path.
+- Specmatic now exposes a `_specmatic/health` health-check endpoint to indicate when the mock and proxy are ready to serve requests.
+- Added support for paths reffed out to `components/schemas/pathItems`.
+
+### Changed
+
+- Two OpenAPI specs that are semantically and structurally identical except for example text are now correctly treated as backward-incompatible.
+- Specmatic no longer creates a `.specmatic` folder when no git repository is defined in the config file.
+- Arazzo now generates mermaid-safe IDs for workflows whose names contain spaces.
+- Arazzo can now handle nullable schemas across OAS 3.0 and 3.1.
+
+## 1.2.2 (2026-02-21)
+
+### Added
+
+- Basic Accept-header negotiation is now performed when responding to mocks and when running contract tests.
+- HTML reporter now renders WIP coverage status.
+
+### Changed
+
+- Reformatted fixture-execution details shown in Studio for OpenAPI and AsyncAPI.
+- Backward-compatibility checks can now resolve and verify changes in reffed-out headers.
+- Fixed an AsyncAPI Arazzo workflow-generation regression; AsyncAPI operations are again visible in the sidebar for drag-and-drop creation.
+
+## 1.2.1 (2026-02-18)
+
+### Added
+
+- The example server now writes examples to a directory specified in the Specmatic config, instead of always using the implicit examples directory.
+- Studio now shows fixture-execution details per OpenAPI and AsyncAPI test.
+
+### Changed
+
+- Fixed example validation for examples containing matchers.
+- Equality matches now work with floating-point values.
+- Dictionaries can now be generated from examples containing matcher expressions.
+- Fixed dictionary generation for reffed-out scalar schemas.
+
+## 1.2.0 (2026-02-17)
+
+### Added
+
+- HTML reporter now renders the actuator URL in the Specmatic config section.
+
+### Changed
+
+- Fixed V3 config serialization for path fields.
+- Excluded operations now display clearly on the specification table with grayed-out rows.
+
+## 1.1.4 (2026-02-15)
+
+### Added
+
+- `HEAD /base-path` is now used as a health check.
+- Added centralized warning logging for missing config-resolved spec files.
+- Before and after fixtures can now be run for a test by specifying them in an externalized example.
+- Test, mock, and other workflows started in a session can now be exported to a Specmatic config for use in CI and automation.
+- Studio now supports async example validation.
+- The interactive server now loads examples defined in the Specmatic config in addition to the implicit examples directory.
+- Protocol feedback is now suppressed for protocols the spec does not use, so meaningful feedback is not lost in the noise.
+- Studio now shows pre-hook requests and post-hook responses when an adapter is used for tests.
+- Studio can now automatically bring up mocks and run contract tests from a Specmatic config within the UI.
+
+### Changed
+
+- Studio now fills inputs based on V3 config, and empty objects no longer appear when exporting.
+- Fixed WSDL example paths being lost in config.
+- CTRF report paths are now relative to the project root.
+- HttpStub now loads unique examples even when a directory is specified multiple times.
+- The "config not found" error no longer appears when `--version` is called.
+- The CTRF report is now generated reliably.
+- Fixed example loading so examples are loaded from implicit, explicit, and configured directories.
+- Fixed disabled interactions on Studio screens.
+
+## 1.1.3 (2026-02-10)
+
+### Added
+
+- `mock` is now the primary command, with aligned user-facing stub text.
+- WSDL specifications can now be interactively tested via Studio.
+- Added the ability to run async tests in Studio.
+- Added async mock support in Studio.
+
+### Changed
+
+- When coverage requirements are not met, the CTRF report is now always generated first instead of exiting immediately.
+- Fixed wiring that loads system properties (introduced while moving all configuration to config params and V3 config).
+
+## 1.1.1 (2026-02-08)
+
+### Changed
+
+- Fixed BFF projects failing because example directories in a V3 spec were not loaded correctly.
+
+## 1.1.0 (2026-02-08)
+
+### Added
+
+- Config V3 is now available, including a documented path for migrating from V2.
+- Before and after fixtures can now be specified per async test in externalized examples.
+
+## 1.0.0 (2026-02-04)
+
+### Added
+
+- Interactive proxy in Studio.
+- Protocol is now sent when reporting feature utilization to the license module.
+- Lenient mode can now continue past an invalid OAS instead of exiting.
+- Environment variables can now be injected into `specmatic.yaml` by declaring templates in place of values.
+- Added regex support in matchers.
+- Added lenient test running (`--lenient`): tests can run with invalid examples, which are auto-skipped.
+- The log now shows the URL for an unreachable `testBaseURL` when running contract tests.
+- HTML report now shows the Specmatic config.
+- Config values in `specmatic.yaml` can now use fallback templates, e.g. `license_path: "{HOME|USERPROFILE:unknown}/.specmatic"`.
+- Specmatic now allows configuring the output path for generated reports, defaulting to `build/reports/specmatic`.
+- V3 config now supports specifying examples at the spec level.
+- V3 config now supports async configuration instead of CLI arguments.
+- V3 config now supports gRPC configuration instead of CLI arguments.
+- The `mock` and `test` commands now work consistently across all spec types.
+
+### Changed
+
+- **Breaking:** `429` and `202` are no longer considered acceptable responses in a `200`/`201` test.
+- **Breaking:** The `serviceType` field in the CTRF report has been renamed to `protocol` for clarity.
+- **Breaking:** The GraphQL `specType` in the CTRF report has been renamed to `graphqlsdl`.
+- Fixed content-type and header handling in the proxy.
+- The actuator-not-found message is no longer logged unless an actuator URL was explicitly expected or set.
+- The fix button in the examples tab now removes extra out-of-spec headers.
+- Fixed a fuzzy-key-check bug (only when fuzzy mode is enabled) where the check could be downgraded to non-fuzzy.
+- Fixed a content-type matching regression so matching is attribute-aware and disallows `;charset=utf-8` when it should not be present.
+- Stopped generating a stub-usage report for WSDL mocks.
+- Handled recursive `anyOf` references in OpenAPI 3.1.
+- An inline response example with a request is now correctly rejected in strict mode instead of being used.
+- `GET` requests returning 404 are no longer marked invalid, fixing coverage issues in the CTRF and HTML reports.
+- CTRF report paths now use path-parameter style, e.g. `/orders/{id}` for `/orders/123`.
+- Fixed wiring of the bearer token from V3 config.
+- Mocks now stop gracefully when the `SpecmaticContractTest` interface is used.
