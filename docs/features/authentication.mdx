@@ -2,6 +2,9 @@
 sidebar_position: 1
 title: Authentication
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import {CommercialBadge} from "../../src/components/CommercialBadge";
 
 # Authentication
 
@@ -323,3 +326,165 @@ Sample project:
 - If an operation defines `security`, it overrides global `security`.
 - Use environment variables in `specmatic.yaml` to switch credentials across local, CI, and test environments.
 - For contract tests, prefer mock/dummy auth unless your test specifically needs real auth.
+
+## Injecting Auth Tokens Into An Example <CommercialBadge/>
+
+Given the following OpenAPI spec:
+
+File: orders.yaml
+
+```yaml
+openapi: 3.0.4
+paths:
+  /orders:
+    get:
+      security:
+      - ApiKeyAuthHeader: []
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                - id
+                - productid
+                - quantity
+                properties:
+                  id:
+                    type: integer
+                  productid:
+                    type: integer
+                  quantity:
+                    type: integer
+components:
+  securitySchemes:
+    ApiKeyAuthHeader:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+```
+
+You could declare the following example:
+
+orders_examples/fetch_orders.json
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/orders",
+    "headers": {
+      "Authorization": "Bearer ${BEARER_TOKEN:abc123}"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": [
+      {
+        "id": 10,
+        "productid": 123,
+        "quantity": 1
+      }
+    ]
+  }
+}
+```
+
+If you setup an environment variable named BEARER_TOKEN when starting test as follows:
+
+<Tabs groupId="example-template-values">
+  <TabItem value="docker_macos_linux_test" label="Docker (MacOS/Linux)">
+```shell
+docker run --rm \
+  -v "$(pwd):/usr/src/app" \
+  -e BEARER_TOKEN=secret-token \
+  specmatic/enterprise validate --spec-file "employee_details.yaml"
+```
+  </TabItem>
+  <TabItem value="docker_windows_test" label="Docker (Windows)">
+```shell
+docker run --rm \
+  -v "${PWD}:/usr/src/app" \
+  -e BEARER_TOKEN=secret-token \
+  specmatic/enterprise validate --spec-file "employee_details.yaml"
+```
+  </TabItem>
+  <TabItem value="cli_test" label="CLI">
+```shell
+BEARER_TOKEN=secret-token enterprise validate --spec-file employee_details.yaml
+```
+  </TabItem>
+  <TabItem value="java_test" label="Java">
+```shell
+java -DBEARER_TOKEN=secret-token -jar enterprise.jar validate --spec-file employee_details.yaml
+```
+  </TabItem>
+</Tabs>
+
+Specmatic resolves loads the example and resolve it at runtime to the following:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/orders",
+    "headers": {
+      "Authorization": "Bearer secret-token"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": [
+      {
+        "id": 10,
+        "productid": 123,
+        "quantity": 1
+      }
+    ]
+  }
+}
+```
+
+The test that runs accordingly will send a header `Authorization: secret-token`.
+
+It works much the same with mock. If you start mock as follows:
+
+<Tabs groupId="example-template-values">
+  <TabItem value="docker_macos_linux_mock" label="Docker (MacOS/Linux)">
+```shell
+docker run --rm \
+  -v "$(pwd):/usr/src/app" \
+  -e BEARER_TOKEN=secret-token \
+  specmatic/enterprise validate --spec-file "employee_details.yaml"
+```
+  </TabItem>
+  <TabItem value="docker_windows_mock" label="Docker (Windows)">
+```shell
+docker run --rm \
+  -v "${PWD}:/usr/src/app" \
+  -e BEARER_TOKEN=secret-token \
+  specmatic/enterprise validate --spec-file "employee_details.yaml"
+```
+  </TabItem>
+  <TabItem value="cli_mock" label="CLI">
+```shell
+BEARER_TOKEN=secret-token enterprise validate --spec-file employee_details.yaml
+```
+  </TabItem>
+  <TabItem value="java_mock" label="Java">
+```shell
+java -DBEARER_TOKEN=secret-token -jar enterprise.jar validate --spec-file employee_details.yaml
+```
+  </TabItem>
+</Tabs>
+
+You can then invoke the mock passing the header `Authorization: secret-token` and Specmatic mock will return the response in the example.
