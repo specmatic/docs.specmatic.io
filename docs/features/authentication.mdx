@@ -276,35 +276,6 @@ OpenAPI allows authentication to be defined at two levels:
 - **Global level**: top-level `security` (applies to all operations by default)
 - **Operation level**: `security` inside a specific endpoint/method (applies only to that operation)
 
-### Precedence rule
-
-If both are present, **Specmatic gives preference to the operation-level security scheme**.
-
-This is useful when most endpoints use one auth scheme, but some endpoints use a different one.
-
-### Example: Global security with operation-level override
-
-```yaml
-openapi: 3.0.1
-
-security:
-  - BearerAuth: []   # Global default
-
-paths:
-  /products:
-    get:
-      security:
-        - basicAuth: []   # Overrides global for GET /products
-      responses:
-        "200":
-          description: OK
-```
-
-In this example:
-
-- Most endpoints use `BearerAuth` (global)
-- `GET /products` uses `basicAuth` (operation-level override)
-
 ## Example: Different auth schemes per operation
 
 Specmatic supports different auth schemes for different endpoints in the same OpenAPI specification.
@@ -319,13 +290,6 @@ Specmatic reads the operation-level `security` entries and sends the appropriate
 
 Sample project:
 - [specmatic-order-api-java-with-oauth](https://github.com/specmatic/specmatic-order-api-java-with-oauth)
-
-## Tips
-
-- Security scheme names in `specmatic.yaml` must match names in `components.securitySchemes`.
-- If an operation defines `security`, it overrides global `security`.
-- Use environment variables in `specmatic.yaml` to switch credentials across local, CI, and test environments.
-- For contract tests, prefer mock/dummy auth unless your test specifically needs real auth.
 
 ## Injecting Auth Tokens Into An Example <CommercialBadge/>
 
@@ -488,3 +452,45 @@ java -DBEARER_TOKEN=secret-token -jar enterprise.jar validate --spec-file employ
 </Tabs>
 
 You can then invoke the mock passing the header `Authorization: secret-token` and Specmatic mock will return the response in the example.
+
+### Precedence rule
+
+If both are present, **Specmatic gives preference to the operation-level security scheme**.
+
+This is useful when most endpoints use one auth scheme, but some endpoints use a different one.
+
+### Example: Global security with operation-level override
+
+```yaml
+openapi: 3.0.1
+
+security:
+  - BearerAuth: []   # Global default
+
+paths:
+  /products:
+    get:
+      security:
+        - basicAuth: []   # Overrides global for GET /products
+      responses:
+        "200":
+          description: OK
+```
+
+In this example:
+
+- Most endpoints use `BearerAuth` (global)
+- `GET /products` uses `basicAuth` (operation-level override)
+
+When reading values for the security scheme into examples, values are loaded from the following sources in order of precedence:
+- An environment variable injected into an example template if present
+- The default value in an example template
+- The environment variable with the same name as the security scheme
+- If none of the above are found, then in `test` mode a format-valid random security scheme value is generated in the test request, and in `mock` mode any format-valid security scheme value would be accepted in an incoming request.
+
+## Tips
+
+- Security scheme names in `specmatic.yaml` must match names in `components.securitySchemes`.
+- If an operation defines `security`, it overrides global `security`.
+- Use environment variables in `specmatic.yaml` to switch credentials across local, CI, and test environments.
+- For contract tests, prefer mock/dummy auth unless your test specifically needs real auth.
