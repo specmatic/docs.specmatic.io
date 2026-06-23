@@ -613,9 +613,9 @@ specmatic examples validate --spec-file employee_details.yaml --examples-dir ./c
 ## Template Values <CommercialBadge/>
 
 External examples can use template values for fields that must change between environments or runs, such as tokens, IDs, etc.
-Instead of hardcoding those values in the example, you can write a template expression with a default value. Specmatic resolves these expressions before using the example.
+Instead of hardcoding those values in the example, you can write a template expression with a default value, and later inject the value. Specmatic resolves these expressions before using the example.
 
-### Simple Lookup
+### Simple Lookup From Environment Variable
 
 ```json
 {
@@ -632,8 +632,24 @@ Instead of hardcoding those values in the example, you can write a template expr
 }
 ```
 
-In this example, `API_TOKEN` is looked up at runtime, which can provided it in any of these ways:
+In this example, `API_TOKEN` is looked up at runtime from an environment variable, which can be provided in any of these ways:
 <Tabs groupId="example-template-values">
+  <TabItem value="docker_macos_linux" label="Docker (MacOS/Linux)">
+```shell
+docker run --rm \
+  -v "$(pwd):/usr/src/app" \
+  -e API_TOKEN=secret-token \
+  specmatic/enterprise validate --spec-file "employee_details.yaml"
+```
+  </TabItem>
+  <TabItem value="docker_windows" label="Docker (Windows)">
+```shell
+docker run --rm \
+  -v "${PWD}:/usr/src/app" \
+  -e API_TOKEN=secret-token \
+  specmatic/enterprise validate --spec-file "employee_details.yaml"
+```
+  </TabItem>
   <TabItem value="cli" label="CLI">
 ```shell
 API_TOKEN=secret-token enterprise validate --spec-file employee_details.yaml
@@ -644,17 +660,9 @@ API_TOKEN=secret-token enterprise validate --spec-file employee_details.yaml
 java -DAPI_TOKEN=secret-token -jar enterprise.jar validate --spec-file employee_details.yaml
 ```
   </TabItem>
-  <TabItem value="docker" label="Docker">
-```shell
-docker run --rm \
-  -v "$(pwd):/usr/src/app" \
-  -e API_TOKEN=secret-token \
-  specmatic/enterprise validate --spec-file "employee_details.yaml"
-```
-  </TabItem>
 </Tabs>
 
-With `API_TOKEN=secret-token`, the example resolves as follows:
+With `API_TOKEN=secret-token`, Specmatic loads the example and resolve it at runtime into the following:
 ```json
 {
   "http-request": {
@@ -704,6 +712,8 @@ If `EMPLOYEE_CODE` is not set and `FALLBACK_EMPLOYEE_CODE` is set to `EMP999`, t
 ```
 
 > If neither value is provided, Specmatic uses the default value `EMP123`.
+
+This comes in handy when the variable name is not in your control and may be different in different environments.
 
 ### Full example
 
