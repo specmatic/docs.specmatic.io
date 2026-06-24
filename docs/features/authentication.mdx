@@ -482,9 +482,12 @@ In this example:
 - Most endpoints use `BearerAuth` (global)
 - `GET /products` uses `basicAuth` (operation-level override)
 
+### Value Source Precedence
+
 When reading values for the security scheme into examples, values are loaded from the following sources in order of precedence:
 - An environment variable injected into an example template if present
 - The default value in an example template
+- The value from specmatic.yaml config
 - The environment variable with the same name as the security scheme
 - If none of the above are found, then in `test` mode a format-valid random security scheme value is generated in the test request, and in `mock` mode any format-valid security scheme value would be accepted in an incoming request.
 
