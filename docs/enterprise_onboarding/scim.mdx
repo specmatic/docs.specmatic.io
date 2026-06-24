@@ -8,6 +8,8 @@ sidebar_position: 6
 
 This page documents the SCIM 2.0 behavior currently supported by Specmatic Insights for org admins and IdP administrators.
 
+For what each mapped role and account type is allowed to do after SCIM hydration, see [Role Permissions](/enterprise_onboarding/role_permissions).
+
 If you are integrating from Microsoft Entra, use the step-by-step guide:
 - [Microsoft Entra SCIM Integration](/enterprise_onboarding/SCIM/entra-scim-integration)
 
@@ -89,6 +91,8 @@ Mapping is applied per SCIM group in Collaborators using four actions:
 - **Mark as Admin (Service account)**
 
 These mappings determine the effective `role` and `identity type` hydrated into org memberships.
+
+See [Role Permissions](/enterprise_onboarding/role_permissions) for the practical meaning of those combinations in Insights.
 
 ### Expected Login Behavior When SCIM Is Enabled
 
@@ -232,6 +236,8 @@ Defaults for newly synced groups:
 - Identity type defaults to Human.
 
 These mappings are managed in **Settings** -> **Collaborators** -> **SCIM Groups**, not in IdP attribute mappings.
+
+Use [Role Permissions](/enterprise_onboarding/role_permissions) to decide which combination each group should receive.
 
 ## Practical Interoperability Notes
 

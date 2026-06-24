@@ -1,0 +1,96 @@
+---
+title: Role Permissions
+sidebar_position: 5.5
+---
+
+# Role Permissions
+
+Specmatic Insights access is based on two choices:
+
+- **Role**: what the user or identity can do in an organization.
+- **Account type**: whether the identity is a person or automation.
+
+## Organization Member
+
+Organization Member is best for people who need read access to an organization.
+
+In Insights, this appears as:
+
+- **Role:** `User`
+- **Account type:** `User account`
+
+Organization Members can:
+
+- View organization dashboards, services, builds, contract operation data, usage, and reports.
+- Approve their own license requests.
+- Manage their own profile and password, unless the account signs in through SSO.
+
+Organization Members cannot:
+
+- Manage collaborators.
+- Manage organization security or identity settings.
+- Manage service-account licenses or audit settings.
+- Delete builds.
+
+## Organization Admin
+
+Organization Admin is best for people who manage one organization.
+
+In Insights, this appears as:
+
+- **Role:** `Organization Admin`
+- **Account type:** `User account`
+
+Organization Admins can do everything Organization Members can, plus:
+
+- Manage collaborators (invite, remove) from the Collaborators page only when SCIM provisioning is disabled.
+- Change group roles only when SCIM provisioning is enabled; otherwise group role changes aren't supported.
+- Manage organization and security settings.
+- Manage licenses issued to users and service accounts inside the organization.
+- View audit events and manage audit export.
+- Delete builds.
+
+## Service Account
+
+Service Account is best for CI, build pipelines, and integrations.
+
+In Insights, this appears as:
+
+- **Role:** `User`
+- **Account type:** `Service account`
+
+Service Accounts can:
+
+- Submit build and backward-compatibility check reports from automation.
+- Read contract operation data from automation (this is particularly required for performing backward compatibility checks)
+
+Service Accounts cannot:
+
+- Sign in to the Insights UI.
+- Manage collaborators, organization settings, identity settings, audit settings, or licenses.
+- Use admin automation APIs unless the service account is also granted admin access.
+
+## Service Account Admin
+
+Service Account Admin is best for trusted automation that needs elevated API actions.
+
+In Insights, this appears as:
+
+- **Role:** `Organization Admin`
+- **Account type:** `Service account`
+
+Service Account Admins can do everything Service Accounts can, plus:
+
+- Access audit events through the Audit Events Export API.
+
+Service Account Admins cannot:
+
+- Sign in to the Insights UI.
+- Manage collaborators through the UI.
+- Bypass license checks or JWT verification.
+
+## SCIM-managed organizations
+
+When SCIM provisioning is enabled, collaborator membership and role changes are managed in the identity provider.
+
+In Insights, Organization Admins can still view provisioned collaborators and SCIM groups. They can also map SCIM groups to role and account type combinations, such as Organization Member, Organization Admin, Service Account, or Service Account Admin. However, invite, remove, and direct role-change actions are disabled in Insights for SCIM-managed organizations.
