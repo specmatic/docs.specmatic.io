@@ -1,0 +1,139 @@
+---
+title: Specmatic MCP
+sidebar_position: 9
+---
+
+# Specmatic MCP
+
+## What is Specmatic MCP?
+
+Specmatic MCP is the MCP server provided by Specmatic for agent workflows. It lets coding agents connect to Specmatic and use Specmatic capabilities directly from the MCP tool surface.
+
+Typical use cases include:
+
+- Running contract tests from an agent session
+- Running resiliency checks
+- Starting and managing mock servers
+- Checking backward compatibility
+
+Once registered, the server becomes available through the MCP integration in your agent, so the agent can invoke Specmatic tools as needed.
+
+## Prerequisites
+
+- Docker is installed and running.
+- Pull the latest specmatic docker image:
+
+```bash
+docker pull specmatic/specmatic
+```
+
+## Register the Specmatic MCP server
+
+Choose one coding agent and register the local Specmatic MCP server.
+
+### Claude Code
+
+Register a local stdio server:
+
+```bash
+claude mcp add specmatic -- docker run --rm -i -v ".:/usr/src/app" specmatic/specmatic mcp server
+```
+
+Start Claude Code in this lab folder:
+
+```bash
+claude
+```
+
+### Codex
+
+Register a local stdio server:
+
+```bash
+codex mcp add specmatic -- docker run --rm -i -v ".:/usr/src/app" specmatic/specmatic mcp server
+```
+
+Start Codex in this lab folder:
+
+```bash
+codex
+```
+
+### Gemini
+
+If you are using Gemini Agent through Antigravity, paste this MCP config into the agent's config file used for MCP servers.
+
+```json
+{
+  "mcpServers": {
+    "specmatic": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-v",
+        ".:/usr/src/app",
+        "specmatic/specmatic",
+        "mcp",
+        "server"
+      ]
+    }
+  }
+}
+```
+
+If you use a different coding agent, register `specmatic mcp` using that tool's MCP setup flow before continuing.
+
+## Available tools
+
+Specmatic MCP exposes these tools to connected agents:
+
+### `run_contract_test`
+
+Validates API implementations against OpenAPI specifications by running [contract tests](/contract_driven_development/contract_testing).
+
+- Input: OpenAPI spec, API base URL, spec format (`yaml` / `json`)
+- Output: Test results with pass/fail status and detailed failure information
+- Use case: Ensure the API implementation matches the contract specification
+
+### `run_resiliency_test`
+
+Tests API [resilience](/contract_driven_development/contract_testing#schema-resiliency-tests) by sending boundary-condition and invalid requests.
+
+- Input: OpenAPI spec, API base URL, spec format (`yaml` / `json`)
+- Output: Enhanced testing results including edge-case validation
+- Use case: Verify error handling and API robustness
+
+### `manage_mock_server`
+
+Provides [mock server](/contract_driven_development/service_virtualization) lifecycle management for development workflows.
+
+- Subcommands: `start`, `stop`, `list`
+- Features: Port management, multiple concurrent servers, automatic cleanup
+- Use case: Generate mock APIs from OpenAPI specs for frontend and integration development
+
+### `backward_compatibility_check`
+
+Checks for breaking changes in OpenAPI specifications using [backward compatibility](/contract_driven_development/backward_compatibility) using git comparison.
+
+- Input: OpenAPI spec file path, git branch comparison, repository directory
+- Output: Backward compatibility analysis with breaking-change detection
+- Use case: Validate API changes before deployment
+
+
+These tools are exposed through the agent's MCP tool discovery flow, and may also be surfaced through `/mcp` depending on the client you are using.
+
+## How to use it
+
+After registration:
+
+1. Start the agent in your project's root directory.
+2. Confirm the MCP server is connected.
+3. Ask the agent to use a Specmatic tool for the task you want to run.
+
+Example prompts:
+
+- "Run the Specmatic contract tests for this spec"
+- "Start the mock server for this OpenAPI file"
+- "Check backward compatibility between these two branches"
