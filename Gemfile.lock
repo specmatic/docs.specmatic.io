@@ -39,7 +39,7 @@ GEM
       yell (~> 2.0)
       zeitwerk (~> 2.5)
     io-event (1.14.3)
-    json (2.19.9)
+    json (2.20.0)
     logger (1.7.0)
     metrics (0.15.0)
     nokogiri (1.19.4-arm64-darwin)
