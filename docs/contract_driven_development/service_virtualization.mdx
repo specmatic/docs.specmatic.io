@@ -670,6 +670,27 @@ Let's try this out.
 
 - You can use as many collections and properties as you like in the `dataLookup` data object.
 
+### Behaviour
+
+Substitution is lenient by default. This means that if Specmatic cannot resolve a substitution expression, it will not fail the request.
+Instead, it will log a warning and generate a value for the field based on the schema.
+
+This fallback applies when:
+* the referenced variable is unavailable
+* the referenced data lookup value cannot be found
+* the resolved value doesn't match the data-type required by the field
+
+For example,
+- if a response contains `$(EMPLOYEE_CODE)` but `EMPLOYEE_CODE` was not captured from the request, Specmatic will ignore the unresolved substitution and generate a valid value for that response field.
+- Similarly, if a data lookup expression such as `$(dataLookup.departments[DEPARTMENT].desig)` cannot be resolved, Specmatic will generate a valid value for `designation` based on its schema.
+
+Substitution also supports:
+- interpolated expressions, such as `"Employee $(EMPLOYEE_CODE) updated"`
+- non scalar values, including objects and arrays, when the captured value is compatible with the target schema
+
+> To make substitution stricter, please enable `strictMode`.
+> When enabled, Specmatic does not fall back to generated values instead unresolved substitutions are treated as errors.
+
 ## Partial Examples
 
 This feature lets you focus on the keys that need, allowing Specmatic to fill in the missing details.
