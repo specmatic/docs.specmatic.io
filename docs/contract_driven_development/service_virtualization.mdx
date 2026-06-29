@@ -688,8 +688,10 @@ Substitution also supports:
 - interpolated expressions, such as `"Employee $(EMPLOYEE_CODE) updated"`
 - non scalar values, including objects and arrays, when the captured value is compatible with the target schema
 
-> To make substitution stricter, please enable `strictMode`.
-> When enabled, Specmatic does not fall back to generated values instead unresolved substitutions are treated as errors.
+:::note
+To make substitution stricter, please enable `strictMode`.
+When enabled, Specmatic does not fall back to generated values instead unresolved substitutions are treated as errors.
+:::
 
 ## Partial Examples
 
