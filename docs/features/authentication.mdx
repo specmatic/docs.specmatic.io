@@ -3,6 +3,10 @@ sidebar_position: 1
 title: Authentication
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import {CommercialBadge} from "../../src/components/CommercialBadge";
+
 # Authentication
 
 Most APIs use authentication (and sometimes authorization). Specmatic reads authentication requirements from your OpenAPI specification and sends the required headers or parameters during contract tests.
@@ -301,6 +305,169 @@ In this example:
 
 - Most endpoints use `BearerAuth` (global)
 - `GET /products` uses `basicAuth` (operation-level override)
+
+## Auth using substitution <CommercialBadge/>
+
+For contract tests, you can fetch a bearer token before the test runs and use it in the main request using substitution.
+This is useful when your application expects an `Authorization` header, but you do not want to hard-code a token in every example or need a fresh token.
+
+The OpenAPI spec may define bearer auth like this:
+
+```yaml
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - BearerAuth: []
+```
+
+In the external example, use a `before` fixture to call a token endpoint and capture the token from its response.
+
+```json title="get_products.json"
+{
+  "before": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "POST",
+        "path": "/auth/token",
+        "baseUrl": "http://localhost:9000",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "clientId": "contract-tests",
+          "clientSecret": "secret"
+        }
+      },
+      "http-response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "accessToken": "(ACCESS_TOKEN:string)"
+        }
+      }
+    }
+  ],
+  "partial": {
+    "http-request": {
+      "method": "GET",
+      "path": "/products",
+      "headers": {
+        "Authorization": "Bearer $(ACCESS_TOKEN)"
+      }
+    },
+    "http-response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": [
+        {
+          "id": 10,
+          "name": "iPhone"
+        }
+      ]
+    }
+  }
+}
+```
+
+Here is what happens:
+- Specmatic calls `/auth/token` before running the contract test.
+- The token response captures `accessToken` as `(ACCESS_TOKEN:string)`.
+- The main request uses it as `$(ACCESS_TOKEN)`.
+- Specmatic sends the request with `Authorization: Bearer <captured-token>`.
+
+## Auth using Template Values <CommercialBadge/>
+
+If the bearer token is already available as an environment variable or system property, you can use Template Values in the external example instead of hard-coding the token.
+This is useful for contract tests where each environment provides its own token.
+The OpenAPI spec may define bearer auth like this:
+
+```yaml
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - BearerAuth: []
+```
+
+The external example can then read the token using a template value:
+
+```json title="get_products.json"
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/products",
+    "headers": {
+      "Authorization": "Bearer ${API_TOKEN:test-token}"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": [
+      {
+        "id": 10,
+        "name": "iPhone"
+      }
+    ]
+  }
+}
+```
+
+Here is what happens:
+- Specmatic looks up `API_TOKEN` before using the example.
+- If `API_TOKEN` is set, Specmatic uses that value.
+- If `API_TOKEN` is not set, Specmatic uses the default value `test-token`.
+- The contract test request is sent with `Authorization: Bearer <resolved-token>`.
+
+In this example, `API_TOKEN` is looked up at runtime from an environment variable or system property, which can be provided in any of these ways:
+
+<Tabs groupId="contract-test-template-values">
+  <TabItem value="docker_macos_linux" label="Docker (MacOS/Linux)">
+```shell
+docker run --rm \
+  -v "$(pwd):/usr/src/app" \
+  -e API_TOKEN=secret-token \
+  specmatic/enterprise test openapi.yaml --testBaseURL http://host.docker.internal:8080
+```
+  </TabItem>
+  <TabItem value="docker_windows" label="Docker (Windows)">
+```shell
+docker run --rm \
+  -v "${PWD}:/usr/src/app" \
+  -e API_TOKEN=secret-token \
+  specmatic/enterprise test openapi.yaml --testBaseURL http://host.docker.internal:8080
+```
+  </TabItem>
+  <TabItem value="cli" label="CLI">
+```shell
+API_TOKEN=secret-token enterprise test openapi.yaml --testBaseURL http://localhost:8080
+```
+  </TabItem>
+  <TabItem value="java" label="Java">
+```shell
+java -DAPI_TOKEN=secret-token -jar enterprise.jar test openapi.yaml --testBaseURL http://localhost:8080
+```
+  </TabItem>
+</Tabs>
+
+Specmatic resolves the request header as:
+```http
+Authorization: Bearer secret-token
+```
 
 ## Example: Different auth schemes per operation
 

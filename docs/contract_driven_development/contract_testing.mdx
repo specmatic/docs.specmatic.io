@@ -704,7 +704,175 @@ Note the contract-invalid id in the example named `INVALID_ID`. Specmatic accept
 
 A contract-invalid example would not be allowed in the example named `SUCCESS`, as it is an example that should trigger a 200 response (and hence must be a contract-valid example).
 
----
+## Data Substitution in Contract Tests  <CommercialBadge/>
+
+In contrast to service virtualization, contract tests involve Specmatic sending requests to your application and validating the responses it obtains.
+This means that request-to-response substitution does not apply in this case
+
+Instead, substitution is used to coordinate values across fixture(s) execution:
+1. A `before` fixture can capture values from its response.
+2. The main contract test request can use values captured by `before` fixtures.
+3. The main contract test response can capture values returned by the system under test.
+4. An `after` fixture can use values captured earlier.
+
+:::note
+Values are available from the point at which they are captured.
+Fixtures in the same section are executed in order. This means a later `before` fixture can use values captured by an earlier `before` fixture. Similarly, an `after` fixture can use values captured by `before` fixtures, the main contract test response, and earlier `after` fixtures.
+:::
+
+### Complete Example
+
+A common use case is an authentication flow where a token is created before the test, used during the test, and revoked after.
+
+Take the below example, which does the following:
+- calls `/auth/token` before the contract test
+- captures `accessToken`, `tokenId`, and `role` from the token response
+- uses the captured token in the main contract test request
+- captures `id` from the actual API response
+- revokes the token after the test
+
+```json title="employee_update.json"
+{
+  "before": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "POST",
+        "path": "/auth/token",
+        "baseUrl": "http://localhost:9000",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "clientSecret": "secret",
+          "clientId": "contract-tests",
+        }
+      },
+      "http-response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "role": "(ROLE:string)",
+          "tokenId": "(TOKEN_ID:string)",
+          "accessToken": "(ACCESS_TOKEN:string)",
+        }
+      }
+    }
+  ],
+  "partial": {
+    "http-request": {
+      "path": "/employees",
+      "method": "PATCH",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $(ACCESS_TOKEN)",
+        "X-Auth-Scope": "$(dataLookup.roles[ROLE].scope)"
+      },
+      "body": {
+        "employeeCode": "abc123",
+        "department": "Engineering"
+      }
+    },
+    "http-response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "employeeCode": "abc123",
+        "id": "(EMPLOYEE_ID:number)",
+        "department": "Engineering"
+      }
+    }
+  },
+  "after": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "POST",
+        "path": "/auth/revoke",
+        "baseUrl": "http://localhost:9000",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $(ACCESS_TOKEN)"
+        },
+        "body": {
+          "tokenId": "$(TOKEN_ID)",
+          "employeeId": "$(EMPLOYEE_ID)"
+        }
+      },
+      "http-response": {
+        "status": 204
+      }
+    }
+  ],
+  "dataLookup": {
+    "roles": {
+      "admin": {
+        "scope": "employees:write"
+      },
+      "hr": {
+        "scope": "employees:update"
+      }
+    }
+  }
+}
+```
+
+In this example:
+- `(ACCESS_TOKEN:string)`, `(TOKEN_ID:string)`, and `(ROLE:string)` capture values from the `before` fixture response.
+- `$(ACCESS_TOKEN)` is used in the `Authorization` header of the main contract test request.
+- `$(dataLookup.roles[ROLE].scope)` uses the captured `ROLE` to derive the value of `X-Auth-Scope`.
+- `(EMPLOYEE_ID:number)` captures `id` from the actual API response returned by the system under test.
+- The `after` fixture uses `TOKEN_ID` from the `before` fixture and `EMPLOYEE_ID` from the main test response.
+
+### Data Flow
+
+When multiple fixtures are present, each fixture can use values captured by earlier fixtures in the same test run.
+
+| Location | Can use values captured from |
+|---|---|
+| first `before` fixture | none |
+| later `before` fixtures | earlier `before` fixtures |
+| main contract test request | all completed `before` fixtures |
+| first `after` fixture | `before` fixtures and the main contract test response |
+| later `after` fixtures | `before` fixtures, the main contract test response, and earlier `after` fixtures |
+
+This makes it possible to model setup and cleanup flows where each step depends on values produced by a previous step.
+
+For example:
+- a `before` fixture creates a tenant and captures `TENANT_ID`
+- a later `before` fixture creates a user under that tenant and captures `USER_ID`
+- the main contract test uses both `TENANT_ID` and `USER_ID`
+- an `after` fixture deletes the user
+- a later `after` fixture deletes the tenant
+
+### Behaviour
+
+Substitution is lenient by default. This means that if Specmatic cannot resolve a substitution expression, it will not fail the test.
+Instead, it will log a warning and generate a value for the field based on the schema.
+However, this does not apply to fixtures, as there is no underlying schema to generate from.
+
+This fallback applies when:
+* the referenced variable is unavailable
+* the referenced data lookup value cannot be found
+* the resolved value doesn't match the data-type required by the field
+* Request being generated is for contract test and is not for `before` or `after` fixtures
+
+For example,
+- if a response contains `$(EMPLOYEE_CODE)` but `EMPLOYEE_CODE` was not captured from the request, Specmatic will ignore the unresolved substitution and generate a valid value for that response field.
+- Similarly, if a data lookup expression such as `$(dataLookup.departments[DEPARTMENT].desig)` cannot be resolved, Specmatic will generate a valid value for `designation` based on its schema.
+
+Substitution also supports:
+- interpolated expressions, such as `"Employee $(EMPLOYEE_CODE) updated"`
+- non scalar values, including objects and arrays, when the captured value is compatible with the target schema
+
+:::note
+To make substitution stricter, please enable `strictMode`.
+When enabled, Specmatic does not fall back to generated values instead unresolved substitutions are treated as errors.
+:::
 
 ## Running Specific Tests
 
