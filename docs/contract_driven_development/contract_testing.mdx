@@ -706,14 +706,64 @@ A contract-invalid example would not be allowed in the example named `SUCCESS`, 
 
 ## Data Substitution in Contract Tests  <CommercialBadge/>
 
-In contrast to service virtualization, contract tests involve Specmatic sending requests to your application and validating the responses it obtains.
-This means that request-to-response substitution does not apply in this case
+Substitution is used to coordinate values across fixture execution and the main contract test. <br/>
+A simple use case is when a `before` fixture creates some data, captures a value from the response, and the contract test uses that captured value in its request.
 
-Instead, substitution is used to coordinate values across fixture(s) execution:
-1. A `before` fixture can capture values from its response.
-2. The main contract test request can use values captured by `before` fixtures.
-3. The main contract test response can capture values returned by the system under test.
-4. An `after` fixture can use values captured earlier.
+### Simple Example
+
+```json title="employee_create.json"
+{
+  "before": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "POST",
+        "path": "/departments",
+        "baseUrl": "http://localhost:9000",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Engineering"
+        }
+      },
+      "http-response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "(DEPARTMENT_ID:number)"
+        }
+      }
+    }
+  ],
+  "partial": {
+    "http-request": {
+      "method": "POST",
+      "path": "/employees",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "name": "John Doe",
+        "departmentId": "$(DEPARTMENT_ID)"
+      }
+    },
+    "http-response": {
+      "status": 201,
+      "body": {
+        "id": "5311ef2d-1bae-46a7-9883-1790d067a388"
+      }
+    }
+  }
+}
+```
+
+In the example above:
+* the `before` fixture creates a department
+* the `before` fixtures response captures the generated department id as `DEPARTMENT_ID`
+* the main contract test request uses `$(DEPARTMENT_ID)` in the request body to register the employee
 
 :::note
 Values are available from the point at which they are captured.
@@ -722,7 +772,7 @@ Fixtures in the same section are executed in order. This means a later `before` 
 
 ### Complete Example
 
-A common use case is an authentication flow where a token is created before the test, used during the test, and revoked after.
+The following example is an authentication flow where a token is created before the test, used during the test, and revoked after.
 
 Take the below example, which does the following:
 - calls `/auth/token` before the contract test
