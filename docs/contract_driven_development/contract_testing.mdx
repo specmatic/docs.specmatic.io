@@ -849,6 +849,69 @@ For example:
 - an `after` fixture deletes the user
 - a later `after` fixture deletes the tenant
 
+### Execution Filtering
+
+Each `before` and `after` fixture can optionally specify when it should be executed by using `executeFor` at the fixture root.
+By default, fixtures are executed only for positive contract test scenarios. This means that omitting `executeFor` is the same as specifying:
+```json
+{
+  "executeFor": {
+    "scenarios": "positive"
+  }
+}
+```
+
+The supported values are:
+
+| Value      | Behaviour                                                     |
+| ---------- | ------------------------------------------------------------- |
+| `positive` | Execute the fixture only for positive scenarios.              |
+| `negative` | Execute the fixture only for negative scenarios.              |
+| `all`      | Execute the fixture for both positive and negative scenarios. |
+
+For example, this fixture runs only for positive scenarios because `executeFor` is not specified.
+It creates a department and captures `DEPARTMENT_ID`, which can then be used by the main contract test.
+
+```json title="create-department.fixture.json"
+{
+  "type": "http",
+  "http-request": {
+    "method": "POST",
+    "path": "/departments",
+    "baseUrl": "http://localhost:9000",
+    "body": {
+      "name": "Engineering"
+    }
+  },
+  "http-response": {
+    "status": 201,
+    "body": {
+      "id": "(DEPARTMENT_ID:number)"
+    }
+  }
+}
+```
+
+
+Use `all` when a fixture should run for both positive and negative scenarios.
+For example, this fixture resets department test data after every scenario:
+```json title="reset-departments.fixture.json"
+{
+  "type": "http",
+  "executeFor": {
+    "scenarios": "all"
+  },
+  "http-request": {
+    "method": "DELETE",
+    "path": "/test-data/departments",
+    "baseUrl": "http://localhost:9000"
+  },
+  "http-response": {
+    "status": 204
+  }
+}
+```
+
 ### Behaviour
 
 Substitution is lenient by default. This means that if Specmatic cannot resolve a substitution expression, it will not fail the test.
