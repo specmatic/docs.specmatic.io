@@ -246,13 +246,11 @@ Specmatic sends:
 
 - `Authorization: Basic dXNlcjpwYXNzd29yZA==`
 
-## Injecting auth tokens using Template Values <CommercialBadge/>
+## Injecting auth tokens directly into examples <CommercialBadge/>
 
-If an auth token is already available as an environment variable or system property, you can use Template Values in the external example instead of hard-coding the token.
+You can inject auth tokens directly into examples using Template Values. This way you can use different auth tokens for different test cases.
 
-This is useful for contract tests where each environment provides its own token.
-
-Supposing the OpenAPI spec defines bearer auth like this:
+First let's understand how this works. Supposing the OpenAPI spec defines bearer auth like this:
 
 ```yaml
 components:
@@ -333,6 +331,28 @@ Specmatic resolves the request header as:
 Authorization: Bearer secret-token
 ```
 
+Now, if you have multiple examples for the same endpoint, you can use different template values for each example. For instance, you could have one example that uses `${API_TOKEN_200:valid-token}`, like the example above, and another that uses `${API_TOKEN_401:invalid-token}`, as followws:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/products",
+    "headers": {
+      "Authorization": "Bearer ${API_TOKEN_401:invalid-token}"
+    }
+  },
+  "http-response": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "error": "Unauthorized"
+    }
+  }
+}
+```
 
 ## Just-in-time authentication <CommercialBadge/>
 
