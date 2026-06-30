@@ -6,6 +6,27 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
+## 1.19.0 (2026-06-30)
+
+### Added
+
+- Added support for generating examples for AsyncAPI specifications from Studio’s example tabs UI.
+- [Fixture execution can now be filtered](/contract_driven_development/contract_testing#execution-filtering) by scenario type, with users able to choose positive, all, or negative scenarios, while default stays positive.
+- [Contract tests now support substitutions](/contract_driven_development/contract_testing#data-substitution-in-contract-tests--), including placeholder resolution in requests, response capture, and shared state across `before`, test, and `after` fixtures.
+- [External examples now support template values](/features/external_examples#template-values-), including scalar/composite defaults, interpolation, clearer load diagnostics, and preservation during example fixing.
+
+### Changed
+
+- Coverage CTRF reports now include spec-level `coverageMetrics` in each execution detail, including covered-operation counts and both filtered and total operation counts for the spec.
+- Improved bundled CTRF reporting so coverage execution details now include spec-level coverage metrics and match operations back to the correct spec more reliably across absolute, relative, and normalized paths.
+- Improved bundled backward-compatibility HTML reporting so breakages in shared specs are attributed to the shared spec that actually changed, instead of being misreported against a referring spec when only one consumer is affected.
+- Fixed a regression in negative test generation so undeclared `4xx` response variants such as `405 Method Not Allowed` and `415 Unsupported Media Type` continue to be exercised instead of being filtered out.
+- Improved URL handling across Postman import, proxy routing, remote spec loading, and web-source caching so mixed-case schemes, authorities with underscores, preserved user-info, and explicit ports behave more reliably.
+- Improved config-driven target resolution so Specmatic preserves scheme, host, port, path-prefix, and certificate details separately instead of flattening them into a base URL.
+- Substitutions are now lenient by default, i.e. missing variables now use auto-generated values, while enabling `strictMode` restores the previous behavior of failing instead of generating.
+- Substitutions stored values and data lookups can now use composite JSON objects and arrays and interpolated expressions, and unresolved substitutions now fall back to dictionary-backed generation when available.
+- Resolved the issue with partialize example that led to metadata keys such as `delay-in-seconds` being omitted via Studio during the partialization process.
+
 ## 1.18.0 (2026-06-18)
 
 ### Added
