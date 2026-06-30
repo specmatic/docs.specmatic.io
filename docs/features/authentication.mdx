@@ -246,149 +246,13 @@ Specmatic sends:
 
 - `Authorization: Basic dXNlcjpwYXNzd29yZA==`
 
-## Testing with mock auth (recommended for contract/component tests)
+## Injecting auth tokens using Template Values <CommercialBadge/>
 
-For contract tests, it is usually best to isolate your application from real auth providers (OAuth servers, DB-backed auth, identity services).
+If an auth token is already available as an environment variable or system property, you can use Template Values in the external example instead of hard-coding the token.
 
-At this stage, the main objective is to validate that:
-
-- Your API advertises the correct auth requirements in the OpenAPI spec
-- Your application accepts the expected auth headers/parameters
-- Your service behavior matches the contract
-
-You usually do **not** need to validate real token issuance/verification in contract tests. That is better covered in higher-level integration or end-to-end tests.
-
-### Recommended approach
-
-Use a test security setup that:
-
-- Checks header presence and format
-- Optionally creates a dummy authenticated principal/user
-- Avoids calling real auth dependencies
-
-This is similar to using an in-memory database in tests instead of a production database.
-
-## How Specmatic chooses authentication for a request
-
-Specmatic reads the OpenAPI `security` requirement for each operation.
-
-OpenAPI allows authentication to be defined at two levels:
-
-- **Global level**: top-level `security` (applies to all operations by default)
-- **Operation level**: `security` inside a specific endpoint/method (applies only to that operation)
-
-### Precedence rule
-
-If both are present, **Specmatic gives preference to the operation-level security scheme**.
-
-This is useful when most endpoints use one auth scheme, but some endpoints use a different one.
-
-### Example: Global security with operation-level override
-
-```yaml
-openapi: 3.0.1
-
-security:
-  - BearerAuth: []   # Global default
-
-paths:
-  /products:
-    get:
-      security:
-        - basicAuth: []   # Overrides global for GET /products
-      responses:
-        "200":
-          description: OK
-```
-
-In this example:
-
-- Most endpoints use `BearerAuth` (global)
-- `GET /products` uses `basicAuth` (operation-level override)
-
-## Auth using substitution <CommercialBadge/>
-
-For contract tests, you can fetch a bearer token before the test runs and use it in the main request using substitution.
-This is useful when your application expects an `Authorization` header, but you do not want to hard-code a token in every example or need a fresh token.
-
-The OpenAPI spec may define bearer auth like this:
-
-```yaml
-components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-
-security:
-  - BearerAuth: []
-```
-
-In the external example, use a `before` fixture to call a token endpoint and capture the token from its response.
-
-```json title="get_products.json"
-{
-  "before": [
-    {
-      "type": "http",
-      "http-request": {
-        "method": "POST",
-        "path": "/auth/token",
-        "baseUrl": "http://localhost:9000",
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "body": {
-          "clientId": "contract-tests",
-          "clientSecret": "secret"
-        }
-      },
-      "http-response": {
-        "status": 200,
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "body": {
-          "accessToken": "(ACCESS_TOKEN:string)"
-        }
-      }
-    }
-  ],
-  "partial": {
-    "http-request": {
-      "method": "GET",
-      "path": "/products",
-      "headers": {
-        "Authorization": "Bearer $(ACCESS_TOKEN)"
-      }
-    },
-    "http-response": {
-      "status": 200,
-      "headers": {
-        "Content-Type": "application/json"
-      },
-      "body": [
-        {
-          "id": 10,
-          "name": "iPhone"
-        }
-      ]
-    }
-  }
-}
-```
-
-Here is what happens:
-- Specmatic calls `/auth/token` before running the contract test.
-- The token response captures `accessToken` as `(ACCESS_TOKEN:string)`.
-- The main request uses it as `$(ACCESS_TOKEN)`.
-- Specmatic sends the request with `Authorization: Bearer <captured-token>`.
-
-## Auth using Template Values <CommercialBadge/>
-
-If the bearer token is already available as an environment variable or system property, you can use Template Values in the external example instead of hard-coding the token.
 This is useful for contract tests where each environment provides its own token.
-The OpenAPI spec may define bearer auth like this:
+
+Supposing the OpenAPI spec defines bearer auth like this:
 
 ```yaml
 components:
@@ -468,6 +332,146 @@ Specmatic resolves the request header as:
 ```http
 Authorization: Bearer secret-token
 ```
+
+
+## Just-in-time authentication <CommercialBadge/>
+
+For contract tests, you can fetch an auth token before the test runs and use it in the main request using substitution.
+
+This is useful when your application expects an auth token, such as an `Authorization` header, but you do not want to hard-code a token in every example or need a fresh token. Perhaps the token is valid for only a short time.
+
+Supposing the OpenAPI spec defines bearer auth like this:
+
+```yaml
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - BearerAuth: []
+```
+
+In the external example, use a `before` fixture to call a token endpoint and capture the token from its response.
+
+```json title="get_products.json"
+{
+  "before": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "POST",
+        "path": "/auth/token",
+        "baseUrl": "http://localhost:9000",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "clientId": "contract-tests",
+          "clientSecret": "secret"
+        }
+      },
+      "http-response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "accessToken": "(ACCESS_TOKEN:string)"
+        }
+      }
+    }
+  ],
+  "partial": {
+    "http-request": {
+      "method": "GET",
+      "path": "/products",
+      "headers": {
+        "Authorization": "Bearer $(ACCESS_TOKEN)"
+      }
+    },
+    "http-response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": [
+        {
+          "id": 10,
+          "name": "iPhone"
+        }
+      ]
+    }
+  }
+}
+```
+
+Here is what happens:
+- Specmatic calls `/auth/token` before running the contract test.
+- The token response captures `accessToken` as `(ACCESS_TOKEN:string)`.
+- The main request uses it as `$(ACCESS_TOKEN)`.
+- Specmatic sends the request with `Authorization: Bearer <captured-token>`.
+
+## Testing with mock auth (recommended for contract/component tests)
+
+For contract tests, it is usually best to isolate your application from real auth providers (OAuth servers, DB-backed auth, identity services).
+
+At this stage, the main objective is to validate that:
+
+- Your API advertises the correct auth requirements in the OpenAPI spec
+- Your application accepts the expected auth headers/parameters
+- Your service behavior matches the contract
+
+You usually do **not** need to validate real token issuance/verification in contract tests. That is better covered in higher-level integration or end-to-end tests.
+
+### Recommended approach
+
+Use a test security setup that:
+
+- Checks header presence and format
+- Optionally creates a dummy authenticated principal/user
+- Avoids calling real auth dependencies
+
+This is similar to using an in-memory database in tests instead of a production database.
+
+## How Specmatic chooses authentication for a request
+
+Specmatic reads the OpenAPI `security` requirement for each operation.
+
+OpenAPI allows authentication to be defined at two levels:
+
+- **Global level**: top-level `security` (applies to all operations by default)
+- **Operation level**: `security` inside a specific endpoint/method (applies only to that operation)
+
+### Precedence rule
+
+If both are present, **Specmatic gives preference to the operation-level security scheme**.
+
+This is useful when most endpoints use one auth scheme, but some endpoints use a different one.
+
+### Example: Global security with operation-level override
+
+```yaml
+openapi: 3.0.1
+
+security:
+  - BearerAuth: []   # Global default
+
+paths:
+  /products:
+    get:
+      security:
+        - basicAuth: []   # Overrides global for GET /products
+      responses:
+        "200":
+          description: OK
+```
+
+In this example:
+
+- Most endpoints use `BearerAuth` (global)
+- `GET /products` uses `basicAuth` (operation-level override)
 
 ## Example: Different auth schemes per operation
 
