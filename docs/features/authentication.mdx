@@ -19,11 +19,74 @@ Specmatic supports these OpenAPI security schemes:
 
 Authentication can be provided in an example, configured globally for a specification, or handled by the application/test setup when authentication is being mocked or bypassed.
 
+<a id="providing-fresh-auth-credentials-for-contract-tests" />
+## Authentication tokens for OpenAPI Security Schemes
+
+When contract tests run against an environment that requires credentials, Specmatic needs real tokens or keys. You can provide them through environment properties or through `specmatic.yaml` security configuration, which can also read from environment variables.
+
+<a id="important-security-scheme-names-must-match-the-openapi-spec" />
+### Environment Properties per Security Scheme
+
+The name you configure must match the security scheme name in `components.securitySchemes`.
+
+For example, if your OpenAPI spec contains:
+
+```yaml
+components:
+  securitySchemes:
+    oAuth2AuthCode:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/auth
+          tokenUrl: https://example.com/token
+          scopes: {}
+```
+
+Then the configured name must be `oAuth2AuthCode`.
+
+<a id="environment-variable-values-what-to-provide" />
+Provide the **raw credential value**, not the full HTTP header.
+Specmatic will construct the correct header format automatically based on the security scheme type.
+
+Examples:
+- **OAuth2 / Bearer**: provide only the token, without `Bearer `.
+- **Basic**: provide only the Base64 credential, without `Basic `.
+- **API Key**: provide only the key value.
+
+<a id="recommended-configure-auth-in-specmaticyaml" />
+### Using Specmatic Configuration
+
+You can configure auth values under the OpenAPI test configuration in `specmatic.yaml`.
+
+```yaml
+specs:
+  - spec:
+      id: orderApiSpec
+      securitySchemes:
+        oAuth2AuthCode:
+          type: oauth2
+          token: ${OAUTH_TOKEN:OAUTH1234}
+        basicAuth:
+          type: basicAuth
+          token: ${BASIC_AUTH_TOKEN:dXNlcjpwYXNzd29yZA==}
+        apiKeyAuth:
+          type: apiKey
+          token: ${API_KEY:APIKEY1234}
+```
+
+This lets you:
+
+- Map each OpenAPI security scheme to a token/key.
+- Read values from environment variables.
+- Provide defaults for local testing.
+
 <a id="providing-auth-credentials-in-examples" />
 ## Authentication within an Example
 
-Use example-level authentication when the credential belongs to a specific external example or test case.
-This can be done by putting a value directly in the example, injecting a value into the example at runtime, or fetching a value just before the contract test runs.
+Use example-level authentication when you need a token for a specific test case, a fresh token for each test run, or when RBAC requires different auth credentials for different test cases.
+
+You can put a value directly in the example, injecting a value into the example at runtime, or fetching a value just before the contract test runs.
 
 ### Hard-coded Values
 
@@ -96,6 +159,7 @@ You may then use that example for running contract tests, or for mocking the API
 ### Injecting Tokens into Examples <CommercialBadge/>
 
 You can inject auth tokens directly into examples using template expressions. This way you can use different auth tokens for different test cases.
+
 Supposing the OpenAPI spec defines bearer auth like this:
 
 ```yaml
@@ -136,7 +200,7 @@ The external example can then read the token using a template value:
 ```
 
 Here is what happens:
-- Specmatic looks up `API_TOKEN` before using the example.
+- Specmatic looks up the environment variable or system property `API_TOKEN` before using the example.
 - If `API_TOKEN` is set, Specmatic uses that value.
 - If `API_TOKEN` is not set, Specmatic uses the default value `test-token`.
 - The contract test request is sent with `Authorization: Bearer <resolved-token>`.
@@ -280,75 +344,11 @@ Here is what happens:
 - The main request uses it as `$(ACCESS_TOKEN)`.
 - Specmatic sends the request with `Authorization: Bearer <captured-token>`.
 
-<a id="providing-fresh-auth-credentials-for-contract-tests" />
-## Global Authentication
-
-Use global authentication when you want Specmatic to apply credentials based on the OpenAPI security scheme, instead of putting credentials in each example.
-
-When contract tests run against an environment that requires credentials, Specmatic needs real tokens or keys. You can provide them through environment properties or through `specmatic.yaml` security configuration, which can also read from environment variables.
-
-<a id="important-security-scheme-names-must-match-the-openapi-spec" />
-### Environment Properties per Security Scheme
-
-The name you configure must match the security scheme name in `components.securitySchemes`.
-
-For example, if your OpenAPI spec contains:
-
-```yaml
-components:
-  securitySchemes:
-    oAuth2AuthCode:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: https://example.com/auth
-          tokenUrl: https://example.com/token
-          scopes: {}
-```
-
-Then the configured name must be `oAuth2AuthCode`.
-
-<a id="environment-variable-values-what-to-provide" />
-Provide the **raw credential value**, not the full HTTP header.
-Specmatic will construct the correct header format automatically based on the security scheme type.
-
-Examples:
-- **OAuth2 / Bearer**: provide only the token, without `Bearer `.
-- **Basic**: provide only the Base64 credential, without `Basic `.
-- **API Key**: provide only the key value.
-
-<a id="recommended-configure-auth-in-specmaticyaml" />
-### Using Specmatic Configuration
-
-You can configure auth values under the OpenAPI test configuration in `specmatic.yaml`.
-
-```yaml
-specs:
-  - spec:
-      id: orderApiSpec
-      securitySchemes:
-        oAuth2AuthCode:
-          type: oauth2
-          token: ${OAUTH_TOKEN:OAUTH1234}
-        basicAuth:
-          type: basicAuth
-          token: ${BASIC_AUTH_TOKEN:dXNlcjpwYXNzd29yZA==}
-        apiKeyAuth:
-          type: apiKey
-          token: ${API_KEY:APIKEY1234}
-```
-
-This lets you:
-
-- Map each OpenAPI security scheme to a token/key.
-- Read values from environment variables.
-- Provide defaults for local testing.
-
 <a id="testing-with-mock-auth-recommended-for-contractcomponent-tests" />
 <a id="recommended-approach" />
 ## Mocking / Bypassing Authentication
 
-For contract tests, you can isolate your application from real auth providers, such as OAuth servers, DB-backed auth, or identity services.
+For local contract tests within the project, such as junit tests, you can isolate your application from real auth providers, such as OAuth servers, DB-backed auth, or identity services.
 
 At this stage, the main objective is to validate that:
 - Your API advertises the correct auth requirements in the OpenAPI spec.
@@ -365,7 +365,8 @@ This is similar to using an in-memory database in tests instead of a production 
 
 <a id="how-specmatic-chooses-authentication-for-a-request" />
 <a id="precedence-rule" />
-## Precedence & Resolution Order
+<a id="precedence--resolution-order" />
+## Security Scheme Precedence
 
 OpenAPI allows authentication to be defined at two levels:
 - **Global level**: top-level `security`, which applies to all operations by default.
