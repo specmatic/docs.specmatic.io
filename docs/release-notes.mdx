@@ -14,8 +14,23 @@ toc_max_heading_level: 2
   - substitution groups
   - polymorphic type extension matching
   - abstract types and elements
+- Added Arazzo support across enterprise `test`, `mock`, and `validate` and `run-suite` CLIs, including multi-spec test and mock execution with combined reports.
+- Added structured JSON report file export by default alongside CLI terminal output, including precise line and column numbers (`line`, `column`) for all reported diagnostics in lint command.
+- Added built-in security lint rules inspired by OWASP API Security Top 10, detecting potential vulnerabilities such as sensitive credentials in URL parameters, unbounded numeric schemas, and missing security scheme definitions.
+- Added new built-in lint rules for health check endpoints (`health-*`), pagination parameters and response structures (`page-*`), response header validation, and naming/structural constraint checks.
+- Added new **`lenient`** built-in ruleset into linter, which is now the **default** preset.
+  - Includes all `specmatic/*` rules, but every rule is capped at `warn` so teams can adopt incrementally without breaking CI on day one.
+  - Health endpoint rules (`health-*`) and pagination rules (`page-*`) are active at `warn`.
+  - Naming/style conventions remain off.
+
+### Changed
+
 - WSDL parser performance was improved. Loading of complicated WSDLs should now be much snappier
 - Fixes to handle SOAPAction header case insensitively in mock, and fixes to other edge cases
+- Improved Arazzo workflow validation and example generation and runtime, including criteria-expression handling, runtime value resolution, interpolated expressions, clearer input validation, and more precise breadcrumbs for failures.
+- Configurable rules (custom YAML/JSON rule definitions) now execute natively in the linter engine, improving linting execution speed and removing external JavaScript runtime dependencies.
+  - **`recommended`** ruleset is redefined. It now extends `lenient` and restores `specmatic/*` rules to their original severities (`warn` stays `warn`, `error` becomes `error`). Core correctness rules are promoted to `error`. Documentation-quality rules are newly active at `warn`. Naming conventions remain off.
+  - **`strict`** ruleset is redefined. It now extends `recommended` and adds naming conventions at `error` (`paths-kebab-case`, `json-property-names`, `path-parameters-snake-case`, `query-parameter-camel-case`, `schema-definition-camel-case`, `uri-names`) and promotes documentation completeness fields to `error`.
 
 ## 1.19.0 (2026-06-30)
 
