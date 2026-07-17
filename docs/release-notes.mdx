@@ -6,6 +6,29 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
+# 1.21.0 (2026-07-17)
+
+### Added
+
+- Added diagnostics and syntax highlighting support for async example validation in Studio code editor.
+- Added support for JSON schema confluent wire format in async
+- Added per-spec run options for Swagger/OpenAPI, actuator, and Swagger UI.
+- Added MCP mock support for OpenAPI, gRPC, GraphQL, and AsyncAPI specifications.
+
+### Changed
+
+- Improved isolation of Arazzo runtime inputs, step outputs, and workflow outputs under their workflow namespace, while preserving local shorthand and explicit cross-workflow runtime expressions.
+- Improved drag-and-drop Arazzo workflow editing in Studio, including proximity connections and auto workflow resizing
+- Improved Arazzo workflow editor layout so workflow containers resize around dropped steps.
+- Improved Arazzo support for multiple workflow inputs, shared defaults, and input isolation.
+- Improved source resolution for single-source specifications and reusable references.
+- Improved handling of optional bodies, default response statuses and scalar subtypes.
+- Improved Arazzo error messages and validation diagnostics
+- Ability to mock exact values of security parameters using the example requests
+- Added MCP mock fixes for spec-file path resolution and gRPC/GraphQL `specmatic.yaml` serialization.
+- Added official Arazzo 1.0.x and 1.1.x schema handling, including generation using the official 1.1.x schema.
+- Added Safari-compatible workflow-editor drag-and-drop, full-size server-picker rendering, and reliable workflow rendering.
+
 ## 1.20.0 (2026-07-06)
 
 ### Added
