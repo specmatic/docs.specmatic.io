@@ -1,0 +1,165 @@
+---
+title: Confluent Schema Registry
+sidebar_position: 1
+---
+
+import {CommercialBadge} from "../../../src/components/CommercialBadge";
+
+# Confluent Schema Registry <CommercialBadge/>
+
+Use registered Avro or JSON Schema Draft-07 schemas as the source of truth for Kafka contract tests. Specmatic fetches the schema from Confluent Schema Registry and validates message fields against it.
+
+Confluent Schema Registry support is available for AsyncAPI 3.0.
+
+## Configure `specmatic.yaml`
+
+Configure Schema Registry under AsyncAPI run options. `kind: CONFLUENT` is required.
+
+```yaml
+version: 3
+systemUnderTest:
+  service:
+    definitions:
+      - definition:
+          source:
+            filesystem:
+              directory: api-specs
+          specs:
+            - order-service-async.yaml
+    runOptions:
+      asyncapi:
+        type: test
+        schemaRegistry:
+          kind: CONFLUENT
+          url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+        servers:
+          - host: ${KAFKA_BROKER:localhost:9092}
+            protocol: kafka
+```
+
+| Field | Purpose |
+| --- | --- |
+| `schemaRegistry.kind` | Set to `CONFLUENT` for Confluent framing and serializers. |
+| `schemaRegistry.url` | Registry base URL. Specmatic uses it to fetch schemas and configures it as `schema.registry.url` for the producer. |
+| `schemaRegistry.username/password` | Optional HTTP Basic credentials used when Specmatic fetches a schema. Omit both for an unauthenticated Registry. |
+| `servers[].client.producer` | Confluent serializer properties, including Registry client authentication and subject-name strategy. |
+| `servers[].client.consumer` | Kafka consumer properties. Specmatic receives values as bytes, then decodes them using the referenced schema. |
+
+### Registry authentication
+
+`schemaRegistry.username` and `schemaRegistry.password` authenticate the HTTP request that fetches the schema. They are not a replacement for Confluent serializer client properties.
+
+For an authenticated Registry, add fetch credentials and Confluent serializer client properties under `runOptions.asyncapi`. For example, the samples use:
+
+```yaml
+schemaRegistry:
+  kind: CONFLUENT
+  url: ${SCHEMA_REGISTRY_URL}
+  username: ${SCHEMA_REGISTRY_USERNAME}
+  password: ${SCHEMA_REGISTRY_PASSWORD}
+
+servers:
+  - host: ${KAFKA_BROKER:localhost:9092}
+    protocol: kafka
+    client:
+      producer:
+        basic.auth.credentials.source: USER_INFO
+        basic.auth.user.info: ${SCHEMA_REGISTRY_USERNAME}:${SCHEMA_REGISTRY_PASSWORD}
+```
+
+Use your Registry provider's required Kafka serializer properties if they differ.
+
+The same `schemaRegistry` object can be configured in AsyncAPI mock run options when virtualizing a registry-backed contract.
+
+## Reference a Registry Schema from AsyncAPI
+
+Use the `<SCHEMA_REGISTRY_URL>` placeholder in the schema reference. Specmatic replaces it with `schemaRegistry.url`.
+
+```text
+<SCHEMA_REGISTRY_URL>/subjects/<subject>/versions/<version>/schema
+```
+
+The Registry subject and version remain visible in the contract, while the environment-specific Registry host stays in configuration.
+
+### Avro
+
+```yaml
+components:
+  messages:
+    OrderRequest:
+      payload:
+        schemaFormat: 'application/vnd.apache.avro+json;version=1.9.0'
+        schema:
+          $ref: '<SCHEMA_REGISTRY_URL>/subjects/new-orders-value/versions/1/schema'
+```
+
+### JSON Schema Draft-07
+
+```yaml
+components:
+  messages:
+    OrderRequest:
+      payload:
+        schemaFormat: 'application/schema+json;version=draft-07'
+        schema:
+          $ref: '<SCHEMA_REGISTRY_URL>/subjects/new-orders-value/versions/1/schema'
+```
+
+Do not duplicate a Registry schema inline in AsyncAPI when using this flow. The Registry is the schema source of truth.
+
+## Subject Name Strategy
+
+Confluent's default value-subject strategy is `TopicNameStrategy`. It looks up this subject:
+
+```text
+<topic>-value
+```
+
+For example, topic `new-orders` normally uses subject `new-orders-value`, which is also the subject referenced in the AsyncAPI examples above.
+
+If your existing producer uses another strategy or subject layout, add the same strategy to its server configuration in Specmatic:
+
+```yaml
+servers:
+  - host: ${KAFKA_BROKER:localhost:9092}
+    protocol: kafka
+    client:
+      producer:
+        value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
+```
+
+Use the strategy your application already uses. Specmatic does not automatically derive it from the `$ref` subject.
+
+If publishing fails with a Registry `not found` error, the serializer may be looking up a different subject from the one referenced in AsyncAPI. Configure `value.subject.name.strategy` to match the application.
+
+## Sample Projects
+
+Both samples include Docker Compose infrastructure, schema registration, a Spring Boot service, contract tests, logs, and HTML reports.
+
+| Format | Sample | Demonstrates |
+| --- | --- | --- |
+| Avro | [specmatic-kafka-avro-sample](https://github.com/specmatic/specmatic-kafka-avro-sample) | AsyncAPI Registry `$ref`, Avro schema registration, Avro producer/consumer, and contract testing. |
+| JSON Schema Draft-07 | [specmatic-kafka-json-schema-sample](https://github.com/specmatic/specmatic-kafka-json-schema-sample) | JSON Schema registration, Registry `$ref`, Confluent serialization, and field-level validation. |
+
+Start with the sample README matching your serialization format. It contains both Gradle and Docker Compose contract-test commands, and identifies the generated HTML report.
+
+## Run Contract Tests
+
+Start Kafka, Schema Registry, and your service. Then run:
+
+```bash
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
+```
+
+For Docker Compose setup, test configuration, and reports, use the sample project matching your serialization format.
+
+## Troubleshooting
+
+| Symptom | What to check |
+| --- | --- |
+| `Schema Registry properties are not provided` | Add `runOptions.asyncapi.schemaRegistry`. |
+| `Schema registry URL is not provided` | Set `schemaRegistry.url`. |
+| Schema fetch fails | Use `<SCHEMA_REGISTRY_URL>` in `$ref`; verify endpoint path, network access, and Basic fetch credentials. |
+| Registry `not found` while publishing | Check that `$ref` subject matches serializer subject strategy; configure `value.subject.name.strategy` when it does not. |
+
+For Kafka broker configuration, mocking, and the Kafka HTTP verification API, see [Kafka](/supported_protocols/asyncapi/kafka).
