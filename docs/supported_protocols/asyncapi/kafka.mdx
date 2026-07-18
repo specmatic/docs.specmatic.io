@@ -67,6 +67,12 @@ Notes:
 - `address` is the Kafka topic name.
 - Message headers and payload schema are validated against the contract.
 
+## Confluent Schema Registry
+
+For Kafka values serialized through Confluent Schema Registry, use registry-backed Avro or JSON Schema Draft-07 payloads in AsyncAPI. Specmatic fetches the registered schema, validates decoded fields, and uses Confluent serializers when sending generated messages.
+
+See [Confluent Schema Registry](/features/asyncapi/confluent-schema-registry) for `specmatic.yaml`, AsyncAPI `$ref`, authentication, subject-name strategy, troubleshooting, and working samples.
+
 ## Start The Kafka Mock
 
 Create `specmatic.yaml`:
