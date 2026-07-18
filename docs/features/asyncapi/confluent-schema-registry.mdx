@@ -52,19 +52,22 @@ systemUnderTest:
 For an authenticated Registry, add fetch credentials and Confluent serializer client properties under `runOptions.asyncapi`. For example, the samples use:
 
 ```yaml
-schemaRegistry:
-  kind: CONFLUENT
-  url: ${SCHEMA_REGISTRY_URL}
-  username: ${SCHEMA_REGISTRY_USERNAME}
-  password: ${SCHEMA_REGISTRY_PASSWORD}
-
-servers:
-  - host: ${KAFKA_BROKER:localhost:9092}
-    protocol: kafka
-    client:
-      producer:
-        basic.auth.credentials.source: USER_INFO
-        basic.auth.user.info: ${SCHEMA_REGISTRY_USERNAME}:${SCHEMA_REGISTRY_PASSWORD}
+runOptions:
+      asyncapi:
+        type: test
+        schemaRegistry:
+          kind: CONFLUENT
+          url: ${SCHEMA_REGISTRY_URL}
+          username: ${SCHEMA_REGISTRY_USERNAME}
+          password: ${SCHEMA_REGISTRY_PASSWORD}
+        
+        servers:
+          - host: ${KAFKA_BROKER:localhost:9092}
+            protocol: kafka
+            client:
+              producer:
+                basic.auth.credentials.source: USER_INFO
+                basic.auth.user.info: ${SCHEMA_REGISTRY_USERNAME}:${SCHEMA_REGISTRY_PASSWORD}
 ```
 
 Use your Registry provider's required Kafka serializer properties if they differ.
