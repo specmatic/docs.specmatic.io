@@ -6,7 +6,7 @@ import {CommercialBadge} from "../../src/components/CommercialBadge";
 
 # Matchers <CommercialBadge/>
 
-Specmatic matchers let an example accept more than one concrete value while still staying within the contract.
+Specmatic's matchers let an example make specific assertions about values beyond what's in the specification.
 
 ## Matchers in test and mock
 
@@ -60,24 +60,482 @@ In service virtualization, Specmatic first validates the incoming request agains
 
 In this example, the mock responds with the `200` response in the example only when the incoming request contains a `status` value that matches the regex `approved|verified`.
 
-## Full list of matcher parameters
+## Matching exact values
 
-**Syntax:** `$match(exact: <exact-value>, regex: <regular-expression>, dataType: <specmatic-datatype>, times: <number>, value: each|any)`
+`exact` accepts an inline value or an explicit data reference. The matcher asserts that the payload matches exactly the given specific value.
 
-The following parameters are supported in both test and mock:
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/exact-values"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "status": "$match(exact: $(data.scalarValue))",
+      "profile": "$match(exact: $(data.objectValue))",
+      "scores": "$match(exact: $(data.arrayValue))"
+    }
+  },
+  "data": {
+    "scalarValue": "active",
+    "objectValue": {
+      "id": 101,
+      "name": "Jack"
+    },
+    "arrayValue": [
+      10,
+      20
+    ]
+  }
+}
+```
 
-* `exact`: require one exact value (e.g. `{"message": "$match(exact: hello)}"`)
-* `pattern`: require a value that matches the given regular expression (e.g. `{"status": "$match(pattern: approved|verified)"}`)
-* `dataType`: accept values matching a Specmatic datatype such as `string` or `integer` (e.g. `{"id": "$match(dataType: integer)"}`)
+In this external example, `$(data.scalarValue)`, `$(data.objectValue)`, and `$(data.arrayValue)` read values from the top-level `data` object. The leading `data.` identifies that object, so references such as `$(scalarValue)` and `$(product)` are not equivalent matcher-data references.
 
-The following parameters are supported for transient examples used for mocking, and are explained in the following section:
-* `times`: limit successful matches before exhaustion
-* `value: each`: maintain an exhaustion counter per unique value
-* `value: any`: maintain one exhaustion counter across all values
+`exact` performs literal deep equality:
+
+- Scalars must have the same value and type.
+- Arrays must have the same length, order, item types, and nested values.
+- Objects must have the same property set, property types, and nested values. An additional actual property causes a mismatch.
+
+Matcher-looking strings nested inside a referenced exact value remain literal strings. For example, a referenced value of `"$match(dataType: integer)"` matches only that exact string; it is not recursively evaluated as a matcher.
+
+Inline operands use the same deep-equality semantics. For example, `$match(exact: 10)` matches the scalar value `10`, and `$match(exact: [10, 20])` matches that complete array. When an inline object appears inside an external-example JSON string, escape its quotes: `$match(exact: {\"id\": 10, \"name\": \"Jack\"})`.
+
+## Matching values in objects
+
+Use `contains` to assert that an object includes a specific set of matching properties while allowing the payload to include additional properties. Use `exact` instead when the complete object must be identical.
+
+### Matching object properties
+
+`contains` asserts that every property specified in the matcher object exists in the payload object and has a matching value.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/products/101"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "product": "$match(contains: $(data.product))"
+    }
+  },
+  "data": {
+    "product": {
+      "id": 101,
+      "name": "Desk lamp"
+    }
+  }
+}
+```
+
+Here, `$(data.product)` supplies the properties and values that `contains` checks.
+
+This payload matches because both specified properties have the expected values. The additional `stock` property is allowed:
+
+```json
+{
+  "product": {
+    "id": 101,
+    "name": "Desk lamp",
+    "stock": 8
+  }
+}
+```
+
+This payload does not match because the plain `id` value specified in the matcher object is compared exactly:
+
+```json
+{
+  "product": {
+    "id": 202,
+    "name": "Desk lamp",
+    "stock": 8
+  }
+}
+```
+
+For object payload matching, `contains` must resolve to one object. Array-only parameters such as `atLeast`, `atMost`, `count`, `atIndex`, `inFirst`, `inLast`, `minLength`, `maxLength`, `length`, `contiguous`, and `order` are not accepted.
+
+### Nested matchers
+
+The matcher object used with `contains` can combine fixed property values with nested matcher assertions.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/featured-product"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "product": "$match(contains: $(data.product))"
+    }
+  },
+  "data": {
+    "product": {
+      "id": "$match(dataType: integer)",
+      "details": {
+        "category": "$match(pattern: lighting|furniture)",
+        "available": true
+      }
+    }
+  }
+}
+```
+
+For example, an integer `id`, a `category` of `"lighting"` or `"furniture"`, and the exact value `true` for `available` satisfy all the properties specified in this matcher object. Additional properties at either object level remain allowed.
+
+Specmatic evaluates nested `$match(...)` expressions in an object referenced by `contains` instead of treating them as plain strings. This recursive evaluation applies to `contains`, not to the literal referenced values used by `exact`.
+
+## Matching arrays
+
+Use array matchers to assert which items appear, how many items match, where they appear, and the total array length.
+
+### Matching scalar patterns
+
+For a required scalar item, `contains` accepts a built-in Specmatic pattern such as `(integer)`.
+
+This external example requires at least one integer rating:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/catalog"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "ratings": "$match(contains: (integer))"
+    }
+  }
+}
+```
+
+The payload `{"ratings": [4, 5]}` matches. The payload `{"ratings": ["high", "low"]}` does not. Use `exact` when the whole scalar or array value must be equal; use `contains` when an array item should satisfy a pattern or the properties specified in a matcher object.
+
+### Matching objects
+
+`contains` can require at least one payload array item to contain every property specified in a matcher object, with matching values.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/catalog"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "products": "$match(contains: $(data.product))"
+    }
+  },
+  "data": {
+    "product": {
+      "category": "lighting",
+      "price": "$match(dataType: number)"
+    }
+  }
+}
+```
+
+Here, `$(data.product)` resolves to the `product` object in the external example's top-level `data` object. Specmatic compares each payload array item with the properties in that matcher object. All specified properties must match, nested matchers are evaluated, and extra properties on the payload item are allowed.
+
+This array matches because one item satisfies every property in the matcher object:
+
+```json
+[
+  {
+    "category": "furniture",
+    "price": 80
+  },
+  {
+    "id": 101,
+    "category": "lighting",
+    "price": 35,
+    "stock": 8
+  }
+]
+```
+
+This array does not match because no single item has both the required category and a numeric price:
+
+```json
+[
+  {
+    "category": "lighting",
+    "price": "unknown"
+  },
+  {
+    "category": "furniture",
+    "price": 35
+  }
+]
+```
+
+### Matching alternatives
+
+`contains` can accept any one of several patterns or matcher objects, so an array item may satisfy whichever alternative fits.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/search-results"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "results": "$match(contains: [(integer), (boolean), $(data.featuredProduct)])"
+    }
+  },
+  "data": {
+    "featuredProduct": {
+      "featured": true
+    }
+  }
+}
+```
+
+The inline list gives `contains` OR semantics. The documented alternatives are built-in patterns or explicit data references that resolve to an object or array. For example, `42`, `true`, and `{"featured": true, "id": 101}` each satisfy one of the non-array alternatives above.
+
+A literal nested array alternative, such as `$match(contains: [[1, 2], (integer)])`, is invalid. Put an array-valued operand under `data` and refer to it explicitly. An array-valued reference has the matcher-item semantics described in [Matching an array of matcher items](#matching-an-array-of-matcher-items), including when it appears as an alternative.
+
+### Controlling the number of matches
+
+Use `atLeast`, `atMost`, or `count` to control how many **distinct actual array items** must match. These values do not assert the total array length.
+
+For a single operand or non-array-valued alternatives, `contains` defaults to `atLeast: 1`.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/scores"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "scores": "$match(contains: (integer), atLeast: 2, atMost: 4)"
+    }
+  }
+}
+```
+
+The inclusive range above accepts between two and four matching array items. `atLeast` cannot exceed `atMost`.
+
+Use `count` for an exact number of matching items:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/orders"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "states": "$match(contains: (string), count: 2)"
+    }
+  }
+}
+```
+
+`count` cannot be combined with `atLeast` or `atMost`. All three parameters accept nonnegative integers, including zero. For example, `atMost: 0` asserts that no item matches the operand.
+
+### Matching at an index
+
+`atIndex` is zero-based and requires the actual item at that index to match the `contains` operand.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/stages"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "stages": "$match(contains: (integer), atIndex: 1)"
+    }
+  }
+}
+```
+
+`["created", 20, "shipped"]` matches, while `[20, "created", "shipped"]` does not.
+
+### Matching within an array range
+
+Use `inFirst` or `inLast` to restrict matching to the beginning or end of the actual array.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/recent-readings"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "readings": "$match(contains: (integer), inLast: 3, atLeast: 2)"
+    }
+  }
+}
+```
+
+`inFirst: N` selects the first `N` items, while `inLast: N` selects the last `N` items. The two parameters cannot be combined, and match cardinality is evaluated only within the selected range.
+
+`atIndex` is relative to the selected range. For example, `$match(contains: (integer), inLast: 3, atIndex: 0)` checks whether the first item among the last three items is an integer. A diagnostic can still identify that item's original array index.
+
+If `N` is larger than the array, the selected range is clamped to the entire array. A value of zero selects no items. Both parameters accept only nonnegative integers.
+
+### Array length assertions
+
+`minLength`, `maxLength`, and `length` assert the total size of the actual array. They are independent of `inFirst` and `inLast`; selecting a search range does not change the length being asserted.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/queue"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "items": "$match(contains: (string), inFirst: 3, atLeast: 1, minLength: 3, maxLength: 10)"
+    }
+  }
+}
+```
+
+Use `length` to require an exact total size, including an empty array:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/completed-jobs"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "jobs": "$match(length: 0)"
+    }
+  }
+}
+```
+
+`length` cannot be combined with `minLength` or `maxLength`. `minLength` cannot exceed `maxLength`. All three parameters accept nonnegative integers, including zero.
+
+### Matching an array of matcher items
+
+`contains` can require a collection of matcher items to be present in the actual array.
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/subscriptions"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "subscriptions": "$match(contains: $(data.requiredItems))"
+    }
+  },
+  "data": {
+    "requiredItems": [
+      "$match(dataType: string)",
+      {
+        "tier": "premium",
+        "id": "$match(dataType: integer)"
+      }
+    ]
+  }
+}
+```
+
+When `contains` resolves through `data` to an array, every matcher item in that referenced array must match a **different** actual array item.
+
+For example, this actual array matches because each referenced matcher item has its own match:
+
+```json
+[
+  "starter",
+  {
+    "tier": "premium",
+    "id": 42,
+    "active": true
+  }
+]
+```
+
+#### Contiguous and ordered matching
+
+Use `contiguous` and `order` to control whether the required matcher items must be adjacent or appear in a particular order.
+
+| `contiguous` | `order` | Behavior |
+| --- | --- | --- |
+| `true` | `exact` | Match one adjacent block in the same order as the matcher items. |
+| `false` | `exact` | Match in the same order, with unrelated actual items allowed between matches. |
+| `true` | `any` | Match one adjacent block, allowing the matcher items to appear in any order within it. |
+| `false` | `any` | Match anywhere in the array and in any order. |
+
+For example:
+
+```json
+{
+  "http-request": {
+    "method": "GET",
+    "path": "/order-progress"
+  },
+  "http-response": {
+    "status": 200,
+    "body": {
+      "stages": "$match(contains: $(data.requiredStages), contiguous: false, order: exact)"
+    }
+  },
+  "data": {
+    "requiredStages": [
+      {
+        "stage": "created"
+      },
+      {
+        "stage": "verified"
+      },
+      {
+        "stage": "shipped"
+      }
+    ]
+  }
+}
+```
+
+`[{"stage": "created"}, {"stage": "paid"}, {"stage": "verified"}, {"stage": "packed"}, {"stage": "shipped"}]` matches because the required stage objects appear in exact order, even though they are not contiguous.
+
+`inFirst` or `inLast` can restrict the range searched for the matcher items before `contiguous` and `order` are applied.
+
+#### Defaults and keyword restrictions
+
+For an array-valued `contains` operand, `contiguous` defaults to `false` and `order` defaults to `any`.
+
+The explicit cardinality parameters `atLeast`, `atMost`, and `count`, and the position parameter `atIndex`, are not currently supported when `contains` resolves to an array. This restriction also applies when an alternative resolves to an array.
+
+An empty referenced matcher array is invalid. Use `$match(length: 0)` to assert that the actual array is empty.
+
+`contiguous` and `order` apply only when `contains` resolves to an array. They do not apply to a single operand or to alternatives that all resolve to non-array values.
 
 ## Transient examples
 
 The `times` option is available only in **transient mock examples**. It controls how many times a matcher can succeed before it is exhausted.
+
+`times` and `value` may be combined with `contains` as well as with `exact`, `pattern`, and `dataType`. With `$match(contains: ..., value: each, times: 3)`, exhaustion is tracked for the value at that matcher location: each distinct value has its own counter. With `value: any`, all values at that location share one counter.
 
 ### `value: each`
 
@@ -307,3 +765,27 @@ For example:
 ```
 
 In this example, the matcher will only match values that are either "hello" or "world". Each of these values can be matched twice before exhaustion occurs. So "hello" can be matched twice and "world" can also be matched twice, but after that, the example will no longer match incoming requests with those values.
+
+## Full list of matcher parameters
+
+All matcher parameters use the form `$match(parameter: value, ...)`.
+
+| Parameter | Description | Values and defaults | Compatibility and restrictions |
+| --- | --- | --- | --- |
+| `exact` | Requires literal deep equality for the complete value. | An inline scalar, array, or object value, or an explicit `$(data.name)` reference resolving to one of those values. Arrays require the same length, order, types, and nested values; objects require the same property set, types, and nested values. | Extra object properties do not match. Nested matcher-looking strings in a referenced value remain literal and are not evaluated. It can be combined with transient-only `times` and `value`. |
+| `pattern` | Requires a scalar value that matches a regular expression. | A regular expression, such as `approved\|verified`. | Scalar matcher. It can be combined with transient-only `times` and `value`. |
+| `dataType` | Requires a value matching a Specmatic datatype. | A supported datatype such as `string`, `number`, or `integer`. | Scalar matcher. It can be combined with transient-only `times` and `value`. |
+| `contains` | Requires every property specified in a matcher object to have a matching value in a payload object, or flexibly matches items in an array. | A built-in pattern, explicit `$(data.name)` reference to an object or array, or inline alternatives list. For a single operand or non-array-valued alternatives, the default is `atLeast: 1`. | Object payloads require one object and reject array-only parameters. Literal nested array alternatives are invalid. Array-valued references use matcher-item semantics. |
+| `atLeast` | Sets the minimum number of distinct matching actual array items. | A nonnegative integer. Defaults to `1` for a single `contains` operand or non-array-valued alternatives. | Array `contains` only. May be combined with `atMost`; must not exceed it. Mutually exclusive with `count`. Unsupported with an array-valued operand or alternative. |
+| `atMost` | Sets the maximum number of distinct matching actual array items. | A nonnegative integer. No default maximum. | Array `contains` only. May be combined with `atLeast`. Mutually exclusive with `count`. Unsupported with an array-valued operand or alternative. |
+| `count` | Sets the exact number of distinct matching actual array items. | A nonnegative integer. | Array `contains` only. Mutually exclusive with `atLeast` and `atMost`. Unsupported with an array-valued operand or alternative. |
+| `atIndex` | Requires the item at one zero-based index to match. | A nonnegative integer. Relative to an `inFirst` or `inLast` selection when present. | Array `contains` only. Unsupported with an array-valued operand or alternative. |
+| `inFirst` | Limits matching to the first `N` actual array items. | A nonnegative integer. Values larger than the array are clamped; `0` selects no items. | Array `contains` only. Mutually exclusive with `inLast`. Does not change total-length assertions. |
+| `inLast` | Limits matching to the last `N` actual array items. | A nonnegative integer. Values larger than the array are clamped; `0` selects no items. | Array `contains` only. Mutually exclusive with `inFirst`. Does not change total-length assertions. |
+| `minLength` | Sets the minimum total actual array size. | A nonnegative integer. | Array matcher. May be combined with `maxLength`; must not exceed it. Mutually exclusive with `length`. Independent of `inFirst` and `inLast`. |
+| `maxLength` | Sets the maximum total actual array size. | A nonnegative integer. | Array matcher. May be combined with `minLength`. Mutually exclusive with `length`. Independent of `inFirst` and `inLast`. |
+| `length` | Sets the exact total actual array size. | A nonnegative integer. | Array matcher. Mutually exclusive with `minLength` and `maxLength`. Independent of `inFirst` and `inLast`. |
+| `contiguous` | Controls whether matcher items must match adjacent actual items. | `true` or `false`; defaults to `false`. | Only when `contains` resolves to an array, including an array-valued alternative. |
+| `order` | Controls whether matcher items must match in their listed order. | `exact` or `any`; defaults to `any`. | Only when `contains` resolves to an array, including an array-valued alternative. |
+| `times` | Limits successful matches before matcher exhaustion. | A number of successful matches. | Transient mock examples only. Used with `value`; it may accompany `exact`, `pattern`, `dataType`, or `contains`. |
+| `value` | Chooses how exhaustion is counted. | `each` keeps a counter for each unique value; `any` shares one counter across values. | Transient mock examples only. Used with `times`; it may accompany `exact`, `pattern`, `dataType`, or `contains`. |
