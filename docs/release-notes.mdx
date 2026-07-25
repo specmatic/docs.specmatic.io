@@ -6,13 +6,33 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
-# 1.21.1 (2026-07-17) (Hotfix)
+## 1.22.0 (2026-07-25)
+
+### Added
+
+- Added load-time validation for `before` and `after` fixtures in external examples, with fuzzy matching for clearer errors.
+- Added ability to rename example files directly in Studio from the examples tab for OpenAPI and AsyncAPI specifications.
+- Added Swagger views for OpenAPI specifications in Studio and the ability to switch between editor and view, with auto-lint when a dependency changes.
+- Added AsyncAPI example structure validation including fixture controls and payload structure for external examples.
+- Added matcher support for JSON object and array containment, including mixed operands, array slicing, length and cardinality constraints, and exact matcher references resolved from example data.
+
+### Changed
+
+- Fixed: Multipart schema being used to generate filename
+- Improved backward compatibility check logs for changed externalised examples.
+- Fixed the backward compatibility check file count to exclude externalised examples that are not checked directly.
+- Updated GraphQL, gRPC, and AsyncAPI backward compatibility checks to identify externalised examples in conventional `*_examples` directories.
+- Fixed Studio example structure repairs so template values are preserved.
+- Improved Insights-based backward-compatibility check for OpenAPI by accounting for the content types.
+- Improved Insights-based backward-compatibility check for AsyncAPI by accounting for the consumer/provider send/receive action direction.
+
+## 1.21.1 (2026-07-17) (Hotfix)
 
 ### Changed
 
 - Fix example to operation exchange matching logic that broke retry and dlq scenario based tests
 
-# 1.21.0 (2026-07-17)
+## 1.21.0 (2026-07-17)
 
 ### Added
 
