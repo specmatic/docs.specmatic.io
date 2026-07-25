@@ -6,7 +6,7 @@ import {CommercialBadge} from "../../src/components/CommercialBadge";
 
 # Matchers <CommercialBadge/>
 
-Specmatic matchers let an example accept more than one concrete value while still staying within the contract.
+Specmatic's matchers let an example make specific assertions about values beyond what's in the specification.
 
 ## Matchers in test and mock
 
@@ -60,9 +60,9 @@ In service virtualization, Specmatic first validates the incoming request agains
 
 In this example, the mock responds with the `200` response in the example only when the incoming request contains a `status` value that matches the regex `approved|verified`.
 
-## Exact matching
+## Matching exact values
 
-`exact` accepts an inline value or an explicit data reference. Referenced values come from the external example's top-level `data` object and require the `data.` prefix.
+`exact` accepts an inline value or an explicit data reference. The matcher asserts that the payload matches exactly the given specific value.
 
 ```json
 {
@@ -92,7 +92,7 @@ In this example, the mock responds with the `200` response in the example only w
 }
 ```
 
-In this example, `$(data.scalarValue)`, `$(data.objectValue)`, and `$(data.arrayValue)` resolve respectively to scalar, object, and array values. A reference without the prefix, such as `$(scalarValue)` or `$(product)`, is not a matcher-data reference.
+In this external example, `$(data.scalarValue)`, `$(data.objectValue)`, and `$(data.arrayValue)` read values from the top-level `data` object. The leading `data.` identifies that object, so references such as `$(scalarValue)` and `$(product)` are not equivalent matcher-data references.
 
 `exact` performs literal deep equality:
 
@@ -102,15 +102,15 @@ In this example, `$(data.scalarValue)`, `$(data.objectValue)`, and `$(data.array
 
 Matcher-looking strings nested inside a referenced exact value remain literal strings. For example, a referenced value of `"$match(dataType: integer)"` matches only that exact string; it is not recursively evaluated as a matcher.
 
-Inline operands use the same deep-equality semantics. For example, `$match(exact: [10, 20])` matches that complete array. When an inline object appears inside an external-example JSON string, escape its quotes: `$match(exact: {\"id\": 10, \"name\": \"Jack\"})`.
+Inline operands use the same deep-equality semantics. For example, `$match(exact: 10)` matches the scalar value `10`, and `$match(exact: [10, 20])` matches that complete array. When an inline object appears inside an external-example JSON string, escape its quotes: `$match(exact: {\"id\": 10, \"name\": \"Jack\"})`.
 
-## Matchers for objects
+## Matching values in objects
 
-With `contains`, every property in the referenced subset template must match, while the actual object may contain additional properties. Use `exact` instead when the complete object must be identical.
+Use `contains` to assert that an object includes a specific set of matching properties while allowing the payload to include additional properties. Use `exact` instead when the complete object must be identical.
 
 ### Matching object properties
 
-With `contains`, a referenced object is a subset template. Reusable matcher values live under the external example's top-level `data` object and use the same mandatory `data.` prefix.
+`contains` asserts that every property specified in the matcher object exists in the payload object and has a matching value.
 
 ```json
 {
@@ -133,7 +133,7 @@ With `contains`, a referenced object is a subset template. Reusable matcher valu
 }
 ```
 
-Use `$match(contains: $(data.product))` against an object. The referenced `product` object is the subset template.
+Here, `$(data.product)` supplies the properties and values that `contains` checks.
 
 This payload matches because both specified properties have the expected values. The additional `stock` property is allowed:
 
@@ -147,7 +147,7 @@ This payload matches because both specified properties have the expected values.
 }
 ```
 
-This payload does not match because a plain constant in the template, `id`, is compared exactly:
+This payload does not match because the plain `id` value specified in the matcher object is compared exactly:
 
 ```json
 {
@@ -163,7 +163,7 @@ For object payload matching, `contains` must resolve to one object. Array-only p
 
 ### Nested matchers
 
-A referenced object used with `contains` may contain `$match(...)` expressions of its own. Specmatic evaluates these nested expressions instead of treating them as plain strings. This recursive evaluation applies to `contains`, not to the literal referenced values used by `exact`.
+The matcher object used with `contains` can combine fixed property values with nested matcher assertions.
 
 ```json
 {
@@ -189,11 +189,13 @@ A referenced object used with `contains` may contain `$match(...)` expressions o
 }
 ```
 
-For example, an integer `id`, a `category` of `"lighting"` or `"furniture"`, and the exact value `true` for `available` satisfy this template. Additional properties at either object level remain allowed.
+For example, an integer `id`, a `category` of `"lighting"` or `"furniture"`, and the exact value `true` for `available` satisfy all the properties specified in this matcher object. Additional properties at either object level remain allowed.
 
-## Matchers for arrays
+Specmatic evaluates nested `$match(...)` expressions in an object referenced by `contains` instead of treating them as plain strings. This recursive evaluation applies to `contains`, not to the literal referenced values used by `exact`.
 
-Array matchers can check for individual items, count how many items match, restrict the part of the array to search, assert the total array length, or match a collection of referenced matcher items.
+## Matching arrays
+
+Use array matchers to assert which items appear, how many items match, where they appear, and the total array length.
 
 ### Matching scalar patterns
 
@@ -216,11 +218,11 @@ This external example requires at least one integer rating:
 }
 ```
 
-The payload `{"ratings": [4, 5]}` matches. The payload `{"ratings": ["high", "low"]}` does not. Use `exact` when the whole scalar or array value must be equal; use `contains` when an array item should satisfy a pattern or subset template.
+The payload `{"ratings": [4, 5]}` matches. The payload `{"ratings": ["high", "low"]}` does not. Use `exact` when the whole scalar or array value must be equal; use `contains` when an array item should satisfy a pattern or the properties specified in a matcher object.
 
 ### Matching objects
 
-When a data reference resolves to an object, each actual array item is compared with that object as a subset template. All specified properties must match, nested matchers are evaluated, and extra properties on the actual item are allowed.
+`contains` can require at least one payload array item to contain every property specified in a matcher object, with matching values.
 
 ```json
 {
@@ -243,7 +245,9 @@ When a data reference resolves to an object, each actual array item is compared 
 }
 ```
 
-This array matches because one item satisfies the complete subset template:
+Here, `$(data.product)` resolves to the `product` object in the external example's top-level `data` object. Specmatic compares each payload array item with the properties in that matcher object. All specified properties must match, nested matchers are evaluated, and extra properties on the payload item are allowed.
+
+This array matches because one item satisfies every property in the matcher object:
 
 ```json
 [
@@ -277,7 +281,7 @@ This array does not match because no single item has both the required category 
 
 ### Matching alternatives
 
-An inline list gives `contains` OR semantics: an actual array item matches when it satisfies any one alternative.
+`contains` can accept any one of several patterns or matcher objects, so an array item may satisfy whichever alternative fits.
 
 ```json
 {
@@ -299,15 +303,15 @@ An inline list gives `contains` OR semantics: an actual array item matches when 
 }
 ```
 
-The documented alternatives are built-in patterns or explicit data references that resolve to an object or array. For example, `42`, `true`, and `{"featured": true, "id": 101}` each satisfy one of the non-array alternatives above.
+The inline list gives `contains` OR semantics. The documented alternatives are built-in patterns or explicit data references that resolve to an object or array. For example, `42`, `true`, and `{"featured": true, "id": 101}` each satisfy one of the non-array alternatives above.
 
 A literal nested array alternative, such as `$match(contains: [[1, 2], (integer)])`, is invalid. Put an array-valued operand under `data` and refer to it explicitly. An array-valued reference has the matcher-item semantics described in [Matching an array of matcher items](#matching-an-array-of-matcher-items), including when it appears as an alternative.
 
 ### Controlling the number of matches
 
-For a single operand or non-array-valued alternatives, `contains` defaults to `atLeast: 1`.
-
 Use `atLeast`, `atMost`, or `count` to control how many **distinct actual array items** must match. These values do not assert the total array length.
+
+For a single operand or non-array-valued alternatives, `contains` defaults to `atLeast: 1`.
 
 ```json
 {
@@ -368,7 +372,7 @@ Use `count` for an exact number of matching items:
 
 ### Matching within an array range
 
-Use `inFirst: N` or `inLast: N` to select the first or last `N` actual array items before applying `contains`. The two parameters cannot be combined. Match cardinality is evaluated only within the selected range.
+Use `inFirst` or `inLast` to restrict matching to the beginning or end of the actual array.
 
 ```json
 {
@@ -384,6 +388,8 @@ Use `inFirst: N` or `inLast: N` to select the first or last `N` actual array ite
   }
 }
 ```
+
+`inFirst: N` selects the first `N` items, while `inLast: N` selects the last `N` items. The two parameters cannot be combined, and match cardinality is evaluated only within the selected range.
 
 `atIndex` is relative to the selected range. For example, `$match(contains: (integer), inLast: 3, atIndex: 0)` checks whether the first item among the last three items is an integer. A diagnostic can still identify that item's original array index.
 
@@ -429,7 +435,7 @@ Use `length` to require an exact total size, including an empty array:
 
 ### Matching an array of matcher items
 
-When `contains` resolves through `data` to an array, every matcher item in that referenced array must match a **different** actual array item.
+`contains` can require a collection of matcher items to be present in the actual array.
 
 ```json
 {
@@ -455,6 +461,8 @@ When `contains` resolves through `data` to an array, every matcher item in that 
 }
 ```
 
+When `contains` resolves through `data` to an array, every matcher item in that referenced array must match a **different** actual array item.
+
 For example, this actual array matches because each referenced matcher item has its own match:
 
 ```json
@@ -470,7 +478,7 @@ For example, this actual array matches because each referenced matcher item has 
 
 #### Contiguous and ordered matching
 
-`contiguous` controls whether the matching actual items must be adjacent. `order` controls whether they must appear in the same order as the referenced matcher items.
+Use `contiguous` and `order` to control whether the required matcher items must be adjacent or appear in a particular order.
 
 | `contiguous` | `order` | Behavior |
 | --- | --- | --- |
@@ -767,7 +775,7 @@ All matcher parameters use the form `$match(parameter: value, ...)`.
 | `exact` | Requires literal deep equality for the complete value. | An inline scalar, array, or object value, or an explicit `$(data.name)` reference resolving to one of those values. Arrays require the same length, order, types, and nested values; objects require the same property set, types, and nested values. | Extra object properties do not match. Nested matcher-looking strings in a referenced value remain literal and are not evaluated. It can be combined with transient-only `times` and `value`. |
 | `pattern` | Requires a scalar value that matches a regular expression. | A regular expression, such as `approved\|verified`. | Scalar matcher. It can be combined with transient-only `times` and `value`. |
 | `dataType` | Requires a value matching a Specmatic datatype. | A supported datatype such as `string`, `number`, or `integer`. | Scalar matcher. It can be combined with transient-only `times` and `value`. |
-| `contains` | Matches an object subset template or flexibly matches items in an array. | A built-in pattern, explicit `$(data.name)` reference to an object or array, or inline alternatives list. For a single operand or non-array-valued alternatives, the default is `atLeast: 1`. | Object payloads require one object and reject array-only parameters. Literal nested array alternatives are invalid. Array-valued references use matcher-item semantics. |
+| `contains` | Requires every property specified in a matcher object to have a matching value in a payload object, or flexibly matches items in an array. | A built-in pattern, explicit `$(data.name)` reference to an object or array, or inline alternatives list. For a single operand or non-array-valued alternatives, the default is `atLeast: 1`. | Object payloads require one object and reject array-only parameters. Literal nested array alternatives are invalid. Array-valued references use matcher-item semantics. |
 | `atLeast` | Sets the minimum number of distinct matching actual array items. | A nonnegative integer. Defaults to `1` for a single `contains` operand or non-array-valued alternatives. | Array `contains` only. May be combined with `atMost`; must not exceed it. Mutually exclusive with `count`. Unsupported with an array-valued operand or alternative. |
 | `atMost` | Sets the maximum number of distinct matching actual array items. | A nonnegative integer. No default maximum. | Array `contains` only. May be combined with `atLeast`. Mutually exclusive with `count`. Unsupported with an array-valued operand or alternative. |
 | `count` | Sets the exact number of distinct matching actual array items. | A nonnegative integer. | Array `contains` only. Mutually exclusive with `atLeast` and `atMost`. Unsupported with an array-valued operand or alternative. |
