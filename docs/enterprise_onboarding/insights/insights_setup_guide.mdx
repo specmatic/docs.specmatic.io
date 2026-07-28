@@ -1,6 +1,7 @@
 ---
 title: Insights Set Up Guide
-sidebar_position: 2
+sidebar_position: 6
+slug: /enterprise_onboarding/insights/setup
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -11,34 +12,7 @@ import TabItem from '@theme/TabItem';
 
 ## Overview
 
-This guide provides step-by-step instructions for integrating Specmatic Insights into your API ecosystem. It is intended for developers and testers adopting contract-driven development and looking to visualize and monitor their microservices architecture. This guide will help you set up, configure, and troubleshoot Specmatic Insights.
-
-## Introduction
-
-Specmatic Insights is a powerful tool that aggregates Specmatic reports from various environments such as your CI/CD pipelines and visualizes how your organization's microservices, microfrontends & clients interact with each other. This guide will walk you through the setup process and help you leverage the full potential of Specmatic Insights.
-
-### Features
-
-Specmatic Insights offers several key features:
-
-- View your service dependency graph in real-time as your CI builds run
-- Track CDD (Contract-Driven Development) adoption progress in your organization
-- Identify dependencies between services
-- Monitor API coverage and stub usage of your services
-
-Here are some examples of what you can expect to see in Specmatic Insights:
-
-![Insights Dashboard](/img/insights_feature_1.png)
-
-Additionally, the dashboard provides a comprehensive overview of your API ecosystem, offering valuable insights such as:
-
-- Identify circular dependencies in your service architecture
-- Pinpoint single points of failure or congestion points in your architecture
-- The proportion of operations used by both providers and consumers
-- Operations used exclusively for testing and stubbing
-- Overall API coverage
-
-![Insights Dashboard](/img/insights_feature_2.png)
+This guide explains how to integrate Specmatic Insights into your API ecosystem. It covers CI/CD report publishing, configuration, visualization, proxy settings, and troubleshooting for teams using contract-driven development.
 
 ## Prerequisites
 
@@ -135,24 +109,6 @@ Once your CI/CD pipelines are set up and executed, you should be able to view yo
 1. Log in to your Specmatic Insights account.
 2. After successful login, you will automatically land on the main dashboard.
 3. Now, you should see a visualization of your services and their dependencies.
-
-For example, if you've been following the Order example, your service mesh might look like this:
-
-![Petstore Service Mesh](/img/insights_dashboard_1.png)
-
-### Understanding the Dashboard
-
-The Specmatic Insights dashboard provides several key pieces of information:
-
-- **Service Dependency Graph**: Shows how your services are interconnected.
-- **API Coverage**: Indicates how much of your API is covered by tests and contracts.
-- **Operations Usage**: Breaks down operations used by both providers and consumers, as tests only, and as stubs only.
-
-For a detailed explanation of the stats summary cards and how the percentages are calculated, see [Insights Stats Overview](/enterprise_onboarding/insights_stats_overview).
-
-Here's an example of what you might see if you have followed the instructions and have been able to set up insights
-
-![Petstore Dashboard](/img/insights_dashboard_2.png)
 
 ## Next Steps
 

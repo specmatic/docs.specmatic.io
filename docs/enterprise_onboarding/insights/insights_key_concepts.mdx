@@ -1,0 +1,142 @@
+---
+title: Insights Key Concepts
+sidebar_position: 2
+slug: /enterprise_onboarding/insights/key_concepts
+---
+
+# Insights Key Concepts
+
+This page explains how Specmatic Insights builds its contract model from central repository and service build reports.
+
+## How Insights Understands Builds
+
+Specmatic Insights accepts two kinds of builds:
+
+- `Central Repo Builds`
+- `Service Builds`
+
+These build types serve different purposes.
+
+### Central Repo Builds
+
+A central repo build describes the contract surface of your organization.
+
+It contains:
+
+- the specifications present in the central contract repository
+- metadata for each specification, such as path, method, response code, and content type for OpenAPI specs
+- the operations defined in each specification
+
+When Insights receives a central repo build, it stores it as:
+
+- a build
+- containing a set of specifications
+- where each specification contains a set of operations
+
+This becomes the reference contract snapshot against which service builds are interpreted.
+
+### Service Builds
+
+A service build describes how a particular service interacts with those specifications.
+
+Like a central repo build, a service build contains specifications. For each specification, Insights also records how the service uses it:
+
+- `tested`: operations covered by provider-side contract verification
+- `mocked`: operations used by a consumer through mocks
+
+## What Is an Operation?
+
+Insights identifies operations differently for each protocol so that the same logical contract interaction is counted consistently across central repo and service build reports.
+
+### OpenAPI
+
+An OpenAPI operation is identified by the combination of:
+
+- path
+- method
+- request content type
+- response code
+
+For example:
+
+- `GET /orders -> 200`
+- `POST /orders (application/json) -> 201`
+
+These are distinct operations.
+
+### AsyncAPI
+
+An AsyncAPI operation is identified by the combination of:
+
+- operation name
+- channel name
+- action
+
+For example:
+
+- `placeOrder` on channel `new-orders` with action `receive`
+- `placeOrder` on channel `wip-orders` with action `send`
+
+These are distinct operations. AsyncAPI relationships may therefore include channel details in Service View and Spec Repo View.
+
+### GraphQL
+
+A GraphQL operation is identified by the combination of:
+
+- operation type
+- operation name
+
+For example:
+
+- `query getOrders`
+- `mutation saveOrder`
+
+These are distinct operations.
+
+### gRPC
+
+A gRPC operation is identified by the combination of:
+
+- package name
+- service name
+- RPC name
+
+For example:
+
+- package `com.orders`, service `OrderService`, RPC `GetOrder`
+- package `com.orders`, service `OrderService`, RPC `SaveOrder`
+
+These are distinct operations.
+
+## Why This Matters
+
+All contract statistics and service relationships in Insights are based on these operation identities.
+
+For example:
+
+- contract test coverage measures central repository operations covered by provider tests
+- mock usage measures central repository operations used by consumers
+- provider-only operations are covered by providers but not used by consumers
+- consumer-only operations are used by consumers but not covered by providers
+- shared operations are both provider-tested and consumer-mocked
+
+The same operation identity lets Insights match a service build to the corresponding central repository operation, even when the provider and consumer reports come from different repositories.
+
+## Missing Providers
+
+A specification can be present in the contract baseline and used by a consumer even when Insights has not received a provider build for the service that owns it.
+
+In that case:
+
+- the specification and all its operations remain part of the contract inventory
+- provider coverage for those operations is zero
+- consumer usage can still be recorded when a consumer publishes a mock usage report
+- the operation can appear as consumer-only
+
+This is why a missing provider does not remove a specification from Stats Overview or Service View.
+
+## Related Pages
+
+- [Top-level Charts and Drill-downs](/enterprise_onboarding/insights_stats_overview)
+- [Service View](/enterprise_onboarding/insights/service_view)
+- [Spec Repo View](/enterprise_onboarding/insights/spec_repo_view)
