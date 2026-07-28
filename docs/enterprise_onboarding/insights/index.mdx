@@ -1,0 +1,60 @@
+---
+title: Specmatic Insights
+sidebar_position: 1
+slug: /enterprise_onboarding/insights/overview
+---
+
+# Specmatic Insights
+
+Specmatic Insights is a governance platform for understanding how the contracts in your organization are built, tested, consumed, and connected.
+
+It turns Specmatic build reports into an operational view of your API ecosystem: services, specifications, operations, consumers, dependencies, and the gaps between them.
+
+![Specmatic Insights overview](/img/enterprise_onboarding/insights-landing-overview.png)
+
+## A Governance Tool for Your Contract Ecosystem
+
+Insights gives engineering teams a shared view of contract-driven development across the organization. Use it to:
+
+- establish a common inventory of specifications and operations
+- map which services implement specifications and how services depend on one another
+- measure operations covered by provider contract tests
+- understand operations used by consumers through mocks
+- see which contracts are shared between providers and consumers
+- identify unused operations, unresolved usage, and consumers without provider coverage
+- define organization-wide targets for contract test coverage and mock usage
+- support conversations between provider and consumer teams with shared evidence
+
+This makes contract data useful beyond individual CI pipelines. The goal is not only to report whether a build passed, but to make the state of your organization's contracts understandable and actionable.
+
+## Explore Insights
+
+### Key Concepts
+
+Learn how Insights interprets central repository builds, service builds, operation identities, provider and consumer usage, AsyncAPI channels, and missing providers.
+
+[Read Insights Key Concepts →](/enterprise_onboarding/insights/key_concepts)
+
+### Top-level Charts and Drill-downs
+
+Review organization-wide contract metrics, weekly trends, mock usage, provider-only and consumer-only operations, shared usage, and operation-level CSV exports.
+
+[Explore Top-level Charts and Drill-downs →](/enterprise_onboarding/insights_stats_overview)
+
+### Service View
+
+Start with a service and follow its implemented specifications, consumers, dependencies, protocols, operations, channels, and unresolved usage.
+
+[Explore Service View →](/enterprise_onboarding/insights/service_view)
+
+### Spec Repo View
+
+Start with specification repositories and inspect their folder structure, operation inventory, contract test coverage, mock usage, and associated services.
+
+[Explore Spec Repo View →](/enterprise_onboarding/insights/spec_repo_view)
+
+### Set up Insights
+
+Configure CI/CD pipelines to publish central repository and service build reports, then view the resulting service ecosystem in Insights.
+
+[Read the Insights Set Up Guide →](/enterprise_onboarding/insights/setup)

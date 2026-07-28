@@ -177,7 +177,9 @@ const config = {
           { from: '/docs/contract_driven_development/generating_api_specifications/', to: '/contract_driven_development/generating_api_specifications' },
           { from: '/docs/contract_driven_development/service_virtualization/', to: '/contract_driven_development/service_virtualization' },
           // enterprise_onboarding
-          {from: '/docs/enterprise_onboarding/insights/', to: '/enterprise_onboarding/insights'},
+          {from: '/docs/enterprise_onboarding/insights/', to: '/enterprise_onboarding/insights/setup'},
+          {from: '/docs/enterprise_onboarding/insights_stats_overview/', to: '/enterprise_onboarding/insights_stats_overview'},
+          {from: '/enterprise_onboarding/insights', to: '/enterprise_onboarding/insights/setup'},
           {from: '/docs/enterprise_onboarding/license_key/', to: '/enterprise_onboarding/license_key'},
           { from: '/docs/enterprise_onboarding/offline_license_set_up/', to: '/enterprise_onboarding/offline_license_set_up' },
           { from: '/docs/enterprise_onboarding/SSO/entra-integration/', to: '/enterprise_onboarding/SSO/entra-integration' },
@@ -330,7 +332,7 @@ const config = {
               '/documentation/references/insights',
               '/documentation/references/insights.html'
             ],
-            to: '/enterprise_onboarding/insights'
+            to: '/enterprise_onboarding/insights/setup'
           },
           {
             from: [
