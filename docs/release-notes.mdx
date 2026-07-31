@@ -6,6 +6,21 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
+## 1.23.0 (2026-07-31)
+
+## Added
+
+- Async contract tests now support substitutions, including placeholder resolution in requests, response capture, and shared state across `before`, test, and `after`.
+- Added the ability to safely rename specifications and associated files in Studio, with Specmatic configuration paths updated automatically.
+- Added AsyncAPI Schema Object support for `byte` and `binary` formats, escaped JSON Pointer component references, and root-level object constraints and property overrides alongside `allOf`.
+- Added support to report the fixture execution details in AsyncAPI CTRF and HTML reports
+
+## Changed
+
+- Fixed OpenAPI `allOf` conversion so a main-schema property overrides a matching member property without generating both optional and required keys.
+- Fixed multi-spec stubs to route requests to the most specific matching base-URL path.
+- Fixed Studio reporting so contract tests whose `before` fixture fails are still included in the results.
+
 ## 1.22.0 (2026-07-25)
 
 ### Added
