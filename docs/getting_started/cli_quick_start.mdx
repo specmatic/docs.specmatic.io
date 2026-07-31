@@ -363,7 +363,7 @@ Once you restore the OpenAPI file to its [original state](#petstore-api-specific
 * Here's a detailed breakdown of the contract test:
   - **Request:** Specmatic uses the value defined for the **petId** request parameter from the `SCOOBY_200_OK` request example to make a HTTP request.
   - **Response:** In order to tie the above request with a HTTP response code in the spec, Specmatic looks for an example with same name: `SCOOBY_200_OK` under responses. In this case the response code happens to be 200. This request/response pair now forms a test case.
-  - **Response Validation:** Note that we are running the specification as a contract test here, in which we are interested in validating only the API signature and not the API logic. Hence, Specmatic does not validate the actual response values defined in the `SCOOBY_200_OK` example against the values returned by the application. It only validates the response code. However, if you do wish to validate response values, you can find more details in our discussion [here](https://github.com/specmatic/specmatic/discussions/1029).
+  - **Response Validation:** Note that the specification runs by default as a contract test, and validates only the API signature, not the API logic. This is because responses often contain ephemeral values such as dates, timestamps, ids, etc. Thus, the test does not by default validate the actual response values defined in the `SCOOBY_200_OK` example against the values returned by the application. It only validates the response code. However, Specmatic does support making specific assertions about response values using the [`matchers` feature](/features/matchers).
 
 `Scenario: GET /pets/(petid:number) -> 200 | EX:SCOOBY_200_OK has SUCCEEDED`
 
