@@ -19,6 +19,12 @@ Each Insights request combines:
 
 Authentication information is sent in headers, not in the JSON request body shown below.
 
+## What is shared
+
+The API specification files are not sent to Insights. Reports contain operation metadata derived from those files, such as paths, methods, response codes, protocol, specification path, and coverage or compatibility status.
+
+For operations that Specmatic executes using generated test data or examples, the corresponding CTRF test entry includes the generated or example-derived request and response data.
+
 ## Report sources
 
 | Command | Report sent to Insights | Artifact |
@@ -203,7 +209,7 @@ X-Auth-Token: Bearer <token>
 }
 ```
 
-`testIds` link a covered operation to its CTRF test entries. An operation can have many test IDs in a real report; this example shows only one. Authentication and session values in the test request and response are redacted.
+`testIds` link a covered operation to its CTRF test entries. An operation can have many test IDs in a real report; this example shows only one. When an operation runs using generated data or an example, its `extra.input` and `extra.outputs` send that request and response data. Authentication and session values in the example are redacted.
 
 ## Mock report payload
 
@@ -356,7 +362,7 @@ X-Auth-Token: Bearer <token>
 }
 ```
 
-`testIds` link a covered operation to its CTRF mock entries. Authentication values in the mocked request are redacted.
+`testIds` link a covered operation to its CTRF mock entries. When mock interactions use generated data or examples, their `extra.input` and `extra.outputs` send that request and response data. Authentication values in the mocked request are redacted.
 
 ## Backward compatibility report payload
 
