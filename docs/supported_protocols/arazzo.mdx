@@ -47,14 +47,14 @@ Take a look at the [Microservices with Event-Driven Architecture Sample](https:/
 When you generate workflows using Specmatic-Arazzo, two files will be created. Both files share the same prefix name to maintain their linkage as a pair:
 
 - `*.arazzo.yaml` — Contains the Arazzo workflow specification (e.g. `PlaceOrder.arazzo.yaml`)
-- `*.arazzo_inputs.json` - Contains the input data for the workflow (e.g. `PlaceOrder.arazzo_inputs.json`)
+- `*.arazzo_input.json` - Contains the input data for the workflow (e.g. `PlaceOrder.arazzo_input.json`)
 
 ### Arazzo Workflow Specification `(*.arazzo.yaml)`
 
 This file is the standard Arazzo workflow specification, detailing the flow of operations, references to API specifications, and the connections between each step.
 It encapsulates the logic of the workflow, including the "what" and the "how."
 
-### Arazzo Input Data `(*.arazzo_inputs.json)`
+### Arazzo Input Data `(*.arazzo_input.json)`
 
 This file contains the input data required for executing the workflow.
 It specifies values for parameters, request bodies, or variables needed throughout the workflow.
