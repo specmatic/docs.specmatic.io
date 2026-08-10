@@ -6,6 +6,32 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
+## 1.24.0 (2026-08-10)
+
+### Added
+
+- Added an MCP tool for running backward-compatibility checks against OpenAPI, AsyncAPI, gRPC, and GraphQL specifications.
+- Added inline OpenAPI and AsyncAPI examples to Studio’s existing example tables and grouped views, with support for viewing details and content, and validating them.
+- Added OpenID Connect security-scheme support for OpenAPI contracts, using the configured token as bearer authentication.
+- Added support for backward-compatibility check tool in MCP for OpenApi,AsyncAPI,gRPC,GraphQL specifications.
+- Added the `lint-server` command for running linter APIs over HTTP. It loads central lint configuration at startup, reuses it for lint requests, and refreshes it in the background when the remote repository changes.
+- Added `POST /lint-reports` to generate JSON lint reports for specifications fetched from a URL.
+- Added `GET /config/status` to inspect central config refresh health and `POST /config/refresh` to request an immediate refresh.
+- Added `/api-docs` for interactive Swagger UI documentation of lint server APIs.
+
+## Changed
+
+- Example files are now discovered recursively in configured example directories, including nested directories for `examples` command and `studio`.
+- Improved AsyncAPI example validation in Studio to show clearly labelled errors from the message schema(s) with the fewest mismatches when a channel supports multiple message types, while preserving authored correlation IDs.
+- Contract tests now retry documented and undocumented `429 Too Many Requests` responses. Retry delays honor `Retry-After` values expressed as seconds or HTTP dates while retaining compatibility with ISO-8601 timestamps, and every request and response attempt remains available to reporting integrations such as Studio.
+- Strict-mode OpenAPI loading now supports response examples for operations that have no request parameters or request body in the spec. Specmatic uses the first named example from the first `2xx` response and reports clearer warnings for examples it cannot select.
+- Coverage reports now preserve an OpenAPI `default` response as `default` when the system under test returns a status that is not explicitly declared.
+- Backward-compatibility checks now send each affected operation to Specmatic Insights only once when multiple generated failures refer to the same operation.
+- Fixed nullable OpenAPI responses so top-level JSON `null` values are matched as JSON nulls without changing `null`-like scalar parameter values.
+- Improved multipart contract-test and mock behavior so specification-derived parts no longer assume filenames, example-provided filenames remain enforceable, and declared part media types are validated consistently.
+- Standardized optional XML attribute handling across OpenAPI and WSDL parsing and preserved source locations for OpenAPI validation diagnostics.
+- Updated the bundled LZ4 Java runtime to `1.11.1` to address CVE-2026-59949, which could crash the JVM when native XXHash APIs received invalid byte-array ranges.
+
 ## 1.22.0 (2026-07-25)
 
 ### Added
