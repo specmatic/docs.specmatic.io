@@ -13,6 +13,7 @@ Most APIs use authentication, and sometimes authorization. Specmatic reads authe
 Specmatic supports these OpenAPI security schemes:
 
 - **OAuth2**
+- **OpenID Connect**
 - **API Key**
 - **HTTP Bearer**
 - **HTTP Basic**
@@ -50,7 +51,7 @@ Provide the **raw credential value**, not the full HTTP header.
 Specmatic will construct the correct header format automatically based on the security scheme type.
 
 Examples:
-- **OAuth2 / Bearer**: provide only the token, without `Bearer `.
+- **OAuth2 / OpenID Connect / Bearer**: provide only the token, without `Bearer `.
 - **Basic**: provide only the Base64 credential, without `Basic `.
 - **API Key**: provide only the key value.
 
@@ -67,6 +68,9 @@ specs:
         oAuth2AuthCode:
           type: oauth2
           token: ${OAUTH_TOKEN:OAUTH1234}
+        oidcAuth:
+          type: openIdConnect
+          token: ${OIDC_TOKEN:OIDC1234}
         basicAuth:
           type: basicAuth
           token: ${BASIC_AUTH_TOKEN:dXNlcjpwYXNzd29yZA==}
@@ -80,6 +84,9 @@ This lets you:
 - Map each OpenAPI security scheme to a token/key.
 - Read values from environment variables.
 - Provide defaults for local testing.
+
+For an OpenID Connect scheme, use `type: openIdConnect` and provide the raw token. Specmatic sends it as an
+`Authorization: Bearer <token>` header.
 
 <a id="providing-auth-credentials-in-examples" />
 ## Authentication within an Example
@@ -126,7 +133,7 @@ components:
           scopes: {}
 ```
 
-The header used by OAuth2 and HTTP Bearer is `Authorization`. So the security token can go into an external example like this:
+The header used by OAuth2, OpenID Connect, and HTTP Bearer is `Authorization`. So the security token can go into an external example like this:
 
 ```json
 {
@@ -422,6 +429,26 @@ components:
 
 Configure:
 - Security scheme name: `oAuth2AuthCode`.
+- Token value: `abc123`, not `Bearer abc123`.
+
+Specmatic sends:
+- `Authorization: Bearer abc123`
+
+#### OpenID Connect
+
+OpenAPI example:
+
+```yaml
+components:
+  securitySchemes:
+    oidcAuth:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/openid
+```
+
+Configure:
+- Security scheme name: `oidcAuth`.
+- Type in `specmatic.yaml`: `openIdConnect`.
 - Token value: `abc123`, not `Bearer abc123`.
 
 Specmatic sends:
