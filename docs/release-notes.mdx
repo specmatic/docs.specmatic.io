@@ -6,6 +6,27 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
+## 1.25.0 (2026-08-14)
+
+### Added
+
+- Added an MCP tool for running a complete Specmatic test suite by reusing the `run-suite` command.
+- Added support for starting MCP mocks directly with specification paths, a port, and example directories.
+- Added support for loading OpenAPI `multipart/form-data` request examples, including multipart content and external file references for mock.
+- Added APIs to load central lint configuration once and lint supplied specification content with that resolved configuration, avoiding a config repository clone for every lint operation.
+
+## Changed
+
+- Fixed GraphQL contract tests reusing state from a previous run.
+- Fixed loading of OpenAPI examples referenced through internal or external references, with consistent handling of scalar, structured, array, null, and Specmatic values.
+- Fixed OpenAPI `multipart/form-data` and `application/x-www-form-urlencoded` examples so their requests use multipart parts or form fields instead of a generic request body, allowing inline and external examples to match request patterns during test generation and mocking.
+- Fixed multipart mock request parsing to preserve each part's `Content-Encoding`, so multipart examples declaring an encoding can match the incoming request.
+- Fixed request examples for operations with an empty response body so path parameter examples are retained when a request body is present.
+- Fixed backward-compatibility change tracking for path parameters defined through `$ref`, preventing unchanged OpenAPI operations from being reported as changed.
+- Backward-compatibility checks now report newly added specifications as compatible when no corresponding specification exists on the base branch, and explain the verdict using the base branch name.
+- Synchronized the bundled multipart-form-data example schemas with the supported example structure.
+- Remote configuration repositories now refresh their cached checkout only when the remote revision changes.
+
 ## 1.24.0 (2026-08-10)
 
 ### Added
