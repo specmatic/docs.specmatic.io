@@ -1174,6 +1174,7 @@ Smart Resiliency Orchestration is a powerful feature in the Specmatic contract t
 All execution details, including request and response logs for each attempt, are fully captured and visible in both the console output and the HTML report to ensure complete traceability.
 :::
 
+<span id="accepted-response-handling" />
 #### Accepted Response Handling <CommercialBadge/>
 
 A **202 Accepted** HTTP status code indicates that a request has been accepted for processing, but the operation has not yet been completed. This response is standard for asynchronous or long-running tasks. Specmatic offers robust support for testing these asynchronous flows, provided the API specification adheres to a few RESTful conventions.
@@ -1263,6 +1264,7 @@ Specmatic will extract request and response from the `MonitorResponse` to recons
 - **Implicit Case**: The extracted request and response must conform to the scenario that was being tested, such as `201 Created`.
 :::
 
+<span id="too-many-requests-handling" />
 #### Too Many Requests Handling <CommercialBadge/>
 
 A **429 Too Many Requests** HTTP status code indicates that the client has sent too many requests within a specified timeframe, or there may be an issue downstream causing it to be rate-limited by the server.
