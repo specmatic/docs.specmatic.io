@@ -1,0 +1,95 @@
+---
+title: Central Config Repo
+sidebar_position: 8
+---
+
+# Central Config Repo
+
+A central config repository lets platform or API governance teams define linting policy in one place while product teams keep only their API specs locally.
+
+## Basic usage
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml \
+  --config-repo-url=https://github.com/specmatic/central-linter-config.git
+```
+
+When `--config-repo-url` is provided:
+
+- the repo is fetched into a local cache
+- the linter looks for `specmatic-linter.yaml` at the root by default
+- the repo's current default branch is detected automatically
+
+## Use a config from a subdirectory
+
+If the config file is not at repo root, pass `--config` as a repo-relative path:
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml \
+  --config-repo-url=https://github.com/specmatic/central-linter-config.git \
+  --config=profiles/team-a.yaml
+```
+
+When `--config-repo-url` is set, `--config` is interpreted as a path **inside the fetched repo**.
+
+The path must stay within the fetched repository.
+
+## Select a profile
+
+Teams typically vary only the active profile:
+
+```bash
+docker run --rm -v "$(pwd):/usr/src/app" specmatic/enterprise lint openapi.yaml \
+  --config-repo-url=https://github.com/specmatic/central-linter-config.git \
+  --profile=internal-api
+```
+
+## Private repositories
+
+For private HTTPS repositories, set:
+
+```bash
+export CENTRAL_CONFIG_REPO_TOKEN=<your-personal-access-token>
+```
+
+The token is injected into HTTPS clone/fetch operations. Non-HTTPS Git URLs are not rewritten.
+
+## Refresh behavior
+
+The cached repo is refreshed on subsequent runs so the linter does not keep serving stale config.
+
+That means a central governance team can update the shared config repo and downstream teams pick up the updated policy on later runs without copying config locally.
+
+## Failure cases to expect
+
+The linter fails clearly when:
+
+- the remote config repo URL is blank
+- the default config file is missing at repo root and `--config` is not provided
+- the repo-relative `--config` path does not exist
+- the requested profile does not exist
+- the central config itself is structurally invalid
+
+## Typical ownership model
+
+This workflow works well when:
+
+- the platform or governance team owns organization-wide policy
+- service teams own their OpenAPI files
+- profile selection is the main team-level variation
+
+Use this pattern to reduce copy-pasted config drift across local development and CI.
+
+## Recommended usage pattern
+
+Keep local repos lightweight:
+
+- local repo contains the OpenAPI files
+- central repo contains the linting policy
+- teams choose the applicable profile through `--profile`
+
+This model is especially useful when:
+
+- internal and public APIs use different policy
+- governance is versioned centrally
+- API-review rules should stay consistent across many services

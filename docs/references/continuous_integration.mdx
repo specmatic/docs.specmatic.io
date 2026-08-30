@@ -57,6 +57,15 @@ When a PR/MR is raised, we need to set up a simple CI pipeline to perform the fo
 * validate if the inline and external examples are still valid according to the updated specification
 * check backward compatibility of your contracts using Specmatic
 
+### Adding Specmatic Linter for governance
+
+If you use Specmatic Enterprise for OpenAPI governance, you can add Specmatic Linter alongside syntax linting. This is useful when you want profile-driven semantic rules, configurable organization-specific rules, maturity reporting, or a central lint-config repository.
+
+See:
+
+- [Specmatic Linter](/linting)
+- [Central Config Repo](/linting/central-config-repo)
+
 <Tabs groupId="ccrCI">
   <TabItem value="github" label="GitHub">
     <YamlDisplay object={yaml.load(require('./includes/continuous-integration/central-contract-repo-ci/github.yml?raw'))}/>

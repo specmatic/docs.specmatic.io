@@ -1,0 +1,174 @@
+---
+title: Built-in Rulesets Reference
+sidebar_position: 5
+---
+
+# Built-in Rulesets Reference
+
+This page is the practical reference for the built-in presets that ship with Specmatic Linter.
+
+The three day-to-day presets are:
+
+- `minimal`
+- `recommended`
+- `recommended-strict`
+
+There is also `all`, which turns every built-in rule on at `error`. It is useful for audits, but it is usually too aggressive for first-time adoption.
+
+## How the presets differ
+
+### `minimal`
+
+`minimal` is the lowest-friction starting point.
+
+- It ships the core built-in rule inventory.
+- Many rules are present but set to `off`.
+- It keeps the highest-signal structural and reference checks active from day one.
+
+Use `minimal` when you want:
+
+- to introduce linting without creating a long migration backlog
+- to baseline old specifications first
+- to harden only a few critical rules initially
+
+### `recommended`
+
+`recommended` is the default serious governance preset.
+
+- It promotes every built-in rule that is `off` in `minimal` to at least `warn`.
+- It adds the Specmatic OpenAPI semantic rules that are not present in `minimal`.
+- It raises a few especially important OAS 3.x rules to `error`, such as `no-empty-servers` and `operation-summary`.
+
+Use `recommended` when you want:
+
+- one preset that catches both style issues and real semantic defects
+- good CI signal without enforcing every convention as a hard failure
+- a sensible default for most new teams
+
+### `recommended-strict`
+
+`recommended-strict` starts from `recommended` and tightens a small set of design conventions.
+
+It is mostly the same rule inventory as `recommended`, but it hardens key descriptive rules:
+
+- `operation-summary`
+- `operation-operationId`
+- `tag-description`
+- `operation-tag-defined` for OAS 3.x
+
+Use `recommended-strict` when you want:
+
+- API review conventions enforced consistently
+- stronger documentation quality gates
+- a stricter preset for public or partner-facing APIs
+
+## What changes between the presets
+
+These counts come from the runtime `get-rules` catalogs generated from the built-in presets:
+
+| Preset | Approximate shape |
+| --- | --- |
+| `minimal` | 63 built-in rule IDs, with many still at `off` |
+| `recommended` | 87 built-in rule IDs, with all active at `warn` or `error` |
+| `recommended-strict` | same 87 rule IDs as `recommended`, but a few key rules are promoted to `error` |
+
+Important details:
+
+- `recommended` adds 24 Specmatic semantic rules that are not part of `minimal`.
+- `recommended-strict` does not add new rule IDs beyond `recommended`; it only tightens severities.
+- Some severities differ slightly by OpenAPI version. For example, `operation-summary` is stricter for OAS 3.x than OAS 2 in the built-in presets.
+
+## Preset comparison
+
+| Topic | `minimal` | `recommended` | `recommended-strict` |
+| --- | --- | --- | --- |
+| Core structural validity | on | on | on |
+| Missing summaries and operation docs | partly on | on | stricter |
+| Style and naming conventions | many off | mostly warn | some promoted to error |
+| Specmatic semantic OpenAPI checks | mostly absent | on | on |
+| Best first use case | first rollout | default team baseline | public API governance |
+
+## Rules that `recommended` adds beyond `minimal`
+
+These are the extra built-in Specmatic rules that appear when you move from `minimal` to `recommended`:
+
+- `specmatic/accept-response-content-type-conflict`
+- `specmatic/content-type-header-declared`
+- `specmatic/content-type-header-overrides-media-type`
+- `specmatic/enum-no-matching-values`
+- `specmatic/enum-nullability-coercion`
+- `specmatic/enum-value-schema-mismatch`
+- `specmatic/get-request-body-disallowed`
+- `specmatic/invalid-additional-properties-usage`
+- `specmatic/invalid-max-length`
+- `specmatic/invalid-min-length`
+- `specmatic/invalid-numeric-bounds`
+- `specmatic/invalid-operation-status`
+- `specmatic/invalid-parameter-shape`
+- `specmatic/invalid-regex-format`
+- `specmatic/length-exceeds-limit`
+- `specmatic/missing-schema-fallback`
+- `specmatic/oas30-enum-null-coercion`
+- `specmatic/pattern-length-incompatible`
+- `specmatic/query-param-collision`
+- `specmatic/ref-has-siblings`
+- `specmatic/required-query-object-conflict`
+- `specmatic/schema-unclear`
+- `specmatic/security-property-redefined`
+- `specmatic/security-scheme-missing`
+
+These are the rules that make `recommended` substantially more useful than a style-only preset. They catch runtime-facing contract defects, not just documentation gaps.
+
+## Rules that get stricter in `recommended-strict`
+
+The built-in runtime currently hardens these rules when you move from `recommended` to `recommended-strict`:
+
+- `operation-summary`
+- `operation-operationId`
+- `tag-description`
+- `operation-tag-defined` for OAS 3.0, 3.1, and 3.2
+
+This means `recommended-strict` is best when you already agree on API review conventions and want them enforced, not merely suggested.
+
+## Which preset should you start with
+
+| If your goal is | Start with |
+| --- | --- |
+| introduce linting with minimal noise | `minimal` |
+| enforce a sensible baseline in CI | `recommended` |
+| enforce strong API design conventions | `recommended-strict` |
+| run a one-time audit or migration exercise | `all` |
+
+## Common rollout pattern
+
+1. Start with `recommended` if the team is comfortable fixing warnings over time.
+2. Start with `minimal` if the codebase is large and inconsistent.
+3. Promote a few high-signal rules to `error`.
+4. Move stricter API audiences, such as public APIs, to `recommended-strict`.
+
+## How to inspect the exact preset in your environment
+
+Use `get-rules` with a profile that extends the preset you care about:
+
+```yaml
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+```
+
+Then run:
+
+```bash
+docker run --rm -v "$PWD:$PWD" -w "$PWD" specmatic/enterprise \
+  lint get-rules --config specmatic-linter.yaml --format=json
+```
+
+That report is the source of truth for the exact effective catalog in your environment after any profile overrides, type filtering, or plugin additions.
+
+## Next
+
+- [Built-in Rules Reference](/linting/built-in-rules-reference)
+- [Rulesets, Types, and Profiles](/linting/rulesets-types-and-profiles)
+- [CLI Reference](/linting/cli-reference)

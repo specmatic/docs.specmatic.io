@@ -1,0 +1,497 @@
+---
+title: Custom JS Plugins
+sidebar_position: 7
+---
+
+# Custom JS Plugins
+
+Use a custom JS plugin when a rule needs computed logic, richer traversal, or reusable custom assertions that are awkward to express in YAML alone.
+
+This page covers only two things:
+
+- writing custom JS **rules**
+- writing custom JS **assertions** for YAML configurable rules
+
+## Runtime model
+
+- JS plugins are loaded through Node.js
+- if no JS plugins are configured, Node is not required
+- plugin paths are resolved relative to the config file directory
+- remote plugin URLs are not supported
+
+Supported export forms:
+
+- a single plugin object
+- an array of plugin objects
+- a factory function returning one plugin object
+- a factory function returning an array of plugin objects
+- CommonJS or ESM `default` export
+
+If the export is a function, Specmatic calls it with:
+
+```js
+{ contentDir: configDirectory }
+```
+
+## Minimal plugin
+
+```js
+module.exports = () => ({
+  id: "corp-standards",
+  rules: {
+    oas3: {
+      "operation-id-naming": operationIdNamingRule,
+    },
+  },
+});
+```
+
+Required field:
+
+- `id`
+
+Useful optional fields:
+
+- `rules`
+- `assertions`
+- `configs`
+
+## Version buckets
+
+JS plugins support these rule families:
+
+- `oas2`
+- `oas3`
+
+There are no separate JS buckets for `oas3_0`, `oas3_1`, and `oas3_2`. All OpenAPI 3.x plugin rules are registered under `oas3`.
+
+## Writing a custom JS rule
+
+Each rule entry is a function that returns a **visitor map**.
+
+Example:
+
+```js
+function operationIdNamingRule() {
+  return {
+    Operation: {
+      enter(operation, ctx) {
+        if (!operation.operationId) {
+          ctx.report({ message: "operationId is required" });
+        }
+      },
+    },
+  };
+}
+```
+
+Shorthand form:
+
+```js
+function operationIdNamingRule() {
+  return {
+    Operation(operation, ctx) {
+      if (!operation.operationId) {
+        ctx.report({ message: "operationId is required" });
+      }
+    },
+  };
+}
+```
+
+The shorthand form is treated as `enter(...)`.
+
+## Visitor lifecycle
+
+A visitor may define:
+
+- `enter(node, ctx)`
+- `leave(node, ctx)`
+
+Example:
+
+```js
+function schemaBoundsRule() {
+  return {
+    Schema: {
+      enter(schema, ctx) {
+        if (typeof schema.minimum !== "number") return;
+        if (typeof schema.maximum !== "number") return;
+        if (schema.maximum >= schema.minimum) return;
+
+        ctx.report({
+          message: `maximum ${schema.maximum} cannot be less than minimum ${schema.minimum}`,
+          location: ctx.location.child("maximum"),
+        });
+      },
+    },
+  };
+}
+```
+
+## Rule context
+
+For JS rules, `ctx` contains:
+
+- `location`
+- `report(problem)`
+
+### `ctx.location`
+
+`location` identifies the current source file and JSON pointer.
+
+Available properties and helpers:
+
+- `location.source`
+- `location.pointer`
+- `location.child(segment)`
+
+Example:
+
+```js
+ctx.location.child("maximum")
+```
+
+### `ctx.report(problem)`
+
+Use `report()` to emit a violation.
+
+Supported fields on `problem`:
+
+- `message`
+- `location`
+- `suggest`
+- `reference`
+
+Example:
+
+```js
+ctx.report({
+  message: "Operation must have x-operation-extra",
+  location: ctx.location.child("x-operation-extra"),
+  suggest: ["Add x-operation-extra: true"],
+  reference: "https://internal.docs.example/api-governance#x-operation-extra",
+})
+```
+
+If `location` is omitted, the current node location is used.
+
+## Registering the rule in config
+
+Plugin rule IDs are namespaced by plugin ID.
+
+If the plugin ID is `corp-standards` and the exported rule name is `pagination-range`, the full rule ID is:
+
+```text
+corp-standards/pagination-range
+```
+
+Config:
+
+```yaml
+plugins:
+  - ./js-plugin/index.js
+
+rules:
+  corp-standards/pagination-range:
+    severity: error
+    type: parameters
+
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+      include:
+        - corp-standards/pagination-range
+```
+
+Plugin rules behave like other rules:
+
+- they can be included in profiles
+- they can be filtered by type
+- they can have severity overrides
+- they can have maturity overrides
+
+## Complete custom rule example
+
+```js
+function paginationRangeRule() {
+  return {
+    Operation: {
+      enter(operation, ctx) {
+        const params = operation.parameters || [];
+        const limit = params.find((p) => p.name === "limit" && p.in === "query");
+        const offset = params.find((p) => p.name === "offset" && p.in === "query");
+
+        if (!limit || !offset) return;
+
+        const limitValue = limit.schema?.default || 0;
+        const offsetValue = offset.schema?.default || 0;
+
+        if (limitValue + offsetValue <= 1000) return;
+
+        ctx.report({
+          message: `Default limit (${limitValue}) + offset (${offsetValue}) exceeds 1000`,
+          location: ctx.location.child("parameters"),
+        });
+      },
+    },
+  };
+}
+
+module.exports = () => ({
+  id: "corp-standards",
+  rules: {
+    oas3: {
+      "pagination-range": paginationRangeRule,
+    },
+  },
+});
+```
+
+## Writing a custom JS assertion
+
+Plugins can also export reusable assertion functions for YAML configurable rules.
+
+Plugin:
+
+```js
+function checkWordsCount(value, opts, ctx) {
+  const words = String(value || "").split(/\s+/).filter(Boolean);
+
+  if (words.length >= opts.min) {
+    return { isValid: true };
+  }
+
+  return {
+    isValid: false,
+    message: `Should have at least ${opts.min} words`,
+    location: ctx.baseLocation,
+  };
+}
+
+module.exports = () => ({
+  id: "local",
+  assertions: {
+    checkWordsCount,
+  },
+});
+```
+
+YAML usage:
+
+```yaml
+plugins:
+  - ./local-plugin.cjs
+
+rules:
+  rule/operation-summary-check:
+    subject:
+      type: Operation
+      property: summary
+    message: Operation summary should contain enough words
+    assertions:
+      local/checkWordsCount:
+        min: 3
+```
+
+### Assertion function signature
+
+Custom assertion functions receive:
+
+- `value`
+- `options`
+- `ctx`
+
+The assertion context contains:
+
+- `source`
+- `pointer`
+- `location`
+- `baseLocation`
+- `rawValue`
+- `node`
+- `key`
+- `parent`
+- `parentType`
+
+### Assertion return shapes
+
+A custom assertion may return:
+
+- `[]` for success
+- one result object
+- an array of result objects
+- `{ isValid: true }`
+- `{ isValid: false, message, location }`
+- `{ valid: true }`
+- `{ valid: false, message, location }`
+
+Each failure result may include:
+
+- `message`
+- `location`
+
+## Plugin-provided preset configs
+
+Plugins may expose preset configs through `configs`.
+
+Example:
+
+```js
+module.exports = () => ({
+  id: "corp-standards",
+  configs: {
+    recommended: {
+      rules: {
+        "corp-standards/pagination-range": "error",
+      },
+    },
+  },
+  rules: {
+    oas3: {
+      "pagination-range": paginationRangeRule,
+    },
+  },
+});
+```
+
+Reference it from config as:
+
+```yaml
+profiles:
+  default:
+    rules:
+      extends:
+        - corp-standards/recommended
+```
+
+## Supported visitor node types
+
+Your visitor keys must match the node types indexed by the linter.
+
+### Common OpenAPI 3.x node types
+
+- `Root`
+- `Info`
+- `License`
+- `Contact`
+- `TagList`
+- `Tag`
+- `ServerList`
+- `Server`
+- `ServerVariablesMap`
+- `ServerVariable`
+- `Paths`
+- `PathItem`
+- `Operation`
+- `ParameterList`
+- `Parameter`
+- `RequestBody`
+- `Responses`
+- `Response`
+- `HeadersMap`
+- `Header`
+- `LinksMap`
+- `Link`
+- `MediaTypesMap`
+- `MediaType`
+- `ExamplesMap`
+- `Example`
+- `EncodingMap`
+- `Encoding`
+- `Components`
+- `NamedSchemas`
+- `NamedResponses`
+- `NamedParameters`
+- `NamedRequestBodies`
+- `NamedHeaders`
+- `NamedExamples`
+- `NamedPathItems`
+- `NamedSecuritySchemes`
+- `NamedLinks`
+- `NamedCallbacks`
+- `CallbacksMap`
+- `Callback`
+- `WebhooksMap`
+- `SecurityScheme`
+- `OAuth2Flows`
+- `OAuth2Flow`
+- `ScopesMap`
+- `ScopeDescription`
+- `SecurityRequirementList`
+- `SecurityRequirement`
+- `SecurityRequirementValue`
+- `Schema`
+- `SchemaList`
+- `SchemaProperties`
+- `SchemaOrBoolean`
+- `BooleanLiteral`
+- `Discriminator`
+- `DiscriminatorMapping`
+- `DiscriminatorMappingValue`
+- `Xml`
+- `ExternalDocs`
+- `SpecExtension`
+
+### Common OpenAPI 2.0 node types
+
+- `Root`
+- `Info`
+- `License`
+- `Contact`
+- `TagList`
+- `Tag`
+- `Paths`
+- `PathItem`
+- `Operation`
+- `ParameterList`
+- `Parameter`
+- `Responses`
+- `Response`
+- `HeadersMap`
+- `Header`
+- `NamedSchemas`
+- `NamedParameters`
+- `NamedResponses`
+- `NamedSecuritySchemes`
+- `SecurityScheme`
+- `ScopesMap`
+- `ScopeDescription`
+- `Schema`
+- `SchemaList`
+- `SchemaProperties`
+- `SchemaOrBoolean`
+- `BooleanLiteral`
+- `Xml`
+- `ExternalDocs`
+- `SpecExtension`
+
+## Special cases
+
+### Vendor extensions
+
+Vendor extensions such as `x-internal` or `x-logo` are indexed as `SpecExtension` nodes.
+
+### `$ref` traversal
+
+The node index follows `$ref` targets while preventing cycles, so plugin rules can see referenced structures instead of only inline declarations.
+
+### Duplicate problems
+
+The runtime deduplicates identical plugin rule problems. This prevents the same rule violation from being reported twice when a schema is reached both by declaration and by `$ref`.
+
+## When to use JS rules vs JS assertions
+
+Use a **JS rule** when you need:
+
+- full document traversal by node type
+- multiple checks inside one visitor
+- rule-specific suggestions or references
+
+Use a **JS assertion** when you want:
+
+- a YAML configurable rule to stay declarative
+- one custom validation function inside `assertions`
+- reusable custom checks across several YAML rules

@@ -1,0 +1,309 @@
+---
+title: Configurable Rules
+sidebar_position: 6
+---
+
+# Configurable Rules
+
+Configurable rules let you express organization-specific governance in YAML without writing JavaScript.
+
+They are usually declared with a `rule/...` ID and activated from a profile.
+
+## Mental model
+
+A configurable rule is:
+
+- a target selector through `subject`
+- optional context narrowing through `where`
+- one or more assertions
+- an optional custom message, reference, and suggestions
+
+The rule runs over indexed OpenAPI nodes, not over raw text.
+
+## Basic shape
+
+```yaml
+rules:
+  rule/parameter-description-required:
+    severity: error
+    type: parameters
+    subject:
+      type: Parameter
+    assertions:
+      required:
+        - description
+    message: Every parameter must declare a description.
+
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+      include:
+        - rule/parameter-description-required
+```
+
+## Subject selectors
+
+`subject` defines which OpenAPI nodes the rule targets.
+
+Supported selectors:
+
+- `type`
+- `property`
+- `filterInParentKeys`
+- `filterOutParentKeys`
+- `matchParentKeys`
+
+Example:
+
+```yaml
+subject:
+  type: Operation
+  property: summary
+```
+
+Example with parent-key filtering:
+
+```yaml
+subject:
+  type: Response
+  filterInParentKeys:
+    - "200"
+```
+
+Example with key matching:
+
+```yaml
+subject:
+  type: SchemaProperties
+  property: x-test
+  matchParentKeys: /^p/
+
+### `property` behavior
+
+`property` can be:
+
+- a single property name
+- a list of property names
+
+Example:
+
+```yaml
+subject:
+  type: Tag
+  property:
+    - name
+    - description
+```
+
+### Map-like subjects
+
+For map-like node types such as `MediaTypesMap` or `SchemaProperties`, some assertions apply to the **keys** rather than the values. This is why key-oriented checks such as casing or `const` work on map node types.
+```
+
+## `where` clauses
+
+Use `where` when a rule should apply only in a specific context. The linter evaluates the chain in order against the node ancestry.
+
+```yaml
+rules:
+  rule/no-pdf-in-ok-put-response:
+    where:
+      - subject:
+          type: Operation
+          filterInParentKeys:
+            - put
+        assertions:
+          defined: true
+      - subject:
+          type: Response
+          filterInParentKeys:
+            - "200"
+        assertions:
+          defined: true
+    subject:
+      type: MediaTypesMap
+    assertions:
+      disallowed:
+        - application/pdf
+    message: PDF should not be returned from successful PUT responses.
+```
+
+Important behavior:
+
+- `where` is matched in order
+- each clause is matched against the current node ancestry
+- if any clause does not match, the rule does not run for that candidate node
+- use `where` when a rule should only fire in a specific operational context
+
+## Built-in assertions
+
+Supported built-in assertions are:
+
+- `pattern`
+- `notPattern`
+- `enum`
+- `defined`
+- `required`
+- `disallowed`
+- `nonEmpty`
+- `minLength`
+- `maxLength`
+- `casing`
+- `sortOrder`
+- `mutuallyExclusive`
+- `mutuallyRequired`
+- `requireAny`
+- `ref`
+- `const`
+- `contains`
+
+## What each assertion is good for
+
+- `pattern` / `notPattern`: naming and format conventions
+- `enum` / `const`: allowlists and exact-value rules
+- `defined` / `required` / `nonEmpty`: presence checks
+- `disallowed`: block deprecated fields, media types, or vendor extensions
+- `minLength` / `maxLength`: documentation or naming quality thresholds
+- `casing`: style conventions like `camelCase` or `kebab-case`
+- `sortOrder`: stable ordering in list-like structures
+- `mutuallyExclusive`: fields that must not appear together
+- `mutuallyRequired`: fields that must appear together
+- `requireAny`: require at least one among several choices
+- `ref`: require or forbid `$ref`, or validate `$ref` against a pattern
+- `contains`: require one or more values inside a list
+
+## Common examples
+
+### Require a property
+
+```yaml
+assertions:
+  required:
+    - description
+```
+
+### Enforce casing
+
+```yaml
+assertions:
+  casing: camelCase
+```
+
+### Enforce one of several values
+
+```yaml
+assertions:
+  enum:
+    - oauth2
+    - openIdConnect
+```
+
+### Match a regex
+
+```yaml
+assertions:
+  pattern: /resource/
+```
+
+### Forbid a media type
+
+```yaml
+assertions:
+  disallowed:
+    - application/pdf
+```
+
+### Require at least one field
+
+```yaml
+assertions:
+  requireAny:
+    - description
+    - externalDocs
+```
+
+## Vendor extensions and map-key rules
+
+Configurable rules can target vendor extensions and map keys.
+
+Example:
+
+```yaml
+rules:
+  rule/media-type-map-application-json:
+    subject:
+      type: MediaTypesMap
+    assertions:
+      const: application/json
+    message: Only application/json can be used
+```
+
+Vendor extensions can also be targeted through subjects that inspect `x-...` keys or through map-style node types plus filters.
+
+## Message, reference, and suggestions
+
+These optional fields improve diagnostics:
+
+- `message`
+- `reference`
+- `suggest`
+
+Example:
+
+```yaml
+rules:
+  rule/operation-summary-suggest:
+    subject:
+      type: Operation
+      property: summary
+    message: Summary must be one of the predefined values
+    suggest:
+      - change to 'My resource'
+      - change to 'My collection'
+    assertions:
+      enum:
+        - My resource
+        - My collection
+```
+
+## Message placeholders
+
+Custom messages can use these placeholders:
+
+- `{{pointer}}`
+- `{{nodeType}}`
+- `{{property}}`
+- `{{assertionName}}`
+- `{{problems}}`
+- `{{file}}`
+- `{{key}}`
+
+Example:
+
+```yaml
+message: 'Rule {{assertionName}} failed: {{nodeType}} at {{pointer}} - {{problems}}'
+```
+
+`{{problems}}` is especially useful when a rule has multiple assertions and you want the rendered message to preserve the assertion-level detail.
+
+## Good practice
+
+Prefer:
+
+- a narrow `subject`
+- a short, stable `message`
+- `where` only when the rule is truly context-sensitive
+- `reference` when the rule maps to an internal standard or published policy
+- `suggest` when users will otherwise have to guess the intended replacement
+
+## When to use configurable rules
+
+Use YAML rules when the logic is:
+
+- declarative
+- local to the selected node or ancestry
+- expressible through built-in assertions
+
+Use [Custom JS Plugins](/linting/custom-js-plugins) when the rule needs computed logic, richer traversal, or custom runtime behavior.

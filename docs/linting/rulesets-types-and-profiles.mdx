@@ -1,0 +1,186 @@
+---
+title: Rulesets, Types, and Profiles
+sidebar_position: 4
+---
+
+# Rulesets, Types, and Profiles
+
+These three concepts define how governance is assembled for a run.
+
+## Built-in rulesets
+
+Specmatic Linter ships with four built-in presets:
+
+### `minimal`
+
+A low-friction baseline for initial adoption. It enables a smaller rule surface and leaves many rules disabled.
+
+Use this when you want to introduce linting with low noise and then tighten policy gradually.
+
+### `recommended`
+
+The default serious governance set. It builds on `minimal` and promotes many disabled rules to warnings or errors.
+
+This is the best starting point for most teams because it balances signal and adoption cost.
+
+### `recommended-strict`
+
+A stricter variant of `recommended` that raises descriptive and quality conventions such as `operation-summary`, `operation-operationId`, `tag-description`, and `operation-tag-defined`.
+
+Use this when API design conventions are already part of your review bar and you want them enforced consistently.
+
+### `all`
+
+Turns the full built-in rule inventory on at `error` severity.
+
+Use this for audits, migration exercises, or cases where you deliberately want the maximum built-in strictness.
+
+## Rule types
+
+Every built-in rule belongs to one of these types:
+
+- `examples`
+- `metadata`
+- `operations`
+- `parameters`
+- `schema`
+- `security`
+
+Type filtering is useful when teams want to focus on a slice of governance, for example only schema quality or only example validation.
+
+Important behavior:
+
+- if `types` is empty, all active rules are eligible to run
+- if `types` is set, a rule must belong to one of those types to run
+- a rule with no matching type is skipped
+- if no rules match the selected types, the run succeeds with no violations and the output includes notes explaining that no rules were selected
+
+Example:
+
+```yaml
+profiles:
+  default:
+    types:
+      - schema
+      - examples
+    rules:
+      extends:
+        - recommended
+```
+
+## Profiles
+
+Profiles let you define different policy levels for different API contexts.
+
+Common patterns:
+
+- `internal`
+- `public-api`
+- `partner-api`
+- `regulated`
+
+Example:
+
+```yaml
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+
+  internal:
+    extends:
+      - default
+    rules:
+      override:
+        info-contact: off
+        info-license: off
+
+  public-api:
+    extends:
+      - default
+    rules:
+      override:
+        info-contact: error
+        info-license: error
+
+This separation is useful when:
+
+- internal APIs can tolerate lighter metadata rules
+- public APIs must satisfy stricter documentation and security conventions
+- a regulated API needs a smaller focused ruleset than a general internal service
+```
+
+## Profile selection rules
+
+- If the config defines exactly one profile, it is selected automatically.
+- If multiple profiles exist and one is named `default`, `default` is selected automatically.
+- If multiple profiles exist and no `default` exists, you must pass `--profile`.
+
+## Rule selection order
+
+For a given profile, Specmatic Linter assembles rules in this order:
+
+1. inherit parent profiles from profile `extends`
+2. apply `rules.extends`
+3. add explicitly `include`d rules
+4. apply `exclude`
+5. apply `override`
+6. apply `types` filtering
+
+This means a profile can inherit a broad baseline, then narrow or harden it for a specific audience.
+
+If you want the rule-by-rule preset breakdown instead of just the composition model, use:
+
+- [Built-in Rulesets Reference](/linting/built-in-rulesets-reference)
+- [Built-in Rules Reference](/linting/built-in-rules-reference)
+
+### Why `include` exists if `override` already exists
+
+`include` is how you activate:
+
+- configurable YAML rules from the root inventory
+- plugin rules from loaded plugins
+- specific built-in rules when you do not want a whole preset
+
+`override` changes behavior of rules that are already in play or that you want to force into a specific severity or maturity.
+
+## Typical combinations
+
+### Recommended baseline with a few custom rules
+
+```yaml
+profiles:
+  default:
+    rules:
+      extends:
+        - recommended
+      include:
+        - rule/parameter-description-required
+        - corp-standards/operation-id-naming
+```
+
+### Strict public API profile
+
+```yaml
+profiles:
+  public-api:
+    rules:
+      extends:
+        - recommended-strict
+      override:
+        info-contact: error
+        info-license: error
+```
+
+### Focused schema-only audit
+
+```yaml
+profiles:
+  schema-audit:
+    types:
+      - schema
+    rules:
+      extends:
+        - all
+```

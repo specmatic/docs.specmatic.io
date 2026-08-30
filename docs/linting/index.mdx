@@ -1,0 +1,78 @@
+---
+title: Linting
+sidebar_position: 1
+---
+
+# Specmatic Linter
+
+Specmatic Linter is Specmatic Enterprise's OpenAPI governance capability. It helps teams detect design, semantic, example, schema, and security issues early using built-in rules, configurable YAML rules, and custom JavaScript plugins.
+
+The current linter supports:
+
+- `OpenAPI 2.0`
+- `OpenAPI 3.0`
+- `OpenAPI 3.1`
+- `OpenAPI 3.2`
+
+The current linter does **not** lint `AsyncAPI`, `GraphQL`, `gRPC`, or `Arazzo` specifications.
+
+## What you can do with it
+
+- Run opinionated built-in rulesets such as `minimal`, `recommended`, and `recommended-strict`
+- Organize governance using profiles and rule types
+- Define organization-specific rules in YAML
+- Extend the engine with JavaScript plugins when rules need computed logic
+- Measure API quality with maturity levels
+- Centralize lint configuration in a shared Git repository
+
+## What it catches
+
+The built-in rules cover more than syntax and structural validity. They include checks for:
+
+- missing or weak operational documentation such as `summary`, `description`, and `operationId`
+- path and operation issues such as ambiguous paths, duplicated path parameters, trailing slashes, or query strings embedded in paths
+- example problems such as invalid schema examples and invalid media-type examples
+- schema inconsistencies such as impossible numeric bounds, regex and length contradictions, enum/type mismatches, or unclear schemas
+- security problems such as missing schemes or conflicting security metadata
+- OpenAPI-specific semantic issues such as `GET` request bodies, `$ref` misuse, and invalid content-type combinations
+
+## How to think about adoption
+
+Most teams adopt the linter in stages:
+
+1. start with `recommended` or `minimal`
+2. add one or two profiles such as `internal` and `public-api`
+3. raise the strictness of a small set of high-signal rules
+4. add configurable YAML rules for organization-specific policy
+5. add JS rules only where YAML stops being expressive enough
+
+## What is not user-configurable
+
+Some behaviors are runtime-level and not ordinary config choices:
+
+- only OpenAPI specs are linted today
+- plugin rule families are `oas2` and `oas3`
+- `get-rules` only supports HTML and JSON report output
+- built-in rule IDs come from the linter itself; you can override them in profiles, but you cannot redefine built-in rule logic in the root `rules` inventory
+
+## Start Here
+
+- [Quick Start](/linting/quick-start)
+- [Configuration](/linting/configuration)
+- [Rulesets, Types, and Profiles](/linting/rulesets-types-and-profiles)
+- [Built-in Rulesets Reference](/linting/built-in-rulesets-reference)
+- [Built-in Rules Reference](/linting/built-in-rules-reference)
+- [Configurable Rules](/linting/configurable-rules)
+- [Custom JS Plugins](/linting/custom-js-plugins)
+- [CLI Reference](/linting/cli-reference)
+
+## How it fits into Specmatic Enterprise
+
+Specmatic Enterprise already supports contract testing, mocking, example validation, and backward compatibility checks. Linting complements those workflows by enforcing OpenAPI design and governance standards before specifications drift into local conventions or CI noise.
+
+Use linting when you want:
+
+- a shared API design baseline across teams
+- stronger semantic validation than syntax-only linters
+- profile-based governance for internal, public, or regulated APIs
+- a central place to manage organization-wide policy
