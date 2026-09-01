@@ -121,7 +121,7 @@ This generates the central contract repo report at:
 
 - `build/reports/specmatic/central_contract_repo_report.json`
 
-See [Reports Sent to Insights](/enterprise_onboarding/insights/reports_sent_to_insights#central-contract-repository-report-payload) for the JSON payload published when this report is sent with `send-report`.
+Run `specmatic spec-metadata-report --ci` with build and repository metadata to generate and publish this report. See [Reports Sent to Insights](/enterprise_onboarding/insights/reports_sent_to_insights#central-contract-repository-report-payload) for the JSON payload.
 
 ### Service build report
 
@@ -209,7 +209,7 @@ jobs:
           mkdir -p ~/.specmatic
           echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
-      - name: Generate Central Contract Report
+      - name: Generate and publish Central Contract Report
         run: |
           # Ensure the repository Git root is mounted into the container.
           docker run --rm -it \
@@ -217,17 +217,9 @@ jobs:
             -v ~/.specmatic:/root/.specmatic \
             -w /usr/src/app/specs \
             specmatic/enterprise \
-            central-contract-repo-report
-
-      - name: Publish Central Contract Report to Insights
-        run: |
-          # Ensure the repository Git root is mounted into the container.
-          docker run --rm -it \
-            -v "$(pwd):/usr/src/app" \
-            -v ~/.specmatic:/root/.specmatic \
-            -w /usr/src/app/specs \
-            specmatic/enterprise \
-            send-report \
+            spec-metadata-report \
+            --ci \
+            --build-id="${{ github.run_id }}" \
             --branch-name=main \
             --repo-name="$(gh repo view --json name -q .name)" \
             --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
@@ -236,7 +228,7 @@ jobs:
       - name: Start Service
         run: docker compose up --build -d
 
-      - name: Run Contract Test Suite
+      - name: Run Contract Test Suite and publish to Insights
         run: |
           # Ensure the repository Git root is mounted into the container.
           docker run --rm -it \
@@ -244,17 +236,9 @@ jobs:
             -v ~/.specmatic:/root/.specmatic \
             -w /usr/src/app \
             specmatic/enterprise \
-            run-suite
-
-      - name: Publish Service Build Report to Insights
-        run: |
-          # Ensure the repository Git root is mounted into the container.
-          docker run --rm -it \
-            -v "$(pwd):/usr/src/app" \
-            -v ~/.specmatic:/root/.specmatic \
-            -w /usr/src/app \
-            specmatic/enterprise \
-            send-report \
+            run-suite \
+            --ci \
+            --build-id="${{ github.run_id }}" \
             --branch-name=main \
             --repo-name="$(gh repo view --json name -q .name)" \
             --repo-id="$(gh api 'repos/{owner}/{repo}' --jq .id)" \
