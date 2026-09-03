@@ -34,7 +34,7 @@ Please go through the detailed [Continuous Integration](/references/continuous_i
 Please add the following 2 steps to your CI/CD pipeline configuration:
 
 :::note
-Legacy build reporter support has been removed. If your pipeline still uses `specmatic-insights-build-reporter-github-action` or `specmatic-insights-github-build-reporter`, migrate to `specmatic send-report` using the [Migration Guide](/references/migration_guide#2-migrate-from-legacy-insights-reporter-to-specmatic-send-report).
+Legacy build reporter support has been removed. If your pipeline still uses `specmatic-insights-build-reporter-github-action` or `specmatic-insights-github-build-reporter`, migrate to direct reporting from `specmatic test`, `specmatic mock`, or `specmatic run-suite` using the [Migration Guide](/references/migration_guide#2-migrate-from-legacy-insights-reporter-to-direct-command-reporting).
 :::
 
 <Tabs groupId="mergeCI">
@@ -48,14 +48,16 @@ Legacy build reporter support has been removed. If your pipeline still uses `spe
     mkdir -p ~/.specmatic
     echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
-- name: Publish Build Reports to Specmatic Insights
+- name: Run contract tests and publish to Specmatic Insights
   if: github.ref == 'refs/heads/main'
   run: |
     docker run --rm \
       -v ~/.specmatic:/root/.specmatic \
       -v ${{ github.workspace }}:/usr/src/app \
       specmatic/enterprise \
-      send-report \
+      test \
+      --ci \
+      --build-id ${{ github.run_id }} \
       --branch-name ${{ github.ref_name }} \
       --repo-name ${{ github.event.repository.name }} \
       --repo-id ${{ github.repository_id }} \
@@ -86,7 +88,9 @@ publish_specmatic_insights:
 
   script:
     - |
-      specmatic send-report \
+      specmatic test \
+        --ci \
+        --build-id "$CI_PIPELINE_ID" \
         --branch-name "$CI_COMMIT_BRANCH" \
         --repo-name "$CI_PROJECT_NAME" \
         --repo-id "$CI_PROJECT_ID" \
