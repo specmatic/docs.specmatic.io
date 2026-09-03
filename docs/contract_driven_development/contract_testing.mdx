@@ -1115,16 +1115,30 @@ Activate the actuator mapping endpoint in your backend framework. Specify the UR
 
 Refer to the [sample project](https://github.com/specmatic/specmatic-order-api-java) to observe this in action.
 
-#### Use Swagger UI
+<a id="use-swagger-ui"></a>
 
-Various programming languages and frameworks offer support for Swagger UI. For example, in .NET, Swashbuckle automatically
-generates an OpenAPI specification from controllers and models, making it easier to document, visualize, and interact
-with APIs directly from a web interface.
+#### Use Swagger URL Endpoint
 
-Specmatic will automatically detect and utilize Swagger UI if it is available. By default, Specmatic sends a request
-to `/swagger/v1/swagger.yaml`. You can customize the base URL for Swagger UI by configuring the
-`swaggerUrl` property on the `runOptions` object. If this property is not defined, Specmatic will default to using
-the URL of the System Under Test (SUT) as the base URL.
+Many frameworks can expose an OpenAPI document generated from the application's routes and models. For example,
+Springdoc commonly exposes one at `/v3/api-docs`, while Swashbuckle can expose one at
+`/swagger/v1/swagger.yaml` or `/swagger/v1/swagger.json`.
+
+Set `swaggerUrl` to the **complete URL of that OpenAPI document**. Specmatic sends a `GET` request to this URL, parses
+the returned OpenAPI document, and compares its operations with the contract test coverage. The endpoint must be
+reachable from the environment in which Specmatic runs and return HTTP `200`.
+
+Set `swaggerUrl` under `systemUnderTest.service.runOptions.openapi`:
+
+<V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/contract-testing/swagger-url/specmatic.yaml?raw'))} />
+
+If the application exposes the generated document for a specific API specification at a different URL or port, set a
+`swaggerUrl` override under `systemUnderTest.service.runOptions.openapi.specs[].spec`. The `id` must match the
+corresponding specification in `systemUnderTest.service.definitions`. This value overrides the top-level `swaggerUrl`
+for that specification.
+
+If both are present, `actuatorUrl` is favored over `swaggerUrl`. However if a `swaggerUrl` override is present, the override is preferred over other options.
+
+If neither is configured, Specmatic attempts to retrieve `<system-under-test-base-url>/swagger/v1/swagger.yaml`.
 
 The test results, including coverage, can be accessed in the HTML and CTRF (Commercial Only) reports generated at 
 `./build/reports/specmatic/test/html/index.html` and `./build/reports/specmatic/test/ctrf/ctrf-report.json`, respectively.
