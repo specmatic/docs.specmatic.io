@@ -6,6 +6,23 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
+## 1.26.0 (2026-09-03)
+
+### Added
+
+- Added support for column level filters in the HTML report
+- Added a `validate_examples` MCP tool for validating inline and external OpenAPI examples against their specification, with structured validation results and guidance when Docker paths prevent local validation.
+- Added Studio support for editing, renaming, and deleting inline OpenAPI and AsyncAPI examples directly in their source specifications, with changes written back to the correct nested or referenced location while preserving authored metadata.
+- Added Studio support for safely importing external OpenAPI and AsyncAPI examples into specifications and exporting inline examples to external files, with per-example Copy, Move, and Skip choices, batch conversion results, and capability-aware importability diagnostics.
+
+### Changed
+
+- Fixed request fixing in studio to preserve security scheme headers and query parameters and repair invalid security values.
+- Fixed regular expressions containing an unescaped `.` so matching and generated values use the same behavior and do not unexpectedly include line terminators.
+- Use `mock`, `test`, `run-suite`, or `backward-compatibility-check` with `--ci` and the Insights repository/build metadata options to submit reports directly to Specmatic Insights. The separate `send-report` follow-up step is deprecated.
+- Improved Insights-backed backward-compatibility verdict messages to distinguish affected consumers, no reported consumers, strict-mode failures, Insights check failures, unavailable licenses, unsupported protocols, and missing operation requests.
+- Improved OpenAPI handling of `default` responses to ensure they only match undeclared statuses. Fixed issues with loading, validating and fixing default response examples. Now, the declared status of a default response example is asserted during contract tests and returned by mocks.
+
 ## 1.25.0 (2026-08-14)
 
 ### Added
