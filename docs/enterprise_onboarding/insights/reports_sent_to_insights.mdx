@@ -39,6 +39,24 @@ For AsyncAPI, GraphQL, and gRPC test and mock runs, the CTRF artifact is stored 
 
 Pass `--ci --build-id <id> --repo-id <id> --repo-name <name> --repo-url <url> --branch-name <branch>` to the command that generates the report. `run-suite` uses one build ID for its separately submitted test and mock reports.
 
+## Build identity and default metadata
+
+`--build-id` correlates all reports from one CI build in Insights. Use the ID supplied by your CI provider; on GitHub Actions, we recommend `${{ github.run_id }}`. A `run-suite` invocation uses the same build ID for the test and mock reports it submits.
+
+CLI arguments take precedence over the following defaults. `--ci` must be passed explicitly because publishing is a sensitive operation.
+
+| Option | System property | Environment variables | Other fallback |
+| --- | --- | --- | --- |
+| `--ci` | — | `CI`, `GITHUB_ACTIONS` | — |
+| `--repo-id` | `specmatic.repo.id` | `SPECMATIC_REPO_ID`, `GITHUB_REPOSITORY_ID` | — |
+| `--repo-name` | `specmatic.repo.name` | `SPECMATIC_REPO_NAME`, `GITHUB_REPOSITORY` | Name derived from the Git remote URL |
+| `--repo-url` | `specmatic.repo.url` | `SPECMATIC_REPO_URL`, `GITHUB_REPOSITORY` (and optionally `GITHUB_SERVER_URL`) | Git remote URL |
+| `--branch-name` | `specmatic.branch.name` | `SPECMATIC_BRANCH_NAME`, `GITHUB_HEAD_REF`, `GITHUB_REF_NAME`, `GITHUB_REF` | Current Git branch |
+| `--build-id` | `specmatic.build.id` | `SPECMATIC_BUILD_ID`, `GITHUB_RUN_ID` | — |
+| `--token` | `specmatic.token` | `SPECMATIC_INSIGHTS_TOKEN` | — |
+
+`--metadata`, `--config`, and `--insights-server-url` are CLI-only options.
+
 ## Contract test report payload
 
 `test --ci` submits its CTRF contract-test report. This example retains every field from the captured report, but shows one operation, one test ID, and one test entry. The aggregate counters retain their original values.
