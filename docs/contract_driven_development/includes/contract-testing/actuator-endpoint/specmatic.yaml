@@ -23,7 +23,7 @@ components:
   runOptions:
     employeeService:
       openapi:
-        type: mock
+        type: test
         specs:
           - spec:
               id: employeeSpec
