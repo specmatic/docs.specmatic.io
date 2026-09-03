@@ -35,7 +35,7 @@ toc_max_heading_level: 2
 - Added support for loading OpenAPI `multipart/form-data` request examples, including multipart content and external file references for mock.
 - Added APIs to load central lint configuration once and lint supplied specification content with that resolved configuration, avoiding a config repository clone for every lint operation.
 
-## Changed
+### Changed
 
 - Fixed GraphQL contract tests reusing state from a previous run.
 - Fixed loading of OpenAPI examples referenced through internal or external references, with consistent handling of scalar, structured, array, null, and Specmatic values.
@@ -60,7 +60,7 @@ toc_max_heading_level: 2
 - Added `GET /config/status` to inspect central config refresh health and `POST /config/refresh` to request an immediate refresh.
 - Added `/api-docs` for interactive Swagger UI documentation of lint server APIs.
 
-## Changed
+### Changed
 
 - Example files are now discovered recursively in configured example directories, including nested directories for `examples` command and `studio`.
 - Improved AsyncAPI example validation in Studio to show clearly labelled errors from the message schema(s) with the fewest mismatches when a channel supports multiple message types, while preserving authored correlation IDs.
@@ -75,14 +75,14 @@ toc_max_heading_level: 2
 
 ## 1.23.0 (2026-07-31)
 
-## Added
+### Added
 
 - Async contract tests now support substitutions, including placeholder resolution in requests, response capture, and shared state across `before`, test, and `after`.
 - Added the ability to safely rename specifications and associated files in Studio, with Specmatic configuration paths updated automatically.
 - Added AsyncAPI Schema Object support for `byte` and `binary` formats, escaped JSON Pointer component references, and root-level object constraints and property overrides alongside `allOf`.
 - Added support to report the fixture execution details in AsyncAPI CTRF and HTML reports
 
-## Changed
+### Changed
 
 - Fixed OpenAPI `allOf` conversion so a main-schema property overrides a matching member property without generating both optional and required keys.
 - Fixed multi-spec stubs to route requests to the most specific matching base-URL path.
