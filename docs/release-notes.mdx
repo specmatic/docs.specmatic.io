@@ -19,9 +19,12 @@ toc_max_heading_level: 2
 
 - Fixed request fixing in studio to preserve security scheme headers and query parameters and repair invalid security values.
 - Fixed regular expressions containing an unescaped `.` so matching and generated values use the same behavior and do not unexpectedly include line terminators.
+- License, telemetry, and utilization requests now support HTTP(S) proxies configured through JVM proxy properties or standard proxy environment variables, with NO_PROXY bypass support.
+- Improved GraphQL specification parsing for large schemas and clearer validation errors for missing or empty query roots and improved parser diagnostics for invalid OpenAPI, AsyncAPI, and gRPC specifications during report generation.
 - Use `mock`, `test`, `run-suite`, or `backward-compatibility-check` with `--ci` and the Insights repository/build metadata options to submit reports directly to Specmatic Insights. The separate `send-report` follow-up step is deprecated.
 - Improved Insights-backed backward-compatibility verdict messages to distinguish affected consumers, no reported consumers, strict-mode failures, Insights check failures, unavailable licenses, unsupported protocols, and missing operation requests.
 - Improved OpenAPI handling of `default` responses to ensure they only match undeclared statuses. Fixed issues with loading, validating and fixing default response examples. Now, the declared status of a default response example is asserted during contract tests and returned by mocks.
+- Renamed the central contract repository report to the Spec Metadata Report. The `spec-metadata-report` command and `spec_metadata_report.json` output are now the primary names, while the previous command name remains an alias and `send-report` continues to consume the previous report filename.
 
 ## 1.25.0 (2026-08-14)
 
