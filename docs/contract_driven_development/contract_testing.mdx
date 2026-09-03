@@ -761,11 +761,11 @@ paths:
 `default` is a fallback, not a catch-all. When the `default` response definition is being evaluated, it is eligible only for statuses that are not explicitly declared for that operation. If a test is selected for a different response definition, an undeclared status causes the test to fail; it does not switch to `default`.
 :::
 
-For the specification above, the statuses eligible while evaluating the `default` response are:
+For the specification above, here is how response statuses in contract test responses are evaluated against the `default` response:
 
-| Status returned by the application | Default response |
+| Status returned by the application | Eligible for default response match? |
 |---|---|
-| `200` | Not eligible; explicitly declared |
+| `200` | Not eligible as spec explicitly declares 200 |
 | `404` | Not eligible; explicitly declared |
 | `400`, `401`, or `500` | Eligible; not explicitly declared |
 
@@ -807,12 +807,12 @@ Inline examples under `responses.default` do not create tests for the default re
 
 The response definition is selected before the application response is validated. For example:
 
-| Selected response definition | Application response | Result |
+| Response status being tested for | Application response | Result |
 |---|---|---|
-| Explicit `200` | `200` | Validate against the explicit `200` response |
-| Explicit `200` | `400` | Fail; the test does not switch to `default` |
-| `default` example with status `400` | `400` | Validate against the `default` response |
-| `default` example with status `400` | `401` | Fail; the example expects `400` |
+| `200` declared expicitly in spec | `200` | Validated as per the `200` response in spec |
+| `200` declared expicitly in spec | `400` | Fail; the response is not validated against `default` |
+| `default` response in spec and `400` status in example | `400` | Validate against the `400` status response in example |
+| `default` response in spec and `400` status in example | `401` | Fail; the example expects `400` |
 
 :::info
 A test is tied to its selected response definition. If a test targets the explicit `200` response, an actual `400` response fails; it does not switch to `default`. Similarly, an example with status `404` is associated with the explicit `404` response, not `default`. If `400` is later declared explicitly, the example above is associated with that new `400` response.
