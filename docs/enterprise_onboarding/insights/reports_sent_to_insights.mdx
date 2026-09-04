@@ -90,7 +90,7 @@ Each value is resolved in this order, with the first available value winning:
 | --- | --- |
 | Detection | `GITLAB_CI=true` |
 | Build ID | `CI_PIPELINE_ID` |
-| Run attempt | `CI_JOB_RETRY` + 1 |
+| Run attempt | `CI_JOB_RETRY_COUNT` + 1 |
 | Repository ID | `CI_PROJECT_ID` |
 | Repository name | `CI_PROJECT_NAME` |
 | Repository URL | `CI_PROJECT_URL` |
