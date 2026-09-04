@@ -1220,9 +1220,9 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 ---
 ## API Coverage
 
-After executing the tests, Specmatic generates a tabular report that displays which APIs were covered by the tests. It can also retrieve the APIs exposed by the application through the actuator module to identify which APIs were *not* covered by contract tests or those that are not *implemented* in the service.
+After executing the tests, Specmatic generates a tabular API Coverage report showing which API operations were covered by the tests. Specmatic can also retrieve the operations exposed by the application through an actuator mappings endpoint or a generated OpenAPI/swagger document URL. This enables Specmatic to highlight operations that were not tested, operations defined in the specification but not implemented by the application, and operations exposed by the application but missing from the specification.
 
-There are two methods to enable this feature:
+There are two methods for retrieving the operations exposed by the application:
 
 #### Enable the Actuator Mapping Endpoint
 
@@ -1236,22 +1236,28 @@ Refer to the [sample project](https://github.com/specmatic/specmatic-order-api-j
 
 #### Use Swagger URL Endpoint
 
-Many frameworks can expose an OpenAPI document generated from the application's routes and models. For example,
-Springdoc commonly exposes one at `/v3/api-docs`, while Swashbuckle can expose one at
-`/swagger/v1/swagger.yaml` or `/swagger/v1/swagger.json`.
+Many frameworks can expose an OpenAPI document generated from the application's routes and models. The following
+table lists the default or commonly configured document paths for popular framework integrations:
 
-Set `swaggerUrl` to the **complete URL of that OpenAPI document**. Specmatic sends a `GET` request to this URL, parses
-the returned OpenAPI document, and compares its operations with the contract test coverage. The endpoint must be
-reachable from the environment in which Specmatic runs and return HTTP `200`.
+| Language/ecosystem | Framework or integration | OpenAPI document path | Notes |
+| --- | --- | --- | --- |
+| Java/Kotlin | [Spring Boot with springdoc-openapi](https://springdoc.org/v2/getting-started.html) | `/v3/api-docs` (JSON) or `/v3/api-docs.yaml` (YAML) | Configurable using `springdoc.api-docs.path`. |
+| Java/Kotlin | [Quarkus with SmallRye OpenAPI](https://quarkus.io/guides/openapi-swaggerui) | `/q/openapi` | Add `?format=json` to request JSON. The path is configurable using `quarkus.smallrye-openapi.path`. |
+| .NET | [ASP.NET Core built-in OpenAPI](https://learn.microsoft.com/aspnet/core/fundamentals/openapi/aspnetcore-openapi) | `/openapi/v1.json` | Available when the application calls `MapOpenApi()`. The document name and route can be customized. |
+| .NET | [ASP.NET Core with Swashbuckle](https://learn.microsoft.com/aspnet/core/tutorials/getting-started-with-swashbuckle) | `/swagger/v1/swagger.json` | The document name and route can be customized. |
+| Python | [FastAPI](https://fastapi.tiangolo.com/tutorial/metadata/#openapi-url) | `/openapi.json` | Configurable using the `openapi_url` parameter. |
+| Python | [Django REST Framework with drf-spectacular](https://drf-spectacular.readthedocs.io/en/stable/readme.html#take-it-for-a-spin) | Commonly `/api/schema/` | There is no fixed default; the path is selected when registering `SpectacularAPIView`. |
+| Node.js/TypeScript | [NestJS with `@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction) | `<swagger-ui-path>-json` | If Swagger UI is mounted at `/api`, the JSON document is exposed at `/api-json`. The path can be customized. |
 
-Set `swaggerUrl` under `systemUnderTest.service.runOptions.openapi`:
+These paths can be changed by application configuration, routing prefixes, gateways, or reverse proxies.
+
+Set `swaggerUrl` to the **complete URL of that OpenAPI document**. Specmatic sends a `GET` request to this URL, parses the returned OpenAPI document, and compares its operations with the contract test coverage. The endpoint must be reachable from the environment in which Specmatic runs, return the raw OpenAPI JSON or YAML document rather than the Swagger UI HTML page, and respond with HTTP `200`.
+
+In your [Specmatic configuration](/references/configuration), set `swaggerUrl` under `systemUnderTest.service.runOptions.openapi`:
 
 <V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/contract-testing/swagger-url/specmatic.yaml?raw'))} />
 
-If the application exposes the generated document for a specific API specification at a different URL or port, set a
-`swaggerUrl` override under `systemUnderTest.service.runOptions.openapi.specs[].spec`. The `id` must match the
-corresponding specification in `systemUnderTest.service.definitions`. This value overrides the top-level `swaggerUrl`
-for that specification.
+If the application exposes the generated document for a specific API specification at a different URL or port, set a `swaggerUrl` override under `systemUnderTest.service.runOptions.openapi.specs[].spec`. The `id` must match the corresponding specification in `systemUnderTest.service.definitions`. This value overrides the top-level `swaggerUrl` for that specification.
 
 If both are present, `actuatorUrl` is favored over `swaggerUrl`. However if a `swaggerUrl` override is present, the override is preferred over other options.
 
