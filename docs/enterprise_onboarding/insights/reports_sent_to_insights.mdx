@@ -74,7 +74,7 @@ For CI publishing, `--build-id` and `--repo-id` are required. A provider can sup
 
 ### CI-provider defaults
 
-Select your CI provider to see the values Specmatic reads. The example in each tab is for a container or other isolated execution context that cannot see the provider's native environment. On a normal CI runner, use `specmatic test --ci`: Reporter reads the native variables automatically. A dash means the provider does not supply a suitable value, so provide `SPECMATIC_REPO_ID` yourself when publishing from CI.
+Select your CI provider to see the values Specmatic reads. The example in each tab passes them explicitly as CLI options, which is useful when running Specmatic in a container or other isolated execution context. On a normal CI runner, use `specmatic test --ci`: Reporter reads the native variables automatically. A dash means the provider does not supply a suitable value, so provide `--repo-id` yourself when publishing from CI.
 
 <Tabs groupId="insights-ci-provider">
   <TabItem value="github-actions" label="GitHub Actions" default>
@@ -92,13 +92,13 @@ Select your CI provider to see the values Specmatic reads. The example in each t
 - name: Run Specmatic in Docker
   run: |
     docker run --rm \
-      -e SPECMATIC_BUILD_ID=${{ github.run_id }} \
-      -e SPECMATIC_RUN_ATTEMPT=${{ github.run_attempt }} \
-      -e SPECMATIC_REPO_ID=${{ github.repository_id }} \
-      -e SPECMATIC_REPO_NAME=${{ github.repository }} \
-      -e SPECMATIC_REPO_URL=${{ github.server_url }}/${{ github.repository }} \
-      -e SPECMATIC_BRANCH_NAME=${{ github.head_ref || github.ref_name }} \
-      <image> test --ci
+      <image> test --ci \
+      --build-id '${{ github.run_id }}' \
+      --run-attempt '${{ github.run_attempt }}' \
+      --repo-id '${{ github.repository_id }}' \
+      --repo-name '${{ github.repository }}' \
+      --repo-url '${{ github.server_url }}/${{ github.repository }}' \
+      --branch-name '${{ github.head_ref || github.ref_name }}'
 ```
 
   </TabItem>
@@ -117,13 +117,13 @@ Select your CI provider to see the values Specmatic reads. The example in each t
 specmatic:
   script:
     - docker run --rm \
-        -e SPECMATIC_BUILD_ID="$CI_PIPELINE_ID" \
-        -e SPECMATIC_RUN_ATTEMPT="$((CI_JOB_RETRY_COUNT + 1))" \
-        -e SPECMATIC_REPO_ID="$CI_PROJECT_ID" \
-        -e SPECMATIC_REPO_NAME="$CI_PROJECT_NAME" \
-        -e SPECMATIC_REPO_URL="$CI_PROJECT_URL" \
-        -e SPECMATIC_BRANCH_NAME="${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME:-$CI_COMMIT_REF_NAME}" \
-        <image> test --ci
+        <image> test --ci \
+        --build-id "$CI_PIPELINE_ID" \
+        --run-attempt "$((CI_JOB_RETRY_COUNT + 1))" \
+        --repo-id "$CI_PROJECT_ID" \
+        --repo-name "$CI_PROJECT_NAME" \
+        --repo-url "$CI_PROJECT_URL" \
+        --branch-name "${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME:-$CI_COMMIT_REF_NAME}"
 ```
 
   </TabItem>
@@ -141,13 +141,13 @@ specmatic:
 ```yaml
 - script: |
     docker run --rm \
-      -e SPECMATIC_BUILD_ID='$(Build.BuildId)' \
-      -e SPECMATIC_RUN_ATTEMPT='$(System.JobAttempt)' \
-      -e SPECMATIC_REPO_ID='$(Build.Repository.ID)' \
-      -e SPECMATIC_REPO_NAME='$(Build.Repository.Name)' \
-      -e SPECMATIC_REPO_URL='$(Build.Repository.Uri)' \
-      -e SPECMATIC_BRANCH_NAME='$(Build.SourceBranchName)' \
-      <image> test --ci
+      <image> test --ci \
+      --build-id '$(Build.BuildId)' \
+      --run-attempt '$(System.JobAttempt)' \
+      --repo-id '$(Build.Repository.ID)' \
+      --repo-name '$(Build.Repository.Name)' \
+      --repo-url '$(Build.Repository.Uri)' \
+      --branch-name '$(Build.SourceBranchName)'
 ```
 
   </TabItem>
@@ -165,11 +165,11 @@ specmatic:
 ```groovy
 sh """
   docker run --rm \\
-    -e SPECMATIC_BUILD_ID='${env.BUILD_TAG ?: env.BUILD_ID}' \\
-    -e SPECMATIC_REPO_ID='<repository-id>' \\
-    -e SPECMATIC_REPO_URL='${env.GIT_URL}' \\
-    -e SPECMATIC_BRANCH_NAME='${env.BRANCH_NAME ?: env.GIT_BRANCH}' \\
-    <image> test --ci
+    <image> test --ci \\
+    --build-id='${env.BUILD_TAG ?: env.BUILD_ID}' \\
+    --repo-id='<repository-id>' \\
+    --repo-url='${env.GIT_URL}' \\
+    --branch-name='${env.BRANCH_NAME ?: env.GIT_BRANCH}'
 """
 ```
 
@@ -190,12 +190,12 @@ sh """
     name: Run Specmatic in Docker
     command: |
       docker run --rm \
-        -e SPECMATIC_BUILD_ID="$CIRCLE_WORKFLOW_ID" \
-        -e SPECMATIC_REPO_ID="$CIRCLE_PROJECT_ID" \
-        -e SPECMATIC_REPO_NAME="$CIRCLE_PROJECT_REPONAME" \
-        -e SPECMATIC_REPO_URL="$CIRCLE_REPOSITORY_URL" \
-        -e SPECMATIC_BRANCH_NAME="$CIRCLE_BRANCH" \
-        <image> test --ci
+        <image> test --ci \
+        --build-id "$CIRCLE_WORKFLOW_ID" \
+        --repo-id "$CIRCLE_PROJECT_ID" \
+        --repo-name "$CIRCLE_PROJECT_REPONAME" \
+        --repo-url "$CIRCLE_REPOSITORY_URL" \
+        --branch-name "$CIRCLE_BRANCH"
 ```
 
   </TabItem>
@@ -212,12 +212,12 @@ sh """
 
 ```yaml
 - docker run --rm \
-    -e SPECMATIC_BUILD_ID="$BITBUCKET_BUILD_NUMBER" \
-    -e SPECMATIC_REPO_ID="$BITBUCKET_REPO_UUID" \
-    -e SPECMATIC_REPO_NAME="$BITBUCKET_REPO_SLUG" \
-    -e SPECMATIC_REPO_URL="$BITBUCKET_GIT_HTTP_ORIGIN" \
-    -e SPECMATIC_BRANCH_NAME="$BITBUCKET_BRANCH" \
-    <image> test --ci
+    <image> test --ci \
+    --build-id "$BITBUCKET_BUILD_NUMBER" \
+    --repo-id "$BITBUCKET_REPO_UUID" \
+    --repo-name "$BITBUCKET_REPO_SLUG" \
+    --repo-url "$BITBUCKET_GIT_HTTP_ORIGIN" \
+    --branch-name "$BITBUCKET_BRANCH"
 ```
 
   </TabItem>
@@ -236,12 +236,12 @@ sh """
 steps:
   - command: |
       docker run --rm \
-        -e SPECMATIC_BUILD_ID="$$BUILDKITE_BUILD_ID" \
-        -e SPECMATIC_RUN_ATTEMPT="$$(($$BUILDKITE_RETRY_COUNT + 1))" \
-        -e SPECMATIC_REPO_ID="<repository-id>" \
-        -e SPECMATIC_REPO_URL="$$BUILDKITE_REPO" \
-        -e SPECMATIC_BRANCH_NAME="$$BUILDKITE_BRANCH" \
-        <image> test --ci
+        <image> test --ci \
+        --build-id "$$BUILDKITE_BUILD_ID" \
+        --run-attempt "$$(($$BUILDKITE_RETRY_COUNT + 1))" \
+        --repo-id "<repository-id>" \
+        --repo-url "$$BUILDKITE_REPO" \
+        --branch-name "$$BUILDKITE_BRANCH"
 ```
 
   </TabItem>
@@ -258,10 +258,10 @@ steps:
 
 ```bash
 docker run --rm \
-  -e SPECMATIC_BUILD_ID='%system.teamcity.build.id%' \
-  -e SPECMATIC_REPO_ID='<repository-id>' \
-  -e SPECMATIC_BRANCH_NAME='%teamcity.build.branch%' \
-  <image> test --ci
+  <image> test --ci \
+  --build-id='%system.teamcity.build.id%' \
+  --repo-id='<repository-id>' \
+  --branch-name='%teamcity.build.branch%'
 ```
 
   </TabItem>
