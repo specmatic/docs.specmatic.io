@@ -74,14 +74,13 @@ For CI publishing, `--build-id` and `--repo-id` are required. A provider can sup
 
 ### CI-provider defaults
 
-Select your CI provider to see the values Specmatic reads. The **Detection** value identifies the provider; the other rows map its values to the corresponding Insights options. A dash means the provider does not supply a suitable value, so use an override where required or allow the Git fallback for repository URL, repository name, and branch.
+Select your CI provider to see the values Specmatic reads. The example in each tab is for a container or other isolated execution context that cannot see the provider's native environment. On a normal CI runner, use `specmatic test --ci`: Reporter reads the native variables automatically. A dash means the provider does not supply a suitable value, so provide `SPECMATIC_REPO_ID` yourself when publishing from CI.
 
 <Tabs groupId="insights-ci-provider">
   <TabItem value="github-actions" label="GitHub Actions" default>
 
-| Parameter | Environment variable |
+| Parameter | Runtime environment variable |
 | --- | --- |
-| Detection | `GITHUB_ACTIONS=true` |
 | Build ID | `GITHUB_RUN_ID` |
 | Run attempt | `GITHUB_RUN_ATTEMPT` |
 | Repository ID | `GITHUB_REPOSITORY_ID` |
@@ -89,12 +88,24 @@ Select your CI provider to see the values Specmatic reads. The **Detection** val
 | Repository URL | `GITHUB_SERVER_URL` + `GITHUB_REPOSITORY` |
 | Branch | `GITHUB_HEAD_REF`, then `GITHUB_REF_NAME`, then `GITHUB_REF` |
 
+```yaml
+- name: Run Specmatic in Docker
+  run: |
+    docker run --rm \
+      -e SPECMATIC_BUILD_ID=${{ github.run_id }} \
+      -e SPECMATIC_RUN_ATTEMPT=${{ github.run_attempt }} \
+      -e SPECMATIC_REPO_ID=${{ github.repository_id }} \
+      -e SPECMATIC_REPO_NAME=${{ github.repository }} \
+      -e SPECMATIC_REPO_URL=${{ github.server_url }}/${{ github.repository }} \
+      -e SPECMATIC_BRANCH_NAME=${{ github.head_ref || github.ref_name }} \
+      <image> test --ci
+```
+
   </TabItem>
   <TabItem value="gitlab" label="GitLab CI">
 
-| Parameter | Environment variable |
+| Parameter | Runtime environment variable |
 | --- | --- |
-| Detection | `GITLAB_CI=true` |
 | Build ID | `CI_PIPELINE_ID` |
 | Run attempt | `CI_JOB_RETRY_COUNT` + 1 |
 | Repository ID | `CI_PROJECT_ID` |
@@ -102,12 +113,24 @@ Select your CI provider to see the values Specmatic reads. The **Detection** val
 | Repository URL | `CI_PROJECT_URL` |
 | Branch | `CI_MERGE_REQUEST_SOURCE_BRANCH_NAME`, then `CI_COMMIT_REF_NAME` |
 
+```yaml
+specmatic:
+  script:
+    - docker run --rm \
+        -e SPECMATIC_BUILD_ID="$CI_PIPELINE_ID" \
+        -e SPECMATIC_RUN_ATTEMPT="$((CI_JOB_RETRY_COUNT + 1))" \
+        -e SPECMATIC_REPO_ID="$CI_PROJECT_ID" \
+        -e SPECMATIC_REPO_NAME="$CI_PROJECT_NAME" \
+        -e SPECMATIC_REPO_URL="$CI_PROJECT_URL" \
+        -e SPECMATIC_BRANCH_NAME="${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME:-$CI_COMMIT_REF_NAME}" \
+        <image> test --ci
+```
+
   </TabItem>
   <TabItem value="azure" label="Azure Pipelines">
 
-| Parameter | Environment variable |
+| Parameter | Runtime environment variable |
 | --- | --- |
-| Detection | `TF_BUILD=true` |
 | Build ID | `BUILD_BUILDID` |
 | Run attempt | `SYSTEM_JOBATTEMPT` |
 | Repository ID | `BUILD_REPOSITORY_ID` |
@@ -115,51 +138,93 @@ Select your CI provider to see the values Specmatic reads. The **Detection** val
 | Repository URL | `BUILD_REPOSITORY_URI` |
 | Branch | `BUILD_SOURCEBRANCHNAME` |
 
+```yaml
+- script: |
+    docker run --rm \
+      -e SPECMATIC_BUILD_ID='$(Build.BuildId)' \
+      -e SPECMATIC_RUN_ATTEMPT='$(System.JobAttempt)' \
+      -e SPECMATIC_REPO_ID='$(Build.Repository.ID)' \
+      -e SPECMATIC_REPO_NAME='$(Build.Repository.Name)' \
+      -e SPECMATIC_REPO_URL='$(Build.Repository.Uri)' \
+      -e SPECMATIC_BRANCH_NAME='$(Build.SourceBranchName)' \
+      <image> test --ci
+```
+
   </TabItem>
   <TabItem value="jenkins" label="Jenkins">
 
-| Parameter | Environment variable |
+| Parameter | Runtime environment variable |
 | --- | --- |
-| Detection | `JENKINS_URL` |
 | Build ID | `BUILD_TAG`, then `BUILD_ID` |
-| Run attempt | — |
+| Run attempt | `1` |
 | Repository ID | — |
 | Repository name | Derived from Git URL |
 | Repository URL | `GIT_URL` |
 | Branch | `BRANCH_NAME`, then `GIT_BRANCH` |
 
+```groovy
+sh """
+  docker run --rm \\
+    -e SPECMATIC_BUILD_ID='${env.BUILD_TAG ?: env.BUILD_ID}' \\
+    -e SPECMATIC_REPO_ID='<repository-id>' \\
+    -e SPECMATIC_REPO_URL='${env.GIT_URL}' \\
+    -e SPECMATIC_BRANCH_NAME='${env.BRANCH_NAME ?: env.GIT_BRANCH}' \\
+    <image> test --ci
+"""
+```
+
   </TabItem>
   <TabItem value="circleci" label="CircleCI">
 
-| Parameter | Environment variable |
+| Parameter | Runtime environment variable |
 | --- | --- |
-| Detection | `CIRCLECI=true` |
 | Build ID | `CIRCLE_WORKFLOW_ID` |
-| Run attempt | — |
+| Run attempt | `1` |
 | Repository ID | `CIRCLE_PROJECT_ID` |
 | Repository name | `CIRCLE_PROJECT_REPONAME` |
 | Repository URL | `CIRCLE_REPOSITORY_URL` |
 | Branch | `CIRCLE_BRANCH` |
 
+```yaml
+- run:
+    name: Run Specmatic in Docker
+    command: |
+      docker run --rm \
+        -e SPECMATIC_BUILD_ID="$CIRCLE_WORKFLOW_ID" \
+        -e SPECMATIC_REPO_ID="$CIRCLE_PROJECT_ID" \
+        -e SPECMATIC_REPO_NAME="$CIRCLE_PROJECT_REPONAME" \
+        -e SPECMATIC_REPO_URL="$CIRCLE_REPOSITORY_URL" \
+        -e SPECMATIC_BRANCH_NAME="$CIRCLE_BRANCH" \
+        <image> test --ci
+```
+
   </TabItem>
   <TabItem value="bitbucket" label="Bitbucket">
 
-| Parameter | Environment variable |
+| Parameter | Runtime environment variable |
 | --- | --- |
-| Detection | `BITBUCKET_BUILD_NUMBER` |
 | Build ID | `BITBUCKET_BUILD_NUMBER` |
-| Run attempt | — |
+| Run attempt | `1` |
 | Repository ID | `BITBUCKET_REPO_UUID` |
 | Repository name | `BITBUCKET_REPO_SLUG` |
 | Repository URL | `BITBUCKET_GIT_HTTP_ORIGIN` |
 | Branch | `BITBUCKET_BRANCH` |
 
+```yaml
+- docker run --rm \
+    -e SPECMATIC_BUILD_ID="$BITBUCKET_BUILD_NUMBER" \
+    -e SPECMATIC_REPO_ID="$BITBUCKET_REPO_UUID" \
+    -e SPECMATIC_REPO_NAME="$BITBUCKET_REPO_SLUG" \
+    -e SPECMATIC_REPO_URL="$BITBUCKET_GIT_HTTP_ORIGIN" \
+    -e SPECMATIC_BRANCH_NAME="$BITBUCKET_BRANCH" \
+    <image> test --ci
+```
+
   </TabItem>
   <TabItem value="buildkite" label="Buildkite">
 
-| Parameter | Environment variable |
+| Parameter | Runtime environment variable |
 | --- | --- |
-| Detection | `BUILDKITE=true` |
 | Build ID | `BUILDKITE_BUILD_ID` |
 | Run attempt | `BUILDKITE_RETRY_COUNT` + 1 |
 | Repository ID | — |
@@ -167,18 +232,37 @@ Select your CI provider to see the values Specmatic reads. The **Detection** val
 | Repository URL | `BUILDKITE_REPO` |
 | Branch | `BUILDKITE_BRANCH` |
 
+```yaml
+steps:
+  - command: |
+      docker run --rm \
+        -e SPECMATIC_BUILD_ID="$$BUILDKITE_BUILD_ID" \
+        -e SPECMATIC_RUN_ATTEMPT="$$(($$BUILDKITE_RETRY_COUNT + 1))" \
+        -e SPECMATIC_REPO_ID="<repository-id>" \
+        -e SPECMATIC_REPO_URL="$$BUILDKITE_REPO" \
+        -e SPECMATIC_BRANCH_NAME="$$BUILDKITE_BRANCH" \
+        <image> test --ci
+```
+
   </TabItem>
   <TabItem value="teamcity" label="TeamCity">
 
-| Parameter | Environment variable |
+| Parameter | Runtime environment variable |
 | --- | --- |
-| Detection | `TEAMCITY_VERSION` |
 | Build ID | `TEAMCITY_BUILD_ID` |
-| Run attempt | — |
+| Run attempt | `1` |
 | Repository ID | — |
 | Repository name | Derived from Git URL |
 | Repository URL | Local Git remote |
 | Branch | `TEAMCITY_BUILD_BRANCH`, then local Git branch |
+
+```bash
+docker run --rm \
+  -e SPECMATIC_BUILD_ID='%system.teamcity.build.id%' \
+  -e SPECMATIC_REPO_ID='<repository-id>' \
+  -e SPECMATIC_BRANCH_NAME='%teamcity.build.branch%' \
+  <image> test --ci
+```
 
   </TabItem>
 </Tabs>
