@@ -3,6 +3,9 @@ title: Reports Sent to Insights
 sidebar_position: 7
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Reports Sent to Insights
 
 Run the command that generates the report with `--ci`, `--build-id`, and repository metadata to submit it directly to Insights. `test` submits its test report, `mock` submits its mock-usage report, and `run-suite` submits both reports separately.
@@ -43,17 +46,138 @@ Pass `--ci --build-id <id> --repo-id <id> --repo-name <name> --repo-url <url> --
 
 `--build-id` correlates all reports from one CI build in Insights. Use the ID supplied by your CI provider; on GitHub Actions, we recommend `${{ github.run_id }}`. A `run-suite` invocation uses the same build ID for the test and mock reports it submits.
 
-CLI arguments take precedence over the following defaults. `--ci` must be passed explicitly because publishing is a sensitive operation.
+### Resolution order
 
-| Option | System property | Environment variables | Other fallback |
-| --- | --- | --- | --- |
-| `--ci` | — | `CI`, `GITHUB_ACTIONS` | — |
-| `--repo-id` | `specmatic.repo.id` | `SPECMATIC_REPO_ID`, `GITHUB_REPOSITORY_ID` | — |
-| `--repo-name` | `specmatic.repo.name` | `SPECMATIC_REPO_NAME`, `GITHUB_REPOSITORY` | Name derived from the Git remote URL |
-| `--repo-url` | `specmatic.repo.url` | `SPECMATIC_REPO_URL`, `GITHUB_REPOSITORY` (and optionally `GITHUB_SERVER_URL`) | Git remote URL |
-| `--branch-name` | `specmatic.branch.name` | `SPECMATIC_BRANCH_NAME`, `GITHUB_HEAD_REF`, `GITHUB_REF_NAME`, `GITHUB_REF` | Current Git branch |
-| `--build-id` | `specmatic.build.id` | `SPECMATIC_BUILD_ID`, `GITHUB_RUN_ID` | — |
-| `--token` | `specmatic.token` | `SPECMATIC_INSIGHTS_TOKEN` | — |
+Each value is resolved in this order, with the first available value winning:
+
+1. CLI argument, such as `--build-id` or `--repo-id`
+2. System property, such as `-Dspecmatic.build.id`
+3. Specmatic environment variable, such as `SPECMATIC_BUILD_ID`
+4. Detected CI-provider environment variable
+5. Local Git metadata, for repository URL, repository name, and branch only
+
+`--ci` must be passed explicitly because publishing is a sensitive operation. CLI arguments always override system properties and environment variables.
+
+| Option | System property | Specmatic environment variable |
+| --- | --- | --- |
+| `--repo-id` | `specmatic.repo.id` | `SPECMATIC_REPO_ID` |
+| `--repo-name` | `specmatic.repo.name` | `SPECMATIC_REPO_NAME` |
+| `--repo-url` | `specmatic.repo.url` | `SPECMATIC_REPO_URL` |
+| `--branch-name` | `specmatic.branch.name` | `SPECMATIC_BRANCH_NAME` |
+| `--build-id` | `specmatic.build.id` | `SPECMATIC_BUILD_ID` |
+| `--run-attempt` | `specmatic.run.attempt` | `SPECMATIC_RUN_ATTEMPT` |
+| `--token` | `specmatic.token` | `SPECMATIC_INSIGHTS_TOKEN` |
+
+### CI-provider defaults
+
+<Tabs groupId="insights-ci-provider">
+  <TabItem value="github-actions" label="GitHub Actions" default>
+
+| Parameter | Environment variable |
+| --- | --- |
+| Detection | `GITHUB_ACTIONS=true` |
+| Build ID | `GITHUB_RUN_ID` |
+| Run attempt | `GITHUB_RUN_ATTEMPT` |
+| Repository ID | `GITHUB_REPOSITORY_ID` |
+| Repository name | `GITHUB_REPOSITORY` |
+| Repository URL | `GITHUB_SERVER_URL` + `GITHUB_REPOSITORY` |
+| Branch | `GITHUB_HEAD_REF`, then `GITHUB_REF_NAME`, then `GITHUB_REF` |
+
+  </TabItem>
+  <TabItem value="gitlab" label="GitLab CI">
+
+| Parameter | Environment variable |
+| --- | --- |
+| Detection | `GITLAB_CI=true` |
+| Build ID | `CI_PIPELINE_ID` |
+| Run attempt | `CI_JOB_RETRY` + 1 |
+| Repository ID | `CI_PROJECT_ID` |
+| Repository name | `CI_PROJECT_NAME` |
+| Repository URL | `CI_PROJECT_URL` |
+| Branch | `CI_MERGE_REQUEST_SOURCE_BRANCH_NAME`, then `CI_COMMIT_REF_NAME` |
+
+  </TabItem>
+  <TabItem value="azure" label="Azure Pipelines">
+
+| Parameter | Environment variable |
+| --- | --- |
+| Detection | `TF_BUILD=true` |
+| Build ID | `BUILD_BUILDID` |
+| Run attempt | `SYSTEM_JOBATTEMPT` |
+| Repository ID | `BUILD_REPOSITORY_ID` |
+| Repository name | `BUILD_REPOSITORY_NAME` |
+| Repository URL | `BUILD_REPOSITORY_URI` |
+| Branch | `BUILD_SOURCEBRANCHNAME` |
+
+  </TabItem>
+  <TabItem value="jenkins" label="Jenkins">
+
+| Parameter | Environment variable |
+| --- | --- |
+| Detection | `JENKINS_URL` |
+| Build ID | `BUILD_TAG`, then `BUILD_ID` |
+| Run attempt | — |
+| Repository ID | — |
+| Repository name | Derived from Git URL |
+| Repository URL | `GIT_URL` |
+| Branch | `BRANCH_NAME`, then `GIT_BRANCH` |
+
+  </TabItem>
+  <TabItem value="circleci" label="CircleCI">
+
+| Parameter | Environment variable |
+| --- | --- |
+| Detection | `CIRCLECI=true` |
+| Build ID | `CIRCLE_WORKFLOW_ID` |
+| Run attempt | — |
+| Repository ID | `CIRCLE_PROJECT_ID` |
+| Repository name | `CIRCLE_PROJECT_REPONAME` |
+| Repository URL | `CIRCLE_REPOSITORY_URL` |
+| Branch | `CIRCLE_BRANCH` |
+
+  </TabItem>
+  <TabItem value="bitbucket" label="Bitbucket">
+
+| Parameter | Environment variable |
+| --- | --- |
+| Detection | `BITBUCKET_BUILD_NUMBER` |
+| Build ID | `BITBUCKET_BUILD_NUMBER` |
+| Run attempt | — |
+| Repository ID | `BITBUCKET_REPO_UUID` |
+| Repository name | `BITBUCKET_REPO_SLUG` |
+| Repository URL | `BITBUCKET_GIT_HTTP_ORIGIN` |
+| Branch | `BITBUCKET_BRANCH` |
+
+  </TabItem>
+  <TabItem value="buildkite" label="Buildkite">
+
+| Parameter | Environment variable |
+| --- | --- |
+| Detection | `BUILDKITE=true` |
+| Build ID | `BUILDKITE_BUILD_ID` |
+| Run attempt | `BUILDKITE_RETRY_COUNT` + 1 |
+| Repository ID | — |
+| Repository name | Derived from Git URL |
+| Repository URL | `BUILDKITE_REPO` |
+| Branch | `BUILDKITE_BRANCH` |
+
+  </TabItem>
+  <TabItem value="teamcity" label="TeamCity">
+
+| Parameter | Environment variable |
+| --- | --- |
+| Detection | `TEAMCITY_VERSION` |
+| Build ID | `TEAMCITY_BUILD_ID` |
+| Run attempt | — |
+| Repository ID | — |
+| Repository name | Derived from Git URL |
+| Repository URL | Local Git remote |
+| Branch | `TEAMCITY_BUILD_BRANCH`, then local Git branch |
+
+  </TabItem>
+</Tabs>
+
+`--run-attempt` is `1` for the first execution. GitLab and Buildkite expose zero-based retry counts, so Specmatic adds one. Azure's `SYSTEM_JOBATTEMPT` is a job-level attempt; the GitHub value is a workflow-run attempt.
 
 `--metadata` and `--config` are CLI-only options.
 
