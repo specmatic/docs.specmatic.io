@@ -399,26 +399,19 @@ Add the following dependencies to your `pom.xml` file:
   </TabItem>
 </Tabs>
 
-Add a class that implements `io.specmatic.test.SpecmaticContractTest` (open source) or `io.specmatic.enterprise.SpecmaticContractTest`
-(Specmatic Enterprise). See how this is done -
-[Interface based contract test example](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
+Add a class that implements `io.specmatic.test.SpecmaticContractTest` (open source) or `io.specmatic.enterprise.SpecmaticContractTest` (Specmatic Enterprise). See how this is done - [Interface based contract test example](https://github.com/specmatic/specmatic-order-api-java/blob/main/src/test/java/com/store/ContractTest.java)
 
 Add the Specmatic configuration file at the project root, as described in the previous section.
 
-Since this is a JUnit 5 test, you can run it the same way you run any other JUnit test. When you run it in your IDE, results
-will appear in the IDE test runner. When you run `mvn test` or `./gradlew test`, Maven or Gradle will write the contract
-test results to the standard JUnit XML reports alongside your other tests.
+Since this is a JUnit 5 test, you can run it the same way you run any other JUnit test. When you run it in your IDE, results will appear in the IDE test runner. When you run `mvn test` or `./gradlew test`, Maven or Gradle will write the contract test results to the standard JUnit XML reports alongside your other tests.
 
 ### Handling Application authentication
 
-If the OpenAPI contract defines API authentication using security schemas, these information will be used by Specmatic when
-running contract tests. Read more about it on the page on [authentication](/features/authentication).
+If the OpenAPI contract defines API authentication using security schemas, these information will be used by Specmatic when running contract tests. Read more about it on the page on [authentication](/features/authentication).
 
 ### Authentication In CI For HTTPS Git Source
 
-Specmatic does a checkout of the git repository given in the Specmatic configuration using the git command. On your computer,
-the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without
-no chance for a user to enter credentials, so the git checkout fails when it gets an authentication failure from the repository.
+Specmatic does a checkout of the git repository given in the Specmatic configuration using the git command. On your computer, the git command will take care of authentication and prompt you for a password. But a build on a CI server runs headless without no chance for a user to enter credentials, so the git checkout fails when it gets an authentication failure from the repository.
 
 Instead, Specmatic can do the checkout using OAuth2 authentication, which is also supported by most git providers.
 
@@ -440,9 +433,7 @@ You can also use an ssh url as your git source. Take the help of your DevOps tea
 
   <TabItem value="java" label="Java/Kotlin">
 
-    If you're building your application in a JVM-based language, you can run Specmatic Contract Tests programmatically, either by
-    implementing `io.specmatic.test.SpecmaticContractTest` (open source) or `io.specmatic.enterprise.SpecmaticContractTest`
-    (Specmatic Enterprise) Here's how:
+    If you're building your application in a JVM-based language, you can run Specmatic Contract Tests programmatically, either by implementing `io.specmatic.test.SpecmaticContractTest` (open source) or `io.specmatic.enterprise.SpecmaticContractTest` (Specmatic Enterprise) Here's how:
 
     <Tabs groupId="java-deps">
       <TabItem value="maven" label="Maven">
@@ -540,8 +531,7 @@ You can also use an ssh url as your git source. Take the help of your DevOps tea
        .run()
    ```
 
-   In this example, replace `your_project` with your project's name and `app` with your Flask application object. If
-   app_host and app_port are not specified, the app will be started on a random available port on 127.0.0.1.
+   In this example, replace `your_project` with your project's name and `app` with your Flask application object. If app_host and app_port are not specified, the app will be started on a random available port on 127.0.0.1.
 
 5. **Run the Tests**: You can run the tests from either your IDE or command line by pointing pytest to your test folder:
 
@@ -563,9 +553,7 @@ Note: Declare your specifications in the Specmatic configuration file as describ
 ### Contract Test Reports
 
 <span id="summary" />
-After the contract tests are completed, Specmatic generates HTML and CTRF reports. 
-These reports provide insights into which operations were executed, which operations aligned with the specifications, and where discrepancies or missing specification entries were identified. 
-**HTML** reports are intended for human-readable analysis, while **CTRF** reports are tailored for CI/CD integrations and downstream tooling.
+After the contract tests are completed, Specmatic generates HTML and CTRF reports. These reports provide insights into which operations were executed, which operations aligned with the specifications, and where discrepancies or missing specification entries were identified. **HTML** reports are intended for human-readable analysis, while **CTRF** reports are tailored for CI/CD integrations and downstream tooling.
 
 To publish this CTRF report in CI, run `specmatic test --ci` with `--build-id`, `--repo-id`, `--repo-name`, `--repo-url`, and `--branch-name`. See [Reports Sent to Insights](/enterprise_onboarding/insights/reports_sent_to_insights#contract-test-report-payload).
 
@@ -820,8 +808,7 @@ A test is tied to its selected response definition. If a test targets the explic
 
 ### Test generation
 
-A `default` response does not generate tests, with or without generative testing, because it does not define a concrete status.
-To exercise a default response, provide an externalized example with the status the application should return. However, during negative schema resiliency testing, `default` will still be used as a fallback to validate an undeclared response status.
+A `default` response does not generate tests, with or without generative testing, because it does not define a concrete status. To exercise a default response, provide an externalized example with the status the application should return. However, during negative schema resiliency testing, `default` will still be used as a fallback to validate an undeclared response status.
 
 ## Data Substitution in Contract Tests  <CommercialBadge/>
 
@@ -885,8 +872,7 @@ In the example above:
 * the main contract test request uses `$(DEPARTMENT_ID)` in the request body to register the employee
 
 :::note
-Values are available from the point at which they are captured.
-Fixtures in the same section are executed in order. This means a later `before` fixture can use values captured by an earlier `before` fixture. Similarly, an `after` fixture can use values captured by `before` fixtures, the main contract test response, and earlier `after` fixtures.
+Values are available from the point at which they are captured. Fixtures in the same section are executed in order. This means a later `before` fixture can use values captured by an earlier `before` fixture. Similarly, an `after` fixture can use values captured by `before` fixtures, the main contract test response, and earlier `after` fixtures.
 :::
 
 ### Complete Example
@@ -1020,8 +1006,7 @@ For example:
 
 ### Execution Filtering
 
-Each `before` and `after` fixture can optionally specify when it should be executed by using `executeFor` at the fixture root.
-By default, fixtures are executed only for positive contract test scenarios. This means that omitting `executeFor` is the same as specifying:
+Each `before` and `after` fixture can optionally specify when it should be executed by using `executeFor` at the fixture root. By default, fixtures are executed only for positive contract test scenarios. This means that omitting `executeFor` is the same as specifying:
 ```json
 {
   "executeFor": {
@@ -1038,8 +1023,7 @@ The supported values are:
 | `negative` | Execute the fixture only for negative scenarios.              |
 | `all`      | Execute the fixture for both positive and negative scenarios. |
 
-For example, this fixture runs only for positive scenarios because `executeFor` is not specified.
-It creates a department and captures `DEPARTMENT_ID`, which can then be used by the main contract test.
+For example, this fixture runs only for positive scenarios because `executeFor` is not specified. It creates a department and captures `DEPARTMENT_ID`, which can then be used by the main contract test.
 
 ```json title="create-department.fixture.json"
 {
@@ -1062,8 +1046,7 @@ It creates a department and captures `DEPARTMENT_ID`, which can then be used by 
 ```
 
 
-Use `all` when a fixture should run for both positive and negative scenarios.
-For example, this fixture resets department test data after every scenario:
+Use `all` when a fixture should run for both positive and negative scenarios. For example, this fixture resets department test data after every scenario:
 ```json title="reset-departments.fixture.json"
 {
   "type": "http",
@@ -1083,9 +1066,7 @@ For example, this fixture resets department test data after every scenario:
 
 ### Behaviour
 
-Substitution is lenient by default. This means that if Specmatic cannot resolve a substitution expression, it will not fail the test.
-Instead, it will log a warning and generate a value for the field based on the schema.
-However, this does not apply to fixtures, as there is no underlying schema to generate from.
+Substitution is lenient by default. This means that if Specmatic cannot resolve a substitution expression, it will not fail the test. Instead, it will log a warning and generate a value for the field based on the schema. However, this does not apply to fixtures, as there is no underlying schema to generate from.
 
 This fallback applies when:
 * the referenced variable is unavailable
@@ -1236,8 +1217,7 @@ Refer to the [sample project](https://github.com/specmatic/specmatic-order-api-j
 
 #### Use Swagger URL Endpoint
 
-Many frameworks can expose an OpenAPI document generated from the application's routes and models. The following
-table lists the default or commonly configured document paths for popular framework integrations:
+Many frameworks can expose an OpenAPI document generated from the application's routes and models. The following table lists the default or commonly configured document paths for popular framework integrations:
 
 | Language/ecosystem | Framework or integration | OpenAPI document path | Notes |
 | --- | --- | --- | --- |
@@ -1263,8 +1243,7 @@ If both are present, `actuatorUrl` is favored over `swaggerUrl`. However if a `s
 
 If neither is configured, Specmatic attempts to retrieve `<system-under-test-base-url>/swagger/v1/swagger.yaml`.
 
-The test results, including coverage, can be accessed in the HTML and CTRF (Commercial Only) reports generated at 
-`./build/reports/specmatic/test/html/index.html` and `./build/reports/specmatic/test/ctrf/ctrf-report.json`, respectively.
+The test results, including coverage, can be accessed in the HTML and CTRF (Commercial Only) reports generated at `./build/reports/specmatic/test/html/index.html` and `./build/reports/specmatic/test/ctrf/ctrf-report.json`, respectively.
 
 ---
 
@@ -1280,8 +1259,7 @@ More details on overlays can be found in the [Overlays Documentation](/features/
 
 ### Schema Resiliency Tests
 
-Contract testing within the bounds of the contract is not enough. HTTP prescribes what should happen when contract-invalid requests are sent.
-To ensure that the application operates as required by HTTP, we need to test it with contract-invalid requests.
+Contract testing within the bounds of the contract is not enough. HTTP prescribes what should happen when contract-invalid requests are sent. To ensure that the application operates as required by HTTP, we need to test it with contract-invalid requests.
 
 Given an API specification, we know what an API's request should look like, and hence we can come up with a number of counter examples.
 
@@ -1291,15 +1269,13 @@ Let's use this specification as an example.
 
 A contract-valid test is found in the examples named `SUCCESS`.
 
-If we send a request containing the body `{"color": null, "category": "medicals"}`, the application should respond with a HTTP `400 Bad Request`
-status, because according to the specification, the value of `color` cannot be null.
+If we send a request containing the body `{"color": null, "category": "medicals"}`, the application should respond with a HTTP `400 Bad Request` status, because according to the specification, the value of `color` cannot be null.
 
 <V3SpecmaticJsonYamlTabs
   v3Object={yaml.load(require('./includes/contract-testing/generative-tests/specmatic.yaml?raw'))}/>
 
 
-Specmatic can generate this test (`color` cannot be `null`) and many more to ensure the required validations are in place, and it will do the same for `category`.
-With the Specmatic configuration shown above, generative tests are enabled by default. To disable them, set the environment variable `DISABLE_GENERATIVE_TESTS=true`.
+Specmatic can generate this test (`color` cannot be `null`) and many more to ensure the required validations are in place, and it will do the same for `category`. With the Specmatic configuration shown above, generative tests are enabled by default. To disable them, set the environment variable `DISABLE_GENERATIVE_TESTS=true`.
 
 The best way to see it in action is to try it out with one of your microservices and its API specifications.
 
