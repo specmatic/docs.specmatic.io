@@ -44,7 +44,9 @@ Pass `--ci --build-id <id> --repo-id <id> --repo-name <name> --repo-url <url> --
 
 ## Build identity and default metadata
 
-`--build-id` correlates all reports from one CI build in Insights. Use the ID supplied by your CI provider; on GitHub Actions, we recommend `${{ github.run_id }}`. A `run-suite` invocation uses the same build ID for the test and mock reports it submits.
+`--build-id` is the stable identifier that correlates all reports from one CI build in Insights. A `run-suite` invocation therefore uses one build ID for its separately submitted test and mock reports. Use the build or workflow identifier supplied by your CI provider; on GitHub Actions, this is `${{ github.run_id }}`.
+
+`--run-attempt` identifies which execution of that build produced a report. It is `1` for the original execution and increases when the CI provider retries or reruns it. Insights can therefore distinguish a report from an initial run from one produced by a later attempt without splitting them into unrelated builds.
 
 ### Resolution order
 
@@ -58,6 +60,8 @@ Each value is resolved in this order, with the first available value winning:
 
 `--ci` must be passed explicitly because publishing is a sensitive operation. CLI arguments always override system properties and environment variables.
 
+For CI publishing, `--build-id` and `--repo-id` are required. A provider can supply both automatically, but Git cannot supply a trustworthy repository ID: if the active provider has no repository-ID field, provide `--repo-id` or `SPECMATIC_REPO_ID` yourself.
+
 | Option | System property | Specmatic environment variable |
 | --- | --- | --- |
 | `--repo-id` | `specmatic.repo.id` | `SPECMATIC_REPO_ID` |
@@ -69,6 +73,8 @@ Each value is resolved in this order, with the first available value winning:
 | `--token` | `specmatic.token` | `SPECMATIC_INSIGHTS_TOKEN` |
 
 ### CI-provider defaults
+
+Select your CI provider to see the values Specmatic reads. The **Detection** value identifies the provider; the other rows map its values to the corresponding Insights options. A dash means the provider does not supply a suitable value, so use an override where required or allow the Git fallback for repository URL, repository name, and branch.
 
 <Tabs groupId="insights-ci-provider">
   <TabItem value="github-actions" label="GitHub Actions" default>
@@ -178,6 +184,12 @@ Each value is resolved in this order, with the first available value winning:
 </Tabs>
 
 `--run-attempt` is `1` for the first execution. GitLab and Buildkite expose zero-based retry counts, so Specmatic adds one. Azure's `SYSTEM_JOBATTEMPT` is a job-level attempt; the GitHub value is a workflow-run attempt.
+
+### Running inside Docker
+
+CI variables belong to the runner process. Docker containers do not inherit them automatically, so pass the provider variables through when launching the container, or pass the normalized `SPECMATIC_*` overrides instead. For example, a GitHub Actions job can forward `GITHUB_RUN_ID`, `GITHUB_RUN_ATTEMPT`, and `GITHUB_REPOSITORY_ID` with `docker run -e ...`; Docker Compose can use equivalent `environment` entries or an `env_file`.
+
+If no CI variables are available inside the container, specify the required values explicitly with CLI options or `SPECMATIC_*` variables. Specmatic can still infer repository URL, name, and branch from a Git checkout, but it cannot infer a CI build ID or a stable repository ID from Git alone.
 
 `--metadata` and `--config` are CLI-only options.
 
