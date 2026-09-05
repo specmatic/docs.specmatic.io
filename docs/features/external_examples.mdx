@@ -533,9 +533,9 @@ Employee:
   employeeCode: EMP1234
 ```
 
-#### Starting the Stub Server
+#### Starting the Mock Server
 
-Start the stub server with the following command:
+Start the mock server with the following command:
 
 <Tabs groupId="test">
 
@@ -819,7 +819,7 @@ For each template, Specmatic resolves values in this order:
 
 When using multiple examples, it's important to ensure each request is unique. 
 
-If the same incoming request appears in multiple examples having different responses (e.g., one returns HTTP 200 and another HTTP 400), then Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve its response, ignoring the others. The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion.
+If the same incoming request appears in multiple examples having different responses (e.g., one returns HTTP 200 and another HTTP 400), then Specmatic mock server will arbitrarily pick one of the examples matching the incoming request and serve its response, ignoring the others. The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic mock may not be the one that the user expects, resulting in confusion.
 
 You can detect such issues with competing example requests early by using Specmatic to validate your examples.
 
@@ -941,8 +941,8 @@ On detecting competing requests while validating examples, Specmatic exits with 
 ```log
 ERROR: Competing requests detected in the given examples
   This may have consequences
-    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
-    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
+    - Specmatic mock server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic mock may not be the one that the user expects, resulting in confusion
 
   1. PATCH /employees
 
@@ -1107,8 +1107,8 @@ On detecting competing requests while validating examples, Specmatic exits with 
 ```log
 ERROR: Competing requests detected in the given examples
   This may have consequences
-    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
-    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
+    - Specmatic mock server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic mock may not be the one that the user expects, resulting in confusion
 
   1. PATCH /employees
 
@@ -1308,8 +1308,8 @@ On detecting competing requests while validating examples, Specmatic exits with 
 ```log
 ERROR: Competing requests detected in the given examples
   This may have consequences
-    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
-    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
+    - Specmatic mock server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic mock may not be the one that the user expects, resulting in confusion
 
   1. PATCH /employees
 
@@ -1344,8 +1344,8 @@ For example, the error above in lenient mode will produce the following output:
 ```log
 WARNING: Competing requests detected in the given examples
   This may have consequences
-    - Specmatic stub server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
-    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic stub may not be the one that the user expects, resulting in confusion
+    - Specmatic mock server will arbitrarily pick one of the examples matching the incoming request and serve it's response, ignoring the others
+    - The user may not even realise that there are multiple examples matching the incoming request. Thus, the response from Specmatic mock may not be the one that the user expects, resulting in confusion
 
   1. PATCH /employees
 

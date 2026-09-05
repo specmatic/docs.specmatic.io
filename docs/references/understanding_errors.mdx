@@ -19,7 +19,7 @@ A report contain 3 components:
 
 ## Error In The Request
 
-Let's assume this contract is running as a stub:
+Let's assume this contract is running as a mock:
 
 ```yaml
 #Filename: basic.spec
@@ -42,7 +42,7 @@ paths:
           description: Basic API
 ```
 
-Here's the output of a curl command that invokes the stub API.
+Here's the output of a curl command that invokes the mock API.
 
 ```bash
 ➜  ~ curl -X POST -H 'Content-Type: text/plain' -d hi http://localhost:9000/basic
@@ -80,7 +80,7 @@ Specmatic helpfully tells you that it expected a number, but the actual value wa
 
 ## Error in JSON request
 
-Let's assume this contract is running as a stub:
+Let's assume this contract is running as a mock:
 
 ```yaml
 openapi: 3.0.1
@@ -110,7 +110,7 @@ paths:
                 type: number
 ```
 
-Here's the output of a curl command that invokes the stub API.
+Here's the output of a curl command that invokes the mock API.
 
 ```bash
 ➜  files git:(master) ✗ curl -X POST -H 'Content-Type: application/json' -d '{"data": "hi"}' http://localhost:9000/number

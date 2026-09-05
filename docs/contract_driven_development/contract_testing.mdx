@@ -207,7 +207,7 @@ components:
         maxLength: 2147483647 # Int max.. a 2GB length string.. ?!
 ```
 
-Usually this is not intentional. It may happen for innocuous reasons, e.g. a flag was set / unset in some framework/generator tool. Just imagine generating a 2GB-length string in a test (or even a stub). And usually it is due to a small mistake in the spec-gen metadata. In fact, most strings in an API aren't larger than a few bytes in length. Maybe a few KB. Very rarely do they cross an MB.
+Usually this is not intentional. It may happen for innocuous reasons, e.g. a flag was set / unset in some framework/generator tool. Just imagine generating a 2GB-length string in a test (or even a mock). And usually it is due to a small mistake in the spec-gen metadata. In fact, most strings in an API aren't larger than a few bytes in length. Maybe a few KB. Very rarely do they cross an MB.
 
 So for any string with `maxLength` (or `minLength`) greater than 4MB, Specmatic uses a length of 4MB instead, a more-than-large-enough length for any string in an API call, and prints a warning during the parsing of the specification. Doing so at parse-time allows Specmatic to run smoothly, while the warning tells you clearly what to fix.
 
@@ -1213,7 +1213,7 @@ Activate the actuator mapping endpoint in your backend framework. Specify the UR
 
 Refer to the [sample project](https://github.com/specmatic/specmatic-order-api-java) to observe this in action.
 
-<a id="use-swagger-ui"></a>
+<span id="use-swagger-ui"></span>
 
 #### Use Swagger URL Endpoint
 

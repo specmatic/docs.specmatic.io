@@ -4,9 +4,9 @@ sidebar_position: 1
 ---
 # Getting Started with Configuration
 
-The Specmatic configuration file provides a centralized way to define how Specmatic should operate within your project. It allows you to declaratively specify the specifications to load, the test mode to run in, the stub settings, and other runtime options required by Specmatic.
+The Specmatic configuration file provides a centralized way to define how Specmatic should operate within your project. It allows you to declaratively specify the specifications to load, the test mode to run in, the mock settings, and other runtime options required by Specmatic.
 
-Using this configuration file helps keep all Specmatic-related settings together so you don’t need to update multiple places when making changes. It simplifies setup, reduces repetition, and makes your Specmatic usage predictable and easy to understand—whether you are working with consumer tests, provider tests, or using Specmatic as a stub.
+Using this configuration file helps keep all Specmatic-related settings together so you don’t need to update multiple places when making changes. It simplifies setup, reduces repetition, and makes your Specmatic usage predictable and easy to understand—whether you are working with consumer tests, provider tests, or using Specmatic as a mock.
 
 ## Specmatic Config v3
 
@@ -284,7 +284,7 @@ paymentMock:
     baseUrl: "http://localhost:8090"
 ```
 
-* `type: mock` starts a Specmatic stub server
+* `type: mock` starts a Specmatic mock server
 * Typically used for dependencies
 
 ---
@@ -302,4 +302,4 @@ To create a valid Specmatic YAML v3 file:
 
 
 
-By consolidating these details into a dedicated configuration file, Specmatic allows your project to remain clean and organized while giving you full control over how contract tests and stubs behave.
+By consolidating these details into a dedicated configuration file, Specmatic allows your project to remain clean and organized while giving you full control over how contract tests and mocks behave.

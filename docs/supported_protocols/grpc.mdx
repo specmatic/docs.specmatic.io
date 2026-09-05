@@ -218,7 +218,7 @@ message CreateOrderResponse {
 }
 ```
 
-To provide example values for testing and stubbing, you can create a JSON file containing data for the `createOrder` method:
+To provide example values for testing and mocking, you can create a JSON file containing data for the `createOrder` method:
 
 ```json
 {
@@ -324,15 +324,15 @@ So far in the above explanation the sample project is invoking Specmatic gRPC su
 
 Also, the Specmatic gRPC Docker image, by nature, is completely language and tech stack agnostic.
 
-#### Starting the Stub Service
+#### Starting the Mock Service
 
-To start the stub/service virtualization service, use the appropriate command based on your configuration version:
+To start the mock/service virtualization service, use the appropriate command based on your configuration version:
 
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
 ```
 
-This command mounts your `specmatic.yaml` file and starts the stub service. All configuration (host, port, import paths, etc.) is read from the `specmatic.yaml` file.
+This command mounts your `specmatic.yaml` file and starts the mock service. All configuration (host, port, import paths, etc.) is read from the `specmatic.yaml` file.
 
 #### Running Tests
 
@@ -480,4 +480,4 @@ We have created sample projects to demonstrate how to use Specmatic with gRPC in
 
 * [gRPC sample projects](/sample_projects)
 
-These projects provide practical examples of how to integrate Specmatic gRPC support into your workflow, including setting up stubs, writing tests, and handling different languages, frameworks and running them on CI like GitHub actions.
+These projects provide practical examples of how to integrate Specmatic gRPC support into your workflow, including setting up mocks, writing tests, and handling different languages, frameworks and running them on CI like GitHub actions.

@@ -11,9 +11,9 @@ import yaml from "js-yaml";
 
 # Mock Configuration
 
-## Configuring Stubs
+## Configuring Mocks
 
-The same configuration file can be leveraged to define stubs also.
+The same configuration file can be leveraged to define mocks also.
 
 
 <V2V3SpecmaticConfigTabs
@@ -25,10 +25,10 @@ Please note that now we are now listing the `api_order_v3.yaml` is listed as a d
 `specmatic mock` command and the Specmatic will clone the API specifications and run it as a mock. Here is an
 [example](https://github.com/specmatic/specmatic-order-bff-java/blob/main/src/test/resources/specmatic.yaml).
 
-## Stub Start Timeout
+## Mock Start Timeout
 
 The `startTimeoutInMilliseconds` setting in Specmatic ensures that a mock service, whether started via the
-`stub` command or programmatically using `createStub` method exits if it doesn't start within the defined time.
+`mock` command or programmatically using `createStub` method exits if it doesn't start within the defined time.
 
 <V2V3SpecmaticConfigTabs
   v3Object={require('./includes/mock-configuration/v3/simple-with-mock-start-timeout/specmatic.json')}
@@ -83,18 +83,18 @@ AsyncAPI mocks use `runOptions.asyncapi` in `specmatic.yaml`. This is where Spec
 
 ## Strict Mode
 
-Stub may run in strict mode. You can read more about [stub in strict mode here](/contract_driven_development/service_virtualization#strict-mode).
+Mock may run in strict mode. You can read more about [mock in strict mode here](/contract_driven_development/service_virtualization#strict-mode).
 
-You can configure Specmatic to run stub in strict mode using the following configuration:
+You can configure Specmatic to run mock server in strict mode using the following configuration:
 
 <V2V3SpecmaticConfigTabs
   v3Object={require('./includes/mock-configuration/v3/simple-with-mock-strict-mode/specmatic.json')}
   v2Object={require('./includes/mock-configuration/v2/simple-with-mock-strict-mode/specmatic.json')}
 />
 
-## Run Stub on Different Ports for Different Specifications
+## Run Mock Server on Different Ports for Different Specifications
 
-If you want to run stubs on different ports for different specifications, you can specify the port number in the `port` field under `consumes` key and assign the list of `specs` to it.
+If you want to run mock server on different ports for different specifications, you can specify the port number in the `port` field under `consumes` key and assign the list of `specs` to it.
 
 <V2V3SpecmaticConfigTabs
   v3Object={require('./includes/mock-configuration/v3/complex-with-multiple-ports/specmatic.json')}

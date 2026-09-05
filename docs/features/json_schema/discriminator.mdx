@@ -14,7 +14,7 @@ For best support of this feature please use Specmatic version 2.0.41 onwards.
 </Admonition>
 
 ## Overview
-OpenAPI's discriminator feature allows APIs to handle polymorphic schemas effectively by specifying how to differentiate between different subtypes of a base schema. Specmatic provides comprehensive support for discriminators across its core functionalities: stubbing, testing, example generation, and backward compatibility checks.
+OpenAPI's discriminator feature allows APIs to handle polymorphic schemas effectively by specifying how to differentiate between different subtypes of a base schema. Specmatic provides comprehensive support for discriminators across its core functionalities: mocking, testing, example generation, and backward compatibility checks.
 
 For a detailed understanding of OpenAPI discriminator, refer to the [official OpenAPI documentation](https://spec.openapis.org/oas/v3.0.3#discriminator-object).
 
@@ -120,7 +120,7 @@ components:
 Save this specification in a file named `petstore.yaml`. Now let's walk through how to use Specmatic's features with this specification.
 
 ### 1. Service Virtualization with Discriminator Support
-Let's start the Specmatic stub server. To spin up a stub server with the `petstore.yaml` we authored earlier, run below command.
+Let's start the Specmatic mock server. To spin up a mock server with the `petstore.yaml` we authored earlier, run below command.
 <Tabs groupId="stub">
 
 <TabItem value="stub-java" label="Java">
@@ -143,7 +143,7 @@ docker run -v "/local-directory/petstore.yaml:/usr/src/app/petstore.yaml" -p 900
 
 </Tabs>
 
-This should start your stub server on port 9000 by default as below.
+This should start your mock server on port 9000 by default as below.
 
 ```shell
 Loading petstore.yaml
@@ -155,7 +155,7 @@ API Specification Summary: petstore.yaml
 Stub server is running on http://0.0.0.0:9000. Ctrl + C to stop.
 ```
 
-The stub server provides two key functionalities with discriminator support:
+The mock server provides two key functionalities with discriminator support:
 
 1. **Request Validation**: When a request is received, Specmatic:
    - Extracts the `petType` discriminator value

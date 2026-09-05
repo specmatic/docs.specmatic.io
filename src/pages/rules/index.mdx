@@ -123,7 +123,7 @@ paths:
           description: OK
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```http
 POST /orders HTTP/1.1
@@ -193,7 +193,7 @@ security:
   - apiKeyAuth: []
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```http
 GET /orders HTTP/1.1
@@ -262,13 +262,13 @@ properties:
     enum: [created, confirmed]
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```json
 {"status": "pending"}
 ```
 
-During validation of the request from consumer to stub, `status` is not one of the allowed enum values, so a value mismatch is reported.
+During validation of the request from consumer to mock, `status` is not one of the allowed enum values, so a value mismatch is reported.
 
 **How this can be resolved**
 
@@ -297,13 +297,13 @@ properties:
     minLength: 6
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```json
 {"username": "amy"}
 ```
 
-The request from consumer to stub is validated and fails because `username` is shorter than the minimum length.
+The request from consumer to mock is validated and fails because `username` is shorter than the minimum length.
 
 **How this can be resolved**
 
@@ -333,7 +333,7 @@ properties:
     type: string
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```json
 {"name": "Maya"}
@@ -465,13 +465,13 @@ components:
           type: boolean
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```json
 {"type": "Parrot", "beakLength": 10}
 ```
 
-The discriminator value does not match any mapping, so validation of the request from consumer to stub reports a discriminator mismatch.
+The discriminator value does not match any mapping, so validation of the request from consumer to mock reports a discriminator mismatch.
 
 **How this can be resolved**
 
@@ -517,7 +517,7 @@ components:
           type: boolean
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```json
 {"type": "Cat", "whiskers": 3}
@@ -575,7 +575,7 @@ components:
           type: boolean
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```json
 {"whiskers": 3}
@@ -624,7 +624,7 @@ Request payload being validated:
 {"c": 10}
 ```
 
-During validation of the request from consumer to stub, `c` is not present in any `anyOf` option, so the property not in any schema options violation is reported.
+During validation of the request from consumer to mock, `c` is not present in any `anyOf` option, so the property not in any schema options violation is reported.
 
 **How this can be resolved**
 
@@ -661,7 +661,7 @@ components:
           type: number
 ```
 
-Request from consumer to stub:
+Request from consumer to mock:
 
 ```json
 {"common": true}

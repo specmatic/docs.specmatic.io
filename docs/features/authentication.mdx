@@ -20,12 +20,12 @@ Specmatic supports these OpenAPI security schemes:
 
 Authentication can be provided in an example, configured globally for a specification, or handled by the application/test setup when authentication is being mocked or bypassed.
 
-<a id="providing-fresh-auth-credentials-for-contract-tests" />
+<span id="providing-fresh-auth-credentials-for-contract-tests"></span>
 ## Authentication tokens for OpenAPI Security Schemes
 
 When contract tests run against an environment that requires credentials, Specmatic needs real tokens or keys. You can provide them through environment properties or through `specmatic.yaml` security configuration, which can also read from environment variables.
 
-<a id="important-security-scheme-names-must-match-the-openapi-spec" />
+<span id="important-security-scheme-names-must-match-the-openapi-spec"></span>
 ### Environment Properties per Security Scheme
 
 The name you configure must match the security scheme name in `components.securitySchemes`.
@@ -46,7 +46,7 @@ components:
 
 Then the configured name must be `oAuth2AuthCode`.
 
-<a id="environment-variable-values-what-to-provide" />
+<span id="environment-variable-values-what-to-provide"></span>
 Provide the **raw credential value**, not the full HTTP header.
 Specmatic will construct the correct header format automatically based on the security scheme type.
 
@@ -55,7 +55,7 @@ Examples:
 - **Basic**: provide only the Base64 credential, without `Basic `.
 - **API Key**: provide only the key value.
 
-<a id="recommended-configure-auth-in-specmaticyaml" />
+<span id="recommended-configure-auth-in-specmaticyaml"></span>
 ### Using Specmatic Configuration
 
 You can configure auth values under the OpenAPI test configuration in `specmatic.yaml`.
@@ -88,7 +88,7 @@ This lets you:
 For an OpenID Connect scheme, use `type: openIdConnect` and provide the raw token. Specmatic sends it as an
 `Authorization: Bearer <token>` header.
 
-<a id="providing-auth-credentials-in-examples" />
+<span id="providing-auth-credentials-in-examples"></span>
 ## Authentication within an Example
 
 Use example-level authentication when you need a token for a specific test case, a fresh token for each test run, or when RBAC requires different auth credentials for different test cases.
@@ -162,7 +162,7 @@ The header used by OAuth2, OpenID Connect, and HTTP Bearer is `Authorization`. S
 
 You may then use that example for running contract tests, or for mocking the API out.
 
-<a id="injecting-auth-tokens-directly-into-examples-" />
+<span id="injecting-auth-tokens-directly-into-examples-"></span>
 ### Injecting Tokens into Examples <CommercialBadge/>
 
 You can inject auth tokens directly into examples using template expressions. This way you can use different auth tokens for different test cases.
@@ -272,7 +272,7 @@ For instance, you could have one example that uses `${API_TOKEN_200:valid-token}
 }
 ```
 
-<a id="just-in-time-authentication-" />
+<span id="just-in-time-authentication-"></span>
 ### Just-in-time Tokens via Fixtures <CommercialBadge/>
 
 For contract tests, you can fetch an auth token before the test runs and use it in the main request using substitution.
@@ -351,8 +351,8 @@ Here is what happens:
 - The main request uses it as `$(ACCESS_TOKEN)`.
 - Specmatic sends the request with `Authorization: Bearer <captured-token>`.
 
-<a id="testing-with-mock-auth-recommended-for-contractcomponent-tests" />
-<a id="recommended-approach" />
+<span id="testing-with-mock-auth-recommended-for-contractcomponent-tests"></span>
+<span id="recommended-approach"></span>
 ## Mocking / Bypassing Authentication
 
 For local contract tests within the project, such as junit tests, you can isolate your application from real auth providers, such as OAuth servers, DB-backed auth, or identity services.
@@ -370,9 +370,9 @@ A test security setup can:
 
 This is similar to using an in-memory database in tests instead of a production database.
 
-<a id="how-specmatic-chooses-authentication-for-a-request" />
-<a id="precedence-rule" />
-<a id="precedence--resolution-order" />
+<span id="how-specmatic-chooses-authentication-for-a-request"></span>
+<span id="precedence-rule"></span>
+<span id="precedence--resolution-order"></span>
 ## Security Scheme Precedence
 
 OpenAPI allows authentication to be defined at two levels:
@@ -405,7 +405,7 @@ In this example:
 - Most endpoints use `BearerAuth` globally.
 - `GET /products` uses `basicAuth` through an operation-level override.
 
-<a id="example-different-auth-schemes-per-operation" />
+<span id="example-different-auth-schemes-per-operation"></span>
 ## Patterns, Examples & FAQs
 
 ### Security Scheme Examples

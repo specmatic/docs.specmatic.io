@@ -20,8 +20,8 @@ GraphQL
   - Introduction
   - What Can You Achieve with Specmatic's GraphQL Support?
   - Quick start with sample projects
-  - Starting a stub server
-  - Stubbing out specific values using example data
+  - Starting a mock server
+  - Mocking out specific values using example data
       - Providing a custom examples directory
       - Example file format
   - HTTP Headers
@@ -47,13 +47,13 @@ Here are sample projects in different languages and frameworks that demonstrate 
 
 README of each of these projects include
 * detailed animated architecture diagram
-* instructions on how to start stub server using graphql spec with custom examples, simulating delays, errors etc.
+* instructions on how to start mock server using graphql spec with custom examples, simulating delays, errors etc.
 * instructions on how to isolate the System Under Test when running contract tests
 * example CI workflow setups using GitHub Actions
 
-## Starting a stub server
+## Starting a mock server
 
-To start a stub server using Specmatic, you can use the following steps:
+To start a mock server using Specmatic, you can use the following steps:
 
 **Step 1: Create a graphql SDL file**
 
@@ -79,17 +79,17 @@ type Product {
 }
 ```
 
-**Step 2: Start the stub server**
+**Step 2: Start the mock server**
 
-Run the following command to start the GraphQL stub:
+Run the following command to start the GraphQL mock:
 
 ```bash
 docker run --network host -v "$(pwd):/sandbox" specmatic/enterprise mock /sandbox/product-api.graphql
 ```
 
-That's it! You now have a GraphQL stub server running on `localhost:9000/graphql` serving the schema defined in `product-api.graphql`.
+That's it! You now have a GraphQL mock server running on `localhost:9000/graphql` serving the schema defined in `product-api.graphql`.
 
-**Step 3: Make a request to the stub server**
+**Step 3: Make a request to the mock server**
 
 Let's try sending GraphQL queries to this server.
 
@@ -118,7 +118,7 @@ You will receive a response with a random product ID, name, inventory, and type 
 }
 ```
 
-## Stubbing out specific values using example data
+## Mocking out specific values using example data
 
 Above, we saw Specmatic generating random output based on the provided `product-api.graphql` spec. Instead, in order to receive specific example values, you can create an example YAML files containing specific data for `findAvailableProducts` query.
 
@@ -154,15 +154,15 @@ response: [
 **Note:** Keep the file `product-api.graphql` and directory `product-api_examples` at same level.
 :::
 
-**Step 2: Start the stub server**
+**Step 2: Start the mock server**
 
-Run the following command to start the GraphQL stub:
+Run the following command to start the GraphQL mock:
 
 ```bash
 docker run --network host -v "$(pwd):/spec" specmatic/enterprise mock /spec/product-api.graphql
 ```
 
-**Step 3: Make a request to the stub server**
+**Step 3: Make a request to the mock server**
 
 Let's try sending the same request as earlier.
 
@@ -406,7 +406,7 @@ This will introduce a 5-second delay before the response is sent back to the cli
 
 ## Dynamic Field Selection from Example Responses
 
-When running a GraphQL stub using Specmatic, you can provide an example query that includes all possible fields and sub-selections. Specmatic uses this example to generate the stub response.
+When running a GraphQL mock using Specmatic, you can provide an example query that includes all possible fields and sub-selections. Specmatic uses this example to generate the mock response.
 
 If a request is made using the exact query provided in the example, Specmatic will return the full response as defined. However, if a request is made with a subset of the fields specified in the original example, **Specmatic will automatically tailor the response to include only those requested fields**.
 
@@ -512,7 +512,7 @@ components:
 ```
 
 
-**5.** Run the following command to start the GraphQL stub on `localhost:9000/graphql`:
+**5.** Run the following command to start the GraphQL mock on `localhost:9000/graphql`:
 
 
 ```bash
@@ -580,7 +580,7 @@ This setup allows you to test how Specmatic reuses the example provided, adaptin
 
 ## Multi-Field Queries
 
-The Specmatic GraphQL stub server supports multi-field queries, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-field queries with variables** are supported, making it flexible for dynamic requests.
+The Specmatic GraphQL mock server supports multi-field queries, allowing you to send a single request with multiple queries and receive a consolidated response. This feature is useful when you want to retrieve data from different queries in a single API call. Additionally, **multi-field queries with variables** are supported, making it flexible for dynamic requests.
 
 To showcase this, let's reuse the folder structure established in the previous section on dynamic field selection.
 
@@ -702,7 +702,7 @@ components:
               port: 9000
 ```
 
-4. **Run the GraphQL Stub**:
+4. **Run the GraphQL Mock**:
 
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
@@ -795,7 +795,7 @@ In this example:
 - `$pageSize` controls the number of products returned.
 - `$id` is used to fetch a specific product by ID in the `productById` query.
 
-This request showcases how Specmatic's GraphQL stub server can process multi-query requests with variables, offering flexibility and efficiency in response generation.
+This request showcases how Specmatic's GraphQL mock server can process multi-query requests with variables, offering flexibility and efficiency in response generation.
 
 This example demonstrates how Specmatic processes multiple queries in a single request and returns the expected responses for each query. You can adapt this setup for various use cases, leveraging the existing folder structure for organizing examples.
 
@@ -881,7 +881,7 @@ components:
               port: 9000
 ```
 
-4. **Run the GraphQL Stub**:
+4. **Run the GraphQL Mock**:
 
 ```bash
 docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
@@ -1155,4 +1155,4 @@ Specmatic supports GraphQL introspection queries, allowing clients to query the 
 
 ## GraphiQL GUI
 
-Specmatic ships with the GraphiQL GUI, an in-browser GraphQL IDE, that you can use to explore and test your GraphQL APIs. You can access it at `http://localhost:9000/graphiql` when your Specmatic GraphQL stub server is running.
+Specmatic ships with the GraphiQL GUI, an in-browser GraphQL IDE, that you can use to explore and test your GraphQL APIs. You can access it at `http://localhost:9000/graphiql` when your Specmatic GraphQL mock server is running.

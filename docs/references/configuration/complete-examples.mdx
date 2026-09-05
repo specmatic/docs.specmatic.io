@@ -38,7 +38,7 @@ This example shows all available configuration options:
         typically contains `definitions` which reference a `source` and one or more `specs`.
         - `components.runOptions` - Named run configurations (for example, `openapi.type` = `test` or `mock`, and `baseUrl`)
         - `components.adapters` - Adapter definitions for massaging contract specifications, or for mutating request/responses
-        from the proxy and/or stub.
+        from the proxy and/or mock.
     3. **systemUnderTest** - Defines the primary system under test. Contains a `components.service` entry and
     usually an associated `runOptions` profile for executing contract tests.
     4. **dependencies** - Defines dependent services used for service virtualization. Typically contains a `services`
