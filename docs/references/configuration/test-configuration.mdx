@@ -5,13 +5,14 @@ sidebar_position: 3
 
 import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
+import {CommercialBadge} from "../../../src/components/CommercialBadge";
 import yaml from "js-yaml";
 
 # Test Configuration
 
 ## Resiliency Tests
 
-To enable [resiliency tests](/contract_driven_development/contract_testing#smart-resiliency-orchestration), add the `resiliencyTests` configuration to your `specmatic.yaml` file as shown below:
+To enable [schema resiliency tests](/contract_driven_development/contract_testing#smart-resiliency-orchestration), add `schemaResiliencyTests` in a v3 configuration or `resiliencyTests` in a v2 configuration, as shown below:
 
 <V2V3SpecmaticConfigTabs
   v3Object={require('./includes/test-configuration/v3/resiliency/specmatic.json')}
@@ -30,6 +31,57 @@ When using configuration version 3, it is possible to set the `schemaResiliencyT
 or `systemUnderTest` or within a specific service. This allows you to enable resiliency tests for specific dependencies
 or the system under test, while keeping it disabled for other services.
 :::
+
+## OpenAPI Test Run Options
+
+Configure OpenAPI tests under `runOptions.openapi`. The options can be defined directly on a service or in `components.runOptions` and referenced by the service.
+
+```yaml
+runOptions:
+  openapi:
+    type: test
+    baseUrl: http://localhost:8080
+    filter: "PATH!='/health,/swagger'"
+    swaggerUrl: http://localhost:8080/openapi.yaml
+    actuatorUrl: http://localhost:8080/actuator/mappings
+```
+
+| Property | Description |
+|----------|-------------|
+| `type` | Must be `test`. |
+| `baseUrl` | Base URL of the application under test. Alternatively, use `host` and `port`. |
+| `filter` | Expression used to select the operations to test. |
+| `swaggerUrl` | URL from which Specmatic can obtain the application's OpenAPI document. This can also be set for an individual entry in `specs`. |
+| `actuatorUrl` | Spring Boot actuator mappings endpoint used for application API discovery. This can also be set for an individual entry in `specs`. |
+| `workflow` | Workflow rules that extract values from one response and use them in later requests. |
+
+swaggerUrl and actuatorUrl are mutually exclusive. You only need one of them.
+
+When a run option contains multiple specifications, use the object form to override discovery settings for one specification:
+
+```yaml
+specs:
+  - spec:
+      id: orders
+      swaggerUrl: http://localhost:8080/orders/openapi.yaml
+```
+
+### Security scheme credentials
+
+Use `securitySchemes` on an OpenAPI specification entry to supply credentials by the security-scheme name declared in the OpenAPI document.
+
+```yaml
+specs:
+  - spec:
+      id: orders
+      path: openapi/orders.yaml
+      securitySchemes:
+        oidc:
+          type: openIdConnect
+          token: "{OIDC_TOKEN}"
+```
+
+Supported `type` values are `oauth2`, `openIdConnect`, `basicAuth`, `bearer`, and `apiKey`.
 
 ## Contract Test Timeout
 
@@ -75,6 +127,38 @@ AsyncAPI contract tests use `runOptions.asyncapi` in `specmatic.yaml`. This is w
 - `adminCredentials`, `client.producer`, and `client.consumer` are protocol-specific maps. For Kafka, use standard Kafka client properties such as `security.protocol`, `sasl.mechanism`, and serializer or auth settings.
 - `schemaRegistry` is only needed when your AsyncAPI payloads reference schemas from a registry, such as the Kafka Avro sample.
 - For Kafka-specific examples, see [Kafka](/supported_protocols/asyncapi/kafka).
+
+## gRPC Test Configuration <CommercialBadge/>
+
+gRPC contract tests use `runOptions.protobuf`.
+
+```yaml
+runOptions:
+  protobuf:
+    type: test
+    host: localhost
+    port: 50051
+    importPaths:
+      - ./proto-imports
+    protocVersion: 3.25.5
+    requestTimeout: 5000
+```
+
+`host` and `port` identify the server under test. `importPaths` supplies directories used to resolve imported proto files, `protocVersion` selects the compiler version, and `requestTimeout` is the request timeout in milliseconds (default: `5000`).
+
+## GraphQL Test Configuration <CommercialBadge/>
+
+GraphQL SDL contract tests use `runOptions.graphqlsdl`.
+
+```yaml
+runOptions:
+  graphqlsdl:
+    type: test
+    host: localhost
+    port: 8080
+```
+
+Both `host` and `port` are optional. When omitted, Specmatic uses the protocol defaults.
 
 ## Strict Mode
 

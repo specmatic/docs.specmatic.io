@@ -6,6 +6,7 @@ redirect_from: /references/configuration/stub-configuration
 
 import {V2V3SpecmaticConfigTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
 import {V3SpecmaticJsonYamlTabs} from "../../../src/components/V2V3SpecmaticConfigTabs";
+import {CommercialBadge} from "../../../src/components/CommercialBadge";
 import yaml from "js-yaml";
 
 
@@ -80,6 +81,36 @@ AsyncAPI mocks use `runOptions.asyncapi` in `specmatic.yaml`. This is where Spec
 - `adminCredentials`, `client.producer`, and `client.consumer` are protocol-specific maps. For Kafka, use standard Kafka client properties.
 - `schemaRegistry` is only needed when your AsyncAPI examples or payload schemas depend on a registry.
 - For Kafka-specific guidance, see [Kafka](/supported_protocols/asyncapi/kafka).
+
+## gRPC Mock Configuration <CommercialBadge/>
+
+gRPC mocks use `runOptions.protobuf`.
+
+```yaml
+runOptions:
+  protobuf:
+    type: mock
+    port: 50051
+    importPaths:
+      - ./proto-imports
+    protocVersion: 3.25.5
+```
+
+`port` is optional when it is supplied by the command that starts the mock. `importPaths` supplies directories used to resolve imported proto files, and `protocVersion` selects the compiler version.
+
+## GraphQL Mock Configuration <CommercialBadge/>
+
+GraphQL SDL mocks use `runOptions.graphqlsdl`.
+
+```yaml
+runOptions:
+  graphqlsdl:
+    type: mock
+    host: 0.0.0.0
+    port: 9000
+```
+
+Both `host` and `port` are optional. When omitted, Specmatic uses the protocol defaults.
 
 ## Strict Mode
 
