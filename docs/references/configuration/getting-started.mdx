@@ -52,23 +52,23 @@ version: 3
 systemUnderTest:
   service:
     $ref: "#/components/services/petStoreService"
-  runOptions:
-    $ref: "#/components/runOptions/petStoreTest"
-  data:
-    examples:
-      - directories:
-          - ./src/test/resources/petstore
+    runOptions:
+      $ref: "#/components/runOptions/petStoreTest"
+    data:
+      examples:
+        - directories:
+            - ./src/test/resources/petstore
 
 dependencies:
   services:
     - service:
         $ref: "#/components/services/paymentService"
-      runOptions:
-        $ref: "#/components/runOptions/paymentMock"
-      data:
-        examples:
-          - directories:
-              - ./src/test/resources/payment
+        runOptions:
+          $ref: "#/components/runOptions/paymentMock"
+        data:
+          examples:
+            - directories:
+                - ./src/test/resources/payment
 
 specmatic:
   governance:
@@ -140,14 +140,16 @@ Defines the **primary service being validated**.
 systemUnderTest:
   service:
     $ref: "#/components/services/petStoreService"
-  runOptions:
-    $ref: "#/components/runOptions/petStoreTest"
+    runOptions:
+      $ref: "#/components/runOptions/petStoreTest"
 ```
 
 * `service` points to a named service definition under `components.services`
-* `runOptions` defines *how* that service is run (test vs mock, base URL, filters)
+* `service.runOptions` defines *how* that service is run (test vs mock, base URL, filters)
 
-Optional `data.examples` directories provide example payloads used during testing.
+Optional `service.data.examples` directories provide example payloads used during testing.
+`systemUnderTest` itself accepts only `service`; keep service-specific `runOptions`,
+`data`, and `settings` inside that object.
 
 ---
 
@@ -160,15 +162,18 @@ dependencies:
   services:
     - service:
         $ref: "#/components/services/paymentService"
-      runOptions:
-        $ref: "#/components/runOptions/paymentMock"
+        runOptions:
+          $ref: "#/components/runOptions/paymentMock"
 ```
 
 Key points:
 
 * Dependencies are typically run in **mock** mode
-* Each dependency is configured in the same structure as the SUT
+* Each dependency entry contains a `service`; keep its service-specific
+  `runOptions`, `data`, and `settings` inside that object
 * Multiple dependencies can be declared
+* Dependency-wide `data` and `settings` may instead be defined directly under
+  `dependencies` when they genuinely apply to every dependency service
 
 ---
 

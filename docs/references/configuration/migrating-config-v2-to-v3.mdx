@@ -59,15 +59,15 @@ version: 3
 systemUnderTest:
   service:
     $ref: "#/components/services/petStoreService"
-  runOptions:
-    $ref: "#/components/runOptions/petStoreTest"
+    runOptions:
+      $ref: "#/components/runOptions/petStoreTest"
 
 dependencies:
   services:
     - service:
         $ref: "#/components/services/paymentService"
-      runOptions:
-        $ref: "#/components/runOptions/paymentMock"
+        runOptions:
+          $ref: "#/components/runOptions/paymentMock"
 
 components:
   sources:
@@ -116,6 +116,11 @@ What is clearer now:
 5. `report` -> `specmatic.governance.report` and `specmatic.governance.successCriteria`
 6. `test`/`mock` settings -> `specmatic.settings` and/or service-specific `runOptions`
 7. `hooks` -> `components.adapters` (where applicable)
+
+Reference a named run option from `systemUnderTest.service.runOptions` or
+`dependencies.services[*].service.runOptions`. Likewise, keep service-specific
+`data` and `settings` inside `service`; only dependency-wide `data` or
+`settings` belongs directly under `dependencies`.
 
 ## Additional inferred benefits from the docs
 
