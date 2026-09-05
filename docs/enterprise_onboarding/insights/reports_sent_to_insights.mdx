@@ -3,6 +3,9 @@ title: Reports Sent to Insights
 sidebar_position: 7
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Reports Sent to Insights
 
 Run the command that generates the report with `--ci`, `--build-id`, and repository metadata to submit it directly to Insights. `test` submits its test report, `mock` submits its mock-usage report, and `run-suite` submits both reports separately.
@@ -41,19 +44,236 @@ Pass `--ci --build-id <id> --repo-id <id> --repo-name <name> --repo-url <url> --
 
 ## Build identity and default metadata
 
-`--build-id` correlates all reports from one CI build in Insights. Use the ID supplied by your CI provider; on GitHub Actions, we recommend `${{ github.run_id }}`. A `run-suite` invocation uses the same build ID for the test and mock reports it submits.
+`--build-id` is the stable identifier that correlates all reports from one CI build in Insights. A `run-suite` invocation therefore uses one build ID for its separately submitted test and mock reports. Use the build or workflow identifier supplied by your CI provider; on GitHub Actions, this is `${{ github.run_id }}`.
 
-CLI arguments take precedence over the following defaults. `--ci` must be passed explicitly because publishing is a sensitive operation.
+`--run-attempt` identifies which execution of that build produced a report. It is `1` for the original execution and increases when the CI provider retries or reruns it. Insights can therefore distinguish a report from an initial run from one produced by a later attempt without splitting them into unrelated builds.
 
-| Option | System property | Environment variables | Other fallback |
-| --- | --- | --- | --- |
-| `--ci` | — | `CI`, `GITHUB_ACTIONS` | — |
-| `--repo-id` | `specmatic.repo.id` | `SPECMATIC_REPO_ID`, `GITHUB_REPOSITORY_ID` | — |
-| `--repo-name` | `specmatic.repo.name` | `SPECMATIC_REPO_NAME`, `GITHUB_REPOSITORY` | Name derived from the Git remote URL |
-| `--repo-url` | `specmatic.repo.url` | `SPECMATIC_REPO_URL`, `GITHUB_REPOSITORY` (and optionally `GITHUB_SERVER_URL`) | Git remote URL |
-| `--branch-name` | `specmatic.branch.name` | `SPECMATIC_BRANCH_NAME`, `GITHUB_HEAD_REF`, `GITHUB_REF_NAME`, `GITHUB_REF` | Current Git branch |
-| `--build-id` | `specmatic.build.id` | `SPECMATIC_BUILD_ID`, `GITHUB_RUN_ID` | — |
-| `--token` | `specmatic.token` | `SPECMATIC_INSIGHTS_TOKEN` | — |
+### Resolution order
+
+Each value is resolved in this order, with the first available value winning:
+
+1. CLI argument, such as `--build-id` or `--repo-id`
+2. System property, such as `-Dspecmatic.build.id`
+3. Specmatic environment variable, such as `SPECMATIC_BUILD_ID`
+4. Detected CI-provider environment variable
+5. Local Git metadata, for repository URL, repository name, and branch only
+
+`--ci` must be passed explicitly because publishing is a sensitive operation. CLI arguments always override system properties and environment variables.
+
+For CI publishing, `--build-id` and `--repo-id` are required. A provider can supply both automatically, but Git cannot supply a trustworthy repository ID: if the active provider has no repository-ID field, provide `--repo-id` or `SPECMATIC_REPO_ID` yourself.
+
+| Option | System property | Specmatic environment variable |
+| --- | --- | --- |
+| `--repo-id` | `specmatic.repo.id` | `SPECMATIC_REPO_ID` |
+| `--repo-name` | `specmatic.repo.name` | `SPECMATIC_REPO_NAME` |
+| `--repo-url` | `specmatic.repo.url` | `SPECMATIC_REPO_URL` |
+| `--branch-name` | `specmatic.branch.name` | `SPECMATIC_BRANCH_NAME` |
+| `--build-id` | `specmatic.build.id` | `SPECMATIC_BUILD_ID` |
+| `--run-attempt` | `specmatic.run.attempt` | `SPECMATIC_RUN_ATTEMPT` |
+| `--token` | `specmatic.token` | `SPECMATIC_INSIGHTS_TOKEN` |
+
+### CI-provider defaults
+
+Select your CI provider to see the values Specmatic reads. The example in each tab passes them explicitly as CLI options, which is useful when running Specmatic in a container or other isolated execution context. On a normal CI runner, use `specmatic test --ci`: Reporter reads the native variables automatically. A dash means the provider does not supply a suitable value, so provide `--repo-id` yourself when publishing from CI.
+
+<Tabs groupId="insights-ci-provider">
+  <TabItem value="github-actions" label="GitHub Actions" default>
+
+| Parameter | Runtime environment variable |
+| --- | --- |
+| Build ID | `GITHUB_RUN_ID` |
+| Run attempt | `GITHUB_RUN_ATTEMPT` |
+| Repository ID | `GITHUB_REPOSITORY_ID` |
+| Repository name | `GITHUB_REPOSITORY` |
+| Repository URL | `GITHUB_SERVER_URL` + `GITHUB_REPOSITORY` |
+| Branch | `GITHUB_HEAD_REF`, then `GITHUB_REF_NAME`, then `GITHUB_REF` |
+
+```yaml
+- name: Run Specmatic in Docker
+  run: |
+    docker run --rm \
+      <image> test --ci \
+      --build-id '${{ github.run_id }}' \
+      --run-attempt '${{ github.run_attempt }}' \
+      --repo-id '${{ github.repository_id }}' \
+      --repo-name '${{ github.repository }}' \
+      --repo-url '${{ github.server_url }}/${{ github.repository }}' \
+      --branch-name '${{ github.head_ref || github.ref_name }}'
+```
+
+  </TabItem>
+  <TabItem value="gitlab" label="GitLab CI">
+
+| Parameter | Runtime environment variable |
+| --- | --- |
+| Build ID | `CI_PIPELINE_ID` |
+| Run attempt | `CI_JOB_RETRY_COUNT` + 1 |
+| Repository ID | `CI_PROJECT_ID` |
+| Repository name | `CI_PROJECT_NAME` |
+| Repository URL | `CI_PROJECT_URL` |
+| Branch | `CI_MERGE_REQUEST_SOURCE_BRANCH_NAME`, then `CI_COMMIT_REF_NAME` |
+
+```yaml
+specmatic:
+  script:
+    - docker run --rm \
+        <image> test --ci \
+        --build-id "$CI_PIPELINE_ID" \
+        --run-attempt "$((CI_JOB_RETRY_COUNT + 1))" \
+        --repo-id "$CI_PROJECT_ID" \
+        --repo-name "$CI_PROJECT_NAME" \
+        --repo-url "$CI_PROJECT_URL" \
+        --branch-name "${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME:-$CI_COMMIT_REF_NAME}"
+```
+
+  </TabItem>
+  <TabItem value="azure" label="Azure Pipelines">
+
+| Parameter | Runtime environment variable |
+| --- | --- |
+| Build ID | `BUILD_BUILDID` |
+| Run attempt | `SYSTEM_JOBATTEMPT` |
+| Repository ID | `BUILD_REPOSITORY_ID` |
+| Repository name | `BUILD_REPOSITORY_NAME` |
+| Repository URL | `BUILD_REPOSITORY_URI` |
+| Branch | `BUILD_SOURCEBRANCHNAME` |
+
+```yaml
+- script: |
+    docker run --rm \
+      <image> test --ci \
+      --build-id '$(Build.BuildId)' \
+      --run-attempt '$(System.JobAttempt)' \
+      --repo-id '$(Build.Repository.ID)' \
+      --repo-name '$(Build.Repository.Name)' \
+      --repo-url '$(Build.Repository.Uri)' \
+      --branch-name '$(Build.SourceBranchName)'
+```
+
+  </TabItem>
+  <TabItem value="jenkins" label="Jenkins">
+
+| Parameter | Runtime environment variable |
+| --- | --- |
+| Build ID | `BUILD_TAG`, then `BUILD_ID` |
+| Run attempt | `1` |
+| Repository ID | — |
+| Repository name | Derived from Git URL |
+| Repository URL | `GIT_URL` |
+| Branch | `BRANCH_NAME`, then `GIT_BRANCH` |
+
+```groovy
+sh """
+  docker run --rm \\
+    <image> test --ci \\
+    --build-id='${env.BUILD_TAG ?: env.BUILD_ID}' \\
+    --repo-id='<repository-id>' \\
+    --repo-url='${env.GIT_URL}' \\
+    --branch-name='${env.BRANCH_NAME ?: env.GIT_BRANCH}'
+"""
+```
+
+  </TabItem>
+  <TabItem value="circleci" label="CircleCI">
+
+| Parameter | Runtime environment variable |
+| --- | --- |
+| Build ID | `CIRCLE_WORKFLOW_ID` |
+| Run attempt | `1` |
+| Repository ID | `CIRCLE_PROJECT_ID` |
+| Repository name | `CIRCLE_PROJECT_REPONAME` |
+| Repository URL | `CIRCLE_REPOSITORY_URL` |
+| Branch | `CIRCLE_BRANCH` |
+
+```yaml
+- run:
+    name: Run Specmatic in Docker
+    command: |
+      docker run --rm \
+        <image> test --ci \
+        --build-id "$CIRCLE_WORKFLOW_ID" \
+        --repo-id "$CIRCLE_PROJECT_ID" \
+        --repo-name "$CIRCLE_PROJECT_REPONAME" \
+        --repo-url "$CIRCLE_REPOSITORY_URL" \
+        --branch-name "$CIRCLE_BRANCH"
+```
+
+  </TabItem>
+  <TabItem value="bitbucket" label="Bitbucket">
+
+| Parameter | Runtime environment variable |
+| --- | --- |
+| Build ID | `BITBUCKET_BUILD_NUMBER` |
+| Run attempt | `1` |
+| Repository ID | `BITBUCKET_REPO_UUID` |
+| Repository name | `BITBUCKET_REPO_SLUG` |
+| Repository URL | `BITBUCKET_GIT_HTTP_ORIGIN` |
+| Branch | `BITBUCKET_BRANCH` |
+
+```yaml
+- docker run --rm \
+    <image> test --ci \
+    --build-id "$BITBUCKET_BUILD_NUMBER" \
+    --repo-id "$BITBUCKET_REPO_UUID" \
+    --repo-name "$BITBUCKET_REPO_SLUG" \
+    --repo-url "$BITBUCKET_GIT_HTTP_ORIGIN" \
+    --branch-name "$BITBUCKET_BRANCH"
+```
+
+  </TabItem>
+  <TabItem value="buildkite" label="Buildkite">
+
+| Parameter | Runtime environment variable |
+| --- | --- |
+| Build ID | `BUILDKITE_BUILD_ID` |
+| Run attempt | `BUILDKITE_RETRY_COUNT` + 1 |
+| Repository ID | — |
+| Repository name | Derived from Git URL |
+| Repository URL | `BUILDKITE_REPO` |
+| Branch | `BUILDKITE_BRANCH` |
+
+```yaml
+steps:
+  - command: |
+      docker run --rm \
+        <image> test --ci \
+        --build-id "$$BUILDKITE_BUILD_ID" \
+        --run-attempt "$$(($$BUILDKITE_RETRY_COUNT + 1))" \
+        --repo-id "<repository-id>" \
+        --repo-url "$$BUILDKITE_REPO" \
+        --branch-name "$$BUILDKITE_BRANCH"
+```
+
+  </TabItem>
+  <TabItem value="teamcity" label="TeamCity">
+
+| Parameter | Runtime environment variable |
+| --- | --- |
+| Build ID | `TEAMCITY_BUILD_ID` |
+| Run attempt | `1` |
+| Repository ID | — |
+| Repository name | Derived from Git URL |
+| Repository URL | Local Git remote |
+| Branch | `TEAMCITY_BUILD_BRANCH`, then local Git branch |
+
+```bash
+docker run --rm \
+  <image> test --ci \
+  --build-id='%system.teamcity.build.id%' \
+  --repo-id='<repository-id>' \
+  --branch-name='%teamcity.build.branch%'
+```
+
+  </TabItem>
+</Tabs>
+
+`--run-attempt` is `1` for the first execution. GitLab and Buildkite expose zero-based retry counts, so Specmatic adds one. Azure's `SYSTEM_JOBATTEMPT` is a job-level attempt; the GitHub value is a workflow-run attempt.
+
+### Running inside Docker
+
+CI variables belong to the runner process. Docker containers do not inherit them automatically, so pass the provider variables through when launching the container, or pass the normalized `SPECMATIC_*` overrides instead. For example, a GitHub Actions job can forward `GITHUB_RUN_ID`, `GITHUB_RUN_ATTEMPT`, and `GITHUB_REPOSITORY_ID` with `docker run -e ...`; Docker Compose can use equivalent `environment` entries or an `env_file`.
+
+If no CI variables are available inside the container, specify the required values explicitly with CLI options or `SPECMATIC_*` variables. Specmatic can still infer repository URL, name, and branch from a Git checkout, but it cannot infer a CI build ID or a stable repository ID from Git alone.
 
 `--metadata` and `--config` are CLI-only options.
 
