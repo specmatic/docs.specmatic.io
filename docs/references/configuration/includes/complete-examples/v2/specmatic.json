@@ -17,6 +17,10 @@
   "hooks": {
     "hook_name": "command"
   },
+  "test": {
+    "swaggerUrl": "http://localhost:8080/v3/api-docs",
+    "actuatorUrl": "http://localhost:8080/actuator/mappings"
+  },
   "report": {
     "formatters": [
       {
