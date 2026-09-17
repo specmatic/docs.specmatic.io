@@ -126,7 +126,7 @@ The repository flow in the federated model is similar to [Central Contract Repos
 
 The main differences are:
 
-- run the central contract repo report flow separately for each federated contract repository
+- run the Spec Metadata Report flow separately for each federated contract repository
 - service repositories may point to one or more federated contract repositories, depending on how contracts/specifications are split
 
 ## CI Workflows
@@ -168,7 +168,7 @@ The following snapshot shows the `order-contracts` repository in Insights:
 
 In this view:
 
-- the `Spec Repository` block comes from the `order-contracts` central contract repo report
+- the `Spec Repository` block comes from the `order-contracts` Spec Metadata Report
 - the block lists the contracts/specifications stored in `order-contracts`, such as `contracts/services/order-service/http/openapi.yaml`
 - `order-service` appears in the center because it provides the `order-service` contract/specification from `order-contracts`
 - there are no consumers shown on the left-hand side for this contract/specification
@@ -182,7 +182,7 @@ The following snapshot shows the `payment-contracts` repository in Insights:
 
 In this view:
 
-- the `Spec Repository` block comes from the `payment-contracts` central contract repo report
+- the `Spec Repository` block comes from the `payment-contracts` Spec Metadata Report
 - the block lists the contracts/specifications stored in `payment-contracts`, such as `contracts/services/payment-service/http/openapi.yaml`
 - `payment-service` appears in the center because it provides the `payment-service` contract/specification from `payment-contracts`
 - `order-service` appears on the left-hand side because it consumes the shared `payment-service` contract/specification from `payment-contracts`
@@ -194,5 +194,5 @@ Troubleshooting in the federated model is similar to [Central Contract Repositor
 
 The main differences are:
 
-- make sure the relevant central contract repo report was generated from the correct federated contract repository and posted to Insights
+- make sure the relevant Spec Metadata Report was generated from the correct federated contract repository and posted to Insights
 - make sure the provider or consumer repository points to the correct spec path in the correct federated contract repository

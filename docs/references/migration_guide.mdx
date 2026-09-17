@@ -37,15 +37,19 @@ Why this is better:
 Recommended sequence:
 
 1. Start with [Central Contract Repository CI setup](/references/continuous_integration#ci-pipeline-setup).
-2. Migrate central contract repo reporting (see subsection below).
+2. Migrate Spec Metadata Reporting (see subsection below).
 3. Migrate each service build to direct CTRF report submission (see subsection below).
 
-### Migrate central contract repo reporting
+### Migrate Spec Metadata Reporting
 
 Use this when your central contract repository has a dedicated reporting step:
 
+:::warning[Deprecated command]
+`central-contract-repo-report` is deprecated. Use `spec-metadata-report` instead. The deprecated command remains available as a compatibility alias.
+:::
+
 1. Keep pre-merge checks: `spectral lint`, `specmatic examples validate`, and `specmatic backward-compatibility-check`.
-2. Add `specmatic central-contract-repo-report` on the `main` branch pipeline to generate the central contract report. See [Reports Sent to Insights](/enterprise_onboarding/insights/reports_sent_to_insights#central-contract-repository-report-payload) for the payload published from this report.
+2. Add `specmatic spec-metadata-report` on the `main` branch pipeline to generate the Spec Metadata Report. See [Reports Sent to Insights](/enterprise_onboarding/insights/reports_sent_to_insights#spec-metadata-report-payload) for the payload published from this report.
 3. Run `specmatic spec-metadata-report` with `--ci`, `--build-id`, and repository metadata on `main` to generate and publish the report.
 4. Keep `--ci` out of PR/MR validation jobs so non-main runs are not published to Insights.
 5. Start from [Central Contract Repository CI setup](/references/continuous_integration#ci-pipeline-setup), then append report generation and publish steps.

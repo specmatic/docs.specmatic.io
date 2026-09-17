@@ -6,20 +6,20 @@ slug: /enterprise_onboarding/insights/key_concepts
 
 # Insights Key Concepts
 
-This page explains how Specmatic Insights builds its contract model from central repository and service build reports.
+This page explains how Specmatic Insights builds its contract model from Spec Metadata and service build reports.
 
 ## How Insights Understands Builds
 
 Specmatic Insights accepts two kinds of builds:
 
-- `Central Repo Builds`
+- `Spec Metadata Builds`
 - `Service Builds`
 
 These build types serve different purposes.
 
-### Central Repo Builds
+### Spec Metadata Builds
 
-A central repo build describes the contract surface of your organization.
+A Spec Metadata Build describes the contract surface of your organization.
 
 It contains:
 
@@ -27,7 +27,7 @@ It contains:
 - metadata for each specification, such as path, method, response code, and content type for OpenAPI specs
 - the operations defined in each specification
 
-When Insights receives a central repo build, it stores it as:
+When Insights receives a Spec Metadata Build, it stores it as:
 
 - a build
 - containing a set of specifications
@@ -39,14 +39,14 @@ This becomes the reference contract snapshot against which service builds are in
 
 A service build describes how a particular service interacts with those specifications.
 
-Like a central repo build, a service build contains specifications. For each specification, Insights also records how the service uses it:
+Like a Spec Metadata Build, a service build contains specifications. For each specification, Insights also records how the service uses it:
 
 - `tested`: operations covered by provider-side contract verification
 - `mocked`: operations used by a consumer through mocks
 
 ## What Is an Operation?
 
-Insights identifies operations differently for each protocol so that the same logical contract interaction is counted consistently across central repo and service build reports.
+Insights identifies operations differently for each protocol so that the same logical contract interaction is counted consistently across Spec Metadata and service build reports.
 
 ### OpenAPI
 
@@ -114,13 +114,13 @@ All contract statistics and service relationships in Insights are based on these
 
 For example:
 
-- contract test coverage measures central repository operations covered by provider tests
-- mock usage measures central repository operations used by consumers
+- contract test coverage measures Spec Metadata operations covered by provider tests
+- mock usage measures Spec Metadata operations used by consumers
 - provider-only operations are covered by providers but not used by consumers
 - consumer-only operations are used by consumers but not covered by providers
 - shared operations are both provider-tested and consumer-mocked
 
-The same operation identity lets Insights match a service build to the corresponding central repository operation, even when the provider and consumer reports come from different repositories.
+The same operation identity lets Insights match a service build to the corresponding Spec Metadata operation, even when the provider and consumer reports come from different repositories.
 
 ## Missing Providers
 

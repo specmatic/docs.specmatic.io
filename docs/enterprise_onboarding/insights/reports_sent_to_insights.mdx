@@ -735,7 +735,7 @@ X-Auth-Token: Bearer <token>
 
 `testIds` link an operation to its compatibility-test entries. `breakingChanges` identifies the contract differences found for a failing test.
 
-## Central contract repository report payload
+## Spec Metadata Report payload
 
 For a central contract repository containing OpenAPI, AsyncAPI, GraphQL SDL, and Protobuf specifications, the JSON request body has the following shape:
 
@@ -856,4 +856,4 @@ X-Auth-Token: Bearer <token>
 | `graphqlsdl` | `operationType`, `operationName` |
 | `protobuf` | `packageName`, `service`, `rpc` |
 
-The `--metadata key=value` option adds the entry to `metadata`. Fields unrelated to a central contract repository report, such as `specmaticCoverage` and `specmaticStubUsage`, are `null`.
+The `--metadata key=value` option adds the entry to `metadata`. Fields unrelated to a Spec Metadata Report, such as `specmaticCoverage` and `specmaticStubUsage`, are `null`.

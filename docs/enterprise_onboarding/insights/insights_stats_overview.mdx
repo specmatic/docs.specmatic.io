@@ -12,7 +12,7 @@ The contract cards are calculated against the latest central contract repository
 
 In other words:
 
-- the central repo provides the contract baseline
+- Spec Metadata provides the contract baseline
 - service builds are interpreted against that baseline
 - the trend lines on these cards represent weekly points across the last 12 weeks
 
@@ -22,7 +22,7 @@ The `Specmatic Usage` card is separate. It shows overall Specmatic feature invoc
 
 The date range above the cards shows the inclusive 12-week reporting window. Each chart contains one point for each weekly bucket in that window.
 
-For contract metrics, each weekly point represents the latest available contract snapshot for that week. The snapshot is evaluated against the central contract baseline and the service build data available at that point. The large value on each card is the value from the latest week in the selected range.
+For contract metrics, each weekly point represents the latest available Spec Metadata snapshot for that week. The snapshot is evaluated against the contract baseline and the service build data available at that point. The large value on each card is the value from the latest week in the selected range.
 
 The **Specmatic Usage** chart is different: each weekly point is the total number of recorded Specmatic feature invocations for that week. It is a usage volume trend, not a contract coverage percentage.
 

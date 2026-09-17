@@ -23,7 +23,7 @@ Use Service View when you want to understand service dependencies. Use Spec Repo
 
 Insights builds Service View from reports published by your contract workflows:
 
-1. A central contract repository report establishes the available specifications and operations.
+1. A Spec Metadata Report establishes the available specifications and operations.
 2. Service build reports identify specifications implemented or consumed by each service.
 3. Insights combines these reports to show provider-consumer relationships and dependencies.
 
@@ -179,7 +179,7 @@ Values such as `2 out of 4 operations` mean that the service is using two of the
 ## Troubleshooting
 
 - **Service is missing:** confirm that its service build report was published to Insights.
-- **Specification is missing:** confirm that the central contract repository report was published.
+- **Specification is missing:** confirm that the Spec Metadata Report was published.
 - **Consumer is missing:** confirm that the consumer workflow published its report.
 - **Provider is missing:** confirm that the provider build implements the same specification and published its report.
-- **Counts are unexpected:** check the latest central repository and service build reports, including the specification and operation identity used by each report.
+- **Counts are unexpected:** check the latest Spec Metadata and service build reports, including the specification and operation identity used by each report.
