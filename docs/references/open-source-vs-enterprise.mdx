@@ -17,7 +17,7 @@ sidebar_position: 0
 | API runtime resiliency testing | No | Yes for `OpenAPI`, including `202` monitor follow-through and `429` retry handling, plus `AsyncAPI`, `GraphQL`, `gRPC` and `Arazzo` workflows | [Smart Resiliency Orchestration](/contract_driven_development/contract_testing#smart-resiliency-orchestration), [OpenAPI details](#openapi-details) |
 | Per test setup and teardown | No | Yes via `before` and `after` fixtures | [OpenAPI details](#openapi-details) |
 | Intelligent Service virtualization | Yes for `OpenAPI/REST` (JSON and XML) and `WSDL/SOAP` APIs via stateless mocks | Yes, plus `AsyncAPI`, `GraphQL`, `gRPC`, `Redis`, `JDBC`, and `Arazzo` workflows | [Service Virtualization](/contract_driven_development/service_virtualization), [Protocol details](#protocol-details) |
-| Stateful mocking | No | Yes for `OpenAPI`, with an in-memory resource store that preserves create, update, and delete operations across requests | [Stateful Mocking](/contract_driven_development/service_virtualization/stateful_mocking) |
+| Stateful mocking | No | Yes for `OpenAPI`, supports CRUD operations on entities | [Stateful Mocking](/contract_driven_development/service_virtualization/stateful_mocking) |
 | Fault simulation | Yes, delays, errors, empty state etc... for `OpenAPI` and WSDL | Yes, plus `AsyncAPI`, `GraphQL`, `gRPC`, `Redis`, `JDBC`, and `Arazzo` workflows | [Service Virtualization](/contract_driven_development/service_virtualization), [Protocol details](#protocol-details) |
 | Backward compatibility testing | `OpenAPI` only | Yes, plus `AsyncAPI`, `GraphQL` and `gRPC` | [Backward Compatibility](/contract_driven_development/backward_compatibility), [Backward Compatibility Rules](/contract_driven_development/backward_compatibility_rules), [Protocol details](#protocol-details) |
 | Specification and Example Generation | Yes for `OpenAPI` via proxy (live traffic), Postman collection, request/response payloads | Yes, plus `AsyncAPI` (Kafka) via `Studio` orchestration | [Service Virtualization](/contract_driven_development/service_virtualization) |
@@ -53,7 +53,7 @@ sidebar_position: 0
 | API runtime resiliency testing | No | Yes, with `429` retry and `202` monitor follow-through, subject to the documented requirements and retry limits | [Smart Resiliency Orchestration](/contract_driven_development/contract_testing#smart-resiliency-orchestration) |
 | Per test setup and teardown | No | Yes via `before` and `after` fixtures |
 | Intelligent Mocking | Mock server with strict mode, pass-through target, hot reload, delays, filtering, config-backed loading, and external examples | Everything in OSS plus richer mock handlers and additional internal verification/retrieval flows | [Service Virtualization](/contract_driven_development/service_virtualization), [Mock Configuration](/references/configuration/mock-configuration) |
-| Stateful mocking | No | Stateful `OpenAPI` mocks backed by an in-memory resource store seeded from inline or external examples | [Stateful Mocking](/contract_driven_development/service_virtualization/stateful_mocking) |
+| Stateful mocking | No | Stateful `OpenAPI` mocks backed by an in-memory entity store seeded from inline or external examples | [Stateful Mocking](/contract_driven_development/service_virtualization/stateful_mocking) |
 | Proxy recording | Captures traffic and converts it into contracts and mocks | Everything in OSS plus Live proxy with `Studio`-assisted workflows around proxy and spec evolution | [Service Virtualization](/contract_driven_development/service_virtualization), [Docker Images](/references/docker_images) |
 | Backward compatibility | `OpenAPI` backward compatibility checks | Everything in OSS plus Insights integrations to provide richer validations | [Backward Compatibility](/contract_driven_development/backward_compatibility), [Backward Compatibility Rules](/contract_driven_development/backward_compatibility_rules) |
 | Validation | `OpenAPI` spec and example validation | Everything in OSS plus duplicate/competing example detection controls |
@@ -115,15 +115,13 @@ sidebar_position: 0
 | Org identity / SSO configuration | Simplifies enterprise access control and centralizes how users sign in. | [SSO](/enterprise_onboarding/SSO), [Role Permissions](/enterprise_onboarding/role_permissions) |
 | SCIM provisioning | Supports automated user and group provisioning and ongoing maintainence from enterprise identity systems. | [SCIM Reference](/enterprise_onboarding/scim), [SCIM Integration Guides](/enterprise_onboarding/SCIM), [Role Permissions](/enterprise_onboarding/role_permissions) |
 
-## Products and Features
+## Commercial Products and Features
 
-| Product / Feature | Open-Source (Free) | Commercial | Description |
-|---|---|---|---|
-| Studio | No | Yes | Visual interface for authoring, validating, testing, and mocking API specifications and examples. [Learn more](/getting_started/studio_quick_start) |
-| Insights | No | Yes | Continuous API governance, reporting, dependency visibility, and build analytics. [Learn more](/enterprise_onboarding/insights/overview) |
-| Proxy | Vanilla `OpenAPI` proxy | `AsyncAPI` proxy plus iterative record-and-replay `OpenAPI` proxy | Observes API traffic to support proxying, contract creation, and iterative specification evolution. [Learn more](/contract_driven_development/service_virtualization) |
-| Executable Config | Yes | Yes | Configures executable contract testing, mocking, proxying, workflows, and related runtime behavior. [Learn more](/references/configuration) |
-| Tests | Runs contract tests | Runs contract tests plus sophisticated response-validating matchers | Validates API implementations against contracts; commercial matchers add richer response-value assertions. [Learn more](/features/matchers) |
-| Mock | Runs concrete-value mocks | Sophisticated request matching for complex workflows | Simulates API dependencies from contracts; commercial capabilities add richer matching and stateful workflow behavior. [Learn more](/contract_driven_development/service_virtualization) |
-| `429` and `202` workflows | No | Yes | Retries `429 Too Many Requests` responses and follows `202 Accepted` monitor workflows under documented conditions. [Learn more](/contract_driven_development/contract_testing#smart-resiliency-orchestration) |
-| Linter | No | Yes | Applies built-in and custom semantic rules to identify specification issues before execution. [Learn more](/features/linter) |
+- **Studio** — Commercial only. A visual interface for authoring, validating, testing, and mocking API specifications and examples. [Learn more](/getting_started/studio_quick_start#getting-started-with-studio).
+- **Insights** — Commercial only. Continuous API governance, reporting, dependency visibility, and build analytics. [Learn more](/enterprise_onboarding/insights/overview#a-governance-tool-for-your-contract-ecosystem).
+- **Proxy** — OSS supports `OpenAPI` specification generation. Commercial adds an `AsyncAPI` proxy and an iterative record-and-replay `OpenAPI` proxy for specification generation and full or partial service virtualization. [Learn more](/contract_driven_development/generating_api_specifications#from-an-existing-application-using-proxy-mode).
+- **Executable Config** — Available in OSS and commercial editions for configuring executable contract testing, mocking, proxying, workflows, and related runtime behavior. [Learn more](/references/configuration#configuration-topics).
+- **Tests** — OSS runs contract tests. Commercial adds sophisticated response-validating matchers for richer response-value assertions. [Learn more](/features/matchers#contract-testing).
+- **Mock** — OSS runs concrete-value mocks. Commercial adds sophisticated request matching for complex workflows, including stateful workflow behavior. [Learn more](/contract_driven_development/service_virtualization#request-matchers).
+- **`429` and `202` workflows** — Commercial only. Retries `429 Too Many Requests` responses and follows `202 Accepted` monitor workflows under documented conditions. [Learn more](/contract_driven_development/contract_testing#smart-resiliency-orchestration).
+- **Linter** — Commercial only. Applies built-in and custom semantic rules to identify specification issues before execution. [Learn more](/features/linter#why-executable-specifications-need-semantic-linting).
