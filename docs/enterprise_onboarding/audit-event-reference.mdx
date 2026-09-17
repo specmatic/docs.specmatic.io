@@ -31,7 +31,7 @@ Top-level fields:
 | `actorId`      | `string \| null`                 | Actor identifier when available. Typically a UUID string; for unauthenticated-user flows this is the literal `"(unauthenticated)"`. |
 | `actorDisplay` | `string \| null`                 | Actor display value (for example email) when available.                                                                             |
 | `sourceIp`     | `string \| null`                 | Source IP when available.                                                                                                           |
-| `targetType`   | `string \| null`                 | Target entity type when applicable. One of `USER`, `ORGANIZATION`, `SCIM_GROUP`, `BUILD`, `LICENSE`.                                |
+| `targetType`   | `string \| null`                 | Target entity type when applicable. One of `USER`, `ORGANIZATION`, `SCIM_GROUP`, `BUILD`, `SERVICE_BUILD_REPORT`, `LICENSE`.       |
 | `targetId`     | `string \| null`                 | Target entity identifier when applicable. Treat this as an opaque string in downstream processing.                                  |
 | `details`      | `object`                         | Event-specific payload. Shape depends on `type`. Present as `{}` when no event-specific keys are defined.                           |
 
@@ -662,6 +662,24 @@ Example event:
 }
 ```
 
+#### `JWT_PROVIDER_CONFIG_CHANGED`
+
+Emitted when an organization’s JWT provider configuration is created or updated.
+
+The `before` snapshot is `null` when the provider is created. The `after` snapshot contains the saved configuration. Client secrets are not included.
+
+| field name                         | data type        | description                                      |
+|------------------------------------|------------------|--------------------------------------------------|
+| `details.before`                   | `object \| null` | Previous JWT provider configuration.             |
+| `details.after`                    | `object`         | New JWT provider configuration.                  |
+| `details.*.enabled`                | `boolean`        | Whether JWT authentication is enabled.           |
+| `details.*.issuer`                 | `string`         | JWT issuer URL.                                  |
+| `details.*.audience`               | `string`         | Expected JWT audience.                           |
+| `details.*.jwksUrl`                | `string`         | JSON Web Key Set URL.                            |
+| `details.*.identityClaim`          | `string`         | Claim used to identify the user.                 |
+| `details.*.allowedAlgorithms`      | `string[]`       | Accepted JWT signing algorithms.                 |
+| `details.*.clockSkewSeconds`       | `number`         | Allowed clock skew in seconds.                   |
+
 ### Build Ingestion
 
 #### `BUILD_SUBMITTED_SERVICE`
@@ -675,7 +693,9 @@ For this event, `httpUserAgent` records the version of Specmatic used to post th
 | `details.repo`       | `string \| null` | Repository name.                                      |
 | `details.repoId`     | `string \| null` | Repository identifier.                                |
 | `details.branchName` | `string \| null` | Branch name for submitted build.                      |
-| `details.reportType` | `string`         | Build report type. Value is `SERVICE` for this event. |
+| `details.reportType` | `string`         | Service report type. Value is `TEST` or `MOCK`.      |
+| `details.buildId`    | `string`         | Build identifier.                                      |
+| `details.runAttempt` | `string`         | CI run attempt.                                        |
 
 Example event:
 
@@ -685,12 +705,12 @@ Example event:
   "type": "BUILD_SUBMITTED_SERVICE",
   "timestamp": "2026-03-10T11:40:00Z",
   "severity": "INFO",
-  "summary": "Build submitted",
+  "summary": "Build with type SERVICE was submitted",
   "actorType": "LICENSE",
   "actorId": "f8e6d960-9816-4215-ad2e-07356da7c11e",
   "actorDisplay": "bob@example.com",
   "sourceIp": "198.51.100.30",
-  "targetType": "BUILD",
+  "targetType": "SERVICE_BUILD_REPORT",
   "targetId": "456",
   "destinationHostname": "insights.specmatic.io",
   "httpUserAgent": "specmatic/2.3.1",
@@ -703,12 +723,20 @@ Example event:
     "repo": "payments-service",
     "repoId": "repo_42",
     "branchName": "main",
-    "reportType": "SERVICE"
+    "buildId": "github-run-42",
+    "reportType": "TEST",
+    "runAttempt": "1"
   }
 }
 ```
 
-#### `BUILD_SUBMITTED_CENTRAL_REPO`
+#### `BUILD_SUBMITTED_CENTRAL_REPO` (Deprecated)
+
+:::warning[Deprecated]
+
+`BUILD_SUBMITTED_CENTRAL_REPO` is retained for historical audit events only. New Spec Metadata submissions use `BUILD_SUBMITTED_SPEC_METADATA`.
+
+:::
 
 Emitted when a central-repository build report is submitted and accepted.
 
@@ -720,22 +748,85 @@ For this event, `httpUserAgent` records the version of Specmatic used to post th
 | `details.repoId`     | `string \| null` | Repository identifier.                                     |
 | `details.branchName` | `string \| null` | Branch name for submitted build.                           |
 | `details.reportType` | `string`         | Build report type. Value is `CENTRAL_REPO` for this event. |
+| `details.buildId`    | `string \| null` | Build identifier when supplied by the reporter.             |
+| `details.runAttempt` | `string \| null` | CI run attempt when supplied by the reporter.               |
+
+#### `BUILD_SUBMITTED_SPEC_METADATA`
+
+Emitted when a Spec Metadata Report is submitted and accepted.
+
+For this event, `httpUserAgent` records the version of Specmatic used to post the build.
+
+| field name           | data type        | description                                                |
+|----------------------|------------------|------------------------------------------------------------|
+| `details.repo`       | `string \| null` | Repository name.                                           |
+| `details.repoId`     | `string \| null` | Repository identifier.                                     |
+| `details.branchName` | `string \| null` | Branch name for submitted build.                           |
+| `details.reportType` | `string`         | Build report type. Value is `SPEC_METADATA` for this event. |
+| `details.buildId`    | `string \| null` | Build identifier when supplied by the reporter.             |
+| `details.runAttempt` | `string \| null` | CI run attempt when supplied by the reporter.               |
 
 Example event:
 
 ```json
 {
-  "id": "966ecb7b-282f-4140-a91b-2f58bd93b59c",
-  "type": "BUILD_SUBMITTED_CENTRAL_REPO",
-  "timestamp": "2026-03-10T11:45:00Z",
+  "id": "701b51ee-3d80-4410-91d9-48eb06cda225",
+  "type": "BUILD_SUBMITTED_SPEC_METADATA",
+  "timestamp": "2026-09-15T13:11:11.649612Z",
   "severity": "INFO",
-  "summary": "Build submitted",
+  "summary": "Build with type SPEC_METADATA was submitted",
+  "actorType": "LICENSE",
+  "actorId": "6b5c3d12-e660-422f-befd-fba3977ce74f",
+  "actorDisplay": "6b5c3d12-e660-422f-befd-fba3977ce74f",
+  "sourceIp": "127.0.0.1",
+  "targetType": "BUILD",
+  "targetId": "3007",
+  "destinationHostname": "localhost",
+  "httpUserAgent": "io.specmatic:specmatic-core/2.54.2",
+  "httpReferer": null,
+  "httpMethod": "POST",
+  "httpProtocol": "http",
+  "httpPort": 8088,
+  "httpUrl": "/api/builds/raw-reports",
+  "details": {
+    "repo": "specmatic-order-contracts",
+    "repoId": "378410509",
+    "branchName": "main",
+    "reportType": "SPEC_METADATA",
+    "buildId": "100",
+    "runAttempt": "1"
+  }
+}
+```
+
+#### `BUILD_SUBMITTED_BACKWARD_COMPATIBILITY_CHECK`
+
+Emitted when a backward compatibility check build report is submitted and accepted.
+
+| field name           | data type        | description                                                         |
+|----------------------|------------------|---------------------------------------------------------------------|
+| `details.repo`       | `string \| null` | Repository name.                                                    |
+| `details.repoId`     | `string \| null` | Repository identifier.                                              |
+| `details.branchName` | `string \| null` | Branch name for submitted build.                                    |
+| `details.reportType` | `string`         | Build report type. Value is `BACKWARD_COMPATIBILITY_CHECK`.         |
+| `details.buildId`    | `string \| null` | Build identifier when supplied by the reporter.                      |
+| `details.runAttempt` | `string \| null` | CI run attempt when supplied by the reporter.                        |
+
+Example event:
+
+```json
+{
+  "id": "b2d8dc5a-9b3b-4bd8-a3ca-8ab92c5d0c19",
+  "type": "BUILD_SUBMITTED_BACKWARD_COMPATIBILITY_CHECK",
+  "timestamp": "2026-03-10T11:50:00Z",
+  "severity": "INFO",
+  "summary": "Build with type BACKWARD_COMPATIBILITY_CHECK was submitted",
   "actorType": "LICENSE",
   "actorId": "f8e6d960-9816-4215-ad2e-07356da7c11e",
   "actorDisplay": "bob@example.com",
-  "sourceIp": "198.51.100.31",
+  "sourceIp": "198.51.100.32",
   "targetType": "BUILD",
-  "targetId": "457",
+  "targetId": "458",
   "destinationHostname": "insights.specmatic.io",
   "httpUserAgent": "specmatic/2.3.1",
   "httpReferer": null,
@@ -747,10 +838,28 @@ Example event:
     "repo": "contracts-central",
     "repoId": "repo_87",
     "branchName": "main",
-    "reportType": "CENTRAL_REPO"
+    "reportType": "BACKWARD_COMPATIBILITY_CHECK",
+    "buildId": "bcc-run-42",
+    "runAttempt": "1"
   }
 }
 ```
+
+#### `BUILD_DELETED_SERVICE`
+
+Emitted when a service build or service build report is deleted.
+
+For a build deletion, details contain `repo`, `repoId`, `branchName`, and `reason`. For a service build report deletion, details additionally contain `buildId`, `reportType`, and `runAttempt`.
+
+| field name            | data type        | description                                             |
+|-----------------------|------------------|---------------------------------------------------------|
+| `details.repo`        | `string \| null` | Repository name.                                        |
+| `details.repoId`      | `string \| null` | Repository identifier.                                  |
+| `details.branchName`  | `string \| null` | Branch name.                                            |
+| `details.buildId`     | `string \| null` | Service build report identifier when applicable.        |
+| `details.reportType`  | `string \| null` | Service report type when applicable.                    |
+| `details.runAttempt`  | `string \| null` | CI run attempt when applicable.                         |
+| `details.reason`      | `string`         | Reason supplied for deletion.                           |
 
 ### License and Code Lifecycle
 
