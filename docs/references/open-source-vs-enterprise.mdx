@@ -17,6 +17,7 @@ sidebar_position: 0
 | API runtime resiliency testing | No | Yes for `OpenAPI`, including `202` monitor follow-through and `429` retry handling, plus `AsyncAPI`, `GraphQL`, `gRPC` and `Arazzo` workflows | [Smart Resiliency Orchestration](/contract_driven_development/contract_testing#smart-resiliency-orchestration), [OpenAPI details](#openapi-details) |
 | Per test setup and teardown | No | Yes via `before` and `after` fixtures | [OpenAPI details](#openapi-details) |
 | Intelligent Service virtualization | Yes for `OpenAPI/REST` (JSON and XML) and `WSDL/SOAP` APIs via stateless mocks | Yes, plus `AsyncAPI`, `GraphQL`, `gRPC`, `Redis`, `JDBC`, and `Arazzo` workflows | [Service Virtualization](/contract_driven_development/service_virtualization), [Protocol details](#protocol-details) |
+| Stateful mocking | No | Yes for `OpenAPI`, supports stateful CRUD operations on spec-based entities | [Stateful Mocking](/contract_driven_development/service_virtualization/stateful_mocking) |
 | Fault simulation | Yes, delays, errors, empty state etc... for `OpenAPI` and WSDL | Yes, plus `AsyncAPI`, `GraphQL`, `gRPC`, `Redis`, `JDBC`, and `Arazzo` workflows | [Service Virtualization](/contract_driven_development/service_virtualization), [Protocol details](#protocol-details) |
 | Backward compatibility testing | `OpenAPI` only | Yes, plus `AsyncAPI`, `GraphQL` and `gRPC` | [Backward Compatibility](/contract_driven_development/backward_compatibility), [Backward Compatibility Rules](/contract_driven_development/backward_compatibility_rules), [Protocol details](#protocol-details) |
 | Specification and Example Generation | Yes for `OpenAPI` via proxy (live traffic), Postman collection, request/response payloads | Yes, plus `AsyncAPI` (Kafka) via `Studio` orchestration | [Service Virtualization](/contract_driven_development/service_virtualization) |
@@ -36,11 +37,10 @@ sidebar_position: 0
 | `Arazzo` workflow testing and mocking | No | Yes | [Arazzo](/supported_protocols/arazzo) |
 | `Redis` stubbing | No | Yes | [Redis](/supported_protocols/redis) |
 | `JDBC` stubbing | No | Yes | [JDBC](/supported_protocols/jdbc) |
-| `MCP Server` | `OpenAPI` only | Yes, plus `AsyncAPI`, `GraphQL`, `gRPC` and `Arazzo` workflows | [MCP Auto Test](/getting_started/mcp_auto_test), [Protocol details](#protocol-details) |
-| `Studio` (Visual Interface) | No | Yes | [Getting Started with Studio](/getting_started/studio_quick_start) |
-| `Insights` (Continuous Governance) | No | Yes | [Insights](/enterprise_onboarding/insights/overview) |
-| API Security | Yes for `OpenAPI` across contract testing, mocking and proxy with HTTP/mTLS and security schemes | Yes, plus `AsyncAPI`, `GraphQL`, `gRPC` and `Arazzo` workflows | [Authentication](/features/authentication) |
-| Support model | Standard open-source support via GitHub Issues | Dedicated support portal with 24-hour TAT | [Migrating to Specmatic Enterprise](/references/migrating_to_enterprise) |
+| `Auto Test MCP Server` | Streamable HTTP | Same as OSS | [MCP Auto Test](/getting_started/mcp_auto_test) |
+| API Security | Yes for `OpenAPI` across contract testing, mocking and proxy with HTTP/mTLS and security schemes | Yes, plus `AsyncAPI`,`Arazzo` workflows | [Authentication](/features/authentication) |
+| Authorization (RBAC) | No | Yes | [Authorization](/features/authentication#just-in-time-tokens-via-fixtures-) |
+| Support model | Standard open-source support via GitHub Issues | Dedicated support portal with 24-hour TAT | [Support Portal](https://support.specmatic.io) |
 
 ## OpenAPI details
 
@@ -52,6 +52,7 @@ sidebar_position: 0
 | API runtime resiliency testing | No | Yes, with `429` retry and `202` monitor follow-through, subject to the documented requirements and retry limits | [Smart Resiliency Orchestration](/contract_driven_development/contract_testing#smart-resiliency-orchestration) |
 | Per test setup and teardown | No | Yes via `before` and `after` fixtures |
 | Intelligent Mocking | Mock server with strict mode, pass-through target, hot reload, delays, filtering, config-backed loading, and external examples | Everything in OSS plus richer mock handlers and additional internal verification/retrieval flows | [Service Virtualization](/contract_driven_development/service_virtualization), [Mock Configuration](/references/configuration/mock-configuration) |
+| Stateful mocking | No | Stateful `OpenAPI` mocks backed by an in-memory entity store seeded from inline or external examples | [Stateful Mocking](/contract_driven_development/service_virtualization/stateful_mocking) |
 | Proxy recording | Captures traffic and converts it into contracts and mocks | Everything in OSS plus Live proxy with `Studio`-assisted workflows around proxy and spec evolution | [Service Virtualization](/contract_driven_development/service_virtualization), [Docker Images](/references/docker_images) |
 | Backward compatibility | `OpenAPI` backward compatibility checks | Everything in OSS plus Insights integrations to provide richer validations | [Backward Compatibility](/contract_driven_development/backward_compatibility), [Backward Compatibility Rules](/contract_driven_development/backward_compatibility_rules) |
 | Validation | `OpenAPI` spec and example validation | Everything in OSS plus duplicate/competing example detection controls |
@@ -112,3 +113,9 @@ sidebar_position: 0
 | Org audit configuration | Lets organizations control how audit activity is captured and managed. | [Audit Event Reference](/enterprise_onboarding/audit-event-reference) |
 | Org identity / SSO configuration | Simplifies enterprise access control and centralizes how users sign in. | [SSO](/enterprise_onboarding/SSO), [Role Permissions](/enterprise_onboarding/role_permissions) |
 | SCIM provisioning | Supports automated user and group provisioning and ongoing maintainence from enterprise identity systems. | [SCIM Reference](/enterprise_onboarding/scim), [SCIM Integration Guides](/enterprise_onboarding/SCIM), [Role Permissions](/enterprise_onboarding/role_permissions) |
+
+## Commercial Products
+
+- **Studio** — A visual interface for authoring, validating, testing, and mocking API specifications and examples [Learn more](/getting_started/studio_quick_start#getting-started-with-studio).
+- **Insights** — Continuous API governance, reporting, dependency visibility, and build analytics [Learn more](/enterprise_onboarding/insights/overview#a-governance-tool-for-your-contract-ecosystem).
+- **Linter** — Applies [built-in and custom semantic rules](/features/linter#why-executable-specifications-need-semantic-linting) to identify specification issues before execution.
