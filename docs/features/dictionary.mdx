@@ -72,7 +72,7 @@ Employee:
 
 ### Parameters Mapping
 
-In the `PARAMETERS` section, parameters should organized based on their location: `PATH`, `QUERY`, or `HEADER`. Each key within these groups denotes the parameter name, which may correspond to either a singular value or an array of potential values. When multiple values are specified, one will be selected pseudo-randomly during runtime.
+In the `PARAMETERS` section, parameters should be organized based on their location: `PATH`, `QUERY`, or `HEADER`. Each key within these groups denotes the parameter name, which may correspond to either a singular value or an array of potential values. When multiple values are specified, one will be selected pseudo-randomly during runtime.
 
 <Tabs groupId="parameters">
 
@@ -118,7 +118,7 @@ PARAMETERS:
 
 ### Nested Properties
 
-For nested structures, properties are represented as nested keys, where each level corresponds to a that level in the schema hierarchy.
+For nested structures, properties are represented as nested keys, where each level corresponds to that level in the schema hierarchy.
 For example, given the `Employee` schema as follows:
 
 ```yaml
@@ -265,7 +265,7 @@ It is also not necessary to specify all properties of the object within the arra
 
 ### Referencing Other Schemas
 
-When a schema component utilizes `$ref` to reference another schema component, the dictionary for the referenced schema component with be defined with that schema component as the root entry (in other words directly start with the fields of the referenced schema)<br/>
+When a schema component utilizes `$ref` to reference another schema component, the dictionary for the referenced schema component will be defined with that schema component as the root entry (in other words directly start with the fields of the referenced schema)<br/>
 For example, given the following `Employee` and `Address` schemas:
 
 ```yaml
