@@ -117,11 +117,12 @@ sidebar_position: 0
 
 ## Commercial Products and Features
 
-- **Studio** — Commercial only. A visual interface for authoring, validating, testing, and mocking API specifications and examples. [Learn more](/getting_started/studio_quick_start#getting-started-with-studio).
-- **Insights** — Commercial only. Continuous API governance, reporting, dependency visibility, and build analytics. [Learn more](/enterprise_onboarding/insights/overview#a-governance-tool-for-your-contract-ecosystem).
-- **Proxy** — OSS supports `OpenAPI` specification generation. Commercial adds an `AsyncAPI` proxy and an iterative record-and-replay `OpenAPI` proxy for specification generation and full or partial service virtualization. [Learn more](/contract_driven_development/generating_api_specifications#from-an-existing-application-using-proxy-mode).
-- **Executable Config** — Available in OSS and commercial editions for configuring executable contract testing, mocking, proxying, workflows, and related runtime behavior. [Learn more](/references/configuration#configuration-topics).
-- **Tests** — OSS runs contract tests. Commercial adds sophisticated response-validating matchers for richer response-value assertions. [Learn more](/features/matchers#contract-testing).
-- **Mock** — OSS runs concrete-value mocks. Commercial adds sophisticated request matching for complex workflows, including stateful workflow behavior. [Learn more](/contract_driven_development/service_virtualization#request-matchers).
-- **`429` and `202` workflows** — Commercial only. Retries `429 Too Many Requests` responses and follows `202 Accepted` monitor workflows under documented conditions. [Learn more](/contract_driven_development/contract_testing#smart-resiliency-orchestration).
-- **Linter** — Commercial only. Applies built-in and custom semantic rules to identify specification issues before execution. [Learn more](/features/linter#why-executable-specifications-need-semantic-linting).
+- **Studio** — A [visual interface for authoring, validating, testing, and mocking API specifications and examples](/getting_started/studio_quick_start#getting-started-with-studio).
+- **Insights** — [Continuous API governance, reporting, dependency visibility, and build analytics](/enterprise_onboarding/insights/overview#a-governance-tool-for-your-contract-ecosystem).
+- **Proxy** — Commercial version supports [iterative record-and-replay `OpenAPI` / `AsyncAPI` proxy](/contract_driven_development/generating_api_specifications#from-an-existing-application-using-proxy-mode) and partial mocking of deployed services.
+- **API Tests** — Commercial supports:
+  - [Sophisticated response-validating matchers](/features/matchers#contract-testing) for richer response-value assertions
+  - Setup and Teardown fixtures for custom per-test pre and post requirements
+- **Mock** — Commercial supports [sophisticated request matching for complex workflows](/contract_driven_development/service_virtualization#request-matchers), including stateful workflow behavior.
+- **`429` and `202` workflows** — [Retries `429 Too Many Requests` responses and follows `202 Accepted` monitor workflows](/contract_driven_development/contract_testing#smart-resiliency-orchestration) under documented conditions.
+- **Linter** — Applies [built-in and custom semantic rules](/features/linter#why-executable-specifications-need-semantic-linting) to identify specification issues before execution.
