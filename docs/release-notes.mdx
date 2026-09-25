@@ -6,6 +6,31 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
+## 1.28.0 (2026-09-25)
+
+### Added
+
+- Added `specmatic config generate` to create and validate an agent-friendly version 3 configuration with separately named OpenAPI or Kafka AsyncAPI dependency services.
+- Added `specmatic config update` commands to safely add dependencies and set or remove OpenAPI service filters while preserving advanced configuration fields.
+- Added `specmatic config validate` with protocol-aware semantic checks, text or JSON diagnostics, source locations, and validation-specific exit codes for CLI and CI use.
+- Added support for `type` with values `in-memory` and `external` and deprecate the `inMemoryBroker` config from async configuration
+- Added support for AsyncAPI `$serverRef` entries and named-server resolution in test and mock configuration.
+- Added `terminateConnection` metadata for external examples so matching mock requests can terminate the connection instead of returning a response.
+- Added validation that prevents mock configurations from using the port reserved for the AsyncAPI HTTP control endpoint.
+- CTRF test results can now identify connections terminated by a mock before an HTTP response was sent; HTML reports display these results with a `Terminated` badge.
+
+### Changed
+
+- Fixed an issue that could cause duplicate mock shutdown reports to be sent when stopping mocks.
+- Competing-example detection no longer treats a transient example (`"transient": true` or `"http-stub-id"`) that overlaps a persistent example as competing. Transient and persistent examples are checked in separate buckets; overlapping examples within the same bucket are still reported.
+- Fixed concurrent transient OpenAPI example handling so each request gets the correct example response, and failed response construction does not consume the transient example.
+- Fixed OpenAPI example matching so transient examples honour their configured usage limit under concurrent requests while persistent examples remain reusable.
+- Fixed OpenAPI `oneOf` mutation generation so example rows are routed only to the matching discriminator or schema variant.
+- Retrieved mock messages now include RFC 3339 `time-stamp` values on the `http-request` and `http-response` objects.
+- Async snapshot now ensures that it is taken after the existing unconsumed messages are drain.
+- Backward-compatibility checks now load OpenAPI specifications leniently and provide clearer specification-specific loading diagnostics.
+- Pending report submissions now participate in the shared shutdown lifecycle and are given time to finish before termination.
+
 ## 1.27.0 (2026-09-07)
 
 ### Added
