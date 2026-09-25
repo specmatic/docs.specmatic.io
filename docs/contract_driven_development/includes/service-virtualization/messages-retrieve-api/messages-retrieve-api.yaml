@@ -60,6 +60,10 @@ components:
     RequestSchema:
       type: object
       properties:
+        time-stamp:
+          type: string
+          format: date-time
+          description: RFC 3339 timestamp for when the request was received.
         path:
           type: string
         method:
@@ -77,6 +81,10 @@ components:
     ResponseSchema:
       type: object
       properties:
+        time-stamp:
+          type: string
+          format: date-time
+          description: RFC 3339 timestamp for when the response was served.
         status:
           type: integer
           minimum: 0

@@ -1178,7 +1178,7 @@ Here's the OpenAPI specification describing the `/actuator/health` endpoint.
 
   <V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('../includes/service-virtualization/health-check-api/health-check-api.yaml?raw'))}/>
 
-## Retrieving Messages Served By The Mock Server
+## Retrieving Messages Served By The Mock Server <CommercialBadge />
 
 You can use the `/_specmatic/messages` endpoint to retrieve the list of all messages served by the mock server. This is useful for debugging, verifying interactions, and asserting that specific traffic actually hit the mock.
 
@@ -1211,6 +1211,48 @@ Fetch **ALL** served messages:
 ```shell
 curl -X GET http://<stub_server_url>/_specmatic/messages
 ```
+
+The response contains one object for each request/response pair served by the mock server. For example:
+
+```json
+[
+  {
+    "http-request": {
+      "method": "POST",
+      "path": "/orders",
+      "query": {
+        "dryRun": "false"
+      },
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "productId": 1,
+        "quantity": 2
+      },
+      "time-stamp": "2025-01-15T10:30:00.123Z"
+    },
+    "http-response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "id": 42,
+        "productId": 1,
+        "quantity": 2,
+        "status": "created"
+      },
+      "time-stamp": "2025-01-15T10:30:00.456Z"
+    }
+  }
+]
+```
+
+:::note
+The `time-stamp` in `http-request` records when the request was received by the mock server. The `time-stamp` in `http-response` records when the response was served by the mock server. Both values use the RFC 3339 `date-time` format.
+:::
 
 Fetch only messages where the request method is `GET`:
 
