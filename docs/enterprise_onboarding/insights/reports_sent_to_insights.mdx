@@ -46,6 +46,11 @@ For AsyncAPI, GraphQL, and gRPC test and mock runs, the CTRF artifact is stored 
 
 Pass `--ci --build-id <id> --repo-id <id> --repo-name <name> --repo-url <url> --branch-name <branch>` to the command that generates the report. `run-suite` uses one build ID for its separately submitted test and mock reports.
 
+## Report processing timing
+
+Insights stores service build reports when they arrive, then waits for a quiet window before processing them. By default, Insights starts processing 10 minutes after the last report for a given build is received. This lets separately submitted test and mock reports from one CI build be processed together instead of producing a partial build.
+
+
 ## Build identity and default metadata
 
 `--build-id` is the stable identifier that correlates all reports from one CI build in Insights. A `run-suite` invocation therefore uses one build ID for its separately submitted test and mock reports. Use the build or workflow identifier supplied by your CI provider; on GitHub Actions, this is `${{ github.run_id }}`.
