@@ -27,6 +27,8 @@ Currently, Specmatic Enterprise supports the following protocols inside the Asyn
 - [IBM MQ](/supported_protocols/asyncapi/ibm-mq)
 - [Google Pub/Sub](/supported_protocols/asyncapi/google-pub-sub)
 
+For runtime broker configuration, server references, and mock/test options, see [AsyncAPI Configuration](/supported_protocols/asyncapi/configuration).
+
 ## Typical Use-case
 
 You want to drop a message on a specific topic/queue in a messaging platform (let's say Amazon SQS), then your application picks up the message, processes it and then then emits a updated message on another topic/queue in the same or different messaging platform (let's say Kafka). You want to verify if this flow is working correctly, the messages are adhering to your defined schemas, the correct integration/messaging pattern (fire-and-forget, request-reply, pub-sub, event-stream, etc.) is being followed and so on.
@@ -115,7 +117,7 @@ You can refer to the README of this sample project to understand how you can try
 
 Mock downstream async services when your application isn't ready or for integration testing.
 
-For protocols other than Kafka (e.g., SQS, SNS, Google Pub/Sub), you must configure external brokers in `specmatic.yaml`. In-memory broker is currently only supported for Kafka.
+Specmatic can start in-memory brokers for Kafka, JMS, and AMQP. Other protocols, including SQS, SNS, and Google Pub/Sub, require an external server configuration.
 
 1. Create Test Examples
 
@@ -179,7 +181,7 @@ docker run --rm \
 Run contract tests against your application:
 
 ```bash
-specmatic-enterprise test [OPTIONS]
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test [OPTIONS]
 ```
 
 **Options**:
@@ -191,21 +193,21 @@ specmatic-enterprise test [OPTIONS]
 
 ### Virtualize Command
 
-Start a mock server for async messaging protocols. Supports both external brokers (configured in `specmatic.yaml`) and in-memory Kafka broker.
+Start a mock server for async messaging protocols. Supports external brokers and in-memory Kafka, JMS, and AMQP brokers configured in `specmatic.yaml`.
 
 ```bash
-specmatic-enterprise mock [OPTIONS]
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock [OPTIONS]
 ```
 
 **Options**:
-- `--host`: Host for in-memory Kafka broker (default: localhost)
-- `--port`: Port for in-memory Kafka broker (default: 9092)
-- `--log-dir`: Directory for in-memory Kafka broker logs (default: `./kafka-logs`)
+- `--host`: Fallback host for an in-memory broker (default: localhost)
+- `--port`: Fallback port for an in-memory broker
+- `--log-dir`: Fallback directory for in-memory broker logs
 - `--verbose`, `-v`: Enable verbose logging (default: false)
 - `--overlay`: Overlay file path (optional)
 - `--examples`: Directory containing test examples (optional)
 
-The command automatically detects whether to use external brokers (if configured in `specmatic.yaml`) or start an in-memory Kafka broker. In-memory broker is currently only supported for Kafka.
+The command uses each server's explicit `type` to connect to an external broker or start a supported in-memory broker. See [AsyncAPI Configuration](/supported_protocols/asyncapi/configuration) for precedence and migration details.
 
 ### Examples Validate Command
 
@@ -251,142 +253,11 @@ project/
 
 ## Configuration Reference
 
-### Complete Configuration Structure
+The [AsyncAPI Configuration](/supported_protocols/asyncapi/configuration) guide explains external and in-memory servers, inline and referenced servers, shared defaults, per-spec overrides, credentials, Schema Registry, and migration from `inMemoryBroker`.
 
-The `specmatic.yaml` file supports detailed configuration for async messaging protocols. Here's the complete structure:
+Here is a complete test configuration using SQS and Kafka:
 
 <V3SpecmaticJsonYamlTabs v3Object={yaml.load(require('./includes/index/complete-reference/specmatic.yaml?raw'))} />
-
----
-
-### Protocol-Specific Configurations
-
-#### Kafka
-
-**Basic Configuration**:
-
-```yaml
-servers:
-  - host: localhost:9092
-    protocol: kafka
-```
-
-**With Authentication (SASL)**:
-
-```yaml
-servers:
-  - host: localhost:9092
-    protocol: kafka
-    adminCredentials:
-      security.protocol: SASL_PLAINTEXT
-      sasl.mechanism: PLAIN
-      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin-secret";
-    client:
-      producer:
-        basic.auth.credentials.source: USER_INFO
-        basic.auth.user.info: admin:admin-secret
-      consumer:
-        basic.auth.credentials.source: USER_INFO
-        basic.auth.user.info: admin:admin-secret
-```
-
-**Configuration Options**:
-
-| Property           | Description                                        |
-|--------------------|----------------------------------------------------|
-| `host`             | Kafka broker URL (e.g., `localhost:9092`)          |
-| `protocol`         | Must be `kafka`                                    |
-| `adminCredentials` | Kafka admin client properties for topic management |
-| `client.producer`  | Standard Kafka producer properties                 |
-| `client.consumer`  | Standard Kafka consumer properties                 |
-
-The `producer` and `consumer` sections accept any standard [Kafka producer](https://kafka.apache.org/documentation/#producerconfigs) and [consumer](https://kafka.apache.org/documentation/#consumerconfigs) configuration properties.
-
----
-
-#### AWS SQS
-
-**Configuration**:
-
-```yaml
-servers:
-  - host: http://localhost:4566/000000000000
-    protocol: sqs
-    adminCredentials:
-      region: us-east-1
-      aws.access.key.id: test
-      aws.secret.access.key: test
-```
-
-**Configuration Options**:
-
-| Property                                 | Description                           |
-|------------------------------------------|---------------------------------------|
-| `host`                                   | SQS endpoint URL including account ID |
-| `protocol`                               | Must be `sqs`                         |
-| `adminCredentials.region`                | AWS region (e.g., `us-east-1`)        |
-| `adminCredentials.aws.access.key.id`     | AWS access key ID                     |
-| `adminCredentials.aws.secret.access.key` | AWS secret access key                 |
-
-For LocalStack, use `http://localhost:4566/000000000000`. For production AWS, use the full SQS endpoint URL.
-
----
-
-#### AWS EventBridge
-
-**Configuration**:
-
-```yaml
-servers:
-  - host: http://localhost:4566/000000000000
-    protocol: eventbridge
-    adminCredentials:
-      region: us-east-1
-      aws.access.key.id: test
-      aws.secret.access.key: test
-```
-
-**Configuration Options**:
-
-| Property                                 | Description                                   |
-|------------------------------------------|-----------------------------------------------|
-| `host`                                   | EventBridge endpoint URL including account ID |
-| `protocol`                               | Must be `eventbridge`                         |
-| `adminCredentials.region`                | AWS region (e.g., `us-east-1`)                |
-| `adminCredentials.aws.access.key.id`     | AWS access key ID                             |
-| `adminCredentials.aws.secret.access.key` | AWS secret access key                         |
-
----
-
-### Schema Registry Configuration
-
-Use Schema Registry to manage and validate message schemas (typically with Kafka).
-
-**Confluent Schema Registry**:
-
-```yaml
-config:
-  schemaRegistry:
-    kind: CONFLUENT
-    url: http://localhost:8085
-    username: admin
-    password: admin-secret
-  
-  servers:
-    - host: localhost:9092
-      protocol: kafka
-```
-
-**Configuration Options**:
-
-| Property   | Description                                  |
-|------------|----------------------------------------------|
-| `kind`     | Schema registry type (currently `CONFLUENT`) |
-| `url`      | Schema registry endpoint URL                 |
-| `username` | Authentication username (optional)           |
-| `password` | Authentication password (optional)           |
-
----
 
 ## Troubleshooting
 

@@ -23,10 +23,12 @@ components:
   runOptions:
     asyncServiceRunOptions:
       asyncapi:
-        type: mock
+        type: test
         servers:
-          - host: tcp://localhost:61616
-            protocol: jms
-            adminCredentials:
-              username: admin
-              password: admin
+          - server:
+              host: tcp://localhost:61616
+              protocol: jms
+              type: external
+              adminCredentials:
+                username: admin
+                password: admin

@@ -24,9 +24,8 @@ components:
     kafkaServiceMock:
       asyncapi:
         type: mock
-        inMemoryBroker:
-          host: localhost
-          port: 9092
         servers:
-          - host: "localhost:9092"
-            protocol: kafka
+          - server:
+              host: "localhost:9092"
+              protocol: kafka
+              type: in-memory

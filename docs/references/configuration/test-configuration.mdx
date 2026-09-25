@@ -98,6 +98,8 @@ The default timeout is `6000 milliseconds`.
 
 AsyncAPI contract tests use `runOptions.asyncapi` in `specmatic.yaml`. This is where Specmatic reads the async test settings represented by `AsyncTestConfig`.
 
+Start with [AsyncAPI Configuration](/supported_protocols/asyncapi/configuration) for the server model, inline and referenced servers, shared and per-spec settings, and complete examples.
+
 <V3SpecmaticJsonYamlTabs
   v3Object={yaml.load(require('./includes/test-configuration/v3/asyncapi/specmatic.yaml?raw'))}
 />
@@ -109,12 +111,15 @@ AsyncAPI contract tests use `runOptions.asyncapi` in `specmatic.yaml`. This is w
 | `type` | Must be `test` for AsyncAPI contract tests. |
 | `replyTimeout` | Maximum time in milliseconds to wait for a reply message. Default: `10000`. |
 | `subscriberReadinessWaitTime` | Additional wait time in milliseconds before tests begin verifying messages. Use this when consumers or subscriptions need time to become ready. Default: `0`. |
-| `servers` | List of broker endpoints Specmatic can use while running the test. Specmatic matches entries by `protocol`. |
-| `servers[].host` | Broker host or endpoint. For Kafka, this is typically `host:port`. |
-| `servers[].protocol` | Messaging protocol such as `kafka`, `sqs`, `sns`, `jms`, or `rabbitmq`. |
-| `servers[].adminCredentials` | Protocol-specific admin properties used to provision or inspect broker resources. |
-| `servers[].client.producer` | Producer client properties passed through to the protocol client. |
-| `servers[].client.consumer` | Consumer client properties passed through to the protocol client. |
+| `servers` | Shared runtime server list. At least one effective server is required. |
+| `servers[].server.host` | Broker host or endpoint for an inline server. |
+| `servers[].server.protocol` | Messaging protocol used by the server. |
+| `specs[].spec.servers[].server.$serverRef` | AsyncAPI 3 local server reference used in a per-spec override instead of `host` and `protocol`. |
+| `servers[].server.type` | Required lifecycle: normally `external` for contract tests. |
+| `servers[].server.adminCredentials` | Protocol-specific admin properties used to provision or inspect broker resources. |
+| `servers[].server.client.producer` | Producer client properties passed through to the protocol client. |
+| `servers[].server.client.consumer` | Consumer client properties passed through to the protocol client. |
+| `specs` | Optional per-spec overrides selected by specification `id`. |
 | `schemaRegistry` | Optional schema registry settings for Avro-based AsyncAPI contracts. |
 | `schemaRegistry.kind` | Schema registry type. Currently `CONFLUENT` is supported. |
 | `schemaRegistry.url` | Schema registry endpoint URL. |

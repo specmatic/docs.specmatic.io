@@ -1,0 +1,459 @@
+---
+title: Configuration
+sidebar_position: 1
+---
+
+# AsyncAPI Configuration
+
+Specmatic reads the message contract from your AsyncAPI document and the runtime connection settings from `specmatic.yaml`.
+
+- The **AsyncAPI document** describes servers, channels, messages, and schemas.
+- **`specmatic.yaml`** tells Specmatic which broker to use at runtime and whether that broker already exists or should be started by Specmatic.
+
+This distinction matters because a server declared in an AsyncAPI document is not automatically the server used by a test or mock. Configure runtime servers under `runOptions.asyncapi`, either as shared `servers` or as a per-spec override.
+
+## Choose who manages the broker
+
+Every configured runtime server must declare `servers[].server.type` explicitly. This is separate from `runOptions.asyncapi.type`, which selects test or mock mode.
+
+| `servers[].server.type` | Meaning | Typical use |
+|---|---|---|
+| `external` | Connect to a broker that is already running. Specmatic does not manage its lifecycle. | Contract tests and mocks using shared infrastructure, containers, or cloud services. |
+| `in-memory` | Start and stop a broker with the Specmatic mock. | Local development and isolated service-virtualization environments. |
+
+In-memory brokers are supported for Kafka, JMS, and AMQP. Contract tests normally use `external` because the system under test and its broker are started outside Specmatic.
+
+## Choose your configuration
+
+Answer these questions in order:
+
+| Question | Choose |
+|---|---|
+| Are you testing a running application or virtualizing a dependency? | Set `runOptions.asyncapi.type` to `test` for the application or `mock` for the dependency. |
+| Is the broker already running? | Set `servers[].server.type` to `external`. |
+| Should Specmatic start the broker? | Set `servers[].server.type` to `in-memory`. This is available for Kafka, JMS, and AMQP mocks. |
+| Do several specifications use the same broker? | Put `servers` directly under `runOptions.asyncapi`. |
+| Does each AsyncAPI 3 specification declare its own server? | Use a per-spec `$serverRef`. |
+| Do runtime connection details differ from the AsyncAPI document? | Configure an inline server with `host` and `protocol`. |
+
+## Copy-paste examples
+
+All three examples below use this directory:
+
+```text
+async-example/
+├── asyncapi.yaml
+└── specmatic.yaml
+```
+
+Save this complete AsyncAPI 3 contract as `asyncapi.yaml`:
+
+```yaml
+asyncapi: 3.0.0
+info:
+  title: Ping service
+  version: 1.0.0
+
+servers:
+  localKafka:
+    host: localhost:9092
+    protocol: kafka
+
+channels:
+  ping:
+    address: ping
+    messages:
+      ping:
+        $ref: "#/components/messages/ping"
+  pong:
+    address: pong
+    messages:
+      pong:
+        $ref: "#/components/messages/pong"
+
+operations:
+  pingRequest:
+    action: receive
+    channel:
+      $ref: "#/channels/ping"
+    messages:
+      - $ref: "#/channels/ping/messages/ping"
+    reply:
+      channel:
+        $ref: "#/channels/pong"
+      messages:
+        - $ref: "#/channels/pong/messages/pong"
+
+components:
+  messages:
+    ping:
+      contentType: application/json
+      payload:
+        type: object
+        required: [event]
+        properties:
+          event:
+            type: string
+            const: ping
+    pong:
+      contentType: application/json
+      payload:
+        type: object
+        required: [event]
+        properties:
+          event:
+            type: string
+            const: pong
+```
+
+### Test a running application with external Kafka
+
+Prerequisites: Kafka is available at `localhost:9092`, and the application under test is running and implements `asyncapi.yaml`.
+
+Save this as `specmatic.yaml`:
+
+```yaml
+version: 3
+
+systemUnderTest:
+  service:
+    definitions:
+      - definition:
+          source:
+            filesystem:
+              directory: .
+          specs:
+            - spec:
+                id: ping-service
+                path: asyncapi.yaml
+    runOptions:
+      asyncapi:
+        type: test
+        specs:
+          - spec:
+              id: ping-service
+              servers:
+                - server:
+                    $serverRef: "#/servers/localKafka"
+                    type: external
+```
+
+Run from `async-example`:
+
+```bash
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise test
+```
+
+Expected result: Specmatic connects to the existing broker, exercises the AsyncAPI scenarios against the running application, and reports the test results. It does not start Kafka.
+
+### Mock with Specmatic-managed Kafka
+
+No existing Kafka broker is required. Save this as `specmatic.yaml`:
+
+```yaml
+version: 3
+
+dependencies:
+  services:
+    - service:
+        definitions:
+          - definition:
+              source:
+                filesystem:
+                  directory: .
+              specs:
+                - spec:
+                    id: ping-service
+                    path: asyncapi.yaml
+        runOptions:
+          asyncapi:
+            type: mock
+            specs:
+              - spec:
+                  id: ping-service
+                  servers:
+                    - server:
+                        $serverRef: "#/servers/localKafka"
+                        type: in-memory
+```
+
+Run from `async-example`:
+
+```bash
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
+```
+
+Expected result: Specmatic starts Kafka at `localhost:9092`, starts the mock, and exposes its HTTP control endpoint on port `9999`. Stopping the command also stops the broker.
+
+### Mock with an existing broker
+
+Prerequisite: Kafka is available at the value of `KAFKA_BROKER`, or at `localhost:9092` when the variable is unset. Save this as `specmatic.yaml`:
+
+```yaml
+version: 3
+
+dependencies:
+  services:
+    - service:
+        definitions:
+          - definition:
+              source:
+                filesystem:
+                  directory: .
+              specs:
+                - spec:
+                    path: asyncapi.yaml
+        runOptions:
+          asyncapi:
+            type: mock
+            servers:
+              - server:
+                  host: ${KAFKA_BROKER:localhost:9092}
+                  protocol: kafka
+                  type: external
+```
+
+Run from `async-example`:
+
+```bash
+docker run --rm --network host -v "$(pwd):/usr/src/app" specmatic/enterprise mock
+```
+
+Expected result: Specmatic connects to the existing Kafka broker and starts the mock. It does not manage the broker's lifecycle.
+
+## Server entries
+
+Use the wrapped `server` form for new configuration:
+
+```yaml
+servers:
+  - server:
+      host: localhost:9092
+      protocol: kafka
+      type: external
+```
+
+Older flat inline entries remain readable for compatibility, but the wrapped form is the canonical format and is required for `$serverRef`.
+
+### Inline server fields
+
+| Property | Required | Description |
+|---|---:|---|
+| `host` | Yes | Broker address. Common forms are `host:port` and `scheme://host:port`. |
+| `protocol` | Yes | One of `kafka`, `sqs`, `sns`, `eventbridge`, `googlepubsub`, `amqp`, `ibmmq`, `jms`, `mqtt`, or `ws`. |
+| `type` | Yes | `external` or `in-memory`. |
+| `adminCredentials` | No | Protocol-specific properties used to provision or inspect broker resources. |
+| `client.producer` | No | Protocol-specific producer properties. |
+| `client.consumer` | No | Protocol-specific consumer properties. |
+
+Example with Kafka client settings:
+
+```yaml
+servers:
+  - server:
+      host: kafka.example.com:9092
+      protocol: kafka
+      type: external
+      adminCredentials:
+        security.protocol: SASL_PLAINTEXT
+        sasl.mechanism: PLAIN
+      client:
+        producer:
+          acks: all
+        consumer:
+          auto.offset.reset: earliest
+```
+
+`adminCredentials`, `client.producer`, and `client.consumer` are passed to the selected protocol integration. Their supported keys therefore depend on that protocol.
+
+## Referencing a server from AsyncAPI
+
+With an AsyncAPI 3 document, per-spec configuration can reuse a named server instead of repeating its `host` and `protocol`.
+
+Given this server in `order-events.yaml`:
+
+```yaml
+asyncapi: 3.0.0
+servers:
+  development:
+    host: localhost:9092
+    protocol: kafka
+```
+
+Reference it from the matching specification override:
+
+```yaml
+definitions:
+  - definition:
+      source:
+        filesystem:
+          directory: .
+      specs:
+        - spec:
+            id: orders
+            path: order-events.yaml
+runOptions:
+  asyncapi:
+    type: test
+    specs:
+      - spec:
+          id: orders
+          servers:
+            - server:
+                $serverRef: "#/servers/development"
+                type: external
+```
+
+The reference supplies `host` and `protocol` from the AsyncAPI document. The Specmatic entry supplies runtime intent through `type` and can also supply `adminCredentials` and `client` properties.
+
+Reference rules:
+
+- Use AsyncAPI 3.
+- Place references in `runOptions.asyncapi.specs[].spec.servers`, not the shared server list.
+- Use a local reference shaped as `#/servers/<name>`.
+- Wrap the reference under `server`.
+- Do not combine `$serverRef` with `host` or `protocol`.
+- The referenced AsyncAPI server host must be concrete; unresolved `{variables}` are rejected.
+- Do not assign different types to repeated references to the same named server.
+
+## Shared servers and per-spec overrides
+
+Put `servers` directly under `runOptions.asyncapi` when several specifications use the same runtime broker:
+
+```yaml
+runOptions:
+  asyncapi:
+    type: test
+    replyTimeout: 15000
+    servers:
+      - server:
+          host: kafka.example.com:9092
+          protocol: kafka
+          type: external
+    specs:
+      - spec:
+          id: orders
+          subscriberReadinessWaitTime: 3000
+      - spec:
+          id: payments
+```
+
+Resolution rules:
+
+1. A spec entry without `servers` inherits the shared server list.
+2. A spec entry with `servers` replaces the shared list for that specification.
+3. Other per-spec settings do not discard shared servers.
+4. `$serverRef` is available only in a per-spec server list because each reference must resolve against one specific AsyncAPI document.
+
+Use shared inline servers for common infrastructure. Use per-spec references when connection details already live in each AsyncAPI document.
+
+## Test options
+
+| Property | Default | Description |
+|---|---:|---|
+| `type` | — | Must be `test`. |
+| `servers` | — | Shared runtime servers. At least one effective server is required. |
+| `replyTimeout` | `10000` | Maximum milliseconds to wait for a reply message. |
+| `subscriberReadinessWaitTime` | `0` | Additional milliseconds to wait for consumers or subscriptions to become ready. |
+| `schemaRegistry` | — | Optional Schema Registry settings. |
+| `specs` | — | Per-spec overrides selected by specification `id`. |
+
+## Mock options
+
+| Property | Description |
+|---|---|
+| `type` | Must be `mock`. |
+| `servers` | Shared runtime servers. At least one effective server is required. |
+| `schemaRegistry` | Optional Schema Registry settings. |
+| `specs` | Per-spec overrides selected by specification `id`. |
+
+A mock may contain multiple server entries. Specmatic connects to entries marked `external` and starts supported brokers for entries marked `in-memory`.
+
+The AsyncAPI mock also exposes an HTTP control endpoint on port `9999`. Do not use port `9999` for an in-memory broker.
+
+## Schema Registry
+
+Configure Schema Registry alongside `servers` when the AsyncAPI contract uses registry-backed Avro or JSON Schema payloads:
+
+```yaml
+runOptions:
+  asyncapi:
+    type: test
+    schemaRegistry:
+      kind: CONFLUENT
+      url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+      username: ${SCHEMA_REGISTRY_USERNAME:}
+      password: ${SCHEMA_REGISTRY_PASSWORD:}
+    servers:
+      - server:
+          host: localhost:9092
+          protocol: kafka
+          type: external
+```
+
+See [Confluent Schema Registry](/features/asyncapi/confluent-schema-registry) for schema references, authentication, serializers, and subject-name strategies.
+
+## Migrate from `inMemoryBroker`
+
+`inMemoryBroker` is deprecated. Runtime compatibility remains during migration, but configuration validation reports it and new configurations should not use it.
+
+Before:
+
+```yaml
+runOptions:
+  asyncapi:
+    type: mock
+    inMemoryBroker:
+      host: localhost
+      port: 9092
+      logDir: ./kafka-logs
+    servers:
+      - host: localhost:9092
+        protocol: kafka
+```
+
+After:
+
+```yaml
+runOptions:
+  asyncapi:
+    type: mock
+    servers:
+      - server:
+          host: localhost:9092
+          protocol: kafka
+          type: in-memory
+```
+
+The server now describes both the connection and who manages the broker. Specmatic derives the broker log directory from protocol, host, and port. If an in-memory server is configured, it takes precedence over legacy `inMemoryBroker` and broker-related command-line values.
+
+## Troubleshooting
+
+Configuration validation reports the location of the problem. Use the message to find the fix:
+
+| Message contains | Fix |
+|---|---|
+| `must provide at least one configured server` | Add a shared `servers` list or a `servers` list to the matching per-spec override. An explicitly empty per-spec list does not inherit shared servers. |
+| `type ... must be explicitly configured` | Add `type: external` or `type: in-memory` to that server entry. |
+| `Server references must use a wrapped 'server' entry` | Nest `$serverRef` under `- server:`. |
+| `cannot have both '$serverRef' and 'host'/'protocol'` | Keep only `$serverRef`; the referenced AsyncAPI server supplies `host` and `protocol`. |
+| `Server references are supported only in AsyncAPI v3 spec-level servers` | Use AsyncAPI 3 and move the reference into `runOptions.asyncapi.specs[].spec.servers`. Otherwise, use an inline server. |
+| `Server reference ... was not found` | Match the name after `#/servers/` to a key under `servers` in the AsyncAPI document. |
+| `has unresolved variables in host` | Resolve AsyncAPI server variables before using `$serverRef`, or use an inline runtime server with a concrete host. |
+| `has conflicting types` | Give every occurrence of the same `$serverRef` the same `type`. |
+| `Invalid in-memory broker host` | Use `<host>:<port>` or `<scheme>://<host>:<port>` with a port from `1` through `65535`. |
+| `Port 9999 is reserved` | Choose another in-memory broker port; `9999` belongs to the AsyncAPI HTTP control endpoint. |
+| `'inMemoryBroker' ... is deprecated` | Remove `inMemoryBroker` and configure the matching server with `type: in-memory`. |
+
+## Configuration checklist
+
+Before running the test or mock command, verify that:
+
+- Every effective config has at least one server.
+- Every server has an explicit `type`.
+- Every inline server has `host` and `protocol`.
+- Every `$serverRef` is wrapped and belongs to a matching per-spec AsyncAPI 3 override.
+- In-memory server addresses contain a valid port from `1` through `65535` and do not use `9999`.
+- Protocol-specific credentials are placed under `adminCredentials` or `client`, not mixed into the server itself.
+
+For protocol-specific properties and examples, continue with [Kafka](/supported_protocols/asyncapi/kafka), [JMS](/supported_protocols/asyncapi/jms), [RabbitMQ](/supported_protocols/asyncapi/rabbit-mq), or another protocol guide.

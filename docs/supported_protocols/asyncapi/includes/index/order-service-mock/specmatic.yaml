@@ -32,11 +32,14 @@ components:
       asyncapi:
         type: mock
         servers:
-          - host: "<SQS_QUEUE_URL>"
-            protocol: sqs
-            adminCredentials:
-              aws.access.key.id: "<AWS_ACCESS_KEY_ID>"
-              aws.secret.access.key: "<AWS_SECRET_ACCESS_KEY>"
-          - host: "<KAFKA_BROKER_URL>"
-            protocol: kafka
-
+          - server:
+              host: "<SQS_QUEUE_URL>"
+              protocol: sqs
+              type: external
+              adminCredentials:
+                aws.access.key.id: "<AWS_ACCESS_KEY_ID>"
+                aws.secret.access.key: "<AWS_SECRET_ACCESS_KEY>"
+          - server:
+              host: "<KAFKA_BROKER_URL>"
+              protocol: kafka
+              type: external

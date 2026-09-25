@@ -26,9 +26,11 @@ components:
       asyncapi:
         type: mock
         servers:
-          - host: http://localhost:4566
-            protocol: eventbridge
-            adminCredentials:
-              region: us-east-1
-              aws.access.key.id: test
-              aws.secret.access.key: test
+          - server:
+              host: http://localhost:4566
+              protocol: eventbridge
+              type: external
+              adminCredentials:
+                region: us-east-1
+                aws.access.key.id: test
+                aws.secret.access.key: test

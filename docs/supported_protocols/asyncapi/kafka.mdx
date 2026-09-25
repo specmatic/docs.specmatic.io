@@ -97,11 +97,17 @@ Listening on topics: (product-queries)
 Starting API server on port: 9999
 ```
 
-If you want Specmatic to use an existing Kafka broker instead of the embedded one:
+If you want Specmatic to use an existing Kafka broker instead of the embedded one, update the server in `specmatic.yaml`:
 
-```bash
-docker run --network host -v "$(pwd):/usr/src/app" specmatic/enterprise --external-broker-url localhost:9092 mock
+```yaml
+servers:
+  - server:
+      host: localhost:9092
+      protocol: kafka
+      type: external
 ```
+
+Then run the same `specmatic/enterprise mock` command. Specmatic connects to the configured broker and does not manage its lifecycle.
 
 If you want the HTTP API on a different port, set `API_SERVER_PORT`:
 
@@ -118,9 +124,10 @@ docker run --network host \
 
 For Kafka, the `servers` entries in `runOptions.asyncapi` map directly to the async config classes:
 
-- `servers[].host` and `servers[].protocol` select the broker
-- `servers[].adminCredentials` carries Kafka admin client properties
-- `servers[].client.producer` and `servers[].client.consumer` carry Kafka client properties
+- `servers[].server.host` and `servers[].server.protocol` select the broker
+- `servers[].server.type` chooses an external or Specmatic-managed broker
+- `servers[].server.adminCredentials` carries Kafka admin client properties
+- `servers[].server.client.producer` and `servers[].server.client.consumer` carry Kafka client properties
 - `schemaRegistry` is used when your AsyncAPI payloads reference Avro schemas from a registry
 
 Example:

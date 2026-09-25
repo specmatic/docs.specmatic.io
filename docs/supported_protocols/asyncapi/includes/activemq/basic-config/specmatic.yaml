@@ -1,10 +1,9 @@
 version: 3
-dependencies:
-  services:
-    - service:
-        $ref: "#/components/services/asyncService"
-        runOptions:
-          $ref: "#/components/runOptions/asyncServiceMock"
+systemUnderTest:
+  service:
+    $ref: "#/components/services/asyncService"
+    runOptions:
+      $ref: "#/components/runOptions/asyncServiceTest"
 components:
   sources:
     yourContracts:
@@ -22,12 +21,14 @@ components:
                   id: asyncSpec
                   path: spec/async-api-spec.yaml
   runOptions:
-    asyncServiceMock:
+    asyncServiceTest:
       asyncapi:
-        type: mock
-        inMemoryBroker:
-          host: 0.0.0.0
-          port: 9127
+        type: test
         servers:
-          - host: tcp://0.0.0.0:9127
-            protocol: jms
+          - server:
+              host: tcp://localhost:61616
+              protocol: jms
+              type: external
+              adminCredentials:
+                username: admin
+                password: admin

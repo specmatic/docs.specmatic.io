@@ -25,24 +25,26 @@ components:
       asyncapi:
         type: test
         servers:
-          - host: tcp://localhost:1415
-            protocol: ibmmq
-            adminCredentials:
-              queueManager: QM1
-              channel: DEV.ADMIN.SVRCONN
-              connName: localhost(1415)
-              username: admin
-              password: adminpassw0rd
-            client:
-              producer:
+          - server:
+              host: tcp://localhost:1415
+              protocol: ibmmq
+              type: external
+              adminCredentials:
                 queueManager: QM1
-                channel: DEV.APP.SVRCONN
-                destination.type: queue
-                username: app
-                password: passw0rd
-              consumer:
-                queueManager: QM1
-                channel: DEV.APP.SVRCONN
-                destination.type: queue
-                username: app
-                password: passw0rd
+                channel: DEV.ADMIN.SVRCONN
+                connName: localhost(1415)
+                username: admin
+                password: adminpassw0rd
+              client:
+                producer:
+                  queueManager: QM1
+                  channel: DEV.APP.SVRCONN
+                  destination.type: queue
+                  username: app
+                  password: passw0rd
+                consumer:
+                  queueManager: QM1
+                  channel: DEV.APP.SVRCONN
+                  destination.type: queue
+                  username: app
+                  password: passw0rd

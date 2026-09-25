@@ -33,8 +33,10 @@ systemUnderTest:
           kind: CONFLUENT
           url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
         servers:
-          - host: ${KAFKA_BROKER:localhost:9092}
-            protocol: kafka
+          - server:
+              host: ${KAFKA_BROKER:localhost:9092}
+              protocol: kafka
+              type: external
 ```
 
 | Field | Purpose |
@@ -42,8 +44,8 @@ systemUnderTest:
 | `schemaRegistry.kind` | Set to `CONFLUENT` for Confluent framing and serializers. |
 | `schemaRegistry.url` | Registry base URL. Specmatic uses it to fetch schemas and configures it as `schema.registry.url` for the producer. |
 | `schemaRegistry.username/password` | Optional HTTP Basic credentials used when Specmatic fetches a schema. Omit both for an unauthenticated Registry. |
-| `servers[].client.producer` | Confluent serializer properties, including Registry client authentication and subject-name strategy. |
-| `servers[].client.consumer` | Kafka consumer properties. Specmatic receives values as bytes, then decodes them using the referenced schema. |
+| `servers[].server.client.producer` | Confluent serializer properties, including Registry client authentication and subject-name strategy. |
+| `servers[].server.client.consumer` | Kafka consumer properties. Specmatic receives values as bytes, then decodes them using the referenced schema. |
 
 ### Registry authentication
 
@@ -62,12 +64,14 @@ runOptions:
           password: ${SCHEMA_REGISTRY_PASSWORD}
         
         servers:
-          - host: ${KAFKA_BROKER:localhost:9092}
-            protocol: kafka
-            client:
-              producer:
-                basic.auth.credentials.source: USER_INFO
-                basic.auth.user.info: ${SCHEMA_REGISTRY_USERNAME}:${SCHEMA_REGISTRY_PASSWORD}
+          - server:
+              host: ${KAFKA_BROKER:localhost:9092}
+              protocol: kafka
+              type: external
+              client:
+                producer:
+                  basic.auth.credentials.source: USER_INFO
+                  basic.auth.user.info: ${SCHEMA_REGISTRY_USERNAME}:${SCHEMA_REGISTRY_PASSWORD}
 ```
 
 Use your Registry provider's required Kafka serializer properties if they differ.
@@ -124,11 +128,13 @@ If your existing producer uses another strategy or subject layout, add the same 
 
 ```yaml
 servers:
-  - host: ${KAFKA_BROKER:localhost:9092}
-    protocol: kafka
-    client:
-      producer:
-        value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
+  - server:
+      host: ${KAFKA_BROKER:localhost:9092}
+      protocol: kafka
+      type: external
+      client:
+        producer:
+          value.subject.name.strategy: io.confluent.kafka.serializers.subject.RecordNameStrategy
 ```
 
 Use the strategy your application already uses. Specmatic does not automatically derive it from the `$ref` subject.

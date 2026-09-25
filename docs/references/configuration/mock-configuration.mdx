@@ -50,6 +50,8 @@ you can simulate response times with the specified delay in milliseconds, as men
 
 AsyncAPI mocks use `runOptions.asyncapi` in `specmatic.yaml`. This is where Specmatic reads the async mock settings represented by `AsyncMockConfig`.
 
+Start with [AsyncAPI Configuration](/supported_protocols/asyncapi/configuration) for the server model, inline and referenced servers, shared and per-spec settings, and complete examples.
+
 <V3SpecmaticJsonYamlTabs
   v3Object={yaml.load(require('./includes/mock-configuration/v3/asyncapi/specmatic.yaml?raw'))}
 />
@@ -59,16 +61,15 @@ AsyncAPI mocks use `runOptions.asyncapi` in `specmatic.yaml`. This is where Spec
 | Property | Description |
 |----------|-------------|
 | `type` | Must be `mock` for AsyncAPI service virtualization. |
-| `inMemoryBroker` | Optional configuration for the embedded broker. When `inMemoryBroker.port` is set, Specmatic starts an in-memory broker instead of using an external one. |
-| `inMemoryBroker.host` | Host name for the embedded broker. Default: `localhost`. |
-| `inMemoryBroker.port` | Port for the embedded broker. Required when you want to run an in-memory broker. |
-| `inMemoryBroker.logDir` | Directory used for broker logs. Defaults to `./<protocol>-logs`. |
-| `servers` | List of broker endpoints the mock should expose or connect to. Specmatic matches entries by `protocol`. |
-| `servers[].host` | Broker host or endpoint. For Kafka, this is typically `host:port`. |
-| `servers[].protocol` | Messaging protocol such as `kafka`, `sqs`, `sns`, `jms`, or `rabbitmq`. |
-| `servers[].adminCredentials` | Protocol-specific admin properties used to provision or inspect broker resources. |
-| `servers[].client.producer` | Producer client properties passed through to the protocol client. |
-| `servers[].client.consumer` | Consumer client properties passed through to the protocol client. |
+| `servers` | Shared runtime server list. At least one effective server is required. |
+| `servers[].server.host` | Broker host or endpoint for an inline server. |
+| `servers[].server.protocol` | Messaging protocol used by the server. |
+| `specs[].spec.servers[].server.$serverRef` | AsyncAPI 3 local server reference used in a per-spec override instead of `host` and `protocol`. |
+| `servers[].server.type` | Required lifecycle: `external` or `in-memory`. |
+| `servers[].server.adminCredentials` | Protocol-specific admin properties used to provision or inspect broker resources. |
+| `servers[].server.client.producer` | Producer client properties passed through to the protocol client. |
+| `servers[].server.client.consumer` | Consumer client properties passed through to the protocol client. |
+| `specs` | Optional per-spec overrides selected by specification `id`. |
 | `schemaRegistry` | Optional schema registry settings for Avro-based AsyncAPI mocks. |
 | `schemaRegistry.kind` | Schema registry type. Currently `CONFLUENT` is supported. |
 | `schemaRegistry.url` | Schema registry endpoint URL. |
@@ -77,7 +78,9 @@ AsyncAPI mocks use `runOptions.asyncapi` in `specmatic.yaml`. This is where Spec
 
 ### Notes
 
-- In-memory broker support is intended for Kafka mocking. If `inMemoryBroker` is omitted, Specmatic expects the broker connection details to be available under `servers`.
+- Mark a server `type: in-memory` when Specmatic should start it. Kafka, JMS, and AMQP support in-memory brokers.
+- Mark a server `type: external` when Specmatic should connect to an existing broker.
+- `inMemoryBroker` is deprecated. Replace it with a server entry whose `type` is `in-memory`; see [migration guidance](/supported_protocols/asyncapi/configuration#migrate-from-inmemorybroker).
 - `adminCredentials`, `client.producer`, and `client.consumer` are protocol-specific maps. For Kafka, use standard Kafka client properties.
 - `schemaRegistry` is only needed when your AsyncAPI examples or payload schemas depend on a registry.
 - For Kafka-specific guidance, see [Kafka](/supported_protocols/asyncapi/kafka).

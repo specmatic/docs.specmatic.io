@@ -19,16 +19,18 @@ systemUnderTest:
           username: admin
           password: admin-secret
         servers:
-          - host: ${KAFKA_BROKER:localhost:9092}
-            protocol: kafka
-            adminCredentials:
-              security.protocol: SASL_PLAINTEXT
-              sasl.mechanism: PLAIN
-              sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="test" password="test-secret";
-            client:
-              producer:
-                basic.auth.credentials.source: USER_INFO
-                basic.auth.user.info: admin:admin-secret
-              consumer:
-                basic.auth.credentials.source: USER_INFO
-                basic.auth.user.info: admin:admin-secret
+          - server:
+              host: ${KAFKA_BROKER:localhost:9092}
+              protocol: kafka
+              type: external
+              adminCredentials:
+                security.protocol: SASL_PLAINTEXT
+                sasl.mechanism: PLAIN
+                sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="test" password="test-secret";
+              client:
+                producer:
+                  basic.auth.credentials.source: USER_INFO
+                  basic.auth.user.info: admin:admin-secret
+                consumer:
+                  basic.auth.credentials.source: USER_INFO
+                  basic.auth.user.info: admin:admin-secret
