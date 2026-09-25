@@ -1327,6 +1327,8 @@ Emitted when a SCIM user is provisioned (created).
 |---------------------|-----------|-----------------------------------------------------------------------------|
 | `details.operation` | `string`  | Operation discriminator for created user events; this event emits `CREATE`. |
 | `details.userName`  | `string`  | Canonical SCIM `userName` value.                                            |
+| `details.projectedUserEmail` | `string \| null` | Projected local email when the SCIM user maps to a local user.              |
+| `details.externalId` | `string \| null` | SCIM external ID when supplied.                                             |
 | `details.active`    | `boolean` | Current SCIM active state for the created user.                             |
 
 Example event:
@@ -1369,6 +1371,8 @@ Emitted when a SCIM user is updated via replace semantics (`PUT`).
 |-------------------------------------|------------------|------------------------------------------------------------------------------------|
 | `details.operation`                 | `string`         | Operation discriminator for full replacement mutations; this event emits `UPDATE`. |
 | `details.userName`                  | `string`         | Canonical SCIM `userName` value after update.                                      |
+| `details.projectedUserEmail`        | `string \| null` | Projected local email after update.                                               |
+| `details.externalId`                | `string \| null` | SCIM external ID after update.                                                     |
 | `details.active`                    | `boolean`        | Current SCIM active state after update.                                            |
 | `details.before`                    | `object`         | Snapshot before mutation.                                                          |
 | `details.before.userName`           | `string`         | `userName` before update.                                                          |
@@ -1433,6 +1437,8 @@ Emitted when a SCIM user is updated via patch semantics (`PATCH`).
 |-------------------------------------|------------------|-------------------------------------------------------------------------------|
 | `details.operation`                 | `string`         | Operation discriminator for partial user mutations; this event emits `PATCH`. |
 | `details.userName`                  | `string`         | Canonical SCIM `userName` value after patch.                                  |
+| `details.projectedUserEmail`        | `string \| null` | Projected local email after patch.                                           |
+| `details.externalId`                | `string \| null` | SCIM external ID after patch.                                                 |
 | `details.active`                    | `boolean`        | Current SCIM active state after patch.                                        |
 | `details.before`                    | `object`         | Snapshot before mutation.                                                     |
 | `details.before.userName`           | `string`         | `userName` before patch.                                                      |
@@ -1497,6 +1503,8 @@ Emitted when a SCIM user is deprovisioned with `active=false`.
 |---------------------|-----------|-------------------------------------------------------------------------------------|
 | `details.operation` | `string`  | Operation discriminator for user deprovision events; this event emits `DEACTIVATE`. |
 | `details.userName`  | `string`  | Canonical SCIM `userName` value for the affected user.                              |
+| `details.projectedUserEmail` | `string \| null` | Projected local email when the SCIM user maps to a local user.                     |
+| `details.externalId` | `string \| null` | SCIM external ID when supplied.                                                    |
 | `details.active`    | `boolean` | Current SCIM active state (`false`).                                                |
 
 Example event:
@@ -1539,6 +1547,8 @@ Emitted when a previously deactivated SCIM user is reactivated (`active=true`).
 |---------------------|-----------|-----------------------------------------------------------------------------------------------------|
 | `details.operation` | `string`  | Operation discriminator for restoring a previously deactivated user; this event emits `REACTIVATE`. |
 | `details.userName`  | `string`  | Canonical SCIM `userName` value for the affected user.                                              |
+| `details.projectedUserEmail` | `string \| null` | Projected local email when the SCIM user maps to a local user.                                     |
+| `details.externalId` | `string \| null` | SCIM external ID when supplied.                                                                    |
 | `details.active`    | `boolean` | Current SCIM active state (`true`).                                                                 |
 
 Example event:
@@ -1581,6 +1591,8 @@ Emitted when a SCIM user is deleted via SCIM `DELETE`.
 |---------------------|-----------|-------------------------------------------------------------------------------|
 | `details.operation` | `string`  | Operation discriminator for hard-delete mutations; this event emits `DELETE`. |
 | `details.userName`  | `string`  | Canonical SCIM `userName` value at delete time.                               |
+| `details.projectedUserEmail` | `string \| null` | Projected local email when the SCIM user maps to a local user.              |
+| `details.externalId` | `string \| null` | SCIM external ID when supplied.                                               |
 | `details.active`    | `boolean` | Final SCIM active state at delete time (`false`).                             |
 
 Example event:
@@ -1623,6 +1635,7 @@ Emitted when a SCIM group is created.
 |-----------------------|-----------|------------------------------------------------------------------------------|
 | `details.operation`   | `string`  | Operation discriminator for created group events; this event emits `CREATE`. |
 | `details.displayName` | `string`  | Canonical SCIM group display name at creation time.                          |
+| `details.externalId`  | `string \| null` | SCIM external ID when supplied.                                         |
 
 Example event:
 
@@ -1662,6 +1675,7 @@ Emitted when a SCIM group is updated via replace semantics (`PUT`).
 |------------------------------|------------------|------------------------------------------------------------------------------------------|
 | `details.operation`          | `string`         | Operation discriminator for full group replacement mutations; this event emits `UPDATE`. |
 | `details.displayName`        | `string`         | Canonical SCIM group display name after update.                                          |
+| `details.externalId`         | `string \| null` | SCIM external ID after update.                                                        |
 | `details.before`             | `object`         | Snapshot before mutation (`displayName`, `externalId`).                                  |
 | `details.before.displayName` | `string`         | Group display name before update.                                                        |
 | `details.before.externalId`  | `string \| null` | Group external id before update.                                                         |
@@ -1715,6 +1729,7 @@ Emitted when a SCIM group is updated via patch semantics (`PATCH`), including me
 |------------------------------|------------------|-------------------------------------------------------------------------------------------|
 | `details.operation`          | `string`         | Operation discriminator for partial group/membership mutations; this event emits `PATCH`. |
 | `details.displayName`        | `string`         | Canonical SCIM group display name after patch.                                            |
+| `details.externalId`         | `string \| null` | SCIM external ID after patch.                                                          |
 | `details.before`             | `object`         | Snapshot before mutation (`displayName`, `externalId`).                                   |
 | `details.before.displayName` | `string`         | Group display name before patch.                                                          |
 | `details.before.externalId`  | `string \| null` | Group external id before patch.                                                           |
@@ -1768,6 +1783,7 @@ Emitted when a SCIM group is deleted via SCIM `DELETE`.
 |-----------------------|-----------|----------------------------------------------------------------------------------|
 | `details.operation`   | `string`  | Operation discriminator for group deletion mutations; this event emits `DELETE`. |
 | `details.displayName` | `string`  | Canonical SCIM group display name at delete time.                                |
+| `details.externalId`  | `string \| null` | SCIM external ID when supplied.                                            |
 
 Example event:
 
@@ -1813,7 +1829,7 @@ Emitted when an org admin updates the Insights role/identity mapping for one or 
 | `targetId`                            | `string`  | SCIM group ID whose mapping changed.                                  |
 | `details.resourceScimId`              | `string`  | SCIM group ID (same value as `targetId`).                             |
 | `details.displayName`                 | `string`  | SCIM group display name at the time of update.                        |
-| `details.externalId`                  | `string`  | Optional SCIM group external ID when present.                         |
+| `details.externalId`                  | `string \| null` | Optional SCIM group external ID when present.                         |
 | `details.before.insightsRole`         | `string`  | Previous Insights role mapping (`USER` or `ORG_ADMIN`).               |
 | `details.before.insightsIdentityType` | `string`  | Previous identity mapping (`HUMAN_IDENTITY` or `NON_HUMAN_IDENTITY`). |
 | `details.after.insightsRole`          | `string`  | New Insights role mapping (`USER` or `ORG_ADMIN`).                    |
