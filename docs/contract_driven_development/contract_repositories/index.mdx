@@ -72,7 +72,7 @@ Typical pre-merge checks include:
 
 These checks help teams catch problems early, before contract changes are merged and consumed more widely.
 
-See [Specmatic Linter](/features/linter) to understand what linting checks, then use the [Linter CI/CD guide](/features/linter/ci-cd) to add it to a pull-request workflow.
+See [Skeptic](/features/linter) to understand what linting checks, then use the [Skeptic CI/CD guide](/features/linter/ci-cd) to add it to a pull-request workflow.
 
 ### CI workflow for pull requests
 
@@ -99,7 +99,7 @@ jobs:
           mkdir -p ~/.specmatic
           echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
-      - name: Run Specmatic Linter
+      - name: Run Skeptic
         run: |
           docker run --rm \
             -v "$(pwd):/usr/src/app" \

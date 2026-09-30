@@ -6,6 +6,6 @@
   "link": {
     "type": "generated-index",
     "title": "OpenAPI linting",
-    "description": "Run Specmatic Linter against OpenAPI documents and understand its OpenAPI rules."
+    "description": "Run Skeptic against OpenAPI documents and understand its OpenAPI rules."
   }
 }

@@ -1,16 +1,16 @@
 ---
-title: Linter
+title: Skeptic
 sidebar_position: 1
 description: Check OpenAPI specifications against built-in and custom API governance rules.
 ---
 
 import {CommercialBadge} from "../../../src/components/CommercialBadge";
 
-# Linter <CommercialBadge/>
+# Skeptic <CommercialBadge/>
 
 An OpenAPI specification can be structurally valid and still be impossible to execute reliably. Contradictory schema constraints, incompatible media types, and ambiguous paths can pass surface-level validation, then break generated tests, mocks, contract validation, or implementation.
 
-Specmatic Linter exists to find this gap early. It checks whether a specification is semantically consistent and executable, not only whether its syntax and structure are valid. Findings include precise source locations and actionable explanations, so authors can fix problems before they affect downstream teams and tooling.
+Skeptic is Specmatic's API specification linter. It finds this gap early by checking whether a specification is semantically consistent and executable, not only whether its syntax and structure are valid. Findings include precise source locations and actionable explanations, so authors can fix problems before they affect downstream teams and tooling.
 
 The result: a specification that passes linting is closer to one you can execute and trust.
 
@@ -61,13 +61,13 @@ Use it to:
 - produce JSON or HTML reports; and
 - block CI only for violations classified as errors.
 
-Specmatic Linter currently supports the OpenAPI specification family: Swagger 2.0 and OpenAPI 3.0, 3.1, and 3.2 documents in YAML or JSON. It is included in Specmatic Enterprise.
+Skeptic currently supports the OpenAPI specification family: Swagger 2.0 and OpenAPI 3.0, 3.1, and 3.2 documents in YAML or JSON. It is included in Specmatic Enterprise.
 
 Ready to lint your first specification? Start with the [OpenAPI Quick Start](/features/linter/specification-formats/openapi/quick-start).
 
 ## Find the right guide
 
-Linter documentation has two layers:
+Skeptic documentation has two layers:
 
 - **Shared guides** explain Docker CLI usage, CI/CD, central governance, and common troubleshooting.
 - **Specification Formats** contains setup, configuration, rules, profiles, maturity, reports, examples, and troubleshooting specific to each supported format. OpenAPI is currently the only format listed.
@@ -76,7 +76,7 @@ When another format becomes available, its guide will appear beside OpenAPI. Onl
 
 ## Learn with the sample project
 
-Use the [Specmatic Linter Interactive Lab](https://github.com/specmatic/specmatic-linter-sample) for a guided, hands-on path through built-in rules, custom rules, maturity levels, profiles, central configuration, reports, and CI usage.
+Use the [Skeptic Interactive Lab](https://github.com/specmatic/specmatic-linter-sample) for a guided, hands-on path through built-in rules, custom rules, maturity levels, profiles, central configuration, reports, and CI usage.
 
 ## How it works
 
@@ -88,4 +88,4 @@ Use the [Specmatic Linter Interactive Lab](https://github.com/specmatic/specmati
 
 Start with the [OpenAPI Quick Start](/features/linter/specification-formats/openapi/quick-start).
 
-To lint specifications through an HTTP API, see [Specmatic Lint Server](/features/linter/lint-server).
+To lint specifications through an HTTP API, see [Skeptic Lint Server](/features/linter/lint-server).
