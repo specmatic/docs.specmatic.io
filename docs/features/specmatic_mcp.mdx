@@ -91,7 +91,7 @@ Specmatic MCP exposes these tools to connected agents:
 
 ### `run_contract_test`
 
-Validates API implementations against OpenAPI specifications by running [contract tests](/contract_driven_development/contract_testing).
+Validates API implementations against OpenAPI specifications by running [contract tests](/spec_driven_api_development/contract_testing).
 
 - Input: OpenAPI spec, API base URL, spec format (`yaml` / `json`)
 - Output: Test results with pass/fail status and detailed failure information
@@ -99,7 +99,7 @@ Validates API implementations against OpenAPI specifications by running [contrac
 
 ### `run_resiliency_test`
 
-Tests API [resilience](/contract_driven_development/contract_testing#schema-resiliency-tests) by sending boundary-condition and invalid requests.
+Tests API [resilience](/spec_driven_api_development/contract_testing#schema-resiliency-tests) by sending boundary-condition and invalid requests.
 
 - Input: OpenAPI spec, API base URL, spec format (`yaml` / `json`)
 - Output: Enhanced testing results including edge-case validation
@@ -107,7 +107,7 @@ Tests API [resilience](/contract_driven_development/contract_testing#schema-resi
 
 ### `manage_mock_server`
 
-Provides [mock server](/contract_driven_development/service_virtualization) lifecycle management for development workflows.
+Provides [mock server](/spec_driven_api_development/service_virtualization) lifecycle management for development workflows.
 
 - Subcommands: `start`, `stop`, `list`
 - Features: Port management, multiple concurrent servers, automatic cleanup
@@ -115,7 +115,7 @@ Provides [mock server](/contract_driven_development/service_virtualization) life
 
 ### `backward_compatibility_check`
 
-Checks for breaking changes in OpenAPI specifications using [backward compatibility](/contract_driven_development/backward_compatibility) using git comparison.
+Checks for breaking changes in OpenAPI specifications using [backward compatibility](/spec_driven_api_development/backward_compatibility) using git comparison.
 
 - Input: OpenAPI spec file path, git branch comparison, repository directory
 - Output: Backward compatibility analysis with breaking-change detection

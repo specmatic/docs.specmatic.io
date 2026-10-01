@@ -1,6 +1,7 @@
 ---
 title: Federated Repositories
 sidebar_position: 2
+slug: /spec_driven_api_development/contract_repositories/federated_repositories
 ---
 
 # Federated Repositories
@@ -122,7 +123,7 @@ To learn more about `specmatic.yaml`, see [Specmatic configuration](/references/
 
 ## Repository flow
 
-The repository flow in the federated model is similar to [Central Contract Repository](/contract_driven_development/contract_repositories/central_contract_repository#repository-flow).
+The repository flow in the federated model is similar to [Central Contract Repository](/spec_driven_api_development/contract_repositories/central_contract_repository#repository-flow).
 
 The main differences are:
 
@@ -135,7 +136,7 @@ The main differences are:
 
 Pull requests on each federated contract repository should run the usual pre-merge checks for contracts/specifications before they are merged.
 
-To learn more about the shared PR process for contract repositories, see [PR Process](/contract_driven_development/contract_repositories#pull-request--merge-request-process).
+To learn more about the shared PR process for contract repositories, see [PR Process](/spec_driven_api_development/contract_repositories#pull-request--merge-request-process).
 
 ### Posting reports to Insights
 
@@ -143,17 +144,17 @@ Publish reports to Insights only from workflows that run on push or merge to `ma
 
 ### Federated contract repository workflow
 
-The federated contract repository workflow is the same as in [Central Contract Repository](/contract_driven_development/contract_repositories/central_contract_repository#central-contract-repository-workflow).
+The federated contract repository workflow is the same as in [Central Contract Repository](/spec_driven_api_development/contract_repositories/central_contract_repository#central-contract-repository-workflow).
 
 In the federated model, run that workflow for each federated contract repository.
 
 ### Service repository workflow
 
-The service repository workflow in the federated model is the same as in [Central Contract Repository](/contract_driven_development/contract_repositories/central_contract_repository#service-repository-workflow).
+The service repository workflow in the federated model is the same as in [Central Contract Repository](/spec_driven_api_development/contract_repositories/central_contract_repository#service-repository-workflow).
 
 ## How this will look in Insights
 
-Insights processes federated contract repositories in the same way as a [Central Contract Repository](/contract_driven_development/contract_repositories/central_contract_repository), but instead of one shared central contract repository, it will show one `Spec Repository` block per federated contract repository.
+Insights processes federated contract repositories in the same way as a [Central Contract Repository](/spec_driven_api_development/contract_repositories/central_contract_repository), but instead of one shared central contract repository, it will show one `Spec Repository` block per federated contract repository.
 
 In this example, you will see two `Spec Repository` blocks:
 
@@ -190,7 +191,7 @@ In this view:
 
 ## Troubleshooting
 
-Troubleshooting in the federated model is similar to [Central Contract Repository](/contract_driven_development/contract_repositories/central_contract_repository#troubleshooting).
+Troubleshooting in the federated model is similar to [Central Contract Repository](/spec_driven_api_development/contract_repositories/central_contract_repository#troubleshooting).
 
 The main differences are:
 

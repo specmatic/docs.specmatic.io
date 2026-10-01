@@ -167,6 +167,10 @@ const config = {
       '@docusaurus/plugin-client-redirects',
       {
       createRedirects(existingPath) {
+        if (existingPath.startsWith('/spec_driven_api_development/')) {
+          return [existingPath.replace('/spec_driven_api_development/', '/contract_driven_development/')];
+        }
+
         if (existingPath === '/features/linter/specification-formats/openapi/troubleshooting') {
           return undefined;
         }
@@ -183,15 +187,16 @@ const config = {
           return undefined;
         },
         redirects: [
+          { from: ['/contract_driven_development', '/docs/contract_driven_development'], to: '/spec_driven_api_development' },
           // === Redirects from /docs/* to /* (docs prefix redirects) ===
           // contract_driven_development
-          { from: '/docs/contract_driven_development/backward_compatibility/', to: '/contract_driven_development/backward_compatibility' },
-          { from: '/docs/contract_driven_development/backward_compatibility_rules/', to: '/contract_driven_development/backward_compatibility_rules' },
-          { from: '/contract_driven_development/central_contract_repository', to: '/contract_driven_development/contract_repositories/central_contract_repository' },
-          { from: '/docs/contract_driven_development/central_contract_repository/', to: '/contract_driven_development/contract_repositories/central_contract_repository' },
-          { from: '/docs/contract_driven_development/contract_testing/', to: '/contract_driven_development/contract_testing' },
-          { from: '/docs/contract_driven_development/generating_api_specifications/', to: '/contract_driven_development/generating_api_specifications' },
-          { from: '/docs/contract_driven_development/service_virtualization/', to: '/contract_driven_development/service_virtualization' },
+          { from: '/docs/contract_driven_development/backward_compatibility/', to: '/spec_driven_api_development/backward_compatibility' },
+          { from: '/docs/contract_driven_development/backward_compatibility_rules/', to: '/spec_driven_api_development/backward_compatibility_rules' },
+          { from: '/contract_driven_development/central_contract_repository', to: '/spec_driven_api_development/contract_repositories/central_contract_repository' },
+          { from: '/docs/contract_driven_development/central_contract_repository/', to: '/spec_driven_api_development/contract_repositories/central_contract_repository' },
+          { from: '/docs/contract_driven_development/contract_testing/', to: '/spec_driven_api_development/contract_testing' },
+          { from: '/docs/contract_driven_development/generating_api_specifications/', to: '/spec_driven_api_development/generating_api_specifications' },
+          { from: '/docs/contract_driven_development/service_virtualization/', to: '/spec_driven_api_development/service_virtualization' },
           // enterprise_onboarding
           {from: '/docs/enterprise_onboarding/insights/', to: '/enterprise_onboarding/insights/setup'},
           {from: '/docs/enterprise_onboarding/insights_stats_overview/', to: '/enterprise_onboarding/insights_stats_overview'},
@@ -273,7 +278,7 @@ const config = {
               '/documentation/tutorials/backward_compatibility',
               '/documentation/tutorials/backward_compatibility.html'
             ],
-            to: '/contract_driven_development/backward_compatibility'
+            to: '/spec_driven_api_development/backward_compatibility'
           },
           {
             from: [
@@ -284,7 +289,7 @@ const config = {
               '/documentation/tutorials/backward_compatibility_rules',
               '/documentation/tutorials/backward_compatibility_rules.html'
             ],
-            to: '/contract_driven_development/backward_compatibility_rules'
+            to: '/spec_driven_api_development/backward_compatibility_rules'
           },
           {
             from: [
@@ -293,7 +298,7 @@ const config = {
               '/documentation/tutorials/central_contract_repository',
               '/documentation/tutorials/central_contract_repository.html'
             ],
-            to: '/contract_driven_development/contract_repositories/central_contract_repository'
+            to: '/spec_driven_api_development/contract_repositories/central_contract_repository'
           },
           {
             from: [
@@ -308,7 +313,7 @@ const config = {
               '/documentation/tutorials/contract_testing',
               '/documentation/tutorials/contract_testing.html'
             ],
-            to: '/contract_driven_development/contract_testing'
+            to: '/spec_driven_api_development/contract_testing'
           },
           {
             from: [
@@ -317,7 +322,7 @@ const config = {
               '/documentation/tutorials/generating_api_specifications',
               '/documentation/tutorials/generating_api_specifications.html'
             ],
-            to: '/contract_driven_development/generating_api_specifications'
+            to: '/spec_driven_api_development/generating_api_specifications'
           },
           {
             from: [
@@ -326,7 +331,7 @@ const config = {
               '/documentation/tutorials',
               '/documentation/tutorials.html'
             ],
-            to: '/contract_driven_development'
+            to: '/spec_driven_api_development'
           },
           {
             from: [
@@ -339,7 +344,7 @@ const config = {
               '/service_virtualization_tutorial',
               '/service_virtualization_tutorial.html'
             ],
-            to: '/contract_driven_development/service_virtualization'
+            to: '/spec_driven_api_development/service_virtualization'
           },
           {
             from: [

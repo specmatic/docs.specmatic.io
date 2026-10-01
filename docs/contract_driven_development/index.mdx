@@ -1,25 +1,26 @@
 ---
-title: Contract Driven Development
+title: Spec-Driven API Development
 sidebar_position: 4
+slug: /spec_driven_api_development
 ---
 
-# Contract Driven Development
+# Spec-Driven API Development
 
-**Contract Driven Development** leverages API Specifications (such as [OpenAPI](https://www.openapis.org/), [AsyncAPI](https://www.asyncapi.com/), [gRPC proto files](https://grpc.io/docs/what-is-grpc/introduction/), [GraphQL](https://graphql.org/), [Arazzo](https://spec.openapis.org/arazzo/), [Avro](https://avro.apache.org/), [MCP](https://modelcontextprotocol.io/about), [WSDL](https://www.w3schools.com/xml/xml_wsdl.asp) and more) as Executable Contracts. This approach allows us to shift-left the identification of contract compatibility issues, making it essential for developing and deploying #microservices independently.
+**Spec-Driven API Development (SDAD)** uses API Specifications (such as [OpenAPI](https://www.openapis.org/), [AsyncAPI](https://www.asyncapi.com/), [gRPC proto files](https://grpc.io/docs/what-is-grpc/introduction/), [GraphQL](https://graphql.org/), [Arazzo](https://spec.openapis.org/arazzo/), [Avro](https://avro.apache.org/), [MCP](https://modelcontextprotocol.io/about), [WSDL](https://www.w3schools.com/xml/xml_wsdl.asp) and more) as Executable Contracts. This approach allows us to shift-left the identification of contract compatibility issues, making it essential for developing and deploying #microservices independently.
 
 ![API Specifications as Executable Contracts](/img/api-specifications-as-executable-contracts.png)
 
-Here are **5 key practices of CDD**:
+Here are **5 key practices of SDAD**:
 
 1. **API design first**: Collaboratively design and document the API using standard specifications.
 
-2. **[Contract Repositories](/contract_driven_development/contract_repositories)**: Treat the API specs as code and store them in repositories in a way that fits your organization. This can be a single central contract repository, multiple federated contract repositories, or provider repositories.
+2. **[Contract Repositories](/spec_driven_api_development/contract_repositories)**: Treat the API specs as code and store them in repositories in a way that fits your organization. This can be a single central contract repository, multiple federated contract repositories, or provider repositories.
 
-3. **[Backward Compatibility Checks](/contract_driven_development/backward_compatibility)** and **[Linting](/features/linter)**: Check every specification change for breaking changes, agreed design standards, semantic consistency, and executability before merging it.
+3. **[Backward Compatibility Checks](/spec_driven_api_development/backward_compatibility)** and **[Linting](/features/linter)**: Check every specification change for breaking changes, agreed design standards, semantic consistency, and executability before merging it.
 
-4. **[Contract Testing](/contract_driven_development/contract_testing)**: Convert API specifications like OpenAPI, AsyncAPI, gRPC proto files, GraphQLs or WSDL into executable contracts without writing any code. Run these tests in the CI/CD pipeline to shift-left and detect integration issues early.
+4. **[Contract Testing](/spec_driven_api_development/contract_testing)**: Convert API specifications like OpenAPI, AsyncAPI, gRPC proto files, GraphQLs or WSDL into executable contracts without writing any code. Run these tests in the CI/CD pipeline to shift-left and detect integration issues early.
 
-5. **[Intelligent Service Virtualization](/contract_driven_development/service_virtualization)**: Use the same API specifications we used above for "Contract Testing" to spin up mock servers, again without writing any code. When expectations are set against this mock, they are validated against the contract to ensure that consumers and providers do not drift away.
+5. **[Intelligent Service Virtualization](/spec_driven_api_development/service_virtualization)**: Use the same API specifications we used above for "Contract Testing" to spin up mock servers, again without writing any code. When expectations are set against this mock, they are validated against the contract to ensure that consumers and providers do not drift away.
 
 At a high level, our goal is to:
 * Significantly improve time to market for features
@@ -29,6 +30,6 @@ At a high level, our goal is to:
 
 Here is a quick explainer video.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/FW4V10UK5tQ?si=Hy59exyZ_nJa3hcN" title="The 5 practices of Contract-Driven Development" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/FW4V10UK5tQ?si=Hy59exyZ_nJa3hcN" title="The 5 practices of Spec-Driven API Development" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
 
-**Contract Driven Development** is significantly different from other approaches such as Consumer Driven Contract Testing. Here are [detailed comparisons](https://specmatic.io/comparisons/) with other tools and approaches.
+**Spec-Driven API Development** is significantly different from other approaches such as Consumer Driven Contract Testing. Here are [detailed comparisons](https://specmatic.io/comparisons/) with other tools and approaches.
