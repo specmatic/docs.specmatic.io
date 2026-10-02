@@ -168,7 +168,8 @@ const config = {
       {
       createRedirects(existingPath) {
         if (existingPath.startsWith('/spec_driven_api_development/')) {
-          return [existingPath.replace('/spec_driven_api_development/', '/contract_driven_development/')];
+          const previousPath = existingPath.replace('/spec_driven_api_development/', '/contract_driven_development/');
+          return [previousPath, `${previousPath}.html`];
         }
 
         if (existingPath === '/features/linter/specification-formats/openapi/troubleshooting') {
@@ -187,12 +188,12 @@ const config = {
           return undefined;
         },
         redirects: [
-          { from: ['/contract_driven_development', '/docs/contract_driven_development'], to: '/spec_driven_api_development' },
+          { from: ['/contract_driven_development', '/contract_driven_development.html', '/docs/contract_driven_development'], to: '/spec_driven_api_development' },
           // === Redirects from /docs/* to /* (docs prefix redirects) ===
           // contract_driven_development
           { from: '/docs/contract_driven_development/backward_compatibility/', to: '/spec_driven_api_development/backward_compatibility' },
           { from: '/docs/contract_driven_development/backward_compatibility_rules/', to: '/spec_driven_api_development/backward_compatibility_rules' },
-          { from: '/contract_driven_development/central_contract_repository', to: '/spec_driven_api_development/contract_repositories/central_contract_repository' },
+          { from: ['/contract_driven_development/central_contract_repository', '/contract_driven_development/central_contract_repository.html'], to: '/spec_driven_api_development/contract_repositories/central_contract_repository' },
           { from: '/docs/contract_driven_development/central_contract_repository/', to: '/spec_driven_api_development/contract_repositories/central_contract_repository' },
           { from: '/docs/contract_driven_development/contract_testing/', to: '/spec_driven_api_development/contract_testing' },
           { from: '/docs/contract_driven_development/generating_api_specifications/', to: '/spec_driven_api_development/generating_api_specifications' },
