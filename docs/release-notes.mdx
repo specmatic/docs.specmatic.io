@@ -5,6 +5,19 @@ sidebar_position: 2
 description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
+## 1.28.3 (2026-10-05)
+
+### Changed
+
+- Exact response matchers now resolve to matching values in mock responses for all JSON value types, including objects and arrays. Additionally, exact matchers in test requests and examples are resolved and validated according to the specification.
+
+## 1.28.2 (2026-10-04)
+
+### Changed
+
+- Partial transient mock examples now match only the fields they specify and return the example response once. A request that does not match those fields no longer consumes the example or receives HTTP status 0.
+- Proxy help now lists `--live` alongside other options, includes it in the usage synopsis, and explains live mode's optional `-c` / `--config` file and default.
+- The Enterprise `proxy` command now accepts OSS proxy arguments and generates specifications and examples in recording mode. Add `--live` to retain the previous config-driven Enterprise proxy, mocks, and reload behavior.
 
 ## 1.28.1 (2026-09-29)
 
