@@ -1,0 +1,42 @@
+node provider.js > provider.log 2>&1 &
+provider_pid=$!
+cleanup() {
+  local result=$?
+  kill "$provider_pid" 2>/dev/null || true
+  wait "$provider_pid" 2>/dev/null || true
+  if [[ "$result" == 0 && "$DOC_EXAMPLE_NAME" == junit.sh ]]; then
+    node -e 'const fs=require("node:fs"); const files=fs.readdirSync("test-output",{recursive:true}).filter(f=>f.endsWith(".xml")); if(!files.some(f=>/<testsuite[\s>]/.test(fs.readFileSync("test-output/"+f,"utf8")))) process.exit(1);' || result=$?
+  fi
+  exit "$result"
+}
+trap cleanup EXIT
+for attempt in {1..100}; do
+  [[ -f provider-url.txt ]] && break
+  kill -0 "$provider_pid" 2>/dev/null || { cat provider.log; exit 1; }
+  sleep 0.1
+done
+[[ -f provider-url.txt ]] || { cat provider.log; exit 1; }
+export TEST_PROVIDER_URL="$(cat provider-url.txt)"
+node prepare.js "$TEST_PROVIDER_URL"
+specmatic() {
+  local args=() arg
+  for arg in "$@"; do
+    if [[ "$arg" == 'https://my-json-server.typicode.com' ]]; then
+      args+=("$TEST_PROVIDER_URL")
+    else
+      args+=("$arg")
+    fi
+  done
+  command specmatic "${args[@]}"
+}
+export -f specmatic
+# Substitute only the illustrative JAR path. Preserve every published CLI argument.
+java() {
+  if [[ "$1" == '-jar' && "$2" == '/path/to/specmatic.jar' ]]; then
+    shift 2
+    specmatic "$@"
+  else
+    command java "$@"
+  fi
+}
+export -f java

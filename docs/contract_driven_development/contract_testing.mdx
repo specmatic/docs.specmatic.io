@@ -35,9 +35,7 @@ Here is a sample application that is implementing this specification. You can ru
 
 Let us now run the `employees.yaml` as a test against the above sample application.
 
-```bash
-specmatic test employees.yaml --testBaseURL https://my-json-server.typicode.com
-```
+<CodeBlock language="bash">{require('./includes/contract-testing/employees.sh?raw').trimEnd()}</CodeBlock>
 
 Alternatively, we can also run the same command with the Docker image:
 
@@ -90,9 +88,7 @@ Let us now run `employees.yaml` as a test against the sample application.
 
 Here’s how you can present that command with `site.spec_cmd` and the Docker alternative in Bash format:
 
-```bash
-specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
-```
+<CodeBlock language="bash">{require('./includes/contract-testing/external-examples.sh?raw').trimEnd()}</CodeBlock>
 
 Alternatively, we can also run the same command with the Docker image:
 
@@ -122,9 +118,7 @@ In the above case, example JSON files will be written into the directory named `
 
 By default, Specmatic generates tests for an API when there are no examples. However, if you want to skip test generation from APIs for which there are no examples, you can enable strict mode using configuration as described [here](/references/configuration/mock-configuration#strict-mode), or using the `--strict` command-line parameter as shown below:
 
-```bash
-specmatic test --testBaseURL https://my-json-server.typicode.com --strict employees.yaml
-```
+<CodeBlock language="bash">{require('./includes/contract-testing/strict.sh?raw').trimEnd()}</CodeBlock>
 
 Alternatively, we can also run the same command with the Docker image:
 
@@ -143,13 +137,7 @@ Make sure that your configuration contains this property:
 <Tabs groupId="schemaResiliencyTests">
 
   <TabItem value="schemaResiliencyTests_yaml" label="YAML">
-```yaml
-version: 3
-specmatic:
-  settings:
-    test:
-      schemaResiliencyTests: all # add this to your test settings in config
-```
+<CodeBlock language="yaml">{require('./includes/contract-testing/boundary-settings.yaml?raw').trimEnd()}</CodeBlock>
   </TabItem>
 
   <TabItem value="schemaResiliencyTests_json" label="JSON">
@@ -175,9 +163,7 @@ Note: The use of the SPECMATIC_GENERATIVE_TESTS environment variable or system p
 
 Then run the following command:
 
-```bash
-specmatic test --testBaseURL https://my-json-server.typicode.com employees.yaml
-```
+<CodeBlock language="bash">{require('./includes/contract-testing/boundary.sh?raw').trimEnd()}</CodeBlock>
 
 Alternatively, we can also run the same command with the Docker image:
 
@@ -218,14 +204,12 @@ Of course, it's just possible that the application does handle strings that are 
 
 You can get the JUnit output from the Specmatic command using an extra parameter.
 
-```bash
-java -jar /path/to/specmatic.jar --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
-```
+<CodeBlock language="bash">{require('./includes/contract-testing/junit.sh?raw').trimEnd()}</CodeBlock>
 
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run -v "$(pwd):/usr/src/app" specmatic/enterprise examples generate employees.yaml
+docker run -v "$(pwd):/usr/src/app" specmatic/enterprise test employees.yaml --testBaseURL https://my-json-server.typicode.com --junitReportDir ./test-output
 ```
 
 The command will create JUnit test XML output in the specified directory which you can then include as part of CI pipeline results etc.
@@ -297,14 +281,12 @@ On the command line, `cd` into the directory containing the Specmatic configurat
 
 Run this command:
 
-```bash
-java -jar /path/to/specmatic.jar --testBaseURL https://my-json-server.typicode.com
-```
+<CodeBlock language="bash">{require('./includes/contract-testing/configured-contracts.sh?raw').trimEnd()}</CodeBlock>
 
 Alternatively, we can also run the same command with the Docker image:
 
 ```bash
-docker run -v "$(pwd):/usr/src/app" specmatic/specmatic --testBaseURL https://my-json-server.typicode.com
+docker run -v "$(pwd):/usr/src/app" specmatic/specmatic test --testBaseURL https://my-json-server.typicode.com
 ```
 Note that no contracts are passed to Specmatic. Since no contracts have been passed, Specmatic looks for the Specmatic configuration file in the current working directory, checks out the contract repo, and runs the specified contracts as contract tests.
 
@@ -1094,9 +1076,7 @@ Specmatic provides powerful filtering capabilities to run specific tests. You ca
 
 Specmatic has `--filter` option which provides granular control over which tests to run:
 
-```bash
-specmatic test --filter="METHOD='POST' && PATH='/users'"
-```
+<CodeBlock language="bash">{require('./includes/contract-testing/filter-method-path.sh?raw').trimEnd()}</CodeBlock>
 
 ### Supported Filters & Operators
 
@@ -1148,44 +1128,28 @@ specmatic test --filter="METHOD='POST' && PATH='/users'"
 ### CLI Usage
 
 1. Run only successful response tests:
-    ```bash
-    specmatic test --filter="STATUS>='200' && STATUS<'300'"
-    ```
+    <CodeBlock language="bash">{require('./includes/contract-testing/filter-success.sh?raw').trimEnd()}</CodeBlock>
 
 2. Skip 4xx error tests:
-    ```bash
-    specmatic test --filter="STATUS<'400' && STATUS>'499'"
-    ```
+    <CodeBlock language="bash">{require('./includes/contract-testing/filter-skip-errors.sh?raw').trimEnd()}</CodeBlock>
 
 3. Skip specific status codes:
-    ```bash
-    specmatic test --filter="STATUS!='401,403'"
-    ```
+    <CodeBlock language="bash">{require('./includes/contract-testing/filter-exclude-status.sh?raw').trimEnd()}</CodeBlock>
 
 4. Test specific API endpoints:
-    ```bash
-    specmatic test --filter="PATH='/users,/products'"
-    ```
+    <CodeBlock language="bash">{require('./includes/contract-testing/filter-paths.sh?raw').trimEnd()}</CodeBlock>
 
 5. Test API endpoints with wildcard(`*`) for `PATH`:
-    ```bash
-    specmatic test --filter="PATH='/users/*'"
-    ```
+    <CodeBlock language="bash">{require('./includes/contract-testing/filter-wildcard.sh?raw').trimEnd()}</CodeBlock>
 
 6. Test all paths that begin with /products/, followed by any pattern, and end with /v1.
-    ```bash
-    specmatic test --filter="PATH='/products/*/v1'"
-    ```
+    <CodeBlock language="bash">{require('./includes/contract-testing/filter-nested-wildcard.sh?raw').trimEnd()}</CodeBlock>
 
 7. Combine multiple filters:
-    ```bash
-    specmatic test --filter="(PATH='/users' && METHOD='POST') || (PATH='/products' && METHOD='POST')"
-    ```
+    <CodeBlock language="bash">{require('./includes/contract-testing/filter-combine.sh?raw').trimEnd()}</CodeBlock>
 
 8. Exclude specified filters:
-    ```bash
-    specmatic test --filter="!(PATH='/users' && METHOD='POST') && !(PATH='/products' && METHOD='POST')"
-    ```
+    <CodeBlock language="bash">{require('./includes/contract-testing/filter-negate.sh?raw').trimEnd()}</CodeBlock>
 
 ### Additional Tips
 

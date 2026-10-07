@@ -1,0 +1,39 @@
+name: Check documentation examples
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  quick-start:
+    name: Documentation examples (${{ matrix.edition }})
+    strategy:
+      fail-fast: false
+      matrix:
+        edition: [oss, enterprise]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Test the generic example runner
+        run: node --test scripts/check-doc-examples.test.js
+      - name: Run published CLI examples
+        env:
+          SPECMATIC_LICENSE_CONTENT: ${{ matrix.edition == 'enterprise' && secrets.SPECMATIC_LICENSE_KEY || '' }}
+        run: >-
+          npm run check:examples -- --edition ${{ matrix.edition }}
+          docs/getting_started/includes/cli-quick-start
+          docs/contract_driven_development/includes/contract-testing

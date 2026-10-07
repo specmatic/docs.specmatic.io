@@ -1,0 +1,30 @@
+{
+    "http-request": {
+        "path": "/znsio/specmatic-documentation/employees",
+        "method": "GET",
+        "query": {
+            "designation": "Developer"
+        }
+    },
+    "http-response": {
+        "status": 200,
+        "body": [
+            {
+                "id": 332,
+                "name": "Bradford Lockman",
+                "department": "Specmatic Studio",
+                "designation": "Developer"
+            },
+            {
+                "id": 960,
+                "name": "Belinda Schiller",
+                "department": "Specmatic Insights",
+                "designation": "Developer"
+            }
+        ],
+        "status-text": "OK",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

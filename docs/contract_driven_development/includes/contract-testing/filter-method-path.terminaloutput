@@ -1,0 +1,2 @@
+Tests run: 1, Successes: 1, Failures: 0, WIP: 0, Errors: 0
+Scenario: POST /users -> 201

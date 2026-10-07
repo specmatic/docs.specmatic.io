@@ -1,0 +1,19 @@
+{
+    "http-request": {
+        "path": "/znsio/specmatic-documentation/employees/10",
+        "method": "GET"
+    },
+    "http-response": {
+        "status": 200,
+        "body": {
+            "id": 10,
+            "name": "Rachelle Weissnat",
+            "department": "Specmatic Studio",
+            "designation": "Designer"
+        },
+        "status-text": "OK",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

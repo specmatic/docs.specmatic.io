@@ -1,0 +1,5 @@
+Tests run: 4, Successes: 4, Failures: 0, WIP: 0, Errors: 0
+Scenario: GET /users -> 200
+Scenario: POST /users -> 201
+Scenario: GET /products -> 200
+Scenario: POST /products -> 201

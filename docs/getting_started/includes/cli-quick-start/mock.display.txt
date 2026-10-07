@@ -1,0 +1,11 @@
+Loading the spec file: service.yaml
+
+API Specification Summary: service.yaml
+  OpenAPI Version: 3.0.1
+  API Paths: 1, API Operations: 1
+
+Mock server is running on the following URLs:
+- http://0.0.0.0:9000 serving endpoints from specs:
+        1. service.yaml
+
+Press Ctrl + C to stop.

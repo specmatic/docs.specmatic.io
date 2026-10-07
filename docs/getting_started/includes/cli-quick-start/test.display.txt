@@ -1,0 +1,51 @@
+Specmatic Version: vx.y.z
+
+API Specification Summary: service.yaml
+  OpenAPI Version: 3.0.1
+  API Paths: 1, API Operations: 1
+
+Endpoints API and SwaggerUI URL were not exposed by the application, so cannot calculate actual coverage
+
+Using Specmatic Enterprise license initialized from jar:file:/usr/local/share/specmatic/specmatic.jar!/default-oss-license.txt
+
+--------------------
+  Request to https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples at 2026-2-17 7:5:51.253
+    GET /specmatic/specmatic-documentation-examples/pets/1
+    Specmatic-Response-Code: 200
+    Host: my-json-server.typicode.com
+    Accept-Charset: UTF-8
+    Accept: */*
+    Content-Type: NOT SENT
+
+  Response at 2026-2-17 7:5:52.170
+    200 OK
+    Date: Tue, 17 Feb 2026 13:35:52 GMT
+    Content-Type: application/json; charset=utf-8
+
+    {
+        "id": 1,
+        "name": "Scooby",
+        "type": "Golden Retriever",
+        "status": "Adopted"
+    }
+
+ Scenario: GET /pets/(petid:number) -> 200 with the request from the example 'SCOOBY_200_OK' has SUCCEEDED
+
+Could not load report configuration, coverage will be calculated but no coverage threshold will be enforced
+
+|---------------------------------------------------------------------|
+| SPECMATIC API COVERAGE SUMMARY                                      |
+|---------------------------------------------------------------------|
+| coverage | path          | method | response | #exercised | result  |
+|----------|---------------|--------|----------|------------|---------|
+| 100%     | /pets/{petid} | GET    | 200      | 1          | covered |
+|---------------------------------------------------------------------|
+| 100% API Coverage reported from 1 Paths                             |
+|---------------------------------------------------------------------|
+
+Generating HTML report...
+Saving Coverage Report json to ./build/reports/specmatic ...
+Generating report for 1 tests...
+Generating HTML report in build/reports/specmatic/test/html/index.html
+
+Tests run: 1, Successes: 1, Failures: 0, Errors: 0

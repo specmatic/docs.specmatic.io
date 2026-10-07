@@ -1,0 +1,7 @@
+API Specification Summary: service.yaml
+OpenAPI Version: 3.0.1
+API Paths: 1, API Operations: 1
+
+Scenario: GET /pets/(petid:number) -> 200 with the request from the example 'SCOOBY_200_OK' has SUCCEEDED
+
+Tests run: 1, Successes: 1, Failures: 0, WIP: 0, Errors: 0

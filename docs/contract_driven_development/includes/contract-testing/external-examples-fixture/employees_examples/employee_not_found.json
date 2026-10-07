@@ -1,0 +1,15 @@
+{
+    "http-request": {
+        "path": "/znsio/specmatic-documentation/employees/100",
+        "method": "GET",
+        "body": ""
+    },
+    "http-response": {
+        "status": 404,
+        "body": {},
+        "status-text": "Not Found",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

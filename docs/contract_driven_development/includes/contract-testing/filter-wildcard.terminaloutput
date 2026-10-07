@@ -1,0 +1,4 @@
+Tests run: 3, Successes: 3, Failures: 0, WIP: 0, Errors: 0
+Scenario: GET /users/(id:number) -> 200
+Scenario: GET /users/(id:number) -> 404
+Scenario: GET /users/(id:number)/profile -> 200

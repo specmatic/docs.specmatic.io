@@ -1,0 +1,25 @@
+# Test-only setup; the generic runner sources this in each isolated scenario.
+node provider.js > provider.log 2>&1 &
+provider_pid=$!
+trap 'kill "$provider_pid" 2>/dev/null || true; wait "$provider_pid" 2>/dev/null || true' EXIT
+for attempt in {1..100}; do
+  [[ -f provider-url.txt ]] && break
+  kill -0 "$provider_pid" 2>/dev/null || { cat provider.log; exit 1; }
+  sleep 0.1
+done
+[[ -f provider-url.txt ]] || { cat provider.log; exit 1; }
+export SPECMATIC_TEST_BASE_URL="$(cat provider-url.txt)"
+
+# Preserve the published command verbatim; redirect its provider only in tests.
+specmatic() {
+  local args=() arg
+  for arg in "$@"; do
+    if [[ "$arg" == '--testBaseURL=https://my-json-server.typicode.com/specmatic/specmatic-documentation-examples' ]]; then
+      args+=("--testBaseURL=$SPECMATIC_TEST_BASE_URL")
+    else
+      args+=("$arg")
+    fi
+  done
+  command specmatic "${args[@]}"
+}
+export -f specmatic

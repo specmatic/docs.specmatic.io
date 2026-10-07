@@ -1,0 +1,5 @@
+version: 3
+specmatic:
+  settings:
+    test:
+      schemaResiliencyTests: all # add this to your test settings in config
