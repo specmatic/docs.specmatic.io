@@ -59,13 +59,14 @@ Status: FAILED
 - **Warnings** remain visible but do not fail the command.
 - **Ignored** problems are detected but excluded by configuration.
 
-The detailed JSON report is written to:
+The command writes a SARIF report for the specification and a combined HTML report. For this single-spec example, the files are:
 
 ```text
-build/reports/specmatic/lint/openapi/lint-report-openapi.json
+build/reports/specmatic/lint/openapi/lint-report-openapi.sarif
+build/reports/specmatic/lint/openapi/html/index.html
 ```
 
-For a browser-friendly report, run the command with `--format=html`.
+The HTML report is useful for browsing findings; the SARIF report can be consumed by compatible code-scanning tools or submitted to Insights from CI.
 
 ## 4. Choose more rules
 

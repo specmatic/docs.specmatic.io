@@ -845,6 +845,52 @@ Example event:
 }
 ```
 
+#### `BUILD_SUBMITTED_LINTER`
+
+Emitted when a raw CI SARIF lint report is submitted and accepted.
+
+For this event, `httpUserAgent` records the version of Specmatic used to submit the report. The event targets the organization that owns the submitted build.
+
+| field name           | data type        | description                           |
+|----------------------|------------------|---------------------------------------|
+| `details.repo`       | `string \| null` | Repository name.                      |
+| `details.repoId`     | `string \| null` | Repository identifier.                |
+| `details.branchName` | `string \| null` | Branch name for the submitted build. |
+| `details.buildId`    | `string`         | Build identifier.                     |
+| `details.runAttempt` | `string`         | CI run attempt.                       |
+
+Example event:
+
+```json
+{
+  "id": "c4e9c2d8-7a31-4ac8-93bb-2c0e5b9f1d42",
+  "type": "BUILD_SUBMITTED_LINTER",
+  "timestamp": "2026-03-10T12:00:00Z",
+  "severity": "INFO",
+  "summary": "Build with type LINTER was submitted",
+  "actorType": "LICENSE",
+  "actorId": "f8e6d960-9816-4215-ad2e-07356da7c11e",
+  "actorDisplay": "f8e6d960-9816-4215-ad2e-07356da7c11e",
+  "sourceIp": "198.51.100.40",
+  "targetType": "ORGANIZATION",
+  "targetId": "970ce194-6039-413a-9c6f-b514cee9cdff",
+  "destinationHostname": "insights.specmatic.io",
+  "httpUserAgent": "io.specmatic:specmatic-enterprise/1.28.4",
+  "httpReferer": null,
+  "httpMethod": "POST",
+  "httpProtocol": "https",
+  "httpPort": 443,
+  "httpUrl": "/api/builds/raw-reports",
+  "details": {
+    "repo": "orders-contracts",
+    "repoId": "repo_42",
+    "branchName": "main",
+    "buildId": "github-lint-42",
+    "runAttempt": "1"
+  }
+}
+```
+
 #### `BUILD_DELETED_SERVICE`
 
 Emitted when a service build or service build report is deleted.
