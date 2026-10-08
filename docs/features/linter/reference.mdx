@@ -23,8 +23,16 @@ Skeptic currently accepts OpenAPI documents in YAML or JSON. Targets may be indi
 | `--config <path>` | Local config path; repo-relative path with `--config-repo-url` | Auto-discover local config or remote root config |
 | `--config-repo-url <url>` | Git repository containing central config | None |
 | `--profile <name>` | Profile to apply | Sole profile or `default` |
-| `--format <json\|html>` | Detailed report format | `json` |
 | `--time` | Print per-target and total duration | Off |
+| `--ci` | Publish the run as a CI build in Specmatic Insights | Detected from CI; otherwise off |
+| `--build-id <id>` | CI build identifier for Insights | Detected from CI; required when publishing |
+| `--run-attempt <attempt>` | CI rerun/attempt identifier | Detected from CI or `1` |
+| `--repo-id <id>` | Stable repository identifier for Insights | Detected from CI; required when publishing |
+| `--repo-name <name>` | Repository name for Insights | Detected from CI or Git |
+| `--repo-url <url>` | Repository URL for Insights | Detected from CI or Git |
+| `--branch-name <name>` | Branch for Insights | Detected from CI or Git |
+| `--metadata <key=value>` | Additional build metadata; repeatable | None |
+| `--token <token>` | Insights submission token | `SPECMATIC_INSIGHTS_TOKEN`, when set |
 | `-h`, `--help` | Show command help | Not applicable |
 | `-V`, `--version` | Show version | Not applicable |
 
@@ -47,8 +55,10 @@ docker run --rm \
   -v "$(pwd):/usr/src/app" \
   -w /usr/src/app \
   specmatic/enterprise \
-  lint "specs/**/*.{yaml,yml,json}" --format=html --time
+  lint "specs/**/*.{yaml,yml,json}" --time
 ```
+
+Use `--ci` when the run should publish its SARIF reports to Insights. `--build-id` and `--repo-id` are required; other repository metadata can be detected from supported CI providers or Git. See [CI/CD Integration](./ci-cd) and [Reports Sent to Insights](/enterprise_onboarding/insights/reports_sent_to_insights) for details.
 
 ## `lint get-rules`
 
