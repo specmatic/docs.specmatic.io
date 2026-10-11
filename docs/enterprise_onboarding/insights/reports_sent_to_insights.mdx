@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 # Reports Sent to Insights
 
-Run the command that generates the report with `--ci`, `--build-id`, and repository metadata to submit it directly to Insights. `test` submits its test report, `mock` submits its mock-usage report, and `run-suite` submits both reports separately.
+Run the command that generates the report with `--ci`, `--build-id`, and repository metadata to submit it directly to Insights. `test` submits its test report, `mock` submits its mock-usage report, `run-suite` submits both reports separately, and `lint` submits its SARIF reports.
 
 :::important[Build visibility]
 After a build is submitted, it can take up to 30 minutes to appear in Insights.
@@ -28,7 +28,7 @@ Authentication information is sent in headers, not in the JSON request body show
 
 ## What is shared
 
-The API specification files are not sent to Insights. Reports contain operation metadata derived from those files, such as paths, methods, response codes, protocol, specification path, and coverage or compatibility status.
+Test and mock reports do not send the API specification files themselves. Those reports contain operation metadata derived from the files, such as paths, methods, response codes, protocol, specification path, and coverage or compatibility status. Lint SARIF reports are an exception: they can include specification file contents in SARIF artifact entries to provide source context for findings.
 
 For operations that Specmatic executes using generated test data or examples, the corresponding CTRF test entry includes the generated or example-derived request and response data.
 
@@ -41,10 +41,19 @@ For operations that Specmatic executes using generated test data or examples, th
 | `mock --ci` | Mock usage report | `stub/ctrf/ctrf-report.json` |
 | `run-suite --ci` | The contract test coverage and mock usage reports it generates | The same `test/ctrf/ctrf-report.json` and `stub/ctrf/ctrf-report.json` artifacts |
 | `backward-compatibility-check --ci` | Backward compatibility report | `backward_compatibility/ctrf/ctrf-report.json` |
+| `lint --ci` | SARIF report for each linted specification, submitted together in one request | `build/reports/specmatic/lint/openapi/lint-report-<specification-name>.sarif` |
 
 For AsyncAPI, GraphQL, and gRPC test and mock runs, the CTRF artifact is stored under the corresponding protocol directory, for example `async/test/ctrf/ctrf-report.json` or `grpc/stub/ctrf/ctrf-report.json`.
 
-Pass `--ci --build-id <id> --repo-id <id> --repo-name <name> --repo-url <url> --branch-name <branch>` to the command that generates the report. `run-suite` uses one build ID for its separately submitted test and mock reports.
+For linting, the command also writes the combined SARIF report at `build/reports/specmatic/lint/combined.json` and a combined HTML report at `build/reports/specmatic/lint/openapi/html/index.html`. These are local artifacts and are not sent to Insights.
+
+Pass `--ci --build-id <id> --repo-id <id> --repo-name <name> --repo-url <url> --branch-name <branch>` to the command that generates the report. `run-suite` uses one build ID for its separately submitted test and mock reports. For lint, all SARIF reports from one invocation are sent together and associated with the same build.
+
+## Linter report
+
+Run `lint` with `--ci` to publish the SARIF reports as an Insights CI build. `--build-id` and `--repo-id` are required; repository name, URL, and branch can be detected from supported CI-provider variables or Git. If no reliable repository ID is available from the provider, pass `--repo-id` or set `SPECMATIC_REPO_ID`.
+
+The linter sends an array of SARIF reports in one request, one report per specification. The individual SARIF files, combined SARIF report, and combined HTML report remain in the workspace. Without `--ci`, a report may still be submitted depending on license report-publishing settings, but it is not processed as a CI build.
 
 ## Report processing timing
 
