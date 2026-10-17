@@ -28,7 +28,7 @@ GEM
       fiber-storage
     fiber-storage (1.0.1)
     hashery (2.1.2)
-    html-proofer (5.2.1)
+    html-proofer (5.2.3)
       addressable (~> 2.3)
       async (~> 2.1)
       benchmark (~> 0.5)
@@ -64,7 +64,7 @@ GEM
     typhoeus (1.6.0)
       ethon (>= 0.18.0)
     yell (2.2.2)
-    zeitwerk (2.8.2)
+    zeitwerk (2.8.3)
 
 PLATFORMS
   arm64-darwin-25
