@@ -3,7 +3,7 @@ title: Arazzo
 sidebar_position: 4
 ---
 
-import {CommercialBadge} from "../../src/components/CommercialBadge";
+import {CommercialBadge} from "../../../src/components/CommercialBadge";
 
 
 # Arazzo <CommercialBadge/>
@@ -27,7 +27,7 @@ Using a simple drag-and-drop approach, Specmatic facilitates the generation of a
 
 ## What Can You Achieve with Specmatic’s Arazzo Support?
 
-- **Workflow Generation**: Specmatic enables you to create Arazzo workflows interactively via [Specmatic Studio](https://studio.specmatic.io).
+- **Workflow Generation**: Create Arazzo workflows interactively in Specmatic Studio.
 
 - **Workflow Validation**: Specmatic validates your Arazzo specifications not only against the [Arazzo Specification](https://www.openapis.org/arazzo-specification) schema but also checks your payloads, parameters, and references against the definitions in your Arazzo specification. It can also perform closed-loop testing using the specification.
 
@@ -37,9 +37,9 @@ Using a simple drag-and-drop approach, Specmatic facilitates the generation of a
 
 ## Generating Workflows
 
-Workflows can be generated using Specmatic interactively through [Specmatic Studio](https://studio.specmatic.io) using the Docker image `specmatic/enterprise`
+Use Specmatic Studio with the [Specmatic Enterprise Docker image](/download#specmatic-enterprise) to generate workflows.
 
-You can import your API specifications into [Specmatic Studio](https://studio.specmatic.io) and utilize a drag-and-drop interface to visually design workflows. Each workflow can be built by connecting operations from your specifications in the intended sequence to represent a business flow
+Import your API specifications into Studio and connect operations in sequence to design a business workflow.
 
 Take a look at the [Microservices with Event-Driven Architecture Sample](https://github.com/specmatic/specmatic-arazzo-async-sample) to observe its functionality
 
@@ -103,11 +103,11 @@ This input file triggers two workflow test runs:
 
 ## Running Workflow Tests
 
-After creating a workflow, you can execute tests on your microservices to validate the entire end-to-end flow. Testing can be performed either interactively through Specmatic Studio or via the Command Line Interface using the Docker image, In either case at the end of the workflow mock, an HTML report will be generated to provide a visual representation of interactions in `./build/reports/specmatic/arazzo/html`
+After creating a workflow, you can execute tests on your microservices to validate the entire end-to-end flow. Run tests in Specmatic Studio or with the CLI and the [Specmatic Enterprise Docker image](/download#specmatic-enterprise). Each run writes an HTML report and a JSON file with the workflow outputs to `./build/reports/specmatic/arazzo/html/`.
 
 ### Interactively through Specmatic Studio
 
-In Specmatic Studio, it is possible to execute workflow tests directly via the visual interface. The Studio offers an intuitive method for selecting which specification will run against which base URL, utilizing a drop-down menu that automatically pulls options from the `servers` section of your specifications.
+In Specmatic Studio, you can execute workflow tests through the visual interface. Select which specification runs against each base URL using options from the `servers` section of your specifications.
 
 During the test execution, Studio also enables you to:
 - Monitor real-time results
@@ -168,16 +168,22 @@ For AsyncAPI specifications, use `--serverUrlName NAME` to direct Specmatic to c
 You can set a default fallback host and port using `--host <host> --port <port>` in the test command. 
 These values will serve as a last resort if no other URL configurations match.
 
+For Arazzo configuration options, see [Configuration](/supported_protocols/arazzo/configuration).
+
+### Workflow outputs
+
+Specmatic saves `workflow_outputs.json` beside the HTML report's `index.html` in `./build/reports/specmatic/arazzo/html/`. The JSON file contains the execution result and final outputs for each workflow scenario. Use it to inspect values produced by the workflow, such as an order ID or status.
+
 ## Workflow Mocking
 
 After generating a workflow, you can also use it to mock your Arazzo specification, allowing you to simulate the workflow itself, not just the underlying services.
 When a workflow is mocked, Specmatic tracks which step has been executed, what comes next, and what response should be returned, based on your workflow definition and its input file.
 
-Just like workflow testing, mocking can be performed either interactively through Specmatic Studio or via the Command Line Interface using the Docker image,
+Just like workflow testing, mocking can be performed either interactively through Specmatic Studio or via the Command Line Interface using the Docker image.
 
 ### Interactively through Specmatic Studio
 
-In Specmatic Studio, you can start a mock workflow session to simulate end-to-end behavior without running your actual services, Studio uses the workflow definition to:
+In Specmatic Studio, you can start a mock workflow session to simulate end-to-end behavior without running your actual services. Studio uses the workflow definition to:
 
 - Monitor real-time request / responses
 - Visualize workflow execution through real-time flow diagrams
@@ -199,4 +205,5 @@ Here are several sample projects you can explore to begin working with Specmatic
 - [Microservices with Frontend Sample](https://github.com/specmatic/specmatic-arazzo-ui-sample)
 - [Microservices with Event-Driven Architecture Sample](https://github.com/specmatic/specmatic-arazzo-async-sample)
 - [Multi-API Workflow Sample: REST, gRPC, GraphQL, and Kafka Events](https://github.com/specmatic/specmatic-arazzo-multi-api-sample)
+- [Arazzo Authentication Sample: Bearer, OAuth2, JWT bearer, Vault, and mTLS](https://github.com/specmatic/specmatic-arazzo-auth)
 - [From REST to Events: API Workflow Testing and Mocking with a Single Arazzo Spec](https://github.com/specmatic/specmatic-arazzo-openapi-asyncapi-sample)
