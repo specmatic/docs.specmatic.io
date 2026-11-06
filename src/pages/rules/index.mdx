@@ -20,6 +20,10 @@ search_exclude: true
     * [Value mismatch](#value-mismatch)
   * [R1003](#r1003)
     * [Constraint violation](#constraint-violation)
+  * [R1004](#r1004)
+    * [XML namespace mismatch](#xml-namespace-mismatch)
+  * [R1005](#r1005)
+    * [Invalid XML namespace usage](#invalid-xml-namespace-usage)
   * [R2001](#r2001)
     * [Missing required property](#missing-required-property)
   * [R2002](#r2002)
@@ -212,6 +216,9 @@ The request does not include the required `X-API-Key` header, so no matching sec
 
 The value type does not match the expected type defined in the specification.
 
+For WSDL payloads, this also covers an unknown, incompatible or abstract
+`xsi:type`. Malformed or unbound namespace-qualified type names use [R1005](#r1005).
+
 **Why this is a problem**
 
 Type mismatches cause validation failures and make clients/providers interpret data incorrectly.
@@ -310,11 +317,117 @@ The request from consumer to mock is validated and fails because `username` is s
 - Provide values that satisfy the constraint (e.g., a longer `username`).
 - If the constraint is too strict, relax it in the specification.
 
+## R1004
+
+### XML namespace mismatch
+
+An XML element does not satisfy the namespace requirement defined in the specification.
+This includes a different namespace URI, a missing namespace, or a namespace on
+an element that must have no namespace. Namespace requirements are also checked
+during backward compatibility comparisons.
+
+**Why this is a problem**
+
+XML element identity includes both its local name and namespace URI. Elements
+with the same local name in different namespaces represent different elements.
+Changing only a prefix is valid when it still resolves to the required URI.
+
+For example, this schema requires `Request` in `urn:orders` and its local `code`
+element with no namespace:
+
+```xml
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:orders" elementFormDefault="unqualified">
+  <xs:element name="Request">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="code" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+```
+
+This payload incorrectly qualifies `code`:
+
+```xml
+<o:Request xmlns:o="urn:orders"><o:code>AB1</o:code></o:Request>
+```
+
+The diagnostic identifies the namespace requirement:
+
+```text
+Expected no XML namespace for element 'code', got 'urn:orders'.
+```
+
+**How this can be resolved**
+
+- Use the namespace URI required by the declaration, regardless of prefix spelling.
+- Keep unqualified local elements outside a namespace. If a nonempty default
+  namespace is inherited, reset it with `xmlns=""` where necessary.
+- Check `targetNamespace`, `elementFormDefault`, explicit `form` overrides and
+  referenced global declarations before changing the schema.
+
+For this example, a valid payload is:
+
+```xml
+<o:Request xmlns:o="urn:orders"><code>AB1</code></o:Request>
+```
+
+Attributes are matched by their namespace URI and local name too. A missing
+required attribute uses [R2001](#r2001), and an unexpected attribute uses
+[R2003](#r2003). An attribute in the wrong namespace can produce both errors.
+
+## R1005
+
+### Invalid XML namespace usage
+
+XML namespace declarations or qualified names violate XML namespace rules.
+This includes unbound prefixes, invalid or reserved prefix bindings, malformed
+qualified names, and duplicate attributes with the same namespace URI and local name.
+Malformed or unbound namespace-qualified `xsi:type` values use this rule too.
+
+**Why this is a problem**
+
+Namespace bindings must give each qualified name a valid identity. These errors
+make the XML invalid under namespace rules, even before checking which elements
+the contract requires.
+
+For example, the prefix `o` is unbound in this payload:
+
+```xml
+<o:Request><code>AB2</code></o:Request>
+```
+
+The diagnostic identifies the unbound prefix:
+
+```text
+Unbound namespace prefix 'o' in 'o:Request'
+```
+
+**How this can be resolved**
+
+- Declare every prefix in scope using the intended namespace URI.
+- Follow the reserved binding rules for `xml` and `xmlns`; a named prefix must
+  not have an empty namespace binding.
+- Use valid qualified names and include at most one attribute for each pair of
+  namespace URI and local name. Different prefixes bound to the same URI do not
+  make duplicate attributes distinct.
+
+For this example, declaring the prefix fixes the namespace usage:
+
+```xml
+<o:Request xmlns:o="urn:orders"><code>AB2</code></o:Request>
+```
+
 ## R2001
 
 ### Missing required property
 
 A required property defined in the specification is missing.
+
+For XML, this includes missing required attributes. It also covers a missing
+`xsi:type` when an abstract WSDL type requires a concrete type to be specified.
 
 **Why this is a problem**
 
