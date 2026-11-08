@@ -166,7 +166,7 @@ Use the stable error `code` and request ID to diagnose failures. Common response
 - `CONFIG_UNAVAILABLE` (`503`): the server could not load configuration because the source or credentials are unavailable.
 - `SERVER_NOT_READY` or `SERVICE_UNAVAILABLE` (`503`): the server cannot accept new work; check its readiness and operational status.
 
-For the full error mapping, open the server's interactive [API documentation](http://localhost:8000/api-docs/) or download the [OpenAPI schema](http://localhost:8000/api-docs/openapi.yaml). Replace `localhost:8000` with your server address when using a remote deployment.
+For the full error mapping, first start the server as described in Step 1, then open `http://localhost:8000/api-docs/` or download `http://localhost:8000/api-docs/openapi.yaml`. For a remote deployment, use that server's address instead of `localhost:8000`.
 
 If you repeat a `POST`, the server runs linting again; it does not replay an earlier response. For the same evaluation, keep the request ID and input unchanged. Insights can use that ID to avoid processing a duplicate delivery. Use a new ID when the specification, configuration, profile, or metadata changes.
 
@@ -186,4 +186,4 @@ Use `GET /status` to inspect the current server instance, including when readine
 curl -i http://localhost:8000/status
 ```
 
-The response shows the instance start time, license and readiness states, Insights delivery counts and batches, and cached configuration versions. It excludes credentials, tokens, report contents, and temporary file paths. State resets when the process restarts. In a multi-instance deployment, each response describes only the instance that handled the request. Keep `/status` on an internal operations network. The server's [API documentation](http://localhost:8000/api-docs/) and [OpenAPI schema](http://localhost:8000/api-docs/openapi.yaml) describe all response fields. Replace `localhost:8000` with your server address when using a remote deployment.
+The response shows the instance start time, license and readiness states, Insights delivery counts and batches, and cached configuration versions. It excludes credentials, tokens, report contents, and temporary file paths. State resets when the process restarts. In a multi-instance deployment, each response describes only the instance that handled the request. Keep `/status` on an internal operations network. After starting the server, open `http://localhost:8000/api-docs/` or download `http://localhost:8000/api-docs/openapi.yaml` to see all response fields. For a remote deployment, use that server's address instead of `localhost:8000`.
