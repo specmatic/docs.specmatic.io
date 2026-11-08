@@ -150,18 +150,72 @@ The server caches configuration by repository and branch and refreshes it every 
 
 ## 8. Insights publishing
 
-The server publishes one ordered SARIF batch per completed lint request using its service-account license. Delivery is asynchronous and FIFO. An Insights success confirms acceptance for processing.
+For each completed lint request, the server asynchronously publishes reports for all linted specifications to Insights in a single batch.
+The following are details of the data posted to Insights:
 
-| Insights request detail | Value |
-| --- | --- |
-| Authentication | `Authorization: license <license UUID>` |
-| Idempotency | Request ID sent as `Idempotency-Key`; Insights acknowledges an accepted duplicate without creating another build. |
-| Encoding | JSON compressed with gzip. |
-| Reports | One SARIF 2.1.0 report per specification, in request order. |
-| CI and repository context | Build ID, run attempt, repository ID/name/URL/branch, when provided. |
-| Metadata | Caller `ci.metadata` plus server fields: `requestId`, `configCommitSha`, `configRepoUrl`, `linterVersion`, and `specifications`. Server values take precedence. |
+### Request headers
 
-`specifications` is a compact JSON string containing each specification's ID, path, and resolved profile. The queue is in memory, so reports that have not been delivered can be lost if the process stops. Transient failures are retried; a blocked front batch pauses later batches and makes readiness fail. Permanent rejections are recorded and later batches continue. The server attempts to drain queued reports during graceful shutdown; allow time and network access for this to complete.
+| Header | Value sent               | Purpose |
+| --- |--------------------------| --- |
+| `Authorization` | `license <license UUID>` | Identifies the server's publishing license. Insights validates that it belongs to the body's `orgId` and is neither expired nor revoked. |
+| `Idempotency-Key` | Request ID               | Reused for publishing retries so Insights does not store the batch twice. The ID comes from the incoming `X-Request-Id`, or a generated UUID when that header is absent. |
+| `Content-Type` | `application/json`       | Body format before compression. |
+| `Content-Encoding` | `gzip`                   | Reporter compresses the JSON before transmission. |
+
+### JSON body received by Insights
+
+Field paths below refer to the decompressed JSON body. These are values sent by the **linter server**, rather than the full set of inputs supported by the raw-report API.
+
+| Field | Type | Value / source |
+| --- | --- | --- |
+| `orgId` | String | Organization ID from the publishing license. |
+| `reportType` | String | Always `"linter"`. |
+| `report` | Array of objects | SARIF 2.1.0 documents from the batch response: one document per specification, in request order. Includes lint findings and specification source text. |
+| `metadata` | Object of string values | Caller CI metadata plus batch/configuration provenance added by the server; see metadata tables below. |
+| `publisher.name` | String | Reporter library coordinates: `<groupId>:<artifactId>` from the reporter jar. |
+| `publisher.version` | String | Reporter jar version. This is separate from the linter version. |
+| `parameters.ci` | Boolean | `true` when the submission has a CI build ID; otherwise `false`. |
+| `parameters.buildId` | String or `null` | Incoming `ci.buildId`; `null` when CI context is absent. |
+| `parameters.runAttempt` | String | Incoming `ci.runAttempt`; defaults to `"1"`. Reporter also sends `"1"` when the submission has no run attempt. |
+| `parameters.repoId` | String | Incoming `repository.id`. |
+| `parameters.repoName` | String or `null` | Incoming `repository.name`. |
+| `parameters.repoUrl` | String | Incoming `repository.url`, with credentials/secrets removed by repository URL sanitization. |
+| `parameters.branchName` | String | Incoming `repository.branch`. |
+| `projectDir` | `null` | Server publisher does not supply a project directory. |
+| `specmaticConfigPath` | String | Resolved configuration path from the batch response's configuration provenance. |
+| `specmaticConfig` | `null` | Server publisher supplies the configuration path, without configuration contents. |
+
+### Metadata
+
+All metadata values are **strings**. The lint server copies fields from `ci.metadata`, then adds its own fields. Server-added values overwrite request values with the same names.
+
+#### Metadata added by the lint server
+
+| Metadata field | Value / source | Example |
+| --- | --- | --- |
+| `requestId` | Batch request ID; same value as `Idempotency-Key`. | `550e8400-e29b-41d4-a716-446655440000` |
+| `configCommitSha` | Resolved configuration repository commit. | `a1b2c3d4…` |
+| `configRepoUrl` | Configuration repository URL from batch response provenance, sanitized before inclusion. | `https://github.com/example/lint-config.git` |
+| `linterVersion` | Linter version from the batch response; adapter checks it matches the SARIF reports. | `1.28.4` |
+| `specifications` | **JSON-encoded string** containing each requested spec's `specId`, `specPath`, and resolved `profile`, in request order. This is not a nested JSON array on the wire. | `[{"specId":"orders","specPath":"contracts/orders.yaml","profile":"default"}]` |
+
+#### Metadata from the lint request
+
+All fields supplied in `ci.metadata` are copied. The names below are examples, not a fixed schema; these fields are optional and are not generated by the lint server.
+
+| Example metadata field | Source | Example value |
+| --- | --- | --- |
+| `pipelineName` | `ci.metadata.pipelineName` | `skeptic-lint-demo` |
+| `pipeline` | `ci.metadata.pipeline` | `release` |
+| `release` | `ci.metadata.release` | `1.2.3` |
+| Other caller-defined fields | Corresponding fields in `ci.metadata` | Any string value |
+
+### Idempotency behavior
+
+| Situation                        | Insights behavior                                                           |
+|----------------------------------|-----------------------------------------------------------------------------|
+| New idempotency key              | Accepts the submission and returns `200` with the generated ID.        |
+| Previously saved idempotency key | Returns `200` with the original ID without processing the batch again. |
 
 ## 9. Check delivery status
 
