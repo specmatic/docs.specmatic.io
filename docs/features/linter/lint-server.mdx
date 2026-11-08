@@ -46,7 +46,7 @@ The server listens on port `8000` by default. The following options configure au
 | `--allowed-config-repo-url` | Configuration Git repository the server may load. Repeat to allow multiple repositories. | Any HTTP(S) repository |
 | `--allowed-spec-download-host` | Hostname allowed for specification downloads. Repeat to allow multiple hosts. | Any host |
 | `--tls-keystore` and `--tls-key-alias` | PKCS#12 keystore and private-key alias; enables HTTPS. | TLS off |
-| `--max-spec-size-code-points` | Maximum decoded characters per specification. | `5242880` |
+| `--max-spec-size-code-points` | Maximum decoded Unicode code points per specification. | `5242880` |
 | `--background-job-max-retries` | Number of retries after the first failed Insights attempt. | `3` |
 | `--background-job-retry-initial-delay-seconds` | Seconds before the first retry. | `3` |
 | `--background-job-retry-multiplier` | Factor used to increase retry delays. | `3` |
@@ -68,7 +68,7 @@ Configuration repository URLs must use HTTP or HTTPS. If a private source requir
 
 To serve HTTPS directly, mount a PKCS#12 keystore containing the server certificate and private key, then configure `--tls-keystore` and `--tls-key-alias` together. Supply `SPECMATIC_TLS_KEYSTORE_PASSWORD` and, if different, `SPECMATIC_TLS_PRIVATE_KEY_PASSWORD` through your secret manager. With TLS enabled, the server serves HTTPS only on the selected port. Without TLS, use HTTP for local development or run behind an HTTPS-enabled ingress or proxy.
 
-The default `--max-spec-size-code-points` limit is 5,242,880 decoded Unicode code points per specification (about 5 MiB for ASCII text). It measures decoded characters, not request size or bytes. Increase it only after checking memory use and parser capacity.
+The default `--max-spec-size-code-points` limit is 5,242,880 decoded Unicode code points per specification (about 5 MiB for ASCII text). It measures decoded content, not request size or bytes. Increase it only after checking memory use and parser capacity.
 
 ## 3. Explore the API
 
@@ -129,7 +129,7 @@ The main request fields are:
 
 The configuration and specification URLs must be reachable from the server. If a private source needs credentials, provide them through your secret manager in the source URL; the server removes URL credentials from logs, responses, reports, and Insights data. The server checks that every requested profile exists before downloading the specifications. It then lints the whole batch. If any specification cannot be downloaded or linted, the request fails without partial reports or an Insights submission. All reports in the batch use the same configuration version.
 
-If caller authentication is enabled, set `LINT_SERVER_JWT` to a valid token from your identity provider and include it as a bearer token. The optional `X-Request-Id` header must contain a UUID. Reuse the same ID when retrying the same request so Insights can recognize duplicate deliveries.
+If caller authentication is enabled, set `LINT_SERVER_JWT` to a valid token from your identity provider and include it as a bearer token. The optional `X-Request-Id` header must contain a UUID. If you omit it, the server generates one. Reuse the same ID when retrying the same request so Insights can recognize duplicate deliveries.
 
 ```bash
 curl -i http://localhost:8000/skeptic/lint/reports \
@@ -152,8 +152,11 @@ Use the stable error `code` and request ID to diagnose failures. Common response
 
 - `UNKNOWN_PROFILE` (`400`): a requested profile is not defined in the configuration.
 - `LICENSE_DENIED` (`402`): the license does not allow new lint work.
+- `AUTHENTICATION_REQUIRED` or `INVALID_TOKEN` (`401`): provide a valid bearer token when caller authentication is enabled.
+- `ACCESS_DENIED` (`403`): the caller does not meet configured claim requirements. `CONFIG_URL_NOT_ALLOWED` and `SPEC_URL_NOT_ALLOWED` (`403`) identify a source blocked by an allowlist.
 - `CONFIG_INVALID` (`422`): the configuration repository, branch, or configuration file is missing or invalid.
 - `SPEC_TOO_LARGE` (`422`): a downloaded specification exceeds the configured size limit.
+- `SPEC_FETCH_FAILED` (`502`) or `SPEC_FETCH_TIMEOUT` (`504`): the server could not download a specification. Check the URL and whether the server can reach it.
 - `CONFIG_UNAVAILABLE` (`503`): the server could not load configuration because the source or credentials are unavailable.
 - `SERVER_NOT_READY` or `SERVICE_UNAVAILABLE` (`503`): the server cannot accept new work; check its readiness and operational status.
 
@@ -161,7 +164,11 @@ See the [OpenAPI contract](https://github.com/specmatic/enterprise/blob/main/lin
 
 If you repeat a `POST`, the server runs linting again; it does not replay an earlier response. For the same evaluation, keep the request ID and input unchanged. Insights can use that ID to avoid processing a duplicate delivery. Use a new ID when the specification, configuration, profile, or metadata changes.
 
-## 7. Check report delivery
+## 7. Understand configuration updates
+
+The server caches configurations by repository and branch, then checks for updates every five minutes. If an update fails, the cache is marked stale. A new lint request must reload that configuration successfully; the server does not use a stale configuration as a fallback.
+
+## 8. Check report delivery
 
 The lint response does not wait for Insights. The server sends each completed batch in the order received. Temporary failures are retried. If the oldest batch exhausts its configured retries, later batches wait and readiness becomes unhealthy until delivery recovers. A permanent Insights rejection is recorded and does not block later batches.
 
