@@ -14,7 +14,7 @@ Skeptic Lint Server currently supports OpenAPI specifications. The server is exp
 
 Skeptic Lint Server provides an HTTP API for linting one or more OpenAPI specifications in a batch. It loads a shared lint configuration from Git, applies a profile (a named set of lint rules and severities) to each specification, and returns one SARIF report per specification. SARIF is a standard format for security and code analysis results. The server then sends the batch to Specmatic Insights in the background.
 
-This guide starts with server setup, then walks through the API endpoints and report delivery. The [OpenAPI contract](https://github.com/specmatic/enterprise/blob/main/linter/lint-server.yaml) lists every request and response field and error code.
+This guide starts with server setup, then walks through the API endpoints and report delivery. After starting the server, use its `/api-docs/` endpoint to explore all request and response fields, status codes, and errors interactively. You can also download the schema from `/api-docs/openapi.yaml`; see [Explore the API](#3-explore-the-api).
 
 ## 1. Start the server
 
@@ -166,7 +166,7 @@ Use the stable error `code` and request ID to diagnose failures. Common response
 - `CONFIG_UNAVAILABLE` (`503`): the server could not load configuration because the source or credentials are unavailable.
 - `SERVER_NOT_READY` or `SERVICE_UNAVAILABLE` (`503`): the server cannot accept new work; check its readiness and operational status.
 
-See the [OpenAPI contract](https://github.com/specmatic/enterprise/blob/main/linter/lint-server.yaml) for the full error mapping.
+For the full error mapping, open the server's interactive [API documentation](http://localhost:8000/api-docs/) or download the [OpenAPI schema](http://localhost:8000/api-docs/openapi.yaml). Replace `localhost:8000` with your server address when using a remote deployment.
 
 If you repeat a `POST`, the server runs linting again; it does not replay an earlier response. For the same evaluation, keep the request ID and input unchanged. Insights can use that ID to avoid processing a duplicate delivery. Use a new ID when the specification, configuration, profile, or metadata changes.
 
@@ -186,4 +186,4 @@ Use `GET /status` to inspect the current server instance, including when readine
 curl -i http://localhost:8000/status
 ```
 
-The response shows the instance start time, license and readiness states, Insights delivery counts and batches, and cached configuration versions. It excludes credentials, tokens, report contents, and temporary file paths. State resets when the process restarts. In a multi-instance deployment, each response describes only the instance that handled the request. Keep `/status` on an internal operations network. See the [OpenAPI contract](https://github.com/specmatic/enterprise/blob/main/linter/lint-server.yaml) for the response fields.
+The response shows the instance start time, license and readiness states, Insights delivery counts and batches, and cached configuration versions. It excludes credentials, tokens, report contents, and temporary file paths. State resets when the process restarts. In a multi-instance deployment, each response describes only the instance that handled the request. Keep `/status` on an internal operations network. The server's [API documentation](http://localhost:8000/api-docs/) and [OpenAPI schema](http://localhost:8000/api-docs/openapi.yaml) describe all response fields. Replace `localhost:8000` with your server address when using a remote deployment.
