@@ -9,105 +9,78 @@ import {CommercialBadge} from "../../../src/components/CommercialBadge";
 # Skeptic Lint Server <CommercialBadge/>
 
 :::caution[Experimental]
-Skeptic Lint Server currently supports OpenAPI specifications. The server is experimental, may change, and requires a Specmatic Enterprise service-account license.
+Skeptic Lint Server currently supports OpenAPI specifications. The server is experimental and requires a Specmatic Enterprise service-account license.
 :::
 
-Skeptic Lint Server provides an HTTP API for linting one or more OpenAPI specifications in a batch. It loads a shared lint configuration from Git, applies a profile (a named set of lint rules and severities) to each specification, and returns one SARIF report per specification. SARIF is a standard format for security and code analysis results. The server then sends the batch to Specmatic Insights in the background.
-
-This guide starts with server setup, then walks through the API endpoints and report delivery. After starting the server, use its `/api-docs/` endpoint to explore all request and response fields, status codes, and errors interactively. You can also download the schema from `/api-docs/openapi.yaml`; see [Explore the API](#3-explore-the-api).
+Skeptic Lint Server lints one or more OpenAPI specifications against a shared Git configuration and returns a SARIF report for each. It publishes completed report batches to Specmatic Insights in the background.
 
 ## 1. Start the server
 
-You need the Specmatic Enterprise Docker image and a valid service-account license. The license enables the server's licensed linting features and Insights publishing. Provide it through your deployment's secret manager as `SPECMATIC_LICENSE_CONTENT`, or mount the license file and set `SPECMATIC_LICENSE_PATH` to its location in the container.
-
-The command below starts the server on port `8000`. Set `SPECMATIC_LICENSE_CONTENT` in your shell or deployment environment before running it.
+Provide a service-account license through your deployment secret manager as `SPECMATIC_LICENSE_CONTENT`, or mount a license file and set `SPECMATIC_LICENSE_PATH`.
 
 ```bash
 docker run --rm \
   -p 8000:8000 \
   -e SPECMATIC_LICENSE_CONTENT="$SPECMATIC_LICENSE_CONTENT" \
   specmatic/enterprise \
-  lint-server \
-  --port=8000
+  lint-server
 ```
 
-The lint request supplies the configuration repository and the download URL for each OpenAPI file. By default, the configuration repository must contain `specmatic-linter.yaml` at its root.
+The server listens on port `8000`. A lint request supplies the configuration repository and each specification's download URL. By default, the config repository contains `specmatic-linter.yaml` at its root.
 
-## 2. Choose startup options
+## 2. Configure startup options
 
-The server listens on port `8000` by default. All options are optional. The following settings configure authentication, source restrictions, HTTPS, specification limits, logging, and publishing behavior. Add them after `lint-server` in the Docker command when needed.
+All options are optional. Add them after `lint-server` in the command above.
 
 | Option | Purpose | Default |
 | --- | --- | --- |
-| `--port` | HTTP port, or HTTPS port when TLS is enabled. | `8000` |
-| `--jwt-issuer` and `--jwt-jwks-url` | Trusted token issuer and its public signing key endpoint. Repeat the pair for each issuer. | Caller authentication off |
-| `--jwt-audience` | Audience required in caller tokens. | None |
-| `--jwt-match` | Additional claim/value required in caller tokens. Repeat as needed. | None |
-| `--allowed-config-repo-url` | Configuration Git repository the server may load. Repeat to allow multiple repositories. | Any HTTP(S) repository |
-| `--allowed-spec-download-host` | Hostname allowed for specification downloads. Repeat to allow multiple hosts. | Any host |
-| `--tls-keystore` and `--tls-key-alias` | PKCS#12 keystore and private-key alias; enables HTTPS. | TLS off |
-| `--max-spec-size-code-points` | Maximum decoded Unicode code points per specification. | `5242880` |
-| `--background-job-max-retries` | Number of retries after the first failed Insights attempt. | `3` |
-| `--background-job-retry-initial-delay-seconds` | Seconds before the first retry. | `3` |
-| `--background-job-retry-multiplier` | Factor used to increase retry delays. | `3` |
-| `--debug` | Include lint-server diagnostic and routine probe events in logs. | Off |
+| `--port` | HTTP or HTTPS listener port. | `8000` |
+| `--jwt-issuer`, `--jwt-jwks-url` | Trusted caller token issuer and signing keys. Repeat the pair per issuer. | Caller authentication off |
+| `--jwt-audience` | Required token audience. | None |
+| `--jwt-match` | Additional claim/value requirement. Repeat as needed. | None |
+| `--allowed-config-repo-url` | Allowed configuration repository. Repeat as needed. | Any HTTP(S) URL |
+| `--allowed-spec-download-host` | Allowed specification download host. Repeat as needed. | Any host |
+| `--tls-keystore`, `--tls-key-alias` | PKCS#12 keystore and key alias; enables HTTPS. | TLS off |
+| `--max-spec-size-code-points` | Maximum decoded code points per specification. | `5242880` |
+| `--background-job-max-retries` | Insights retries after the initial attempt. | `3` |
+| `--background-job-retry-initial-delay-seconds` | Delay before the first retry. | `3` |
+| `--background-job-retry-multiplier` | Retry delay multiplier. | `3` |
+| `--debug` | Add diagnostic and probe events to logs. | Off |
 
-### Caller authentication
+<details>
+<summary>Authentication, source access, and HTTPS</summary>
 
-Caller authentication is optional. To enable it, configure `--jwt-issuer`, `--jwt-jwks-url`, and `--jwt-audience`. Incomplete or invalid JWT settings prevent startup. Clients then send a signed JSON Web Token (JWT) in the `Authorization: Bearer <JWT>` header. Tokens must use RS256, match the configured issuer and audience, and include an expiration claim (`exp`). The `aud` claim may be a string or an array containing the configured audience. If `nbf` is present, the server checks it too. The server retrieves signing keys only from the configured JWKS endpoints.
+Caller authentication uses RS256 JWTs with a required `exp` claim. Configure issuer, JWKS URL, and audience, then send `Authorization: Bearer <JWT>`. Use `--jwt-match` for additional claims; strings match case-sensitive substrings, while arrays require each configured value as an exact element.
 
-Use `--jwt-match` to require specific token claims. A match is written as `claim=JSON-value`; each claim name can be configured once. String values use case-sensitive substring matching. For arrays, every configured value must appear as an exact element, in any order; extra token values are allowed. Other values must have the same JSON type and match exactly. Every configured claim must be present and match.
+Configuration allowlists match the exact URL after embedded credentials are removed; specification allowlists match the hostname. Empty allowlists allow any source. Configuration URLs use HTTP(S). Credentials for private configuration and specification sources are separate; keep them in your secret manager. Credentials are redacted from logs, reports, and Insights data.
 
-The server uses the issuer claim to select a configured JWKS endpoint and verifies the signature, issuer, audience, expiration, and `nbf` when present. It accepts RS256 tokens, with 30 seconds of clock skew for time checks; token-supplied key URLs are not used. New signing key IDs are retrieved from the configured JWKS endpoint when needed. If that endpoint is unavailable, the request returns `AUTHENTICATION_UNAVAILABLE`. Authentication is checked before configuration or specification sources are accessed.
+For HTTPS, mount a read-only PKCS#12 keystore with the certificate chain and private key, and set `--tls-keystore`, `--tls-key-alias`, and `SPECMATIC_TLS_KEYSTORE_PASSWORD`. If the key has a separate password, set `SPECMATIC_TLS_PRIVATE_KEY_PASSWORD` too. HTTPS serves on the selected port.
 
-Health, readiness, status, and API documentation endpoints do not require a caller token; keep operational endpoints on an internal network. The service-account license is separate from caller authentication, and caller tokens are not sent to Insights or source repositories.
+The specification size limit applies to decoded Unicode code points per file, not request size or bytes. Increase it only after checking memory use and parser capacity.
 
-### Source allowlists
-
-Use `--allowed-config-repo-url` to restrict configuration repository URLs and `--allowed-spec-download-host` to restrict specification download hosts. Configuration URLs must exactly match an allowed URL after embedded credentials are removed; branch names are not part of this match. Specification URLs must use an allowed hostname. If no values are configured, those sources are unrestricted. A blocked source returns `403` before the source is accessed. Error responses identify the field without echoing credential-bearing URLs. Redirect destinations are outside these allowlist checks.
-
-Configuration repository URLs must use HTTP or HTTPS. Credentials in a configuration URL are used only for that repository; private specification sources need their own reachable download URLs and credentials. Provide credentials through your secret manager. Credentials embedded in source URLs are removed from logs, responses, reports, and Insights data.
-
-### HTTPS
-
-To serve HTTPS directly, mount a read-only PKCS#12 keystore containing the server certificate chain and private key, then configure `--tls-keystore` and `--tls-key-alias` together. The alias must identify an entry with a private key and certificate chain; a certificate file alone is insufficient. Supply `SPECMATIC_TLS_KEYSTORE_PASSWORD` through your secret manager and, if the private key has a different password, set `SPECMATIC_TLS_PRIVATE_KEY_PASSWORD` too. With TLS enabled, the server serves HTTPS only on the selected port. Missing or invalid TLS settings prevent startup. Without TLS, use HTTP for local development or run behind an HTTPS-enabled ingress or proxy. TLS passwords and private-key material must not be logged or exposed in status responses.
-
-### Insights delivery
-
-After linting succeeds, the server queues all reports from the request as one batch and publishes it to Insights in the background. The request returns `200` once the batch is accepted into the queue; this confirms queue acceptance, not that Insights has finished processing the reports. If the queue has no capacity, the request returns `503`.
-
-The retry options in the table control transient Insights failures. By default, the server retries three times after the initial attempt, waits three seconds before the first retry, and multiplies the delay by three for each later retry. It also respects an Insights `Retry-After` response when provided. If retries are exhausted, the batch blocks later batches and readiness becomes unhealthy while the server continues recovery attempts. Permanent Insights rejections are recorded and do not block later batches. See [Check report delivery](#8-check-report-delivery) for queue durability and how to inspect delivery status.
-
-The default `--max-spec-size-code-points` limit is 5,242,880 decoded Unicode code points per specification (about 5 MiB for ASCII text). It measures decoded content, not request size or UTF-8 bytes. The value must be a positive integer, and the parser must support the configured limit. Increase it only after checking memory use, parser capacity, and expected specification sizes. `SPEC_TOO_LARGE` accepts content at the limit and rejects content above it before parsing.
+</details>
 
 ## 3. Explore the API
 
-After the server starts, open [http://localhost:8000/api-docs/](http://localhost:8000/api-docs/) for interactive API documentation. To download the OpenAPI contract directly, use [http://localhost:8000/api-docs/openapi.yaml](http://localhost:8000/api-docs/openapi.yaml). Both endpoints are unauthenticated and remain available when the server is not ready for lint requests. For remote deployments, replace `localhost:8000` with the server address.
+After the server starts, open [interactive API documentation](http://localhost:8000/api-docs/) or download the [OpenAPI schema](http://localhost:8000/api-docs/openapi.yaml). For a remote server, replace `localhost:8000` with its address. These endpoints are unauthenticated and remain available when lint requests are not ready.
 
 ## 4. Check health and readiness
-
-Use these endpoints to check whether the server is alive and ready for lint requests. They can also be configured as container or Kubernetes probes.
 
 ```bash
 curl -i http://localhost:8000/health
 curl -i http://localhost:8000/readiness
 ```
 
-- `GET /health` is a lightweight liveness check. It confirms that the HTTP server responds and the license has not expired; it does not fetch configuration, contact Insights, or check every route. It returns `503` with `LICENSE_EXPIRED` only after the license `endDate`; through that time it returns `200`, including during the final ten-minute drain window. Other problems, such as full storage, can still prevent linting while health is up.
-- `GET /readiness` tells you whether the server accepts new lint requests. It reads local license, publisher, and shutdown state; it does not contact dependencies or change state. A ready response omits `codes`. A not-ready response returns every active reason (order is not guaranteed):
+| Endpoint | Use | Key behavior |
+| --- | --- | --- |
+| `GET /health` | Liveness probe. | Returns `200` through the license expiry time, including the final ten-minute drain; afterward returns `503 LICENSE_EXPIRED`. |
+| `GET /readiness` | Route new lint work. | Returns `200` when ready; `503` lists active reason codes. |
 
-| Code | Meaning |
-| --- | --- |
-| `LICENSE_EXPIRING` | At or after `endDate` minus ten minutes, through the license `endDate`. New work is paused so queued reports can finish. |
-| `LICENSE_EXPIRED` | After the license `endDate`. |
-| `INSIGHTS_BLOCKED` | The front Insights batch exhausted its retries; recovery attempts continue. |
-| `SHUTTING_DOWN` | Graceful shutdown has started. |
-
-Transient Insights retries, pending reports, permanent rejections, an empty configuration cache, and configuration refresh issues do not by themselves make the server unready. A ready status does not guarantee that a particular request's configuration, profile, source, or queue capacity is valid. The ten-minute license drain window pauses new lint work with `402 LICENSE_DENIED` so admitted work can finish and queued reports can be processed. Requests admitted before the cutoff may finish and enqueue reports afterward. During graceful shutdown, the server stops admitting new work while already-admitted requests may finish within the shutdown grace period.
+Readiness can be affected by license expiry, blocked Insights delivery, or graceful shutdown. The ten-minute license drain pauses new lint work with `402 LICENSE_DENIED` so queued reports can be processed. A ready response does not guarantee that a particular request's config, profile, source, or queue capacity is valid.
 
 ## 5. Submit a lint request
 
-Send a `POST` request to `/skeptic/lint/reports`. Save this example as `lint-request.json` and replace the sample URLs and IDs with your own:
+Send `POST /skeptic/lint/reports`. This example includes optional CI metadata; remove the `ci` object if it is not needed.
 
 ```json
 {
@@ -133,33 +106,14 @@ Send a `POST` request to `/skeptic/lint/reports`. Save this example as `lint-req
   },
   "ci": {
     "buildId": "234",
-    "runAttempt": "1",
     "metadata": { "pipelineName": "orders-api-ci" }
   }
 }
 ```
 
-The main request fields are:
+The request requires a configuration URL, repository ID/URL/branch, and at least one specification. Each specification needs a unique ID, repository-relative path, and download URL. The config branch and profile are optional; the server uses the repository default branch and `default` profile when omitted. The config URL must use HTTP(S); specification downloads accept HTTP(S) URLs and JSON or YAML content. `repository.url` and `repository.branch` are Insights metadata; the server fetches files from `downloadUrl`. If `ci` is included, `buildId` is required; `runAttempt` defaults to `"1"`, and metadata values must be strings.
 
-- `config.git.url` identifies the Git repository containing the lint configuration. `branch` is optional and may be null; if omitted, the repository's default branch is used.
-- `repository.id`, `repository.url`, and `repository.branch` describe the Git repository that owns the specifications. They are metadata for Insights; the server does not fetch specification files from this repository or compare `repository.url` against the configuration repository allowlist. `repository.name` is an optional display name sent to Insights when supplied.
-- Each specification needs a unique `id` and a repository-relative `path`. The server downloads it from `downloadUrl`, which must be an absolute HTTP(S) URL. The `profile` is optional; if omitted, the server uses the `default` profile.
-- `ci` is optional. If included, it must contain `buildId`. `runAttempt` and flat string `metadata` values are optional; nested objects and arrays are not allowed in `metadata`. If omitted, `runAttempt` defaults to `"1"`.
-
-The request must include `config.git.url` and `repository.id`, `repository.url`, `repository.branch`, and at least one specification. Each specification requires a unique, non-empty `id` and non-empty repository-relative `path`; paths cannot contain control characters or credentials. Unknown fields are rejected. If `ci` is present, `buildId` must be a non-empty string. The request body is JSON.
-
-The configuration and specification URLs must be reachable from the server. If a private source needs credentials, provide them through your secret manager in the source URL; the server removes URL credentials from logs, responses, reports, and Insights data. The server checks request structure and source allowlists before loading configuration or accepting changed credentials, then resolves every effective profile before downloading specifications. Profile names are case-sensitive. The server lints the whole batch using one configuration snapshot; a response includes reports only when every specification is processed successfully.
-
-The request proceeds in this order:
-
-1. Authenticate the caller when enabled, then validate the request and source allowlists.
-2. Load or refresh configuration and resolve each specification's profile.
-3. Download and lint every specification against the same configuration snapshot.
-4. Return `200` with reports in request order and queue the complete SARIF batch for Insights. Requests that cannot complete or be queued return an error instead of partial reports.
-
-`repository.id` is an opaque identifier that must match what Insights expects; it need not be a UUID. `repository.url` may be an HTTP(S), `ssh://`, or SCP-style Git URL, but it is metadata only. Each specification `path` is repository-relative metadata returned as `specPath` and included in Insights data; control characters and credentials are not allowed in it. Supply `downloadUrl` for every specification; although the schema marks it optional, the current server requires it. JSON and YAML are accepted. If a supplied download URL fails, the server does not fall back to Git. The caller JWT is not forwarded to source hosts.
-
-If caller authentication is enabled, set `LINT_SERVER_JWT` to a valid token from your identity provider and include it as a bearer token. The optional `X-Request-Id` header must contain a UUID. If you omit it, the server generates one. Reuse the same ID when retrying the same request so Insights can recognize duplicate deliveries.
+The server authenticates the caller when enabled, validates the request and allowlists, loads configuration and resolves profiles, then downloads and lints the full batch against one config snapshot. A successful request returns all reports and queues the batch for Insights; a failed specification does not produce a partial response.
 
 ```bash
 curl -i http://localhost:8000/skeptic/lint/reports \
@@ -170,124 +124,49 @@ curl -i http://localhost:8000/skeptic/lint/reports \
   --data-binary @lint-request.json
 ```
 
-If caller authentication is disabled, remove the `Authorization` header. The server returns the request ID in a response header and, for errors, in the response body. It records the ID in logs and sends it to Insights as the batch `Idempotency-Key`. An empty or malformed request ID returns `400 INVALID_REQUEST` with a newly generated ID in the response. Each `POST` runs linting and returns a new response. If the supplied ID has already been accepted by Insights, Insights acknowledges the duplicate without creating another build; this protects retries after a lost acknowledgement and does not require `ci.buildId`. If no ID was supplied, each POST gets a new ID and cannot deduplicate a previous publication. A lost HTTP response does not confirm whether the batch was accepted.
+When caller authentication is off, omit the `Authorization` header. `X-Request-Id` is optional; the server generates one when absent. Reuse the same ID and input for a retry of the same evaluation, and use a new ID when the evaluation changes. The ID is used as Insights' `Idempotency-Key`; the API runs linting for each `POST` and does not replay an earlier response.
 
 ## 6. Read the response
 
-HTTP `200` means every specification was linted and the batch was accepted for background delivery to Insights. It does not mean lint passed or that Insights has finished processing the reports. The response contains an overall result, the configuration version, the linter version, and one report per specification, in request order.
+HTTP `200` means all reports were generated and accepted into the background Insights queue. It does not indicate whether lint passed or whether Insights finished processing. Each report contains a SARIF 2.1.0 document; batch and per-spec results are `success` or `failure`. Warnings alone do not cause failure. The response also identifies the configuration snapshot and linter version used.
 
-A report has `result: "failure"` if it contains a non-ignored error-level finding. Warnings and ignored findings alone produce `success`. The batch result is `failure` if any report fails; both batch outcomes return HTTP `200` once all reports are generated and queued. The `maturity` value is a separate assessment based on centrally managed rules. It is `null` when no rules are enabled, `non-conformant` when no baseline rule passes, or one of `baseline`, `silver`, `gold`, and `platinum`.
+Handle errors by stable `code` and HTTP status; use `requestId` to correlate logs. Common errors:
 
-Each report includes its specification ID and path plus the raw SARIF 2.1.0 document. `linterVersion` is the Specmatic Linter version and matches the SARIF tool driver version. The `config` object records the exact snapshot used: full commit SHA, credential-free repository URL, resolved branch, and repository-relative config file path.
-
-Use the stable error `code` and HTTP status for programmatic handling; message text can change. Every endpoint accepts an optional UUID `X-Request-Id`; if omitted, the server generates one. An empty or invalid value returns `400 INVALID_REQUEST` with a new ID. All API responses include `X-Request-Id` and `Cache-Control: no-store`; on errors, the ID in the response body matches the header. Validation `details` may identify fields, but the API does not guarantee an exhaustive list of problems. `upstreamStatus`, when present, is the specification source's HTTP status, not the lint API or Insights status. `INVALID_REQUEST` (`400`) covers malformed JSON, missing or unknown fields, invalid values, a missing `ci.buildId`, or a malformed configuration URL or request ID. Common responses include:
-
-- `UNKNOWN_PROFILE` (`400`): a requested profile is not defined in the configuration.
-- `LICENSE_DENIED` (`402`): license utilization is denied, or the service license is expiring/expired before the request is admitted.
-- `AUTHENTICATION_REQUIRED` or `INVALID_TOKEN` (`401`): provide a valid bearer token when caller authentication is enabled.
-- `ACCESS_DENIED` (`403`): the caller does not meet configured claim requirements. `CONFIG_URL_NOT_ALLOWED` and `SPEC_URL_NOT_ALLOWED` (`403`) identify a source blocked by an allowlist.
-- `NOT_ACCEPTABLE` (`406`): the `Accept` header does not allow `application/json`.
-- `UNSUPPORTED_MEDIA_TYPE` (`415`): send the request with `Content-Type: application/json`.
-- `INVALID_SPECIFICATION` or `UNSUPPORTED_SPECIFICATION` (`422`): correct the document structure or provide a supported OpenAPI format/version.
-- `CONFIG_INVALID` (`422`): the configuration repository, branch, or configuration file is missing or invalid.
-- `SPEC_TOO_LARGE` (`422`): a downloaded specification exceeds the configured size limit.
-- `SPEC_FETCH_FAILED` (`502`) or `SPEC_FETCH_TIMEOUT` (`504`): the server could not download a specification. Source HTTP `401`, `403`, and `404` are reported as lint API `502`; check the URL and whether the server can reach it. `AUTHENTICATION_UNAVAILABLE` (`502`) means the configured JWKS endpoint could not provide a verification key.
-- `CONFIG_UNAVAILABLE` (`503`): the server could not load configuration because the source or credentials are unavailable.
-- `SERVER_NOT_READY` or `SERVICE_UNAVAILABLE` (`503`): the server cannot accept new work; check its readiness and operational status.
-- `INTERNAL_ERROR` (`500`): unexpected processing, linting, or SARIF generation failure; contact the operator with the request ID instead of blindly retrying.
-
-`SERVICE_UNAVAILABLE` may include a `Retry-After` header with an estimated delay in seconds. Treat it as advice, not a guarantee that the next attempt will succeed.
-
-For the full error mapping, first start the server as described in Step 1, then open `http://localhost:8000/api-docs/` or download `http://localhost:8000/api-docs/openapi.yaml`. For a remote deployment, use that server's address instead of `localhost:8000`.
-
-There is no report retrieval endpoint. For a retry of the same evaluation, keep the request ID and input unchanged; use a new ID when the specification, configuration, profile, or metadata changes.
-
-## 7. Understand configuration updates
-
-The server caches configuration snapshots in memory by repository and resolved branch. A cache miss, stale entry, or changed repository credential triggers a fresh fetch and validation before linting. A successful load becomes the snapshot used for the request and future refreshes. If a load or credential change fails, the request returns an error; scheduled refreshes continue to use the last accepted credentials.
-
-The server refreshes cached entries every five minutes. If a refresh fails, the last successful snapshot remains available for status inspection and is marked `stale`; the next lint request must load configuration successfully before it can proceed. A successful load clears the stale state. Configuration refresh issues affect requests that use that configuration and do not by themselves make the server unready.
-
-Configuration and specification URL credentials are redacted from logs, reports, metadata, and Insights data.
-
-## 8. Check report delivery
-
-The lint response does not wait for Insights. The publisher sends one ordered SARIF array per lint request, using the server's service-account license. A successful Insights response means the batch was accepted for processing, not that downstream processing is complete. The submission carries `ci.buildId`, `ci.runAttempt` (default `"1"` when `ci` is present and the attempt is omitted), and caller `ci.metadata`. The server adds `requestId`, `configCommitSha`, `configRepoUrl`, `linterVersion`, and `specifications`; the last is a compact JSON array string of `{specId, specPath, profile}` objects in request order. Server values replace caller metadata with the same keys. If CI details are absent, the server still sends `requestId` without inventing a build ID. The publisher sends batches in FIFO order, one batch at a time.
-
-### Insights publishing
-
-For each completed lint request, the server asynchronously sends the reports as one batch. The request uses the server's Specmatic service-account license to authenticate with Insights.
-
-#### Request headers
-
-| Header | Value sent | Purpose |
+| Status | Common codes | Next step |
 | --- | --- | --- |
-| `Authorization` | `license <license UUID>` | Identifies the publishing license. Insights validates that the license belongs to the payload organization and is active. |
-| `Idempotency-Key` | Request ID | Lets Insights recognize a retry of a batch it has already accepted. |
-| `Content-Type` | `application/json` | Describes the JSON payload before compression. |
-| `Content-Encoding` | `gzip` | Indicates the compressed request body. |
+| `400` | `INVALID_REQUEST`, `UNKNOWN_PROFILE` | Correct request fields or profile. |
+| `401` / `403` | `INVALID_TOKEN`, `ACCESS_DENIED`, `*_URL_NOT_ALLOWED` | Check caller token, claim rules, and source allowlists. |
+| `402` | `LICENSE_DENIED` | Check the service-account license. |
+| `422` | `CONFIG_INVALID`, `INVALID_SPECIFICATION`, `SPEC_TOO_LARGE` | Correct the config or specification. |
+| `500` | `INTERNAL_ERROR` | Contact the operator with the request ID. |
+| `502` / `504` | `SPEC_FETCH_FAILED`, `AUTHENTICATION_UNAVAILABLE`, `SPEC_FETCH_TIMEOUT` | Check source or JWKS availability. |
+| `503` | `CONFIG_UNAVAILABLE`, `SERVER_NOT_READY`, `SERVICE_UNAVAILABLE` | Check `/readiness` and `/status`; retry after recovery. |
 
-#### JSON body
+For all fields, status codes, headers, and error variants, use the running server's `/api-docs/` or `/api-docs/openapi.yaml` endpoint. A `503` may include `Retry-After`. There is no report retrieval endpoint.
 
-Field paths below refer to the decompressed JSON sent to Insights.
+## 7. Configuration updates
 
-| Field | Type | Value or source |
-| --- | --- | --- |
-| `orgId` | String | Organization associated with the publishing license. |
-| `reportType` | String | Always `"linter"`. |
-| `report` | Array | One SARIF 2.1.0 document per specification, in request order. Includes lint findings and specification source text. |
-| `metadata` | Object of strings | Caller CI metadata plus the server fields listed below. |
-| `publisher.name` | String | Reporter library coordinates, in `<groupId>:<artifactId>` form. |
-| `publisher.version` | String | Reporter library version; this is separate from `linterVersion`. |
-| `parameters.ci` | Boolean | `true` when the request includes a CI build ID; otherwise `false`. |
-| `parameters.buildId` | String or `null` | `ci.buildId`, or `null` when CI context is absent. |
-| `parameters.runAttempt` | String | `ci.runAttempt`, defaulting to `"1"`. |
-| `parameters.repoId` | String | `repository.id`. |
-| `parameters.repoName` | String or `null` | `repository.name`, when supplied. |
-| `parameters.repoUrl` | String | `repository.url`, with credentials removed. |
-| `parameters.branchName` | String | `repository.branch`. |
-| `projectDir` | `null` | No project directory is supplied. |
-| `specmaticConfigPath` | String | Configuration path from the batch's configuration provenance. |
-| `specmaticConfig` | `null` | Configuration contents are not sent. |
+The server caches configuration by repository and branch and refreshes it every five minutes. If a refresh fails, the last snapshot is marked stale; the next lint request must load the configuration successfully before it can proceed. A configuration refresh issue alone does not make the server unready.
 
-#### Metadata
+## 8. Insights publishing
 
-All metadata values are strings. The server copies values from `ci.metadata`, then adds its own fields. Server values take precedence when a caller uses the same key.
+The server publishes one ordered SARIF batch per completed lint request using its service-account license. Delivery is asynchronous and FIFO. An Insights success confirms acceptance for processing.
 
-| Server metadata field | Value |
+| Insights request detail | Value |
 | --- | --- |
-| `requestId` | Batch request ID; also the `Idempotency-Key`. |
-| `configCommitSha` | Commit SHA of the configuration snapshot used for linting. |
-| `configRepoUrl` | Credential-free configuration repository URL. |
-| `linterVersion` | Version of the Specmatic Linter that generated the reports. |
-| `specifications` | Compact JSON-encoded string of each specification's `specId`, `specPath`, and resolved `profile`, in request order. |
+| Authentication | `Authorization: license <license UUID>` |
+| Idempotency | Request ID sent as `Idempotency-Key`; Insights acknowledges an accepted duplicate without creating another build. |
+| Encoding | JSON compressed with gzip. |
+| Reports | One SARIF 2.1.0 report per specification, in request order. |
+| CI and repository context | Build ID, run attempt, repository ID/name/URL/branch, when provided. |
+| Metadata | Caller `ci.metadata` plus server fields: `requestId`, `configCommitSha`, `configRepoUrl`, `linterVersion`, and `specifications`. Server values take precedence. |
 
-Caller-defined metadata can include pipeline, release, or other string values. The field names are defined by the caller; the server does not generate them.
+`specifications` is a compact JSON string containing each specification's ID, path, and resolved profile. The queue is in memory, so reports that have not been delivered can be lost if the process stops. Transient failures are retried; a blocked front batch pauses later batches and makes readiness fail. Permanent rejections are recorded and later batches continue. The server attempts to drain queued reports during graceful shutdown; allow time and network access for this to complete.
 
-Insights returns `200` with the original submission ID for a previously accepted idempotency key without processing the batch again. A new key returns `200` with the generated submission ID. Reuse the same request ID for retries of the same evaluation; use a new ID when the evaluation changes. The lint server still runs linting for each `POST` and returns a new HTTP response.
-
-HTTP `429`, `5xx`, network failures, and timeouts are transient. The publisher retries the front batch using the configured delay and multiplier and honors `Retry-After` when supplied. Later batches remain pending with zero attempts until the front batch advances. Once its retry budget is exhausted, all specifications in the batch are marked `blocked`, readiness returns `503`, and recovery attempts continue against that batch. On success, the batch is removed and readiness can recover. Other `4xx` responses permanently reject the batch: its queued payload is released, diagnostics remain visible until restart, and later batches proceed. Permanent rejections and pending batches alone do not fail readiness.
-
-Queue capacity is bounded. If there is not enough capacity to accept a completed batch, the lint request receives `503 SERVICE_UNAVAILABLE`; the server does not return `200` while silently dropping work.
-
-The delivery queue is held in memory. A restart or forced termination can lose reports that have not been delivered.
-
-During a controlled shutdown, the server stops admitting new requests and stops scheduling configuration refreshes. It keeps the publisher running while already-admitted lint requests finish within the shutdown grace period, then drains queued batches in order using the existing publisher. Retries and network calls are bounded by the remaining grace period. If it expires, remaining work can be lost.
-
-Shutdown logs summarize delivered, rejected, and still-outstanding batches without report payloads or credentials. Configure a termination grace period that allows linting and the publishing flush to finish, and preserve network access to Insights during shutdown.
-
-Use `GET /status` to inspect the current server instance, including when readiness is failing:
+## 9. Check delivery status
 
 ```bash
 curl -i http://localhost:8000/status
 ```
 
-`GET /status` provides a read-only snapshot of the instance that answered. It returns `200` even while readiness is failing; use the `status` field to determine whether the instance can accept lint work. The endpoint has no query parameters.
-
-The response includes `instanceId`, UTC `startedAt`, the Specmatic Linter version, top-level readiness, license status and expiry, Insights state and counters, undelivered batch diagnostics, and cached configuration snapshots. `lastDeliveredAt` appears after the first successful delivery. Failure details include a UTC time and sanitized reason. Configuration entries include a repository-relative `configPath`.
-
-License status is `valid`, `expiring`, or `expired`. Top-level `status` reports readiness. `insights.state` is `healthy`, `retrying`, or `blocked`. The published report count starts at zero and increases by the number of specs in each successfully delivered batch; the batch count starts at zero and increases once per successful Insights submission. Both reset on restart.
-
-`unpublishedReports` is grouped by request ID and includes pending, retrying, blocked, and rejected batches. Each specification in a batch shares its state, attempt count, and latest safe failure. Attempts count every started submission, including recovery attempts, and are zero before the first attempt. This list is diagnostic history, not the active FIFO queue; its order does not represent queue order. Rejected batches remain visible but no longer block the queue. Use `configs` to inspect retained branch, commit, config path, stale state, and any last refresh failure; entries describe retained snapshots, not a live Git query. The list may be empty when no snapshot is cached.
-
-Status data resets when the process restarts. An empty batch list after a restart does not prove that earlier reports were delivered. In a multi-instance deployment, each response describes only the instance that handled the request, so inspect each instance independently. Keep `/status` on an internal operations network. The response excludes credentials, JWTs, keys, JWKS URLs, report contents, temporary file paths, stack traces, and raw upstream responses. After starting the server, use `/api-docs/` or `/api-docs/openapi.yaml` for exact field definitions.
+`GET /status` returns a sanitized, read-only snapshot for the instance that answered, including when readiness is failing. It reports license and readiness state, Insights delivery counts and undelivered batches, and cached configuration snapshots. Counters and diagnostics reset when the process restarts; in a multi-instance deployment, each response describes one instance. Keep this endpoint on an internal operations network.
