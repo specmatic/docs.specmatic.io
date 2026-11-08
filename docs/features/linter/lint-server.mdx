@@ -170,3 +170,5 @@ curl -i http://localhost:8000/status
 ```
 
 `GET /status` returns a sanitized, read-only snapshot for the instance that answered, including when readiness is failing. It reports license and readiness state, Insights delivery counts and undelivered batches, and cached configuration snapshots. Counters and diagnostics reset when the process restarts; in a multi-instance deployment, each response describes one instance. Keep this endpoint on an internal operations network.
+
+For a working example, see the [Skeptic Server Demo](https://github.com/specmatic/skeptic-server-demo) repository.
