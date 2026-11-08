@@ -68,6 +68,12 @@ Configuration repository URLs must use HTTP or HTTPS. If a private source requir
 
 To serve HTTPS directly, mount a PKCS#12 keystore containing the server certificate and private key, then configure `--tls-keystore` and `--tls-key-alias` together. Supply `SPECMATIC_TLS_KEYSTORE_PASSWORD` and, if different, `SPECMATIC_TLS_PRIVATE_KEY_PASSWORD` through your secret manager. With TLS enabled, the server serves HTTPS only on the selected port. Without TLS, use HTTP for local development or run behind an HTTPS-enabled ingress or proxy.
 
+### Insights delivery
+
+After linting succeeds, the server queues all reports from the request as one batch and publishes it to Insights in the background. The request returns `200` once the batch is accepted into the queue; this confirms queue acceptance, not that Insights has finished processing the reports. If the queue has no capacity, the request returns `503`.
+
+The retry options in the table control transient Insights failures. By default, the server retries three times after the initial attempt, waits three seconds before the first retry, and multiplies the delay by three for each later retry. It also respects an Insights `Retry-After` response when provided. If retries are exhausted, the batch blocks later batches and readiness becomes unhealthy while the server continues recovery attempts. Permanent Insights rejections are recorded and do not block later batches. See [Check report delivery](#8-check-report-delivery) for queue durability and how to inspect delivery status.
+
 The default `--max-spec-size-code-points` limit is 5,242,880 decoded Unicode code points per specification (about 5 MiB for ASCII text). It measures decoded content, not request size or bytes. Increase it only after checking memory use and parser capacity.
 
 ## 3. Explore the API
