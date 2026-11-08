@@ -1,0 +1,506 @@
+---
+title: Configuration
+sidebar_position: 1
+---
+
+# Arazzo Configuration
+
+Specmatic reads the workflow from your Arazzo document and the runtime settings from `specmatic.yaml`.
+
+- The **Arazzo document** defines workflows, steps, source descriptions, and security requirements.
+- **`specmatic.yaml`** configures service URLs, credentials, and the profiles Specmatic uses when a workflow step calls a protected API.
+
+Configure Arazzo run options under `systemUnderTest.service.runOptions.arazzo` for workflow tests. Use the top-level options for settings shared by the Arazzo specifications in that service. Add an entry under `specs` when a workflow needs its own settings.
+
+:::tip[Use the Studio UI]
+Use Specmatic Studio with the [Specmatic Enterprise Docker image](/download#specmatic-enterprise) to create workflows visually. Import your API specifications, connect operations, and generate the Arazzo document and input file. Configure runtime URLs, credentials, and profiles in `specmatic.yaml` as shown below. See [Generating Workflows](/supported_protocols/arazzo#generating-workflows) for the walkthrough.
+:::
+
+## Configure base URLs
+
+Set `baseUrls` under `runOptions.arazzo` to apply URL overrides to all Arazzo specifications in the service. Each key must match a `sourceDescriptions[].name` in the Arazzo document:
+
+| Setting | Schema meaning |
+|---|---|
+| `baseUrls` | Map from Arazzo source-description name to runtime URL. |
+| `specs[].spec.id` | Specification ID assigned in the service definition. Use the same ID to select its Arazzo override. |
+| `specs[].spec.baseUrls` | URL map for that matching specification. A matching override replaces the shared Arazzo settings. |
+
+Example of shared service URLs:
+
+```yaml
+runOptions:
+  arazzo:
+    type: test
+    baseUrls:
+      OrdersApi: https://orders.example.com
+      InventoryApi: https://inventory.example.com
+```
+
+For workflow-specific settings, match `runOptions.arazzo.specs[].spec.id` to the specification ID in the service definition. A matching override replaces the shared Arazzo settings. Include every setting that workflow needs. For CLI URL overrides and server selection, see [Running Workflow Tests](/supported_protocols/arazzo#command-line-interface).
+
+For example, the service definition assigns the ID `orders-workflow` to the Arazzo file. The per-spec override uses the same ID:
+
+```yaml
+version: 3
+systemUnderTest:
+  service:
+    definitions:
+      - definition:
+          source:
+            filesystem:
+              directory: specs
+          specs:
+            - spec:
+                id: orders-workflow
+                path: orders.arazzo.yaml
+    runOptions:
+      arazzo:
+        type: test
+        specs:
+          - spec:
+              id: orders-workflow
+              baseUrls:
+                OrdersApi: https://orders-staging.example.com
+```
+
+## Resolve authentication at runtime
+
+Set a step parameter's `value` to `$specmatic.auth` when Specmatic should resolve the credential from a security profile at runtime. Use it for a `header` or `query` parameter defined by a security scheme in the API description. No credential is needed in the workflow input file.
+
+For example, use the marker as the Authorization header value:
+
+```yaml
+parameters:
+  - name: Authorization
+    in: header
+    value: $specmatic.auth
+```
+
+The input file contains workflow data, without the credential:
+
+```json
+{
+  "PlaceOrder": {
+    "DEFAULT": {
+      "PlaceOrder": {
+        "orderRequestId": "1234567890"
+      }
+    }
+  }
+}
+```
+
+## Profiles and bindings
+
+A **profile** stores connection or authentication settings under a name. A **binding** tells Specmatic which profile to use for a workflow context. Place these settings under `runOptions.arazzo`. There is no shared top-level `bindings` object. `vault` and `security` each contain their own `profiles` and `bindings` sections.
+
+| Path under `runOptions.arazzo` | Shape |
+|---|---|
+| `vault.profiles` | Map of profile name to Vault provider settings. |
+| `security.profiles` | Map of profile name to security settings. |
+| `vault.bindings` | List of Vault entries. Each entry has a `binding` object. |
+| `security.bindings` | List of security entries. Each entry has a `binding` object. |
+| `binding.use` | Required inside each entry's `binding`. Names a profile, or `none` to disable it. |
+| `binding.when` | Optional inside `binding`. Selects where it applies. Omit it for a default. |
+
+Profiles can extend other profiles. Child values override inherited values. Names must be unique and nonempty, `none` is reserved for disabling a binding, and inheritance cannot contain cycles. Bind a profile to activate it.
+
+Omit `when` to make a binding the default. Otherwise, use the selectors below to limit where it applies. A step selector must include its workflow.
+
+| Selector | Security binding | Vault binding | Constraint |
+|---|---|---|---|
+| `workflow` | Yes | Yes | Required when `step` is set. |
+| `step` | Yes | Yes | Must be paired with `workflow`. |
+| `source` | Yes | Yes | Matches an Arazzo `sourceDescriptions[].name`. |
+| `scheme` | Yes | No | A security `when` must include `workflow`, `source`, or `scheme`. |
+| `scopes` | Yes | No | Must match the API security requirement and include `scheme`. |
+
+Selectors may combine `workflow` and `source`. A selector with `step` must include `workflow` and cannot include `source`. Vault selectors must include `workflow` or `source` and cannot use `scheme` or `scopes`. `use: none` disables the selected security or Vault profile.
+
+When bindings overlap, Specmatic prefers a step binding over a source binding. If neither applies, workflow-only and default bindings have equal priority. For security bindings, scope-specific selectors take precedence over scheme selectors. Equally preferred bindings that select different profiles cause an error.
+
+## Credential sources
+
+Credentials can come from an [environment variable](#credential-sources) or [Vault](#vaults). Vault is optional. The examples show both forms.
+
+```yaml
+bearer:
+  env: API_ACCESS_TOKEN
+```
+
+```yaml
+bearer:
+  vault:
+    secretKey: applications/orders
+    field: /accessToken
+```
+
+For Vault, `secretKey` identifies the secret. The optional `field` is a JSON Pointer to a string inside it. Specmatic reads credentials at runtime, so they do not need to appear in the Arazzo document.
+
+## Vaults
+
+A Vault profile describes how Specmatic connects to a Vault provider. The `type` selects the provider and the remaining settings are provider-specific. HashiCorp Vault is the currently supported provider.
+
+### HashiCorp Vault
+
+Set `type: hashicorp` and the Vault server `url`. The HashiCorp-specific profile fields are:
+
+| Field | Meaning |
+|---|---|
+| `extends` | Optional parent Vault profile. Unset values are inherited. |
+| `type` | Required provider discriminator: `hashicorp`. |
+| `url` | HashiCorp Vault server URL. |
+| `mount` | KV engine mount path. If omitted, Specmatic discovers the mount and KV version. In that case, `secretKey` must include the mount path. |
+| `version` | KV version `1` or `2`. If omitted, Specmatic discovers the version. Setting it explicitly requires `mount`. |
+| `namespace` | Optional HashiCorp Vault namespace. |
+| `tokenKey` | [Environment variable](#credential-sources) containing the Vault token. Defaults to `VAULT_TOKEN`. |
+
+The Vault profile must be bound to the workflow context that needs its secrets. For example, an unqualified binding makes the connection available to credential lookups throughout the Arazzo specification:
+
+```yaml
+vault:
+  profiles:
+    applicationVault:
+      type: hashicorp
+      url: https://vault.example.com
+      mount: secret
+      version: 2
+      tokenKey: VAULT_TOKEN
+  bindings:
+    - binding:
+        use: applicationVault
+```
+
+Keep the Vault token outside `specmatic.yaml`. Provide it through the named [environment variable](#credential-sources). Store API credentials and private keys in Vault, then refer to their secret key and optional JSON Pointer from a [security profile](#security-profiles).
+
+## Security profiles
+
+Security profiles configure authentication for protected HTTP steps. Specmatic reads the API security requirement, selects the matching bound profile, resolves its [credentials](#credential-sources), and applies them to the request. A profile can combine mechanisms when a request requires more than one. Keep real credentials and Vault tokens out of `specmatic.yaml`.
+
+Each profile can contain `extends` and one or more of `bearer`, `basic`, `apiKey`, `oauth2`, and `mtls`. The subsections below describe the fields for each mechanism.
+
+### Bearer
+
+Use `bearer` for an existing HTTP Bearer token. Set it to an [environment or Vault credential source](#credential-sources), as in the examples below.
+
+| Field | Meaning |
+|---|---|
+| `bearer` | Credential source for the token. Set one source using `env` or `vault`. |
+
+### Basic authentication
+
+Set `basic.username` and `basic.password` to [credential sources](#credential-sources).
+
+| Field | Meaning |
+|---|---|
+| `basic.username` | Credential source for the Basic username. |
+| `basic.password` | Credential source for the Basic password. |
+
+### API key
+
+Set `apiKey` to a [credential source](#credential-sources). The API description supplies the key's parameter name and whether Specmatic sends it in a header or query parameter.
+
+| Field | Meaning |
+|---|---|
+| `apiKey` | Credential source for the key value. The API description defines its name and location. |
+
+### OAuth2 and OpenID Connect
+
+OAuth2 profiles acquire a token and use it as a Bearer token on the API request. Supported grants are `client_credentials`, `password`, and `urn:ietf:params:oauth:grant-type:jwt-bearer`. OpenID Connect token endpoints can be discovered from the OIDC URL when no `tokenUrl` override is provided.
+
+OAuth2 profile fields are:
+
+| Field | Meaning |
+|---|---|
+| `grantType` | `client_credentials`, `password`, or `urn:ietf:params:oauth:grant-type:jwt-bearer`. |
+| `tokenUrl` | Optional token endpoint override. For OIDC, Specmatic can discover it when omitted. |
+| `clientAuthentication` | Required token-endpoint method: `client_secret_basic`, `client_secret_post`, `private_key_jwt`, or `none`. `client_credentials` does not allow `none`. |
+| `clientId` | [Credential source](#credential-sources) for the OAuth client ID. If omitted, defaults to the `OAUTH_CLIENT_ID` environment variable. |
+| `clientSecret` | [Credential source](#credential-sources) for the OAuth client secret. If omitted, defaults to the `OAUTH_CLIENT_SECRET` environment variable. |
+| `privateKey` | [Credential source](#credential-sources) for an unencrypted PEM key used with `private_key_jwt`. If omitted, defaults to `OAUTH_CLIENT_PRIVATE_KEY`. |
+| `signingAlgorithm` | Required when `clientAuthentication` is `private_key_jwt`. Supported values are `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384`, and `ES512`. |
+| `keyId` | Optional key ID written to the client assertion's JWT `kid` header. |
+| `clientAssertionAudience` | Optional audience for the client assertion. Defaults to `tokenUrl`. |
+| `username` | Credential source for the `password` grant username. |
+| `password` | Credential source for the `password` grant password. |
+| `grantAssertion` | JWT Bearer grant assertion settings, described below. Do not set it for the other grants. |
+
+For the JWT Bearer grant, `grantAssertion` contains the assertion identity, signing key, and optional signing settings:
+
+| Field | Meaning |
+|---|---|
+| `grantAssertion.issuer` | Required issuer identifier configured with the identity provider. |
+| `grantAssertion.subject` | Required subject identifier configured with the identity provider. |
+| `grantAssertion.privateKey` | [Credential source](#credential-sources) for the signing key. Defaults to `OAUTH_JWT_BEARER_PRIVATE_KEY`. It must contain an unencrypted PKCS#8 RSA or EC PEM key, or a PKCS#1 RSA PEM key. |
+| `grantAssertion.audience` | Optional audience. Defaults to `tokenUrl`. |
+| `grantAssertion.signingAlgorithm` | Required signing algorithm. Supported values are `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384`, and `ES512`. |
+| `grantAssertion.keyId` | Optional key ID written to the JWT `kid` header. |
+
+These grant assertion settings are distinct from `private_key_jwt`, which authenticates the OAuth client itself.
+
+### Mutual TLS (mTLS)
+
+mTLS configures the HTTP client's TLS connection. Configure a key-store file.
+
+| Field | Meaning |
+|---|---|
+| `mtls.keyStore.file` | Path to the key-store file. |
+| `mtls.keyStore.alias` | Optional alias of the key to use. |
+| `mtls.keyStore.password` | Optional password for the key. |
+| `mtls.keyStorePassword` | Optional password for the key store. |
+
+### Combining mechanisms
+
+When an API call needs multiple authentication mechanisms, configure them in the same profile. This example combines Basic authentication and mTLS for `OrdersApi`, and defines a separate API-key profile for `InventoryApi`:
+
+```yaml
+security:
+  profiles:
+    ordersClient:
+      basic:
+        username:
+          env: ORDERS_USERNAME
+        password:
+          vault:
+            secretKey: applications/orders
+            field: /password
+      mtls:
+        keyStore:
+          file: ./certs/orders-client.p12
+          alias: orders-client
+          password: "<key-password>"
+        keyStorePassword: "<key-store-password>"
+    inventoryKey:
+      apiKey:
+        env: INVENTORY_API_KEY
+  bindings:
+    - binding:
+        when:
+          source: OrdersApi
+        use: ordersClient
+    - binding:
+        when:
+          source: InventoryApi
+          scheme: inventoryKey
+        use: inventoryKey
+```
+
+The [Config v3 JSON Schema](https://github.com/specmatic/specmatic/blob/main/core/src/main/resources/config-validation/config-v3-resolved.schema.json) lists the allowed fields and rejects unknown properties in these structures.
+
+## Common authentication setups
+
+These Config v3 examples belong under `systemUnderTest.service.runOptions` in `specmatic.yaml`. Use your own source and security scheme names.
+
+### Bearer token from an environment variable
+
+This is the simplest profile-based setup. Specmatic reads the token from the process environment when the workflow runs:
+
+```yaml
+arazzo:
+  type: test
+  security:
+    profiles:
+      ordersBearer:
+        bearer:
+          env: ORDERS_API_TOKEN
+    bindings:
+      - binding:
+          when:
+            source: OrdersApi
+            scheme: accessToken
+          use: ordersBearer
+```
+
+### Basic authentication and API key from environment variables
+
+The API description defines the API-key name and whether it is sent in a header or query parameter:
+
+```yaml
+security:
+  profiles:
+    ordersBasic:
+      basic:
+        username:
+          env: ORDERS_USERNAME
+        password:
+          env: ORDERS_PASSWORD
+    inventoryKey:
+      apiKey:
+        env: INVENTORY_API_KEY
+  bindings:
+    - binding:
+        when:
+          source: OrdersApi
+          scheme: basicAuth
+        use: ordersBasic
+    - binding:
+        when:
+          source: InventoryApi
+          scheme: inventoryKey
+        use: inventoryKey
+```
+
+### Bearer token from HashiCorp Vault
+
+This example reads an API token from HashiCorp Vault and uses it for the `accessToken` security scheme on `OrdersApi`:
+
+```yaml
+arazzo:
+  type: test
+  vault:
+    profiles:
+      applicationVault:
+        type: hashicorp
+        url: https://vault.example.com
+        mount: secret
+        version: 2
+        tokenKey: VAULT_TOKEN
+    bindings:
+      - binding:
+          use: applicationVault
+  security:
+    profiles:
+      ordersBearer:
+        bearer:
+          vault:
+            secretKey: applications/orders
+            field: /accessToken
+    bindings:
+      - binding:
+          when:
+            source: OrdersApi
+            scheme: accessToken
+          use: ordersBearer
+```
+
+### OAuth2 client credentials with a Vault secret
+
+Use the client-credentials grant for service-to-service access. This example reads the client ID from the environment and the client secret from HashiCorp Vault:
+
+```yaml
+arazzo:
+  type: test
+  vault:
+    profiles:
+      applicationVault:
+        type: hashicorp
+        url: https://vault.example.com
+        mount: secret
+        version: 2
+        tokenKey: VAULT_TOKEN
+    bindings:
+      - binding:
+          use: applicationVault
+  security:
+    profiles:
+      ordersService:
+        oauth2:
+          grantType: client_credentials
+          tokenUrl: https://identity.example.com/oauth2/token
+          clientAuthentication: client_secret_basic
+          clientId:
+            env: ORDERS_OAUTH_CLIENT_ID
+          clientSecret:
+            vault:
+              secretKey: oauth/orders
+              field: /clientSecret
+    bindings:
+      - binding:
+          when:
+            source: OrdersApi
+            scheme: ordersOAuth
+          use: ordersService
+```
+
+### OAuth2 password grant with credentials in Vault
+
+If the identity provider uses the password grant, add `username` and `password` credential sources to the OAuth2 profile and set `grantType: password`. This example reads the client ID from the environment and the client secret and user credentials from HashiCorp Vault:
+
+```yaml
+arazzo:
+  type: test
+  vault:
+    profiles:
+      applicationVault:
+        type: hashicorp
+        url: https://vault.example.com
+        mount: secret
+        version: 2
+        tokenKey: VAULT_TOKEN
+    bindings:
+      - binding:
+          use: applicationVault
+  security:
+    profiles:
+      ordersUser:
+        oauth2:
+          grantType: password
+          tokenUrl: https://identity.example.com/oauth2/token
+          clientAuthentication: client_secret_basic
+          clientId:
+            env: ORDERS_OAUTH_CLIENT_ID
+          clientSecret:
+            vault:
+              secretKey: oauth/orders
+              field: /clientSecret
+          username:
+            vault:
+              secretKey: oauth/orders-user
+              field: /username
+          password:
+            vault:
+              secretKey: oauth/orders-user
+              field: /password
+    bindings:
+      - binding:
+          when:
+            source: OrdersApi
+            scheme: ordersOAuth
+          use: ordersUser
+```
+
+The values of `scheme` and `source` must match the security scheme and source description names used by that workflow.
+
+### JWT Bearer grant with an environment-based signing key
+
+The JWT Bearer grant signs an assertion for the token request. In this anonymized example, the issuer and subject are identifiers configured by the identity provider, and Specmatic reads the signing key from an environment variable:
+
+```yaml
+arazzo:
+  type: test
+  security:
+    profiles:
+      signedService:
+        oauth2:
+          grantType: urn:ietf:params:oauth:grant-type:jwt-bearer
+          tokenUrl: https://identity.example.com/oauth2/token
+          clientAuthentication: none
+          grantAssertion:
+            issuer: orders-service
+            subject: orders-service
+            privateKey:
+              env: ORDERS_OAUTH_PRIVATE_KEY
+            signingAlgorithm: RS256
+    bindings:
+      - binding:
+          when:
+            source: OrdersApi
+            scheme: ordersOAuth
+          use: signedService
+```
+
+`issuer`, `subject`, and `signingAlgorithm` are required. The `audience` defaults to the token URL and can be set explicitly when the identity provider expects a different value. To keep the signing key in Vault instead, configure `privateKey` with a Vault credential source.
+
+## Configuration checklist
+
+Before running an Arazzo workflow test, check that:
+
+- `baseUrls` keys match Arazzo `sourceDescriptions[].name` values.
+- Each profile is referenced by an appropriate binding.
+- Binding selectors use the workflow, step, source, security scheme, and scopes from the workflow and API descriptions.
+- Every credential source points to an existing environment variable or Vault secret field.
+- Each security profile matches the authentication scheme required by the API step.
+- Matching per-spec settings include the configuration needed by that workflow because they replace the shared Arazzo settings.
+
+For command-line URL overrides and server selection, see [Running Workflow Tests](/supported_protocols/arazzo#command-line-interface).
