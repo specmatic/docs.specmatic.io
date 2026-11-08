@@ -214,6 +214,58 @@ Configuration and specification URL credentials are redacted from logs, reports,
 
 The lint response does not wait for Insights. The publisher sends one ordered SARIF array per lint request, using the server's service-account license. A successful Insights response means the batch was accepted for processing, not that downstream processing is complete. The submission carries `ci.buildId`, `ci.runAttempt` (default `"1"` when `ci` is present and the attempt is omitted), and caller `ci.metadata`. The server adds `requestId`, `configCommitSha`, `configRepoUrl`, `linterVersion`, and `specifications`; the last is a compact JSON array string of `{specId, specPath, profile}` objects in request order. Server values replace caller metadata with the same keys. If CI details are absent, the server still sends `requestId` without inventing a build ID. The publisher sends batches in FIFO order, one batch at a time.
 
+### Insights publishing
+
+For each completed lint request, the server asynchronously sends the reports as one batch. The request uses the server's Specmatic service-account license to authenticate with Insights.
+
+#### Request headers
+
+| Header | Value sent | Purpose |
+| --- | --- | --- |
+| `Authorization` | `license <license UUID>` | Identifies the publishing license. Insights validates that the license belongs to the payload organization and is active. |
+| `Idempotency-Key` | Request ID | Lets Insights recognize a retry of a batch it has already accepted. |
+| `Content-Type` | `application/json` | Describes the JSON payload before compression. |
+| `Content-Encoding` | `gzip` | Indicates the compressed request body. |
+
+#### JSON body
+
+Field paths below refer to the decompressed JSON sent to Insights.
+
+| Field | Type | Value or source |
+| --- | --- | --- |
+| `orgId` | String | Organization associated with the publishing license. |
+| `reportType` | String | Always `"linter"`. |
+| `report` | Array | One SARIF 2.1.0 document per specification, in request order. Includes lint findings and specification source text. |
+| `metadata` | Object of strings | Caller CI metadata plus the server fields listed below. |
+| `publisher.name` | String | Reporter library coordinates, in `<groupId>:<artifactId>` form. |
+| `publisher.version` | String | Reporter library version; this is separate from `linterVersion`. |
+| `parameters.ci` | Boolean | `true` when the request includes a CI build ID; otherwise `false`. |
+| `parameters.buildId` | String or `null` | `ci.buildId`, or `null` when CI context is absent. |
+| `parameters.runAttempt` | String | `ci.runAttempt`, defaulting to `"1"`. |
+| `parameters.repoId` | String | `repository.id`. |
+| `parameters.repoName` | String or `null` | `repository.name`, when supplied. |
+| `parameters.repoUrl` | String | `repository.url`, with credentials removed. |
+| `parameters.branchName` | String | `repository.branch`. |
+| `projectDir` | `null` | No project directory is supplied. |
+| `specmaticConfigPath` | String | Configuration path from the batch's configuration provenance. |
+| `specmaticConfig` | `null` | Configuration contents are not sent. |
+
+#### Metadata
+
+All metadata values are strings. The server copies values from `ci.metadata`, then adds its own fields. Server values take precedence when a caller uses the same key.
+
+| Server metadata field | Value |
+| --- | --- |
+| `requestId` | Batch request ID; also the `Idempotency-Key`. |
+| `configCommitSha` | Commit SHA of the configuration snapshot used for linting. |
+| `configRepoUrl` | Credential-free configuration repository URL. |
+| `linterVersion` | Version of the Specmatic Linter that generated the reports. |
+| `specifications` | Compact JSON-encoded string of each specification's `specId`, `specPath`, and resolved `profile`, in request order. |
+
+Caller-defined metadata can include pipeline, release, or other string values. The field names are defined by the caller; the server does not generate them.
+
+Insights returns `200` with the original submission ID for a previously accepted idempotency key without processing the batch again. A new key returns `200` with the generated submission ID. Reuse the same request ID for retries of the same evaluation; use a new ID when the evaluation changes. The lint server still runs linting for each `POST` and returns a new HTTP response.
+
 HTTP `429`, `5xx`, network failures, and timeouts are transient. The publisher retries the front batch using the configured delay and multiplier and honors `Retry-After` when supplied. Later batches remain pending with zero attempts until the front batch advances. Once its retry budget is exhausted, all specifications in the batch are marked `blocked`, readiness returns `503`, and recovery attempts continue against that batch. On success, the batch is removed and readiness can recover. Other `4xx` responses permanently reject the batch: its queued payload is released, diagnostics remain visible until restart, and later batches proceed. Permanent rejections and pending batches alone do not fail readiness.
 
 Queue capacity is bounded. If there is not enough capacity to accept a completed batch, the lint request receives `503 SERVICE_UNAVAILABLE`; the server does not return `200` while silently dropping work.
