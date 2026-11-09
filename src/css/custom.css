@@ -279,3 +279,7 @@
     max-height: calc(100vh - 3rem);
   }
 }
+
+.preserve-case, .preserve-case * {
+  text-transform: none !important;
+}
