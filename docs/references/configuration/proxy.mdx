@@ -48,6 +48,8 @@ export NO_PROXY=localhost,.internal.example
 
 Lowercase `http_proxy`, `https_proxy`, and `no_proxy` are supported too. `NO_PROXY` accepts a comma-separated list of hosts or domains; a domain entry also bypasses the proxy for its subdomains. `*` bypasses the proxy for all hosts.
 
+These variables may also be needed when your Specmatic configuration requires access to a Git repository behind a proxy. Git's HTTP transport uses curl's proxy environment variables: set `HTTPS_PROXY` for HTTPS remotes, and lowercase `http_proxy` for HTTP remotes. curl does not recognize uppercase `HTTP_PROXY` on Unix-like systems, so use the lowercase name for HTTP Git remotes. Set `NO_PROXY` for Git hosts that should be reached directly.
+
 JVM proxy properties take precedence over environment variables for their respective protocol. Contact your IT administrator for the correct proxy address and port.
 
 > **Note:** Specmatic does not support NTLM (NT LAN Manager) authentication for proxies. If your corporate environment uses NTLM, set up an intermediary proxy such as [CNTLM](https://cntlm.sourceforge.net/) or [Px](https://github.com/genotrance/px) to handle NTLM and provide basic/digest authentication or no authentication to Specmatic.
