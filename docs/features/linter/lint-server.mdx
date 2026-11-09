@@ -381,7 +381,7 @@ The existing publisher drains the queue in order, including batches waiting for 
 
 The server releases its resources and exits after admitted requests finish and the queue drains, or when the grace period expires. It logs a summary of delivered, rejected, and outstanding batches, with request and specification IDs for outstanding work. The summary excludes credentials and report payloads.
 
-Set the deployment's termination grace period to allow time for in-flight linting and publishing. Keep network access to Insights available during the drain. If the server needs a proxy to reach Insights or a Git repository in its configuration, see [Proxy Configuration](/references/configuration/proxy). Any batches still outstanding when the process exits can be lost.
+Set the deployment's termination grace period to allow time for in-flight linting and publishing. Keep network access to Insights available during the drain. If the server needs a proxy to reach Insights or a Git repository in its configuration, see [Network Proxy Settings](/references/configuration/proxy). Any batches still outstanding when the process exits can be lost.
 
 ## 9. Check delivery status
 
@@ -408,6 +408,6 @@ Keep `/status` on an internal operations network. For the response schema and ex
 
 For a working example, see the [Skeptic Server Demo](https://github.com/specmatic/skeptic-server-demo) repository.
 
-## 10. Proxy Configuration
+## 10. Network Proxy Settings
 
-If the lint server needs a proxy to reach Insights or a Git repository in its configuration, see [Proxy Configuration](/references/configuration/proxy).
+If the lint server needs a proxy to reach Insights or a Git repository in its configuration, see [Network Proxy Settings](/references/configuration/proxy).
