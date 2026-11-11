@@ -1,11 +1,14 @@
-# Documentation examples
+# Documentation guidelines
 
 These instructions apply to documentation changes throughout this repository.
+
+## Documentation examples
+
 Use `docs/getting_started/cli_quick_start.mdx` and its
 `docs/getting_started/includes/cli-quick-start/` folder as the reference implementation.
 See `README.md` for runner usage and current coverage limits.
 
-## Keep published examples and tests aligned
+### Keep published examples and tests aligned
 
 - When adding or changing runnable CLI instructions, put commands, specifications,
   configurations, and deterministic example responses in shared files under an
@@ -22,7 +25,7 @@ Example include:
 <CodeBlock language="shell">{require('./includes/my-example/run.sh?raw').trimEnd()}</CodeBlock>
 ```
 
-## Folder convention
+### Folder convention
 
 The generic runner discovers all `.sh` files directly in the supplied folder in
 alphabetical order. Each script runs with Bash `-e -o pipefail` in a fresh temporary
@@ -46,7 +49,7 @@ in `scripts/check-doc-examples.js`. Keep that runner independent of products,
 subcommands, ports, URLs, schemas, and page-specific fixtures. Put additional
 behavior in setup, fixtures, and verifiers instead.
 
-## Expected output
+### Expected output
 
 - Follow the labs' `terminaloutput` convention: every nonblank, trimmed expected
   line must occur within an actual output line. Extra log lines are allowed.
@@ -65,7 +68,7 @@ behavior in setup, fixtures, and verifiers instead.
 - Investigate failures against the latest release. Do not weaken assertions or pin
   an older version merely to make a stale instruction pass.
 
-## Preserve the reader's experience
+### Preserve the reader's experience
 
 When externalizing existing examples or adding testing infrastructure, preserve the
 rendered page: prose, displayed commands, complete transcripts, links, tab labels,
@@ -81,7 +84,7 @@ Test-only redirects to local providers belong in `.setup`. They must preserve
 command names, flags, and user-facing behavior; do not silently drop or translate
 unsupported flags to make checks pass. Never print or commit license contents.
 
-## Validation and CI
+### Validation and CI
 
 For each changed or new example folder, run:
 
@@ -117,3 +120,7 @@ tests are needed merely to add an example pair.
 Report the folders, resolved edition/version numbers, and checks that passed.
 State missing prerequisites, unavailable licenses, or untested platform/edition
 paths explicitly; do not silently skip them or claim coverage beyond what ran.
+
+## Documentation publishing
+
+Never use `[ci skip]`, `[skip ci]`, or other CI-skip markers in commit messages or merge commit titles for documentation updates. CI builds and publishes the docs website, so it must run when these changes reach `main`.
