@@ -10,16 +10,6 @@ on:
         options:
           - specmatic-jms
           - specmatic-core
-          - specmatic-grpc
-          - specmatic-jdbc
-          - specmatic-async
-          - specmatic-redis
-          - specmatic-arazzo
-          - specmatic-studio
-          - specmatic-graphql
-          - specmatic-openapi
-          - specmatic-google-pubsub
-          - specmatic-release-test
           - specmatic-enterprise
 
       product-version:
