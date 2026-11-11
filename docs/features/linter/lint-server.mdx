@@ -53,7 +53,7 @@ All options are optional. Add them after `lint-server` in the command above.
 
 To enable caller authentication, supply at least one `--jwt-issuer` and `--jwt-jwks-url` pair and set `--jwt-audience`. Incomplete or invalid JWT settings prevent startup. Callers send `Authorization: Bearer <JWT>` with each lint submission.
 
-Use `--jwt-match='claim=JSON-value'` to require additional claims. Every configured claim must be present and match by JSON type. Strings match case-sensitive substrings. Arrays must contain each configured value as an exact element, in any order, and may contain extra elements. Other JSON values must match exactly.
+Use `--jwt-match='claim=JSON-value'` to require additional claims. Every configured claim must be present and match by JSON type. For string claims, the server splits both values on whitespace. Every configured token must appear as an exact, case-sensitive token in the caller's claim, in any order. Arrays must contain each configured value as an exact element, in any order, and may contain extra elements. Other JSON values must match exactly.
 
 ```bash
 --jwt-issuer='https://issuer.example.com/' \
@@ -63,7 +63,7 @@ Use `--jwt-match='claim=JSON-value'` to require additional claims. Every configu
 --jwt-match='permissions=["lint:run","reports:read"]'
 ```
 
-This example requires the `scope` string to contain `lint:run reports:read` and the `permissions` array to contain both permissions as separate elements.
+This example requires the `scope` string to contain both `lint:run` and `reports:read` tokens and the `permissions` array to contain both permissions as separate elements.
 
 The server uses the unverified `iss` only to look up an exact match in the configured issuer-to-JWKS map. It rejects unknown issuers. It selects the signing key from the configured JWKS endpoint, typically using `kid`, and verifies the RS256 signature. It then validates the verified issuer and audience, requires `exp`, and checks `nbf` when present. Both time checks allow 30 seconds of clock skew. The `aud` claim can be a string equal to the configured audience or an array containing it.
 
@@ -262,12 +262,12 @@ Handle errors by stable `code` and HTTP status; use `requestId` to correlate log
 | `400` | `INVALID_REQUEST`, `UNKNOWN_PROFILE` | Correct request fields or profile. |
 | `401` / `403` | `INVALID_TOKEN`, `ACCESS_DENIED`, `*_URL_NOT_ALLOWED` | Check caller token, claim rules, and source allowlists. |
 | `402` | `LICENSE_DENIED` | Check the service-account license. |
-| `422` | `CONFIG_INVALID`, `INVALID_SPECIFICATION`, `SPEC_TOO_LARGE` | Correct the config or specification. |
+| `422` | `CONFIG_INVALID`, `INVALID_CONFIG_TOKEN`, `INVALID_SPECIFICATION`, `SPEC_TOO_LARGE` | Correct the config or specification, or replace a rejected configuration token. |
 | `500` | `INTERNAL_ERROR` | Contact the operator with the request ID. |
 | `502` / `504` | `SPEC_FETCH_FAILED`, `AUTHENTICATION_UNAVAILABLE`, `SPEC_FETCH_TIMEOUT` | Check source or JWKS availability. Source `401`, `403`, and `404` map to `502`. |
 | `503` | `CONFIG_UNAVAILABLE`, `SERVER_NOT_READY`, `SERVICE_UNAVAILABLE` | Check `/readiness` and `/status`; follow `Retry-After` when supplied. |
 
-For `CONFIG_UNAVAILABLE`, update the repository credentials if the source rejected them. If the configuration source is temporarily unavailable, retry once it recovers.
+For `INVALID_CONFIG_TOKEN`, replace or refresh the rejected or expired repository token before retrying. For `CONFIG_UNAVAILABLE`, retry after the configuration source recovers from the network failure, timeout, or temporary upstream error.
 
 For all fields, status codes, headers, and error variants, use the running server's `/api-docs/` or `/api-docs/openapi.yaml` endpoint. A `503` may include `Retry-After`. There is no report retrieval endpoint.
 
@@ -401,7 +401,7 @@ The publisher sends one batch at a time in first-in, first-out order. All specif
 
 - **Accepted.** The publisher removes the batch from the queue and `unpublishedReports`. It increments `publishedBatchCount` by one and `publishedReportCount` by the number of specifications in the batch.
 - **Transient failure.** On HTTP `429`, `5xx`, a network error, or a timeout, the publisher retries the front batch using the configured backoff and honors `Retry-After` when supplied. Later batches remain `pending` with zero attempts.
-- **Retries exhausted.** The front batch becomes `blocked` and `/readiness` returns `503` with `INSIGHTS_BLOCKED`. The publisher continues recovery attempts even without new lint traffic. Acceptance or permanent rejection clears that batch's blocking state and lets the next batch proceed. Other active readiness reasons can still keep the instance unready.
+- **Retries exhausted.** The front batch becomes `blocked` and `/readiness` returns `503` with `INSIGHTS_BLOCKED`. The publisher pauses report submissions and checks Insights with `GET /actuator/health` immediately, then every 60 seconds while Insights remains unavailable. When Insights reports `UP`, the publisher resumes the front batch. The attempt count remains cumulative. Acceptance or permanent rejection clears that batch's blocking state and lets the next batch proceed. Other active readiness reasons can still keep the instance unready.
 - **Permanent rejection.** Other `4xx` responses mark the batch `rejected`. The publisher releases the queued payload and advances to the next batch. Rejection diagnostics remain in `unpublishedReports` until restart. Permanent rejections and pending batches leave readiness unaffected on their own.
 
 Retries and recovery attempts preserve the batch payload and its `Idempotency-Key`. The bounded queue is held in memory, so undelivered reports can be lost when the process stops. When the queue is full, the lint request returns `503 SERVICE_UNAVAILABLE`.
@@ -443,4 +443,4 @@ For a working example, see the [Skeptic Server Demo](https://github.com/specmati
 
 ## 10. Network Proxy Settings
 
-If the lint server needs a proxy to reach Insights or a Git repository in its configuration, see [Network Proxy Settings](/references/configuration/proxy).
+If the lint server needs a proxy to reach an external service over the internet, such as Insights, S3, or a Git repository, see [Network Proxy Settings](/references/configuration/proxy).
