@@ -1,6 +1,7 @@
-# Documentation examples
+# Documentation guidelines
 
 These instructions apply to documentation changes throughout this repository.
+
 Use `docs/getting_started/cli_quick_start.mdx` and its
 `docs/getting_started/includes/cli-quick-start/` folder as the reference implementation.
 See `README.md` for runner usage and current coverage limits.
@@ -117,3 +118,7 @@ tests are needed merely to add an example pair.
 Report the folders, resolved edition/version numbers, and checks that passed.
 State missing prerequisites, unavailable licenses, or untested platform/edition
 paths explicitly; do not silently skip them or claim coverage beyond what ran.
+
+## Documentation publishing
+
+Never use `[ci skip]`, `[skip ci]`, or other CI-skip markers in commit messages or merge commit titles for documentation updates. CI builds and publishes the docs website, so it must run when these changes reach `main`.
