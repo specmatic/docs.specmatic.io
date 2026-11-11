@@ -5,6 +5,122 @@ sidebar_position: 2
 description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
+## 1.29.1 (2026-11-11)
+
+### Added
+
+- Reporting APIs can generate specification metadata directly from OpenAPI, AsyncAPI, GraphQL, and Protobuf content, returning per-specification parsing errors alongside successful entries.
+
+- Reporting APIs expose Insights publishing readiness and distinguish typed server metadata from client metadata.
+
+### Changed
+
+- If the Skeptic server becomes not ready because all attempts to publish reports to Insights have failed, it pauses publishing and checks the readiness of the Insights service every minute. Once Insights is ready, the Skeptic server resumes publishing the queued reports.
+
+### Fixed
+
+- Contract tests preserve intentionally invalid requests in explicit 4xx examples, including incompatible Accept headers, through request construction and default interceptor validation. Example-derived negative tests are no longer skipped solely for incompatible Accept headers.
+
+- Regex-generated examples use readable characters for `.`, `\S`, `\D`, `\W`, and `\s`, including repeated occurrences and generated prefixes or suffixes. Matching and explicit character-class choices retain their existing semantics. Lookaround expressions retain their existing generation behavior.
+
+- WSDL loading retains messages, port types and bindings from imported documents sharing a target namespace. Shared and circular local imports are loaded once, and conflicting declarations report both source files.
+
+- WSDL element references to complex payloads load when their prefix is declared only in the referring schema. Qualification uses the referenced declaration's source schema while preserving its namespace bindings and occurrence rules.
+
+- OpenAPI 3.1 overlays remain applied when resolving references back to the root document; overlay paths are logged for troubleshooting.
+
+- Backward-compatibility checks accept JSON specifications with a UTF-8 byte-order mark (BOM).
+
+- The Insights reports API invoked by the Skeptic server to publish the report asynchronously now receives the server metadata in a dedicated structured field. The existing metadata field is still used to receive the client metadata.
+
+- Lint batches return HTTP 422 `INVALID_SPECIFICATION` when a fetched specification is invalid, and HTTP 400 `INVALID_REQUEST` when specification IDs are duplicated. Both errors reject the batch before report publication.
+
+- Rejected or expired configuration-repository access tokens return HTTP 422 `INVALID_CONFIG_TOKEN` with the message: “The configuration repository access token was rejected or has expired.”
+
+- The Skeptic server JWT string claims match exact whitespace-delimited tokens; array claims match exact elements.
+
+- MCP array schemas declare their item types for contract-test failures and mock dependency usage.
+
+- Arazzo validation handles nullable GraphQL variable names.
+
+### Security
+
+- Updated bundled Guava and the GraphQL parser to address vulnerabilities, including a vulnerable shaded Guava dependency.
+
+## 1.29.0 (2026-11-09)
+
+### Added
+
+- WSDL/SOAP namespace validation, example matching, generation and compatibility checks, including qualified attributes and SOAP 1.2. Accepts equivalent prefixes and rejects missing or incorrect namespaces. Includes namespace error codes `R1004` and `R1005`.
+
+- WSDL contracts preserve and enforce `minOccurs` and `maxOccurs` for elements, wildcards, sequences, choices, and XSD 1.0 `all` groups, including named group references and zero occurrences. Invalid bounds fail during loading with source context. Generated SOAP cases include occurrence boundaries, and compatibility checks retain numeric ranges and group structure.
+
+- Regex constraints now support lookaheads, lookbehinds, named captures, and lazy quantifiers when generating matching values.
+
+- SARIF lint reports can be submitted to Insights as `linter` reports, including arrays of SARIF reports.
+
+- V3 configuration supports Arazzo run options and richer security-scheme details, including JWT and OAuth settings.
+
+- Insights report publishing accepts an optional idempotency key so retries can be recognized as the same submission.
+
+- Arazzo workflows support unary gRPC and GraphQL steps across validation, execution, mocking, extrapolation, and Studio workflow editing.
+
+- Arazzo supports authentication profiles, credential sources, OAuth2 token acquisition, private-key JWT authentication, and the JWT bearer grant. Studio can configure security, persist workflow settings, and display security coverage.
+
+- Arazzo workflows can discover, select, generate, and export output fields, with outputs grouped by scenario in Studio.
+
+- Enterprise MCP adds configuration generation and dependency updates, configuration and example validation, runtime and license checks, structured contract-test results, and managed mock lifecycles. Test runs preserve project configuration and validate examples before applying run filters.
+
+- MCP tools can generate OpenAPI examples for filtered endpoints and lint OpenAPI specifications.
+
+- Added the Skeptic lint server for batch OpenAPI linting with per-specification SARIF results, shared Git-hosted rule profiles, and background publishing to Insights. It supports JWT caller authentication, source allowlists, HTTPS, health/readiness/status endpoints, and graceful report draining. See the [Skeptic server guide](https://docs.specmatic.io/features/linter/lint-server).
+
+- Studio validates configuration and reports initial contract-loading failures.
+
+### Changed
+
+- OpenAPI response matching now uses response media types to select compatible response candidates. `oneOf` generation respects variant-specific required fields, and property-bound constraints remain intact when deriving schemas.
+
+- External example matcher references are resolved before mock responses are filled, so referenced values are applied consistently to served responses.
+
+- Reporter metadata discovery skips `.specmatic` directories, including nested directories, so their contents are not reported as API specifications.
+
+- Raw report submissions to Insights are gzip-compressed.
+
+- Insights HTTP clients transparently decompress gzip and deflate responses, and utilization uploads are gzip-compressed.
+
+- Linting produces SARIF reports and a standalone HTML viewer, including maturity badges, filtering and grouping controls, combined reports, and CI publishing to Specmatic Insights. See the [report formats](https://docs.specmatic.io/features/linter/specification-formats/openapi/reports-and-exit-codes) and [CI/CD integration guide](https://docs.specmatic.io/features/linter/ci-cd).
+
+- Restored WIP reporting in Studio contract-test reports and drill-downs, with WIP results counted and filtered separately.
+
+- Commercial Enterprise Maven and Gradle artifacts are available from the [Specmatic releases repository](https://repo.specmatic.io/releases/).
+
+### Fixed
+
+- Insights report publishing treats all successful HTTP status codes as successful submissions.
+
+- WSDL loading follows local XSD includes, including nested, repeated and cyclic references and namespace-free schemas adopting their includer’s namespace. Invalid includes report their source and cause.
+
+- WSDL loading retains declarations from multiple XSD documents sharing a target namespace, preserves their source schema context, and reports conflicting declarations with source locations.
+
+- WSDL payload elements with inline `simpleType` restrictions now load correctly, using existing supported constraints when generating and validating SOAP requests and responses.
+
+- `STATUS` filter equality no longer treats generated negative tests as matching every declared 4xx code on the operation. Exact codes such as `STATUS='429'` select only tests with that expected status, so rate-limit example tests can run without schema-resiliency negatives. Use `STATUS='4xx'` (and other `Nxx` class tokens) to select by status class: `4xx` matches generated negatives and declared 4xx tests when those responses remain in scope after the first filter pass.
+
+- OpenAPI loading no longer emits security-parameter override warnings.
+
+- Interpolated mock substitutions recognize only known capture types, preserving literal text that resembles an unknown capture.
+
+- Arazzo extrapolation and validation handle nested output names, output-key conflicts, and passing-condition generation more reliably.
+
+- Kafka partition discovery retries empty metadata responses instead of immediately skipping the topic.
+
+### Security
+
+- Updated bundled Guava to address security vulnerabilities.
+
+- Updated bundled LZ4, RabbitMQ client, Snappy, and Studio Vite dependencies to address security vulnerabilities.
+
 ## 1.28.3 (2026-10-05)
 
 ### Changed
