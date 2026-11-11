@@ -41,10 +41,12 @@ All options are optional. Add them after `lint-server` in the command above.
 | `--allowed-spec-download-host` | Allowed specification download host. Repeat as needed. | Any host |
 | `--tls-keystore`, `--tls-key-alias` | PKCS#12 keystore and key alias; enables HTTPS. | TLS off |
 | `--max-spec-size-code-points` | Maximum decoded code points per specification. | `5242880` |
-| `--background-job-max-retries` | Insights retries after the initial attempt. | `3` |
-| `--background-job-retry-initial-delay-seconds` | Delay before the first retry. | `3` |
-| `--background-job-retry-multiplier` | Retry delay multiplier. | `3` |
+| `--background-job-max-retries` | Insights retries after the initial attempt. Accepts whole numbers from `0` to `2147483647`. Set to `0` to disable retries. | `3` |
+| `--background-job-retry-initial-delay-seconds` | Delay before the first retry. Accepts whole seconds from `1` to `9223372036854775807`. | `3` |
+| `--background-job-retry-multiplier` | Retry delay multiplier. Accepts finite numbers from `1.0` to `1.7976931348623157e308`. Set to `1.0` to keep the backoff delay constant. | `3` |
 | `--debug` | Add diagnostic and probe events to logs. | Off |
+
+The retry options' maximum values reflect the CLI's numeric types.
 
 <details>
 <summary>Authentication, source access, and HTTPS</summary>
