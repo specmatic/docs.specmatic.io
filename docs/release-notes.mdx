@@ -5,6 +5,22 @@ sidebar_position: 2
 description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
+
+## 1.29.2 (2026-11-16)
+
+### Changed
+
+- Command codec hooks drain stdout and stderr concurrently and bound all reads by a single timeout; on timeout, streams are closed and live child processes are terminated.
+
+### Fixed
+
+- Filtered stateful mock collection requests return `200 []` instead of 404 when no records match. Missing resources requested by ID still return 404.
+
+- The workflow editor's Tailwind utility styles, such as `border-2`, render correctly inside the editor's Shadow DOM.
+
+- Backward compatibility checks no longer list or check ordinary YAML/JSON files and schema fragments as standalone OpenAPI specifications. Shared fragments still trigger checks of affected specifications, including through transitive references.
+
+
 ## 1.29.1 (2026-11-11)
 
 ### Added
