@@ -1,7 +1,7 @@
 ---
 title: Reports and Exit Codes
 sidebar_position: 5
-description: Understand lint summaries, JSON and HTML reports, output paths, and exit codes.
+description: Understand lint summaries, SARIF and HTML reports, output paths, and exit codes.
 ---
 
 # Reports and Exit Codes
@@ -17,9 +17,9 @@ Status: PASSED
 
 When several specifications are linted, Specmatic also prints aggregate totals.
 
-## Report formats
+## Generated reports
 
-JSON is the default:
+Lint writes one SARIF report per target, a combined SARIF report, and a combined HTML report. There is no `--format` option for the `lint` command.
 
 ```bash
 docker run --rm \
@@ -29,30 +29,21 @@ docker run --rm \
   lint specs/orders.yaml
 ```
 
-Generate HTML instead:
-
-```bash
-docker run --rm \
-  -v "$(pwd):/usr/src/app" \
-  -w /usr/src/app \
-  specmatic/enterprise \
-  lint specs/orders.yaml --format=html
-```
-
 Reports are written below the directory containing the linter configuration:
 
 ```text
 build/reports/specmatic/lint/openapi/
 ```
 
-Filename pattern:
+For a target named `orders.yaml`, the report files are:
 
 ```text
-lint-report-<specification-name>.json
-lint-report-<specification-name>.html
+lint-report-orders.sarif
+combined.json
+html/index.html
 ```
 
-The command prints each exact report path.
+`combined.json` is the SARIF report for the complete lint invocation and is suitable for upload to GitHub Code Scanning. The combined HTML report includes all targets from the invocation. The command prints the exact path to every generated report.
 
 ## Problem details
 

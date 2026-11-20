@@ -322,7 +322,7 @@ docker run --rm \
   -v "$(pwd):/usr/src/app" \
   -w /usr/src/app \
   specmatic/enterprise \
-  lint pass.yaml fail.yaml --profile test-rules --format=html
+  lint pass.yaml fail.yaml --profile test-rules
 ```
 
 5. Confirm report points to intended file, JSON Pointer, line, and column.

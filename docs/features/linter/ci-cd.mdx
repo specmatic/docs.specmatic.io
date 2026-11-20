@@ -6,7 +6,7 @@ description: Run Skeptic as a repeatable CI quality gate and retain its reports.
 
 # CI/CD Integration
 
-Use the same configuration locally and in CI. Error-level violations fail the build; warnings provide feedback without blocking it.
+Use the same configuration locally and in CI. Error-level violations fail the build; warnings provide feedback without blocking it. Linting writes per-specification SARIF files, a combined SARIF report, and a combined HTML report, which can be retained as pipeline artifacts or uploaded to a code-scanning service.
 
 Current examples lint OpenAPI documents because OpenAPI is the supported specification format today.
 
@@ -23,13 +23,16 @@ docker run --rm \
 
 Quote glob patterns so Specmatic, not shell, expands them consistently.
 
-After the command runs, publish this directory as a pipeline artifact:
+After the command runs, publish these reports as pipeline artifacts:
 
 ```text
 build/reports/specmatic/lint/openapi/
+build/reports/specmatic/lint/combined.json
 ```
 
 ## GitHub Actions example
+
+The following workflow runs lint in Docker, uploads the combined SARIF report to GitHub Code Scanning, and retains the raw reports on the workflow run. The container runs as the GitHub runner user so that generated reports remain writable by later workflow steps. The license is mounted at an accessible path and passed explicitly to the container.
 
 ```yaml
 name: Lint API specifications
@@ -39,30 +42,65 @@ on:
     paths:
       - "specs/**"
       - "specmatic-linter.yaml"
+  push:
+    branches:
+      - main
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      security-events: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Lint OpenAPI documents
+      - name: Save Specmatic license
+        run: |
+          echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > "$RUNNER_TEMP/specmatic-license.txt"
+
+      - name: Lint OpenAPI documents and publish to Insights
         run: |
           docker run --rm \
             -v "$GITHUB_WORKSPACE:/usr/src/app" \
+            -v "$RUNNER_TEMP/specmatic-license.txt:/tmp/specmatic-license.txt:ro" \
+            -e SPECMATIC_LICENSE_PATH=/tmp/specmatic-license.txt \
+            --user "$(id -u):$(id -g)" \
             -w /usr/src/app \
             specmatic/enterprise \
-            lint "specs/**/*.{yaml,yml,json}"
+            lint "specs/**/*.{yaml,yml,json}" \
+            --ci \
+            --build-id "${{ github.run_id }}" \
+            --run-attempt "${{ github.run_attempt }}" \
+            --repo-id "${{ github.repository_id }}" \
+            --repo-name "${{ github.repository }}" \
+            --repo-url "${{ github.server_url }}/${{ github.repository }}" \
+            --branch-name "${{ github.ref_name }}"
+
+      - name: Upload SARIF to GitHub Code Scanning
+        if: always() && hashFiles('build/reports/specmatic/lint/combined.json') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: build/reports/specmatic/lint/combined.json
 
       - name: Upload lint reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: specmatic-lint-reports
-          path: build/reports/specmatic/lint/openapi/
+          path: |
+            build/reports/specmatic/lint/openapi/
+            build/reports/specmatic/lint/combined.json
 ```
 
-Configure Enterprise image access and licensing using your CI secret store. Never place credentials in workflow files or linter configuration.
+The workflow uses the public `specmatic/enterprise` image. Configure licensing using your CI secret store. Never place credentials in workflow files or linter configuration.
+
+The SARIF findings appear under the repository's **Security → Code scanning** page and in pull-request checks. The raw SARIF, per-specification SARIF, and HTML reports are available as workflow artifacts.
+
+Every lint run in this workflow is submitted to Insights with `--ci` and its build and repository metadata. `--build-id` and `--repo-id` are required for CI publishing; the workflow passes those along with the repository name, URL, branch, and run attempt. Use a service-account license for Enterprise CI publishing, and keep license credentials in CI secrets.
+
+Lint reports submitted to Insights use SARIF; the SARIF and HTML files are also written to the workspace. Without `--ci`, any report submission follows the license's report-publishing settings and is not recorded as a CI build. See [Reports Sent to Insights](/enterprise_onboarding/insights/reports_sent_to_insights#linter-report) for required metadata, provider variables, and payload details.
 
 ## Roll out without blocking teams
 
