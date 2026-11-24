@@ -171,7 +171,8 @@ paths:
           description: Snapshot captured successfully
   /_specmatic/verify:
     get:
-      summary: Verifies counts for the requested channels or example ids.
+      summary: Verifies counts for the requested channels or example ids, optionally filtered by message predicates.
+      description: Use exactly one selector (`channels` or `exampleIds`). Add optional message predicates as an exploded query object.
       parameters:
         - in: query
           name: channels
@@ -183,6 +184,19 @@ paths:
           required: false
           schema:
             type: string
+        - in: query
+          name: predicates
+          description: Arbitrary predicate paths and values used to filter captured messages. Each object key is serialized as a separate query parameter name.
+          style: form
+          required: false
+          explode: true
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+          example:
+            receive.headers.Correlation-Id: payment-123
+            receive.payload.status: success
       responses:
         '200':
           description: Verification counts
@@ -242,6 +256,49 @@ Example response:
 }
 ```
 
+### Filter Verification With Message Predicates
+
+For an AsyncAPI mock, `/_specmatic/verify` accepts message predicates in addition to a `channels` or `exampleIds` selector.
+Each predicate filters the messages counted by the selector. When you provide multiple predicates, a message must match all of them.
+Predicates use a path into the received or sent message:
+
+| Predicate path | Selects |
+| --- | --- |
+| `receive.payload.<path>` | A field in the received message payload |
+| `receive.headers.<name>` | A received message header |
+| `receive.key.<path>` | A field in the received message key, when the protocol provides one |
+| `send.payload.<path>` | A field in the sent message payload |
+| `send.headers.<name>` | A sent message header |
+| `send.key.<path>` | A field in the sent message key, when the protocol provides one |
+
+Use dot-separated names for nested fields and `[index]` for array elements. Predicate values are compared exactly.
+The supported predicate direction depends on the selector:
+
+| Selector | Accepted predicates |
+| --- | --- |
+| `channels` | `receive.*` only |
+| `exampleIds` | `receive.*` and `send.*` |
+
+For example, count only `payment-status` messages whose `Correlation-Id` header matches `payment-123`:
+
+```http
+GET /_specmatic/verify?channels=payment-status&receive.headers.Correlation-Id=payment-123
+```
+
+Example response:
+
+```json
+{
+  "payment-status": 1
+}
+```
+
+You can combine predicates to narrow the count further. This request counts only messages with the same correlation ID and a `success` status:
+
+```http
+GET /_specmatic/verify?channels=payment-status&receive.headers.Correlation-Id=payment-123&receive.payload.status=success
+```
+
 ### Stop The Mock
 
 ```bash
@@ -258,9 +315,12 @@ curl -X POST http://localhost:9999/stop
 
 ## API Rules
 
-- `/_specmatic/verify` accepts exactly one query parameter.
-- Supported query parameters are `channels` and `exampleIds`.
-- Values are comma-separated.
+- `/_specmatic/verify` requires exactly one selector: `channels` or `exampleIds`.
+- Selector values are comma-separated. You can add one or more message predicates as additional query parameters.
+- Predicate paths are case-sensitive and use exact value comparisons. Multiple predicates are combined with AND.
+- Predicate directions depend on the selector:
+  - `channels` accepts `receive.*` predicates only.
+  - `exampleIds` accepts both `receive.*` and `send.*` predicates.
 - Unknown query parameter names return `400 Bad Request`.
 - Verifying a channel before a snapshot exists for it returns `404 Not Found`.
 
