@@ -258,6 +258,23 @@ Notes:
 * Specs are resolved relative to the source
 * The same source can be shared across services
 
+When a spec is described as an object, you can set `supportingInterface: true` on its `spec` entry to mark it as a supporting interface:
+
+```yaml
+specs:
+  - spec:
+      id: orderApi
+      path: order/openapi.yaml
+  - spec:
+      id: orderEvents
+      path: order/asyncapi.yaml
+      supportingInterface: true
+```
+
+A supporting interface is part of the service's contract configuration but is not tested directly by Specmatic.
+Instead, it can be used during tests executed against other contracts, such as to observe and verify messages produced by the service as a result of an operation.
+For an example, see [Testing Event Flows and Behaviors](/features/testing_event_flows-and_behaviors#mark-the-asyncapi-contract-as-a-supporting-interface).
+
 ---
 
 #### 4.4 `components.runOptions`

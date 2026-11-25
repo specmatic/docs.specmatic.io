@@ -4,6 +4,7 @@ sidebar_position: 3
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import CodeBlock from '@theme/CodeBlock';
 import {CommercialBadge} from "../../src/components/CommercialBadge";
 
 # External Examples
@@ -462,6 +463,43 @@ Examples can be externalized to `json` files as seen in the above section, You w
 **Notes on the `response` format:**
 
 1. In contract tests, only the `status` field is required. Other fields will be ignored if provided such as headers, body etc.
+
+## Fixtures <CommercialBadge/>
+
+Fixtures allow an example to perform additional interactions before or after its main interaction.
+Use `before` fixtures to set up prerequisites and `after` fixtures to verify side effects or clean up resources.
+For example, a test can create a session before the main request, use it during the request, and delete it afterward.
+
+:::note
+During contract testing, `before` fixtures run before the main interaction, and `after` fixtures run afterward.<br />
+Mock serving does not support `before` fixtures. Support for `after` fixtures is currently limited to OpenAPI mocks Only.
+:::
+
+### HTTP fixtures
+
+Use an HTTP fixture when the flow needs to call an HTTP endpoint. It sends the request in `http-request` and checks the result described by `http-response`.
+For example, this fixture creates a session and captures its ID for the main request, then deletes the session afterward:
+
+<CodeBlock language="json" title="http-fixture.json">{require('./includes/external-examples/http-fixture.json?raw').trimEnd()}</CodeBlock>
+
+### Mock fixtures
+
+Use a mock fixture to trigger the execution of one or more examples in a running Specmatic mock.
+For example, after a payment mock accepts a payment request, a mock fixture can trigger an AsyncAPI mock to
+publish a payment-status event, reusing the correlation ID from the incoming request:
+
+<CodeBlock language="json" title="initiatePayment.json">{require('./includes/event-flows/initiatePayment.json?raw').trimEnd()}</CodeBlock>
+
+Set `id` to the specification ID of the target mock and `exampleIds` to the IDs of the examples to execute.
+Specmatic locates the running mock, resolves the referenced examples, and executes them.
+
+Additional fields in the fixture, such as send, are deep-merged with each referenced example,
+allowing specific values to be overridden while preserving the rest of the example.
+
+:::note
+Mock fixtures are currently supported in OpenAPI examples as after fixtures,
+with only AsyncAPI mocks supported as targets. Execution is currently limited to sending messages.
+:::
 
 ## Datatypes In Examples
 

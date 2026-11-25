@@ -1,0 +1,65 @@
+{
+  "before": [
+    {
+      "type": "http",
+      "timeout": "PT5S",
+      "http-request": {
+        "method": "POST",
+        "path": "/_specmatic/snapshot",
+        "baseUrl": "${SPECMATIC_ASYNC_API_URL:http://localhost:9999}"
+      },
+      "http-response": {
+        "status": 200
+      }
+    }
+  ],
+  "http-request": {
+    "path": "/orders",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json",
+      "Idempotency-Key": "1234"
+    },
+    "body": {
+      "quantity": 50,
+      "productId": 10
+    }
+  },
+  "http-response": {
+    "status": 202,
+    "status-text": "Accepted",
+    "headers": {
+      "Correlation-Id": "(CORRELATION_ID:string)"
+    }
+  },
+  "after": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "GET",
+        "baseUrl": "${PAYMENT_API_URL:http://localhost:9000}",
+        "path": "/_specmatic/messages?REQUEST.PATH=/payment/initiate&REQUEST.HEADER.Idempotency-Key=$(CORRELATION_ID)"
+      },
+      "http-response": {
+        "status": 200,
+        "body": "$match(length: 1)"
+      }
+    },
+    {
+      "type": "http",
+      "wait": "PT4S",
+      "timeout": "PT2S",
+      "http-request": {
+        "method": "GET",
+        "baseUrl": "${SPECMATIC_ASYNC_API_URL:http://localhost:9999}",
+        "path": "/_specmatic/verify?channels=order-status&receive.headers.Correlation-Id=$(CORRELATION_ID)"
+      },
+      "http-response": {
+        "status": 200,
+        "body": {
+          "order-status": "$match(exact: 1)"
+        }
+      }
+    }
+  ]
+}

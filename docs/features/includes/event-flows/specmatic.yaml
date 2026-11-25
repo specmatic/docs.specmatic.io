@@ -1,0 +1,71 @@
+version: 3
+
+systemUnderTest:
+  service:
+    $ref: "#/components/services/orderService"
+    runOptions:
+      $ref: "#/components/runOptions/orderRunOptions"
+
+dependencies:
+  services:
+    - service:
+        $ref: "#/components/services/paymentService"
+        runOptions:
+          $ref: "#/components/runOptions/paymentRunOptions"
+
+components:
+  sources:
+    localFileSystem:
+      filesystem:
+        directory: ./specifications
+
+  services:
+    orderService:
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/localFileSystem"
+            specs:
+              - spec:
+                  id: orderOpenApi
+                  path: ./order/openapi.yaml
+              - spec:
+                  id: orderAsyncApi
+                  path: ./order/asyncapi.yaml
+                  supportingInterface: true
+    paymentService:
+      definitions:
+        - definition:
+            source:
+              $ref: "#/components/sources/localFileSystem"
+            specs:
+              - spec:
+                  id: paymentOpenApi
+                  path: ./payment/openapi.yaml
+              - spec:
+                  id: paymentAsyncApi
+                  path: ./payment/asyncapi.yaml
+
+  runOptions:
+    orderRunOptions:
+      openapi:
+        type: test
+        baseUrl: "${ORDER_API_URL:http://localhost:8080}"
+      asyncapi:
+        type: test
+        servers:
+          - server:
+              type: external
+              protocol: kafka
+              host: "${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}"
+    paymentRunOptions:
+      openapi:
+        type: mock
+        baseUrl: "${PAYMENT_API_URL:http://localhost:9000}"
+      asyncapi:
+        type: mock
+        servers:
+          - server:
+              type: in-memory
+              protocol: kafka
+              host: "${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}"

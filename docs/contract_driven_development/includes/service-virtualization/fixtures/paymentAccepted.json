@@ -1,0 +1,42 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/payments",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "paymentId": "payment-123",
+      "amount": 49.99
+    }
+  },
+  "http-response": {
+    "status": 202,
+    "status-text": "Accepted",
+    "body": {
+      "paymentId": "payment-123",
+      "status": "accepted"
+    }
+  },
+  "after": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "POST",
+        "baseUrl": "http://localhost:8081",
+        "path": "/audit/events",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "event": "payment.accepted",
+          "paymentId": "payment-123"
+        }
+      },
+      "http-response": {
+        "status": 201
+      },
+      "timeout": "PT5S"
+    }
+  ]
+}
