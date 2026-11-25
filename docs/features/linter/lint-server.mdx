@@ -40,7 +40,6 @@ All options are optional. Add them after `lint-server` in the command above.
 | `--allowed-config-repo-url` | Allowed configuration repository. Repeat as needed. | Any HTTP(S) URL |
 | `--allowed-spec-download-host` | Allowed specification download host. Repeat as needed. | Any host |
 | `--tls-keystore`, `--tls-key-alias` | PKCS#12 keystore and key alias; enables HTTPS. | TLS off |
-| `--max-spec-size-code-points` | Maximum decoded code points per specification. | `5242880` |
 | `--background-job-max-retries` | Insights retries after the initial attempt. Accepts whole numbers from `0` to `2147483647`. Set to `0` to disable retries. | `3` |
 | `--background-job-retry-initial-delay-seconds` | Delay before the first retry. Accepts whole seconds from `1` to `9223372036854775807`. | `3` |
 | `--background-job-retry-multiplier` | Retry delay multiplier. Accepts finite numbers from `1.0` to `1.7976931348623157e308`. Set to `1.0` to keep the backoff delay constant. | `3` |
@@ -79,12 +78,18 @@ The server checks both allowlists before accessing the requested sources. Each l
 
 | Option | Matching rule | Error on mismatch |
 | --- | --- | --- |
-| `--allowed-config-repo-url` | Exact HTTP(S) configuration repository URL after removing embedded credentials. Any branch of a matching repository is allowed. | `403 CONFIG_URL_NOT_ALLOWED` |
+| `--allowed-config-repo-url` | Exact credential-free HTTP(S) configuration repository URL. Any branch of a matching repository is allowed. | `403 CONFIG_URL_NOT_ALLOWED` |
 | `--allowed-spec-download-host` | Exact hostname in each specification's `downloadUrl`. | `403 SPEC_URL_NOT_ALLOWED` |
 
-A mismatch fails the entire lint request before the disallowed source is fetched, and the server sends no reports to Insights. The error identifies the field and omits credential-bearing URLs. The server checks the supplied URLs and leaves redirect destinations outside the allowlist check.
+A mismatch fails the entire lint request before the disallowed source is fetched, and the server sends no reports to Insights. The error omits credential-bearing URLs.
 
-Configuration credentials apply only to their repository. Private specification sources need their own credentials in a reachable `downloadUrl`. The server redacts credentials from logs, API responses, reports, and Insights data.
+#### Download redirects
+
+When `--allowed-spec-download-host` is configured, specification downloads reject every redirect, including redirects to another allowed host. The response is `403 SPEC_URL_NOT_ALLOWED` with the upstream `3xx` code in `upstreamStatus`; the server does not fetch the redirect target. Supply the final download URL. Without this allowlist, specification downloads follow redirects. Git operations for the configuration repository always disable redirects.
+
+#### Configuration repository credentials
+
+Configuration credentials apply only to their repository. Supply private configuration repository credentials in `config.git.token`, separately from the URL. The server sends this token to Git only in an Authorization header, including background refreshes using the latest accepted token. It holds the token in memory and does not write it to disk, including the clone’s `.git/config`, or include it in logs, API responses, reports, or Insights data. Private specification sources need their own credentials in a reachable `downloadUrl`.
 
 #### HTTPS
 
@@ -102,9 +107,7 @@ With TLS enabled, the selected port serves HTTPS only. Configure clients and pro
 
 #### Specification size limit
 
-`--max-spec-size-code-points` limits the decoded Unicode code points in each downloaded specification before parsing. The default is 5,242,880 code points. The server measures each file independently of the request body size and the file's byte count. Zero, negative, and non-integer values prevent startup.
-
-For example, add `--max-spec-size-code-points=10485760` to allow up to 10,485,760 code points per specification. Before raising the limit, check memory use and expected flattened specification sizes, and verify that the parser can handle files up to the configured limit.
+Each downloaded specification is limited to 26,214,400 decoded Unicode code points (25 Mi code points). The server checks each file independently of the request body size and the file’s byte count, before parsing. A specification exceeding this limit returns `422 SPEC_TOO_LARGE`.
 </details>
 
 ## 3. Explore the API
@@ -177,6 +180,8 @@ Send `POST /skeptic/lint/reports`. This example includes optional CI metadata; r
 ```
 
 </details>
+
+For a private configuration repository, add `config.git.token` to the `git` object. Omit it or use `null` for public repositories. A blank token returns `422 INVALID_CONFIG_TOKEN`. Credentials embedded in `config.git.url` are rejected before network access with `422 INVALID_CONFIG_URL`; move them to `config.git.token`.
 
 The request requires a configuration URL, repository ID/URL/branch, and at least one specification. Each specification needs a unique ID, repository-relative path, and download URL; paths cannot contain credentials or control characters. The path is returned as `specPath` and sent to Insights. The config branch and profile are optional; the server uses the repository default branch and `default` profile when omitted. Profile names are case-sensitive and all profiles are resolved before any specification is downloaded. The config URL must use HTTP(S); specification downloads accept HTTP(S) URLs and JSON or YAML content. `repository.id` is a stable Insights identifier and need not be a UUID. `repository.url` (HTTP(S), `ssh://`, or SCP-style) and `repository.branch` are Insights metadata; the server fetches files from `downloadUrl`. Supply a download URL for each specification even though the schema marks it optional; a failed download does not fall back to Git. If `ci` is included, `buildId` is required; `runAttempt` defaults to `"1"`, and metadata values must be strings.
 
@@ -264,7 +269,7 @@ Handle errors by stable `code` and HTTP status; use `requestId` to correlate log
 | `400` | `INVALID_REQUEST`, `UNKNOWN_PROFILE` | Correct request fields or profile. |
 | `401` / `403` | `INVALID_TOKEN`, `ACCESS_DENIED`, `*_URL_NOT_ALLOWED` | Check caller token, claim rules, and source allowlists. |
 | `402` | `LICENSE_DENIED` | Check the service-account license. |
-| `422` | `CONFIG_INVALID`, `INVALID_CONFIG_TOKEN`, `INVALID_SPECIFICATION`, `SPEC_TOO_LARGE` | Correct the config or specification, or replace a rejected configuration token. |
+| `422` | `CONFIG_INVALID`, `INVALID_CONFIG_URL`, `INVALID_CONFIG_TOKEN`, `INVALID_SPECIFICATION`, `SPEC_TOO_LARGE` | Correct the config or specification, or replace a rejected configuration token. |
 | `500` | `INTERNAL_ERROR` | Contact the operator with the request ID. |
 | `502` / `504` | `SPEC_FETCH_FAILED`, `AUTHENTICATION_UNAVAILABLE`, `SPEC_FETCH_TIMEOUT` | Check source or JWKS availability. Source `401`, `403`, and `404` map to `502`. |
 | `503` | `CONFIG_UNAVAILABLE`, `SERVER_NOT_READY`, `SERVICE_UNAVAILABLE` | Check `/readiness` and `/status`; follow `Retry-After` when supplied. |
@@ -279,15 +284,15 @@ The server starts with an empty in-memory cache. Entries are keyed by credential
 
 ### Loading configuration and changing credentials
 
-A cache miss, stale entry, or changed repository credential requires the server to fetch, parse, and validate configuration before linting. A successful load replaces the snapshot and accepts the supplied credentials for future refreshes of that repository's branches. The commit SHA can stay the same after a successful load.
+A cache miss, stale entry, or changed repository credential requires the server to fetch, parse, and validate configuration before linting. Successful Git access accepts the supplied token for future refreshes of every branch of that repository, even if configuration validation then fails. Only successful configuration validation replaces the snapshot and commit SHA. The commit SHA can stay the same after a successful load.
 
-A failed first load creates no cache entry. If a credential change fails, the server retains the previously accepted credentials and snapshot, and returns an error for that request without using either as a fallback. Concurrent loads preserve the latest accepted snapshot and credentials. An older load cannot overwrite them or restore a stale flag cleared by a later success. In-flight requests finish with the snapshot they acquired, even if it becomes stale or is evicted.
+A first load that reaches Git successfully but fails configuration validation creates an entry with `commitSha: null`, `stale: false`, and a safe failure summary; background refresh retries it. If Git rejects a credential change, the server retains the previously accepted credentials and snapshot, and returns an error for that request without using either as a fallback. Concurrent loads preserve the latest accepted snapshot and credentials. An older load cannot overwrite them or restore a stale flag cleared by a later success. In-flight requests finish with the snapshot they acquired, even if it becomes stale or is evicted.
 
 While Insights delivery blocks readiness, a valid request for a new configuration repository or changed credentials can still load configuration. After a successful load, the readiness check still prevents specification fetching and linting. During graceful shutdown, new requests receive `503 SERVER_NOT_READY`, including requests that would otherwise qualify for configuration recovery.
 
 ### Refreshing stale entries
 
-The server refreshes each cached entry every five minutes using the repository's latest accepted credentials. A failed refresh retains the last snapshot for `/status` and requests already using it, marks the entry stale, and suspends background refresh for that entry. Each new lint request using the entry must load configuration successfully before it can proceed. A successful load clears the stale flag and resumes background refresh. The stale flag indicates an unresolved refresh failure.
+The server refreshes each cached entry every five minutes using the repository's latest accepted credentials. A failed refresh retains the last snapshot for `/status` and requests already using it, marks the entry stale, and retries automatically on the next five-minute refresh cycle. Each new lint request using the entry must load configuration successfully before it can proceed. A successful load clears the stale flag. The stale flag indicates an unresolved refresh failure.
 
 ### Evicting idle entries
 
