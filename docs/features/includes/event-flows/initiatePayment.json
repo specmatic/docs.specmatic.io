@@ -1,0 +1,29 @@
+{
+  "http-request": {
+    "path": "/payment/initiate",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json",
+      "Idempotency-Key": "(CORRELATION_ID:string)"
+    },
+    "body": {
+      "price": "(number)"
+    }
+  },
+  "http-response": {
+    "status": 202,
+    "status-text": "Accepted"
+  },
+  "after": [
+    {
+      "type": "mock",
+      "id": "paymentAsyncApi",
+      "exampleIds": ["publishPaymentStatusExample"],
+      "send": {
+        "headers": {
+          "Correlation-Id": "$(CORRELATION_ID)"
+        }
+      }
+    }
+  ]
+}

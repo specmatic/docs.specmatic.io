@@ -845,14 +845,16 @@ This means, if a request matches an example in the specification, but also match
 
 ## Fixtures In Mock Examples <CommercialBadge />
 
-An OpenAPI mock example can define fixtures to exercise side effects as part of a mock interaction. The mock serves the matching response first, then runs the example's `after` fixtures. These can use any fixture type Specmatic supports.
+An OpenAPI mock example can define fixtures to exercise side effects as part of a mock interaction.
+The mock serves the matching response first, then runs the example's `after` fixtures. These can use any fixture type Specmatic supports.
 
 :::note
 `before` fixtures are not supported when serving mock examples.<br />
 Utilize `after` fixtures for work that should happen after the mock has returned its response.
 :::
 
-For example, if you want to notify an audit service whenever a payment is accepted, add an HTTP fixture to the payment example's `after` list. The mock returns `202 Accepted`, then runs the fixture to send the audit request:
+For example, if you want to notify an audit service whenever a payment is accepted, add an HTTP fixture to the payment example's `after` list.
+The mock returns `202 Accepted`, then runs the fixture to send the audit request:
 
 <CodeBlock language="json" title="paymentAccepted.json">{require('../includes/service-virtualization/fixtures/paymentAccepted.json?raw').trimEnd()}</CodeBlock>
 

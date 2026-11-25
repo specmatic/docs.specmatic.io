@@ -5,6 +5,9 @@ parent: Features
 sidebar_position: 6
 exclude_nav: true
 ---
+import CodeBlock from '@theme/CodeBlock';
+import { CommercialBadge } from "../../src/components/CommercialBadge";
+
 # Testing Event Flows and Behaviors
 
 ## Introduction to Event Flows and Behaviors
@@ -270,6 +273,76 @@ And for side effects:
 ### Sample Project
 Please have a look at the following sample project to understand how to utilize `Specmatic` for testing event flows and behaviors in your application:
 - [specmatic-kafka-sample-asyncapi3](https://github.com/specmatic/specmatic-kafka-sample-asyncapi3)
+
+## Testing an OpenAPI service with event-flow interface
+
+This example tests the Order Service through its OpenAPI contract while checking the event it publishes.
+A Payment Service mock returns an HTTP response and publishes a `payment-status` event, the Order Service
+consumes that event and publishes `order-status`. The test matches the resulting event to the request by its correlation ID.
+
+```mermaid
+sequenceDiagram
+    participant T as Contract test
+    participant O as Order Service
+    participant P as Payment mock
+    participant K as Kafka
+    participant S as Specmatic observer
+
+    T->>S: Capture a message snapshot
+    T->>O: POST /orders
+    O-->>T: 202 Accepted + Correlation-Id
+    O->>P: POST /payment/initiate
+    P-->>O: 202 Accepted
+    P->>K: Publish payment-status
+    K-->>O: Deliver payment-status
+    O->>K: Publish order-status
+    K-->>S: Observe order-status
+    T->>S: Verify order-status by Correlation-Id
+    S-->>T: One matching message
+```
+
+The Order Service returns `202 Accepted` with a correlation ID, then processes the payment asynchronously.
+After consuming the payment event, it publishes an `order-status` event carrying that same correlation ID.
+
+This flow has two separate `after` lists, the Payment mock's `after` publishes a dependency event, and the Order contract test's `after` verifies the resulting interactions.
+See [fixtures in mock examples](/spec_driven_api_development/service_virtualization#fixtures-in-mock-examples-) for when an `after` fixture runs during mock serving.
+
+### Mark the AsyncAPI contract as a supporting interface
+
+The Order Service is tested directly through OpenAPI. Its AsyncAPI contract describes an event the test also
+needs to observe. Mark that definition with `supportingInterface: true` in the v3 configuration:
+
+<CodeBlock language="yaml" title="specmatic.yaml excerpt">
+  {require('./includes/event-flows/specmatic.yaml?raw').trimEnd()}
+</CodeBlock>
+
+Specmatic skips direct contract testing for `orderAsyncApi` but provisions its Kafka topics and starts an observer-only, non-committing consumer.
+This allows the OpenAPI tests to capture and verify events published by the Order Service without triggering mock responses.
+
+:::note
+Observer-only AsyncAPI supporting interfaces currently require [Kafka](/supported_protocols/asyncapi/kafka).
+:::
+
+### Publish a payment event with a mock fixture <CommercialBadge />
+
+The Payment Service is mocked using OpenAPI and AsyncAPI contracts.
+After serving `/payment/initiate`, the OpenAPI mock uses a [Mock fixture](/features/external_examples#mock-fixtures)
+to publish a `payment-status` event through the AsyncAPI mock, reusing the correlation ID from the incoming HTTP request:
+
+<CodeBlock language="json" title="initiatePayment.json">
+  {require('./includes/event-flows/initiatePayment.json?raw').trimEnd()}
+</CodeBlock>
+
+### Snapshot and verify the resulting event
+
+The Order Service example captures a message snapshot before sending the HTTP request. Its `after` fixtures verify two outcomes.
+First, the [mock messages endpoint](/spec_driven_api_development/service_virtualization#retrieving-messages-served-by-the-mock-server-) confirms the Payment mock received the request.
+Then the [snapshot and verify API](/supported_protocols/asyncapi/kafka#api-server) confirms that one `order-status` event was published.
+[Message predicates](/supported_protocols/asyncapi/kafka#filter-verification-with-message-predicates) filter the events by their correlation ID
+
+<CodeBlock language="json" title="createOrder.json">
+  {require('./includes/event-flows/createOrder.json?raw').trimEnd()}
+</CodeBlock>
 
 ## Conclusion
 By leveraging **Before and After Fixtures** in example files, Specmatic empowers teams to define and test triggers and side effects in event-driven systems. This approach enables comprehensive end-to-end testing of event flows and behaviors without relying on mocks or brittle test harnesses.
