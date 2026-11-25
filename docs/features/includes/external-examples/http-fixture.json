@@ -1,0 +1,41 @@
+{
+  "before": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "POST",
+        "path": "/sessions",
+        "baseUrl": "http://localhost:9000"
+      },
+      "http-response": {
+        "status": 201,
+        "body": {
+          "id": "(SESSION_ID:string)"
+        }
+      }
+    }
+  ],
+  "http-request": {
+    "method": "POST",
+    "path": "/orders",
+    "headers": {
+      "X-Session-Id": "$(SESSION_ID)"
+    }
+  },
+  "http-response": {
+    "status": 202
+  },
+  "after": [
+    {
+      "type": "http",
+      "http-request": {
+        "method": "DELETE",
+        "path": "/sessions/$(SESSION_ID)",
+        "baseUrl": "http://localhost:9000"
+      },
+      "http-response": {
+        "status": 204
+      }
+    }
+  ]
+}
