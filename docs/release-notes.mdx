@@ -6,6 +6,56 @@ description: Specmatic Enterprise release notes.
 toc_max_heading_level: 2
 ---
 
+## 1.30.0 (2026-11-25)
+
+### Added
+
+- Contract tests can exercise related supporting interfaces alongside the primary contract, so multi-interface workflows can be verified in one test run.
+
+- Mock fixtures can start and stop HTTP or AsyncAPI mocks, publish AsyncAPI examples, and verify mock behavior during a test run. External examples can define these fixtures for reuse, and CTRF reports include mock-fixture results with values for each example.
+
+- HTTP stub examples can run follow-up fixtures after the interaction, including when the stub terminates the connection. AsyncAPI channels used by supporting interfaces are observed during tests, making their messages available to fixture verification.
+
+- Enhanced the AsyncAPI mock verification API (`/_specmatic/verify`) to support message predicates, allowing verification counts to be filtered by specific payload fields, headers, and message keys when verifying by channel or example ID.
+
+- MCP Auto Test can connect to and test servers using the stdio transport.
+
+- Mock and test configuration can derive server origins from AsyncAPI, GraphQL SDL, and Protobuf specifications, using the relevant specification IDs and run options.
+
+- WSDL contracts support additional SOAP headers in examples and matching, including headers scoped by namespace and optional header presence. Header matching supports different header ordering and keeps SOAP header metadata separate from XML attributes.
+
+- WSDL parsing and validation support `xs:anyType`, named unions and lists, and XML Schema date values. WSDL generation also supports `xs:anyType` payload elements.
+
+- OpenAPI object schemas enforce `minProperties` and `maxProperties` during parsing, generation, matching, and backward-compatibility checks, with clearer diagnostics for impossible bounds. Enforcement also covers mutation and substitution.
+
+### Changed
+
+- HTTP mocks decode gzip request bodies before parsing and schema matching, including JSON, URL-encoded forms, and multipart forms.
+
+- Specmatic uses shared reporter parsing APIs for JSON, YAML, and OpenAPI inputs, applying the reporter's common input size limit of 25 Mi code points. Enterprise applies the same limit to AsyncAPI, GraphQL, and gRPC parsing, including configuration validation and backward-compatibility file detection.
+
+- The Skeptic lint server accepts configuration-repository access tokens separately from the lint request and refreshes its cached repository credentials when a token is rotated.
+
+- SARIF reports from the lint server include the repository URL and accurate source regions. Report generation also avoids repeatedly recalculating source positions, improving performance for larger reports.
+
+- The lint server now shuts down cleanly on SIGTERM so queued report publishing can finish.
+
+### Fixed
+
+- Specifications fetched by the lint server from allowlisted URLs can no longer redirect to a different URL. Such redirects are rejected with HTTP 403 `SPEC_URL_NOT_ALLOWED`.
+
+- Contract verification for AsyncAPI filters messages using their scenario breadcrumbs, so only messages associated with the selected scenarios are considered.
+
+- OpenAPI response headers are matched when capturing substitutions, allowing header values to be captured and reused consistently.
+
+- Parsing diagnostics for invalid specifications are clearer, and OpenAPI overlays avoid reparsing the same document.
+
+- OpenAPI examples preserve query parameters that are not declared in the specification when building example requests.
+
+- WSDL/SOAP matching now honors scoped header presence and reports more useful XML diagnostics while validating empty union values and preserving known `xs:all` member errors.
+
+- OpenAPI backward-compatibility discovery avoids treating regular YAML/JSON files and schema fragments as specifications while still checking specifications affected by shared fragments, including transitive references.
+
 ## 1.29.2 (2026-11-16)
 
 ### Changed
